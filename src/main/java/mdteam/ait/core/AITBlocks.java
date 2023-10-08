@@ -13,6 +13,8 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block DISPLAY_CONSOLE = new DisplayConsoleBlock(FabricBlockSettings.create().nonOpaque());
     public static final Block EXTERIOR_BLOCK = new ExteriorBlock(FabricBlockSettings.create().nonOpaque());
 
+    public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque());
+
 
     @Override
     public BlockItem createBlockItem(Block block, String identifier) {

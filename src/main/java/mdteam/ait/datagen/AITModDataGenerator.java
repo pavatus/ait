@@ -36,6 +36,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 			aitModelProvider.registerDirectionalBlock(AITBlocks.RADIO);
 			aitModelProvider.registerDirectionalBlock(AITBlocks.DISPLAY_CONSOLE);
 			aitModelProvider.registerDirectionalBlock(AITBlocks.EXTERIOR_BLOCK);
+			aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
 
 			//falloutModelProvider.registerSimpleBlock(AITBlocks.DEEPSLATE_URANIUM_ORE);
 			return aitModelProvider;
@@ -73,6 +74,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
+		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
 
 		return aitLanguageProvider;
 	}
@@ -90,6 +92,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
+		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
 
 
 		return aitLanguageProvider;
@@ -108,6 +111,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
+		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
 
 		return aitLanguageProvider;
 	}
