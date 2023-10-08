@@ -1,9 +1,7 @@
 package mdteam.ait.core.helper.desktop;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.helper.DesktopUtil;
-import mdteam.ait.core.helper.structures.DesktopStructures;
-import net.minecraft.client.MinecraftClient;
+import mdteam.ait.core.helper.structures.DesktopStructure;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.structure.StructurePlacementData;
@@ -15,7 +13,7 @@ import net.minecraft.util.math.random.Random;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class DesktopSchema extends DesktopStructures {
+public abstract class DesktopSchema extends DesktopStructure {
     protected BlockPos doorPosition;
     protected String id;
     protected StructureTemplate template;
@@ -86,8 +84,7 @@ public abstract class DesktopSchema extends DesktopStructures {
         }
 
        public DesktopSchema deserialize(NbtCompound nbt) {
-            return null; // @TODO no Desktop list to grab from
-           //return TARDISInteriors.get(nbt.getString("id"));
+           return DesktopInit.get(nbt.getString("id"));
        }
     }
 }

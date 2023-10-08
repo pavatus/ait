@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.helper.desktop.TARDISDesktop;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,6 +25,7 @@ public class ExteriorBlockEntity extends BlockEntity {
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
         setExterior(getExterior());
+        setDesktop(getDesktop());
         setMaterialState(getMaterialState());
         setLeftDoorRot(getLeftDoorRotation());
         setRightDoorRot(getRightDoorRotation());
@@ -40,6 +42,15 @@ public class ExteriorBlockEntity extends BlockEntity {
             setLeftDoorRot(0);
         }
         world.playSound(null,this.pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS,0.6f, 1f);
+
+        if (sneaking) {
+            getDesktop().teleportToDoor(player);
+        }
+
+        // Check if dEskToP (interior on top) needs generating
+        if (getDesktop() != null && getDesktop().needsGeneration()) {
+            getDesktop().generate();
+        }
     }
 
     public void setExterior(ExteriorEnum exterior) {
@@ -49,6 +60,11 @@ public class ExteriorBlockEntity extends BlockEntity {
     public ExteriorEnum getExterior() {
         return EXTERIORNBT.get(this).getExterior();
     }
+    public void setDesktop(TARDISDesktop desktop) {
+        desktop.link(this);
+        EXTERIORNBT.get(this).setDesktop(desktop);
+    }
+    public TARDISDesktop getDesktop() {return EXTERIORNBT.get(this).getDesktop();}
 
     public void setLeftDoorRot(float rotation) {
         EXTERIORNBT.get(this).setLeftDoorRotation(rotation);

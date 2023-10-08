@@ -7,6 +7,7 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.AbsoluteBlockPos;
 import mdteam.ait.core.helper.DesktopGenerator;
 import mdteam.ait.core.helper.TeleportHelper;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.impl.container.ServerPlayerEntitySyncHook;
 import net.minecraft.MinecraftVersion;
@@ -68,7 +69,7 @@ public class TARDISDesktop {
         this.interiorCornerPosList = list;
     }
     private BlockPos searchForDoorPosAndUpdate() {
-        // @TODO no door block entity
+        // @TODO cba
         return new BlockPos(0,0,0); // yum
 
         //BlockPos doorPos = this.interiorCornerPosList.get(0).offset(this.getSchema().getDoorPosition());
@@ -90,10 +91,10 @@ public class TARDISDesktop {
     private BlockPos getOffsetDoorPosition() {
         BlockPos doorPos = this.getInteriorDoorPos();
         BlockPos adjustedPos = new BlockPos(0,0,0);
-        Direction doorDirection = this.getInteriorDimension()
+        Direction doorDirection = /*this.getInteriorDimension()
                 .getBlockState(
                         doorPos)
-                .get(Properties.HORIZONTAL_FACING);
+                .get(Properties.HORIZONTAL_FACING);*/ Direction.NORTH;
 //        switch(doorDirection) {
 //            case NORTH -> adjustedPos = new BlockPos(doorPos.getX() + 0.5,doorPos.getY(),doorPos.getZ() - 1.5);
 //            case SOUTH -> adjustedPos = new BlockPos(doorPos.getX() + 0.5,doorPos.getY(),doorPos.getZ() + 1.5);
@@ -108,10 +109,10 @@ public class TARDISDesktop {
             this.generate();
         }
 
-        Direction doorDirection = this.getInteriorDimension()
+        Direction doorDirection = /*this.getInteriorDimension()
                 .getBlockState(
                         this.getInteriorDoorPos())
-                .get(Properties.HORIZONTAL_FACING);
+                .get(Properties.HORIZONTAL_FACING);*/ Direction.NORTH;
 
         TeleportHelper helper = new TeleportHelper(player.getUuid(),new AbsoluteBlockPos(this.getInteriorDimension(),doorDirection,this.getOffsetDoorPosition()));
         helper.teleport((ServerWorld) player.getWorld());
@@ -140,6 +141,8 @@ public class TARDISDesktop {
         AbsoluteBlockPos bottomLeft = new AbsoluteBlockPos(this.getInteriorDimension(), NbtHelper.toBlockPos(tag.getCompound("bottomLeft")));
         AbsoluteBlockPos topRight = new AbsoluteBlockPos(this.getInteriorDimension(),NbtHelper.toBlockPos(tag.getCompound("topRight")));
 
+        if (this.interiorCornerPosList == null) return;
+
         this.interiorCornerPosList.set(0, bottomLeft);
         this.interiorCornerPosList.set(1, topRight);
     }
@@ -151,12 +154,19 @@ public class TARDISDesktop {
             NbtCompound schema = new NbtCompound();
             SCHEMA_SERIALIZER.serialize(schema, interior.schema);
 
-            tag.put("doorPos",NbtHelper.fromBlockPos(interior.interiorDoorPos));
-
-            tag.put("bottomLeft", NbtHelper.fromBlockPos(interior.interiorCornerPosList.get(0)));
-            tag.put("topRight", NbtHelper.fromBlockPos(interior.interiorCornerPosList.get(1)));
-
+            if (interior.interiorDoorPos != null) {
+                tag.put("doorPos", NbtHelper.fromBlockPos(interior.interiorDoorPos));
+            }
+            if (interior.interiorCornerPosList != null) {
+                tag.put("bottomLeft", NbtHelper.fromBlockPos(interior.interiorCornerPosList.get(0)));
+                tag.put("topRight", NbtHelper.fromBlockPos(interior.interiorCornerPosList.get(1)));
+            }
             tag.put("schema", schema);
+        }
+        public NbtCompound serialize(TARDISDesktop interior) {
+            NbtCompound nbt = new NbtCompound();
+            this.serialize(nbt,interior);
+            return nbt;
         }
         public TARDISDesktop deserialize(NbtCompound nbt) {
             return new TARDISDesktop(SCHEMA_SERIALIZER.deserialize(nbt.getCompound("schema")),nbt);

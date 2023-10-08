@@ -2,12 +2,11 @@ package mdteam.ait.core.helper;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.desktop.DesktopSchema;
-import mdteam.ait.core.helper.structures.DesktopStructures;
+import mdteam.ait.core.helper.structures.DesktopStructure;
 import net.minecraft.block.Block;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
-import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -35,14 +34,14 @@ public class DesktopGenerator {
             //this.tardis.setInterior(this.interior);
         }
     }
-    private DesktopStructures structure;
+    private DesktopStructure structure;
     private String structureName;
     protected StructureTemplate template;
 
-    public DesktopGenerator(ServerWorld level, DesktopStructures structure) {
+    public DesktopGenerator(ServerWorld level, DesktopStructure structure) {
         this.structure = structure;
         this.structureName = structure.getStructureName();
-        //this.template = level.getStructureTemplateManager().getTemplate(this.structure.getLocation());
+        this.template = level.getStructureTemplateManager().getTemplate(this.structure.getLocation()).get();
     }
 
     public void placeStructure(ServerWorld level, BlockPos pos, Direction direction) {

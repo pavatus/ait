@@ -8,6 +8,7 @@ import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
+import mdteam.ait.core.helper.desktop.DesktopInit;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.util.Identifier;
@@ -44,7 +45,6 @@ public class AITMod implements ModInitializer {
 		FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
 		//FieldRegistrationHandler.register(AITDimensions.class, MOD_ID, false);
 		AIT_ITEM_GROUP.initialize();
-
-
+		DesktopInit.init();
 	}
 }
