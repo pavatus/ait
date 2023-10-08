@@ -2,15 +2,12 @@ package mdteam.ait;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.AITBlocks;
-import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.*;
 import mdteam.ait.core.components.block.exterior.ExteriorNBTComponent;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
-import mdteam.ait.core.AITItems;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.util.Identifier;
@@ -45,6 +42,7 @@ public class AITMod implements ModInitializer {
 		FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
+		FieldRegistrationHandler.register(AITDimensions.class, MOD_ID, false);
 		AIT_ITEM_GROUP.initialize();
 
 
