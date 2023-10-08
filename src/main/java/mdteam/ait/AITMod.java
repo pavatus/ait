@@ -42,7 +42,7 @@ public class AITMod implements ModInitializer {
 		FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
-		FieldRegistrationHandler.register(AITDimensions.class, MOD_ID, false);
+		//FieldRegistrationHandler.register(AITDimensions.class, MOD_ID, false);
 		AIT_ITEM_GROUP.initialize();
 
 

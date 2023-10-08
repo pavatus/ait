@@ -85,8 +85,9 @@ public abstract class DesktopSchema extends DesktopStructures {
             nbt.putString("id", interior.id);
         }
 
-       //public DesktopSchema deserialize(NbtCompound nbt) {
-       //    return TARDISInteriors.get(nbt.getString("id"));
-       //}
+       public DesktopSchema deserialize(NbtCompound nbt) {
+            return null; // @TODO no Desktop list to grab from
+           //return TARDISInteriors.get(nbt.getString("id"));
+       }
     }
 }
