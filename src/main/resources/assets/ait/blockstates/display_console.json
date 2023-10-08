@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "ait:block/display_console",
+      "y": 180
+    },
+    "facing=north": {
+      "model": "ait:block/display_console",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "ait:block/display_console",
+      "y": 270
+    },
+    "facing=west": {
+      "model": "ait:block/display_console",
+      "y": 0
+    }
+  }
+}

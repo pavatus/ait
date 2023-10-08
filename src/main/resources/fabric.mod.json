@@ -1,0 +1,52 @@
+{
+	"schemaVersion": 1,
+	"id": "ait",
+	"version": "${version}",
+	"name": "Adventures In Time",
+	"description": "A secret Fabric version of AIT developed by Loqor and L0AInk!",
+	"authors": [
+		"Loqor, L0AInk"
+	],
+	"contact": {
+		"homepage": "https://loqor.github.io",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/ait/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"mdteam.ait.AITMod"
+		],
+		"client": [
+          "mdteam.ait.client.AITModClient"
+		],
+		"fabric-datagen": [
+          "mdteam.ait.datagen.AITModDataGenerator"
+		],
+		"cardinal-components-item": [
+          "mdteam.ait.core.components.item.AITModItemComponents"
+		],
+		"cardinal-components-block": [
+          "mdteam.ait.core.components.block.AITModBlockComponents"
+		]
+	},
+	"mixins": [
+		"ait.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=${loader_version}",
+		"minecraft": "${minecraft_version}",
+		"java": ">=17",
+		"fabric-api": "*",
+		"fabric-key-binding-api-v1": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	},
+	"custom": {
+		"cardinal-components": [
+			"ait:radionbt"
+		]
+	}
+}

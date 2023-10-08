@@ -1,0 +1,6 @@
+{
+  "parent": "ait:block/radio_decommissioned",
+  "textures": {
+    "layer0": "ait:block/radio"
+  }
+}
