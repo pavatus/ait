@@ -20,8 +20,8 @@ import net.minecraft.util.math.RotationAxis;
 public class DisplayConsoleRenderer <T extends DisplayConsoleBlockEntity> implements BlockEntityRenderer<T> {
 
     public ModelPart displayConsole;
-    public static final Identifier EXTERIOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/display_console.png"));
-    public static final Identifier EXTERIOR_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/display_console_emission.png"));
+    public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/display_console.png"));
+    public static final Identifier CONSOLE_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/display_console_emission.png"));
 
     public DisplayConsoleRenderer(BlockEntityRendererFactory.Context ctx) {
         this.displayConsole = DisplayConsole.getTexturedModelData().createModel();
@@ -39,8 +39,8 @@ public class DisplayConsoleRenderer <T extends DisplayConsoleBlockEntity> implem
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         matrices.scale(0.9f, 0.9f, 0.9f);
-        this.displayConsole.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(EXTERIOR_TEXTURE)), light, overlay, 1, 1, 1, 1);
-        this.displayConsole.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(EXTERIOR_TEXTURE_EMISSION)), maxLight, overlay, 1, 1, 1, 1);
+        this.displayConsole.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(CONSOLE_TEXTURE)), light, overlay, 1, 1, 1, 1);
+        this.displayConsole.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(CONSOLE_TEXTURE_EMISSION)), maxLight, overlay, 1, 1, 1, 1);
         matrices.pop();
     }
 

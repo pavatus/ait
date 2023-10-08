@@ -46,7 +46,8 @@
 	},
 	"custom": {
 		"cardinal-components": [
-			"ait:radionbt"
+			"ait:radionbt",
+			"ait:exteriornbt"
 		]
 	}
 }

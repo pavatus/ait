@@ -4,11 +4,11 @@ import dev.onyxstudios.cca.api.v3.component.Component;
 
 public interface RotationNBTComponent extends Component {
 
-    public double getTuner();
-    public double getVolume();
-    public boolean isOn();
-    public void setTuner(double tuner);
-    public void setVolume(double volume);
-    public void turnOn(boolean isOn);
+    double getTuner();
+    double getVolume();
+    boolean isOn();
+    void setTuner(double tuner);
+    void setVolume(double volume);
+    void turnOn(boolean isOn);
 
 }

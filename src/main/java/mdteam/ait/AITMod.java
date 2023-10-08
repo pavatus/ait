@@ -5,6 +5,7 @@ import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.components.block.exterior.ExteriorNBTComponent;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
@@ -28,6 +29,9 @@ public class AITMod implements ModInitializer {
 	//Blocks/Block Entities
 	public static final ComponentKey<RadioNBTComponent> RADIONBT =
 			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "radionbt"), RadioNBTComponent.class);
+
+	public static final ComponentKey<ExteriorNBTComponent> EXTERIORNBT =
+			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "exteriornbt"), ExteriorNBTComponent.class);
 
 	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () -> Icon.of(AITItems.AITMODCREATIVETAB.getDefaultStack())).build();
 
