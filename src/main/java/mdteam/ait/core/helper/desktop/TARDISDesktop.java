@@ -2,6 +2,7 @@ package mdteam.ait.core.helper.desktop;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITDimensions;
+import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.AbsoluteBlockPos;
 import mdteam.ait.core.helper.DesktopGenerator;
@@ -9,6 +10,7 @@ import mdteam.ait.core.helper.TeleportHelper;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.impl.container.ServerPlayerEntitySyncHook;
 import net.minecraft.MinecraftVersion;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.DoubleBlockProperties;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,14 +50,14 @@ public class TARDISDesktop {
     public void setSchema(DesktopSchema schema) {
         this.schema = schema;
     }
-    public DesktopSchema getSchema() {return this.schema;}
+    public DesktopSchema getSchema() {return this.schema;}1
     public World getInteriorDimension() {
         if (this.tardisEntity == null) return null;
 
         return this.tardisEntity.getWorld().getServer().getWorld(AITDimensions.TARDIS_DIM_WORLD);
     }
     public BlockPos getInteriorDoorPos() {
-        if (this.interiorDoorPos != null /*&& this.getInteriorDimension().getBlockEntity(this.interiorDoorPos) instanceof InteriorDoorBlockEntity*/) {return this.interiorDoorPos;} // @TODO no interior door entity yet so
+        if (this.interiorDoorPos != null && this.getInteriorDimension().getBlockEntity(this.interiorDoorPos) instanceof DoorBlockEntity) {return this.interiorDoorPos;} // @TODO no interior door entity yet so
 
         return this.searchForDoorPosAndUpdate();
     }
@@ -69,20 +71,20 @@ public class TARDISDesktop {
         // @TODO no door block entity
         return new BlockPos(0,0,0); // yum
 
-//        BlockPos doorPos = this.interiorCornerPositions.get(0).offset(this.getSchema().getDoorPosition());
-//        System.out.println(doorPos);
-//
-//        if (!(this.getInteriorDimension().getBlockState(doorPos).getBlock() instanceof InteriorDoorBlock)) {
-//            doorPos = TARDISManager.getInstance().searchForDoorBlock(this.interiorCornerPositions);
-//        }
-//
-//        InteriorDoorBlockEntity door = (InteriorDoorBlockEntity) this.getInteriorDimension().getBlockEntity(doorPos);
-//        assert door != null;
-//        door.setTARDIS(this.tardis);
-//
-//        this.interiorDoorPos = doorPos;
-//
-//        return doorPos;
+        //BlockPos doorPos = this.interiorCornerPosList.get(0).offset(this.getSchema().getDoorPosition());
+        //System.out.println(doorPos);
+
+        //if (!(this.getInteriorDimension().getBlockState(doorPos).getBlock() instanceof DoorBlock)) {
+        //    doorPos = TARDISManager.getInstance().searchForDoorBlock(this.interiorCornerPosList);
+        //}
+
+        //DoorBlockEntity door = (DoorBlockEntity) this.getInteriorDimension().getBlockEntity(doorPos);
+        //assert door != null;
+        //door.setTARDIS(this.tardis);
+
+        //this.interiorDoorPos = doorPos;
+
+        //return doorPos;
     }
 
     private BlockPos getOffsetDoorPosition() {

@@ -32,7 +32,7 @@ public class DesktopGenerator {
             //this.interior.setDoorPosition(findTargetBlockPosInTemplate(this.template,pos,direction, TARDISInteriorDoors.INTERIOR_DOOR_BLOCK_LIST).get(0));
             //this.tardis.getInterior().setSchema(this.interior);
 
-//            this.tardis.setInterior(this.interior);
+            //this.tardis.setInterior(this.interior);
         }
     }
     private DesktopStructures structure;
