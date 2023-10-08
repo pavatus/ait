@@ -50,7 +50,7 @@ public class TARDISDesktop {
     public void setSchema(DesktopSchema schema) {
         this.schema = schema;
     }
-    public DesktopSchema getSchema() {return this.schema;}1
+    public DesktopSchema getSchema() {return this.schema;}
     public World getInteriorDimension() {
         if (this.tardisEntity == null) return null;
 
