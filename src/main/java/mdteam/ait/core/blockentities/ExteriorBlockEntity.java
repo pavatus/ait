@@ -4,10 +4,15 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.helper.AbsoluteBlockPos;
+import mdteam.ait.core.helper.TARDISUtil;
 import mdteam.ait.core.helper.desktop.TARDISDesktop;
+import mdteam.ait.core.tardis.Tardis;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -25,7 +30,6 @@ public class ExteriorBlockEntity extends BlockEntity {
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
         setExterior(getExterior());
-        setDesktop(getDesktop());
         setMaterialState(getMaterialState());
         setLeftDoorRot(getLeftDoorRotation());
         setRightDoorRot(getRightDoorRotation());
@@ -34,7 +38,12 @@ public class ExteriorBlockEntity extends BlockEntity {
     public static void tick(World world1, BlockPos pos, BlockState state1, ExteriorBlockEntity be) {
 
     }
-
+    public void onPlace(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+//        if (placer != null) {
+//            world.breakBlock(pos,false);
+//            TARDISUtil.create(new AbsoluteBlockPos(world,placer.getMovementDirection().getOpposite(),pos));
+//        }
+    }
     public void useOn(BlockHitResult hit, BlockState state, PlayerEntity player, World world, boolean sneaking) {
         if(getLeftDoorRotation() == 0) {
             setLeftDoorRot(1.2f);
@@ -53,6 +62,12 @@ public class ExteriorBlockEntity extends BlockEntity {
         }
     }
 
+    public Tardis getTardis() {
+        return TARDISUtil.getTardisFromUuid(EXTERIORNBT.get(this).getTardisUuid());
+    }
+    public void link(Tardis tardis) {
+        EXTERIORNBT.get(this).setTardisUuid(tardis.getUuid());
+    }
     public void setExterior(ExteriorEnum exterior) {
         EXTERIORNBT.get(this).setExterior(exterior);
     }
@@ -60,11 +75,7 @@ public class ExteriorBlockEntity extends BlockEntity {
     public ExteriorEnum getExterior() {
         return EXTERIORNBT.get(this).getExterior();
     }
-    public void setDesktop(TARDISDesktop desktop) {
-        desktop.link(this);
-        EXTERIORNBT.get(this).setDesktop(desktop);
-    }
-    public TARDISDesktop getDesktop() {return EXTERIORNBT.get(this).getDesktop();}
+    public TARDISDesktop getDesktop() {return this.getTardis().getDesktop();}
 
     public void setLeftDoorRot(float rotation) {
         EXTERIORNBT.get(this).setLeftDoorRotation(rotation);
@@ -99,4 +110,5 @@ public class ExteriorBlockEntity extends BlockEntity {
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
     }
+
 }

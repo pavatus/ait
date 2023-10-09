@@ -11,6 +11,8 @@ import net.minecraft.item.BlockItem;
 public class AITBlocks implements BlockRegistryContainer {
     public static final Block RADIO = new RadioBlock(FabricBlockSettings.create().nonOpaque());
     public static final Block DISPLAY_CONSOLE = new DisplayConsoleBlock(FabricBlockSettings.create().nonOpaque());
+
+    @NoBlockItem
     public static final Block EXTERIOR_BLOCK = new ExteriorBlock(FabricBlockSettings.create().nonOpaque());
 
     public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque());

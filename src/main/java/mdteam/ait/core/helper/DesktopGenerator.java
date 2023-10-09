@@ -3,6 +3,7 @@ package mdteam.ait.core.helper;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.desktop.DesktopSchema;
 import mdteam.ait.core.helper.structures.DesktopStructure;
+import mdteam.ait.core.tardis.Tardis;
 import net.minecraft.block.Block;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
@@ -17,9 +18,9 @@ import java.util.List;
 
 public class DesktopGenerator {
     public static class InteriorGenerator extends DesktopGenerator {
-        private ExteriorBlockEntity tardis;
+        private Tardis tardis;
         private DesktopSchema interior;
-        public InteriorGenerator(ExteriorBlockEntity tardis, ServerWorld level, DesktopSchema interior) {
+        public InteriorGenerator(Tardis tardis, ServerWorld level, DesktopSchema interior) {
             super(level, interior);
             this.tardis = tardis;
             this.interior = interior;

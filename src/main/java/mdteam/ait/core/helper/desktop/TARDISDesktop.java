@@ -3,6 +3,8 @@ package mdteam.ait.core.helper.desktop;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.*;
+import mdteam.ait.core.tardis.Tardis;
+import mdteam.ait.core.tardis.TardisData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
@@ -15,7 +17,7 @@ import java.util.List;
 
 public class TARDISDesktop {
     private DesktopSchema schema;
-    private ExteriorBlockEntity tardisEntity;
+    private Tardis tardis;
     private List<AbsoluteBlockPos> interiorCornerPosList;
     private BlockPos interiorDoorPos;
 
@@ -27,15 +29,15 @@ public class TARDISDesktop {
         this.loadCorners(nbt);
     }
 
-    public void link(ExteriorBlockEntity tardis) {
-        this.tardisEntity = tardis;
+    public void link(Tardis tardis) {
+        this.tardis = tardis;
     }
     public void setSchema(DesktopSchema schema) {
         this.schema = schema;
     }
     public DesktopSchema getSchema() {return this.schema;}
     public World getInteriorDimension() {
-        if (this.tardisEntity == null) return null;
+        if (this.tardis == null) return null;
 
         return TARDISUtil.getTardisDimension();
     }
@@ -107,7 +109,7 @@ public class TARDISDesktop {
         helper.teleport((ServerWorld) player.getWorld());
     }
     public void delete() {
-        DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(this.tardisEntity, (ServerWorld) this.getInteriorDimension(),this.getSchema());
+        DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(this.tardis, (ServerWorld) this.getInteriorDimension(),this.getSchema());
 //        generator.deleteInterior(); // @TODO no thread for deleting interiors yet, it was also pretty slow on box mod so maybe theres a faster way? - duzo
         this.interiorCornerPosList = null;
     }
@@ -116,7 +118,7 @@ public class TARDISDesktop {
     }
     public void generate(DesktopSchema schema) {
         this.interiorCornerPosList = DesktopUtil.getNextAvailableInteriorSpot();
-        DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(this.tardisEntity, (ServerWorld) this.getInteriorDimension(), schema);
+        DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(this.tardis, (ServerWorld) this.getInteriorDimension(), schema);
         generator.placeStructure((ServerWorld) this.getInteriorDimension(), this.interiorCornerPosList.get(0), Direction.SOUTH);
     }
     public boolean needsGeneration() {

@@ -1,7 +1,12 @@
 package mdteam.ait.core.helper;
 
+import mdteam.ait.AITMod;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -23,6 +28,31 @@ public class AbsoluteBlockPos extends BlockPos {
     public AbsoluteBlockPos(World dimension, BlockPos pos) {
         this(dimension, Direction.NORTH, pos);
     }
+
+    public NbtCompound writeToNbt() {
+        NbtCompound nbt = new NbtCompound();
+
+        nbt.putString("worldRegistry",this.dimension.getRegistryKey().getRegistry().toString());
+        nbt.putString("worldValue",this.dimension.getRegistryKey().getValue().toString());
+        nbt.put("pos",NbtHelper.fromBlockPos(this));
+        nbt.putInt("direction",this.direction.getId());
+
+        return nbt;
+    }
+    public static AbsoluteBlockPos readFromNbt(NbtCompound nbt) {
+        World dim = AITMod.mcServer.getWorld(World.OVERWORLD);
+        BlockPos pos = new BlockPos(0,0,0);
+        Direction dir = Direction.NORTH;
+
+        if (nbt.contains("worldRegistry") && nbt.contains("worldValue")) {
+            dim = AITMod.mcServer.getWorld(RegistryKey.of(RegistryKey.ofRegistry(new Identifier(nbt.getString("worldRegistry"))),new Identifier(nbt.getString("worldValue"))));
+        }
+        if (nbt.contains("pos")) pos = NbtHelper.toBlockPos(nbt.getCompound("pos"));
+        if (nbt.contains("direction")) dir = Direction.byId(nbt.getInt("direction"));
+
+        return new AbsoluteBlockPos(dim,dir,pos);
+    }
+
 
 //    public AbsoluteBlockPos(RegistryKey<World> dimension, BlockPos pos) {
 //        this(TARDISMod.server.getLevel(dimension),pos);

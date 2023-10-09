@@ -63,6 +63,10 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) {
+            exteriorBlockEntity.onPlace(world,pos,state,placer,itemStack);
+        }
     }
 
     @Nullable

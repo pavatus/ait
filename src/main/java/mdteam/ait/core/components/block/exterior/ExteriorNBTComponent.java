@@ -15,14 +15,11 @@ import java.util.UUID;
 import static mdteam.ait.AITMod.EXTERIORNBT;
 
 public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedComponent {
-    public static final DesktopSchema DEFAULT_DESKTOP_SCHEMA = DesktopInit.get("war");
-    public static final TARDISDesktop.Serializer DESKTOP_SERIALIZER = new TARDISDesktop.Serializer();
-
     public ExteriorEnum currentExterior;
     public BlockEntity blockEntity;
     public MaterialStateEnum materialState;
     public float leftDoorRotation, rightDoorRotation;
-    public TARDISDesktop desktop;
+    public UUID uuid;
 
     public ExteriorNBTComponent(BlockEntity blockentity) {
         this.currentExterior = ExteriorEnum.SHELTER;
@@ -30,7 +27,7 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
         this.materialState = MaterialStateEnum.SOLID;
         this.leftDoorRotation = 0;
         this.rightDoorRotation = 0;
-        this.desktop = new TARDISDesktop(DEFAULT_DESKTOP_SCHEMA);
+        this.uuid = UUID.randomUUID();
     }
 
     @Override
@@ -78,13 +75,13 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
     }
 
     @Override
-    public TARDISDesktop getDesktop() {
-        return this.desktop;
+    public UUID getTardisUuid() {
+        return this.uuid;
     }
 
     @Override
-    public void setDesktop(TARDISDesktop desktop) {
-        this.desktop = desktop;
+    public void setTardisUuid(UUID uuid) {
+        this.uuid = uuid;
         EXTERIORNBT.sync(this.blockEntity);
     }
 
@@ -94,7 +91,7 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
         if(tag.contains("materialState")) this.materialState = MaterialStateEnum.values()[tag.getInt("materialState")]; EXTERIORNBT.sync(this.blockEntity);
         if(tag.contains("leftDoorRotation")) this.leftDoorRotation = tag.getFloat("leftDoorRotation"); EXTERIORNBT.sync(this.blockEntity);
         if(tag.contains("rightDoorRotation")) this.rightDoorRotation = tag.getFloat("rightDoorRotation"); EXTERIORNBT.sync(this.blockEntity);
-        if(tag.contains("desktop")) this.desktop = DESKTOP_SERIALIZER.deserialize(tag.getCompound("desktop")); EXTERIORNBT.sync(this.blockEntity);
+        if(tag.contains("uuid")) this.uuid = tag.getUuid("uuid"); EXTERIORNBT.sync(this.blockEntity);
     }
 
     @Override
@@ -103,6 +100,6 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
         tag.putInt("materialState", this.materialState.ordinal());
         tag.putFloat("leftDoorRotation", this.leftDoorRotation);
         tag.putFloat("rightDoorRotation", this.rightDoorRotation);
-        tag.put("desktop",DESKTOP_SERIALIZER.serialize(this.desktop));
+        tag.putUuid("uuid",this.uuid);
     }
 }
