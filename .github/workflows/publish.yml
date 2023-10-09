@@ -1,6 +1,6 @@
 name: Publish on GitHub
 
-on: [ pull_request, workflow_dispatch ]
+on: [ pull_request, workflow_dispatch, push ]
 
 env:
   JAVA_VERSION: 17
