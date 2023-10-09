@@ -13,11 +13,11 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import static mdteam.ait.AITMod.EXTERIORNBT;
+import static mdteam.ait.AITMod.TARDISNBT;
 
 public class DoorBlockEntity extends BlockEntity {
     public DoorBlockEntity(BlockPos pos, BlockState state) {
-        super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
+        super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
         setExterior(getExterior());
         setMaterialState(getMaterialState());
         setLeftDoorRot(getLeftDoorRotation());
@@ -38,35 +38,43 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     public void setExterior(ExteriorEnum exterior) {
-        EXTERIORNBT.get(this).setExterior(exterior);
+        TARDISNBT.get(this).setExterior(exterior);
     }
 
     public ExteriorEnum getExterior() {
-        return EXTERIORNBT.get(this).getExterior();
+        return TARDISNBT.get(this).getExterior();
+    }
+
+    public void setExteriorBlock(ExteriorBlockEntity exterior) {
+        TARDISNBT.get(this).setExteriorBlock(exterior);
+    }
+
+    public ExteriorBlockEntity getExteriorBlock() {
+        return TARDISNBT.get(this).getExteriorBlock();
     }
 
     public void setLeftDoorRot(float rotation) {
-        EXTERIORNBT.get(this).setLeftDoorRotation(rotation);
+        TARDISNBT.get(this).setLeftDoorRotation(rotation);
     }
 
     public void setRightDoorRot(float rotation) {
-        EXTERIORNBT.get(this).setRightDoorRotation(rotation);
+        TARDISNBT.get(this).setRightDoorRotation(rotation);
     }
 
     public float getLeftDoorRotation() {
-        return EXTERIORNBT.get(this).getLeftDoorRotation();
+        return TARDISNBT.get(this).getLeftDoorRotation();
     }
 
     public float getRightDoorRotation() {
-        return EXTERIORNBT.get(this).getRightDoorRotation();
+        return TARDISNBT.get(this).getRightDoorRotation();
     }
 
     public void setMaterialState(MaterialStateEnum materialState) {
-        EXTERIORNBT.get(this).setMaterialState(materialState);
+        TARDISNBT.get(this).setMaterialState(materialState);
     }
 
     public MaterialStateEnum getMaterialState() {
-        return EXTERIORNBT.get(this).getCurrentMaterialState();
+        return TARDISNBT.get(this).getCurrentMaterialState();
     }
 
     @Override

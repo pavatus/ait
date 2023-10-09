@@ -29,6 +29,9 @@
 		],
 		"cardinal-components-block": [
           "mdteam.ait.core.components.block.AITModBlockComponents"
+		],
+		"cardinal-components-world": [
+			"mdteam.ait.core.components.world.AITModWorldComponents"
 		]
 	},
 	"mixins": [
@@ -47,7 +50,8 @@
 	"custom": {
 		"cardinal-components": [
 			"ait:radionbt",
-			"ait:exteriornbt"
+			"ait:exteriornbt",
+			"ait:tardisnbt"
 		]
 	}
 }
