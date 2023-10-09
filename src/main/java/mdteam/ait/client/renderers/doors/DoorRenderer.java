@@ -2,6 +2,7 @@ package mdteam.ait.client.renderers.doors;
 
 import com.google.common.collect.ImmutableMap;
 import mdteam.ait.AITMod;
+import mdteam.ait.client.models.doors.FalloutDoor;
 import mdteam.ait.client.models.exteriors.FalloutExterior;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
@@ -23,14 +24,14 @@ import net.minecraft.util.math.RotationAxis;
 import java.util.Map;
 
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
-    public static final Identifier EXTERIOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/exteriors/shelter.png"));
+    public static final Identifier EXTERIOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/door/shelter_door.png"));
     public static final Identifier EXTERIOR_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/shelter_emission.png");
     private final Map<ExteriorEnum, ModelPart> exteriormap;
 
 
     public Map<ExteriorEnum, ModelPart> getModels() {
         ImmutableMap.Builder<ExteriorEnum, ModelPart> builder = ImmutableMap.builder();
-        builder.put(ExteriorEnum.SHELTER, FalloutExterior.getTexturedModelData().createModel());
+        builder.put(ExteriorEnum.SHELTER, FalloutDoor.getTexturedModelData().createModel());
         return builder.build();
     }
     public DoorRenderer(BlockEntityRendererFactory.Context ctx) {
@@ -49,9 +50,9 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         Model exteriorModel = new FalloutExterior(this.exteriormap.get(entity.getExterior()));
         if(exteriorModel != null) {
-            ((FalloutExterior) exteriorModel).door.yaw = entity.getLeftDoorRotation();
+            ((FalloutDoor) exteriorModel).door.yaw = -entity.getLeftDoorRotation();
             exteriorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(EXTERIOR_TEXTURE)), light, overlay, 1, 1, 1, 1);
-            exteriorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(EXTERIOR_TEXTURE_EMISSION)), light, overlay, 1, 1, 1, 1);
+            //exteriorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(EXTERIOR_TEXTURE_EMISSION)), light, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }
