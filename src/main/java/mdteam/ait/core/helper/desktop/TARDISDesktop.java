@@ -4,9 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.helper.AbsoluteBlockPos;
-import mdteam.ait.core.helper.DesktopGenerator;
-import mdteam.ait.core.helper.TeleportHelper;
+import mdteam.ait.core.helper.*;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.impl.container.ServerPlayerEntitySyncHook;
@@ -55,7 +53,7 @@ public class TARDISDesktop {
     public World getInteriorDimension() {
         if (this.tardisEntity == null) return null;
 
-        return this.tardisEntity.getWorld().getServer().getWorld(AITDimensions.TARDIS_DIM_WORLD);
+        return DimensionUtil.getTardisDimension();
     }
     public BlockPos getInteriorDoorPos() {
         if (this.interiorDoorPos != null && this.getInteriorDimension().getBlockEntity(this.interiorDoorPos) instanceof DoorBlockEntity) {return this.interiorDoorPos;} // @TODO no interior door entity yet so
@@ -68,24 +66,31 @@ public class TARDISDesktop {
     public void setInteriorCornerPositions(List<AbsoluteBlockPos> list) {
         this.interiorCornerPosList = list;
     }
+
+    /**
+     * Not centered properly. just kinda winging it
+     * @return
+     */
+    public BlockPos getCentreBlockPos() {
+        return this.getInteriorCornerPositions().get(0).add(16,0,16);
+    }
     private BlockPos searchForDoorPosAndUpdate() {
         // @TODO cba
-        return new BlockPos(0,0,0); // yum
-
-        //BlockPos doorPos = this.interiorCornerPosList.get(0).offset(this.getSchema().getDoorPosition());
-        //System.out.println(doorPos);
-
-        //if (!(this.getInteriorDimension().getBlockState(doorPos).getBlock() instanceof DoorBlock)) {
-        //    doorPos = TARDISManager.getInstance().searchForDoorBlock(this.interiorCornerPosList);
-        //}
-
-        //DoorBlockEntity door = (DoorBlockEntity) this.getInteriorDimension().getBlockEntity(doorPos);
-        //assert door != null;
-        //door.setTARDIS(this.tardis);
-
-        //this.interiorDoorPos = doorPos;
-
-        //return doorPos;
+        return this.getCentreBlockPos().add(0,8,0); // yum
+//        BlockPos doorPos = this.interiorCornerPosList.get(0).add(this.getSchema().getDoorPosition());
+//        System.out.println(doorPos);
+//
+//        if (!(this.getInteriorDimension().getBlockState(doorPos).getBlock() instanceof DoorBlock)) {
+//            doorPos = TARDISManager.getInstance().searchForDoorBlock(this.interiorCornerPosList);
+//        }
+//
+//        DoorBlockEntity door = (DoorBlockEntity) this.getInteriorDimension().getBlockEntity(doorPos);
+//        assert door != null;
+//        door.setTARDIS(this.tardis);
+//
+//        this.interiorDoorPos = doorPos;
+//
+//        return doorPos;
     }
 
     private BlockPos getOffsetDoorPosition() {
@@ -101,7 +106,7 @@ public class TARDISDesktop {
 //            case EAST -> adjustedPos = new BlockPos(doorPos.getX() + 1.5,doorPos.getY(),doorPos.getZ() + 0.5);
 //            case WEST -> adjustedPos = new BlockPos(doorPos.getX() - 1.5,doorPos.getY(),doorPos.getZ() + 0.5);
 //        }
-        return adjustedPos;
+        return doorPos;
     }
 
     public void teleportToDoor(PlayerEntity player) {
@@ -126,11 +131,7 @@ public class TARDISDesktop {
         this.generate(this.getSchema());
     }
     public void generate(DesktopSchema schema) {
-        this.interiorCornerPosList = new ArrayList<>(); // TARDISManager.getInstance().getNextAvailableInteriorSpot(); // @TODO no TARDISManager and i cant be assed doing it right now just someone else copy it off my mod
-        this.interiorCornerPosList.add(new AbsoluteBlockPos(this.getInteriorDimension(),new BlockPos(0,0,0)));
-        this.interiorCornerPosList.add(new AbsoluteBlockPos(this.getInteriorDimension(),this.interiorCornerPosList.get(0).add(256,0,256)));
-
-
+        this.interiorCornerPosList = DesktopUtil.getNextAvailableInteriorSpot();
         DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(this.tardisEntity, (ServerWorld) this.getInteriorDimension(), schema);
         generator.placeStructure((ServerWorld) this.getInteriorDimension(), this.interiorCornerPosList.get(0), Direction.SOUTH);
     }

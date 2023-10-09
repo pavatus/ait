@@ -1,5 +1,6 @@
 package mdteam.ait;
 
+import com.google.common.eventbus.Subscribe;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import mdteam.ait.core.*;
@@ -11,7 +12,13 @@ import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import mdteam.ait.core.helper.desktop.DesktopInit;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.minecraft.client.util.telemetry.WorldLoadedEvent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.profiling.jfr.event.WorldLoadFinishedEvent;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +37,7 @@ public class AITMod implements ModInitializer {
 
 	public static final ComponentKey<ExteriorNBTComponent> EXTERIORNBT =
 			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "exteriornbt"), ExteriorNBTComponent.class);
-
+	public static MinecraftServer mcServer = null;
 	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () -> Icon.of(AITItems.AITMODCREATIVETAB.getDefaultStack())).build();
 
 	public static final String MOD_ID = "ait";
@@ -46,5 +53,17 @@ public class AITMod implements ModInitializer {
 		//FieldRegistrationHandler.register(AITDimensions.class, MOD_ID, false);
 		AIT_ITEM_GROUP.initialize();
 		DesktopInit.init();
+
+		ServerWorldEvents.LOAD.register((server, world) -> {
+			if (world.getRegistryKey().equals(World.OVERWORLD)) {
+				mcServer = server;
+			}
+		});
+		ServerWorldEvents.UNLOAD.register((server, world) -> {
+			if (world.getRegistryKey().equals(World.OVERWORLD)) {
+				mcServer = null; // Prevents an annoying crash
+			}
+		});
 	}
+
 }
