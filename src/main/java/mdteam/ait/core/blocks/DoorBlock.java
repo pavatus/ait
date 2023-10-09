@@ -50,7 +50,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof DoorBlockEntity doorBlock) {
-            doorBlock.useOn(hit, state, player, world, player.isSneaking());
+            //doorBlock.useOn(hit, state, player, world, player.isSneaking());
         }
         return ActionResult.CONSUME;
     }
@@ -65,11 +65,11 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
         return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, (world1, pos, state1, be) -> DoorBlockEntity.tick(world1, pos, state1, be));
-    }
+    //@Nullable
+    //@Override
+    //public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+    //    return checkType(type, AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, (world1, pos, state1, be) -> DoorBlockEntity.tick(world1, pos, state1, be));
+    //}
 
     @Nullable
     @Override

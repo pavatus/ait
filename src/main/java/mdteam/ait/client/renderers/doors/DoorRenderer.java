@@ -48,12 +48,12 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         matrices.translate(0.5, 0, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-        Model exteriorModel = new FalloutExterior(this.exteriormap.get(entity.getExterior()));
-        if(exteriorModel != null) {
-            ((FalloutDoor) exteriorModel).door.yaw = -entity.getLeftDoorRotation();
-            exteriorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(EXTERIOR_TEXTURE)), light, overlay, 1, 1, 1, 1);
-            //exteriorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(EXTERIOR_TEXTURE_EMISSION)), light, overlay, 1, 1, 1, 1);
-        }
+        //Model exteriorModel = new FalloutExterior(this.exteriormap.get(entity.getExterior()));
+        //if(exteriorModel != null) {
+        //    ((FalloutDoor) exteriorModel).door.yaw = -entity.getLeftDoorRotation();
+        //    exteriorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(EXTERIOR_TEXTURE)), light, overlay, 1, 1, 1, 1);
+        //    //exteriorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(EXTERIOR_TEXTURE_EMISSION)), light, overlay, 1, 1, 1, 1);
+        //}
         matrices.pop();
     }
 

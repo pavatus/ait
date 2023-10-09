@@ -2,6 +2,7 @@ package mdteam.ait.datagen;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.datagen.datagen_providers.AITModelProvider;
@@ -71,6 +72,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	public AITLanguageProvider addEnglishTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
 		AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
+		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
@@ -89,6 +91,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	public AITLanguageProvider addFrenchTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
 		AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Mod de stuff");
+		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
@@ -108,6 +111,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	public AITLanguageProvider addSpanishTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
 		AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Mod de stuff");
+		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");

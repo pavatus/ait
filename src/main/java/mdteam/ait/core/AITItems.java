@@ -10,5 +10,5 @@ import net.minecraft.item.Item;
 public class AITItems implements ItemRegistryContainer {
     public static final Item AITMODCREATIVETAB = new Item(new OwoItemSettings());
 
-    public static final Item TARDIS_ITEM = new TardisItemBuilder(new OwoItemSettings());
+    public static final Item TARDIS_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 }

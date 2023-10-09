@@ -80,11 +80,12 @@ public abstract class DesktopSchema extends DesktopStructure {
 
     public static class Serializer {
         public void serialize(NbtCompound nbt, DesktopSchema interior) {
-            nbt.putString("id", interior.id);
+            if(interior.id != null) nbt.putString("id", interior.id);
         }
 
        public DesktopSchema deserialize(NbtCompound nbt) {
-           return DesktopInit.get(nbt.getString("id"));
+           if(nbt.contains("id")) return DesktopInit.get(nbt.getString("id"));
+           return null;
        }
     }
 }
