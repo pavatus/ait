@@ -47,6 +47,8 @@ public class TARDISUtil {
         UUID uuid = UUID.randomUUID();
         TARDISDesktop desktop = new TARDISDesktop(schema);
 
+        System.out.println(schema);
+
         Tardis tardis = new Tardis(uuid,desktop,position);
         getComponent().putTardis(tardis);
         placeExterior(tardis);

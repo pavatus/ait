@@ -18,34 +18,35 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class TardisItemBuilder extends Item {
-    public static final DesktopSchema DEFAULT_INTERIOR = DesktopInit.get("war");
+    public static final String DEFAULT_INTERIOR = "war";
     public static final ExteriorEnum DEFAULT_EXTERIOR = ExteriorEnum.SHELTER;
 
-    private DesktopSchema desktop;
+    private String desktop;
     private ExteriorEnum exterior;
 
-    public TardisItemBuilder(Settings settings,ExteriorEnum exterior, DesktopSchema desktop) {
+    public TardisItemBuilder(Settings settings,ExteriorEnum exterior, String desktopId) {
         super(settings);
         this.exterior = exterior;
-        this.desktop = desktop;
+        this.desktop = desktopId;
     }
     public TardisItemBuilder(Settings settings, ExteriorEnum exterior) {
         this(settings,exterior,DEFAULT_INTERIOR);
     }
     public TardisItemBuilder(Settings settings) {
-        this(settings,DEFAULT_EXTERIOR,DEFAULT_INTERIOR);
+        this(settings,DEFAULT_EXTERIOR);
     }
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        BlockPos pos = context.getBlockPos();
+        BlockPos pos = context.getBlockPos().up();
         World level = context.getWorld();
         AbsoluteBlockPos absolutePos = new AbsoluteBlockPos(level,pos);
         PlayerEntity player = context.getPlayer();
         Hand hand = context.getHand();
 
         if (!level.isClient() && hand == Hand.MAIN_HAND) {
-            TARDISUtil.create(absolutePos,exterior,desktop);
+            System.out.println(this.desktop);
+            TARDISUtil.create(absolutePos,this.exterior,DesktopInit.get(this.desktop));
             context.getStack().decrement(1);
         }
         return ActionResult.SUCCESS;

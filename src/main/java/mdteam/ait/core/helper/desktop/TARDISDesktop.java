@@ -37,8 +37,6 @@ public class TARDISDesktop {
     }
     public DesktopSchema getSchema() {return this.schema;}
     public World getInteriorDimension() {
-        if (this.tardis == null) return null;
-
         return TARDISUtil.getTardisDimension();
     }
     public BlockPos getInteriorDoorPos() {

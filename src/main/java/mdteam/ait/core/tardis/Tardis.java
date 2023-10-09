@@ -17,6 +17,7 @@ public class Tardis implements TardisData {
     public Tardis(UUID uuid, TARDISDesktop desktop, AbsoluteBlockPos pos) {
         this.uuid = uuid;
         this.desktop = desktop;
+        this.desktop.link(this);
         this.pos = pos;
     }
 
