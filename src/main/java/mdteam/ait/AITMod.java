@@ -64,6 +64,7 @@ public class AITMod implements ModInitializer {
 		ServerWorldEvents.UNLOAD.register((server, world) -> {
 			if (world.getRegistryKey() == World.OVERWORLD) {
 				mcServer = null; // Prevents an annoying crash
+				tardisListComponent = null;
 			}
 		});
 	}
