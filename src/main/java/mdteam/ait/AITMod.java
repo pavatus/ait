@@ -38,6 +38,7 @@ public class AITMod implements ModInitializer {
 	public static final ComponentKey<TARDISListComponent> TARDISNBT =
 			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "tardisnbt"), TARDISListComponent.class);
 	public static MinecraftServer mcServer = null;
+	public static TARDISListComponent tardisListComponent = null;
 	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () -> Icon.of(AITItems.AITMODCREATIVETAB.getDefaultStack())).build();
 
 	public static final String MOD_ID = "ait";
@@ -55,12 +56,13 @@ public class AITMod implements ModInitializer {
 		DesktopInit.init();
 
 		ServerWorldEvents.LOAD.register((server, world) -> {
-			if (world.getRegistryKey().equals(World.OVERWORLD)) {
+			if (world.getRegistryKey() == World.OVERWORLD) {
 				mcServer = server;
+				tardisListComponent = world.getComponent(TARDISNBT);
 			}
 		});
 		ServerWorldEvents.UNLOAD.register((server, world) -> {
-			if (world.getRegistryKey().equals(World.OVERWORLD)) {
+			if (world.getRegistryKey() == World.OVERWORLD) {
 				mcServer = null; // Prevents an annoying crash
 			}
 		});

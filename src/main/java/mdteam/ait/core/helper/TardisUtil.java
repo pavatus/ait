@@ -29,7 +29,7 @@ public class TardisUtil {
         return getTardisDimension(AITMod.mcServer);
     }
     public static TARDISListComponent getComponent() {
-        return TARDISNBT.get(mcServer.getWorld(World.OVERWORLD));
+        return TARDISNBT.get(AITMod.tardisListComponent);
     }
     public static List<Tardis> getTardises() {
         return getComponent().getTardises();
