@@ -11,7 +11,7 @@ public class DesktopUtil {
         List<AbsoluteBlockPos> list = new ArrayList<>();
 
         AbsoluteBlockPos bottomLeft = generateRandomPosInTARDISDim();
-        AbsoluteBlockPos topRight = new AbsoluteBlockPos(TARDISUtil.getTardisDimension(), bottomLeft.add(256,0,256));
+        AbsoluteBlockPos topRight = new AbsoluteBlockPos(TardisUtil.getTardisDimension(), bottomLeft.add(256,0,256));
 
         list.add(bottomLeft);
         list.add(topRight);
@@ -23,7 +23,7 @@ public class DesktopUtil {
 
         int x = random.nextInt(100000);
         int z = random.nextInt(100000);
-        AbsoluteBlockPos pos = new AbsoluteBlockPos(TARDISUtil.getTardisDimension(),new BlockPos(x,0,z));
+        AbsoluteBlockPos pos = new AbsoluteBlockPos(TardisUtil.getTardisDimension(),new BlockPos(x,0,z));
         return pos;
     }
 }

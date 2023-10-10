@@ -1,10 +1,8 @@
 package mdteam.ait.core.helper.desktop;
 
 import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.*;
 import mdteam.ait.core.tardis.Tardis;
-import mdteam.ait.core.tardis.TardisData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
@@ -37,7 +35,7 @@ public class TARDISDesktop {
     }
     public DesktopSchema getSchema() {return this.schema;}
     public World getInteriorDimension() {
-        return TARDISUtil.getTardisDimension();
+        return TardisUtil.getTardisDimension();
     }
     public BlockPos getInteriorDoorPos() {
         if (this.interiorDoorPos != null && this.getInteriorDimension().getBlockEntity(this.interiorDoorPos) instanceof DoorBlockEntity) {return this.interiorDoorPos;} // @TODO no interior door entity yet so

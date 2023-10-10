@@ -1,11 +1,9 @@
 package mdteam.ait.core.blockentities;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.helper.AbsoluteBlockPos;
-import mdteam.ait.core.helper.TARDISUtil;
+import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.helper.desktop.TARDISDesktop;
 import mdteam.ait.core.tardis.Tardis;
 import net.minecraft.block.BlockState;
@@ -20,11 +18,9 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.security.InvalidParameterException;
 import java.util.UUID;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
-import static mdteam.ait.AITMod.RADIONBT;
 
 public class ExteriorBlockEntity extends BlockEntity {
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
@@ -62,8 +58,14 @@ public class ExteriorBlockEntity extends BlockEntity {
         }
     }
 
+    public UUID getTardisUuid() {
+        return EXTERIORNBT.get(this).getTardisUuid();
+    }
     public Tardis getTardis() {
-        return TARDISUtil.getTardisFromUuid(EXTERIORNBT.get(this).getTardisUuid());
+        return TardisUtil.getTardisFromUuid(getTardisUuid());
+    }
+    public Tardis tardis() {
+        return this.getTardis();
     }
     public void link(Tardis tardis) {
         EXTERIORNBT.get(this).setTardisUuid(tardis.getUuid());

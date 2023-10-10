@@ -2,7 +2,9 @@ package mdteam.ait.core.tardis;
 
 import mdteam.ait.core.helper.AbsoluteBlockPos;
 import mdteam.ait.core.helper.desktop.TARDISDesktop;
+import mdteam.ait.core.tardis.travel.TardisTravel;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.World;
 
 import java.util.UUID;
 
@@ -10,9 +12,11 @@ import static mdteam.ait.AITMod.EXTERIORNBT;
 
 public class Tardis implements TardisData {
     public static final TARDISDesktop.Serializer DESKTOP_SERIALIZER = new TARDISDesktop.Serializer();
+    public static final TardisTravel.Serializer TRAVEL_SERIALIZER = new TardisTravel.Serializer();
     private TARDISDesktop desktop;
     private UUID uuid;
     private AbsoluteBlockPos pos;
+    private TardisTravel travel;
 
     public Tardis(UUID uuid, TARDISDesktop desktop, AbsoluteBlockPos pos) {
         this.uuid = uuid;
@@ -25,6 +29,16 @@ public class Tardis implements TardisData {
         this.readFromNbt(nbt);
     }
 
+    public TardisTravel getTravel() {
+        if (this.travel == null) this.travel = new TardisTravel(this);
+
+        return this.travel;
+    }
+
+    public World world() {
+        return this.getPosition().getDimension();
+    }
+
     @Override
     public NbtCompound writeToNbt() {
         NbtCompound nbt = new NbtCompound();
@@ -32,6 +46,7 @@ public class Tardis implements TardisData {
         nbt.put("desktop",DESKTOP_SERIALIZER.serialize(this.desktop));
         nbt.putUuid("uuid",this.uuid);
         nbt.put("position",this.pos.writeToNbt());
+        nbt.put("travel",TRAVEL_SERIALIZER.serialize(this.getTravel()));
 
         return nbt;
     }
@@ -41,6 +56,7 @@ public class Tardis implements TardisData {
         if(nbt.contains("desktop")) this.desktop = DESKTOP_SERIALIZER.deserialize(nbt.getCompound("desktop"));
         if(nbt.contains("uuid")) this.uuid = nbt.getUuid("uuid");
         if(nbt.contains("position")) this.pos = AbsoluteBlockPos.readFromNbt(nbt.getCompound("position"));
+        if(nbt.contains("travel")) this.travel = TRAVEL_SERIALIZER.deserialize(nbt.getCompound("travel"));
     }
 
     @Override

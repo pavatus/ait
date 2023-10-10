@@ -48,6 +48,7 @@ public class TARDISListComponent implements TARDISListWorldComponent, AutoSynced
                 this.tardisList.add(new Tardis((NbtCompound) nbt));
             });
         }
+        System.out.println(this.tardisList);
         TARDISNBT.sync(this.world);
     }
 

@@ -1,29 +1,27 @@
 package mdteam.ait.core.helper;
 
+import com.mojang.logging.LogUtils;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.components.world.tardis.TARDISListComponent;
-import mdteam.ait.core.helper.desktop.DesktopInit;
 import mdteam.ait.core.helper.desktop.DesktopSchema;
 import mdteam.ait.core.helper.desktop.TARDISDesktop;
-import mdteam.ait.core.helper.desktop.impl.WarDesktop;
 import mdteam.ait.core.tardis.Tardis;
-import mdteam.ait.core.tardis.TardisData;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 
-import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
 import static mdteam.ait.AITMod.TARDISNBT;
 import static mdteam.ait.AITMod.mcServer;
 
-public class TARDISUtil {
+public class TardisUtil {
     public static ServerWorld getTardisDimension(MinecraftServer server) {
         return server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
     }
@@ -65,5 +63,18 @@ public class TARDISUtil {
         world.addBlockEntity(entity);
 
         return (ExteriorBlockEntity) world.getBlockEntity(tardis.getPosition());
+    }
+
+    public static void updateBlockEntity(Tardis tardis) {
+        if (tardis.world().isClient()) return;
+
+        BlockEntity entity = tardis.world().getBlockEntity(tardis.getPosition());
+
+        if (!(entity instanceof ExteriorBlockEntity)) {
+            LogUtils.getLogger().error("Could not find Exterior Block Entity at " + tardis.getPosition().toString() + " when trying to update!\nInstead got: " + entity);
+            return;
+        }
+
+        ((ExteriorBlockEntity) entity).link(tardis);
     }
 }
