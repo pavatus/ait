@@ -27,7 +27,6 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
         this.materialState = MaterialStateEnum.SOLID;
         this.leftDoorRotation = 0;
         this.rightDoorRotation = 0;
-        this.uuid = UUID.randomUUID();
     }
 
     @Override
@@ -100,6 +99,8 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
         tag.putInt("materialState", this.materialState.ordinal());
         tag.putFloat("leftDoorRotation", this.leftDoorRotation);
         tag.putFloat("rightDoorRotation", this.rightDoorRotation);
-        tag.putUuid("uuid",this.uuid);
+        if(this.uuid != null)
+            tag.putUuid("uuid",this.uuid);
+        else this.setTardisUuid(new UUID(1, 1));
     }
 }

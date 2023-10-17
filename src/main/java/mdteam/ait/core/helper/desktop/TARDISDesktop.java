@@ -3,6 +3,7 @@ package mdteam.ait.core.helper.desktop;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.helper.*;
 import mdteam.ait.core.tardis.Tardis;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
@@ -91,7 +92,7 @@ public class TARDISDesktop {
         return doorPos;
     }
 
-    public void teleportToDoor(PlayerEntity player) {
+    public void teleportToDoor(Entity entity) {
         if (this.needsGeneration()) {
             this.generate();
         }
@@ -101,8 +102,8 @@ public class TARDISDesktop {
                         this.getInteriorDoorPos())
                 .get(Properties.HORIZONTAL_FACING);*/ Direction.NORTH;
 
-        TeleportHelper helper = new TeleportHelper(player.getUuid(),new AbsoluteBlockPos(this.getInteriorDimension(),doorDirection,this.getOffsetDoorPosition()));
-        helper.teleport((ServerWorld) player.getWorld());
+        TeleportHelper helper = new TeleportHelper(entity.getUuid(),new AbsoluteBlockPos(this.getInteriorDimension(),doorDirection,this.getOffsetDoorPosition()));
+        helper.teleport((ServerWorld) entity.getWorld());
     }
     public void delete() {
         DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(this.tardis, (ServerWorld) this.getInteriorDimension(),this.getSchema());

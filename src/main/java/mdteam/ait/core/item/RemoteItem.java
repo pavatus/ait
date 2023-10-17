@@ -2,13 +2,26 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.AbsoluteBlockPos;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.UUID;
 
 public class RemoteItem extends TardisLinkableItem {
+
+    private java.util.UUID UUID;
+
     public RemoteItem(Settings settings) {
         super(settings);
     }
@@ -26,6 +39,7 @@ public class RemoteItem extends TardisLinkableItem {
                 if (exterior.tardis() == null) return ActionResult.FAIL;
 
                 this.link(exterior.tardis());
+                this.UUID = exterior.tardis().getUuid();
 
                 return ActionResult.SUCCESS;
             }
@@ -38,5 +52,18 @@ public class RemoteItem extends TardisLinkableItem {
         }
 
         return super.useOnBlock(context);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        if (Screen.hasShiftDown()) {
+            if(this.UUID == null)
+                tooltip.add(Text.literal("When a TARDIS is linked, it's UUID will show here.").fillStyle(Style.EMPTY.withBold(true)));
+            else
+                tooltip.add(Text.literal(this.UUID.toString()).fillStyle(Style.EMPTY.withBold(true)));
+        } else {
+            tooltip.add(Text.of("Hold shift for more info"));
+        }
+        super.appendTooltip(stack, world, tooltip, context);
     }
 }

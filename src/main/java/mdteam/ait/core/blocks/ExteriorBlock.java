@@ -10,6 +10,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -20,6 +21,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
@@ -31,19 +33,18 @@ import org.jetbrains.annotations.Nullable;
 
 public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
-    VoxelShape shape;
-
-    public static final VoxelShape DEFAULT_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 16.0);
+    public static final VoxelShape PZ = Block.createCuboidShape(0.01, 0.0, 0.0, 16.0, 32.0, 15.99);
+    public static final VoxelShape NZ = Block.createCuboidShape(0.01, 0.0, 0.0, 16.0, 32.0, 15.99);
+    public static final VoxelShape PX = Block.createCuboidShape(0.01, 0.0, 0.0, 16.0, 32.0, 15.99);
+    public static final VoxelShape NX = Block.createCuboidShape(0.01, 0.0, 0.0, 16.0, 32.0, 15.99);
 
     public ExteriorBlock(Settings settings) {
         super(settings);
-        this.shape = VoxelShapes.empty();
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        this.shape = DEFAULT_SHAPE;
-        return this.shape;
+        return shapePerDirection(state.get(FACING));
     }
 
     @Override
@@ -58,7 +59,17 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
         return ActionResult.CONSUME;
     }
 
-
+    //@Override
+    //public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+    //    super.onEntityCollision(state, world, pos, entity);
+    //    if(world.isClient) return;
+    //    Vec3d vec = new Vec3d(entity.getBlockX(), entity.getBlockY(), entity.getBlockZ());
+    //    Vec3d vected = vec.subtract(pos.getX(), pos.getY(), pos.getZ());
+    //    if(vected.equals(Vec3d.ZERO)) {
+    //        BlockEntity blockEntity = world.getBlockEntity(pos);
+    //        if(blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) exteriorBlockEntity.onEntityCollision(state, world, pos, entity);
+    //    }
+    //}
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
@@ -89,6 +100,15 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
     @Override
     public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
         return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
+    }
+
+    public VoxelShape shapePerDirection(Direction direction) {
+        return switch (direction) {
+            case EAST -> NZ;
+            case SOUTH -> NX;
+            case WEST -> PZ;
+            default -> PX;
+        };
     }
 
 }

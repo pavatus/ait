@@ -8,6 +8,7 @@ import mdteam.ait.core.helper.desktop.TARDISDesktop;
 import mdteam.ait.core.tardis.Tardis;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -47,21 +48,15 @@ public class ExteriorBlockEntity extends BlockEntity {
             setLeftDoorRot(0);
         }
         world.playSound(null,this.pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS,0.6f, 1f);
-
-        if (sneaking) {
-            getDesktop().teleportToDoor(player);
-        }
-
-        // Check if dEskToP (interior on top) needs generating
-        if (getDesktop() != null && getDesktop().needsGeneration()) {
-            getDesktop().generate();
-        }
+        if(!sneaking) onEntityCollision(state, world, this.getPos(), player); else System.out.println(this.getTardisUuid());
     }
 
     public UUID getTardisUuid() {
+        System.out.println("@!!!" + EXTERIORNBT.get(this).getTardisUuid());
         return EXTERIORNBT.get(this).getTardisUuid();
     }
     public Tardis getTardis() {
+        System.out.println("@!!!" + TardisUtil.getTardisFromUuid(getTardisUuid()));
         return TardisUtil.getTardisFromUuid(getTardisUuid());
     }
     public Tardis tardis() {
@@ -77,7 +72,9 @@ public class ExteriorBlockEntity extends BlockEntity {
     public ExteriorEnum getExterior() {
         return EXTERIORNBT.get(this).getExterior();
     }
-    public TARDISDesktop getDesktop() {return this.getTardis().getDesktop();}
+    public TARDISDesktop getDesktop() {
+        return this.getTardis().getDesktop();
+    }
 
     public void setLeftDoorRot(float rotation) {
         EXTERIORNBT.get(this).setLeftDoorRotation(rotation);
@@ -113,4 +110,12 @@ public class ExteriorBlockEntity extends BlockEntity {
         super.readNbt(nbt);
     }
 
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if(getLeftDoorRotation() > 0 || getRightDoorRotation() > 0) {
+            getDesktop().teleportToDoor(entity);
+            if (getDesktop() != null && getDesktop().needsGeneration()) {
+                getDesktop().generate();
+            }
+        }
+    }
 }

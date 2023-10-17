@@ -9,6 +9,6 @@ import static mdteam.ait.AITMod.TARDISNBT;
 public class AITModWorldComponents implements WorldComponentInitializer {
     @Override
     public void registerWorldComponentFactories(WorldComponentFactoryRegistry registry) {
-        registry.register(TARDISNBT, TARDISListComponent::new);
+        registry.register(TARDISNBT, it -> new TARDISListComponent());
     }
 }

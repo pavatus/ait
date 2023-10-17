@@ -12,6 +12,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.UUID;
+
 public class TardisItemBuilder extends Item {
     public static final String DEFAULT_INTERIOR = "war";
     public static final ExteriorEnum DEFAULT_EXTERIOR = ExteriorEnum.SHELTER;
@@ -41,7 +43,7 @@ public class TardisItemBuilder extends Item {
 
         if (!level.isClient() && hand == Hand.MAIN_HAND) {
             System.out.println(this.desktop);
-            TardisUtil.create(absolutePos,this.exterior,DesktopInit.get(this.desktop));
+            TardisUtil.create(absolutePos,this.exterior,DesktopInit.get(this.desktop), new UUID(1, 1));
             context.getStack().decrement(1);
         }
         return ActionResult.SUCCESS;

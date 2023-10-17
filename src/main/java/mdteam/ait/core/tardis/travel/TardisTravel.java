@@ -220,10 +220,13 @@ public class TardisTravel {
         ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
         BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, this.destination.getDirection());
         level.setBlockState(this.destination, state,3);
-        level.addBlockEntity(new ExteriorBlockEntity(this.destination, state));
+        ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(this.destination, state);
+        this.link(blockEntity.getTardisUuid());
+        level.addBlockEntity(blockEntity);
         // level.playSound(null, this.destination, SoundsInit.HOP_LAND.get(), SoundSource.BLOCKS, 1f, 1f);
 
         this.tardis().setPosition(this.destination);
+        this.tardis().setUuid(this.tardisUuid);
         TardisUtil.updateBlockEntity(this.tardis());
 
         this.runAnimations();
@@ -337,9 +340,12 @@ public class TardisTravel {
         ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
         BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, this.destination.getDirection());
         level.setBlockState(this.destination, state, 3);
-        level.addBlockEntity(new ExteriorBlockEntity(this.destination, state));
+        ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(this.destination, state);
+        level.addBlockEntity(blockEntity);
+        this.link(blockEntity.getTardisUuid());
 
         this.tardis().setPosition(this.destination);
+        this.tardis().setUuid(this.tardisUuid);
         TardisUtil.updateBlockEntity(this.tardis());
 
         this.runAnimations();

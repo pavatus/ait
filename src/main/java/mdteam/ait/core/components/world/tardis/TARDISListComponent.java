@@ -1,6 +1,7 @@
 package mdteam.ait.core.components.world.tardis;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import dev.onyxstudios.cca.api.v3.world.WorldSyncCallback;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.helper.AbsoluteBlockPos;
 import mdteam.ait.core.helper.desktop.TARDISDesktop;
@@ -19,11 +20,6 @@ import static mdteam.ait.AITMod.TARDISNBT;
 
 public class TARDISListComponent implements TARDISListWorldComponent, AutoSyncedComponent {
     private List<Tardis> tardisList = new ArrayList<>();
-    private World world;
-
-    public TARDISListComponent(World world) {
-        this.world = world;
-    }
 
     @Override
     public List<Tardis> getTardises() {
@@ -33,35 +29,37 @@ public class TARDISListComponent implements TARDISListWorldComponent, AutoSynced
     @Override
     public void setTardises(List<Tardis> tardisList) {
         this.tardisList = tardisList;
-        TARDISNBT.sync(this.world);
     }
     public void putTardis(Tardis tardis) {
         this.tardisList.add(tardis);
-        TARDISNBT.sync(this.world);
     }
 
     @Override
     public void readFromNbt(NbtCompound tag) {
+        this.tardisList.clear(); // Clear the list to avoid duplicates when reading from NBT
+
         if (tag.contains("tardisList")) {
-            NbtList list = tag.getList("tardisList", NbtElement.COMPOUND_TYPE);
-            list.forEach((nbt) -> {
-                this.tardisList.add(new Tardis((NbtCompound) nbt));
-            });
+            NbtCompound listTag = tag.getCompound("tardisList");
+
+            for (String key : listTag.getKeys()) {
+                NbtCompound nbt = listTag.getCompound(key);
+                this.tardisList.add(new Tardis(nbt));
+            }
         }
-        System.out.println(this.tardisList);
-        TARDISNBT.sync(this.world);
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-        if (this.tardisList == null) return;
+        NbtCompound listTag = new NbtCompound();
 
-        System.out.println(this.tardisList);
+        for (int i = 0; i < this.tardisList.size(); i++) {
+            Tardis tardis = this.tardisList.get(i);
 
-        NbtList list = new NbtList();
-        for (Tardis tardis : this.tardisList) {
-            list.add(tardis.writeToNbt());
+            NbtCompound nbt = tardis.writeToNbt();
+
+            listTag.put(String.valueOf(i), nbt);
         }
-        tag.put("tardisList",list);
+
+        tag.put("tardisList", listTag);
     }
 }

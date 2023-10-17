@@ -29,27 +29,32 @@ public class TardisUtil {
         return getTardisDimension(AITMod.mcServer);
     }
     public static TARDISListComponent getComponent() {
-        return TARDISNBT.get(AITMod.tardisListComponent);
+        return AITMod.tardisListComponent;
     }
     public static List<Tardis> getTardises() {
         return getComponent().getTardises();
     }
     public static Tardis getTardisFromUuid(UUID uuid) {
         // @TODO slow
-        for (Tardis tardis : getTardises()) {
-            if (tardis.getUuid() == uuid) return tardis;
+        System.out.println("@1 UUID???: " + uuid + " | LIST UUID?? " + getTardises().get(0).getUuid());
+        for(Tardis tardis : getTardises()) {
+            if(tardis.getUuid().equals(uuid)) {
+                return tardis;
+            }
+
+            System.out.println("THIS IS THE TARDIS" + tardis);
+
         }
         return null;
     }
-    public static Tardis create(AbsoluteBlockPos position, ExteriorEnum exterior, DesktopSchema schema) {
-        UUID uuid = UUID.randomUUID();
+    public static Tardis create(AbsoluteBlockPos position, ExteriorEnum exterior, DesktopSchema schema, UUID id) {
         TARDISDesktop desktop = new TARDISDesktop(schema);
 
         System.out.println(schema);
 
-        Tardis tardis = new Tardis(uuid,desktop,position);
+        Tardis tardis = new Tardis(id,desktop,position);
         getComponent().putTardis(tardis);
-        placeExterior(tardis);
+        if(position != null) placeExterior(tardis);
 
         return tardis;
     }
