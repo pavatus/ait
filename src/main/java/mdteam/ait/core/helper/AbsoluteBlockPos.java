@@ -31,12 +31,10 @@ public class AbsoluteBlockPos extends BlockPos {
 
     public NbtCompound writeToNbt() {
         NbtCompound nbt = new NbtCompound();
-
         nbt.putString("worldRegistry",this.dimension.getRegistryKey().getRegistry().toString());
         nbt.putString("worldValue",this.dimension.getRegistryKey().getValue().toString());
         nbt.put("pos",NbtHelper.fromBlockPos(this));
         nbt.putInt("direction",this.direction.getId());
-
         return nbt;
     }
     public static AbsoluteBlockPos readFromNbt(NbtCompound nbt) {

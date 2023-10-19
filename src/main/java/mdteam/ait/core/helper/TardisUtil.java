@@ -7,6 +7,7 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.components.world.tardis.TARDISListComponent;
+import mdteam.ait.core.components.world.tardis.TardisComponent;
 import mdteam.ait.core.helper.desktop.DesktopSchema;
 import mdteam.ait.core.helper.desktop.TARDISDesktop;
 import mdteam.ait.core.tardis.Tardis;
@@ -18,9 +19,6 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.UUID;
 
-import static mdteam.ait.AITMod.TARDISNBT;
-import static mdteam.ait.AITMod.mcServer;
-
 public class TardisUtil {
     public static ServerWorld getTardisDimension(MinecraftServer server) {
         return server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
@@ -28,11 +26,14 @@ public class TardisUtil {
     public static ServerWorld getTardisDimension() {
         return getTardisDimension(AITMod.mcServer);
     }
-    public static TARDISListComponent getComponent() {
+    public static TARDISListComponent getListComponent() {
         return AITMod.tardisListComponent;
     }
+    public static TardisComponent getTardisComponent() {
+        return AITMod.tardisComponent;
+    }
     public static List<Tardis> getTardises() {
-        return getComponent().getTardises();
+        return getListComponent().getTardises();
     }
     public static Tardis getTardisFromUuid(UUID uuid) {
         // @TODO slow
@@ -53,7 +54,7 @@ public class TardisUtil {
         System.out.println(schema);
 
         Tardis tardis = new Tardis(id,desktop,position);
-        getComponent().putTardis(tardis);
+        getListComponent().putTardis(tardis);
         if(position != null) placeExterior(tardis);
 
         return tardis;

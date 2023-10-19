@@ -9,6 +9,7 @@ import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import mdteam.ait.core.components.world.tardis.TARDISListComponent;
+import mdteam.ait.core.components.world.tardis.TardisComponent;
 import mdteam.ait.core.helper.desktop.DesktopInit;
 import net.fabricmc.api.ModInitializer;
 
@@ -37,8 +38,13 @@ public class AITMod implements ModInitializer {
 
 	public static final ComponentKey<TARDISListComponent> TARDISNBT =
 			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "tardisnbt"), TARDISListComponent.class);
+
+	public static final ComponentKey<TardisComponent> TARDISCLASSNBT =
+			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "tardisclassnbt"), TardisComponent.class);
 	public static MinecraftServer mcServer = null;
-	public static TARDISListComponent tardisListComponent = null;
+	public static TARDISListComponent tardisListComponent;
+
+	public static TardisComponent tardisComponent;
 	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () -> Icon.of(AITItems.AITMODCREATIVETAB.getDefaultStack())).build();
 
 	public static final String MOD_ID = "ait";
@@ -59,12 +65,12 @@ public class AITMod implements ModInitializer {
 			if (world.getRegistryKey() == World.OVERWORLD) {
 				mcServer = server;
 				tardisListComponent = TARDISNBT.get(world);
+				tardisComponent = TARDISCLASSNBT.get(world);
 			}
 		});
 		ServerWorldEvents.UNLOAD.register((server, world) -> {
 			if (world.getRegistryKey() == World.OVERWORLD) {
 				mcServer = null; // Prevents an annoying crash
-				tardisListComponent = null;
 			}
 		});
 	}
