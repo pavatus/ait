@@ -14,6 +14,8 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
+import static mdteam.ait.core.helper.TardisUtil.getTardisComponent;
+
 public class TardisItemBuilder extends Item {
     public static final String DEFAULT_INTERIOR = "war";
     public static final ExteriorEnum DEFAULT_EXTERIOR = ExteriorEnum.SHELTER;
@@ -37,13 +39,13 @@ public class TardisItemBuilder extends Item {
     public ActionResult useOnBlock(ItemUsageContext context) {
         BlockPos pos = context.getBlockPos().up();
         World level = context.getWorld();
-        AbsoluteBlockPos absolutePos = new AbsoluteBlockPos(level,pos);
+        AbsoluteBlockPos absolutePos = new AbsoluteBlockPos(level, pos);
         PlayerEntity player = context.getPlayer();
         Hand hand = context.getHand();
 
         if (!level.isClient() && hand == Hand.MAIN_HAND) {
             System.out.println(this.desktop);
-            TardisUtil.create(absolutePos,this.exterior,DesktopInit.get(this.desktop), new UUID(1, 1));
+            TardisUtil.create(absolutePos, this.exterior, DesktopInit.get(this.desktop), UUID.randomUUID()/*new UUID(1, 1)*/);
             context.getStack().decrement(1);
         }
         return ActionResult.SUCCESS;

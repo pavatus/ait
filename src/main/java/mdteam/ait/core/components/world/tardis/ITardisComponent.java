@@ -19,7 +19,9 @@ public interface ITardisComponent extends Component {
     TARDISDesktop getDesktop();
     void setPosition(AbsoluteBlockPos pos);
     AbsoluteBlockPos getPosition();
-    void setExterior(ExteriorEnum exterior, ExteriorBlockEntity blockEntity);
-    ExteriorEnum getExterior(ExteriorBlockEntity blockEntity);
+    void setExterior(ExteriorEnum exterior);
+    ExteriorEnum getExterior();
     TardisTravel getTravel();
+    void setNbt(NbtCompound nbt);
+    NbtCompound getNbt();
 }

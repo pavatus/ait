@@ -39,6 +39,7 @@ public class TardisUtil {
         // @TODO slow
         System.out.println("@1 UUID???: " + uuid + " | LIST UUID?? " + getTardises().get(0).getUuid());
         for(Tardis tardis : getTardises()) {
+            System.out.println(tardis.getUuid() + " is this null in the for loop? " + uuid);
             if(tardis.getUuid().equals(uuid)) {
                 return tardis;
             }
@@ -50,25 +51,26 @@ public class TardisUtil {
     }
     public static Tardis create(AbsoluteBlockPos position, ExteriorEnum exterior, DesktopSchema schema, UUID id) {
         TARDISDesktop desktop = new TARDISDesktop(schema);
-
         System.out.println(schema);
-
-        Tardis tardis = new Tardis(id,desktop,position);
+        Tardis tardis = new Tardis();
+        tardis.setExterior(exterior);
+        tardis.setUuid(id);
+        tardis.setPosition(position);
+        tardis.setDesktop(desktop);
         getListComponent().putTardis(tardis);
         if(position != null) placeExterior(tardis);
 
         return tardis;
     }
     public static ExteriorBlockEntity placeExterior(Tardis tardis) {
-        World world = tardis.getPosition().getDimension();
 
-        world.setBlockState(tardis.getPosition(),AITBlocks.EXTERIOR_BLOCK.getDefaultState());
+        tardis.world().setBlockState(tardis.getPosition(),AITBlocks.EXTERIOR_BLOCK.getDefaultState());
 
-        ExteriorBlockEntity entity = new ExteriorBlockEntity(tardis.getPosition(),world.getBlockState(tardis.getPosition()));
+        ExteriorBlockEntity entity = new ExteriorBlockEntity(tardis.getPosition(), tardis.world().getBlockState(tardis.getPosition()));
         entity.link(tardis);
-        world.addBlockEntity(entity);
+        tardis.world().addBlockEntity(entity);
 
-        return (ExteriorBlockEntity) world.getBlockEntity(tardis.getPosition());
+        return (ExteriorBlockEntity) tardis.world().getBlockEntity(tardis.getPosition());
     }
 
     public static void updateBlockEntity(Tardis tardis) {
@@ -76,11 +78,10 @@ public class TardisUtil {
 
         BlockEntity entity = tardis.world().getBlockEntity(tardis.getPosition());
 
-        if (!(entity instanceof ExteriorBlockEntity)) {
+        if (!(entity instanceof ExteriorBlockEntity exteriorBlockEntity)) {
             LogUtils.getLogger().error("Could not find Exterior Block Entity at " + tardis.getPosition().toString() + " when trying to update!\nInstead got: " + entity);
-            return;
+        } else {
+            exteriorBlockEntity.link(tardis);
         }
-
-        ((ExteriorBlockEntity) entity).link(tardis);
     }
 }

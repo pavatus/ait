@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import java.util.UUID;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
+import static mdteam.ait.core.helper.TardisUtil.getTardisComponent;
 
 public class ExteriorBlockEntity extends BlockEntity {
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
@@ -56,12 +57,11 @@ public class ExteriorBlockEntity extends BlockEntity {
         return EXTERIORNBT.get(this).getTardisUuid();
     }
     public Tardis getTardis() {
-        System.out.println("@!!!" + TardisUtil.getTardisFromUuid(getTardisUuid()));
-        return TardisUtil.getTardisFromUuid(getTardisUuid());
+        System.out.println("LOOK AT ME " + this.getTardisUuid());
+        if(getTardisComponent().getUuid() == null) getTardisComponent().setUuid(this.getTardisUuid());
+        return TardisUtil.getTardisFromUuid(getTardisComponent().getUuid());
     }
-    public Tardis tardis() {
-        return this.getTardis();
-    }
+
     public void link(Tardis tardis) {
         EXTERIORNBT.get(this).setTardisUuid(tardis.getUuid());
     }

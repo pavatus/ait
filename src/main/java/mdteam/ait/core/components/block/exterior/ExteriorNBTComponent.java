@@ -13,6 +13,7 @@ import net.minecraft.nbt.NbtCompound;
 import java.util.UUID;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
+import static mdteam.ait.core.helper.TardisUtil.getTardisComponent;
 
 public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedComponent {
     public ExteriorEnum currentExterior;
@@ -27,6 +28,7 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
         this.materialState = MaterialStateEnum.SOLID;
         this.leftDoorRotation = 0;
         this.rightDoorRotation = 0;
+        this.uuid = getTardisComponent().getUuid();
     }
 
     @Override
@@ -99,8 +101,8 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
         tag.putInt("materialState", this.materialState.ordinal());
         tag.putFloat("leftDoorRotation", this.leftDoorRotation);
         tag.putFloat("rightDoorRotation", this.rightDoorRotation);
-        if(this.uuid != null)
-            tag.putUuid("uuid",this.uuid);
-        else this.setTardisUuid(new UUID(1, 1));
+        tag.putUuid("uuid",this.uuid);
+        /*else
+            this.setTardisUuid(new UUID(1, 1));*/
     }
 }

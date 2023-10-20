@@ -36,10 +36,10 @@ public class RemoteItem extends TardisLinkableItem {
 
             // Link to exteriors tardis if it exists and player is crouching
             if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && player.isSneaking()) {
-                if (exterior.tardis() == null) return ActionResult.FAIL;
+                if (exterior.getTardis() == null) return ActionResult.FAIL;
 
-                this.link(exterior.tardis());
-                this.UUID = exterior.tardis().getUuid();
+                this.link(exterior.getTardis());
+                this.UUID = exterior.getTardis().getUuid();
 
                 return ActionResult.SUCCESS;
             }

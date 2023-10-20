@@ -43,7 +43,6 @@ public class AITMod implements ModInitializer {
 			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "tardisclassnbt"), TardisComponent.class);
 	public static MinecraftServer mcServer = null;
 	public static TARDISListComponent tardisListComponent;
-
 	public static TardisComponent tardisComponent;
 	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () -> Icon.of(AITItems.AITMODCREATIVETAB.getDefaultStack())).build();
 
@@ -64,13 +63,14 @@ public class AITMod implements ModInitializer {
 		ServerWorldEvents.LOAD.register((server, world) -> {
 			if (world.getRegistryKey() == World.OVERWORLD) {
 				mcServer = server;
-				tardisListComponent = TARDISNBT.get(world);
-				tardisComponent = TARDISCLASSNBT.get(world);
+				tardisListComponent = TARDISNBT.maybeGet(world).orElse(new TARDISListComponent());
+				tardisComponent = TARDISCLASSNBT.maybeGet(world).orElse(new TardisComponent(world));
 			}
 		});
 		ServerWorldEvents.UNLOAD.register((server, world) -> {
 			if (world.getRegistryKey() == World.OVERWORLD) {
 				mcServer = null; // Prevents an annoying crash
+				//tardisListComponent.setTardises(tardisListComponent.getTardises()); //idk ignore this i just added it cause yeah
 			}
 		});
 	}

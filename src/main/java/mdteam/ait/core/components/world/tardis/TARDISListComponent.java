@@ -12,26 +12,29 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.world.World;
 
 import javax.management.ListenerNotFoundException;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static mdteam.ait.AITMod.TARDISNBT;
 
-public class TARDISListComponent implements TARDISListWorldComponent, AutoSyncedComponent {
-    private List<Tardis> tardisList = new ArrayList<>();
+public class TARDISListComponent implements TARDISListWorldComponent {
+
+    List<Tardis> tardisList = new ArrayList<>();
 
     @Override
     public List<Tardis> getTardises() {
-        return this.tardisList;
+        return tardisList;
     }
 
     @Override
-    public void setTardises(List<Tardis> tardisList) {
-        this.tardisList = tardisList;
+    public void setTardises(List<Tardis> TardisList) {
+        tardisList = TardisList;
     }
+
     public void putTardis(Tardis tardis) {
-        this.tardisList.add(tardis);
+        tardisList.add(tardis);
     }
 
     @Override
@@ -46,6 +49,20 @@ public class TARDISListComponent implements TARDISListWorldComponent, AutoSynced
                 this.tardisList.add(new Tardis(nbt));
             }
         }
+        //try {
+        //    NbtList nbtElements = tag.getList("tardisData", NbtElement.LIST_TYPE);
+        //    tardisList = new ArrayList<>();
+        //    int size = nbtElements.size();
+        //    for (int i = 0; i <= size; i++) {
+        //        UUID uuid = UUID.fromString(nbtElements.getCompound(i).getString("uuid"));
+        //        TARDISDesktop desktop = DESKTOP_SERIALIZER.deserialize(nbtElements.getCompound(i).getCompound("desktop"));
+        //        AbsoluteBlockPos position = AbsoluteBlockPos.readFromNbt(nbtElements.getCompound(i).getCompound("position"));
+        //        Tardis tardis = new Tardis(uuid, desktop, position);
+        //        tardisList.add(tardis);
+        //    }
+        //} catch (Exception e) {
+        //    //Nothing
+        //}
     }
 
     @Override
@@ -55,11 +72,20 @@ public class TARDISListComponent implements TARDISListWorldComponent, AutoSynced
         for (int i = 0; i < this.tardisList.size(); i++) {
             Tardis tardis = this.tardisList.get(i);
 
-            NbtCompound nbt = tardis.writeToNbt();
+            NbtCompound nbt = tardis.getNbt();
 
             listTag.put(String.valueOf(i), nbt);
         }
 
         tag.put("tardisList", listTag);
+        //NbtList nbtElements = new NbtList();
+        //for(Tardis tardis : tardisList) {
+        //    NbtCompound nbtCompound = new NbtCompound();
+        //    nbtCompound.putString("uuid", tardis.getUuid().toString());
+        //    nbtCompound.put("desktop", DESKTOP_SERIALIZER.serialize(tardis.getDesktop()));
+        //    nbtCompound.put("position", tardis.getPosition().writeToNbt());
+        //    nbtElements.add(nbtCompound);
+        //}
+        //tag.put("tardisData", nbtElements);
     }
 }
