@@ -14,11 +14,13 @@ import static mdteam.ait.AITMod.TARDISCLASSNBT;
 import static mdteam.ait.core.helper.TardisUtil.getTardisComponent;
 
 public class Tardis {
-    NbtCompound tag;
 
     public static final TARDISDesktop.Serializer DESKTOP_SERIALIZER = new TARDISDesktop.Serializer();
     public static final TardisTravel.Serializer TRAVEL_SERIALIZER = new TardisTravel.Serializer();
 
+    AbsoluteBlockPos position;
+    ExteriorEnum exterior;
+    UUID uuid;
     public Tardis() {
         setUuid(getUuid());
         setDesktop(getDesktop());
@@ -31,11 +33,11 @@ public class Tardis {
     }
 
     public void setUuid(UUID uuid) {
-        getTardisComponent().setUuid(uuid);
+        this.uuid = uuid;
     }
 
     public UUID getUuid() {
-        return getTardisComponent().getUuid();
+        return uuid;
     }
 
     public void setDesktop(TARDISDesktop desktop) {
@@ -47,11 +49,11 @@ public class Tardis {
     }
 
     public void setPosition(AbsoluteBlockPos blockPos) {
-        getTardisComponent().setPosition(blockPos);
+        this.position = blockPos;
     }
 
     public AbsoluteBlockPos getPosition() {
-        return getTardisComponent().getPosition();
+        return position;
     }
 
     public TardisTravel getTravel() {
@@ -59,11 +61,11 @@ public class Tardis {
     }
 
     public void setExterior(ExteriorEnum exterior) {
-        getTardisComponent().setExterior(exterior);
+       this.exterior = exterior;
     }
 
     public ExteriorEnum getExterior() {
-        return getTardisComponent().getExterior();
+        return exterior;
     }
 
     public World world() {

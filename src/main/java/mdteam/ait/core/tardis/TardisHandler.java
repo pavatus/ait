@@ -46,7 +46,7 @@ public class TardisHandler {
             writer.write(GSON.toJson(tardis));
             writer.close();
         } catch (Exception e) {
-
+            AITMod.LOGGER.warn("Couldnt save Tardis " + tardis.uuid);
         }
     }
 
