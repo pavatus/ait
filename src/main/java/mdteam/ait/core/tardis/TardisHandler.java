@@ -36,8 +36,15 @@ public class TardisHandler {
     }
 
     @Nullable
-    public static Tardis getTardisByInteriorPos(BlockPos bp1, BlockPos bp2) {
-        //@TODO Come on little Jayson buddy its okay its not hard just do this code :))))
+    public static Tardis getTardisByInteriorPos(BlockPos pos) {
+        for (Tardis value : tardisses.values()) {
+            BlockPos xy1 = value.getDesktop().getInteriorCornerPositions().get(0).toBlockPos();
+            BlockPos xy2 = value.getDesktop().getInteriorCornerPositions().get(1).toBlockPos();
+            if (pos.getX() <= Math.max(xy1.getX(), xy2.getX()) && pos.getX() >= Math.min(xy1.getX(), xy2.getX())
+						&& pos.getY() <= Math.max(xy1.getY(), xy2.getY()) && pos.getY() >= Math.min(xy1.getY(), xy2.getY())) {
+                return value;
+            }
+        }
         return null;
     }
 
