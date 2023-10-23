@@ -11,67 +11,77 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
-public class AbsoluteBlockPos extends BlockPos {
-    private final World dimension;
-    private final Direction direction;
-    public AbsoluteBlockPos(World dimension, Direction direction, int x, int y, int z) {
-        super(x,y,z);
+public class AbsoluteBlockPos implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private transient World dimension;
+    public String dimensionValue;
+    public String dimensionRegistry;
+    int x;
+    int y;
+    int z;
 
-        this.direction = direction;
+    public AbsoluteBlockPos(int x, int y, int z, World dimension) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        setDimension(dimension);
+    }
+    public AbsoluteBlockPos(BlockPos pos, World dimension) {
+        this(pos.getX(), pos.getY(), pos.getZ(), dimension);
+    }
+
+    public void setDimension(World dimension) {
         this.dimension = dimension;
-    }
-    public AbsoluteBlockPos(World dimension,Direction direction, BlockPos pos) {
-        this(dimension,direction, pos.getX(), pos.getY(), pos.getZ());
-    }
-    public AbsoluteBlockPos(World dimension, BlockPos pos) {
-        this(dimension, Direction.NORTH, pos);
+        this.dimensionValue = this.dimension.getRegistryKey().getValue().toString();
+        this.dimensionRegistry = this.dimension.getRegistryKey().getRegistry().toString();
     }
 
-    public NbtCompound writeToNbt() {
-        NbtCompound nbt = new NbtCompound();
-        nbt.putString("worldRegistry",this.dimension.getRegistryKey().getRegistry().toString());
-        nbt.putString("worldValue",this.dimension.getRegistryKey().getValue().toString());
-        nbt.put("pos",NbtHelper.fromBlockPos(this));
-        nbt.putInt("direction",this.direction.getId());
-        return nbt;
+    public BlockPos toBlockPos() {
+        return new BlockPos(x, y, z);
     }
-    public static AbsoluteBlockPos readFromNbt(NbtCompound nbt) {
-        World dim = AITMod.mcServer.getWorld(World.OVERWORLD);
-        BlockPos pos = new BlockPos(0,0,0);
-        Direction dir = Direction.NORTH;
-
-        if (nbt.contains("worldRegistry") && nbt.contains("worldValue")) {
-            dim = AITMod.mcServer.getWorld(RegistryKey.of(RegistryKey.ofRegistry(new Identifier(nbt.getString("worldRegistry"))),new Identifier(nbt.getString("worldValue"))));
-        }
-        if (nbt.contains("pos")) pos = NbtHelper.toBlockPos(nbt.getCompound("pos"));
-        if (nbt.contains("direction")) dir = Direction.byId(nbt.getInt("direction"));
-
-        return new AbsoluteBlockPos(dim,dir,pos);
-    }
-
-
-
-//    public AbsoluteBlockPos(RegistryKey<World> dimension, BlockPos pos) {
-//        this(TARDISMod.server.getLevel(dimension),pos);
-//    }
 
     public World getDimension() {
-        return this.dimension;
+        if(dimension == null) {
+            dimension = AITMod.mcServer.getWorld(RegistryKey.of(RegistryKey.ofRegistry(new Identifier(dimensionRegistry)),new Identifier(dimensionValue)));
+        }
+        return dimension;
     }
-//    public RegistryKey<World> getResourceKeyLevel() {
-//        // Find the resource key from the server and grab that if it exists
-//        if (!TARDISMod.server.levelKeys().contains(this.dimension)) {return null;}
-//
-//        for (Iterator<ResourceKey<World>> it = TARDISMod.server.levelKeys().iterator(); it.hasNext(); ) {
-//            ResourceKey<World> key = it.next();
-//            if (TARDISMod.server.getLevel(key) == this.dimension) {
-//                return key;
-//            }
-//        }
-//        return null;
-//    }
-    public Direction getDirection() {return this.direction;}
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setZ(int z) {
+        this.z = z;
+    }
+
+    public AbsoluteBlockPos above() {
+        return new AbsoluteBlockPos(getX(), getY() + 1, getZ());
+    }
+
+    @Override
+    public String toString() {
+        return "AbsoluteBlockPos["+ getX() + "_" + getY() + "_" + getZ() + "]";
+    }
+
 }
 
