@@ -19,7 +19,6 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
     public BlockEntity blockEntity;
     public MaterialStateEnum materialState;
     public float leftDoorRotation, rightDoorRotation;
-    public UUID uuid;
 
     public ExteriorNBTComponent(BlockEntity blockentity) {
         this.currentExterior = ExteriorEnum.SHELTER;
@@ -74,23 +73,11 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
     }
 
     @Override
-    public UUID getTardisUuid() {
-        return this.uuid;
-    }
-
-    @Override
-    public void setTardisUuid(UUID uuid) {
-        this.uuid = uuid;
-        EXTERIORNBT.sync(this.blockEntity);
-    }
-
-    @Override
     public void readFromNbt(NbtCompound tag) {
         if(tag.contains("currentExterior")) this.currentExterior = ExteriorEnum.values()[tag.getInt("currentExterior")]; EXTERIORNBT.sync(this.blockEntity);
         if(tag.contains("materialState")) this.materialState = MaterialStateEnum.values()[tag.getInt("materialState")]; EXTERIORNBT.sync(this.blockEntity);
         if(tag.contains("leftDoorRotation")) this.leftDoorRotation = tag.getFloat("leftDoorRotation"); EXTERIORNBT.sync(this.blockEntity);
         if(tag.contains("rightDoorRotation")) this.rightDoorRotation = tag.getFloat("rightDoorRotation"); EXTERIORNBT.sync(this.blockEntity);
-        if(tag.contains("uuid")) this.uuid = tag.getUuid("uuid"); EXTERIORNBT.sync(this.blockEntity);
     }
 
     @Override
@@ -99,7 +86,6 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
         tag.putInt("materialState", this.materialState.ordinal());
         tag.putFloat("leftDoorRotation", this.leftDoorRotation);
         tag.putFloat("rightDoorRotation", this.rightDoorRotation);
-        tag.putUuid("uuid",this.uuid);
         /*else
             this.setTardisUuid(new UUID(1, 1));*/
     }

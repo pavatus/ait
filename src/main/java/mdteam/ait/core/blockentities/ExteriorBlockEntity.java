@@ -26,6 +26,8 @@ import java.util.UUID;
 import static mdteam.ait.AITMod.EXTERIORNBT;
 
 public class ExteriorBlockEntity extends BlockEntity {
+
+    private UUID tardisUUid;
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
         setExterior(getExterior());
@@ -50,19 +52,20 @@ public class ExteriorBlockEntity extends BlockEntity {
             setLeftDoorRot(0);
         }
         world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS,0.6f, 1f);
-        if(!sneaking) onEntityCollision(state, world, getPos(), player); else System.out.println(getTardisUuid());
+        if(!sneaking) onEntityCollision(state, world, getPos(), player);
     }
 
     public UUID getTardisUuid() {
-        System.out.println("@!!!" + EXTERIORNBT.get(this).getTardisUuid());
-        return EXTERIORNBT.get(this).getTardisUuid();
+        return tardisUUid;
     }
+
     public Tardis getTardis() {
+        if(this.getTardisUuid() == null) return null;
         return TardisHandler.getTardis(this.getTardisUuid());
     }
 
     public void setTardis(Tardis tardis) {
-        EXTERIORNBT.get(this).setTardisUuid(tardis.getUuid());
+        this.tardisUUid = tardis.getUuid();
     }
     public void setExterior(ExteriorEnum exterior) {
         EXTERIORNBT.get(this).setExterior(exterior);
@@ -103,11 +106,18 @@ public class ExteriorBlockEntity extends BlockEntity {
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+        //nbt.write(tardisUUid);
+        if(tardisUUid != null) {
+            nbt.putUuid("tardis", tardisUUid);
+        }
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+        if(nbt.contains("tardis")) {
+            this.tardisUUid = nbt.getUuid("tardis");
+        }
     }
 
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {

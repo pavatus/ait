@@ -24,6 +24,4 @@ public interface ExteriorDataComponent extends Component {
     MaterialStateEnum getCurrentMaterialState();
 
     void setMaterialState(MaterialStateEnum newMaterialState);
-    UUID getTardisUuid();
-    void setTardisUuid(UUID uuid);
 }

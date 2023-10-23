@@ -14,7 +14,7 @@ import net.minecraft.util.math.random.Random;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class DesktopSchema extends DesktopStructure {
+public class DesktopSchema extends DesktopStructure {
     protected AbsoluteBlockPos doorPosition;
     protected String id;
     protected transient StructureTemplate template;
