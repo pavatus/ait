@@ -16,10 +16,7 @@ import java.util.Iterator;
 
 public class AbsoluteBlockPos implements Serializable {
     private static final long serialVersionUID = 1L;
-    private transient World dimension;
-    private String dimensionValue;
-    private String dimensionRegistry;
-
+    private final SerialDimension dimension;
     private Direction direction;
     int x;
     int y;
@@ -29,7 +26,7 @@ public class AbsoluteBlockPos implements Serializable {
         this.x = x;
         this.y = y;
         this.z = z;
-        setDimension(dimension);
+        this.dimension = new SerialDimension(dimension);
         setDirection(direction);
     }
     public AbsoluteBlockPos(BlockPos pos, World dimension) {
@@ -40,10 +37,16 @@ public class AbsoluteBlockPos implements Serializable {
         this(pos.getX(), pos.getY(), pos.getZ(), direction, dimension);
     }
 
+    public World getDimension() {
+        return dimension.get();
+    }
+
+    public SerialDimension getSerialDimension() {
+        return dimension;
+    }
+
     public void setDimension(World dimension) {
-        this.dimension = dimension;
-        this.dimensionValue = this.dimension.getRegistryKey().getValue().toString();
-        this.dimensionRegistry = this.dimension.getRegistryKey().getRegistry().toString();
+        this.dimension.set(dimension);
     }
 
     public void setDirection(Direction direction) {
@@ -52,13 +55,6 @@ public class AbsoluteBlockPos implements Serializable {
 
     public BlockPos toBlockPos() {
         return new BlockPos(x, y, z);
-    }
-
-    public World getDimension() {
-        if(dimension == null) {
-            dimension = AITMod.mcServer.getWorld(RegistryKey.of(RegistryKey.ofRegistry(new Identifier(dimensionRegistry)),new Identifier(dimensionValue)));
-        }
-        return dimension;
     }
 
     public Direction getDirection() {
