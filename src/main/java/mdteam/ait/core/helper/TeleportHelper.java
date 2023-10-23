@@ -25,12 +25,12 @@ public class TeleportHelper {
 
     public TeleportHelper(UUID uuid, World level, Vec3i destination) {
         this.entityUUID = uuid;
-        this.destination = new AbsoluteBlockPos(level, new BlockPos(destination));
+        this.destination = new AbsoluteBlockPos(new BlockPos(destination), level);
     }
 
     public void teleport(ServerWorld origin) {
         Entity entity = origin.getEntity(this.entityUUID);
-        this.destination.getDimension().getChunk(this.destination);
+        this.destination.getDimension().getChunk(this.destination.toBlockPos());
 
         if (entity instanceof ServerPlayerEntity player) {
             player.teleport((ServerWorld) this.destination.getDimension(), this.destination.getX() + 0.5, this.destination.getY(), this.destination.getZ() + 0.5,this.destination.getDirection().getHorizontal(),0);

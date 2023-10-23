@@ -47,7 +47,7 @@ public class RemoteItem extends TardisLinkableItem {
             // Move tardis to the clicked pos
 
             if (this.hasTardis()) {
-                this.tardis().getTravel().moveTo(new AbsoluteBlockPos(world, player.getMovementDirection().getOpposite(), pos.up()));
+                this.tardis().getTravel().moveTo(new AbsoluteBlockPos(pos.up(),player.getMovementDirection().getOpposite(),world));
             }
         }
 
