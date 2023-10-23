@@ -8,28 +8,22 @@ import mdteam.ait.core.tardis.travel.TardisTravel;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 
+import java.awt.*;
+import java.io.Serializable;
 import java.util.UUID;
 
-import static mdteam.ait.AITMod.TARDISCLASSNBT;
-import static mdteam.ait.core.helper.TardisUtil.getTardisComponent;
+public class Tardis implements Serializable {
+    private AbsoluteBlockPos position;
+    private ExteriorEnum exterior;
+    private UUID uuid;
+    private TardisTravel travel;
+    private TARDISDesktop desktop;
 
-public class Tardis {
-
-    public static final TARDISDesktop.Serializer DESKTOP_SERIALIZER = new TARDISDesktop.Serializer();
-    public static final TardisTravel.Serializer TRAVEL_SERIALIZER = new TardisTravel.Serializer();
-
-    AbsoluteBlockPos position;
-    ExteriorEnum exterior;
-    UUID uuid;
     public Tardis() {
         setUuid(getUuid());
         setDesktop(getDesktop());
         setPosition(getPosition());
-        if(getDesktop() != null) getDesktop().link(this);
-    }
-
-    public Tardis(NbtCompound nbt) {
-        getTardisComponent().setNbt(nbt);
+        if(getDesktop() != null) getDesktop().setTardis(this);
     }
 
     public void setUuid(UUID uuid) {
@@ -41,11 +35,11 @@ public class Tardis {
     }
 
     public void setDesktop(TARDISDesktop desktop) {
-        getTardisComponent().setDesktop(desktop);
+        this.desktop = desktop;
     }
 
     public TARDISDesktop getDesktop() {
-        return getTardisComponent().getDesktop();
+        return desktop;
     }
 
     public void setPosition(AbsoluteBlockPos blockPos) {
@@ -57,7 +51,9 @@ public class Tardis {
     }
 
     public TardisTravel getTravel() {
-        return getTardisComponent().getTravel();
+        if (this.travel == null) this.travel = new TardisTravel(this.getUuid());
+
+        return this.travel;
     }
 
     public void setExterior(ExteriorEnum exterior) {
@@ -70,9 +66,5 @@ public class Tardis {
 
     public World world() {
         return this.getPosition().getDimension();
-    }
-
-    public NbtCompound getNbt() {
-        return getTardisComponent().getNbt();
     }
 }

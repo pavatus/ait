@@ -16,17 +16,17 @@ import static net.minecraft.datafixer.fix.BlockEntitySignTextStrictJsonFix.GSON;
 
 public class TardisHandler {
 
-    public Map<UUID, Tardis> tardisses = new HashMap<>();
+    public static Map<UUID, Tardis> tardisses = new HashMap<>();
 
     @Nullable
-    Tardis getTardis(UUID uuid) {
+    public static Tardis getTardis(UUID uuid) {
         if (!tardisses.containsKey(uuid)) {
             loadTardis(uuid);
         }
         return tardisses.get(uuid);
     }
 
-    public void loadTardis(UUID uuid) {
+    public static void loadTardis(UUID uuid) {
         if(tardisses.containsKey(uuid)) return;
         File file = new File(AITMod.mcServer.getSavePath(WorldSavePath.ROOT) + "ait/" + uuid + ".json");
         if(!file.exists()) return;
@@ -38,7 +38,7 @@ public class TardisHandler {
         }
     }
 
-    public void saveTardis(Tardis tardis) {
+    public static void saveTardis(Tardis tardis) {
         File file = new File(AITMod.mcServer.getSavePath(WorldSavePath.ROOT) + "ait/" + tardis.getUuid() + ".json");
         if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
         try {
@@ -46,7 +46,7 @@ public class TardisHandler {
             writer.write(GSON.toJson(tardis));
             writer.close();
         } catch (Exception e) {
-            AITMod.LOGGER.warn("Couldnt save Tardis " + tardis.uuid);
+            AITMod.LOGGER.warn("Couldnt save Tardis " + tardis.getUuid());
         }
     }
 

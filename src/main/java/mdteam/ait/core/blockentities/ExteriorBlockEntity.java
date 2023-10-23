@@ -3,9 +3,11 @@ package mdteam.ait.core.blockentities;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.helper.desktop.TARDISDesktop;
 import mdteam.ait.core.tardis.Tardis;
+import mdteam.ait.core.tardis.TardisHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -22,7 +24,6 @@ import net.minecraft.world.World;
 import java.util.UUID;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
-import static mdteam.ait.core.helper.TardisUtil.getTardisComponent;
 
 public class ExteriorBlockEntity extends BlockEntity {
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
@@ -48,8 +49,8 @@ public class ExteriorBlockEntity extends BlockEntity {
         } else {
             setLeftDoorRot(0);
         }
-        world.playSound(null,this.pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS,0.6f, 1f);
-        if(!sneaking) onEntityCollision(state, world, this.getPos(), player); else System.out.println(this.getTardisUuid());
+        world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS,0.6f, 1f);
+        if(!sneaking) onEntityCollision(state, world, getPos(), player); else System.out.println(getTardisUuid());
     }
 
     public UUID getTardisUuid() {
@@ -57,12 +58,10 @@ public class ExteriorBlockEntity extends BlockEntity {
         return EXTERIORNBT.get(this).getTardisUuid();
     }
     public Tardis getTardis() {
-        System.out.println("LOOK AT ME " + this.getTardisUuid());
-        if(getTardisComponent().getUuid() == null) getTardisComponent().setUuid(this.getTardisUuid());
-        return TardisUtil.getTardisFromUuid(getTardisComponent().getUuid());
+        return TardisHandler.getTardis(this.getTardisUuid());
     }
 
-    public void link(Tardis tardis) {
+    public void setTardis(Tardis tardis) {
         EXTERIORNBT.get(this).setTardisUuid(tardis.getUuid());
     }
     public void setExterior(ExteriorEnum exterior) {
@@ -72,6 +71,7 @@ public class ExteriorBlockEntity extends BlockEntity {
     public ExteriorEnum getExterior() {
         return EXTERIORNBT.get(this).getExterior();
     }
+
     public TARDISDesktop getDesktop() {
         return this.getTardis().getDesktop();
     }

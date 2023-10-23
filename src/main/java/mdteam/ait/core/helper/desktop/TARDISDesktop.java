@@ -18,33 +18,32 @@ public class TARDISDesktop {
     private DesktopSchema schema;
     private Tardis tardis;
     private List<AbsoluteBlockPos> interiorCornerPosList;
-    private BlockPos interiorDoorPos;
+    private transient BlockPos interiorDoorPos;
 
     public TARDISDesktop(DesktopSchema schema) {
         this.schema = schema;
-    }
-    public TARDISDesktop(DesktopSchema schema, NbtCompound nbt) {
-        this(schema);
-        this.loadCorners(nbt);
+        setCorners();
     }
 
-    public void link(Tardis tardis) {
+    public void setTardis(Tardis tardis) {
         this.tardis = tardis;
     }
     public void setSchema(DesktopSchema schema) {
         this.schema = schema;
     }
-    public DesktopSchema getSchema() {return this.schema;}
+    public DesktopSchema getSchema() {
+        return schema;
+    }
     public World getInteriorDimension() {
         return TardisUtil.getTardisDimension();
     }
     public BlockPos getInteriorDoorPos() {
-        if (this.interiorDoorPos != null && this.getInteriorDimension().getBlockEntity(this.interiorDoorPos) instanceof DoorBlockEntity) {return this.interiorDoorPos;} // @TODO no interior door entity yet so
+        if (interiorDoorPos != null && getInteriorDimension().getBlockEntity(interiorDoorPos) instanceof DoorBlockEntity) {return interiorDoorPos;} // @TODO no interior door entity yet so
 
-        return this.searchForDoorPosAndUpdate();
+        return searchForDoorPosAndUpdate();
     }
     public List<AbsoluteBlockPos> getInteriorCornerPositions() {
-        return this.interiorCornerPosList;
+        return interiorCornerPosList;
     }
     public void setInteriorCornerPositions(List<AbsoluteBlockPos> list) {
         this.interiorCornerPosList = list;
@@ -55,31 +54,31 @@ public class TARDISDesktop {
      * @return
      */
     public BlockPos getCentreBlockPos() {
-        return this.getInteriorCornerPositions().get(0).add(16,0,16);
+        return getInteriorCornerPositions().get(0).toBlockPos().add(16, 0, 16);
     }
     private BlockPos searchForDoorPosAndUpdate() {
         // @TODO cba
-        return this.getCentreBlockPos().add(0,8,0); // yum
-//        BlockPos doorPos = this.interiorCornerPosList.get(0).add(this.getSchema().getDoorPosition());
+        return getCentreBlockPos().add(0,8,0); // yum
+//        BlockPos doorPos = interiorCornerPosList.get(0).add(getSchema().getDoorPosition());
 //        System.out.println(doorPos);
 //
-//        if (!(this.getInteriorDimension().getBlockState(doorPos).getBlock() instanceof DoorBlock)) {
-//            doorPos = TARDISManager.getInstance().searchForDoorBlock(this.interiorCornerPosList);
+//        if (!(getInteriorDimension().getBlockState(doorPos).getBlock() instanceof DoorBlock)) {
+//            doorPos = TARDISManager.getInstance().searchForDoorBlock(interiorCornerPosList);
 //        }
 //
-//        DoorBlockEntity door = (DoorBlockEntity) this.getInteriorDimension().getBlockEntity(doorPos);
+//        DoorBlockEntity door = (DoorBlockEntity) getInteriorDimension().getBlockEntity(doorPos);
 //        assert door != null;
-//        door.setTARDIS(this.tardis);
+//        door.setTARDIS(tardis);
 //
-//        this.interiorDoorPos = doorPos;
+//        interiorDoorPos = doorPos;
 //
 //        return doorPos;
     }
 
     private BlockPos getOffsetDoorPosition() {
-        BlockPos doorPos = this.getInteriorDoorPos();
+        BlockPos doorPos = getInteriorDoorPos();
         BlockPos adjustedPos = new BlockPos(0,0,0);
-        Direction doorDirection = /*this.getInteriorDimension()
+        Direction doorDirection = /*getInteriorDimension()
                 .getBlockState(
                         doorPos)
                 .get(Properties.HORIZONTAL_FACING);*/ Direction.NORTH;
@@ -93,69 +92,38 @@ public class TARDISDesktop {
     }
 
     public void teleportToDoor(Entity entity) {
-        if (this.needsGeneration()) {
-            this.generate();
+        if (needsGeneration()) {
+            generate();
         }
 
-        Direction doorDirection = /*this.getInteriorDimension()
+        Direction doorDirection = /*getInteriorDimension()
                 .getBlockState(
-                        this.getInteriorDoorPos())
+                        getInteriorDoorPos())
                 .get(Properties.HORIZONTAL_FACING);*/ Direction.NORTH;
 
-        TeleportHelper helper = new TeleportHelper(entity.getUuid(),new AbsoluteBlockPos(this.getInteriorDimension(),doorDirection,this.getOffsetDoorPosition()));
+        TeleportHelper helper = new TeleportHelper(entity.getUuid(),new AbsoluteBlockPos(getOffsetDoorPosition(), doorDirection, getInteriorDimension()));
         helper.teleport((ServerWorld) entity.getWorld());
     }
     public void delete() {
-        DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(this.tardis, (ServerWorld) this.getInteriorDimension(),this.getSchema());
+        DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(tardis, (ServerWorld) getInteriorDimension(),getSchema());
 //        generator.deleteInterior(); // @TODO no thread for deleting interiors yet, it was also pretty slow on box mod so maybe theres a faster way? - duzo
-        this.interiorCornerPosList = null;
+        interiorCornerPosList = null;
     }
     public void generate() {
-        this.generate(this.getSchema());
+        generate(getSchema());
     }
     public void generate(DesktopSchema schema) {
-        this.interiorCornerPosList = DesktopUtil.getNextAvailableInteriorSpot();
-        DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(this.tardis, (ServerWorld) this.getInteriorDimension(), schema);
-        generator.placeStructure((ServerWorld) this.getInteriorDimension(), this.interiorCornerPosList.get(0), Direction.SOUTH);
+        setInteriorCornerPositions(DesktopUtil.getNextAvailableInteriorSpot());
+        DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(tardis, (ServerWorld) getInteriorDimension(), schema);
+        generator.placeStructure((ServerWorld) getInteriorDimension(), getInteriorCornerPositions().get(0).toBlockPos(), Direction.SOUTH);
     }
     public boolean needsGeneration() {
-        return this.interiorCornerPosList == null;
+        return interiorCornerPosList == null;
     }
-    private void loadCorners(NbtCompound tag) {
-        AbsoluteBlockPos bottomLeft = new AbsoluteBlockPos(this.getInteriorDimension(), NbtHelper.toBlockPos(tag.getCompound("bottomLeft")));
-        AbsoluteBlockPos topRight = new AbsoluteBlockPos(this.getInteriorDimension(),NbtHelper.toBlockPos(tag.getCompound("topRight")));
-
-        if (this.interiorCornerPosList == null) return;
-
-        this.interiorCornerPosList.set(0, bottomLeft);
-        this.interiorCornerPosList.set(1, topRight);
-    }
-
-    public static class Serializer {
-        private static final DesktopSchema.Serializer SCHEMA_SERIALIZER = new DesktopSchema.Serializer();
-
-        public void serialize(NbtCompound tag, TARDISDesktop interior) {
-            NbtCompound schema = new NbtCompound();
-            SCHEMA_SERIALIZER.serialize(schema, interior.schema);
-
-            if (interior.interiorDoorPos != null) {
-                tag.put("doorPos", NbtHelper.fromBlockPos(interior.interiorDoorPos));
-            }
-            if (interior.interiorCornerPosList != null) {
-                tag.put("bottomLeft", NbtHelper.fromBlockPos(interior.interiorCornerPosList.get(0)));
-                tag.put("topRight", NbtHelper.fromBlockPos(interior.interiorCornerPosList.get(1)));
-            }
-            tag.put("schema", schema);
-        }
-        public NbtCompound serialize(TARDISDesktop interior) {
-            NbtCompound nbt = new NbtCompound();
-            this.serialize(nbt,interior);
-            return nbt;
-        }
-        public TARDISDesktop deserialize(NbtCompound nbt) {
-            return new TARDISDesktop(SCHEMA_SERIALIZER.deserialize(nbt.getCompound("schema")),nbt);
-        }
-
+    private void setCorners() {
+        if (getInteriorCornerPositions() == null) return;
+        getInteriorCornerPositions().set(0, new AbsoluteBlockPos(getInteriorCornerPositions().get(0).toBlockPos(), getInteriorDimension()));
+        getInteriorCornerPositions().set(1, new AbsoluteBlockPos(getInteriorCornerPositions().get(1).toBlockPos(), getInteriorDimension()));
     }
 }
 

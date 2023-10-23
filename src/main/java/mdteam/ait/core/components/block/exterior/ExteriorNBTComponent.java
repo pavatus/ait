@@ -7,14 +7,13 @@ import mdteam.ait.core.helper.desktop.DesktopInit;
 import mdteam.ait.core.helper.desktop.DesktopSchema;
 import mdteam.ait.core.helper.desktop.TARDISDesktop;
 import mdteam.ait.core.helper.desktop.impl.WarDesktop;
+import mdteam.ait.core.tardis.TardisHandler;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 
 import java.util.UUID;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
-import static mdteam.ait.core.helper.TardisUtil.getTardisComponent;
-
 public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedComponent {
     public ExteriorEnum currentExterior;
     public BlockEntity blockEntity;
@@ -28,7 +27,6 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
         this.materialState = MaterialStateEnum.SOLID;
         this.leftDoorRotation = 0;
         this.rightDoorRotation = 0;
-        this.uuid = getTardisComponent().getUuid();
     }
 
     @Override

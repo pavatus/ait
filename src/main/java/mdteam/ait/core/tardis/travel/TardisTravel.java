@@ -8,6 +8,7 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.helper.AbsoluteBlockPos;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.tardis.Tardis;
+import mdteam.ait.core.tardis.TardisHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.NbtCompound;
@@ -16,23 +17,20 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import java.io.Serializable;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-
-import static mdteam.ait.core.helper.TardisUtil.getTardisComponent;
 
 /**
  * Mostly copied from box mod's TARDISTravel class and then ported to fabric
  * Not the best way to do things, especially due to the ongoing issues with saves (also an issue in box mod) @TODO Better implementation?
  * @TODO No sounds implemented, so all sound references are commented out.
  */
-public class TardisTravel {
-    private final int DEMAT_AUDIO_LENGTH = 8;
-    private int MAT_AUDIO_LENGTH = 10;
-    private final long SECONDS = 1000L;
-    private final long MINUTES = SECONDS * 60;
+public class TardisTravel implements Serializable {
+    private transient int MAT_AUDIO_LENGTH = 10;
+    private transient final long SECONDS = 1000L;
     private UUID tardisUuid;
     private STATE state;
     private AbsoluteBlockPos destination;
@@ -89,39 +87,33 @@ public class TardisTravel {
     }
 
     public Tardis getTardis() {
-        System.out.println("WHY IS THIS SO LITERALLY MUNTED BRO" + this.tardisUuid);
-        if(this.tardisUuid == null) this.tardisUuid = getTardisComponent().getUuid();
-        return TardisUtil.getTardisFromUuid(this.tardisUuid); // Ensures the Tardis class is always up to date to avoid sync issues, may cause lag though @TODO
+        return TardisHandler.getTardis(tardisUuid);
     }
 
-    public STATE state() {
-        if (this.state == null) this.state = STATE.LANDED; // assuming its landed if its null, probs not best way
+    public STATE getState() {
+        if (state == null) setState(STATE.LANDED); // assuming its landed if its null, probs not best way
 
-        return this.state;
+        return state;
     }
 
     public void setDestination(AbsoluteBlockPos pos, boolean withChecks) {
         if (withChecks) {
-            pos = new AbsoluteBlockPos(pos.getDimension(),pos.getDirection(),
-                    checkForNearestNonAirBlock(pos.getDimension(),
-                            searchForNearestAirBlock(pos.getDimension(),pos, Direction.UP),
-                            Direction.DOWN)
-            );
+            pos = new AbsoluteBlockPos(checkForNearestNonAirBlock(pos.getDimension(), searchForNearestAirBlock(pos.getDimension(),pos.toBlockPos(), Direction.UP), Direction.DOWN), pos.getDirection(), pos.getDimension());
         }
         this.destination = pos;
     }
     public AbsoluteBlockPos getDestination() {
-        return this.destination;
+        return destination;
     }
     private boolean canTakeoff() {
-        return (this.state() == STATE.LANDED) && !(this.handbrakeOn);
+        return (getState() == STATE.LANDED) && !(handbrakeOn);
     }
-    private boolean runHandbrakeChecks() {
-        if (this.handbrakeOn && this.state() == STATE.LANDED) {
-            this.state = STATE.FAIL_TAKEOFF;
-            // this.getTardis().world().playSound(null, this.getTardis().getPosition(), SoundsInit.FAIL_TAKEOFF.get(), SoundSource.BLOCKS, 1f,1f);
-            this.runAnimations();
-            this.startHopping();
+    private boolean getHandbrakeChecks() {
+        if (handbrakeOn && getState() == STATE.LANDED) {
+            setState(STATE.FAIL_TAKEOFF);
+            // getTardis().world().playSound(null, getTardis().getPosition(), SoundsInit.FAIL_TAKEOFF.get(), SoundSource.BLOCKS, 1f,1f);
+            runAnimations();
+            startHopping();
 
             // making sure that it does land
             TardisTravel travel = this;
@@ -129,7 +121,7 @@ public class TardisTravel {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    travel.state = STATE.LANDED;
+                    travel.setState(STATE.LANDED);
                 }
             }, MAT_AUDIO_LENGTH * SECONDS);
 
@@ -140,11 +132,11 @@ public class TardisTravel {
 
     private void runAnimations() {
         // @TODO animations
-//        World level = this.tardis.getLevel();
-//        level.getChunkAt(this.tardis.getPosition());
-//        BlockEntity entity = level.getBlockEntity(this.tardis.getPosition());
+//        World level = tardis.getLevel();
+//        level.getChunkAt(tardis.getPosition());
+//        BlockEntity entity = level.getBlockEntity(tardis.getPosition());
 //        if (entity instanceof ExteriorBlockEntity) {
-//            ((ExteriorBlockEntity) entity).getAnimation().setupAnimation(this.state);
+//            ((ExteriorBlockEntity) entity).getAnimation().setupAnimation(state);
 //        }
     }
 
@@ -152,6 +144,7 @@ public class TardisTravel {
         Random random = new Random();
         TardisTravel travel = this;
         Timer timer = new Timer();
+        long MINUTES = SECONDS * 60;
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -161,26 +154,26 @@ public class TardisTravel {
     }
 
     private void __hopTakeoff() {
-        if (this.getTardis().world().isClient) {return;}
+        if (getTardis().world().isClient) {return;}
 
-        if (this.runHandbrakeChecks()) {
+        if (getHandbrakeChecks()) {
             return;
         }
 
-        if (!(this.canTakeoff())) {
-            this.startHopping();
+        if (!(canTakeoff())) {
+            startHopping();
             return;
         }
 
-        this.state = STATE.HOP_TAKEOFF;
+        setState(STATE.HOP_TAKEOFF);
 
-        World level = this.getTardis().world();
+        World level = getTardis().world();
 
-        // level.playSound(null,this.getTardis().getPosition(), SoundsInit.HOP_TAKEOFF.get(), SoundSource.BLOCKS, 1f,1f);
+        // level.playSound(null,getTardis().getPosition(), SoundsInit.HOP_TAKEOFF.get(), SoundSource.BLOCKS, 1f,1f);
 
-        this.runAnimations();
+        runAnimations();
 
-        this.setDestination(new AbsoluteBlockPos(this.getTardis().getPosition().getDimension(),getRandomPosInRange(this.getTardis().getPosition(), 10)),true);
+        setDestination(new AbsoluteBlockPos(getRandomPosInRange(getTardis().getPosition().toBlockPos(), 10), getTardis().getPosition().getDimension()),true);
 
         // Timer code for waiting for sound to finish
         TardisTravel travel = this;
@@ -190,10 +183,10 @@ public class TardisTravel {
             public void run() {
                 // Delete the block and rematerialise if needed.
 //                ForgeChunkManager.forceChunk((ServerLevel) level, TARDISMod.MODID, travel.tardis.getPosition(),0, 0,true,true);
-                travel.state = STATE.FLIGHT;
-                level.getChunk(travel.destination);
+                travel.setState(STATE.FLIGHT);
+                level.getChunk(travel.destination.toBlockPos());
 
-                level.removeBlock(travel.getTardis().getPosition(), false);
+                level.removeBlock(travel.getTardis().getPosition().toBlockPos(), false);
 
                 travel.__hopLand();
             }
@@ -201,30 +194,30 @@ public class TardisTravel {
     }
 
     private void __hopLand() {
-        if (this.destination == null || this.destination.getDimension().isClient) {
+        if (getDestination() == null || getDestination().getDimension().isClient) {
             return;
         }
 
-        this.state = STATE.HOP_LAND;
+        setState(STATE.HOP_LAND);
 
-        World level = this.destination.getDimension();
+        World level = getDestination().getDimension();
 
-        level.getChunk(this.destination);
+        level.getChunk(getDestination().toBlockPos());
 
         ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-        BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, this.destination.getDirection());
-        level.setBlockState(this.destination, state,3);
-        ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(this.destination, state);
-        this.link(blockEntity.getTardisUuid());
+        BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, getDestination().getDirection());
+        level.setBlockState(getDestination().toBlockPos(), state,3);
+        ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(getDestination().toBlockPos(), state);
+        setUuid(blockEntity.getTardisUuid());
         level.addBlockEntity(blockEntity);
-        // level.playSound(null, this.destination, SoundsInit.HOP_LAND.get(), SoundSource.BLOCKS, 1f, 1f);
+        // level.playSound(null, destination, SoundsInit.HOP_LAND.get(), SoundSource.BLOCKS, 1f, 1f);
 
-        this.getTardis().setPosition(this.destination);
-        this.getTardis().setUuid(this.tardisUuid);
-        if(level.getBlockEntity(this.destination) != null) TardisUtil.updateBlockEntity(this.getTardis());
+        getTardis().setPosition(getDestination());
+        getTardis().setUuid(tardisUuid);
+        if(level.getBlockEntity(getDestination().toBlockPos()) != null) TardisUtil.updateBlockEntity(getTardis());
 
-        this.runAnimations();
-        this.startHopping();
+        runAnimations();
+        startHopping();
 
         // making sure that it does land
         TardisTravel travel = this;
@@ -232,49 +225,50 @@ public class TardisTravel {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                travel.state = STATE.LANDED;
+                travel.setState(STATE.LANDED);
             }
         }, MAT_AUDIO_LENGTH * SECONDS);
     }
 
     public void dematerialise() {
-        this.dematerialise(false);
+        dematerialise(false);
     }
     public void dematerialise(boolean withRemat) {
-        if (this.getTardis().world().isClient) {return;}
+        if (getTardis().world().isClient) {return;}
         System.out.println("DEMATERIALISING");
-        System.out.println(this.state());
-        System.out.println(this.runHandbrakeChecks());
-        System.out.println(this.canTakeoff());
+        System.out.println(getState());
+        System.out.println(getHandbrakeChecks());
+        System.out.println(canTakeoff());
 
-        World level = this.getTardis().world();
+        World level = getTardis().world();
 
-        if (this.runHandbrakeChecks()) {
+        if (getHandbrakeChecks()) {
             return;
         }
 
-        if (!(this.canTakeoff())) {
+        if (!(canTakeoff())) {
             return;
         }
 
-        this.state = STATE.DEMAT;
+        setState(STATE.DEMAT);
 
-        // level.playSound(null,this.getTardis().getPosition(), SoundsInit.DEMATERIALISE.get(), SoundSource.BLOCKS, 1f,1f);
+        // level.playSound(null,getTardis().getPosition(), SoundsInit.DEMATERIALISE.get(), SoundSource.BLOCKS, 1f,1f);
 
-        this.runAnimations();
+        runAnimations();
 
         // Timer code for waiting for sound to finish
         TardisTravel travel = this;
         Timer timer = new Timer();
+        int DEMAT_AUDIO_LENGTH = 8;
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 // Delete the block and rematerialise if needed.
 //                ForgeChunkManager.forceChunk((ServerLevel) level, TARDISMod.MODID, travel.tardis.getPosition(),0, 0,true,true);
-                travel.state = STATE.FLIGHT;
-                level.getChunk(travel.destination);
+                travel.setState(STATE.FLIGHT);
+                level.getChunk(travel.destination.toBlockPos());
 
-                level.removeBlock(travel.getTardis().getPosition(), false);
+                level.removeBlock(travel.getTardis().getPosition().toBlockPos(), false);
 
                 if (withRemat) {
                     travel.materialise();
@@ -284,30 +278,30 @@ public class TardisTravel {
     }
 
     public void materialise() {
-        if (this.destination == null || this.destination.getDimension().isClient) {return;}
+        if (getDestination() == null || getDestination().getDimension().isClient) {return;}
 
-        this.state = STATE.MAT;
+        setState(STATE.MAT);
 
-        World level = this.destination.getDimension();
+        World level = getDestination().getDimension();
 
-        level.getChunk(this.destination);
+        level.getChunk(getDestination().toBlockPos());
         if (level == TardisUtil.getTardisDimension()) {
             if (/*AITCommonConfigs.CAN_LAND_IN_TARDIS_DIM.get()*/ true) {
-                // level.playSound(null, this.destination, SoundsInit.EMERGENCY_LAND.get(), SoundSource.BLOCKS, 1f,1f);
+                // level.playSound(null, destination, SoundsInit.EMERGENCY_LAND.get(), SoundSource.BLOCKS, 1f,1f);
                 MAT_AUDIO_LENGTH = 16;
             } else {
-                // level.playSound(null, this.destination, SoundsInit.FAIL_LAND.get(), SoundSource.BLOCKS, 1f,1f);
-                this.setDestination(this.getTardis().getPosition(),false);
+                // level.playSound(null, destination, SoundsInit.FAIL_LAND.get(), SoundSource.BLOCKS, 1f,1f);
+                setDestination(getTardis().getPosition(),false);
 
-                if (this.getTardis().getPosition().getDimension() == TardisUtil.getTardisDimension()) {
-                    this.setDestination(new AbsoluteBlockPos(AITMod.mcServer.getOverworld(), this.getTardis().getPosition()),false);
+                if (getTardis().getPosition().getDimension() == TardisUtil.getTardisDimension()) {
+                    setDestination(new AbsoluteBlockPos(getTardis().getPosition().toBlockPos(), AITMod.mcServer.getOverworld()),false);
                 }
 
-                this.materialise();
+                materialise();
                 return;
             }
         } else {
-            // level.playSound(null, this.destination, SoundsInit.MATERIALISE.get(), SoundSource.BLOCKS, 1f, 1f);
+            // level.playSound(null, destination, SoundsInit.MATERIALISE.get(), SoundSource.BLOCKS, 1f, 1f);
             MAT_AUDIO_LENGTH = 10;
         }
 
@@ -323,24 +317,24 @@ public class TardisTravel {
     }
 
     private void __materialise() {
-        if (this.destination.getDimension().isClient) {return;}
+        if (getDestination().getDimension().isClient) {return;}
 
-        World level = this.destination.getDimension();
+        World level = getDestination().getDimension();
 
-        level.getChunk(this.destination);
+        level.getChunk(getDestination().toBlockPos());
 
         ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-        BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, this.destination.getDirection());
-        level.setBlockState(this.destination, state, 3);
-        ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(this.destination, state);
+        BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, getDestination().getDirection());
+        level.setBlockState(getDestination().toBlockPos(), state, 3);
+        ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(getDestination().toBlockPos(), state);
         level.addBlockEntity(blockEntity);
-        this.link(blockEntity.getTardisUuid());
+        setUuid(blockEntity.getTardisUuid());
 
-        this.getTardis().setPosition(this.destination);
-        this.getTardis().setUuid(this.tardisUuid);
-        if(level.getBlockEntity(this.destination) != null) TardisUtil.updateBlockEntity(this.getTardis());
+        getTardis().setPosition(getDestination());
+        getTardis().setUuid(tardisUuid);
+        if(level.getBlockEntity(getDestination().toBlockPos()) != null) TardisUtil.updateBlockEntity(getTardis());
 
-        this.runAnimations();
+        runAnimations();
 
         // making sure that it does land
         TardisTravel travel = this;
@@ -348,54 +342,33 @@ public class TardisTravel {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                travel.state = STATE.LANDED;
+                travel.setState(STATE.LANDED);
             }
         }, MAT_AUDIO_LENGTH * SECONDS);
     }
 
     public void moveTo(AbsoluteBlockPos destination, boolean withChecks) {
-        this.setDestination(destination,withChecks);
-        this.dematerialise(true);
+        setDestination(destination,withChecks);
+        dematerialise(true);
     }
     public void moveTo(AbsoluteBlockPos destination) {
-        this.moveTo(destination, false);
+        moveTo(destination, false);
     }
 
     public boolean inFlight() {
-        return this.state() == STATE.FLIGHT;
+        return getState() == STATE.FLIGHT;
     }
-    public boolean isMaterialising() {return this.state() == STATE.MAT;}
-    public boolean isDematerialising() {return this.state() == STATE.DEMAT;}
+    public boolean isMaterialising() {return getState() == STATE.MAT;}
+    public boolean isDematerialising() {return getState() == STATE.DEMAT;}
     public void setState(STATE state) {
         this.state = state;
     }
-    public void link(UUID uuid) {
+    public void setUuid(UUID uuid) {
         this.tardisUuid = uuid;
     }
-    public void changeHandbrake() {
-        this.handbrakeOn = !this.handbrakeOn;
+    public void setToggleHandbrake() {
+        this.handbrakeOn = !handbrakeOn;
     }
-
-    public static class Serializer {
-        public NbtCompound serialize(TardisTravel travel) {
-            NbtCompound tag = new NbtCompound();
-            this.serialize(tag, travel);
-            return tag;
-        }
-        public void serialize(NbtCompound nbt, TardisTravel travel) {
-            if (travel.tardisUuid != null) nbt.putUuid("uuid", travel.getTardis().getUuid());
-            if (travel.destination != null) nbt.put("destination", travel.destination.writeToNbt());
-        }
-        public TardisTravel deserialize(NbtCompound nbt) {
-            if (nbt.contains("destination") && nbt.contains("uuid")) {
-                TardisTravel travel = new TardisTravel(nbt.getUuid("uuid"));
-                travel.setDestination(AbsoluteBlockPos.readFromNbt(nbt.getCompound("destination")), false);
-                return travel;
-            }
-            return null;
-        }
-    }
-
 
     public enum STATE {
         FAIL_TAKEOFF,

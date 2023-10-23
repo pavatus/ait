@@ -6,17 +6,15 @@ import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.components.world.tardis.TARDISListComponent;
-import mdteam.ait.core.components.world.tardis.TardisComponent;
 import mdteam.ait.core.helper.desktop.DesktopSchema;
 import mdteam.ait.core.helper.desktop.TARDISDesktop;
 import mdteam.ait.core.tardis.Tardis;
+import mdteam.ait.core.tardis.TardisHandler;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
 
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TardisUtil {
@@ -26,28 +24,11 @@ public class TardisUtil {
     public static ServerWorld getTardisDimension() {
         return getTardisDimension(AITMod.mcServer);
     }
-    public static TARDISListComponent getListComponent() {
-        return AITMod.tardisListComponent;
-    }
-    public static TardisComponent getTardisComponent() {
-        return AITMod.tardisComponent;
-    }
-    public static List<Tardis> getTardises() {
-        return getListComponent().getTardises();
+    public static Map<UUID, Tardis> getTardisMap() {
+        return TardisHandler.tardisses;
     }
     public static Tardis getTardisFromUuid(UUID uuid) {
-        // @TODO slow
-        System.out.println("@1 UUID???: " + uuid + " | LIST UUID?? " + getTardises().get(0).getUuid());
-        for(Tardis tardis : getTardises()) {
-            System.out.println(tardis.getUuid() + " is this null in the for loop? " + uuid);
-            if(tardis.getUuid().equals(uuid)) {
-                return tardis;
-            }
-
-            System.out.println("THIS IS THE TARDIS" + tardis);
-
-        }
-        return null;
+        return TardisHandler.getTardis(uuid);
     }
     public static Tardis create(AbsoluteBlockPos position, ExteriorEnum exterior, DesktopSchema schema, UUID id) {
         TARDISDesktop desktop = new TARDISDesktop(schema);
@@ -57,31 +38,30 @@ public class TardisUtil {
         tardis.setUuid(id);
         tardis.setPosition(position);
         tardis.setDesktop(desktop);
-        getListComponent().putTardis(tardis);
+        TardisHandler.saveTardis(tardis);
         if(position != null) placeExterior(tardis);
-
         return tardis;
     }
     public static ExteriorBlockEntity placeExterior(Tardis tardis) {
 
-        tardis.world().setBlockState(tardis.getPosition(),AITBlocks.EXTERIOR_BLOCK.getDefaultState());
+        tardis.world().setBlockState(tardis.getPosition().toBlockPos(), AITBlocks.EXTERIOR_BLOCK.getDefaultState());
 
-        ExteriorBlockEntity entity = new ExteriorBlockEntity(tardis.getPosition(), tardis.world().getBlockState(tardis.getPosition()));
-        entity.link(tardis);
+        ExteriorBlockEntity entity = new ExteriorBlockEntity(tardis.getPosition().toBlockPos(), tardis.world().getBlockState(tardis.getPosition().toBlockPos()));
+        entity.setTardis(tardis);
         tardis.world().addBlockEntity(entity);
 
-        return (ExteriorBlockEntity) tardis.world().getBlockEntity(tardis.getPosition());
+        return (ExteriorBlockEntity) tardis.world().getBlockEntity(tardis.getPosition().toBlockPos());
     }
 
     public static void updateBlockEntity(Tardis tardis) {
         if (tardis.world().isClient()) return;
 
-        BlockEntity entity = tardis.world().getBlockEntity(tardis.getPosition());
+        BlockEntity entity = tardis.world().getBlockEntity(tardis.getPosition().toBlockPos());
 
         if (!(entity instanceof ExteriorBlockEntity exteriorBlockEntity)) {
             LogUtils.getLogger().error("Could not find Exterior Block Entity at " + tardis.getPosition().toString() + " when trying to update!\nInstead got: " + entity);
         } else {
-            exteriorBlockEntity.link(tardis);
+            exteriorBlockEntity.setTardis(tardis);
         }
     }
 }

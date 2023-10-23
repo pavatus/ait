@@ -15,10 +15,8 @@ import net.minecraft.world.World;
 import java.util.UUID;
 
 import static mdteam.ait.AITMod.TARDISCLASSNBT;
-import static mdteam.ait.core.tardis.Tardis.DESKTOP_SERIALIZER;
-import static mdteam.ait.core.tardis.Tardis.TRAVEL_SERIALIZER;
 
-public class TardisComponent implements ITardisComponent, AutoSyncedComponent, WorldSyncCallback {
+public class TardisComponent implements ITardisComponent, AutoSyncedComponent {
     World world;
     UUID uuid;
     AbsoluteBlockPos absoluteBlockPos;
@@ -92,29 +90,24 @@ public class TardisComponent implements ITardisComponent, AutoSyncedComponent, W
 
     @Override
     public void readFromNbt(NbtCompound nbt) {
-        if(this.tag.contains("exterior"))
-            this.exterior = ExteriorEnum.values()[this.tag.getInt("exterior")]; TARDISCLASSNBT.sync(this.world);
-        if(this.tag.contains("desktop"))
-            this.desktop = DESKTOP_SERIALIZER.deserialize(this.tag.getCompound("desktop")); TARDISCLASSNBT.sync(this.world);
-        if(this.tag.contains("uuid"))
-            this.uuid = tag.getUuid("uuid"); TARDISCLASSNBT.sync(this.world);
-        if(this.tag.contains("position"))
-            this.absoluteBlockPos = AbsoluteBlockPos.readFromNbt(this.tag.getCompound("position")); TARDISCLASSNBT.sync(this.world);
+        //if(this.tag.contains("exterior"))
+        //    this.exterior = ExteriorEnum.values()[this.tag.getInt("exterior")]; TARDISCLASSNBT.sync(this.world);
+        //if(this.tag.contains("desktop"))
+        //    this.desktop = DESKTOP_SERIALIZER.deserialize(this.tag.getCompound("desktop")); TARDISCLASSNBT.sync(this.world);
+        //if(this.tag.contains("uuid"))
+        //    this.uuid = tag.getUuid("uuid"); TARDISCLASSNBT.sync(this.world);
+        //if(this.tag.contains("position"))
+        //    this.absoluteBlockPos = AbsoluteBlockPos.readFromNbt(this.tag.getCompound("position")); TARDISCLASSNBT.sync(this.world);
         //if(this.tag.contains("travel"))
         //    this.travel = TRAVEL_SERIALIZER.deserialize(this.tag.getCompound("travel")); TARDISCLASSNBT.sync(this.world);
     }
 
     @Override
     public void writeToNbt(NbtCompound nbt) {
-        if(this.exterior != null) this.tag.putInt("exterior", this.exterior.ordinal());
-        if(this.desktop != null) this.tag.put("desktop", DESKTOP_SERIALIZER.serialize(this.desktop));
-        if(this.uuid != null) this.tag.putUuid("uuid",this.uuid);
-        if(this.absoluteBlockPos != null) this.tag.put("position",this.absoluteBlockPos.writeToNbt());
+        //if(this.exterior != null) this.tag.putInt("exterior", this.exterior.ordinal());
+        //if(this.desktop != null) this.tag.put("desktop", DESKTOP_SERIALIZER.serialize(this.desktop));
+        //if(this.uuid != null) this.tag.putUuid("uuid",this.uuid);
+        //if(this.absoluteBlockPos != null) this.tag.put("position",this.absoluteBlockPos.writeToNbt());
         //if(this.getTravel() != null) this.tag.put("travel",TRAVEL_SERIALIZER.serialize(this.getTravel()));
-    }
-
-    @Override
-    public void onPlayerStartTracking(ServerPlayerEntity player, ServerWorld world) {
-
     }
 }

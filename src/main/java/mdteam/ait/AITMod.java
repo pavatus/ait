@@ -63,8 +63,8 @@ public class AITMod implements ModInitializer {
 		ServerWorldEvents.LOAD.register((server, world) -> {
 			if (world.getRegistryKey() == World.OVERWORLD) {
 				mcServer = server;
-				//tardisListComponent = TARDISNBT.maybeGet(world).orElse(new TARDISListComponent());
-				//tardisComponent = TARDISCLASSNBT.maybeGet(world).orElse(new TardisComponent(world));
+				tardisListComponent = TARDISNBT.maybeGet(world).orElse(new TARDISListComponent());
+				tardisComponent = TARDISCLASSNBT.maybeGet(world).orElse(new TardisComponent(world));
 			}
 		});
 		ServerWorldEvents.UNLOAD.register((server, world) -> {
