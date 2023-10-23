@@ -25,9 +25,24 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
 	public void generateSoundData(FabricDataGenerator.Pack pack) {
 		pack.addProvider((((output, registriesFuture) ->  {
-			AITSoundProvider aitSoundProvider = new AITSoundProvider(output);
-			aitSoundProvider.addSound("secret_music", AITSounds.SECRET_MUSIC);
-			return aitSoundProvider;
+			AITSoundProvider provider = new AITSoundProvider(output);
+
+			provider.addSound("secret_music", AITSounds.SECRET_MUSIC);
+
+			// TARDIS
+			provider.addSound("demat", AITSounds.DEMAT);
+			provider.addSound("mat", AITSounds.MAT);
+			provider.addSound("hop_demat", AITSounds.HOP_DEMAT);
+			provider.addSound("hop_mat", AITSounds.HOP_MAT);
+			provider.addSound("fail_demat", AITSounds.FAIL_DEMAT);
+			provider.addSound("fail_mat", AITSounds.FAIL_MAT);
+			provider.addSound("emergency_mat", AITSounds.EMERG_MAT);
+
+			// Controls
+			provider.addSound("demat_lever_pull", AITSounds.DEMAT_LEVER_PULL);
+			provider.addSound("handbrake_lever_pull", AITSounds.HANDBRAKE_LEVER_PULL);
+
+			return provider;
 		})));
 	}
 

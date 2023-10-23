@@ -6,9 +6,18 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 public class AITSounds implements SoundRegistryContainer {
-    public static final SoundEvent STIMPAK_USE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "stimpak_use"));
-    public static final SoundEvent DEMATERIALIZE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "dematerialize"));
-    public static final SoundEvent TITLE_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "title_music"));
-    public static final SoundEvent BLAST_DOOR_OPEN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "blast_door_open"));
     public static final SoundEvent SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "secret_music"));
+
+    // TARDIS
+    public static final SoundEvent DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/demat"));
+    public static final SoundEvent MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/mat"));
+    public static final SoundEvent HOP_DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hop_takeoff"));
+    public static final SoundEvent HOP_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hop_land"));
+    public static final SoundEvent FAIL_DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/fail_takeoff"));
+    public static final SoundEvent FAIL_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/fail_land"));
+    public static final SoundEvent EMERG_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/emergency_land"));
+
+    // Controls
+    public static final SoundEvent DEMAT_LEVER_PULL = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/demat_lever_pull"));
+    public static final SoundEvent HANDBRAKE_LEVER_PULL = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/handbrake_pull"));
 }
