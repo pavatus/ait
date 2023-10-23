@@ -2,6 +2,7 @@ package mdteam.ait.core.tardis;
 
 import mdteam.ait.AITMod;
 import net.minecraft.util.WorldSavePath;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedWriter;
@@ -24,6 +25,22 @@ public class TardisHandler {
             loadTardis(uuid);
         }
         return tardisses.get(uuid);
+    }
+
+    @Nullable
+    public static Tardis getTardisByExteriorPos(BlockPos blockPos) {
+        for (Tardis tardis : tardisses.values()) {
+            if (tardis.getPosition().toBlockPos() == blockPos) {
+                return tardis;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static Tardis getTardisByInteriorPos(BlockPos bp1, BlockPos bp2) {
+        //@TODO Come on little Jayson buddy its okay its not hard just do this code :))))
+        return null;
     }
 
     public static void loadTardis(UUID uuid) {
