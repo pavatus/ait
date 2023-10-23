@@ -1,6 +1,7 @@
 package mdteam.ait.core.helper.desktop;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.helper.AbsoluteBlockPos;
 import mdteam.ait.core.helper.structures.DesktopStructure;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -14,9 +15,9 @@ import net.minecraft.util.math.random.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class DesktopSchema extends DesktopStructure {
-    protected BlockPos doorPosition;
+    protected AbsoluteBlockPos doorPosition;
     protected String id;
-    protected StructureTemplate template;
+    protected transient StructureTemplate template;
 
     public DesktopSchema(Identifier location, String id) {
         super(id);
@@ -53,7 +54,8 @@ public abstract class DesktopSchema extends DesktopStructure {
 
             if (state == interiorDoorNumberState.get()) {
                 NbtList posList = nbt.getList("pos", tag.INT_TYPE);
-                doorPosition = new BlockPos(posList.getInt(0),posList.getInt(1),posList.getInt(2));
+                //TODO
+                //doorPosition = new AbsoluteBlockPos(posList.getInt(0),posList.getInt(1),posList.getInt(2), null);
             }
         }));
     }
@@ -70,11 +72,8 @@ public abstract class DesktopSchema extends DesktopStructure {
         //this.template = DesktopUtil.getInteriorLevel(MinecraftClient.getInstance().getServer()).getStructureTemplateManager().getTemplate(location);
     }
 
-    public void setDoorPosition(BlockPos pos) {
-        this.doorPosition = pos;
-    }
     public BlockPos getDoorPosition() {
-        return this.doorPosition;
+        return this.doorPosition.toBlockPos();
     }
     public String getID() {return this.id;}
 

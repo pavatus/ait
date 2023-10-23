@@ -16,7 +16,7 @@ import java.util.List;
 
 public class TARDISDesktop {
     private DesktopSchema schema;
-    private Tardis tardis;
+    private transient Tardis tardis;
     private List<AbsoluteBlockPos> interiorCornerPosList;
     private transient BlockPos interiorDoorPos;
 

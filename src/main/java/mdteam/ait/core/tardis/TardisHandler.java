@@ -57,6 +57,7 @@ public class TardisHandler {
             tardisses.put(uuid, GSON.fromJson(fileContent, Tardis.class));
         } catch (Exception e) {
             AITMod.LOGGER.warn("Tardis " + uuid + " does not exist");
+            e.printStackTrace();
         }
     }
 
@@ -69,6 +70,7 @@ public class TardisHandler {
             writer.close();
         } catch (Exception e) {
             AITMod.LOGGER.warn("Couldnt save Tardis " + tardis.getUuid());
+            e.printStackTrace();
         }
     }
 
