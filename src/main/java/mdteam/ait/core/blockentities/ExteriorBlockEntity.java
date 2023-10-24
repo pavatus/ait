@@ -15,6 +15,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
@@ -60,8 +61,7 @@ public class ExteriorBlockEntity extends BlockEntity {
     }
 
     public Tardis getTardis() {
-        if(this.getTardisUuid() == null) return null;
-        return TardisHandler.getTardis(this.getTardisUuid());
+        return TardisHandler.getTardis(getTardisUuid());
     }
 
     public void setTardis(Tardis tardis) {
@@ -76,7 +76,7 @@ public class ExteriorBlockEntity extends BlockEntity {
     }
 
     public TARDISDesktop getDesktop() {
-        return this.getTardis().getDesktop();
+        return getTardis().getDesktop();
     }
 
     public void setLeftDoorRot(float rotation) {
@@ -121,10 +121,12 @@ public class ExteriorBlockEntity extends BlockEntity {
     }
 
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if(getLeftDoorRotation() > 0 || getRightDoorRotation() > 0) {
-            getDesktop().teleportToDoor(entity);
-            if (getDesktop() != null && getDesktop().needsGeneration()) {
-                getDesktop().generate();
+        if (entity instanceof ServerPlayerEntity player && !world.isClient()) {
+            if (getLeftDoorRotation() > 0 || getRightDoorRotation() > 0) {
+                getDesktop().teleportToDoor(player);
+                if (getDesktop() != null && getDesktop().needsGeneration()) {
+                    getDesktop().generate();
+                }
             }
         }
     }

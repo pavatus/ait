@@ -15,7 +15,7 @@ public class AITBlocks implements BlockRegistryContainer {
     @NoBlockItem
     public static final Block EXTERIOR_BLOCK = new ExteriorBlock(FabricBlockSettings.create().nonOpaque());
 
-    public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque());
+    public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque().noCollision());
 
 
     @Override

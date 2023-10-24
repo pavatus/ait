@@ -15,8 +15,8 @@ import java.util.UUID;
 
 public class TeleportHelper {
     private static final Logger LOGGER = LogUtils.getLogger();
-    public final UUID entityUUID;
-    public final AbsoluteBlockPos destination;
+    private final UUID entityUUID;
+    private final AbsoluteBlockPos destination;
 
     public TeleportHelper(UUID uuid, AbsoluteBlockPos destination) {
         this.entityUUID = uuid;
@@ -29,15 +29,17 @@ public class TeleportHelper {
     }
 
     public void teleport(ServerWorld origin) {
-        Entity entity = origin.getEntity(this.entityUUID);
+        Entity entity = origin.getEntity(entityUUID);
         this.destination.getDimension().getChunk(this.destination.toBlockPos());
 
         if (entity instanceof ServerPlayerEntity player) {
-            player.teleport((ServerWorld) this.destination.getDimension(), this.destination.getX() + 0.5, this.destination.getY(), this.destination.getZ() + 0.5,this.destination.getDirection().getHorizontal(),0);
+            player.teleport((ServerWorld) this.destination.getDimension(), this.destination.getX() + 0.5, this.destination.getY(), this.destination.getZ() + 0.5,this.destination.getDirection().asRotation(), entity.getPitch());
         }
         else if (!(entity instanceof PlayerEntity)) {
-            entity.moveToWorld((ServerWorld) this.destination.getDimension());
+            if (entity != null) {
+                entity.moveToWorld((ServerWorld) this.destination.getDimension());
+            }
         }
-        LOGGER.info("Teleported " + entity + " to " + this.destination);
+        LOGGER.info("Teleported " + entity + " to " + this.destination + " with rotation " +  this.destination.getDirection());
     }
 }

@@ -1,6 +1,8 @@
 package mdteam.ait.core.helper;
 
+import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.blocks.DoorBlock;
 import mdteam.ait.core.helper.desktop.DesktopSchema;
 import mdteam.ait.core.helper.structures.DesktopStructure;
 import mdteam.ait.core.tardis.Tardis;
@@ -29,10 +31,7 @@ public class DesktopGenerator {
         @Override
         public void placeStructure(ServerWorld level, BlockPos pos, Direction direction) {
             super.placeStructure(level, pos, direction);
-            //this.interior.setDoorPosition(findTargetBlockPosInTemplate(this.template,pos,direction, TARDISInteriorDoors.INTERIOR_DOOR_BLOCK_LIST).get(0));
-            //this.tardis.getInterior().setSchema(this.interior);
-
-            //this.tardis.setInterior(this.interior);
+            this.interior.setDoorPosition(new AbsoluteBlockPos(findTargetBlockPosInTemplate(this.template, pos, direction, AITBlocks.DOOR_BLOCK), level));
         }
     }
     private DesktopStructure structure;

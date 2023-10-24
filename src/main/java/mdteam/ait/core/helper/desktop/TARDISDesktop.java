@@ -1,33 +1,39 @@
 package mdteam.ait.core.helper.desktop;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
+import mdteam.ait.core.blocks.DoorBlock;
 import mdteam.ait.core.helper.*;
 import mdteam.ait.core.tardis.Tardis;
+import mdteam.ait.core.tardis.TardisHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TARDISDesktop {
+public class TARDISDesktop implements Serializable {
     private DesktopSchema schema;
-    private transient Tardis tardis;
+    private Tardis tardis;
     private List<AbsoluteBlockPos> interiorCornerPosList;
     private transient BlockPos interiorDoorPos;
 
     public TARDISDesktop(DesktopSchema schema) {
-        this.schema = schema;
+        setSchema(schema);
         setCorners();
     }
 
     public void setTardis(Tardis tardis) {
         this.tardis = tardis;
     }
+    public Tardis getTardis() {
+        return tardis;
+    }
+
     public void setSchema(DesktopSchema schema) {
         this.schema = schema;
     }
@@ -38,9 +44,11 @@ public class TARDISDesktop {
         return TardisUtil.getTardisDimension();
     }
     public BlockPos getInteriorDoorPos() {
-        if (interiorDoorPos != null && getInteriorDimension().getBlockEntity(interiorDoorPos) instanceof DoorBlockEntity) {return interiorDoorPos;} // @TODO no interior door entity yet so
-
-        return searchForDoorPosAndUpdate();
+        if (interiorDoorPos != null && getInteriorDimension().getBlockEntity(interiorDoorPos) instanceof DoorBlockEntity) {
+            return interiorDoorPos;
+        } else {
+            return searchForDoorPosAndUpdate();
+        }
     }
     public List<AbsoluteBlockPos> getInteriorCornerPositions() {
         return interiorCornerPosList;
@@ -49,46 +57,39 @@ public class TARDISDesktop {
         this.interiorCornerPosList = list;
     }
 
-    /**
-     * Not centered properly. just kinda winging it
-     * @return
-     */
     public BlockPos getCentreBlockPos() {
-        return getInteriorCornerPositions().get(0).toBlockPos().add(16, 0, 16);
+        return getInteriorCornerPositions().get(0).toBlockPos().add(getSchema().getTemplate().getSize().getX() / 2, 0, getSchema().getTemplate().getSize().getZ() / 2);
     }
     private BlockPos searchForDoorPosAndUpdate() {
-        // @TODO cba
-        return getCentreBlockPos().add(0,8,0); // yum
-//        BlockPos doorPos = interiorCornerPosList.get(0).add(getSchema().getDoorPosition());
-//        System.out.println(doorPos);
-//
-//        if (!(getInteriorDimension().getBlockState(doorPos).getBlock() instanceof DoorBlock)) {
-//            doorPos = TARDISManager.getInstance().searchForDoorBlock(interiorCornerPosList);
-//        }
-//
-//        DoorBlockEntity door = (DoorBlockEntity) getInteriorDimension().getBlockEntity(doorPos);
-//        assert door != null;
-//        door.setTARDIS(tardis);
-//
-//        interiorDoorPos = doorPos;
-//
-//        return doorPos;
+        BlockPos doorPos = interiorCornerPosList.get(0).toBlockPos().add(getSchema().getDoorPosition().toBlockPos());
+        System.out.println(doorPos);
+
+        if (!(getInteriorDimension().getBlockState(doorPos).getBlock() instanceof DoorBlock)) {
+            doorPos = TardisHandler.searchForDoorBlock(interiorCornerPosList);
+        }
+
+        DoorBlockEntity door = (DoorBlockEntity) getInteriorDimension().getBlockEntity(doorPos);
+        assert door != null;
+        door.setTardis(TardisHandler.getTardisByInteriorPos(doorPos));
+
+        this.interiorDoorPos = doorPos;
+
+        return doorPos;
     }
 
-    private BlockPos getOffsetDoorPosition() {
-        BlockPos doorPos = getInteriorDoorPos();
+    public static BlockPos offsetDoorPosition(BlockPos blockPos, World world) {
         BlockPos adjustedPos = new BlockPos(0,0,0);
-        Direction doorDirection = /*getInteriorDimension()
+        Direction doorDirection = /*world
                 .getBlockState(
-                        doorPos)
+                        blockPos)
                 .get(Properties.HORIZONTAL_FACING);*/ Direction.NORTH;
-//        switch(doorDirection) {
-//            case NORTH -> adjustedPos = new BlockPos(doorPos.getX() + 0.5,doorPos.getY(),doorPos.getZ() - 1.5);
-//            case SOUTH -> adjustedPos = new BlockPos(doorPos.getX() + 0.5,doorPos.getY(),doorPos.getZ() + 1.5);
-//            case EAST -> adjustedPos = new BlockPos(doorPos.getX() + 1.5,doorPos.getY(),doorPos.getZ() + 0.5);
-//            case WEST -> adjustedPos = new BlockPos(doorPos.getX() - 1.5,doorPos.getY(),doorPos.getZ() + 0.5);
-//        }
-        return doorPos;
+        switch(doorDirection) {
+            case NORTH -> adjustedPos = new BlockPos.Mutable(blockPos.getX() + 0.5,blockPos.getY(),blockPos.getZ() - 1);
+            case SOUTH -> adjustedPos = new BlockPos.Mutable(blockPos.getX() + 0.5,blockPos.getY(),blockPos.getZ() + 1);
+            case EAST -> adjustedPos = new BlockPos.Mutable(blockPos.getX() + 1,blockPos.getY(),blockPos.getZ() + 0.5);
+            case WEST -> adjustedPos = new BlockPos.Mutable(blockPos.getX() - 1,blockPos.getY(),blockPos.getZ() + 0.5);
+        }
+        return adjustedPos;
     }
 
     public void teleportToDoor(Entity entity) {
@@ -96,14 +97,22 @@ public class TARDISDesktop {
             generate();
         }
 
-        Direction doorDirection = /*getInteriorDimension()
+        Direction doorDirection = getInteriorDimension()
                 .getBlockState(
-                        getInteriorDoorPos())
-                .get(Properties.HORIZONTAL_FACING);*/ Direction.NORTH;
+                       getInteriorDoorPos())
+                .get(Properties.HORIZONTAL_FACING);
 
-        TeleportHelper helper = new TeleportHelper(entity.getUuid(),new AbsoluteBlockPos(getOffsetDoorPosition(), doorDirection, getInteriorDimension()));
+        TeleportHelper helper = new TeleportHelper(entity.getUuid(), new AbsoluteBlockPos(offsetDoorPosition(getInteriorDoorPos(), getInteriorDimension()), doorDirection, getInteriorDimension()));
         helper.teleport((ServerWorld) entity.getWorld());
     }
+
+    public static void teleportToExterior(Entity entity, AbsoluteBlockPos blockPos, World world, Direction direction) {
+
+        TeleportHelper helper = new TeleportHelper(entity.getUuid(), new AbsoluteBlockPos(offsetDoorPosition(blockPos.toBlockPos(), world), direction, world));
+
+        helper.teleport((ServerWorld) entity.getWorld());
+    }
+
     public void delete() {
         DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(tardis, (ServerWorld) getInteriorDimension(),getSchema());
 //        generator.deleteInterior(); // @TODO no thread for deleting interiors yet, it was also pretty slow on box mod so maybe theres a faster way? - duzo
