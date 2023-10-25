@@ -26,6 +26,7 @@ public class TardisHandler {
 
     @Nullable
     public static Tardis getTardis(UUID uuid) {
+        loadTardis(uuid);
         return tardisses.get(uuid);
     }
 
