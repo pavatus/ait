@@ -20,7 +20,7 @@ public class TARDISDesktop implements Serializable {
     private DesktopSchema schema;
     private Tardis tardis;
     private List<AbsoluteBlockPos> interiorCornerPosList;
-    private transient BlockPos interiorDoorPos;
+    private BlockPos interiorDoorPos;
 
     public TARDISDesktop(DesktopSchema schema) {
         setSchema(schema);
@@ -44,11 +44,7 @@ public class TARDISDesktop implements Serializable {
         return TardisUtil.getTardisDimension();
     }
     public BlockPos getInteriorDoorPos() {
-        if (interiorDoorPos != null && getInteriorDimension().getBlockEntity(interiorDoorPos) instanceof DoorBlockEntity) {
             return interiorDoorPos;
-        } else {
-            return searchForDoorPosAndUpdate();
-        }
     }
     public List<AbsoluteBlockPos> getInteriorCornerPositions() {
         return interiorCornerPosList;
@@ -60,7 +56,12 @@ public class TARDISDesktop implements Serializable {
     public BlockPos getCentreBlockPos() {
         return getInteriorCornerPositions().get(0).toBlockPos().add(getSchema().getTemplate().getSize().getX() / 2, 0, getSchema().getTemplate().getSize().getZ() / 2);
     }
-    private BlockPos searchForDoorPosAndUpdate() {
+
+    public void setInteriorDoorPosition(BlockPos pos) {
+        this.interiorDoorPos = pos;
+    }
+
+    /*private BlockPos searchForDoorPosAndUpdate() {
         BlockPos doorPos = interiorCornerPosList.get(0).toBlockPos().add(getSchema().getDoorPosition().toBlockPos());
         System.out.println(doorPos);
 
@@ -75,7 +76,7 @@ public class TARDISDesktop implements Serializable {
         this.interiorDoorPos = doorPos;
 
         return doorPos;
-    }
+    }*/
 
     public static BlockPos offsetDoorPosition(BlockPos blockPos, World world) {
         BlockPos adjustedPos = new BlockPos(0,0,0);

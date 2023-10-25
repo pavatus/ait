@@ -12,6 +12,7 @@ import mdteam.ait.core.components.world.tardis.TardisComponent;
 import mdteam.ait.core.helper.desktop.DesktopInit;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;

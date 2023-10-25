@@ -124,6 +124,10 @@ public class ExteriorBlockEntity extends BlockEntity {
         if (entity instanceof ServerPlayerEntity player && !world.isClient()) {
             if (getLeftDoorRotation() > 0 || getRightDoorRotation() > 0) {
                 getDesktop().teleportToDoor(player);
+                //Don't use this commented-out one it's just a reminder for me.
+                //WorldOps.teleportToWorld(player, (ServerWorld) getTardis().getPosition().getDimension(),
+                //                        offsetDoorPosition(getTardis().getPosition().toBlockPos(), getTardis().getPosition().getDimension()).toCenterPos(),
+                //                        getTardis().getPosition().getDirection().asRotation(),player.getPitch());
                 if (getDesktop() != null && getDesktop().needsGeneration()) {
                     getDesktop().generate();
                 }

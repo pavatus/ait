@@ -1,5 +1,6 @@
 package mdteam.ait.core.blockentities;
 
+import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
@@ -20,6 +21,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -31,15 +33,17 @@ import java.awt.*;
 import java.util.UUID;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
+import static mdteam.ait.core.helper.desktop.TARDISDesktop.offsetDoorPosition;
 import static mdteam.ait.core.helper.desktop.TARDISDesktop.teleportToExterior;
 
 public class DoorBlockEntity extends BlockEntity {
 
-    private UUID tardisUUid;
+    private Tardis tardis;
 
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
         setTardis(getTardis());
+        getTardis().getDesktop().setInteriorDoorPosition(getPos());
     }
 
     public static void tick(World world1, BlockPos pos, BlockState state1, ExteriorBlockEntity be) {
@@ -48,19 +52,17 @@ public class DoorBlockEntity extends BlockEntity {
 
     public void useOn(BlockHitResult hit, BlockState state, PlayerEntity player, World world, boolean sneaking) {
         world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS,0.6f, 1f);
-        if(!sneaking) onEntityCollision(state, world, getPos(), player);
-    }
-
-    public UUID getTardisUuid() {
-        return tardisUUid;
-    }
-
-    public Tardis getTardis() {
-        return TardisHandler.getTardisByInteriorPos(pos);
+        if(!sneaking) onEntityCollision(state, world, pos, player);
     }
 
     public void setTardis(Tardis tardis) {
-        if(tardis != null) this.tardisUUid = tardis.getUuid();
+        this.tardis = tardis;
+    }
+
+    public Tardis getTardis() {
+        if(tardis == null)
+            return TardisHandler.getTardisByInteriorPos(pos);
+        else return tardis;
     }
 
     public TARDISDesktop getDesktop() {
@@ -70,24 +72,32 @@ public class DoorBlockEntity extends BlockEntity {
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        if(tardisUUid != null) {
-            nbt.putUuid("tardis", tardisUUid);
+        if(tardis != null) {
+            nbt.putUuid("tardis", tardis.getUuid());
         }
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+        getTardis().getDesktop().setInteriorDoorPosition(getPos());
         if(nbt.contains("tardis")) {
-            this.tardisUUid = nbt.getUuid("tardis");
+            this.tardis = TardisHandler.getTardis(nbt.getUuid("tardis"));
         }
     }
 
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        Tardis tardis = TardisHandler.getTardis(this.tardisUUid);
         if (entity instanceof ServerPlayerEntity player && !world.isClient()) {
-            if (tardis != null)
-                teleportToExterior(player, tardis.getPosition(), tardis.getPosition().getDimension(), tardis.getPosition().getDirection());
+            if (getTardis() != null) {
+                //TeleportHelper helper = new TeleportHelper(entity.getUuid(), new AbsoluteBlockPos(offsetDoorPosition(getPos(),
+                //        getTardis().getPosition().getDimension()), getTardis().getPosition().getDirection(), getTardis().getPosition().getDimension()));
+                //System.out.println(helper + " " + getTardis().getPosition().getDimension());
+                WorldOps.teleportToWorld(player, (ServerWorld) getTardis().getPosition().getDimension(),
+                        offsetDoorPosition(getTardis().getPosition().toBlockPos(), getTardis().getPosition().getDimension()).toCenterPos(),
+                        getTardis().getPosition().getDirection().asRotation(),player.getPitch());
+            }
+        //        teleportToExterior(player, getTardis().getPosition(), getTardis().getPosition().getDimension(), getTardis().getPosition().getDirection());
+
         }
     }
 }
