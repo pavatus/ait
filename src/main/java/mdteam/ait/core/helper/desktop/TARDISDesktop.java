@@ -63,30 +63,13 @@ public class TARDISDesktop implements Serializable {
         this.interiorDoorPos = pos;
     }
 
-    /*private BlockPos searchForDoorPosAndUpdate() {
-        BlockPos doorPos = interiorCornerPosList.get(0).toBlockPos().add(getSchema().getDoorPosition().toBlockPos());
-        System.out.println(doorPos);
-
-        if (!(getInteriorDimension().getBlockState(doorPos).getBlock() instanceof DoorBlock)) {
-            doorPos = TardisHandler.searchForDoorBlock(interiorCornerPosList);
-        }
-
-        DoorBlockEntity door = (DoorBlockEntity) getInteriorDimension().getBlockEntity(doorPos);
-        assert door != null;
-        door.setTardis(TardisHandler.getTardisByInteriorPos(doorPos));
-
-        this.interiorDoorPos = doorPos;
-
-        return doorPos;
-    }*/
-
     public static BlockPos offsetDoorPosition(BlockPos blockPos, World world) {
         BlockPos adjustedPos = new BlockPos(0,0,0);
-        Direction doorDirection = /*world
+        Direction currentDir = world
                 .getBlockState(
                         blockPos)
-                .get(Properties.HORIZONTAL_FACING);*/ Direction.NORTH;
-        switch(doorDirection) {
+                .get(Properties.HORIZONTAL_FACING);
+        switch(currentDir) {
             case NORTH -> adjustedPos = new BlockPos.Mutable(blockPos.getX() + 0.5,blockPos.getY(),blockPos.getZ() - 1);
             case SOUTH -> adjustedPos = new BlockPos.Mutable(blockPos.getX() + 0.5,blockPos.getY(),blockPos.getZ() + 1);
             case EAST -> adjustedPos = new BlockPos.Mutable(blockPos.getX() + 1,blockPos.getY(),blockPos.getZ() + 0.5);
@@ -109,10 +92,11 @@ public class TARDISDesktop implements Serializable {
         helper.teleport((ServerWorld) entity.getWorld());
     }
 
-    public static void teleportToExterior(Entity entity, AbsoluteBlockPos blockPos, World world, Direction direction) {
+    //Unused for now, will move some stuff into here later :p
+
+    /*public static void teleportToExterior(Entity entity, AbsoluteBlockPos blockPos, World world, Direction direction) {
 
         ServerWorld newServerWorld = AITMod.mcServer.getWorld(world.getRegistryKey());
-        //if(newServerWorld != null) newServerWorld.getChunk(blockPos.toBlockPos());
         ServerPlayerEntity player = AITMod.mcServer.getPlayerManager().getPlayer(entity.getUuid());
         if(newServerWorld != null) {
             if(player != null) {
@@ -123,7 +107,7 @@ public class TARDISDesktop implements Serializable {
                 helper.teleport(newServerWorld);
             }
         }
-    }
+    }*/
 
     public void delete() {
         DesktopGenerator.InteriorGenerator generator = new DesktopGenerator.InteriorGenerator(tardis, (ServerWorld) getInteriorDimension(),getSchema());

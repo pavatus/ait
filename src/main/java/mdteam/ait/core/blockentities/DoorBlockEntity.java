@@ -35,7 +35,6 @@ import java.util.UUID;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
 import static mdteam.ait.core.helper.desktop.TARDISDesktop.offsetDoorPosition;
-import static mdteam.ait.core.helper.desktop.TARDISDesktop.teleportToExterior;
 
 public class DoorBlockEntity extends BlockEntity {
 
