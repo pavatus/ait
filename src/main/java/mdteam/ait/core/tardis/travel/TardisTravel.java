@@ -327,6 +327,7 @@ public class TardisTravel implements Serializable {
         BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, getDestination().getDirection());
         level.setBlockState(getDestination().toBlockPos(), state, 3);
         ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(getDestination().toBlockPos(), state);
+        blockEntity.setTardis(getTardis());
         level.addBlockEntity(blockEntity);
         setUuid(tardisUuid);
 
