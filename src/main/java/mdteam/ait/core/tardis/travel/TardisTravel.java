@@ -24,6 +24,8 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 /**
+ * Mostly copied from box mod's TARDISTravel class and then ported to fabric
+ * Not the best way to do things, especially due to the ongoing issues with saves (also an issue in box mod) @TODO Better implementation?
  * @TODO No sounds implemented, so all sound references are commented out.
  */
 public class TardisTravel implements Serializable {
@@ -179,8 +181,10 @@ public class TardisTravel implements Serializable {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                // Delete the block and rematerialise if needed.
+//                ForgeChunkManager.forceChunk((ServerLevel) level, TARDISMod.MODID, travel.tardis.getPosition(),0, 0,true,true);
                 travel.setState(STATE.FLIGHT);
-                level.getChunk(travel.getDestination().toBlockPos());
+                level.getChunk(travel.destination.toBlockPos());
 
                 level.removeBlock(travel.getTardis().getPosition().toBlockPos(), false);
 
