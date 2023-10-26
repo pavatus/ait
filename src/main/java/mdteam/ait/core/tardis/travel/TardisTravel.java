@@ -234,20 +234,21 @@ public class TardisTravel implements Serializable {
         dematerialise(false);
     }
     public void dematerialise(boolean withRemat) {
-        if (getTardis().world().isClient) {return;}
-        System.out.println("DEMATERIALISING");
-        System.out.println(getState());
-        System.out.println(getHandbrakeChecks());
-        System.out.println(canTakeoff());
+        if (getTardis().getPosition().getDimension().isClient) {return;}
+        System.out.println(getTardis().getUuid() + ": " + "DEMATERIALISING");
+        System.out.println(getTardis().getUuid() + ": " + "DESTINATION: " + getDestination());
+        System.out.println(getTardis().getUuid() + ": " + getState());
+        System.out.println(getTardis().getUuid() + ": " + getHandbrakeChecks());
+        System.out.println(getTardis().getUuid() + ": " + canTakeoff());
 
-        World level = getTardis().world();
+        World level = getTardis().getPosition().getDimension();
 
         if (getHandbrakeChecks()) {
             return;
         }
 
         if (!(canTakeoff())) {
-            return;
+                return;
         }
 
         setState(STATE.DEMAT);
@@ -263,10 +264,8 @@ public class TardisTravel implements Serializable {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                // Delete the block and rematerialise if needed.
-//                ForgeChunkManager.forceChunk((ServerLevel) level, TARDISMod.MODID, travel.tardis.getPosition(),0, 0,true,true);
                 travel.setState(STATE.FLIGHT);
-                level.getChunk(travel.destination.toBlockPos());
+                level.getChunk(travel.getDestination().toBlockPos());
 
                 level.removeBlock(travel.getTardis().getPosition().toBlockPos(), false);
 
@@ -359,8 +358,12 @@ public class TardisTravel implements Serializable {
     public boolean inFlight() {
         return getState() == STATE.FLIGHT;
     }
-    public boolean isMaterialising() {return getState() == STATE.MAT;}
-    public boolean isDematerialising() {return getState() == STATE.DEMAT;}
+    public boolean isMaterialising() {
+        return getState() == STATE.MAT;
+    }
+    public boolean isDematerialising() {
+        return getState() == STATE.DEMAT;
+    }
     public void setState(STATE state) {
         this.state = state;
     }

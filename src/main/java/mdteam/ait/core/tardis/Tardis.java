@@ -52,7 +52,7 @@ public class Tardis implements Serializable {
 
     public TardisTravel getTravel() {
         if (this.travel == null) this.travel = new TardisTravel(this.getUuid());
-
+        System.out.println(this.travel);
         return this.travel;
     }
 
