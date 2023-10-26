@@ -29,7 +29,7 @@ public class TeleportHelper {
 
     public void teleport(ServerWorld origin) {
         Entity entity = origin.getEntity(entityUUID);
-        destination.getDimension().getWorldChunk(destination.toBlockPos());
+        destination.getDimension().getChunk(destination.toBlockPos());
 
         if (entity instanceof ServerPlayerEntity player) {
             player.teleport((ServerWorld) destination.getDimension(), destination.getX() + 0.5, destination.getY(), destination.getZ() + 0.5,destination.getDirection().asRotation(), entity.getPitch());

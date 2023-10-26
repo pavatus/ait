@@ -7,6 +7,8 @@ import mdteam.ait.core.helper.*;
 import mdteam.ait.core.tardis.Tardis;
 import mdteam.ait.core.tardis.TardisHandler;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -109,9 +111,18 @@ public class TARDISDesktop implements Serializable {
 
     public static void teleportToExterior(Entity entity, AbsoluteBlockPos blockPos, World world, Direction direction) {
 
-        TeleportHelper helper = new TeleportHelper(entity.getUuid(), new AbsoluteBlockPos(offsetDoorPosition(blockPos.toBlockPos(), world), direction, world));
-
-        helper.teleport((ServerWorld) entity.getWorld());
+        ServerWorld newServerWorld = AITMod.mcServer.getWorld(world.getRegistryKey());
+        //if(newServerWorld != null) newServerWorld.getChunk(blockPos.toBlockPos());
+        ServerPlayerEntity player = AITMod.mcServer.getPlayerManager().getPlayer(entity.getUuid());
+        if(newServerWorld != null) {
+            if(player != null) {
+                TeleportHelper helper = new TeleportHelper(player.getUuid(), new AbsoluteBlockPos(offsetDoorPosition(blockPos.toBlockPos(), newServerWorld), direction, newServerWorld));
+                helper.teleport(newServerWorld);
+            } else if (!(entity instanceof PlayerEntity)) {
+                TeleportHelper helper = new TeleportHelper(entity.getUuid(), new AbsoluteBlockPos(offsetDoorPosition(blockPos.toBlockPos(), newServerWorld), direction, newServerWorld));
+                helper.teleport(newServerWorld);
+            }
+        }
     }
 
     public void delete() {

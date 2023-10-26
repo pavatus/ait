@@ -1,6 +1,7 @@
 package mdteam.ait.core.blockentities;
 
 import io.wispforest.owo.ops.WorldOps;
+import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
@@ -87,17 +88,17 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (entity instanceof ServerPlayerEntity player && !world.isClient()) {
-            if (getTardis() != null) {
-                //TeleportHelper helper = new TeleportHelper(entity.getUuid(), new AbsoluteBlockPos(offsetDoorPosition(getPos(),
-                //        getTardis().getPosition().getDimension()), getTardis().getPosition().getDirection(), getTardis().getPosition().getDimension()));
-                //System.out.println(helper + " " + getTardis().getPosition().getDimension());
-                WorldOps.teleportToWorld(player, (ServerWorld) getTardis().getPosition().getDimension(),
-                        offsetDoorPosition(getTardis().getPosition().toBlockPos(), getTardis().getPosition().getDimension()).toCenterPos(),
-                        getTardis().getPosition().getDirection().asRotation(),player.getPitch());
+        ServerPlayerEntity player = AITMod.mcServer.getPlayerManager().getPlayer(entity.getUuid());
+        ServerWorld newServerWorld = AITMod.mcServer.getWorld(getTardis().getPosition().getDimension().getRegistryKey());
+        if(newServerWorld != null) newServerWorld.getChunk(getTardis().getPosition().toBlockPos());
+        if (player != null) {
+            if (!world.isClient()) {
+                if (getTardis() != null) {
+                    WorldOps.teleportToWorld(player, newServerWorld,
+                            offsetDoorPosition(getTardis().getPosition().toBlockPos(), getTardis().getPosition().getDimension()).toCenterPos(),
+                            getTardis().getPosition().getDirection().asRotation(), player.getPitch());
+                }
             }
-        //        teleportToExterior(player, getTardis().getPosition(), getTardis().getPosition().getDimension(), getTardis().getPosition().getDirection());
-
         }
     }
 }
