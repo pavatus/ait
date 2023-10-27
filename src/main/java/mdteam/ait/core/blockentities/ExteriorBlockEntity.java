@@ -152,7 +152,6 @@ public class ExteriorBlockEntity extends BlockEntity {
         ServerPlayerEntity player = AITMod.mcServer.getPlayerManager().getPlayer(entity.getUuid());
         ServerWorld newServerWorld = AITMod.mcServer.getWorld(TardisUtil.getTardisDimension().getRegistryKey());
         if (newServerWorld != null) {
-            newServerWorld.getChunk(getDesktop().getInteriorDoorPos());
             if (player != null)
                 if (getLeftDoorRotation() > 0 || getRightDoorRotation() > 0) {
                     WorldOps.teleportToWorld(player, newServerWorld,

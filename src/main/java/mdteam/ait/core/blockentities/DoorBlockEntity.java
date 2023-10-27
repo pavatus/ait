@@ -127,7 +127,6 @@ public class DoorBlockEntity extends BlockEntity {
         ServerPlayerEntity player = AITMod.mcServer.getPlayerManager().getPlayer(entity.getUuid());
         ServerWorld newServerWorld = AITMod.mcServer.getWorld(getTardis().getPosition().getDimension().getRegistryKey());
         if (newServerWorld != null) {
-            newServerWorld.getChunk(getTardis().getPosition().toBlockPos());
             if (player != null)
                 if (getLeftDoorRotation() > 0 || getRightDoorRotation() > 0) {
                     player.teleport(newServerWorld, offsetDoorPosition(getTardis().getPosition().toBlockPos(), newServerWorld).getX(),
