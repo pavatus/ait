@@ -51,6 +51,7 @@
 		"cardinal-components": [
 			"ait:radionbt",
 			"ait:exteriornbt",
+			"ait:interiordoornbt",
 			"ait:tardisclassnbt"
 		]
 	}

@@ -28,12 +28,17 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Boxes;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import javax.swing.text.html.BlockView;
 import java.awt.*;
 import java.util.UUID;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
+import static mdteam.ait.AITMod.INTERIORDOORNBT;
 import static mdteam.ait.core.helper.desktop.TARDISDesktop.offsetDoorPosition;
 import static mdteam.ait.core.helper.desktop.TARDISDesktop.teleportToExterior;
 
@@ -45,6 +50,8 @@ public class DoorBlockEntity extends BlockEntity {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
         setTardis(getTardis());
         getTardis().getDesktop().setInteriorDoorPosition(getPos());
+        setLeftDoorRot(getLeftDoorRotation());
+        setRightDoorRot(getRightDoorRotation());
     }
 
     public static void tick(World world1, BlockPos pos, BlockState state1, ExteriorBlockEntity be) {
@@ -52,8 +59,19 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     public void useOn(BlockHitResult hit, BlockState state, PlayerEntity player, World world, boolean sneaking) {
+        if(getLeftDoorRotation() == 0) {
+            setLeftDoorRot(1.2f);
+        } else {
+            setLeftDoorRot(0);
+        }
         world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS,0.6f, 1f);
-        if(!sneaking) onEntityCollision(state, world, pos, player);
+        if(!sneaking) {
+            if (getTardis().getPosition().getDimension().getBlockEntity(getTardis().getPosition().toBlockPos()) instanceof ExteriorBlockEntity exteriorBlockEntity) {
+                getTardis().getPosition().getDimension().getChunk(exteriorBlockEntity.getPos());
+                exteriorBlockEntity.setLeftDoorRot(getLeftDoorRotation());
+                exteriorBlockEntity.setRightDoorRot(getRightDoorRotation());
+            }
+        }
     }
 
     public void setTardis(Tardis tardis) {
@@ -68,6 +86,22 @@ public class DoorBlockEntity extends BlockEntity {
 
     public TARDISDesktop getDesktop() {
         return this.getTardis().getDesktop();
+    }
+
+    public void setLeftDoorRot(float rotation) {
+        INTERIORDOORNBT.get(this).setLeftDoorRotation(rotation);
+    }
+
+    public void setRightDoorRot(float rotation) {
+        INTERIORDOORNBT.get(this).setRightDoorRotation(rotation);
+    }
+
+    public float getLeftDoorRotation() {
+        return INTERIORDOORNBT.get(this).getLeftDoorRotation();
+    }
+
+    public float getRightDoorRotation() {
+        return INTERIORDOORNBT.get(this).getRightDoorRotation();
     }
 
     @Override
@@ -88,17 +122,22 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (world.isClient()) return;
+        if (getTardis() == null) return;
         ServerPlayerEntity player = AITMod.mcServer.getPlayerManager().getPlayer(entity.getUuid());
         ServerWorld newServerWorld = AITMod.mcServer.getWorld(getTardis().getPosition().getDimension().getRegistryKey());
-        if(newServerWorld != null) newServerWorld.getChunk(getTardis().getPosition().toBlockPos());
-        if (player != null) {
-            if (!world.isClient()) {
-                if (getTardis() != null) {
-                    WorldOps.teleportToWorld(player, newServerWorld,
-                            offsetDoorPosition(getTardis().getPosition().toBlockPos(), getTardis().getPosition().getDimension()).toCenterPos(),
+        if (newServerWorld != null) {
+            newServerWorld.getChunk(getTardis().getPosition().toBlockPos());
+            if (player != null)
+                if (getLeftDoorRotation() > 0 || getRightDoorRotation() > 0) {
+                    player.teleport(newServerWorld, offsetDoorPosition(getTardis().getPosition().toBlockPos(), newServerWorld).getX(),
+                            offsetDoorPosition(getTardis().getPosition().toBlockPos(), newServerWorld).getY(),
+                            offsetDoorPosition(getTardis().getPosition().toBlockPos(), newServerWorld).getZ(),
                             getTardis().getPosition().getDirection().asRotation(), player.getPitch());
+                    //WorldOps.teleportToWorld(player, newServerWorld,
+                    //        offsetDoorPosition(getTardis().getPosition().toBlockPos(), newServerWorld).toCenterPos(),
+                    //        getTardis().getPosition().getDirection().asRotation(), player.getPitch());
                 }
-            }
         }
     }
 }

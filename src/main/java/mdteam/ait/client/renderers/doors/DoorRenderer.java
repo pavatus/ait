@@ -24,6 +24,8 @@ import net.minecraft.util.math.RotationAxis;
 
 import java.util.Map;
 
+import static mdteam.ait.AITMod.INTERIORDOORNBT;
+
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
     public static final Identifier DOOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/doors/shelter_door.png"));
     //public static final Identifier DOOR_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/shelter_emission.png");
@@ -47,21 +49,12 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         matrices.translate(0.5, 1.5, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-        if(entity.getWorld() == TardisUtil.getTardisDimension()) {
-            Model doorModel = new FalloutDoor(this.exteriormap.get(entity.getTardis().getExterior()));
+            FalloutDoor doorModel = new FalloutDoor(this.exteriormap.get(entity.getTardis().getExterior()));
             if (doorModel != null) {
-                //((FalloutDoor) doorModel).door.yaw = -entity.getLeftDoorRotation();
+                doorModel.door.yaw = entity.getLeftDoorRotation() > 0 ? entity.getLeftDoorRotation() + 0.3f : entity.getLeftDoorRotation();
                 doorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(DOOR_TEXTURE)), light, overlay, 1, 1, 1, 1);
                 //exteriorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(DOOR_TEXTURE_EMISSION)), light, overlay, 1, 1, 1, 1);
             }
-        } else {
-            Model doorModel = new FalloutDoor(this.exteriormap.get(ExteriorEnum.SHELTER));
-            if (doorModel != null) {
-                //((FalloutDoor) doorModel).door.yaw = -entity.getLeftDoorRotation();
-                doorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(DOOR_TEXTURE)), light, overlay, 1, 1, 1, 1);
-                //exteriorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(DOOR_TEXTURE_EMISSION)), light, overlay, 1, 1, 1, 1);
-            }
-        }
         matrices.pop();
     }
 }

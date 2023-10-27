@@ -82,10 +82,10 @@ public class TARDISDesktop implements Serializable {
 
     public static BlockPos offsetDoorPosition(BlockPos blockPos, World world) {
         BlockPos adjustedPos = new BlockPos(0,0,0);
-        Direction doorDirection = /*world
+        Direction doorDirection = world
                 .getBlockState(
                         blockPos)
-                .get(Properties.HORIZONTAL_FACING);*/ Direction.NORTH;
+                .get(Properties.HORIZONTAL_FACING);
         switch(doorDirection) {
             case NORTH -> adjustedPos = new BlockPos.Mutable(blockPos.getX() + 0.5,blockPos.getY(),blockPos.getZ() - 1);
             case SOUTH -> adjustedPos = new BlockPos.Mutable(blockPos.getX() + 0.5,blockPos.getY(),blockPos.getZ() + 1);

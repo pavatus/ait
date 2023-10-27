@@ -4,6 +4,7 @@ import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import mdteam.ait.core.*;
 import mdteam.ait.core.components.block.exterior.ExteriorNBTComponent;
+import mdteam.ait.core.components.block.interior_door.InteriorDoorNBTComponent;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
@@ -12,7 +13,6 @@ import mdteam.ait.core.components.world.tardis.TardisComponent;
 import mdteam.ait.core.helper.desktop.DesktopInit;
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
@@ -35,6 +35,9 @@ public class AITMod implements ModInitializer {
 
 	public static final ComponentKey<ExteriorNBTComponent> EXTERIORNBT =
 			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "exteriornbt"), ExteriorNBTComponent.class);
+
+	public static final ComponentKey<InteriorDoorNBTComponent> INTERIORDOORNBT =
+			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "interiordoornbt"), InteriorDoorNBTComponent.class);
 
 	public static final ComponentKey<TardisComponent> TARDISCLASSNBT =
 			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "tardisclassnbt"), TardisComponent.class);
