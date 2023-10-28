@@ -11,13 +11,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class HorizontalDirectionalBlock extends Block {
 
-    static {
-        FACING = HorizontalFacingBlock.FACING;
-    }
+    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
 
-    public static final DirectionProperty FACING;
     public HorizontalDirectionalBlock(Settings settings) {
         super(settings);
+
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
 

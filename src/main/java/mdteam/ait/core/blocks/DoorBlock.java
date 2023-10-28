@@ -7,8 +7,6 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -40,8 +38,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
             case EAST -> EAST_SHAPE;
             case SOUTH -> SOUTH_SHAPE;
             case WEST -> WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
+            default -> throw new RuntimeException("Invalid facing direction in " + this);
         };
     }
 
@@ -52,8 +49,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
             case EAST -> EAST_SHAPE;
             case SOUTH -> SOUTH_SHAPE;
             case WEST -> WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
+            default -> throw new RuntimeException("Invalid facing direction in " + this);
         };
     }
 
@@ -72,15 +68,12 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        super.onEntityCollision(state, world, pos, entity);
-        if(world.isClient) return;
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof DoorBlockEntity doorBlockEntity) doorBlockEntity.onEntityCollision(world, entity);
-    }
+        if(world.isClient())
+            return;
 
-    @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
-        return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof DoorBlockEntity door)
+            door.onEntityCollision(entity);
     }
 
     @Nullable

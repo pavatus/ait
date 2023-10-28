@@ -3,6 +3,7 @@ package mdteam.ait.core.blockentities;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.api.tardis.ITardis;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
@@ -13,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import the.mdteam.ait.TardisManager;
 
@@ -29,10 +31,10 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public void useOn(World world, boolean sneaking) {
-        if(getLeftDoorRotation() == 0) {
-            setLeftDoorRot(1.2f);
+        if(this.getLeftDoorRotation() == 0) {
+            this.setLeftDoorRot(1.2f);
         } else {
-            setLeftDoorRot(0);
+            this.setLeftDoorRot(0);
         }
 
         if (sneaking)
@@ -50,16 +52,6 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         }
     }
 
-    @Override
-    public ITardis getTardis() {
-        return tardis;
-    }
-
-    @Override
-    public void setTardis(ITardis tardis) {
-        this.tardis = tardis;
-    }
-
     public void setLeftDoorRot(float rotation) {
         INTERIORDOORNBT.get(this).setLeftDoorRotation(rotation);
     }
@@ -74,6 +66,10 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
 
     public float getRightDoorRotation() {
         return INTERIORDOORNBT.get(this).getRightDoorRotation();
+    }
+
+    public Direction getFacing() {
+        return this.getCachedState().get(HorizontalDirectionalBlock.FACING);
     }
 
     @Override
@@ -94,18 +90,25 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         }
     }
 
-    public void onEntityCollision(World world, Entity entity) {
+    public void onEntityCollision(Entity entity) {
         if (this.getTardis() == null)
-            return;
-
-        if (!world.isClient())
             return;
 
         if (!(entity instanceof ServerPlayerEntity player))
             return;
 
         if (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
-            TardisUtil.teleport(player, this.getTardis().getTravel().getPosition(), player.getPitch());
+            TardisUtil.teleportOutside(this.tardis, player);
         }
+    }
+
+    @Override
+    public ITardis getTardis() {
+        return tardis;
+    }
+
+    @Override
+    public void setTardis(ITardis tardis) {
+        this.tardis = tardis;
     }
 }

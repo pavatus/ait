@@ -1,7 +1,9 @@
 package mdteam.ait.core.helper;
 
+import mdteam.ait.api.tardis.IDesktop;
 import mdteam.ait.api.tardis.ITardis;
 import mdteam.ait.api.tardis.ITardisManager;
+import mdteam.ait.api.tardis.ITravel;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -11,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.BlockRotation;
@@ -18,6 +21,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import java.util.*;
 
@@ -107,11 +112,65 @@ public class TardisUtil {
         player.teleport(world, destination.getX(), destination.getY(), destination.getZ(), yaw, pitch);
     }
 
+    public static void teleport(ServerPlayerEntity player, ServerWorld world, Vec3d destination, float yaw, float pitch) {
+        player.teleport(world, destination.getX(), destination.getY(), destination.getZ(), yaw, pitch);
+    }
+
     public static void teleport(ServerPlayerEntity player, AbsoluteBlockPos destination, float yaw, float pitch) {
         TardisUtil.teleport(player, (ServerWorld) destination.getWorld(), destination, yaw, pitch);
     }
 
     public static void teleport(ServerPlayerEntity player, AbsoluteBlockPos.Directed destination, float pitch) {
         TardisUtil.teleport(player, (ServerWorld) destination.getWorld(), destination, destination.getDirection().asRotation(), pitch);
+    }
+
+    public static BlockPos offsetInteriorDoorPosition(ITardis tardis) {
+        return TardisUtil.offsetInteriorDoorPosition(tardis.getDesktop());
+    }
+
+    public static BlockPos offsetInteriorDoorPosition(IDesktop desktop) {
+        return TardisUtil.offsetInteriorDoorPosition(desktop.getInteriorDoorPos());
+    }
+
+    public static BlockPos offsetInteriorDoorPosition(BlockPos pos) {
+        return TardisUtil.offsetDoorPosition(TardisUtil.getTardisDimension(), pos);
+    }
+
+    public static BlockPos offsetExteriorDoorPosition(ITardis tardis) {
+        return TardisUtil.offsetExteriorDoorPosition(tardis.getTravel());
+    }
+
+    public static BlockPos offsetExteriorDoorPosition(ITravel travel) {
+        AbsoluteBlockPos.Directed directed = travel.getPosition();
+        return TardisUtil.offsetDoorPosition(directed.getWorld(), directed);
+    }
+
+    public static BlockPos offsetDoorPosition(World world, BlockPos pos) {
+        Direction doorDirection = world.getBlockState(pos).get(Properties.HORIZONTAL_FACING);
+
+        return switch (doorDirection) {
+            case DOWN, UP -> throw new IllegalArgumentException("Cannot adjust door position with direction: " + doorDirection);
+            case NORTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() - 1);
+            case SOUTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() + 1);
+            case EAST -> new BlockPos.Mutable(pos.getX() + 1, pos.getY(), pos.getZ() + 0.5);
+            case WEST -> new BlockPos.Mutable(pos.getX() - 1, pos.getY(), pos.getZ() + 0.5);
+        };
+    }
+
+    public static void teleportOutside(ITardis tardis, ServerPlayerEntity player) {
+        AbsoluteBlockPos.Directed pos = tardis.getTravel().getPosition();
+
+        TardisUtil.teleport(
+                player, (ServerWorld) pos.getWorld(), TardisUtil.offsetExteriorDoorPosition(tardis)
+                        .toCenterPos(), pos.getDirection().asRotation(), player.getPitch()
+        );
+    }
+
+    public static void teleportInside(ITardis tardis, ServerPlayerEntity player) {
+        AbsoluteBlockPos.Directed pos = tardis.getDesktop().getInteriorDoorPos();
+
+        TardisUtil.teleport(player, TardisUtil.getTardisDimension(), TardisUtil.offsetInteriorDoorPosition(pos)
+                .toCenterPos(), pos.getDirection().asRotation(), player.getPitch()
+        );
     }
 }

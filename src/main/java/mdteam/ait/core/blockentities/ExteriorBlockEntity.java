@@ -1,9 +1,7 @@
 package mdteam.ait.core.blockentities;
 
-import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.api.tardis.ITardis;
-import mdteam.ait.api.tardis.ITardisManager;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
@@ -17,8 +15,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import the.mdteam.ait.TardisManager;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
 
@@ -97,7 +94,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         super.readNbt(nbt);
 
         if (nbt.contains("tardis")) {
-            this.tardis = ITardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+            this.tardis = TardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
         }
     }
 
@@ -109,10 +106,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             return;
 
         if (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
-            WorldOps.teleportToWorld(player, TardisUtil.getTardisDimension(),
-                    this.getTardis().getDesktop().offsetDoorPosition().toCenterPos(),
-                    Direction.NORTH.asRotation(), player.getPitch()
-            );
+            TardisUtil.teleportInside(this.tardis, player);
         }
     }
 
