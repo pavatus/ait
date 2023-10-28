@@ -1,8 +1,6 @@
 package mdteam.ait.core.blocks;
 
-import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -12,23 +10,17 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
@@ -67,13 +59,14 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.SUCCESS;
         }
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof DoorBlockEntity doorBlock) {
-            doorBlock.useOn(hit, state, player, world, player.isSneaking());
+
+        if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
+            door.useOn(world, player.isSneaking());
         }
+
         return ActionResult.CONSUME;
     }
 
@@ -82,7 +75,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
         super.onEntityCollision(state, world, pos, entity);
         if(world.isClient) return;
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof DoorBlockEntity doorBlockEntity) doorBlockEntity.onEntityCollision(state, world, pos, entity);
+        if (blockEntity instanceof DoorBlockEntity doorBlockEntity) doorBlockEntity.onEntityCollision(world, entity);
     }
 
     @Nullable
@@ -100,5 +93,4 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
     public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
         return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
     }
-
 }

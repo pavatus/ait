@@ -1,9 +1,8 @@
 package mdteam.ait.core;
 
-import io.wispforest.owo.Owo;
-import mdteam.ait.AITMod;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
+import mdteam.ait.AITMod;
 import mdteam.ait.core.item.RemoteItem;
 import mdteam.ait.core.item.TardisItemBuilder;
 import net.minecraft.item.Item;

@@ -3,15 +3,8 @@ package mdteam.ait.core.components.block.exterior;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
-import mdteam.ait.core.helper.desktop.DesktopInit;
-import mdteam.ait.core.helper.desktop.DesktopSchema;
-import mdteam.ait.core.helper.desktop.TARDISDesktop;
-import mdteam.ait.core.helper.desktop.impl.WarDesktop;
-import mdteam.ait.core.tardis.TardisHandler;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
-
-import java.util.UUID;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
 public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedComponent {

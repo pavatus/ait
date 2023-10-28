@@ -1,67 +1,117 @@
 package mdteam.ait.core.helper;
 
-import com.mojang.logging.LogUtils;
-import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.core.AITBlocks;
+import mdteam.ait.api.tardis.ITardis;
+import mdteam.ait.api.tardis.ITardisManager;
 import mdteam.ait.core.AITDimensions;
+import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.helper.desktop.DesktopSchema;
-import mdteam.ait.core.helper.desktop.TARDISDesktop;
-import mdteam.ait.core.tardis.Tardis;
-import mdteam.ait.core.tardis.TardisHandler;
-import net.minecraft.block.entity.BlockEntity;
+import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.data.Corners;
+import net.minecraft.block.Block;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class TardisUtil {
-    public static ServerWorld getTardisDimension(MinecraftServer server) {
-        return server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
+
+    private static final Random random = new Random();
+
+    private static MinecraftServer SERVER;
+    private static ServerWorld TARDIS_DIMENSION;
+
+    //FIXME: here
+    public static void init(MinecraftServer server) {
+        SERVER = server;
+        TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
     }
+
+    public static MinecraftServer getServer() {
+        return SERVER;
+    }
+
     public static ServerWorld getTardisDimension() {
-        return getTardisDimension(AITMod.mcServer);
-    }
-    public static Map<UUID, Tardis> getTardisMap() {
-        return TardisHandler.tardisses;
-    }
-    public static Tardis getTardisFromUuid(UUID uuid) {
-        return TardisHandler.getTardis(uuid);
-    }
-    public static Tardis create(AbsoluteBlockPos position, ExteriorEnum exterior, DesktopSchema schema, UUID id) {
-        TARDISDesktop desktop = new TARDISDesktop(schema);
-        System.out.println(schema);
-        Tardis tardis = new Tardis();
-        tardis.setExterior(exterior);
-        tardis.setUuid(id);
-        tardis.setPosition(position);
-        tardis.setDesktop(desktop);
-        TardisHandler.saveTardis(tardis);
-        if(position != null) placeExterior(tardis);
-        return tardis;
-    }
-    public static ExteriorBlockEntity placeExterior(Tardis tardis) {
-
-        tardis.world().setBlockState(tardis.getPosition().toBlockPos(), AITBlocks.EXTERIOR_BLOCK.getDefaultState());
-
-        ExteriorBlockEntity entity = new ExteriorBlockEntity(tardis.getPosition().toBlockPos(), tardis.world().getBlockState(tardis.getPosition().toBlockPos()));
-        entity.setTardis(tardis);
-        tardis.world().addBlockEntity(entity);
-
-        return (ExteriorBlockEntity) tardis.world().getBlockEntity(tardis.getPosition().toBlockPos());
+        return TARDIS_DIMENSION;
     }
 
-    public static void updateBlockEntity(Tardis tardis) {
-        if (tardis.world().isClient()) return;
+    public static boolean inBox(Box box, BlockPos pos) {
+        return pos.getX() <= box.maxX && pos.getX() >= box.minX &&
+                pos.getZ() <= box.maxZ && pos.getZ() >= box.minZ;
+    }
 
-        BlockEntity entity = tardis.world().getBlockEntity(tardis.getPosition().toBlockPos());
+    public static boolean inBox(Corners corners, BlockPos pos) {
+        return inBox(corners.getBox(), pos);
+    }
 
-        if (!(entity instanceof ExteriorBlockEntity exteriorBlockEntity)) {
-            LogUtils.getLogger().error("Could not find Exterior Block Entity at " + tardis.getPosition().toString() + " when trying to update!\nInstead got: " + entity);
-        } else {
-            exteriorBlockEntity.setTardis(tardis);
-        }
+    public static DoorBlockEntity getDoor(ITardis tardis) {
+        if (!(TardisUtil.getTardisDimension().getBlockEntity(tardis.getDesktop().getInteriorDoorPos()) instanceof DoorBlockEntity door))
+            return null;
+
+        return door;
+    }
+
+    public static ExteriorBlockEntity getExterior(ITardis tardis) {
+        if (!(tardis.getTravel().getPosition().getBlockEntity() instanceof ExteriorBlockEntity exterior))
+            return null;
+
+        return exterior;
+    }
+
+    public static Corners findInteriorSpot() {
+        BlockPos first = findRandomPlace();
+
+        return new Corners(
+                first, first.add(256, 0, 256)
+        );
+    }
+
+    public static BlockPos findRandomPlace() {
+        return new BlockPos(random.nextInt(100000), 0, random.nextInt(100000));
+    }
+
+    public static BlockPos findBlockInTemplate(StructureTemplate template, BlockPos pos, Direction direction, Block targetBlock) {
+        List<StructureTemplate.StructureBlockInfo> list = template.getInfosForBlock(
+                pos, new StructurePlacementData().setRotation(
+                        TardisUtil.directionToRotation(direction)
+                ), targetBlock
+        );
+
+        if (list.isEmpty())
+            return null;
+
+        return list.get(0).pos();
+    }
+
+    public static BlockRotation directionToRotation(Direction direction) {
+        return switch (direction) {
+            case NORTH -> BlockRotation.CLOCKWISE_180;
+            case EAST -> BlockRotation.COUNTERCLOCKWISE_90;
+            case WEST -> BlockRotation.CLOCKWISE_90;
+            default -> BlockRotation.NONE;
+        };
+    }
+
+    public static Optional<StructureTemplate> findStructure(Identifier identifier) {
+        return TardisUtil.getServer().getStructureTemplateManager().getTemplate(identifier);
+    }
+
+    public static void teleport(ServerPlayerEntity player, ServerWorld world, BlockPos destination, float yaw, float pitch) {
+        player.teleport(world, destination.getX(), destination.getY(), destination.getZ(), yaw, pitch);
+    }
+
+    public static void teleport(ServerPlayerEntity player, AbsoluteBlockPos destination, float yaw, float pitch) {
+        TardisUtil.teleport(player, (ServerWorld) destination.getWorld(), destination, yaw, pitch);
+    }
+
+    public static void teleport(ServerPlayerEntity player, AbsoluteBlockPos.Directed destination, float pitch) {
+        TardisUtil.teleport(player, (ServerWorld) destination.getWorld(), destination, destination.getDirection().asRotation(), pitch);
     }
 }

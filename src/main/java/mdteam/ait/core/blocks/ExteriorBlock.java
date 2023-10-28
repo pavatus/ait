@@ -1,6 +1,5 @@
 package mdteam.ait.core.blocks;
 
-import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import net.minecraft.block.Block;
@@ -8,29 +7,18 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.structure.pool.StructurePoolBasedGenerator;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.Nullable;
 
 public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
@@ -63,49 +51,30 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
             case EAST -> EAST_SHAPE;
             case SOUTH -> SOUTH_SHAPE;
             case WEST -> WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
+            default -> throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
         };
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient())
             return ActionResult.SUCCESS;
-        }
+
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) {
-            exteriorBlockEntity.useOn(hit, state, player, world, player.isSneaking());
-        }
+        if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity)
+            exteriorBlockEntity.useOn((ServerWorld) world, player.isSneaking());
+
         return ActionResult.CONSUME;
     }
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        super.onEntityCollision(state, world, pos, entity);
-        if(world.isClient) return;
+        if(world.isClient())
+            return;
+
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) exteriorBlockEntity.onEntityCollision(state, world, pos, entity);
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.onPlaced(world, pos, state, placer, itemStack);
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) {
-            exteriorBlockEntity.onPlace(world,pos,state,placer,itemStack);
-        }
-    }
-
-    @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
-        return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, (world1, pos, state1, be) -> ExteriorBlockEntity.tick(world1, pos, state1, be));
+        if (blockEntity instanceof ExteriorBlockEntity exterior)
+            exterior.onEntityCollision(entity);
     }
 
     @Nullable
@@ -118,5 +87,4 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
     public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
         return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
     }
-
 }

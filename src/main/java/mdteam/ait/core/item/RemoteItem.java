@@ -1,9 +1,8 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.api.tardis.ITardis;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.helper.AbsoluteBlockPos;
-import mdteam.ait.core.tardis.Tardis;
-import mdteam.ait.core.tardis.TardisHandler;
+import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,14 +12,13 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import the.mdteam.ait.TardisManager;
 
 import java.util.List;
-import java.util.UUID;
 
 public class RemoteItem extends Item {
 
@@ -34,50 +32,46 @@ public class RemoteItem extends Item {
         BlockPos pos = context.getBlockPos();
         PlayerEntity player = context.getPlayer();
         ItemStack itemStack = context.getStack();
-        if (!world.isClient()) {
 
-            // Link to exteriors tardis if it exists and player is crouching
-            if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && player.isSneaking()) {
-                if (exterior.getTardis() == null) return ActionResult.FAIL;
+        if (world.isClient() || player == null)
+            return ActionResult.PASS;
 
-                if(!itemStack.hasNbt()) {
-                    itemStack.getOrCreateNbt().putUuid("tardis", exterior.getTardis().getUuid());
-                    player.setStackInHand(context.getHand(), itemStack);
-                }
-                return ActionResult.SUCCESS;
-            }
+        NbtCompound nbt = itemStack.getOrCreateNbt();
 
-            // Move tardis to the clicked pos
+        // Link to exteriors tardis if it exists and player is crouching
+        if (player.isSneaking() && world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
+            if (exterior.getTardis() == null)
+                return ActionResult.FAIL;
 
-            if(itemStack.hasNbt()) {
-                if(itemStack.getNbt().contains("tardis")) {
-                    Tardis tardis = TardisHandler.getTardis(itemStack.getNbt().getUuid("tardis"));
-                    if(tardis != null) {
-                        tardis.getTravel().moveTo(new AbsoluteBlockPos(pos.up(),player.getMovementDirection().getOpposite(),world));
-                    }
-                }
-            }
+            nbt.putUuid("tardis", exterior.getTardis().getUuid());
+            return ActionResult.SUCCESS;
         }
 
-        return super.useOnBlock(context);
+        // Move tardis to the clicked pos
+        if (!nbt.contains("tardis"))
+            return ActionResult.FAIL;
+
+        ITardis tardis = TardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+
+        if (tardis != null) {
+            tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(pos.up(), world, player.getMovementDirection().getOpposite()), true);
+            return ActionResult.SUCCESS;
+        }
+
+        return ActionResult.PASS;
     }
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if (Screen.hasShiftDown()) {
-            NbtCompound tag = new NbtCompound();
-            if(stack.hasNbt()) {
-                tag = stack.getNbt();
-            }
-            if(!tag.contains("tardis")) {
-                tooltip.add(Text.literal("When a TARDIS is linked, it's UUID will show here.").fillStyle(Style.EMPTY.withBold(true)));
-            }
-            else {
-                tooltip.add(Text.literal(tag.getUuid("tardis").toString()).fillStyle(Style.EMPTY.withBold(true)));
-            }
-        } else {
+        if (!Screen.hasShiftDown()) {
             tooltip.add(Text.of("Hold shift for more info"));
+            return;
         }
-        super.appendTooltip(stack, world, tooltip, context);
+
+        NbtCompound tag = stack.getOrCreateNbt();
+        String text = tag.contains("tardis") ? tag.getUuid("tardis").toString()
+                : "When a TARDIS is linked, it's UUID will show here.";
+
+        tooltip.add(Text.literal(text).fillStyle(Style.EMPTY.withBold(true)));
     }
 }

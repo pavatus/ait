@@ -1,96 +1,35 @@
 package mdteam.ait.core.helper;
 
+import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.IDesktopSchema;
 import mdteam.ait.core.AITBlocks;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.blocks.DoorBlock;
-import mdteam.ait.core.helper.desktop.DesktopSchema;
-import mdteam.ait.core.helper.structures.DesktopStructure;
-import mdteam.ait.core.tardis.Tardis;
-import net.minecraft.block.Block;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 public class DesktopGenerator {
-    public static class InteriorGenerator extends DesktopGenerator {
-        private Tardis tardis;
-        private DesktopSchema interior;
-        public InteriorGenerator(Tardis tardis, ServerWorld level, DesktopSchema interior) {
-            super(level, interior);
-            this.tardis = tardis;
-            this.interior = interior;
+
+    private final IDesktopSchema schema;
+
+    public DesktopGenerator(IDesktopSchema schema) {
+        this.schema = schema;
+    }
+
+    public BlockPos place(ServerWorld level, BlockPos pos) {
+        Optional<StructureTemplate> optional = this.schema.findTemplate();
+
+        if (optional.isPresent()) {
+            StructureTemplate template = optional.get();
+
+            template.place(level, pos, pos, new StructurePlacementData(), level.getRandom(), 2);
+            return TardisUtil.findBlockInTemplate(template, pos, Direction.SOUTH, AITBlocks.DOOR_BLOCK);
         }
 
-        @Override
-        public void placeStructure(ServerWorld level, BlockPos pos, Direction direction) {
-            super.placeStructure(level, pos, direction);
-            this.interior.setDoorPosition(new AbsoluteBlockPos(findTargetBlockPosInTemplate(this.template, pos, direction, AITBlocks.DOOR_BLOCK), level));
-        }
-    }
-    private DesktopStructure structure;
-    private String structureName;
-    protected StructureTemplate template;
-
-    public DesktopGenerator(ServerWorld level, DesktopStructure structure) {
-        this.structure = structure;
-        this.structureName = structure.getStructureName();
-        this.template = level.getStructureTemplateManager().getTemplate(this.structure.getLocation()).get();
-    }
-
-    public void placeStructure(ServerWorld level, BlockPos pos, Direction direction) {
-        this.template.place(level,pos,pos,new StructurePlacementData(),level.getRandom(),2); // .setRotation(this.directionToRotation(direction))
-    }
-
-    protected BlockPos findTargetBlockPosInTemplate(StructureTemplate template, BlockPos pos, Direction direction, Block targetBlock) {
-        List<StructureTemplate.StructureBlockInfo> list = template.getInfosForBlock(pos, new StructurePlacementData().setRotation(directionToRotation(direction)), targetBlock);
-
-        if (list.size() == 0) {
-            return new BlockPos(0,0,0);
-        }
-
-        return list.get(0).pos();
-    }
-
-    /**
-     * Recommended usage is for finding the first door pos etc
-     *
-     * @param targetBlocks Blocks to search for
-     * @return A list of block positions for the FIRST instance of each block
-     */
-    protected List<BlockPos> findTargetBlockPosInTemplate(StructureTemplate template, BlockPos pos, Direction direction, List<Block> targetBlocks) {
-        List<BlockPos> posList = new ArrayList<>();
-        for (Block block : targetBlocks) {
-            BlockPos foundPos = this.findTargetBlockPosInTemplate(template,pos,direction,block);
-            if (foundPos != null) {
-                posList.add(foundPos);
-            }
-        }
-        return posList;
-    }
-
-    private BlockRotation directionToRotation(Direction direction) {
-        return switch (direction) {
-            default -> BlockRotation.NONE;
-            case NORTH -> BlockRotation.CLOCKWISE_180;
-            case SOUTH -> BlockRotation.NONE;
-            case EAST -> BlockRotation.COUNTERCLOCKWISE_90;
-            case WEST -> BlockRotation.CLOCKWISE_90;
-        };
-    }
-
-    public static Direction rotationToDirection(BlockRotation rotation) {
-        return switch(rotation) {
-            case NONE -> Direction.NORTH;
-            case CLOCKWISE_180 -> Direction.SOUTH;
-            case CLOCKWISE_90 -> Direction.WEST;
-            case COUNTERCLOCKWISE_90 -> Direction.EAST;
-        };
+        AITMod.LOGGER.error("Couldn't find interior structure {}!", this.schema.id());
+        return null;
     }
 }

@@ -6,9 +6,11 @@ import net.minecraft.util.Identifier;
 public abstract class DesktopStructure {
     private final String structureName;
     protected Identifier location;
+
     public DesktopStructure(String structureName) {
-        this(new Identifier(AITMod.MOD_ID,structureName),structureName);
+        this(new Identifier(AITMod.MOD_ID, structureName), structureName);
     }
+
     public DesktopStructure(Identifier location, String structureName) {
         this.location = location;
         this.structureName = structureName;
@@ -17,6 +19,7 @@ public abstract class DesktopStructure {
     public String getStructureName() {
         return this.structureName;
     }
+
     public Identifier getLocation() {
         return this.location;
     }
