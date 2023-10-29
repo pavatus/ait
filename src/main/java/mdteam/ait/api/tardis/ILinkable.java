@@ -1,7 +1,5 @@
 package mdteam.ait.api.tardis;
 
-import mdteam.ait.AITMod;
-
 public interface ILinkable {
 
     ITardis getTardis();

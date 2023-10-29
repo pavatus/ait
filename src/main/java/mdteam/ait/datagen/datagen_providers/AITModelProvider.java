@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AITModelProvider extends FabricModelProvider {
-    private List<Block> directionalBlocksToRegister = new ArrayList<>();
-    private List<Block> simpleBlocksToRegister = new ArrayList<>();
+    private final List<Block> directionalBlocksToRegister = new ArrayList<>();
+    private final List<Block> simpleBlocksToRegister = new ArrayList<>();
     public AITModelProvider(FabricDataOutput output) {
         super(output);
     }

@@ -99,7 +99,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public void onEntityCollision(Entity entity) {
-        if (this.getTardis() == null)
+        if (this.tardis == null)
             return;
 
         if (!(entity instanceof ServerPlayerEntity player))

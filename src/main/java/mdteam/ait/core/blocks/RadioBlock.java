@@ -46,13 +46,13 @@ public class RadioBlock extends HorizontalDirectionalBlock implements BlockEntit
     private static final VoxelShape NZ_AXIS_SHAPE = VoxelShapes.union(Z_AXIS_RADIO, NZ_AXIS_TUNER, NZ_AXIS_VOLUME);
     public RadioBlock(Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState)((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH));
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
         this.shape = VoxelShapes.empty();
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return (BlockState)this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
     @Override

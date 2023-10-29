@@ -17,7 +17,7 @@ public class DefaultLogoMixin {
     private static final Identifier AIT_EDITION = new Identifier(AITMod.MOD_ID, "textures/gui/title/edition.png");
 
     //My reasoning for this is because the "width" argument in the methods below doesn't actually get the active window's screen width, so I have to do it this way :/.
-    private MinecraftClient client = MinecraftClient.getInstance();
+    private final MinecraftClient client = MinecraftClient.getInstance();
 
     //This is setting the logo to BOTH the logo itself and the edition, as they're both in the same texture.
     //Also, while on the topic, I had to make a new texture since the old one only worked for older versions of Minecraft, as 1.19+ now uses a scaled and blurred version of the logo for the title screen.

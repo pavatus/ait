@@ -36,7 +36,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        BlockState blockState = ((BlockEntity) entity).getCachedState();
+        BlockState blockState = entity.getCachedState();
         float f = blockState.get(ExteriorBlock.FACING).asRotation();
         int maxLight = 0x0;//0xF000F0;
        // float exteriorState = getMaterialStateForAlpha(entity.getMaterialState());
