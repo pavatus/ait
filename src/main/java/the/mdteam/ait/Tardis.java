@@ -11,18 +11,18 @@ import java.util.UUID;
 
 public class Tardis implements ITardis {
 
-    private final ITravel travel = new TardisTravel();
+    private final ITravel travel;
 
     private final UUID uuid;
     private IDesktop desktop;
     private ExteriorEnum exteriorType;
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, IDesktopSchema schema, ExteriorEnum exteriorType) {
+        this.travel = new TardisTravel(this, pos);
         this.uuid = uuid;
+
         this.desktop = new TardisDesktop(this, schema);
         this.exteriorType = exteriorType;
-
-        this.travel.setPosition(pos);
     }
 
     @Override

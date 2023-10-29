@@ -21,6 +21,7 @@ public interface ITardisManager {
      */
     ITardis loadTardis(UUID uuid);
     void saveTardis(ITardis tardis);
+    void saveTardis();
 
     default void saveTardis(UUID uuid) {
         this.saveTardis(this.getTardis(uuid));

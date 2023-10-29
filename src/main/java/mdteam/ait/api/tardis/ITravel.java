@@ -23,6 +23,9 @@ public interface ITravel {
 
     void toggleHandbrake();
 
+    void placeExterior();
+    void deleteExterior();
+
     enum State {
         FAIL_TAKEOFF,
         HOP_TAKEOFF,

@@ -7,7 +7,6 @@ import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blocks.DoorBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -21,7 +20,6 @@ import java.util.Map;
 
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
     public static final Identifier DOOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/doors/shelter_door.png"));
-    //public static final Identifier DOOR_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/shelter_emission.png");
     private final Map<ExteriorEnum, ModelPart> exteriormap;
 
     public Map<ExteriorEnum, ModelPart> getModels() {
@@ -29,25 +27,25 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         builder.put(ExteriorEnum.SHELTER, FalloutDoor.getTexturedModelData().createModel());
         return builder.build();
     }
+
     public DoorRenderer(BlockEntityRendererFactory.Context ctx) {
         this.exteriormap = this.getModels();
     }
 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        BlockState blockState = ((BlockEntity) entity).getCachedState();
+        BlockState blockState = entity.getCachedState();
         float f = blockState.get(DoorBlock.FACING).asRotation();
-        //int maxLight = 0x0;//0xF000F0;
+
         matrices.push();
         matrices.translate(0.5, 1.5, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-            FalloutDoor doorModel = new FalloutDoor(this.exteriormap.get(entity.getTardis().getExteriorType()));
-            if (doorModel != null) {
-                doorModel.door.yaw = entity.getLeftDoorRotation() > 0 ? entity.getLeftDoorRotation() + 0.3f : entity.getLeftDoorRotation();
-                doorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(DOOR_TEXTURE)), light, overlay, 1, 1, 1, 1);
-                //exteriorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(DOOR_TEXTURE_EMISSION)), light, overlay, 1, 1, 1, 1);
-            }
+
+        FalloutDoor doorModel = new FalloutDoor(this.exteriormap.get(entity.getTardis().getExteriorType()));
+
+        doorModel.door.yaw = entity.getLeftDoorRotation() > 0 ? entity.getLeftDoorRotation() + 0.3f : entity.getLeftDoorRotation();
+        doorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(DOOR_TEXTURE)), light, overlay, 1, 1, 1, 1);
         matrices.pop();
     }
 }

@@ -11,6 +11,8 @@ import java.io.Serializable;
  */
 public interface IDesktop extends Serializable {
     AbsoluteBlockPos.Directed getInteriorDoorPos();
+    void setInteriorDoorPos(AbsoluteBlockPos.Directed pos);
+
     IDesktopSchema getSchema();
     Corners getCorners();
 }

@@ -14,7 +14,8 @@ import net.minecraft.util.math.BlockPos;
 public class TardisDesktop implements IDesktop {
 
     private final IDesktopSchema schema;
-    private final AbsoluteBlockPos.Directed doorPos;
+
+    private AbsoluteBlockPos.Directed doorPos;
     private final Corners corners;
 
     public TardisDesktop(ITardis tardis, IDesktopSchema schema) {
@@ -27,11 +28,11 @@ public class TardisDesktop implements IDesktop {
 
         if (!(TardisUtil.getTardisDimension().getBlockEntity(doorPos) instanceof DoorBlockEntity door)) {
             AITMod.LOGGER.error("Failed to find the interior door!");
-            this.doorPos = null;
             return;
         }
 
-        this.doorPos = new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), door.getFacing());
+        // this is needed for door initialization. when we call #setTardis(ITardis) the desktop field is still null.
+        door.setDesktop(this);
         door.setTardis(tardis);
     }
 
@@ -43,6 +44,11 @@ public class TardisDesktop implements IDesktop {
     @Override
     public AbsoluteBlockPos.Directed getInteriorDoorPos() {
         return doorPos;
+    }
+
+    @Override
+    public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
+        this.doorPos = pos;
     }
 
     @Override

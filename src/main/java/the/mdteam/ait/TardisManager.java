@@ -6,8 +6,6 @@ import mdteam.ait.api.tardis.IDesktopSchema;
 import mdteam.ait.api.tardis.ITardis;
 import mdteam.ait.api.tardis.ITardisManager;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.core.AITBlocks;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.util.WorldSavePath;
@@ -62,18 +60,7 @@ public class TardisManager implements ITardisManager {
         ITardis tardis = new Tardis(uuid, pos, desktopSchema, exteriorType);
         this.lookup.put(uuid, tardis);
 
-        if(pos != null) {
-            AbsoluteBlockPos exteriorPos = tardis.getTravel().getPosition();
-            exteriorPos.getWorld().setBlockState(exteriorPos, AITBlocks.EXTERIOR_BLOCK.getDefaultState());
-
-            ExteriorBlockEntity exterior = new ExteriorBlockEntity(
-                    exteriorPos, exteriorPos.getWorld().getBlockState(exteriorPos)
-            );
-
-            exterior.setTardis(tardis);
-            exteriorPos.getWorld().addBlockEntity(exterior);
-        }
-
+        tardis.getTravel().placeExterior();
         return tardis;
     }
 
@@ -117,6 +104,13 @@ public class TardisManager implements ITardisManager {
         } catch (IOException e) {
             AITMod.LOGGER.warn("Couldn't save Tardis {}", tardis.getUuid());
             AITMod.LOGGER.warn(e.getMessage());
+        }
+    }
+
+    @Override
+    public void saveTardis() {
+        for (ITardis tardis : this.lookup.values()) {
+            this.saveTardis(tardis);
         }
     }
 

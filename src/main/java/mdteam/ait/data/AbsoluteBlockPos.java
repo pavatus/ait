@@ -1,9 +1,11 @@
 package mdteam.ait.data;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.Serial;
@@ -50,13 +52,29 @@ public class AbsoluteBlockPos extends BlockPos implements Serializable {
         return this.getWorld().getBlockEntity(this);
     }
 
+    public void addBlockEntity(BlockEntity blockEntity) {
+        this.getWorld().addBlockEntity(blockEntity);
+    }
+
+    public BlockState getBlockState() {
+        return this.getWorld().getBlockState(this);
+    }
+
+    public void setBlockState(BlockState state) {
+        this.getWorld().setBlockState(this, state);
+    }
+
+    public Chunk getChunk() {
+        return this.getWorld().getChunk(this);
+    }
+
     public AbsoluteBlockPos above() {
         return new AbsoluteBlockPos(this.getX(), this.getY() + 1, this.getZ(), this.getWorld());
     }
 
     @Override
     public String toString() {
-        return "AbsoluteBlockPos[ "+ getX() + " _ " + getY() + " _ " + getZ() + " ] | [ " + getWorld() + " ]";
+        return "AbsoluteBlockPos[ " + getX() + " _ " + getY() + " _ " + getZ() + " ] | [ " + getWorld() + " ]";
     }
 
     @Override

@@ -1,5 +1,7 @@
 package mdteam.ait.core.blockentities;
 
+import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.IDesktop;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.api.tardis.ITardis;
 import mdteam.ait.core.AITBlockEntityTypes;
@@ -27,7 +29,8 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
 
-        this.tardis = TardisManager.getInstance().findTardisByInterior(pos);
+        // even though TardisDesktop links the door, we need to link it here as well to avoid desync
+        this.setTardis(TardisManager.getInstance().findTardisByInterior(pos));
     }
 
     public void useOn(World world, boolean sneaking) {
@@ -41,11 +44,11 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
             return;
 
         world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS,0.6f, 1f);
-        AbsoluteBlockPos exteriorPos = this.getTardis().getTravel().getPosition();
+        AbsoluteBlockPos exteriorPos = this.tardis.getTravel().getPosition();
         ExteriorBlockEntity exterior = TardisUtil.getExterior(this.tardis);
 
         if (exterior != null) {
-            exteriorPos.getWorld().getChunk(exterior.getPos());
+            exteriorPos.getChunk();
 
             exterior.setLeftDoorRot(this.getLeftDoorRotation());
             exterior.setRightDoorRot(this.getRightDoorRotation());
@@ -110,5 +113,15 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
     @Override
     public void setTardis(ITardis tardis) {
         this.tardis = tardis;
+
+        // force re-link a desktop if it's not null
+        this.linkDesktop();
+    }
+
+    @Override
+    public void setDesktop(IDesktop desktop) {
+        desktop.setInteriorDoorPos(new AbsoluteBlockPos.Directed(
+                this.pos, TardisUtil.getTardisDimension(), this.getFacing())
+        );
     }
 }
