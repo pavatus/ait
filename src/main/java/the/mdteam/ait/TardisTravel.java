@@ -1,14 +1,17 @@
 package the.mdteam.ait;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ITardis;
 import mdteam.ait.api.tardis.ITravel;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.util.Scheduler;
+import mdteam.ait.util.TimeSpan;
 
 public class TardisTravel implements ITravel {
 
-    private State state = State.LANDED;
+    private IState state = State.LANDED;
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
 
@@ -50,18 +53,18 @@ public class TardisTravel implements ITravel {
     }
 
     @Override
-    public State getState() {
+    public IState getState() {
         return state;
     }
 
     @Override
-    public void setState(State state) {
+    public void setState(IState state) {
         this.state = state;
     }
 
     @Override
     public void toggleHandbrake() {
-
+        this.state.next(new TravelContext(this, this.position, this.destination));
     }
 
     @Override
@@ -79,5 +82,117 @@ public class TardisTravel implements ITravel {
     @Override
     public void deleteExterior() {
 
+    }
+
+    public enum State implements IState {
+        LANDED(true) {
+            @Override
+            public void onEnable() {
+                AITMod.LOGGER.info("ON: LANDED");
+            }
+
+            @Override
+            public void onDisable() {
+                AITMod.LOGGER.info("OFF: LANDED");
+            }
+
+            @Override
+            public void schedule(TravelContext context) {
+
+            }
+
+            @Override
+            public IState getNext() {
+                return DEMAT;
+            }
+        },
+        DEMAT {
+            @Override
+            public void onEnable() {
+                AITMod.LOGGER.info("ON: DEMAT");
+            }
+
+            @Override
+            public void onDisable() {
+                AITMod.LOGGER.info("OFF: DEMAT");
+            }
+
+            @Override
+            public void schedule(TravelContext context) {
+                Scheduler.scheduleOnce(TimeSpan.seconds(2), () -> this.next(context));
+            }
+
+            @Override
+            public IState getNext() {
+                return FLIGHT;
+            }
+        },
+        FLIGHT(true) {
+            @Override
+            public void onEnable() {
+                AITMod.LOGGER.info("ON: FLIGHT");
+            }
+
+            @Override
+            public void onDisable() {
+                AITMod.LOGGER.info("OFF: LANDED");
+            }
+
+            @Override
+            public void schedule(TravelContext context) {
+
+            }
+
+            @Override
+            public IState getNext() {
+                return MAT;
+            }
+        },
+        MAT {
+            @Override
+            public void onEnable() {
+                AITMod.LOGGER.info("ON: MAT");
+            }
+
+            @Override
+            public void onDisable() {
+                AITMod.LOGGER.info("OFF: LANDED");
+            }
+
+            @Override
+            public void schedule(TravelContext context) {
+                Scheduler.scheduleOnce(TimeSpan.seconds(2), () -> this.next(context));
+            }
+
+            @Override
+            public IState getNext() {
+                return LANDED;
+            }
+        };
+
+        private final boolean isStatic;
+
+        State(boolean isStatic) {
+            this.isStatic = isStatic;
+        }
+
+        State() {
+            this(false);
+        }
+
+        @Override
+        public boolean isStatic() {
+            return isStatic;
+        }
+
+        @Override
+        public void next(TravelContext context) {
+            this.onDisable();
+            IState next = this.getNext();
+            next.schedule(context);
+
+            next.onEnable();
+            context.travel().setState(next);
+        }
     }
 }

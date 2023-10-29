@@ -1,8 +1,7 @@
 package mdteam.ait.api.tardis;
 
 import mdteam.ait.data.AbsoluteBlockPos;
-
-import java.util.UUID;
+import mdteam.ait.util.Scheduler;
 
 public interface ITravel {
 
@@ -18,21 +17,32 @@ public interface ITravel {
     void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks);
     AbsoluteBlockPos.Directed getDestination();
 
-    State getState();
-    void setState(State state);
+    IState getState();
+    void setState(IState state);
 
     void toggleHandbrake();
 
     void placeExterior();
     void deleteExterior();
 
-    enum State {
-        FAIL_TAKEOFF,
-        HOP_TAKEOFF,
-        HOP_LAND,
-        DEMAT,
-        MAT,
-        LANDED,
-        FLIGHT
+    interface IState {
+
+        void onEnable();
+        void onDisable();
+
+        /**
+         * Inits the {@link Scheduler} that will trigger upon completion of this state.
+         */
+        void schedule(TravelContext context);
+        IState getNext();
+
+        /**
+         * If true, to advance to the next state will require manual call
+         * @return is static
+         */
+        boolean isStatic();
+        void next(TravelContext context);
     }
+
+    record TravelContext(ITravel travel, AbsoluteBlockPos.Directed from, AbsoluteBlockPos.Directed to) { }
 }

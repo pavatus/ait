@@ -10,11 +10,13 @@ import mdteam.ait.core.components.block.exterior.ExteriorNBTComponent;
 import mdteam.ait.core.components.block.interior_door.InteriorDoorNBTComponent;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.util.Scheduler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import the.mdteam.ait.TardisManager;
 
 public class AITMod implements ModInitializer {
 
@@ -44,9 +46,12 @@ public class AITMod implements ModInitializer {
 		FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
 
+		Scheduler.init();
+
 		AIT_ITEM_GROUP.initialize();
 		AITDesktops.init();
 
 		ServerLifecycleEvents.SERVER_STARTED.register(TardisUtil::init);
+		ServerLifecycleEvents.SERVER_STOPPING.register(server -> TardisManager.getInstance().saveTardis());
 	}
 }

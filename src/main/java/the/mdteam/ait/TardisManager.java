@@ -87,7 +87,7 @@ public class TardisManager implements ITardisManager {
 
             return tardis;
         } catch (IOException e) {
-            AITMod.LOGGER.warn("Tardis {} does not exist (or it got corrupted)!", uuid);
+            AITMod.LOGGER.warn("Failed to load tardis with uuid {}!", uuid);
             AITMod.LOGGER.warn(e.getMessage());
         }
 
@@ -96,7 +96,7 @@ public class TardisManager implements ITardisManager {
 
     @Override
     public void saveTardis(ITardis tardis) {
-        File savePath = TardisManager.getSavePath(tardis.getUuid());
+        File savePath = TardisManager.getSavePath(tardis);
         savePath.getParentFile().mkdirs();
 
         try {
