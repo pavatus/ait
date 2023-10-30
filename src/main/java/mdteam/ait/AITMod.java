@@ -52,6 +52,6 @@ public class AITMod implements ModInitializer {
 		AITDesktops.init();
 
 		ServerLifecycleEvents.SERVER_STARTED.register(TardisUtil::init);
-		ServerLifecycleEvents.SERVER_STOPPING.register(server -> TardisManager.getInstance().saveTardis());
+		//ServerLifecycleEvents.SERVER_STOPPING.register(server -> TardisManager.getInstance().saveTardis());
 	}
 }
