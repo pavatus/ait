@@ -22,7 +22,7 @@ public abstract class TardisDesktopSchema implements IDesktopSchema {
 
     @Override
     public Optional<StructureTemplate> findTemplate() {
-        return TardisUtil.findStructure(this.getStructureLocation());
+        return TardisUtil.getTardisDimension().getStructureTemplateManager().getTemplate(this.getStructureLocation());
     }
 
     private Identifier getStructureLocation() {

@@ -104,10 +104,6 @@ public class TardisUtil {
         };
     }
 
-    public static Optional<StructureTemplate> findStructure(Identifier identifier) {
-        return TardisUtil.getServer().getStructureTemplateManager().getTemplate(identifier);
-    }
-
     public static void teleport(ServerPlayerEntity player, ServerWorld world, BlockPos destination, float yaw, float pitch) {
         player.teleport(world, destination.getX(), destination.getY(), destination.getZ(), yaw, pitch);
     }
