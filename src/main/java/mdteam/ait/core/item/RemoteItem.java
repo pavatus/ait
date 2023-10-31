@@ -1,6 +1,7 @@
 package mdteam.ait.core.item;
 
 import mdteam.ait.api.tardis.ITardis;
+import mdteam.ait.api.tardis.ITardisManager;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.client.gui.screen.Screen;
@@ -16,7 +17,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import the.mdteam.ait.TardisManager;
+import the.mdteam.ait.ServerTardisManager;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class RemoteItem extends Item {
         if (!nbt.contains("tardis"))
             return ActionResult.FAIL;
 
-        ITardis tardis = TardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+        ITardis tardis = ITardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
 
         if (tardis != null) {
             tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(pos.up(), world, player.getMovementDirection().getOpposite()), true);

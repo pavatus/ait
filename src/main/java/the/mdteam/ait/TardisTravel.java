@@ -6,8 +6,10 @@ import mdteam.ait.api.tardis.ITravel;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.data.AbsoluteBlockPos;
-import mdteam.ait.util.Scheduler;
-import mdteam.ait.util.TimeSpan;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class TardisTravel implements ITravel {
 
@@ -118,11 +120,6 @@ public class TardisTravel implements ITravel {
             }
 
             @Override
-            public void schedule(TravelContext context) {
-                Scheduler.scheduleOnce(TimeSpan.seconds(2), () -> this.next(context));
-            }
-
-            @Override
             public IState getNext() {
                 return FLIGHT;
             }
@@ -160,15 +157,12 @@ public class TardisTravel implements ITravel {
             }
 
             @Override
-            public void schedule(TravelContext context) {
-                Scheduler.scheduleOnce(TimeSpan.seconds(2), () -> this.next(context));
-            }
-
-            @Override
             public IState getNext() {
                 return LANDED;
             }
         };
+
+        private final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 
         private final boolean isStatic;
 
@@ -185,14 +179,27 @@ public class TardisTravel implements ITravel {
             return isStatic;
         }
 
+        public ScheduledExecutorService getService() {
+            return service;
+        }
+
         @Override
         public void next(TravelContext context) {
+            this.service.shutdown();
             this.onDisable();
+
             IState next = this.getNext();
             next.schedule(context);
 
             next.onEnable();
             context.travel().setState(next);
+        }
+
+        @Override
+        public void schedule(TravelContext context) {
+            this.getService().schedule(() -> {
+                this.next(context);
+            }, 2, TimeUnit.SECONDS);
         }
     }
 }

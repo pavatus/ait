@@ -9,20 +9,19 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
 import net.minecraft.block.Block;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @SuppressWarnings("unused")
@@ -31,6 +30,8 @@ public class TardisUtil {
     private static final Random random = new Random();
 
     private static MinecraftServer SERVER;
+    private static MinecraftClient CLIENT;
+
     private static ServerWorld TARDIS_DIMENSION;
 
     //FIXME: here
@@ -39,8 +40,24 @@ public class TardisUtil {
         TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
     }
 
+    public static void init(MinecraftClient client) {
+        CLIENT = client;
+    }
+
     public static MinecraftServer getServer() {
         return SERVER;
+    }
+
+    public static MinecraftClient getClient() {
+        return CLIENT;
+    }
+
+    public static boolean isClient() {
+        return CLIENT != null;
+    }
+
+    public static boolean isServer() {
+        return SERVER != null;
     }
 
     public static ServerWorld getTardisDimension() {

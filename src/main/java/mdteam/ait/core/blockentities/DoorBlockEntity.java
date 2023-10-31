@@ -1,9 +1,9 @@
 package mdteam.ait.core.blockentities;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.IDesktop;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.api.tardis.ITardis;
+import mdteam.ait.api.tardis.ITardisManager;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.helper.TardisUtil;
@@ -18,7 +18,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import the.mdteam.ait.TardisManager;
+import the.mdteam.ait.ServerTardisManager;
 
 import static mdteam.ait.AITMod.INTERIORDOORNBT;
 
@@ -30,7 +30,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
 
         // even though TardisDesktop links the door, we need to link it here as well to avoid desync
-        this.setTardis(TardisManager.getInstance().findTardisByInterior(pos));
+        this.setTardis(ITardisManager.getInstance().findTardisByInterior(pos));
     }
 
     public void useOn(World world, boolean sneaking) {
@@ -89,7 +89,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         super.readNbt(nbt);
 
         if(nbt.contains("tardis")) {
-            this.tardis = TardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+            this.tardis = ITardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
         }
     }
 

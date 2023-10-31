@@ -1,6 +1,7 @@
 package mdteam.ait.core.item;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.ITardisManager;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.data.AbsoluteBlockPos;
@@ -11,7 +12,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import the.mdteam.ait.TardisManager;
+import the.mdteam.ait.ServerTardisManager;
 
 public class TardisItemBuilder extends Item {
 
@@ -46,7 +47,7 @@ public class TardisItemBuilder extends Item {
         AbsoluteBlockPos.Directed pos = new AbsoluteBlockPos.Directed(context.getBlockPos().up(), world, Direction.NORTH);
 
         if (context.getHand() == Hand.MAIN_HAND) {
-            TardisManager.getInstance().create(pos, this.exterior, AITDesktops.get(this.desktop));
+            ITardisManager.getInstance().create(pos, this.exterior, AITDesktops.get(this.desktop));
             context.getStack().decrement(1);
         }
 

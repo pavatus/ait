@@ -2,6 +2,7 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.api.tardis.ITardis;
+import mdteam.ait.api.tardis.ITardisManager;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
@@ -15,7 +16,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import the.mdteam.ait.TardisManager;
+import the.mdteam.ait.ServerTardisManager;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
 
@@ -94,7 +95,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         super.readNbt(nbt);
 
         if (nbt.contains("tardis")) {
-            this.tardis = TardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+            this.tardis = ITardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
         }
     }
 

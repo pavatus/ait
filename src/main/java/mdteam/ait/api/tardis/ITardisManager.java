@@ -1,9 +1,13 @@
 package mdteam.ait.api.tardis;
 
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.util.math.BlockPos;
+import the.mdteam.ait.ClientTardisManager;
+import the.mdteam.ait.ServerTardisManager;
 
+import java.io.File;
 import java.util.UUID;
 
 public interface ITardisManager {
@@ -20,6 +24,9 @@ public interface ITardisManager {
      * @return the tardis instance
      */
     ITardis loadTardis(UUID uuid);
+    ITardis loadTardis(File file);
+    void loadTardis();
+
     void saveTardis(ITardis tardis);
     void saveTardis();
 
@@ -28,6 +35,6 @@ public interface ITardisManager {
     }
 
     static ITardisManager getInstance() {
-        throw new UnsupportedOperationException();
+        return TardisUtil.isServer() ? ServerTardisManager.getInstance() : ClientTardisManager.getInstance();
     }
 }
