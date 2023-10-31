@@ -1,6 +1,9 @@
 package the.mdteam.ait;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.IDesktopSchema;
 import mdteam.ait.api.tardis.ITardis;
@@ -21,12 +24,21 @@ import java.util.UUID;
 public class TardisManager implements ITardisManager {
 
     private static final TardisManager instance = new TardisManager();
-    private static final Gson gson = new Gson();
+    private final Gson gson;
     private final Map<UUID, ITardis> lookup = new HashMap<>();
 
-    // Make the constructor private, to avoid bad stuff from happening.
     private TardisManager() {
+        this.gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes field) {
+                return field.getAnnotation(Exclude.class) != null;
+            }
 
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).create();
     }
 
     @Override
@@ -82,9 +94,17 @@ public class TardisManager implements ITardisManager {
             if (!savePath.exists())
                 throw new IOException("Tardis file " + uuid + " doesn't exist!");
 
-            ITardis tardis = gson.fromJson(Files.readString(savePath.toPath()), Tardis.class);
+            ITardis tardis = this.gson.fromJson(Files.readString(savePath.toPath()), Tardis.class);
             this.lookup.put(uuid, tardis);
 
+            AITMod.LOGGER.info("Loaded TARDIS: {}", uuid);
+            AITMod.LOGGER.info("Schema ID: {}", tardis.getDesktop().getSchema().id());
+            AITMod.LOGGER.info("Corners: {}", tardis.getDesktop().getCorners());
+            AITMod.LOGGER.info("Door Pos: {}", tardis.getDesktop().getInteriorDoorPos());
+            AITMod.LOGGER.info("Exterior Type: {}", tardis.getExteriorType());
+            AITMod.LOGGER.info("Travel state: {}", tardis.getTravel().getState());
+            AITMod.LOGGER.info("Pos: {}", tardis.getTravel().getPosition());
+            AITMod.LOGGER.info("Destination: {}", tardis.getTravel().getDestination());
             return tardis;
         } catch (IOException e) {
             AITMod.LOGGER.warn("Failed to load tardis with uuid {}!", uuid);
@@ -100,7 +120,7 @@ public class TardisManager implements ITardisManager {
         savePath.getParentFile().mkdirs();
 
         try {
-            Files.writeString(savePath.toPath(), gson.toJson(tardis));
+            Files.writeString(savePath.toPath(), this.gson.toJson(tardis, Tardis.class));
         } catch (IOException e) {
             AITMod.LOGGER.warn("Couldn't save Tardis {}", tardis.getUuid());
             AITMod.LOGGER.warn(e.getMessage());

@@ -2,10 +2,10 @@ package mdteam.ait.data;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import the.mdteam.ait.Exclude;
 
 public class Corners {
-
-    private final Box box;
+    @Exclude private final Box box;
     private final BlockPos first;
     private final BlockPos second;
 
@@ -26,5 +26,14 @@ public class Corners {
 
     public BlockPos getSecond() {
         return second;
+    }
+
+    @Override
+    public String toString() {
+        return "Corners{" +
+                "box=" + box +
+                ", first=" + first +
+                ", second=" + second +
+                '}';
     }
 }

@@ -15,7 +15,7 @@ public class TardisTravel implements ITravel {
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
 
-    private final ITardis tardis;
+    @Exclude private final ITardis tardis;
 
     public TardisTravel(ITardis tardis, AbsoluteBlockPos.Directed pos) {
         this.tardis = tardis;
