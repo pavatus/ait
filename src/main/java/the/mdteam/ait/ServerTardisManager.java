@@ -1,9 +1,8 @@
 package the.mdteam.ait;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.IDesktopSchema;
-import mdteam.ait.api.tardis.ITardis;
-import mdteam.ait.api.tardis.ITardisManager;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
@@ -13,67 +12,64 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
-import net.minecraft.util.math.BlockPos;
+import the.mdteam.ait.wrapper.ServerTardis;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class ServerTardisManager extends TardisManager {
 
-    private static final ServerTardisManager instance = new ServerTardisManager();
     public static final Identifier SEND = new Identifier("ait", "send_tardis");
+    public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
+    private static final ServerTardisManager instance = new ServerTardisManager();
 
-    private ServerTardisManager() {
+    private final Multimap<UUID, ServerPlayerEntity> subscribers = ArrayListMultimap.create();
+
+    public ServerTardisManager() {
         ServerPlayNetworking.registerGlobalReceiver(
-                ClientTardisManager.ASK, (server, player, handler, buf, responseSender) -> this.sync(buf.readUuid())
+                ClientTardisManager.ASK, (server, player, handler, buf, responseSender) -> {
+                    UUID uuid = buf.readUuid();
+                    this.sendTardis(player, uuid);
+
+                    this.subscribers.put(uuid, player);
+                }
         );
     }
 
-    @Override
-    public ITardis findTardisByExterior(BlockPos pos) {
-        for (ITardis tardis : this.lookup.values()) {
-            if (tardis.getTravel().getPosition().equals(pos))
-                return tardis;
-        }
-
-        return null;
-    }
-
-    @Override
-    public ITardis findTardisByInterior(BlockPos pos) {
-        for (ITardis tardis : this.lookup.values()) {
-            if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos))
-                return tardis;
-        }
-
-        return null;
-    }
-
-    @Override
-    public ITardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, IDesktopSchema desktopSchema) {
+    public Tardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, TardisDesktopSchema schema) {
         UUID uuid = UUID.randomUUID();
-        ITardis tardis = new Tardis(uuid, pos, desktopSchema, exteriorType);
+
+        Tardis tardis = new Tardis(uuid, pos, schema, exteriorType);
         this.lookup.put(uuid, tardis);
 
         tardis.getTravel().placeExterior();
         return tardis;
     }
 
-    /**
-     * Loads the tardis from a file and returns it, or, returns the cached instance.
-     *
-     * @param uuid uuid of the tardis
-     * @return the tardis or null if no tardis file was found
-     */
-    @Override
-    public ITardis loadTardis(UUID uuid) {
-        return this.loadTardis(ServerTardisManager.getSavePath(uuid));
+    public Tardis getTardis(UUID uuid) {
+        System.out.println("SERVER: getting (direct) tardis with uuid " + uuid);
+        if (this.lookup.containsKey(uuid))
+            return this.lookup.get(uuid);
+
+        return this.loadTardis(uuid);
     }
 
     @Override
-    public ITardis loadTardis(File file) {
+    public void getTardis(UUID uuid, Consumer<Tardis> consumer) {
+        System.out.println("SERVER: getting tardis with uuid " + uuid);
+        super.getTardis(uuid, consumer);
+    }
+
+    @Override
+    public void loadTardis(UUID uuid, Consumer<Tardis> consumer) {
+        consumer.accept(this.loadTardis(uuid));
+    }
+
+    private Tardis loadTardis(UUID uuid) {
+        File file = ServerTardisManager.getSavePath(uuid);
         file.getParentFile().mkdirs();
 
         try {
@@ -81,10 +77,8 @@ public class ServerTardisManager extends TardisManager {
                 throw new IOException("Tardis file " + file + " doesn't exist!");
 
             String json = Files.readString(file.toPath());
-            ITardis tardis = this.gson.fromJson(json, Tardis.class);
+            Tardis tardis = this.gson.fromJson(json, Tardis.class);
             this.lookup.put(tardis.getUuid(), tardis);
-
-            this.sync(tardis.getUuid(), json);
 
             AITMod.LOGGER.info("Loaded TARDIS: {}", tardis.getUuid());
             AITMod.LOGGER.info("Schema ID: {}", tardis.getDesktop().getSchema().id());
@@ -104,15 +98,7 @@ public class ServerTardisManager extends TardisManager {
         return null;
     }
 
-    @Override
-    public void loadTardis() {
-        for (File file : ServerTardisManager.getSavePath().listFiles()) {
-            this.loadTardis(file);
-        }
-    }
-
-    @Override
-    public void saveTardis(ITardis tardis) {
+    public void saveTardis(Tardis tardis) {
         File savePath = ServerTardisManager.getSavePath(tardis);
         savePath.getParentFile().mkdirs();
 
@@ -124,30 +110,33 @@ public class ServerTardisManager extends TardisManager {
         }
     }
 
-    @Override
     public void saveTardis() {
-        for (ITardis tardis : this.lookup.values()) {
+        for (Tardis tardis : this.lookup.values()) {
             this.saveTardis(tardis);
         }
     }
 
-    private void sync(UUID uuid) {
-        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
-            this.sync(player, uuid);
+    public void sendToSubscribers(Tardis tardis) {
+        for (ServerPlayerEntity player : this.subscribers.get(tardis.getUuid())) {
+            this.sendTardis(player, tardis);
         }
     }
 
-    private void sync(ServerPlayerEntity player, UUID uuid) {
-        this.sync(player, uuid, this.gson.toJson(this.lookup.get(uuid), Tardis.class));
-    }
-
-    private void sync(UUID uuid, String json) {
-        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
-            this.sync(player, uuid, json);
+    public void sendToSubscribers(UUID uuid) {
+        for (ServerPlayerEntity player : this.subscribers.get(uuid)) {
+            this.sendTardis(player, uuid);
         }
     }
 
-    private void sync(ServerPlayerEntity player, UUID uuid, String json) {
+    private void sendTardis(ServerPlayerEntity player, UUID uuid) {
+        this.sendTardis(player, this.getTardis(uuid));
+    }
+
+    private void sendTardis(ServerPlayerEntity player, Tardis tardis) {
+        this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
+    }
+
+    private void sendTardis(ServerPlayerEntity player, UUID uuid, String json) {
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(uuid);
         data.writeString(json);
@@ -155,20 +144,16 @@ public class ServerTardisManager extends TardisManager {
         ServerPlayNetworking.send(player, SEND, data);
     }
 
-    public static ITardisManager getInstance() {
-        return instance;
-    }
-
     private static File getSavePath(UUID uuid) {
         // TODO: maybe, make WorldSavePath.AIT?
         return new File(TardisUtil.getServer().getSavePath(WorldSavePath.ROOT) + "ait/" + uuid + ".json");
     }
 
-    private static File getSavePath(ITardis tardis) {
+    private static File getSavePath(Tardis tardis) {
         return ServerTardisManager.getSavePath(tardis.getUuid());
     }
 
-    private static File getSavePath() {
-        return new File(TardisUtil.getServer().getSavePath(WorldSavePath.ROOT) + "ait/");
+    public static ServerTardisManager getInstance() {
+        return instance;
     }
 }

@@ -1,9 +1,6 @@
 package the.mdteam.ait;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.IDesktop;
-import mdteam.ait.api.tardis.IDesktopSchema;
-import mdteam.ait.api.tardis.ITardis;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.helper.DesktopGenerator;
 import mdteam.ait.core.helper.TardisUtil;
@@ -11,14 +8,17 @@ import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
 import net.minecraft.util.math.BlockPos;
 
-public class TardisDesktop implements IDesktop {
+public class TardisDesktop {
 
-    private final IDesktopSchema schema;
+    @Exclude
+    protected final Tardis tardis;
+    private final TardisDesktopSchema schema;
 
     private AbsoluteBlockPos.Directed doorPos;
     private final Corners corners;
 
-    public TardisDesktop(ITardis tardis, IDesktopSchema schema) {
+    public TardisDesktop(Tardis tardis, TardisDesktopSchema schema) {
+        this.tardis = tardis;
         this.schema = schema;
         this.corners = TardisUtil.findInteriorSpot();
 
@@ -36,22 +36,18 @@ public class TardisDesktop implements IDesktop {
         door.setTardis(tardis);
     }
 
-    @Override
-    public IDesktopSchema getSchema() {
+    public TardisDesktopSchema getSchema() {
         return schema;
     }
 
-    @Override
     public AbsoluteBlockPos.Directed getInteriorDoorPos() {
         return doorPos;
     }
 
-    @Override
     public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
         this.doorPos = pos;
     }
 
-    @Override
     public Corners getCorners() {
         return corners;
     }

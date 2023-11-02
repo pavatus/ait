@@ -1,8 +1,6 @@
 package the.mdteam.ait;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.ITardis;
-import mdteam.ait.api.tardis.ITravel;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.data.AbsoluteBlockPos;
@@ -11,65 +9,56 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class TardisTravel implements ITravel {
+public class TardisTravel {
 
-    private IState state = State.LANDED;
+    private State state = State.LANDED;
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
 
-    @Exclude private final ITardis tardis;
+    @Exclude
+    protected final Tardis tardis;
 
-    public TardisTravel(ITardis tardis, AbsoluteBlockPos.Directed pos) {
+    public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
         this.tardis = tardis;
         this.position = pos;
     }
 
-    @Override
     public void setPosition(AbsoluteBlockPos.Directed pos) {
         this.position = pos;
     }
 
-    @Override
     public AbsoluteBlockPos.Directed getPosition() {
         return position;
     }
 
-    @Override
     public void materialise() {
 
     }
 
-    @Override
     public void dematerialise(boolean withRemat) {
 
     }
 
-    @Override
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
         this.destination = pos;
     }
 
-    @Override
     public AbsoluteBlockPos.Directed getDestination() {
         return destination;
     }
 
-    @Override
-    public IState getState() {
+    public State getState() {
         return state;
     }
 
-    @Override
-    public void setState(IState state) {
+    public void setState(State state) {
         this.state = state;
     }
 
-    @Override
     public void toggleHandbrake() {
         this.state.next(new TravelContext(this, this.position, this.destination));
     }
 
-    @Override
     public void placeExterior() {
         this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState());
 
@@ -81,12 +70,11 @@ public class TardisTravel implements ITravel {
         this.position.addBlockEntity(exterior);
     }
 
-    @Override
     public void deleteExterior() {
 
     }
 
-    public enum State implements IState {
+    public enum State {
         LANDED(true) {
             @Override
             public void onEnable() {
@@ -104,7 +92,7 @@ public class TardisTravel implements ITravel {
             }
 
             @Override
-            public IState getNext() {
+            public State getNext() {
                 return DEMAT;
             }
         },
@@ -120,7 +108,7 @@ public class TardisTravel implements ITravel {
             }
 
             @Override
-            public IState getNext() {
+            public State getNext() {
                 return FLIGHT;
             }
         },
@@ -141,7 +129,7 @@ public class TardisTravel implements ITravel {
             }
 
             @Override
-            public IState getNext() {
+            public State getNext() {
                 return MAT;
             }
         },
@@ -157,7 +145,7 @@ public class TardisTravel implements ITravel {
             }
 
             @Override
-            public IState getNext() {
+            public State getNext() {
                 return LANDED;
             }
         };
@@ -174,7 +162,6 @@ public class TardisTravel implements ITravel {
             this(false);
         }
 
-        @Override
         public boolean isStatic() {
             return isStatic;
         }
@@ -183,19 +170,21 @@ public class TardisTravel implements ITravel {
             return service;
         }
 
-        @Override
+        public abstract void onEnable();
+        public abstract void onDisable();
+        public abstract State getNext();
+
         public void next(TravelContext context) {
             this.service.shutdown();
             this.onDisable();
 
-            IState next = this.getNext();
+            State next = this.getNext();
             next.schedule(context);
 
             next.onEnable();
             context.travel().setState(next);
         }
 
-        @Override
         public void schedule(TravelContext context) {
             this.getService().schedule(() -> {
                 this.next(context);

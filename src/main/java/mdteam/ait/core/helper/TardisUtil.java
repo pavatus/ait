@@ -1,8 +1,5 @@
 package mdteam.ait.core.helper;
 
-import mdteam.ait.api.tardis.IDesktop;
-import mdteam.ait.api.tardis.ITardis;
-import mdteam.ait.api.tardis.ITravel;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -20,6 +17,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import the.mdteam.ait.Tardis;
+import the.mdteam.ait.TardisDesktop;
+import the.mdteam.ait.TardisManager;
+import the.mdteam.ait.TardisTravel;
 
 import java.util.List;
 import java.util.Random;
@@ -73,14 +74,14 @@ public class TardisUtil {
         return inBox(corners.getBox(), pos);
     }
 
-    public static DoorBlockEntity getDoor(ITardis tardis) {
+    public static DoorBlockEntity getDoor(Tardis tardis) {
         if (!(TardisUtil.getTardisDimension().getBlockEntity(tardis.getDesktop().getInteriorDoorPos()) instanceof DoorBlockEntity door))
             return null;
 
         return door;
     }
 
-    public static ExteriorBlockEntity getExterior(ITardis tardis) {
+    public static ExteriorBlockEntity getExterior(Tardis tardis) {
         if (!(tardis.getTravel().getPosition().getBlockEntity() instanceof ExteriorBlockEntity exterior))
             return null;
 
@@ -137,19 +138,19 @@ public class TardisUtil {
         TardisUtil.teleport(player, (ServerWorld) destination.getWorld(), destination, destination.getDirection().asRotation(), pitch);
     }
 
-    public static BlockPos offsetInteriorDoorPosition(ITardis tardis) {
+    public static BlockPos offsetInteriorDoorPosition(Tardis tardis) {
         return TardisUtil.offsetInteriorDoorPosition(tardis.getDesktop());
     }
 
-    public static BlockPos offsetInteriorDoorPosition(IDesktop desktop) {
+    public static BlockPos offsetInteriorDoorPosition(TardisDesktop desktop) {
         return TardisUtil.offsetDoorPosition(desktop.getInteriorDoorPos());
     }
 
-    public static BlockPos offsetExteriorDoorPosition(ITardis tardis) {
+    public static BlockPos offsetExteriorDoorPosition(Tardis tardis) {
         return TardisUtil.offsetExteriorDoorPosition(tardis.getTravel());
     }
 
-    public static BlockPos offsetExteriorDoorPosition(ITravel travel) {
+    public static BlockPos offsetExteriorDoorPosition(TardisTravel travel) {
         return TardisUtil.offsetDoorPosition(travel.getPosition());
     }
 
@@ -163,7 +164,7 @@ public class TardisUtil {
         };
     }
 
-    public static void teleportOutside(ITardis tardis, ServerPlayerEntity player) {
+    public static void teleportOutside(Tardis tardis, ServerPlayerEntity player) {
         AbsoluteBlockPos.Directed pos = tardis.getTravel().getPosition();
 
         TardisUtil.teleport(
@@ -172,12 +173,21 @@ public class TardisUtil {
         );
     }
 
-    public static void teleportInside(ITardis tardis, ServerPlayerEntity player) {
+    public static void teleportInside(Tardis tardis, ServerPlayerEntity player) {
         AbsoluteBlockPos.Directed pos = tardis.getDesktop().getInteriorDoorPos();
 
         TardisUtil.teleport(
                 player, TardisUtil.getTardisDimension(), TardisUtil.offsetDoorPosition(pos)
                         .toCenterPos(), pos.getDirection().asRotation(), player.getPitch()
         );
+    }
+
+    public static Tardis findTardisByInterior(BlockPos pos) {
+        for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
+            if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos))
+                return tardis;
+        }
+
+        return null;
     }
 }

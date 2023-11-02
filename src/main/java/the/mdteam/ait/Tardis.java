@@ -1,57 +1,52 @@
 package the.mdteam.ait;
 
-import mdteam.ait.api.tardis.IDesktop;
-import mdteam.ait.api.tardis.IDesktopSchema;
-import mdteam.ait.api.tardis.ITardis;
-import mdteam.ait.api.tardis.ITravel;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.data.AbsoluteBlockPos;
 
 import java.util.UUID;
+import java.util.function.Function;
 
-public class Tardis implements ITardis {
+public class Tardis {
 
-    private final ITravel travel;
+    private final TardisTravel travel;
 
     private final UUID uuid;
-    private IDesktop desktop;
+    private TardisDesktop desktop;
     private ExteriorEnum exteriorType;
 
-    public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, IDesktopSchema schema, ExteriorEnum exteriorType) {
-        this.travel = new TardisTravel(this, pos);
-        this.uuid = uuid;
+    public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType) {
+        this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), exteriorType);
+    }
 
-        this.desktop = new TardisDesktop(this, schema);
+    protected Tardis(UUID uuid, Function<Tardis, TardisTravel> travel, Function<Tardis, TardisDesktop> desktop, ExteriorEnum exteriorType) {
+        this.uuid = uuid;
+        this.travel = travel.apply(this);
+
+        this.desktop = desktop.apply(this);
         this.exteriorType = exteriorType;
     }
 
-    @Override
     public UUID getUuid() {
         return uuid;
     }
 
-    @Override
-    public void setDesktop(IDesktop desktop) {
+    public void setDesktop(TardisDesktop desktop) {
         this.desktop = desktop;
     }
 
-    @Override
-    public IDesktop getDesktop() {
+    public TardisDesktop getDesktop() {
         return desktop;
     }
 
-    @Override
     public void setExteriorType(ExteriorEnum exteriorType) {
         this.exteriorType = exteriorType;
     }
 
-    @Override
     public ExteriorEnum getExteriorType() {
         return exteriorType;
     }
 
-    @Override
-    public ITravel getTravel() {
+    public TardisTravel getTravel() {
         return travel;
     }
 }

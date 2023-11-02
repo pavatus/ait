@@ -4,21 +4,17 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import mdteam.ait.api.tardis.IDesktopSchema;
-import mdteam.ait.api.tardis.ITardis;
-import mdteam.ait.api.tardis.ITardisManager;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.data.AbsoluteBlockPos;
-import net.minecraft.util.math.BlockPos;
+import mdteam.ait.api.tardis.ILinkable;
+import mdteam.ait.core.helper.TardisUtil;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-public abstract class TardisManager implements ITardisManager {
+public abstract class TardisManager {
 
-    protected final Map<UUID, ITardis> lookup = new HashMap<>();
+    protected final Map<UUID, Tardis> lookup = new HashMap<>();
     protected final Gson gson;
 
     public TardisManager() {
@@ -32,54 +28,29 @@ public abstract class TardisManager implements ITardisManager {
             public boolean shouldSkipClass(Class<?> clazz) {
                 return false;
             }
-        }).create();
+        }).registerTypeAdapter(TardisDesktopSchema.class, new TardisDesktopSchema.Serializer()).create();
     }
 
-    @Override
-    public ITardis getTardis(UUID uuid) {
-        if (this.lookup.containsKey(uuid))
-            return this.lookup.get(uuid);
+    public void getTardis(UUID uuid, Consumer<Tardis> consumer) {
+        if (this.lookup.containsKey(uuid)) {
+            consumer.accept(this.lookup.get(uuid));
+            return;
+        }
 
-        return this.loadTardis(uuid);
+        this.loadTardis(uuid, consumer);
     }
 
-    @Override
-    public ITardis findTardisByExterior(BlockPos pos) {
-        return null;
+    public void link(UUID uuid, ILinkable linkable) {
+        this.getTardis(uuid, linkable::setTardis);
     }
 
-    @Override
-    public ITardis findTardisByInterior(BlockPos pos) {
-        return null;
+    public abstract void loadTardis(UUID uuid, Consumer<Tardis> consumer);
+
+    public Map<UUID, Tardis> getLookup() {
+        return this.lookup;
     }
 
-    @Override
-    public ITardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exterior, IDesktopSchema desktop) {
-        return null;
-    }
-
-    @Override
-    public ITardis loadTardis(UUID uuid) {
-        return null;
-    }
-
-    @Override
-    public ITardis loadTardis(File file) {
-        return null;
-    }
-
-    @Override
-    public void loadTardis() {
-
-    }
-
-    @Override
-    public void saveTardis(ITardis tardis) {
-
-    }
-
-    @Override
-    public void saveTardis() {
-
+    public static TardisManager getInstance() {
+        return TardisUtil.isServer() ? ServerTardisManager.getInstance() : ClientTardisManager.getInstance();
     }
 }

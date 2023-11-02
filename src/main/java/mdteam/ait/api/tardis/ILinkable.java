@@ -1,12 +1,16 @@
 package mdteam.ait.api.tardis;
 
+import the.mdteam.ait.Tardis;
+import the.mdteam.ait.TardisDesktop;
+import the.mdteam.ait.TardisTravel;
+
 public interface ILinkable {
 
-    ITardis getTardis();
-    void setTardis(ITardis tardis);
+    Tardis getTardis();
+    void setTardis(Tardis tardis);
 
-    default IDesktop getDesktop() { return this.getTardis().getDesktop(); }
-    default void setDesktop(IDesktop desktop) { }
+    default TardisDesktop getDesktop() { return this.getTardis().getDesktop(); }
+    default void setDesktop(TardisDesktop desktop) { }
 
     /**
      * This method forces the {@link ILinkable} to update its desktop!
@@ -15,14 +19,14 @@ public interface ILinkable {
         if (this.getTardis() == null)
             return;
 
-        IDesktop desktop = this.getTardis().getDesktop();
+        TardisDesktop desktop = this.getTardis().getDesktop();
 
         if (desktop != null)
             this.setDesktop(desktop);
     }
 
-    default ITravel getTravel() { return this.getTardis().getTravel(); }
-    default void setTravel(ITravel travel) { }
+    default TardisTravel getTravel() { return this.getTardis().getTravel(); }
+    default void setTravel(TardisTravel travel) { }
 
     /**
      * This method forces the {@link ILinkable} to update its travel!
@@ -31,14 +35,14 @@ public interface ILinkable {
         if (this.getTardis() == null)
             return;
 
-        ITravel travel = this.getTardis().getTravel();
+        TardisTravel travel = this.getTardis().getTravel();
 
         if (travel != null)
             this.setTravel(travel);
     }
 
     /**
-     * If false, calling {@link ILinkable#setTardis(ITardis)} might throw an exception!
+     * If false, calling {@link ILinkable#setTardis(Tardis)} might throw an exception!
      */
     default boolean linkable() {
         return true;

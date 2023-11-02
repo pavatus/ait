@@ -1,8 +1,6 @@
 package mdteam.ait.core.blockentities;
 
 import mdteam.ait.api.tardis.ILinkable;
-import mdteam.ait.api.tardis.ITardis;
-import mdteam.ait.api.tardis.ITardisManager;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
@@ -16,13 +14,14 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import the.mdteam.ait.ServerTardisManager;
+import the.mdteam.ait.Tardis;
+import the.mdteam.ait.TardisManager;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
 
 public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
-    private ITardis tardis;
+    private Tardis tardis;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -95,7 +94,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         super.readNbt(nbt);
 
         if (nbt.contains("tardis")) {
-            this.tardis = ITardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+            TardisManager.getInstance().link(nbt.getUuid("tardis"), this);
         }
     }
 
@@ -112,12 +111,12 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     @Override
-    public ITardis getTardis() {
+    public Tardis getTardis() {
         return tardis;
     }
 
     @Override
-    public void setTardis(ITardis tardis) {
+    public void setTardis(Tardis tardis) {
         this.tardis = tardis;
     }
 }

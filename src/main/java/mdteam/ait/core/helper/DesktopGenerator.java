@@ -1,21 +1,21 @@
 package mdteam.ait.core.helper;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.IDesktopSchema;
 import mdteam.ait.core.AITBlocks;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import the.mdteam.ait.TardisDesktopSchema;
 
 import java.util.Optional;
 
 public class DesktopGenerator {
 
-    private final IDesktopSchema schema;
+    private final TardisDesktopSchema schema;
 
-    public DesktopGenerator(IDesktopSchema schema) {
+    public DesktopGenerator(TardisDesktopSchema schema) {
         this.schema = schema;
     }
 

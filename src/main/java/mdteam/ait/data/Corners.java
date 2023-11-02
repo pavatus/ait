@@ -5,7 +5,7 @@ import net.minecraft.util.math.Box;
 import the.mdteam.ait.Exclude;
 
 public class Corners {
-    @Exclude private final Box box;
+    private final Box box;
     private final BlockPos first;
     private final BlockPos second;
 
