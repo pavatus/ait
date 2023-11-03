@@ -8,17 +8,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * This class should be immutable. It contains the BlockPos and a Dimension of the block position.
  */
 @Unmodifiable
-public class AbsoluteBlockPos extends BlockPos implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -8041139044437812566L;
+public class AbsoluteBlockPos extends BlockPos {
 
     private final SerialDimension dimension;
 

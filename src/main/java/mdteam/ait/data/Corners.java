@@ -1,11 +1,15 @@
 package mdteam.ait.data;
 
+import com.google.gson.*;
+import net.minecraft.util.JsonSerializer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import the.mdteam.ait.Exclude;
 
+import java.lang.reflect.Type;
+
 public class Corners {
-    private final Box box;
+    @Exclude private final Box box;
     private final BlockPos first;
     private final BlockPos second;
 
@@ -35,5 +39,22 @@ public class Corners {
                 ", first=" + first +
                 ", second=" + second +
                 '}';
+    }
+
+    public static Object serializer() {
+        return new Serializer();
+    }
+
+    private static class Serializer implements JsonDeserializer<Corners> {
+
+        @Override
+        public Corners deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject corners = json.getAsJsonObject();
+
+            return new Corners(
+                    context.deserialize(corners.get("first"), BlockPos.class),
+                    context.deserialize(corners.get("second"), BlockPos.class)
+            );
+        }
     }
 }

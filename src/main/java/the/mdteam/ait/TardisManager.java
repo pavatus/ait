@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.data.Corners;
+import mdteam.ait.data.SerialDimension;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +30,10 @@ public abstract class TardisManager {
             public boolean shouldSkipClass(Class<?> clazz) {
                 return false;
             }
-        }).registerTypeAdapter(TardisDesktopSchema.class, new TardisDesktopSchema.Serializer()).create();
+        }).registerTypeAdapter(TardisDesktopSchema.class, TardisDesktopSchema.serializer())
+                .registerTypeAdapter(SerialDimension.class, SerialDimension.serializer())
+                .registerTypeAdapter(Corners.class, Corners.serializer())
+                .create();
     }
 
     public void getTardis(UUID uuid, Consumer<Tardis> consumer) {

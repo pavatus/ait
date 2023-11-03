@@ -1,14 +1,10 @@
 package the.mdteam.ait;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.helper.TardisUtil;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonSerializer;
 
 import java.lang.reflect.Type;
 import java.util.Optional;
@@ -37,13 +33,20 @@ public abstract class TardisDesktopSchema {
         );
     }
 
-    public static class Serializer implements JsonDeserializer<TardisDesktopSchema> {
+    public static Object serializer() {
+        return new Serializer();
+    }
+
+    private static class Serializer implements JsonSerializer<TardisDesktopSchema>, JsonDeserializer<TardisDesktopSchema> {
 
         @Override
         public TardisDesktopSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return AITDesktops.get(context.deserialize(
-                    json.getAsJsonObject().getAsJsonObject("id"), Identifier.class)
-            );
+            return AITDesktops.get(new Identifier(json.getAsJsonPrimitive().getAsString()));
+        }
+
+        @Override
+        public JsonElement serialize(TardisDesktopSchema src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.id().toString());
         }
     }
 }
