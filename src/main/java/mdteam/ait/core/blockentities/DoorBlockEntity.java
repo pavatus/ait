@@ -79,7 +79,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         super.writeNbt(nbt);
 
         if(this.tardis != null) {
-            nbt.putUuid("tardis", tardis.getUuid());
+            nbt.putUuid("tardis", this.tardis.getUuid());
         }
     }
 
