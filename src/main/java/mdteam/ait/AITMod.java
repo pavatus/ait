@@ -11,11 +11,12 @@ import mdteam.ait.core.components.block.interior_door.InteriorDoorNBTComponent;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.helper.TardisUtil;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import the.mdteam.ait.ClientTardisManager;
 import the.mdteam.ait.ServerTardisManager;
 
 public class AITMod implements ModInitializer {
@@ -28,9 +29,6 @@ public class AITMod implements ModInitializer {
 
 	public static final ComponentKey<InteriorDoorNBTComponent> INTERIORDOORNBT =
 			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "interiordoornbt"), InteriorDoorNBTComponent.class);
-
-	//public static final ComponentKey<TardisWrapper> TARDISCLASSNBT =
-	//		ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "tardisclassnbt"), TardisWrapper.class);
 
 	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"),
 			() -> Icon.of(AITItems.AITMODCREATIVETAB.getDefaultStack())).build();
@@ -49,11 +47,13 @@ public class AITMod implements ModInitializer {
 		AIT_ITEM_GROUP.initialize();
 		AITDesktops.init();
 
-
-
 		ServerLifecycleEvents.SERVER_STARTED.register(TardisUtil::init);
-		ClientLifecycleEvents.CLIENT_STARTED.register(TardisUtil::init);
 
-		ServerLifecycleEvents.SERVER_STOPPING.register(server -> ServerTardisManager.getInstance().saveTardis());
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ClientTardisManager.getInstance().reset());
+
+		ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+			ServerTardisManager.getInstance().reset();
+			TardisUtil.reset();
+		});
 	}
 }

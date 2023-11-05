@@ -75,6 +75,12 @@ public class ClientTardisManager extends TardisManager {
         this.sync(buf.readUuid(), buf);
     }
 
+    @Override
+    public void reset() {
+        this.subscribers.clear();
+        super.reset();
+    }
+
     public static ClientTardisManager getInstance() {
         return instance;
     }

@@ -144,6 +144,14 @@ public class ServerTardisManager extends TardisManager {
         ServerPlayNetworking.send(player, SEND, data);
     }
 
+    @Override
+    public void reset() {
+        this.subscribers.clear();
+
+        this.saveTardis();
+        super.reset();
+    }
+
     private static File getSavePath(UUID uuid) {
         // TODO: maybe, make WorldSavePath.AIT?
         return new File(TardisUtil.getServer().getSavePath(WorldSavePath.ROOT) + "ait/" + uuid + ".json");
@@ -156,4 +164,6 @@ public class ServerTardisManager extends TardisManager {
     public static ServerTardisManager getInstance() {
         return instance;
     }
+
+
 }

@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.ServerTask;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -100,7 +101,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
             return;
 
         if (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
-            TardisUtil.teleportOutside(this.tardis, player);
+            TardisUtil.getServer().execute(() -> TardisUtil.teleportOutside(this.tardis, player));
         }
     }
 

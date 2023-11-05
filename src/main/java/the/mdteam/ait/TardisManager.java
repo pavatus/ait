@@ -51,6 +51,10 @@ public abstract class TardisManager {
 
     public abstract void loadTardis(UUID uuid, Consumer<Tardis> consumer);
 
+    public void reset() {
+        this.lookup.clear();
+    }
+
     public Map<UUID, Tardis> getLookup() {
         return this.lookup;
     }

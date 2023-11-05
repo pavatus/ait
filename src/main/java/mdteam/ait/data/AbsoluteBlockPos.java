@@ -93,6 +93,10 @@ public class AbsoluteBlockPos extends BlockPos {
             this(pos.getX(), pos.getY(), pos.getZ(), dimension, direction);
         }
 
+        public Directed(AbsoluteBlockPos pos, Direction direction) {
+            this(pos, pos.getDimension(), direction);
+        }
+
         public Directed(int x, int y, int z, World world, Direction direction) {
             super(x, y, z, world);
 

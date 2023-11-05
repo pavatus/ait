@@ -6,7 +6,6 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
 import net.minecraft.block.Block;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -35,7 +34,6 @@ public class TardisUtil {
     private static final Random random = new Random();
 
     private static MinecraftServer SERVER;
-    private static MinecraftClient CLIENT;
 
     private static ServerWorld TARDIS_DIMENSION;
 
@@ -45,20 +43,16 @@ public class TardisUtil {
         TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
     }
 
-    public static void init(MinecraftClient client) {
-        CLIENT = client;
+    public static void reset() {
+        TARDIS_DIMENSION = null;
     }
 
     public static MinecraftServer getServer() {
         return SERVER;
     }
 
-    public static MinecraftClient getClient() {
-        return CLIENT;
-    }
-
     public static boolean isClient() {
-        return CLIENT != null;
+        return !TardisUtil.isServer();
     }
 
     public static boolean isServer() {
@@ -126,22 +120,6 @@ public class TardisUtil {
         };
     }
 
-    public static void teleport(ServerPlayerEntity player, ServerWorld world, BlockPos destination, float yaw, float pitch) {
-        player.teleport(world, destination.getX(), destination.getY(), destination.getZ(), yaw, pitch);
-    }
-
-    public static void teleport(ServerPlayerEntity player, ServerWorld world, Vec3d destination, float yaw, float pitch) {
-        player.teleport(world, destination.getX(), destination.getY(), destination.getZ(), yaw, pitch);
-    }
-
-    public static void teleport(ServerPlayerEntity player, AbsoluteBlockPos destination, float yaw, float pitch) {
-        TardisUtil.teleport(player, (ServerWorld) destination.getWorld(), destination, yaw, pitch);
-    }
-
-    public static void teleport(ServerPlayerEntity player, AbsoluteBlockPos.Directed destination, float pitch) {
-        TardisUtil.teleport(player, (ServerWorld) destination.getWorld(), destination, destination.getDirection().asRotation(), pitch);
-    }
-
     public static BlockPos offsetInteriorDoorPosition(Tardis tardis) {
         return TardisUtil.offsetInteriorDoorPosition(tardis.getDesktop());
     }
@@ -169,20 +147,19 @@ public class TardisUtil {
     }
 
     public static void teleportOutside(Tardis tardis, ServerPlayerEntity player) {
-        AbsoluteBlockPos.Directed pos = tardis.getTravel().getPosition();
-
-        TardisUtil.teleport(
-                player, (ServerWorld) pos.getWorld(), TardisUtil.offsetDoorPosition(pos)
-                        .toCenterPos(), pos.getDirection().asRotation(), player.getPitch()
-        );
+        TardisUtil.teleportWithDoorOffset(player, tardis.getTravel().getPosition());
     }
 
     public static void teleportInside(Tardis tardis, ServerPlayerEntity player) {
-        AbsoluteBlockPos.Directed pos = tardis.getDesktop().getInteriorDoorPos();
+        TardisUtil.teleportWithDoorOffset(player, tardis.getDesktop().getInteriorDoorPos());
+    }
 
-        TardisUtil.teleport(
-                player, TardisUtil.getTardisDimension(), TardisUtil.offsetDoorPosition(pos)
-                        .toCenterPos(), pos.getDirection().asRotation(), player.getPitch()
+    private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
+        Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
+
+        player.teleport(
+                (ServerWorld) pos.getWorld(), vec.getX(), vec.getY(), vec.getZ(),
+                pos.getDirection().asRotation(), player.getPitch()
         );
     }
 
