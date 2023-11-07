@@ -101,7 +101,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
             return;
 
         if (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
-            TardisUtil.getServer().execute(() -> TardisUtil.teleportOutside(this.tardis, player));
+            TardisUtil.teleportOutside(this.tardis, player);
         }
     }
 

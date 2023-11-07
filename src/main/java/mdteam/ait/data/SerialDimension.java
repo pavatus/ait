@@ -2,8 +2,6 @@ package mdteam.ait.data;
 
 import com.google.gson.*;
 import mdteam.ait.core.helper.TardisUtil;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import the.mdteam.ait.Exclude;
@@ -16,9 +14,13 @@ public class SerialDimension {
     private final World dimension;
     private final String value;
 
+    @Exclude
+    private final String registry;
+
     public SerialDimension(World dimension) {
         this.dimension = dimension;
         this.value = this.dimension.getRegistryKey().getValue().toString();
+        this.registry = this.dimension.getRegistryKey().getRegistry().toString();
     }
 
     public SerialDimension(Identifier value) {
@@ -31,6 +33,10 @@ public class SerialDimension {
 
     public String getValue() {
         return value;
+    }
+
+    public String getRegistry() {
+        return registry;
     }
 
     public World get() {

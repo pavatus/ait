@@ -46,8 +46,7 @@ public class AITMod implements ModInitializer {
 
 		AIT_ITEM_GROUP.initialize();
 		AITDesktops.init();
-
-		ServerLifecycleEvents.SERVER_STARTED.register(TardisUtil::init);
+		TardisUtil.init();
 
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ClientTardisManager.getInstance().reset());
 

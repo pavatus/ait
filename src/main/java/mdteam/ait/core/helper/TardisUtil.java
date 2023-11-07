@@ -5,6 +5,8 @@ import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.block.Block;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -20,27 +22,37 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisDesktop;
-import the.mdteam.ait.TardisManager;
-import the.mdteam.ait.TardisTravel;
+import net.minecraft.world.chunk.Chunk;
+import the.mdteam.ait.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
 
-    private static final Random random = new Random();
+    private static final Random RANDOM = new Random();
+    private static final Set<TeleportEntry> TELEPORTS = new HashSet<>();
 
     private static MinecraftServer SERVER;
-
     private static ServerWorld TARDIS_DIMENSION;
 
-    //FIXME: here
-    public static void init(MinecraftServer server) {
-        SERVER = server;
-        TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
+    public static void init() {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            SERVER = server;
+            TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
+        });
+
+        ServerTickEvents.END_WORLD_TICK.register(world -> {
+            for (TeleportEntry entry : TELEPORTS) {
+                System.out.println(entry);
+                entry.teleport();
+            }
+
+            TELEPORTS.clear();
+        });
     }
 
     public static void reset() {
@@ -95,7 +107,7 @@ public class TardisUtil {
     }
 
     public static BlockPos findRandomPlace() {
-        return new BlockPos(random.nextInt(100000), 0, random.nextInt(100000));
+        return new BlockPos(RANDOM.nextInt(100000), 0, RANDOM.nextInt(100000));
     }
 
     public static BlockPos findBlockInTemplate(StructureTemplate template, BlockPos pos, Direction direction, Block targetBlock) {
@@ -157,9 +169,11 @@ public class TardisUtil {
     private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
         Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
 
-        player.teleport(
-                (ServerWorld) pos.getWorld(), vec.getX(), vec.getY(), vec.getZ(),
-                pos.getDirection().asRotation(), player.getPitch()
+        Chunk chunk = pos.getChunk();
+        pos.getWorld().getChunkManager().setChunkForced(chunk.getPos(), true);
+
+        TELEPORTS.add(new TeleportEntry(
+                player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch())
         );
     }
 
