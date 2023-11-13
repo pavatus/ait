@@ -3,6 +3,7 @@ package mdteam.ait.core.tardis.travel;
 import com.mojang.logging.LogUtils;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.helper.AbsoluteBlockPos;
@@ -12,6 +13,7 @@ import mdteam.ait.core.tardis.TardisHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -111,7 +113,7 @@ public class TardisTravel implements Serializable {
     private boolean getHandbrakeChecks() {
         if (handbrakeOn && getState() == STATE.LANDED) {
             setState(STATE.FAIL_TAKEOFF);
-            // getTardis().world().playSound(null, getTardis().getPosition(), SoundsInit.FAIL_TAKEOFF.get(), SoundSource.BLOCKS, 1f,1f);
+            // getTardis().world().playSound(null, getTardis().getPosition(), AITSounds.FAIL_TAKEOFF.get(), SoundCategory.BLOCKS, 1f,1f);
             runAnimations();
             startHopping();
 
@@ -169,7 +171,7 @@ public class TardisTravel implements Serializable {
 
         World level = getTardis().world();
 
-        // level.playSound(null,getTardis().getPosition(), SoundsInit.HOP_TAKEOFF.get(), SoundSource.BLOCKS, 1f,1f);
+        level.playSound(null, getTardis().getPosition().toBlockPos(), AITSounds.HOP_DEMAT, SoundCategory.BLOCKS, 1f,1f);
 
         runAnimations();
 
@@ -210,7 +212,7 @@ public class TardisTravel implements Serializable {
         ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(getDestination().toBlockPos(), state);
         setUuid(blockEntity.getTardisUuid());
         level.addBlockEntity(blockEntity);
-        // level.playSound(null, destination, SoundsInit.HOP_LAND.get(), SoundSource.BLOCKS, 1f, 1f);
+        level.playSound(null, destination.toBlockPos(), AITSounds.HOP_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
         getTardis().setPosition(getDestination());
         getTardis().setUuid(tardisUuid);
@@ -253,7 +255,7 @@ public class TardisTravel implements Serializable {
 
         setState(STATE.DEMAT);
 
-        // level.playSound(null,getTardis().getPosition(), SoundsInit.DEMATERIALISE.get(), SoundSource.BLOCKS, 1f,1f);
+        level.playSound(null, getTardis().getPosition().toBlockPos(), AITSounds.DEMAT, SoundCategory.BLOCKS, 1f,1f);
 
         runAnimations();
 
@@ -286,10 +288,10 @@ public class TardisTravel implements Serializable {
         level.getChunk(getDestination().toBlockPos());
         if (level == TardisUtil.getTardisDimension()) {
             if (/*AITCommonConfigs.CAN_LAND_IN_TARDIS_DIM.get()*/ true) {
-                // level.playSound(null, destination, SoundsInit.EMERGENCY_LAND.get(), SoundSource.BLOCKS, 1f,1f);
+                level.playSound(null, destination.toBlockPos(), AITSounds.EMERG_MAT, SoundCategory.BLOCKS, 1f,1f);
                 MAT_AUDIO_LENGTH = 16;
             } else {
-                // level.playSound(null, destination, SoundsInit.FAIL_LAND.get(), SoundSource.BLOCKS, 1f,1f);
+                level.playSound(null, destination.toBlockPos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f,1f);
                 setDestination(getTardis().getPosition(),false);
 
                 if (getTardis().getPosition().getDimension() == TardisUtil.getTardisDimension()) {
@@ -300,7 +302,7 @@ public class TardisTravel implements Serializable {
                 return;
             }
         } else {
-            // level.playSound(null, destination, SoundsInit.MATERIALISE.get(), SoundSource.BLOCKS, 1f, 1f);
+            level.playSound(null, destination.toBlockPos(), AITSounds.MAT, SoundCategory.BLOCKS, 1f, 1f);
             MAT_AUDIO_LENGTH = 10;
         }
 
