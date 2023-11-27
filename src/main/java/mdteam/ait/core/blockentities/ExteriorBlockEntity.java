@@ -2,12 +2,16 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
+import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.helper.TardisUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.client.render.entity.animation.Animation;
+import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -15,15 +19,16 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import the.mdteam.ait.ServerTardisManager;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisManager;
+import net.minecraft.world.World;
+import the.mdteam.ait.*;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
 
-public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
+public class ExteriorBlockEntity extends BlockEntity implements ILinkable, BlockEntityTicker<ExteriorBlockEntity> {
 
     private Tardis tardis;
+    public final AnimationState ANIMATION_STATE = new AnimationState();
+    public int tickCount = 0;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -38,7 +43,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         ServerTardisManager manager = ServerTardisManager.getInstance();
 
         for (Tardis tardis : manager.getLookup().values()) {
-            if (tardis.getTravel().getPosition() != this.pos) continue;
+            if (!tardis.getTravel().getPosition().equals(this.pos)) continue;
 
             this.setTardis(tardis);
             return;
@@ -46,6 +51,22 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
         AITMod.LOGGER.warn("Deleting exterior block at " + this.pos + " due to lack of Tardis!");
         this.getWorld().removeBlock(this.pos, false);
+    }
+    public void refindTardisClient() {
+        if (this.tardis != null) // No issue
+            return;
+        if (!this.getWorld().isClient())
+            return;
+
+        ClientTardisManager manager = ClientTardisManager.getInstance();
+
+        for (Tardis tardis : manager.getLookup().values()) {
+            if (!tardis.getTravel().getPosition().equals(this.pos)) continue;
+
+            this.setTardis(tardis);
+            return;
+        }
+
     }
 
     public void useOn(ServerWorld world, boolean sneaking) {
@@ -139,11 +160,39 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
     @Override
     public Tardis getTardis() {
+        if (getWorld().isClient() && tardis == null)
+            syncTardisFromServer();
+        
         return tardis;
+    }
+    public void syncTardisFromServer() {
+        this.refindTardisClient();
+        if (tardis != null || !this.getWorld().isClient())
+            return;
+
+        ClientTardisManager manager = ClientTardisManager.getInstance();
+
+        manager.ask(this.pos);
+
+        this.refindTardisClient();
     }
 
     @Override
     public void setTardis(Tardis tardis) {
         this.tardis = tardis;
+    }
+
+    @Override
+    public void tick(World world, BlockPos pos, BlockState state, ExteriorBlockEntity blockEntity) {
+        if (!ANIMATION_STATE.isRunning()) {
+            tickCount = 0;
+            ANIMATION_STATE.start(tickCount);
+        } else {
+            tickCount++;
+        }
+
+        if (this.tardis.getTravel().getState() == TardisTravel.State.DEMAT) {
+            tickCount++;
+        }
     }
 }

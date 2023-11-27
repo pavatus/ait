@@ -2,11 +2,13 @@ package the.mdteam.ait;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import mdteam.ait.data.AbsoluteBlockPos;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -16,6 +18,7 @@ import java.util.function.Consumer;
 public class ClientTardisManager extends TardisManager {
 
     public static final Identifier ASK = new Identifier("ait", "ask_tardis");
+    public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
     private static final ClientTardisManager instance = new ClientTardisManager();
 
     private final Multimap<UUID, Consumer<Tardis>> subscribers = ArrayListMultimap.create();
@@ -73,6 +76,19 @@ public class ClientTardisManager extends TardisManager {
 
     private void sync(PacketByteBuf buf) {
         this.sync(buf.readUuid(), buf);
+    }
+
+    public void ask(UUID uuid) {
+        PacketByteBuf data = PacketByteBufs.create();
+        data.writeUuid(uuid);
+
+        ClientPlayNetworking.send(ASK, data);
+    }
+    public void ask(BlockPos pos) {
+        PacketByteBuf data = PacketByteBufs.create();
+        data.writeBlockPos(pos);
+
+        ClientPlayNetworking.send(ASK_POS, data);
     }
 
     @Override

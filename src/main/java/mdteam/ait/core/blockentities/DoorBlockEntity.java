@@ -120,13 +120,13 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public void onEntityCollision(Entity entity) {
+        if (!(entity instanceof ServerPlayerEntity player))
+            return;
+
         if (this.tardis == null) {
             refindTardis();
             return;
         }
-
-        if (!(entity instanceof ServerPlayerEntity player))
-            return;
 
         if (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
             TardisUtil.teleportOutside(this.tardis, player);

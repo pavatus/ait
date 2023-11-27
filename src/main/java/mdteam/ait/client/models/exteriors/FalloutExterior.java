@@ -5,12 +5,14 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 
 // Made with Blockbench 4.8.3
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
-public class FalloutExterior extends Model {
+public class FalloutExterior extends ExteriorModel {
 	public ModelPart tardis;
 	public ModelPart door;
 	public ModelPart frame;
@@ -217,5 +219,16 @@ public class FalloutExterior extends Model {
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
 		this.tardis.render(matrices, vertices, light, overlay,1, 1, 1, 1);
+	}
+
+	@Override
+	public ModelPart getPart() {
+		return tardis;
+	}
+
+
+	@Override
+	public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
 	}
 }

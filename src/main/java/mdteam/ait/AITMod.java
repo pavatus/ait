@@ -54,5 +54,8 @@ public class AITMod implements ModInitializer {
 			ServerTardisManager.getInstance().reset();
 			TardisUtil.reset();
 		});
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+			ServerTardisManager.getInstance().loadTardises();
+		});
 	}
 }
