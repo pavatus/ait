@@ -1,5 +1,6 @@
 package mdteam.ait.core.blockentities;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
@@ -16,6 +17,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import the.mdteam.ait.ServerTardisManager;
 import the.mdteam.ait.Tardis;
 import the.mdteam.ait.TardisDesktop;
 import the.mdteam.ait.TardisManager;
@@ -33,7 +35,31 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         this.setTardis(TardisUtil.findTardisByInterior(pos));
     }
 
+    public void refindTardis() {
+        if (this.tardis != null) // No issue
+            return;
+        if (this.getWorld().isClient())
+            return;
+
+        ServerTardisManager manager = ServerTardisManager.getInstance();
+
+        for (Tardis tardis : manager.getLookup().values()) {
+            if (tardis.getTravel().getPosition() != this.pos) continue;
+
+            this.setTardis(tardis);
+            return;
+        }
+
+        AITMod.LOGGER.warn("Deleting door block at " + this.pos + " due to lack of Tardis!");
+        this.getWorld().removeBlock(this.pos, false);
+    }
+
     public void useOn(World world, boolean sneaking) {
+        if (this.tardis == null) {
+            refindTardis();
+            return;
+        }
+
         if(this.getLeftDoorRotation() == 0) {
             this.setLeftDoorRot(1.2f);
         } else {
@@ -94,8 +120,10 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public void onEntityCollision(Entity entity) {
-        if (this.tardis == null)
+        if (this.tardis == null) {
+            refindTardis();
             return;
+        }
 
         if (!(entity instanceof ServerPlayerEntity player))
             return;
