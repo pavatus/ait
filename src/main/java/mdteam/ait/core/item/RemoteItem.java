@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import the.mdteam.ait.ServerTardisManager;
 import the.mdteam.ait.Tardis;
 import the.mdteam.ait.TardisTravel;
+import the.mdteam.ait.wrapper.ServerTardisTravel;
 
 import java.util.List;
 
@@ -55,10 +56,16 @@ public class RemoteItem extends Item {
         Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
 
         if (tardis != null) {
-            TardisTravel travel = tardis.getTravel();
+            ServerTardisTravel travel = (ServerTardisTravel) tardis.onServer().getTravel();
 
             travel.setDestination(new AbsoluteBlockPos.Directed(pos.up(), world, player.getMovementDirection().getOpposite()), true);
-            travel.toggleHandbrake();
+            // travel.toggleHandbrake();
+
+            if (travel.getState() == TardisTravel.State.LANDED)
+                travel.dematerialise(true);
+            if (travel.getState() == TardisTravel.State.FLIGHT)
+                travel.materialise();
+
             return ActionResult.SUCCESS;
         }
 

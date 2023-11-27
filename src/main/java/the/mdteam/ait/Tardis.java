@@ -2,6 +2,8 @@ package the.mdteam.ait;
 
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.data.AbsoluteBlockPos;
+import the.mdteam.ait.wrapper.ServerTardis;
+import the.mdteam.ait.wrapper.ServerTardisTravel;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -48,5 +50,13 @@ public class Tardis {
 
     public TardisTravel getTravel() {
         return travel;
+    }
+
+    // @TODO shitty hotfix for incomplete code
+    public ServerTardis onServer() {
+        if (this.getTravel().getPosition().getWorld().isClient)
+            return null;
+
+        return new ServerTardis(this);
     }
 }

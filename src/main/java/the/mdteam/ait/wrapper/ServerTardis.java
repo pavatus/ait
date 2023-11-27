@@ -14,6 +14,9 @@ public class ServerTardis extends Tardis {
     public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType) {
         super(uuid, tardis -> new ServerTardisTravel(tardis, pos), tardis -> new ServerTardisDesktop(tardis, schema), exteriorType);
     }
+    public ServerTardis(Tardis tardis) {
+        this(tardis.getUuid(), tardis.getTravel().getPosition(),tardis.getDesktop().getSchema(), tardis.getExteriorType());
+    }
 
     @Override
     public void setExteriorType(ExteriorEnum exteriorType) {
@@ -29,5 +32,14 @@ public class ServerTardis extends Tardis {
 
     public void sync() {
         ServerTardisManager.getInstance().sendToSubscribers(this);
+    }
+
+    // @TODO have to do this as ServerTardis and allat is not properly used, waiting on theo to finish so heres jank
+    public void duzoJankSync() {
+        Tardis realTardis = ServerTardisManager.getInstance().getTardis(this.getUuid());
+
+        realTardis.getTravel().setDestination(this.getTravel().getDestination(), true);
+        realTardis.getTravel().setPosition(this.getTravel().getPosition());
+        realTardis.getTravel().setState(this.getTravel().getState());
     }
 }

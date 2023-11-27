@@ -77,12 +77,12 @@ public class TardisTravel {
     public enum State {
         LANDED(true) {
             @Override
-            public void onEnable() {
+            public void onEnable(TravelContext context) {
                 AITMod.LOGGER.info("ON: LANDED");
             }
 
             @Override
-            public void onDisable() {
+            public void onDisable(TravelContext context) {
                 AITMod.LOGGER.info("OFF: LANDED");
             }
 
@@ -98,12 +98,14 @@ public class TardisTravel {
         },
         DEMAT {
             @Override
-            public void onEnable() {
+            public void onEnable(TravelContext context) {
                 AITMod.LOGGER.info("ON: DEMAT");
+
+                // context.travel().dematerialise(false);
             }
 
             @Override
-            public void onDisable() {
+            public void onDisable(TravelContext context) {
                 AITMod.LOGGER.info("OFF: DEMAT");
             }
 
@@ -114,12 +116,12 @@ public class TardisTravel {
         },
         FLIGHT(true) {
             @Override
-            public void onEnable() {
+            public void onEnable(TravelContext context) {
                 AITMod.LOGGER.info("ON: FLIGHT");
             }
 
             @Override
-            public void onDisable() {
+            public void onDisable(TravelContext context) {
                 AITMod.LOGGER.info("OFF: LANDED");
             }
 
@@ -135,12 +137,14 @@ public class TardisTravel {
         },
         MAT {
             @Override
-            public void onEnable() {
+            public void onEnable(TravelContext context) {
                 AITMod.LOGGER.info("ON: MAT");
+
+                // context.travel().materialise();
             }
 
             @Override
-            public void onDisable() {
+            public void onDisable(TravelContext context) {
                 AITMod.LOGGER.info("OFF: LANDED");
             }
 
@@ -170,24 +174,24 @@ public class TardisTravel {
             return service;
         }
 
-        public abstract void onEnable();
-        public abstract void onDisable();
+        public abstract void onEnable(TravelContext context);
+        public abstract void onDisable(TravelContext context);
         public abstract State getNext();
 
         public void next(TravelContext context) {
             this.service.shutdown();
-            this.onDisable();
+            this.onDisable(context);
 
             State next = this.getNext();
             next.schedule(context);
 
-            next.onEnable();
+            next.onEnable(context);
             context.travel().setState(next);
         }
 
         public void schedule(TravelContext context) {
             this.getService().schedule(() -> {
-                this.next(context);
+                // this.next(context);
             }, 2, TimeUnit.SECONDS);
         }
     }
