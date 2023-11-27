@@ -44,7 +44,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         ServerTardisManager manager = ServerTardisManager.getInstance();
 
         for (Tardis tardis : manager.getLookup().values()) {
-            if (tardis.getTravel().getPosition() != this.pos) continue;
+            if (tardis.getDesktop().getCorners().getBox().contains(this.pos.toCenterPos())) continue;
 
             this.setTardis(tardis);
             return;
