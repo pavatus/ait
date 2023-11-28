@@ -53,10 +53,10 @@ public class Tardis {
     }
 
     // @TODO shitty hotfix for incomplete code
-    public ServerTardis onServer() {
+    public Tardis onServer() {
         if (this.getTravel().getPosition().getWorld().isClient())
             return null;
 
-        return new ServerTardis(this);
+        return ServerTardisManager.getInstance().getTardis(this.getUuid());
     }
 }

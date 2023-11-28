@@ -42,21 +42,18 @@ public class ServerTardisTravel extends TardisTravel {
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
         super.setDestination(pos, withChecks);
         ((ServerTardis) this.tardis).sync();
-        ((ServerTardis) this.tardis).duzoJankSync();
     }
 
     @Override
     public void setPosition(AbsoluteBlockPos.Directed pos) {
         super.setPosition(pos);
         ((ServerTardis) this.tardis).sync();
-        ((ServerTardis) this.tardis).duzoJankSync();
     }
 
     @Override
     public void setState(State state) {
         super.setState(state);
         ((ServerTardis) this.tardis).sync();
-        ((ServerTardis) this.tardis).duzoJankSync();
     }
 
     public static double getSoundEventLengthInSeconds(SoundEvent sound) {

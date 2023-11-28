@@ -34,26 +34,4 @@ public class ServerTardis extends Tardis {
     public void sync() {
         ServerTardisManager.getInstance().sendToSubscribers(this);
     }
-
-    // @TODO have to do this as ServerTardis and allat is not properly used, waiting on theo to finish so heres jank
-    public void duzoJankSync() {
-        Tardis realTardis = ServerTardisManager.getInstance().getTardis(this.getUuid());
-
-        realTardis.getTravel().setDestination(this.getTravel().getDestination(), true);
-        realTardis.getTravel().setPosition(this.getTravel().getPosition());
-        realTardis.getTravel().setState(this.getTravel().getState());
-
-        ServerTardisManager.getInstance().sendToSubscribers(realTardis);
-    }
-    // MORE JANK
-    public ServerTardisDesktop getRealDesktop() {
-        Tardis real = ServerTardisManager.getInstance().getTardis(this.getUuid());
-        TardisDesktop realDesktop = real.getDesktop();
-        return new ServerTardisDesktop(this, realDesktop.getSchema(),realDesktop.getCorners(),realDesktop.getInteriorDoorPos());
-    }
-    public ServerTardisTravel getRealTravel() {
-        Tardis real = ServerTardisManager.getInstance().getTardis(this.getUuid());
-        TardisTravel realTravel = real.getTravel();
-        return new ServerTardisTravel(this, realTravel.getPosition(), realTravel.getDestination(), realTravel.getState());
-    }
 }
