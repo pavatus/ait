@@ -23,6 +23,13 @@ public class TardisTravel {
         this.position = pos;
     }
 
+    public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
+        this.tardis = tardis;
+        this.position = pos;
+        this.destination = dest;
+        this.state = state;
+    }
+
     public void setPosition(AbsoluteBlockPos.Directed pos) {
         this.position = pos;
     }

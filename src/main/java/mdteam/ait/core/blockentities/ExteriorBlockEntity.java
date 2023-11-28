@@ -160,14 +160,14 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable, Block
 
     @Override
     public Tardis getTardis() {
-        if (getWorld().isClient() && tardis == null)
+        if (getWorld().isClient()) // ive come to the realisation client cannot be trusted so just always reask
             syncTardisFromServer();
         
         return tardis;
     }
     public void syncTardisFromServer() {
-        this.refindTardisClient();
-        if (tardis != null || !this.getWorld().isClient())
+        // this.refindTardisClient();
+        if (!this.getWorld().isClient())
             return;
 
         ClientTardisManager manager = ClientTardisManager.getInstance();

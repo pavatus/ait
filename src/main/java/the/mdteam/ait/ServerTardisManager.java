@@ -139,7 +139,12 @@ public class ServerTardisManager extends TardisManager {
     }
 
     public void sendToSubscribers(Tardis tardis) {
+
         for (ServerPlayerEntity player : this.subscribers.get(tardis.getUuid())) {
+            // System.out.println(this.gson.toJson(tardis, ServerTardis.class));
+
+            System.out.println(tardis);
+
             this.sendTardis(player, tardis);
         }
     }
@@ -190,24 +195,26 @@ public class ServerTardisManager extends TardisManager {
 
 
     public void loadTardises() {
-        for (String name : Stream.of(new File(TardisUtil.getServer().getSavePath(WorldSavePath.ROOT) + "ait/").listFiles())
-                .filter(file -> !file.isDirectory())
-                .map(File::getName)
-                .collect(Collectors.toSet())) {
+        try {
+            for (String name : Stream.of(new File(TardisUtil.getServer().getSavePath(WorldSavePath.ROOT) + "ait/").listFiles())
+                    .filter(file -> !file.isDirectory())
+                    .map(File::getName)
+                    .collect(Collectors.toSet())) {
 
-            System.out.println(name.substring(name.lastIndexOf(".") + 1));
+                System.out.println(name.substring(name.lastIndexOf(".") + 1));
 
-            if (!name.substring(name.lastIndexOf(".") + 1).equalsIgnoreCase("json"))
-                continue;
+                if (!name.substring(name.lastIndexOf(".") + 1).equalsIgnoreCase("json"))
+                    continue;
 
-            System.out.println(name.substring(name.lastIndexOf("/")+1, name.lastIndexOf(".")));
+                System.out.println(name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf(".")));
 
-            UUID uuid = UUID.fromString(name.substring(name.lastIndexOf("/")+1, name.lastIndexOf(".")));
+                UUID uuid = UUID.fromString(name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf(".")));
 
-            System.out.println(uuid);
+                System.out.println(uuid);
 
-            this.loadTardis(uuid);
-        }
-        System.out.println(this.lookup);
+                this.loadTardis(uuid);
+            }
+            System.out.println(this.lookup);
+        } catch (Exception e) {}
     }
 }

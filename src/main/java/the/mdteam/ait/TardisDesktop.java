@@ -35,6 +35,12 @@ public class TardisDesktop {
         door.setDesktop(this);
         door.setTardis(tardis);
     }
+    public TardisDesktop(Tardis tardis, TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed door) {
+        this.tardis = tardis;
+        this.schema = schema;
+        this.corners = corners;
+        this.doorPos = door;
+    }
 
     public TardisDesktopSchema getSchema() {
         return schema;

@@ -34,6 +34,9 @@ public class ServerTardisTravel extends TardisTravel {
     public ServerTardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
         super(tardis, pos);
     }
+    public ServerTardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
+        super(tardis, pos,dest,state);
+    }
 
     @Override
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {

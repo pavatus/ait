@@ -2,20 +2,21 @@ package the.mdteam.ait.wrapper;
 
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.data.AbsoluteBlockPos;
-import the.mdteam.ait.ServerTardisManager;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisDesktop;
-import the.mdteam.ait.TardisDesktopSchema;
+import org.apache.logging.log4j.core.jmx.Server;
+import the.mdteam.ait.*;
 
 import java.util.UUID;
+import java.util.function.Function;
 
+
+// @TODO warning for this server class and most others, NOTHING will sync. Theo pls do :)
 public class ServerTardis extends Tardis {
 
     public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType) {
         super(uuid, tardis -> new ServerTardisTravel(tardis, pos), tardis -> new ServerTardisDesktop(tardis, schema), exteriorType);
     }
     public ServerTardis(Tardis tardis) {
-        this(tardis.getUuid(), tardis.getTravel().getPosition(),tardis.getDesktop().getSchema(), tardis.getExteriorType());
+        super(tardis.getUuid(), tardis.getTravel().getPosition(),tardis.getDesktop().getSchema(), tardis.getExteriorType());
     }
 
     @Override
@@ -41,5 +42,18 @@ public class ServerTardis extends Tardis {
         realTardis.getTravel().setDestination(this.getTravel().getDestination(), true);
         realTardis.getTravel().setPosition(this.getTravel().getPosition());
         realTardis.getTravel().setState(this.getTravel().getState());
+
+        ServerTardisManager.getInstance().sendToSubscribers(realTardis);
+    }
+    // MORE JANK
+    public ServerTardisDesktop getRealDesktop() {
+        Tardis real = ServerTardisManager.getInstance().getTardis(this.getUuid());
+        TardisDesktop realDesktop = real.getDesktop();
+        return new ServerTardisDesktop(this, realDesktop.getSchema(),realDesktop.getCorners(),realDesktop.getInteriorDoorPos());
+    }
+    public ServerTardisTravel getRealTravel() {
+        Tardis real = ServerTardisManager.getInstance().getTardis(this.getUuid());
+        TardisTravel realTravel = real.getTravel();
+        return new ServerTardisTravel(this, realTravel.getPosition(), realTravel.getDestination(), realTravel.getState());
     }
 }
