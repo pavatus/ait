@@ -16,14 +16,6 @@ import java.util.function.Function;
 
 public abstract class ExteriorModel extends SinglePartEntityModel {
     public static int MAX_TICK_COUNT = 2 * 20;
-    private float alpha = 1f;
-
-    private float getAlpha() {
-        return alpha;
-    }
-    private void setAlpha(float var) {
-        this.alpha = var;
-    }
 
     public ExteriorModel() {
         this(RenderLayer::getEntityCutoutNoCull);
@@ -42,10 +34,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         if (exterior.getTardis() == null) return;
 
-        if (exterior.getTardis().getTravel().getState() == TardisTravel.State.DEMAT) {
-            this.setAlpha(this.getAlpha() * ((MAX_TICK_COUNT - exterior.tickCount) / MAX_TICK_COUNT));
-        }
-
-        root.render(matrices, vertices, light, overlay,red,green,blue,this.getAlpha());
+        root.render(matrices, vertices, light, overlay,red,green,blue,exterior.getAlpha());
     }
 }

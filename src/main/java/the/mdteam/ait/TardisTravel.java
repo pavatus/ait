@@ -7,10 +7,13 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.profiler.SampleType;
+import net.minecraft.world.World;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,7 +50,7 @@ public class TardisTravel {
         return position;
     }
     public static double getSoundEventLengthInSeconds(SoundEvent sound) {
-        return 2.0d;
+        return 10.0d;
 
 //        try {
 //            // @TODO is no worky??
@@ -75,20 +78,23 @@ public class TardisTravel {
 
         world.playSound(null, this.getPosition(), AITSounds.MAT, SoundCategory.BLOCKS);
 
+        ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
+        destWorld.getChunk(this.getDestination());
+
+        ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
+        BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING,this.getDestination().getDirection());
+        destWorld.setBlockState(this.getDestination(), state);
+        ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(this.getDestination(), state);
+        destWorld.addBlockEntity(blockEntity);
+        this.setPosition(this.getDestination());
+
+        this.runAnimations(blockEntity);
+
         Timer animTimer = new Timer();
 
         Runnable mat = () -> {
-            ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
-            destWorld.getChunk(this.getDestination());
-
-            this.setPosition(this.getDestination());
-
-            ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-            BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING,this.getDestination().getDirection());
-            destWorld.setBlockState(this.getDestination(), state);
-            ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(this.getDestination(), state);
-            destWorld.addBlockEntity(blockEntity);
             this.getState().next(context);
+            this.runAnimations(blockEntity);
 
             // blockEntity.refindTardis();
         };
@@ -113,6 +119,8 @@ public class TardisTravel {
 
         world.playSound(null, this.getPosition(), AITSounds.DEMAT, SoundCategory.BLOCKS);
 
+        this.runAnimations();
+
         Timer animTimer = new Timer();
         TardisTravel travel = this;
 
@@ -131,6 +139,19 @@ public class TardisTravel {
                 }
             }
         }, (long) getSoundEventLengthInSeconds(AITSounds.DEMAT) * 1000L);
+    }
+
+    private void runAnimations() {
+        ServerWorld level = (ServerWorld) this.position.getWorld();
+        level.getChunk(this.getPosition());
+        BlockEntity entity = level.getBlockEntity(this.getPosition());
+        if (entity instanceof ExteriorBlockEntity) {
+            ((ExteriorBlockEntity) entity).getAnimation().setupAnimation(this.state);
+        }
+    }
+    private void runAnimations(ExteriorBlockEntity exterior) {
+        exterior.getAnimation().setupAnimation(this.state);
+        System.out.println(this.state);
     }
 
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {

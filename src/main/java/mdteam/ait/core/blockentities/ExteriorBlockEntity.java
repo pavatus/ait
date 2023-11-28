@@ -1,7 +1,10 @@
 package mdteam.ait.core.blockentities;
 
+import com.mojang.logging.LogUtils;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
+import mdteam.ait.client.animation.ClassicAnimation;
+import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
@@ -24,10 +27,11 @@ import the.mdteam.ait.*;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
 
-public class ExteriorBlockEntity extends BlockEntity implements ILinkable, BlockEntityTicker<ExteriorBlockEntity> {
+public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
     private Tardis tardis;
     public final AnimationState ANIMATION_STATE = new AnimationState();
+    private ExteriorAnimation animation;
     public int tickCount = 0;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
@@ -182,17 +186,18 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable, Block
         this.tardis = tardis;
     }
 
-    @Override
-    public void tick(World world, BlockPos pos, BlockState state, ExteriorBlockEntity blockEntity) {
-        if (!ANIMATION_STATE.isRunning()) {
-            tickCount = 0;
-            ANIMATION_STATE.start(tickCount);
-        } else {
-            tickCount++;
+    public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T exterior) {
+        ((ExteriorBlockEntity) exterior).getAnimation().tick();
+    }
+    public ExteriorAnimation getAnimation() {
+        if (this.animation == null) {
+//            this.animation = this.getTARDIS().getExteriorAnimation();
+            this.animation = new ClassicAnimation(this);
+            LogUtils.getLogger().debug("Created new CLASSIC ANIMATION for " + this);
         }
-
-        if (this.tardis.getTravel().getState() == TardisTravel.State.DEMAT) {
-            tickCount++;
-        }
+        return this.animation;
+    }
+    public float getAlpha() {
+        return this.getAnimation().getAlpha();
     }
 }

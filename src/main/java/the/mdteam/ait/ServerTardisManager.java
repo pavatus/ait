@@ -141,10 +141,6 @@ public class ServerTardisManager extends TardisManager {
     public void sendToSubscribers(Tardis tardis) {
 
         for (ServerPlayerEntity player : this.subscribers.get(tardis.getUuid())) {
-            // System.out.println(this.gson.toJson(tardis, ServerTardis.class));
-
-            System.out.println(tardis);
-
             this.sendTardis(player, tardis);
         }
     }
@@ -216,5 +212,11 @@ public class ServerTardisManager extends TardisManager {
             }
             System.out.println(this.lookup);
         } catch (Exception e) {}
+    }
+
+    public static void sendPacketToAll(Identifier channel, PacketByteBuf data) {
+        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
+            ServerPlayNetworking.send(player,channel,data);
+        }
     }
 }
