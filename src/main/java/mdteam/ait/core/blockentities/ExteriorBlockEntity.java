@@ -5,6 +5,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.client.animation.ClassicAnimation;
 import mdteam.ait.client.animation.ExteriorAnimation;
+import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
@@ -135,6 +136,8 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
 
+        this.getAnimation().setAlpha(nbt.getFloat("alpha"));
+
         if (this.tardis != null) {
             nbt.putUuid("tardis", this.tardis.getUuid());
         }
@@ -143,6 +146,8 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+
+        nbt.putFloat("alpha",this.getAlpha());
 
         if (nbt.contains("tardis")) {
             TardisManager.getInstance().link(nbt.getUuid("tardis"), this);
@@ -192,7 +197,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     public ExteriorAnimation getAnimation() {
         if (this.animation == null) {
 //            this.animation = this.getTARDIS().getExteriorAnimation();
-            this.animation = new ClassicAnimation(this);
+            this.animation = new PulsatingAnimation(this);
             LogUtils.getLogger().debug("Created new CLASSIC ANIMATION for " + this);
         }
         return this.animation;

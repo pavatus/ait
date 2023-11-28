@@ -1,13 +1,13 @@
 package mdteam.ait.client.animation;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.network.PacketByteBuf;
-import the.mdteam.ait.ServerTardisManager;
 import the.mdteam.ait.TardisTravel;
 
-public class ClassicAnimation extends ExteriorAnimation {
-    public ClassicAnimation(ExteriorBlockEntity exterior) {
+public class PulsatingAnimation extends ExteriorAnimation{
+    private int pulses = 0;
+    private int PULSE_LENGTH = 20;
+
+    public PulsatingAnimation(ExteriorBlockEntity exterior) {
         super(exterior);
     }
 
@@ -22,40 +22,51 @@ public class ClassicAnimation extends ExteriorAnimation {
 
         TardisTravel.State state = exterior.getTardis().getTravel().getState();
 
-        if (state == TardisTravel.State.DEMAT)   {
+        if (state == TardisTravel.State.DEMAT) {
             this.updateClient();
-            alpha = alpha - alphaChangeAmount;
+            this.setAlpha(1f - getPulseAlpha());
             timeLeft--;
 
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.MAT) {
             this.updateClient();
-            alpha = alpha + alphaChangeAmount;
             timeLeft--;
 
+            if (timeLeft < maxTime)
+                this.setAlpha(getPulseAlpha());
+            else
+                this.setAlpha(0f);
+
             runAlphaChecks(state);
-        } /*else if (state == TardisTravel.State.LANDED) {
-            this.updateClient();
-            alpha = 1F;
-        }*/
+        }
 
         this.updateClient();
+    }
+
+    public float getPulseAlpha() {
+        if (timeLeft != maxTime && timeLeft % PULSE_LENGTH == 0)
+            pulses++;
+
+        return (float) ((float) (pulses / Math.floor(maxTime / PULSE_LENGTH)) + (Math.cos(timeLeft * 0.25) * 0.4f)); // @TODO find alternative math or ask cwaig if we're allowed to use this, loqor says "its just math" but im still saying this just in case.
     }
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
         if (state == TardisTravel.State.DEMAT) {
             alpha = 1f;
-            timeLeft = 150;
+            timeLeft = 240;
+            maxTime = timeLeft;
         } else if (state == TardisTravel.State.MAT){
             alpha = 0f;
-            timeLeft = 200;
+            timeLeft = 460;
+            maxTime = 240;
         } else {
             alpha = 1f;
             timeLeft = 0;
+            maxTime = timeLeft;
         }
 
-        maxTime = timeLeft;
+        pulses = 0;
 
         this.updateClient();
     }

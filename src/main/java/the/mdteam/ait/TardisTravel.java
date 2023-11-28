@@ -11,6 +11,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.profiler.SampleType;
 import net.minecraft.world.World;
@@ -26,6 +27,7 @@ public class TardisTravel {
     private State state = State.LANDED;
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
+    private boolean shouldRemat = false;
 
     @Exclude
     protected final Tardis tardis;
@@ -64,22 +66,23 @@ public class TardisTravel {
 //        }
     }
     public void materialise() {
-
         if (this.getPosition().getWorld().isClient())
             return;
 
         if (this.getDestination() == null)
             return;
 
+        this.shouldRemat = false;
+
         this.setState(State.MAT);
 
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         TravelContext context = new TravelContext(this, this.getPosition(),this.getDestination());
 
-        world.playSound(null, this.getPosition(), AITSounds.MAT, SoundCategory.BLOCKS);
-
         ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
         destWorld.getChunk(this.getDestination());
+
+        this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.MAT, SoundCategory.BLOCKS,1f,1f);
 
         ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
         BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING,this.getDestination().getDirection());
@@ -90,26 +93,28 @@ public class TardisTravel {
 
         this.runAnimations(blockEntity);
 
-        Timer animTimer = new Timer();
-
-        Runnable mat = () -> {
-            this.getState().next(context);
-            this.runAnimations(blockEntity);
-
-            // blockEntity.refindTardis();
-        };
-
-        animTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                mat.run();
-            }
-        }, (long) getSoundEventLengthInSeconds(AITSounds.MAT) * 1000L);
+//        Timer animTimer = new Timer();
+//
+//        Runnable mat = () -> {
+//            this.getState().next(context);
+//            this.runAnimations(blockEntity);
+//
+//            // blockEntity.refindTardis();
+//        };
+//
+//        animTimer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                mat.run();
+//            }
+//        }, (long) getSoundEventLengthInSeconds(AITSounds.MAT) * 1000L);
     }
 
     public void dematerialise(boolean withRemat) {
         if (this.getPosition().getWorld().isClient())
             return;
+
+        this.shouldRemat = withRemat;
 
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
@@ -121,27 +126,27 @@ public class TardisTravel {
 
         this.runAnimations();
 
-        Timer animTimer = new Timer();
-        TardisTravel travel = this;
+//        Timer animTimer = new Timer();
+//        TardisTravel travel = this;
 
-        System.out.println(getSoundEventLengthInSeconds(AITSounds.DEMAT));
-
-        animTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                travel.getState().next(context);
-
-                world.getChunk(travel.getDestination());
-                world.removeBlock(travel.getPosition(),false);
-
-                if (withRemat) {
-                    travel.materialise();
-                }
-            }
-        }, (long) getSoundEventLengthInSeconds(AITSounds.DEMAT) * 1000L);
+//        System.out.println(getSoundEventLengthInSeconds(AITSounds.DEMAT));
+//
+//        animTimer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                travel.getState().next(context);
+//
+//                world.getChunk(travel.getDestination());
+//                world.removeBlock(travel.getPosition(),false);
+//
+//                if (withRemat) {
+//                    travel.materialise();
+//                }
+//            }
+//        }, (long) getSoundEventLengthInSeconds(AITSounds.DEMAT) * 1000L);
     }
 
-    private void runAnimations() {
+    public void runAnimations() {
         ServerWorld level = (ServerWorld) this.position.getWorld();
         level.getChunk(this.getPosition());
         BlockEntity entity = level.getBlockEntity(this.getPosition());
@@ -149,7 +154,7 @@ public class TardisTravel {
             ((ExteriorBlockEntity) entity).getAnimation().setupAnimation(this.state);
         }
     }
-    private void runAnimations(ExteriorBlockEntity exterior) {
+    public void runAnimations(ExteriorBlockEntity exterior) {
         exterior.getAnimation().setupAnimation(this.state);
         System.out.println(this.state);
     }
@@ -186,7 +191,15 @@ public class TardisTravel {
     }
 
     public void deleteExterior() {
+        this.destination.getWorld().getChunk(this.getDestination());
+        this.destination.getWorld().removeBlock(this.getPosition(),false);
+    }
 
+    public void checkShouldRemat() {
+        if (!this.shouldRemat)
+            return;
+
+        this.materialise();
     }
 
     public enum State {

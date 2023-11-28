@@ -23,6 +23,7 @@ public abstract class ExteriorAnimation {
     protected float alpha;
     protected ExteriorBlockEntity exterior;
     protected int timeLeft;
+    protected int maxTime;
     protected float alphaChangeAmount = 0.005f;
 
     public ExteriorAnimation(ExteriorBlockEntity exterior) {
@@ -36,25 +37,31 @@ public abstract class ExteriorAnimation {
 
                 BlockPos pos = buf.readBlockPos();
                 float pAlpha = buf.readFloat();
-                boolean firstRun = buf.readBoolean();
 
                 ExteriorBlockEntity entity = (ExteriorBlockEntity) level.getBlockEntity(pos);
                 if (entity == null) {return;}
 
                 ExteriorAnimation animation = entity.getAnimation();
                 animation.setAlpha(pAlpha);
-
-                if (animation instanceof ClassicAnimation classic) {
-                    classic.setFirstRun(firstRun);
-                }
             }
         );
+    }
+
+    protected void runAlphaChecks(TardisTravel.State state) {
+        if (alpha <= 0f && state == TardisTravel.State.DEMAT) {
+            exterior.getTardis().getTravel().setState(TardisTravel.State.FLIGHT);
+            exterior.getTardis().getTravel().deleteExterior();
+            exterior.getTardis().getTravel().checkShouldRemat();
+        }
+        if (alpha >= 1f && state == TardisTravel.State.MAT) {
+            exterior.getTardis().getTravel().setState(TardisTravel.State.LANDED);
+            exterior.getTardis().getTravel().runAnimations(exterior);
+        }
     }
 
     public float getAlpha() {
         return Math.clamp(0.0F,1.0F,this.alpha);
     }
-
 
     public abstract void tick();
     public abstract void setupAnimation(TardisTravel.State state);
@@ -72,7 +79,6 @@ public abstract class ExteriorAnimation {
 
         data.writeBlockPos(this.exterior.getPos());
         data.writeFloat(this.alpha);
-        data.writeBoolean(false);
 
         return data;
     }
