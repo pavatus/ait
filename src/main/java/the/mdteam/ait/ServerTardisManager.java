@@ -13,6 +13,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
+import net.minecraft.util.math.BlockPos;
 import the.mdteam.ait.wrapper.server.ServerTardis;
 
 import java.io.File;
@@ -41,14 +42,33 @@ public class ServerTardisManager extends TardisManager {
                 }
         );
 
+        ServerPlayNetworking.registerGlobalReceiver(
+                ClientTardisManager.ASK_POS, (server, player, handler, buf, responseSender) -> {
+                    BlockPos pos = buf.readBlockPos();
+                    UUID uuid = null;
+
+                    for (Tardis tardis : this.getLookup().values()) {
+                        if (!tardis.getTravel().getPosition().equals(pos)) continue;
+
+                        uuid = tardis.getUuid();
+                    }
+
+                    if (uuid == null)
+                        return;
+
+                    this.sendTardis(player, uuid);
+                    this.subscribers.put(uuid, player);
+                }
+        );
+
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> this.reset());
         ServerLifecycleEvents.SERVER_STARTED.register(server -> this.loadTardises());
     }
 
-    public Tardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, TardisDesktopSchema schema) {
+    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, TardisDesktopSchema schema) {
         UUID uuid = UUID.randomUUID();
 
-        Tardis tardis = new Tardis(uuid, pos, schema, exteriorType);
+        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType);
         this.lookup.put(uuid, tardis);
 
         tardis.getTravel().placeExterior();

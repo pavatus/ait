@@ -17,10 +17,11 @@ public abstract class ExteriorAnimation {
     }
 
     protected void runAlphaChecks(TardisTravel.State state) {
+        if (this.exterior.getWorld().isClient)
+            return;
+
         if (alpha <= 0f && state == TardisTravel.State.DEMAT) {
-            exterior.getTardis().getTravel().setState(TardisTravel.State.FLIGHT);
-            exterior.getTardis().getTravel().deleteExterior();
-            exterior.getTardis().getTravel().checkShouldRemat();
+            exterior.getTardis().getTravel().toFlight();
         }
         if (alpha >= 1f && state == TardisTravel.State.MAT) {
             exterior.getTardis().getTravel().setState(TardisTravel.State.LANDED);

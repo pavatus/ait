@@ -189,4 +189,10 @@ public class TardisUtil {
     public static ServerWorld findWorld(String identifier) {
         return TardisUtil.findWorld(new Identifier(identifier));
     }
+    public static ExteriorBlockEntity findExteriorEntity(Tardis tardis) {
+        if (tardis.getTravel().getPosition().getWorld() == null)
+            return null;
+
+        return (ExteriorBlockEntity) tardis.getTravel().getPosition().getWorld().getBlockEntity(tardis.getTravel().getPosition());
+    }
 }

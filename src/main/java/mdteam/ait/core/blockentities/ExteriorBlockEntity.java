@@ -1,5 +1,7 @@
 package mdteam.ait.core.blockentities;
 
+import com.mojang.logging.LogUtils;
+import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
@@ -18,8 +20,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisManager;
+import the.mdteam.ait.*;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
 
@@ -27,7 +28,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
     private Tardis tardis;
     public final AnimationState ANIMATION_STATE = new AnimationState();
-    private final ExteriorAnimation animation = new PulsatingAnimation(this);
+    private ExteriorAnimation animation;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -112,13 +113,78 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         if (!(entity instanceof ServerPlayerEntity player))
             return;
 
-        if (this.tardis != null && (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0)) {
-            TardisUtil.teleportInside(this.tardis, player);
+        if (this.getTardis() != null && (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0)) {
+            TardisUtil.teleportInside(this.getTardis(), player);
         }
+    }
+
+    // flip you im readdng it (the client doesnt have the tardis and this fixes it)
+    public void refindTardisClient() {
+        if (this.tardis != null) // No issue
+            return;
+        if (!this.getWorld().isClient())
+            return;
+
+        ClientTardisManager manager = ClientTardisManager.getInstance();
+
+        if (manager.getLookup().isEmpty()) {
+            manager.ask(this.getPos());
+            return;
+        }
+
+        for (Tardis tardis : manager.getLookup().values()) {
+            if (!tardis.getTravel().getPosition().equals(this.pos)) continue;
+
+            this.setTardis(tardis);
+            return;
+        }
+        manager.ask(this.getPos());
+    }
+    // millionth jank sync method
+    public void syncFromClientManager() {
+        if (this.tardis == null)
+            return;
+
+        TardisTravel.State last = this.tardis.getTravel().getState();
+
+        ClientTardisManager.getInstance().getTardis(this.tardis.getUuid(), (var) -> this.tardis = var);
+
+        if (last != this.tardis.getTravel().getState())
+            this.animation = null;
+            this.getAnimation();
+    }
+    // same here
+    public void refindTardis() {
+        if (this.tardis != null) // No issue
+            return;
+        if (this.getWorld().isClient())
+            return;
+
+        ServerTardisManager manager = ServerTardisManager.getInstance();
+
+        for (Tardis tardis : manager.getLookup().values()) {
+            if (!tardis.getTravel().getPosition().equals(this.pos)) continue;
+
+            this.setTardis(tardis);
+            return;
+        }
+
+        AITMod.LOGGER.warn("Deleting exterior block at " + this.pos + " due to lack of Tardis!");
+        this.getWorld().removeBlock(this.pos, false);
     }
 
     @Override
     public Tardis getTardis() {
+        if (this.tardis == null && this.getWorld() != null) {
+            if (!this.getWorld().isClient())
+                refindTardis();
+            else
+                refindTardisClient();
+        }
+
+        if (this.getWorld().isClient && this.tardis != null)
+            syncFromClientManager(); // i accidentally made it make a bajillion different instances when it syncs so this fixes that and i dont know how to fix the other thing so theo can do it
+
         return tardis;
     }
 
@@ -126,14 +192,29 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     public void setTardis(Tardis tardis) {
         this.tardis = tardis;
 
-        this.animation.setupAnimation(this.tardis.getTravel().getState());
+        this.getAnimation().setupAnimation(this.tardis.getTravel().getState());
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T exterior) {
         ((ExteriorBlockEntity) exterior).getAnimation().tick();
     }
 
+    // theo please stop deleting my shit theres a reason its there rarely its not just schizophrenic code rambles that are useless
+    public void verifyAnimation() {
+        if (this.animation != null)
+            return;
+
+        this.animation = this.getExterior().createAnimation(this);
+        AITMod.LOGGER.debug("Created new ANIMATION for " + this);
+
+
+        if (this.getTardis() != null)
+            this.animation.setupAnimation(this.getTardis().getTravel().getState());
+    }
+
     public ExteriorAnimation getAnimation() {
+        this.verifyAnimation();
+
         return this.animation;
     }
 

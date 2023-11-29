@@ -11,6 +11,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
+import the.mdteam.ait.wrapper.server.ServerTardisTravel;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -87,6 +88,11 @@ public class TardisTravel {
         this.runAnimations();
     }
 
+    public void toFlight() {
+        this.setState(TardisTravel.State.FLIGHT);
+        this.deleteExterior();
+        this.checkShouldRemat();
+    }
     public void runAnimations() {
         ServerWorld level = (ServerWorld) this.position.getWorld();
         level.getChunk(this.getPosition());

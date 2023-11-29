@@ -1,7 +1,9 @@
 package mdteam.ait.client.animation;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import the.mdteam.ait.ServerTardisManager;
 import the.mdteam.ait.TardisTravel;
+import the.mdteam.ait.wrapper.server.ServerTardis;
 
 public class PulsatingAnimation extends ExteriorAnimation{
     private int pulses = 0;
@@ -33,7 +35,7 @@ public class PulsatingAnimation extends ExteriorAnimation{
                 this.setAlpha(0f);
 
             runAlphaChecks(state);
-        } else if (!exterior.getWorld().isClient() && state == TardisTravel.State.LANDED && alpha != 1f) {
+        } else if (state == TardisTravel.State.LANDED && alpha != 1f) {
             this.setAlpha(1f);
         }
     }
