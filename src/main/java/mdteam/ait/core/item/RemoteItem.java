@@ -1,6 +1,5 @@
 package mdteam.ait.core.item;
 
-import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.client.gui.screen.Screen;
@@ -21,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 import the.mdteam.ait.ServerTardisManager;
 import the.mdteam.ait.Tardis;
 import the.mdteam.ait.TardisTravel;
-import the.mdteam.ait.wrapper.ServerTardisTravel;
 
 import java.util.List;
 
@@ -66,6 +64,7 @@ public class RemoteItem extends Item {
             travel.setDestination(new AbsoluteBlockPos.Directed(pos.up(), world, player.getMovementDirection().getOpposite()), true);
             // travel.toggleHandbrake();
 
+            //FIXME: this is not how you do it!
             if (travel.getState() == TardisTravel.State.LANDED)
                 travel.dematerialise(true);
             if (travel.getState() == TardisTravel.State.FLIGHT)

@@ -35,13 +35,9 @@ public class TeleportUtil {
     private static void handlePlayerTeleport(ServerPlayerEntity player, ServerWorld targetWorld, double x, double y, double z, float yaw, float pitch) {
         BlockPos pos = new BlockPos((int) x, (int) y, (int) z);
 
-        System.out.println(pos);
-
         targetWorld.getChunkManager().addTicket(ChunkTicketType.POST_TELEPORT,
                 new ChunkPos(pos), 1, player.getId()
         );
-
-        System.out.println(pos);
 
         player.stopRiding();
         if (player.isSleeping()) {

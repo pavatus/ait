@@ -7,6 +7,7 @@ import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.block.Block;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -40,23 +41,27 @@ public class TardisUtil {
     private static ServerWorld TARDIS_DIMENSION;
 
     public static void init() {
+        ServerWorldEvents.UNLOAD.register((server, world) -> {
+            SERVER = server;
+            TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
+        });
+
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             SERVER = server;
             TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
         });
 
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            SERVER = null;
+        });
+
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             for (TeleportEntry entry : TELEPORTS) {
-                System.out.println(entry);
                 entry.teleport();
             }
 
             TELEPORTS.clear();
         });
-    }
-
-    public static void reset() {
-        TARDIS_DIMENSION = null;
     }
 
     public static MinecraftServer getServer() {

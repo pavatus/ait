@@ -1,20 +1,14 @@
 package mdteam.ait.core.blockentities;
 
-import com.mojang.logging.LogUtils;
-import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
-import mdteam.ait.client.animation.ClassicAnimation;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.helper.TardisUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
@@ -24,7 +18,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import the.mdteam.ait.*;
+import the.mdteam.ait.Tardis;
+import the.mdteam.ait.TardisManager;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
 
@@ -32,54 +27,13 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
     private Tardis tardis;
     public final AnimationState ANIMATION_STATE = new AnimationState();
-    private ExteriorAnimation animation;
-    public int tickCount = 0;
+    private final ExteriorAnimation animation = new PulsatingAnimation(this);
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
     }
 
-    public void refindTardis() {
-        if (this.tardis != null) // No issue
-            return;
-        if (this.getWorld().isClient())
-            return;
-
-        ServerTardisManager manager = ServerTardisManager.getInstance();
-
-        for (Tardis tardis : manager.getLookup().values()) {
-            if (!tardis.getTravel().getPosition().equals(this.pos)) continue;
-
-            this.setTardis(tardis);
-            return;
-        }
-
-        AITMod.LOGGER.warn("Deleting exterior block at " + this.pos + " due to lack of Tardis!");
-        this.getWorld().removeBlock(this.pos, false);
-    }
-    public void refindTardisClient() {
-        if (this.tardis != null) // No issue
-            return;
-        if (!this.getWorld().isClient())
-            return;
-
-        ClientTardisManager manager = ClientTardisManager.getInstance();
-
-        for (Tardis tardis : manager.getLookup().values()) {
-            if (!tardis.getTravel().getPosition().equals(this.pos)) continue;
-
-            this.setTardis(tardis);
-            return;
-        }
-
-    }
-
     public void useOn(ServerWorld world, boolean sneaking) {
-        if (this.tardis == null) {
-            refindTardis();
-            return;
-        }
-
         if (this.getLeftDoorRotation() == 0) {
             this.setLeftDoorRot(1.2f);
         } else {
@@ -147,7 +101,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
 
-        nbt.putFloat("alpha",this.getAlpha());
+        nbt.putFloat("alpha", this.getAlpha());
 
         if (nbt.contains("tardis")) {
             TardisManager.getInstance().link(nbt.getUuid("tardis"), this);
@@ -155,10 +109,6 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public void onEntityCollision(Entity entity) {
-        if (this.tardis == null) {
-            refindTardis();
-            return;
-        }
         if (!(entity instanceof ServerPlayerEntity player))
             return;
 
@@ -169,42 +119,24 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
     @Override
     public Tardis getTardis() {
-        if (getWorld().isClient()) // ive come to the realisation client cannot be trusted so just always reask
-            syncTardisFromServer();
-        
         return tardis;
-    }
-    public void syncTardisFromServer() {
-        // this.refindTardisClient();
-        if (!this.getWorld().isClient())
-            return;
-
-        ClientTardisManager manager = ClientTardisManager.getInstance();
-
-        manager.ask(this.pos);
-
-        this.refindTardisClient();
     }
 
     @Override
     public void setTardis(Tardis tardis) {
         this.tardis = tardis;
+
+        this.animation.setupAnimation(this.tardis.getTravel().getState());
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T exterior) {
         ((ExteriorBlockEntity) exterior).getAnimation().tick();
     }
-    public ExteriorAnimation getAnimation() {
-        if (this.animation == null) {
-//            this.animation = this.getTARDIS().getExteriorAnimation();
-            this.animation = this.getExterior().createAnimation(this);
-            LogUtils.getLogger().debug("Created new ANIMATION for " + this);
 
-            if (this.getWorld() != null && !this.getWorld().isClient() && this.getTardis() != null)
-                this.animation.setupAnimation(this.getTardis().getTravel().getState());
-        }
+    public ExteriorAnimation getAnimation() {
         return this.animation;
     }
+
     public float getAlpha() {
         return this.getAnimation().getAlpha();
     }

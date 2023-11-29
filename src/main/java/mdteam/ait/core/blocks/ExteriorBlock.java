@@ -1,8 +1,6 @@
 package mdteam.ait.core.blocks;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.blockentities.AITRadioBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import net.minecraft.block.Block;
@@ -44,8 +42,7 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
             case EAST -> EAST_SHAPE;
             case SOUTH -> SOUTH_SHAPE;
             case WEST -> WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
+            default -> throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
         };
     }
 

@@ -1,74 +1,50 @@
-package the.mdteam.ait.wrapper;
+package the.mdteam.ait.wrapper.server;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
-import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import the.mdteam.ait.ServerTardisManager;
 import the.mdteam.ait.Tardis;
 import the.mdteam.ait.TardisTravel;
 import the.mdteam.ait.TravelContext;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+//TODO: istg duzo
 public class ServerTardisTravel extends TardisTravel {
 
     public ServerTardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
         super(tardis, pos);
     }
-    public ServerTardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
-        super(tardis, pos,dest,state);
-    }
 
     @Override
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
         super.setDestination(pos, withChecks);
-        ((ServerTardis) this.tardis).sync();
+        this.sync();
     }
 
     @Override
     public void setPosition(AbsoluteBlockPos.Directed pos) {
         super.setPosition(pos);
-        ((ServerTardis) this.tardis).sync();
+        this.sync();
     }
 
     @Override
     public void setState(State state) {
         super.setState(state);
-        ((ServerTardis) this.tardis).sync();
+        this.sync();
     }
 
     public static double getSoundEventLengthInSeconds(SoundEvent sound) {
         return 2.0d;
-
-//        try {
-//            // @TODO is no worky??
-//            AudioInputStream stream =
-//                    (AudioInputStream) TardisUtil.getServer().getResourceManager().getResource(sound.getId()).get().getInputStream();
-//            AudioFormat format = stream.getFormat();
-//            long frames = stream.getFrameLength();
-//            return (frames + 0.0) / format.getFrameRate();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     @Override
@@ -147,5 +123,9 @@ public class ServerTardisTravel extends TardisTravel {
                 mat.run();
             }
         }, (long) getSoundEventLengthInSeconds(AITSounds.MAT) * 1000L);
+    }
+
+    public void sync() {
+        ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
     }
 }

@@ -10,17 +10,11 @@ import mdteam.ait.core.components.block.exterior.ExteriorNBTComponent;
 import mdteam.ait.core.components.block.interior_door.InteriorDoorNBTComponent;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.helper.TardisUtil;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.loader.impl.launch.FabricLauncherBase;
-import net.minecraft.MinecraftVersion;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import the.mdteam.ait.ClientTardisManager;
-import the.mdteam.ait.ServerTardisManager;
+import the.mdteam.ait.TardisManager;
 
 public class AITMod implements ModInitializer {
 
@@ -51,17 +45,7 @@ public class AITMod implements ModInitializer {
 		AITDesktops.init();
 		TardisUtil.init();
 
-		if (FabricLauncherBase.getLauncher().getEnvironmentType() == EnvType.CLIENT) {
-			ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ClientTardisManager.getInstance().reset());
-		}
-		if (FabricLauncherBase.getLauncher().getEnvironmentType() == EnvType.SERVER) {
-			ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
-				ServerTardisManager.getInstance().reset();
-				TardisUtil.reset();
-			});
-			ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-				ServerTardisManager.getInstance().loadTardises();
-			});
-		}
+		// makes sure the initialization for tardis managers runs
+		TardisManager.getInstance();
 	}
 }

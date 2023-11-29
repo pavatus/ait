@@ -2,8 +2,6 @@ package the.mdteam.ait;
 
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.data.AbsoluteBlockPos;
-import the.mdteam.ait.wrapper.ServerTardis;
-import the.mdteam.ait.wrapper.ServerTardisTravel;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -14,18 +12,18 @@ public class Tardis {
 
     private final UUID uuid;
     private TardisDesktop desktop;
-    private ExteriorEnum exteriorType;
+    private final TardisExterior exterior;
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType) {
-        this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), exteriorType);
+        this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType));
     }
 
-    protected Tardis(UUID uuid, Function<Tardis, TardisTravel> travel, Function<Tardis, TardisDesktop> desktop, ExteriorEnum exteriorType) {
+    protected Tardis(UUID uuid, Function<Tardis, TardisTravel> travel, Function<Tardis, TardisDesktop> desktop, Function<Tardis, TardisExterior> exterior) {
         this.uuid = uuid;
         this.travel = travel.apply(this);
 
         this.desktop = desktop.apply(this);
-        this.exteriorType = exteriorType;
+        this.exterior = exterior.apply(this);
     }
 
     public UUID getUuid() {
@@ -40,23 +38,11 @@ public class Tardis {
         return desktop;
     }
 
-    public void setExteriorType(ExteriorEnum exteriorType) {
-        this.exteriorType = exteriorType;
-    }
-
-    public ExteriorEnum getExteriorType() {
-        return exteriorType;
+    public TardisExterior getExterior() {
+        return exterior;
     }
 
     public TardisTravel getTravel() {
         return travel;
-    }
-
-    // @TODO shitty hotfix for incomplete code
-    public Tardis onServer() {
-        if (this.getTravel().getPosition().getWorld().isClient())
-            return null;
-
-        return ServerTardisManager.getInstance().getTardis(this.getUuid());
     }
 }

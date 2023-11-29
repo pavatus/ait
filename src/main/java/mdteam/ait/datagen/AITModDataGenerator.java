@@ -195,8 +195,4 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	public void generate_EN_NZ_Language(FabricDataGenerator.Pack pack) {
 		pack.addProvider(((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_NZ))); // en_nz (English New Zealand)
 	}
-
-
-
-
 }

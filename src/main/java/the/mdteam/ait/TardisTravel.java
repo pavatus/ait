@@ -10,14 +10,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.profiler.SampleType;
-import net.minecraft.world.World;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -51,20 +45,7 @@ public class TardisTravel {
     public AbsoluteBlockPos.Directed getPosition() {
         return position;
     }
-    public static double getSoundEventLengthInSeconds(SoundEvent sound) {
-        return 10.0d;
 
-//        try {
-//            // @TODO is no worky??
-//            AudioInputStream stream =
-//                    (AudioInputStream) TardisUtil.getServer().getResourceManager().getResource(sound.getId()).get().getInputStream();
-//            AudioFormat format = stream.getFormat();
-//            long frames = stream.getFrameLength();
-//            return (frames + 0.0) / format.getFrameRate();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-    }
     public void materialise() {
         if (this.getPosition().getWorld().isClient())
             return;
@@ -73,11 +54,7 @@ public class TardisTravel {
             return;
 
         this.shouldRemat = false;
-
         this.setState(State.MAT);
-
-        ServerWorld world = (ServerWorld) this.getPosition().getWorld();
-        TravelContext context = new TravelContext(this, this.getPosition(),this.getDestination());
 
         ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
         destWorld.getChunk(this.getDestination());
@@ -92,22 +69,6 @@ public class TardisTravel {
         this.setPosition(this.getDestination());
 
         this.runAnimations(blockEntity);
-
-//        Timer animTimer = new Timer();
-//
-//        Runnable mat = () -> {
-//            this.getState().next(context);
-//            this.runAnimations(blockEntity);
-//
-//            // blockEntity.refindTardis();
-//        };
-//
-//        animTimer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                mat.run();
-//            }
-//        }, (long) getSoundEventLengthInSeconds(AITSounds.MAT) * 1000L);
     }
 
     public void dematerialise(boolean withRemat) {
@@ -120,30 +81,10 @@ public class TardisTravel {
         world.getChunk(this.getPosition());
 
         this.setState(State.DEMAT);
-        TravelContext context = new TravelContext(this, this.getPosition(),this.getDestination());
 
         world.playSound(null, this.getPosition(), AITSounds.DEMAT, SoundCategory.BLOCKS);
 
         this.runAnimations();
-
-//        Timer animTimer = new Timer();
-//        TardisTravel travel = this;
-
-//        System.out.println(getSoundEventLengthInSeconds(AITSounds.DEMAT));
-//
-//        animTimer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                travel.getState().next(context);
-//
-//                world.getChunk(travel.getDestination());
-//                world.removeBlock(travel.getPosition(),false);
-//
-//                if (withRemat) {
-//                    travel.materialise();
-//                }
-//            }
-//        }, (long) getSoundEventLengthInSeconds(AITSounds.DEMAT) * 1000L);
     }
 
     public void runAnimations() {

@@ -14,23 +14,17 @@ public class PulsatingAnimation extends ExteriorAnimation{
 
     @Override
     public void tick() {
-        if (exterior.getTardis() == null) {
-            if (!exterior.getWorld().isClient())
-                exterior.refindTardis();
-
+        if (exterior.getTardis() == null)
             return;
-        }
 
         TardisTravel.State state = exterior.getTardis().getTravel().getState();
 
         if (state == TardisTravel.State.DEMAT) {
-            this.updateClient();
             this.setAlpha(1f - getPulseAlpha());
             timeLeft--;
 
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.MAT) {
-            this.updateClient();
             timeLeft--;
 
             if (timeLeft < maxTime)
@@ -39,18 +33,16 @@ public class PulsatingAnimation extends ExteriorAnimation{
                 this.setAlpha(0f);
 
             runAlphaChecks(state);
-        } else if (!exterior.getWorld().isClient() && state == TardisTravel.State.LANDED && alpha != 1f)
+        } else if (!exterior.getWorld().isClient() && state == TardisTravel.State.LANDED && alpha != 1f) {
             this.setAlpha(1f);
-
-
-        this.updateClient();
+        }
     }
 
     public float getPulseAlpha() {
         if (timeLeft != maxTime && timeLeft % PULSE_LENGTH == 0)
             pulses++;
 
-        return (float) ((float) (pulses / Math.floor(maxTime / PULSE_LENGTH)) + (Math.cos(timeLeft * frequency) * intensity)); // @TODO find alternative math or ask cwaig if we're allowed to use this, loqor says "its just math" but im still saying this just in case.
+        return (float) ((float) (pulses / Math.floor((double) maxTime / PULSE_LENGTH)) + (Math.cos(timeLeft * frequency) * intensity)); // @TODO find alternative math or ask cwaig if we're allowed to use this, loqor says "its just math" but im still saying this just in case.
     }
 
     @Override
@@ -74,7 +66,5 @@ public class PulsatingAnimation extends ExteriorAnimation{
         }
 
         pulses = 0;
-
-        this.updateClient();
     }
 }

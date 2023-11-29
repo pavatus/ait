@@ -1,4 +1,4 @@
-package the.mdteam.ait.wrapper;
+package the.mdteam.ait.wrapper.server;
 
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
@@ -11,9 +11,6 @@ public class ServerTardisDesktop extends TardisDesktop {
 
     public ServerTardisDesktop(Tardis tardis, TardisDesktopSchema schema) {
         super(tardis, schema);
-    }
-    public ServerTardisDesktop(Tardis tardis, TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed doors) {
-        super(tardis, schema,corners,doors);
     }
 
     @Override
