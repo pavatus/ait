@@ -88,6 +88,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
 		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
+		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
