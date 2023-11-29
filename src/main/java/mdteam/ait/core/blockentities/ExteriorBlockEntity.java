@@ -112,7 +112,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         if (!(entity instanceof ServerPlayerEntity player))
             return;
 
-        if (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
+        if (this.tardis != null && (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0)) {
             TardisUtil.teleportInside(this.tardis, player);
         }
     }

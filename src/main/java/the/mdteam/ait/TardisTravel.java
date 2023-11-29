@@ -258,10 +258,6 @@ public class TardisTravel {
             context.travel().setState(next);
         }
 
-        public void schedule(TravelContext context) {
-            this.getService().schedule(() -> {
-                // this.next(context);
-            }, 2, TimeUnit.SECONDS);
-        }
+        public void schedule(TravelContext context) { }
     }
 }
