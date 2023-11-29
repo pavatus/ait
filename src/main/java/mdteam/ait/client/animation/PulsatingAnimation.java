@@ -6,6 +6,7 @@ import the.mdteam.ait.TardisTravel;
 public class PulsatingAnimation extends ExteriorAnimation{
     private int pulses = 0;
     private int PULSE_LENGTH = 20;
+    private float frequency, intensity;
 
     public PulsatingAnimation(ExteriorBlockEntity exterior) {
         super(exterior);
@@ -49,7 +50,7 @@ public class PulsatingAnimation extends ExteriorAnimation{
         if (timeLeft != maxTime && timeLeft % PULSE_LENGTH == 0)
             pulses++;
 
-        return (float) ((float) (pulses / Math.floor(maxTime / PULSE_LENGTH)) + (Math.cos(timeLeft * 0.25) * 0.4f)); // @TODO find alternative math or ask cwaig if we're allowed to use this, loqor says "its just math" but im still saying this just in case.
+        return (float) ((float) (pulses / Math.floor(maxTime / PULSE_LENGTH)) + (Math.cos(timeLeft * frequency) * intensity)); // @TODO find alternative math or ask cwaig if we're allowed to use this, loqor says "its just math" but im still saying this just in case.
     }
 
     @Override
@@ -58,10 +59,14 @@ public class PulsatingAnimation extends ExteriorAnimation{
             alpha = 1f;
             timeLeft = 240;
             maxTime = timeLeft;
+            frequency = 0.1f;
+            intensity = 0.3f;
         } else if (state == TardisTravel.State.MAT){
             alpha = 0f;
             timeLeft = 460;
             maxTime = 240;
+            frequency = 0.2f;
+            intensity = 0.4f;
         } else {
             alpha = 1f;
             timeLeft = 0;
