@@ -182,7 +182,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
                 refindTardisClient();
         }
 
-        if (this.getWorld().isClient && this.tardis != null)
+        if (this.getWorld() != null && this.getWorld().isClient && this.tardis != null)
             syncFromClientManager(); // i accidentally made it make a bajillion different instances when it syncs so this fixes that and i dont know how to fix the other thing so theo can do it
 
         return tardis;
