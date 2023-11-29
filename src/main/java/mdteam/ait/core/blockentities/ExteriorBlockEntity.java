@@ -197,8 +197,11 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     public ExteriorAnimation getAnimation() {
         if (this.animation == null) {
 //            this.animation = this.getTARDIS().getExteriorAnimation();
-            this.animation = new PulsatingAnimation(this);
-            LogUtils.getLogger().debug("Created new CLASSIC ANIMATION for " + this);
+            this.animation = this.getExterior().createAnimation(this);
+            LogUtils.getLogger().debug("Created new ANIMATION for " + this);
+
+            if (this.getWorld() != null && !this.getWorld().isClient() && this.getTardis() != null)
+                this.animation.setupAnimation(this.getTardis().getTravel().getState());
         }
         return this.animation;
     }

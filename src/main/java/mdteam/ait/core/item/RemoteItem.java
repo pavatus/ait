@@ -58,7 +58,7 @@ public class RemoteItem extends Item {
         Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
 
         if (tardis != null) {
-            TardisTravel travel = tardis.onServer().getTravel();
+            TardisTravel travel = tardis.getTravel();
 
             travel.setDestination(new AbsoluteBlockPos.Directed(pos.up(), world, player.getMovementDirection().getOpposite()), true);
             // travel.toggleHandbrake();

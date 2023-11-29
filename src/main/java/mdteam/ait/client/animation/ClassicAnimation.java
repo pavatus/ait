@@ -34,10 +34,8 @@ public class ClassicAnimation extends ExteriorAnimation {
             timeLeft--;
 
             runAlphaChecks(state);
-        } /*else if (state == TardisTravel.State.LANDED) {
-            this.updateClient();
-            alpha = 1F;
-        }*/
+        } else if (!exterior.getWorld().isClient() && state == TardisTravel.State.LANDED && alpha != 1f)
+            this.setAlpha(1f);
 
         this.updateClient();
     }

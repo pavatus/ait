@@ -38,7 +38,9 @@ public class PulsatingAnimation extends ExteriorAnimation{
                 this.setAlpha(0f);
 
             runAlphaChecks(state);
-        }
+        } else if (!exterior.getWorld().isClient() && state == TardisTravel.State.LANDED && alpha != 1f)
+            this.setAlpha(1f);
+
 
         this.updateClient();
     }
