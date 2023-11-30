@@ -69,6 +69,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         EXTERIORNBT.get(this).setExterior(exterior);
     }
 
+    @Deprecated
     public ExteriorEnum getExterior() {
         return EXTERIORNBT.get(this).getExterior();
     }
@@ -159,9 +160,13 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
         ClientTardisManager.getInstance().getTardis(this.tardis.getUuid(), (var) -> this.tardis = var);
 
-        if (last != this.tardis.getTravel().getState())
+        if (last != this.tardis.getTravel().getState()) {
             this.animation = null;
-            this.getAnimation();
+            this.animation = this.getExterior().createAnimation(this);
+            AITMod.LOGGER.debug("Created new ANIMATION for " + this);
+            this.animation.setupAnimation(this.getTardis().getTravel().getState());
+            // this.getAnimation();
+        }
     }
     // same here
     public void refindTardis() {
@@ -207,20 +212,21 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T exterior) {
-        ((ExteriorBlockEntity) exterior).getAnimation().tick();
+
+        if (((ExteriorBlockEntity) exterior).animation != null)
+            ((ExteriorBlockEntity) exterior).getAnimation().tick();
     }
 
     // theo please stop deleting my shit theres a reason its there rarely its not just schizophrenic code rambles that are useless
     public void verifyAnimation() {
         if (this.animation != null)
             return;
+        if (this.getTardis() == null)
+            return;
 
         this.animation = this.getExterior().createAnimation(this);
         AITMod.LOGGER.debug("Created new ANIMATION for " + this);
-
-
-        if (this.getTardis() != null)
-            this.animation.setupAnimation(this.getTardis().getTravel().getState());
+        this.animation.setupAnimation(this.getTardis().getTravel().getState());
     }
 
     public ExteriorAnimation getAnimation() {

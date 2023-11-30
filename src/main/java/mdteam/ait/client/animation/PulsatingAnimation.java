@@ -1,6 +1,7 @@
 package mdteam.ait.client.animation;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.sounds.MatSound;
 import the.mdteam.ait.ServerTardisManager;
 import the.mdteam.ait.TardisTravel;
 import the.mdteam.ait.wrapper.server.ServerTardis;
@@ -29,7 +30,7 @@ public class PulsatingAnimation extends ExteriorAnimation{
         } else if (state == TardisTravel.State.MAT) {
             timeLeft--;
 
-            if (timeLeft < maxTime)
+            if (timeLeft < startTime)
                 this.setAlpha(getPulseAlpha());
             else
                 this.setAlpha(0f);
@@ -49,22 +50,20 @@ public class PulsatingAnimation extends ExteriorAnimation{
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
+        MatSound sound = exterior.getExterior().getSound(state);
+
+        timeLeft = sound.timeLeft();
+        maxTime = sound.maxTime();
+        frequency = sound.frequency();
+        intensity = sound.intensity();
+        startTime = sound.startTime();
+
         if (state == TardisTravel.State.DEMAT) {
             alpha = 1f;
-            timeLeft = 240;
-            maxTime = timeLeft;
-            frequency = 0.1f;
-            intensity = 0.3f;
         } else if (state == TardisTravel.State.MAT){
             alpha = 0f;
-            timeLeft = 460;
-            maxTime = 240;
-            frequency = 0.2f;
-            intensity = 0.4f;
-        } else if(state == TardisTravel.State.LANDED) {
+        } else if (state == TardisTravel.State.LANDED) {
             alpha = 1f;
-            timeLeft = 0;
-            maxTime = timeLeft;
         }
 
         pulses = 0;

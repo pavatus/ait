@@ -3,6 +3,8 @@ package mdteam.ait.core.components.block.exterior;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.blocks.ExteriorBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 
@@ -14,15 +16,23 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
     public float leftDoorRotation, rightDoorRotation;
 
     public ExteriorNBTComponent(BlockEntity blockentity) {
-        this.currentExterior = ExteriorEnum.SHELTER;
+        if (!(blockentity instanceof ExteriorBlockEntity))
+            return;
+
+        this.currentExterior = null; // will be reassigned later
         this.blockEntity = blockentity;
         this.materialState = MaterialStateEnum.SOLID;
         this.leftDoorRotation = 0;
         this.rightDoorRotation = 0;
     }
 
+    @Deprecated
     @Override
     public ExteriorEnum getExterior() {
+        if (this.currentExterior == null && ((ExteriorBlockEntity) this.blockEntity).getTardis() != null)
+            System.out.println(((ExteriorBlockEntity) this.blockEntity).getTardis());
+            this.currentExterior = ((ExteriorBlockEntity) this.blockEntity).getTardis().getExterior().getType();
+
         return this.currentExterior;
     }
 

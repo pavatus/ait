@@ -8,14 +8,14 @@ public abstract class ExteriorAnimation {
 
     protected float alpha = 1;
     protected ExteriorBlockEntity exterior;
-    protected int timeLeft;
-    protected int maxTime;
+    protected int timeLeft, maxTime, startTime;
     protected float alphaChangeAmount = 0.005f;
 
     public ExteriorAnimation(ExteriorBlockEntity exterior) {
         this.exterior = exterior;
     }
 
+    // fixme bug that sometimes happens where server doesnt have animation
     protected void runAlphaChecks(TardisTravel.State state) {
         if (this.exterior.getWorld().isClient)
             return;

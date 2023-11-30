@@ -8,6 +8,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import the.mdteam.ait.TardisTravel;
 
@@ -36,4 +37,12 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
         root.render(matrices, vertices, light, overlay,red,green,blue,exterior.getAlpha());
     }
+
+    @Override
+    public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
+    }
+
+    public abstract Identifier getTexture();
+    public abstract Identifier getEmission();
 }

@@ -1,18 +1,20 @@
 package mdteam.ait.client.models.exteriors;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
+import net.minecraft.util.Identifier;
 
 // Made with Blockbench 4.8.3
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
-public class FalloutExterior extends ExteriorModel {
+public class FalloutExteriorModel extends ExteriorModel {
+	public static final Identifier EXTERIOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/exteriors/shelter.png"));
+	public static final Identifier EXTERIOR_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/shelter_emission.png");
+
 	public ModelPart tardis;
 	public ModelPart door;
 	public ModelPart frame;
@@ -71,7 +73,7 @@ public class FalloutExterior extends ExteriorModel {
 	public ModelPart bone52;
 	public ModelPart bone53;
 	public ModelPart bone54;
-	public FalloutExterior(ModelPart root) {
+	public FalloutExteriorModel(ModelPart root) {
 		super(RenderLayer::getEntityTranslucent);
 		this.tardis = root.getChild("tardis");
 		this.door = this.tardis.getChild("door");
@@ -228,7 +230,19 @@ public class FalloutExterior extends ExteriorModel {
 
 
 	@Override
-	public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+		this.door.yaw = exterior.getLeftDoorRotation();
 
+		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+	}
+
+	@Override
+	public Identifier getTexture() {
+		return EXTERIOR_TEXTURE;
+	}
+
+	@Override
+	public Identifier getEmission() {
+		return EXTERIOR_TEXTURE_EMISSION;
 	}
 }
