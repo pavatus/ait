@@ -6,7 +6,7 @@ import the.mdteam.ait.TardisTravel;
 
 public abstract class ExteriorAnimation {
 
-    protected float alpha;
+    protected float alpha = 1;
     protected ExteriorBlockEntity exterior;
     protected int timeLeft;
     protected int maxTime;

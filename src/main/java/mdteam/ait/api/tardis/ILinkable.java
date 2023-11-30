@@ -15,7 +15,7 @@ public interface ILinkable {
     /**
      * This method forces the {@link ILinkable} to update its desktop!
      */
-    default void linkDesktop() {
+    /*default void linkDesktop() {
         if (this.getTardis() == null)
             return;
 
@@ -23,6 +23,13 @@ public interface ILinkable {
 
         if (desktop != null)
             this.setDesktop(desktop);
+    }*/
+
+    default void linkDesktop() {
+        if (this.getTardis() == null)
+            return;
+        if (this.getDesktop() != null)
+            this.setDesktop(this.getDesktop());
     }
 
     default TardisTravel getTravel() { return this.getTardis().getTravel(); }

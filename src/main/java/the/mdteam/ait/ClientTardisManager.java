@@ -4,10 +4,12 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.TardisUtil;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -22,33 +24,39 @@ public class ClientTardisManager extends TardisManager {
 
     public static final Identifier ASK = new Identifier("ait", "ask_tardis");
     public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
-    private static final ClientTardisManager instance = new ClientTardisManager();
+    private static ClientTardisManager instance;
 
     private final Multimap<UUID, Consumer<Tardis>> subscribers = ArrayListMultimap.create();
     private final Deque<PacketByteBuf> buffers = new ArrayDeque<>();
 
     public ClientTardisManager() {
-        ClientPlayNetworking.registerGlobalReceiver(ServerTardisManager.SEND,
-                (client, handler, buf, responseSender) -> this.sync(buf)
-        );
+        //if(FabricLauncherBase.getLauncher().getEnvironmentType() == EnvType.CLIENT) {
+            ClientPlayNetworking.registerGlobalReceiver(ServerTardisManager.SEND,
+                    (client, handler, buf, responseSender) -> this.sync(buf)
+            );
 
-        ClientPlayNetworking.registerGlobalReceiver(ServerTardisManager.UPDATE,
-                (client, handler, buf, responseSender) -> {
-            UUID uuid = buf.readUuid();
+            ClientPlayNetworking.registerGlobalReceiver(ServerTardisManager.UPDATE,
+                    (client, handler, buf, responseSender) -> {
+                        UUID uuid = buf.readUuid();
 
-            if (!this.lookup.containsKey(uuid))
-                return;
+                        if (!this.lookup.containsKey(uuid))
+                            return;
 
-            this.sync(uuid, buf);
-        });
+                        this.sync(uuid, buf);
+                    });
 
-        ClientTickEvents.END_WORLD_TICK.register(world -> {
-            for (int i = 0; i < this.buffers.size(); i++) {
-                ClientPlayNetworking.send(ASK, this.buffers.pop());
-            }
-        });
+            ClientTickEvents.END_WORLD_TICK.register(world -> {
+                for (int i = 0; i < this.buffers.size(); i++) {
+                    ClientPlayNetworking.send(ASK, this.buffers.pop());
+                }
+            });
 
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());
+            ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());
+        //}
+    }
+
+    public static void init() {
+        instance = new ClientTardisManager();
     }
 
     @Override

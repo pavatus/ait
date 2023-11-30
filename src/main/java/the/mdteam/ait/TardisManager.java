@@ -5,9 +5,10 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.api.tardis.ILinkable;
-import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.Corners;
 import mdteam.ait.data.SerialDimension;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,18 @@ public abstract class TardisManager {
                 .create();
     }
 
+    public static void init() {
+        if (FabricLauncherBase.getLauncher().getEnvironmentType() == EnvType.SERVER) {
+            ServerTardisManager.init();
+        } else {
+            ClientTardisManager.init();
+        }
+    }
+
+    public static TardisManager getInstance() {
+        return FabricLauncherBase.getLauncher().getEnvironmentType() == EnvType.SERVER ? ServerTardisManager.getInstance() : ClientTardisManager.getInstance();
+    }
+
     public void getTardis(UUID uuid, Consumer<Tardis> consumer) {
         if (this.lookup.containsKey(uuid)) {
             consumer.accept(this.lookup.get(uuid));
@@ -57,9 +70,5 @@ public abstract class TardisManager {
 
     public Map<UUID, Tardis> getLookup() {
         return this.lookup;
-    }
-
-    public static TardisManager getInstance() {
-        return TardisUtil.isServer() ? ServerTardisManager.getInstance() : ClientTardisManager.getInstance();
     }
 }

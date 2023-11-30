@@ -93,7 +93,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public void onEntityCollision(Entity entity) {
-        if (!(entity instanceof ServerPlayerEntity player))
+        if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
             return;
 
         if (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {

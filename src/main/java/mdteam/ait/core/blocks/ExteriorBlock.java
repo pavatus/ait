@@ -64,7 +64,7 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity)
-            exteriorBlockEntity.useOn((ServerWorld) world, player.isSneaking());
+            exteriorBlockEntity.useOn((ServerWorld) world, player.isSneaking(), player);
 
         return ActionResult.CONSUME;
     }

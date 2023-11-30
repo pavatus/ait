@@ -35,7 +35,7 @@ public class PulsatingAnimation extends ExteriorAnimation{
                 this.setAlpha(0f);
 
             runAlphaChecks(state);
-        } else if (state == TardisTravel.State.LANDED && alpha != 1f) {
+        } else if (state == TardisTravel.State.LANDED/* && alpha != 1f*/) {
             this.setAlpha(1f);
         }
     }
@@ -61,7 +61,7 @@ public class PulsatingAnimation extends ExteriorAnimation{
             maxTime = 240;
             frequency = 0.2f;
             intensity = 0.4f;
-        } else {
+        } else if(state == TardisTravel.State.LANDED) {
             alpha = 1f;
             timeLeft = 0;
             maxTime = timeLeft;

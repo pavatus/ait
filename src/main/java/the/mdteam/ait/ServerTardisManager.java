@@ -28,8 +28,7 @@ public class ServerTardisManager extends TardisManager {
 
     public static final Identifier SEND = new Identifier("ait", "send_tardis");
     public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
-    private static final ServerTardisManager instance = new ServerTardisManager();
-
+    private static ServerTardisManager instance;
     private final Multimap<UUID, ServerPlayerEntity> subscribers = ArrayListMultimap.create();
 
     public ServerTardisManager() {
@@ -65,12 +64,17 @@ public class ServerTardisManager extends TardisManager {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> this.loadTardises());
     }
 
+    public static void init() {
+        instance = new ServerTardisManager();
+    }
+
     public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, TardisDesktopSchema schema) {
         UUID uuid = UUID.randomUUID();
 
-        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType);
+        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, false);
         this.lookup.put(uuid, tardis);
 
+        tardis.getTravel().runAnimations();
         tardis.getTravel().placeExterior();
         return tardis;
     }

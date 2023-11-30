@@ -20,13 +20,14 @@ public class DesktopGenerator {
     }
 
     public BlockPos place(ServerWorld level, BlockPos pos) {
+        BlockPos bpos = new BlockPos(pos.getX(), pos.getY() - 64, pos.getZ());
         Optional<StructureTemplate> optional = this.schema.findTemplate();
 
         if (optional.isPresent()) {
             StructureTemplate template = optional.get();
 
-            template.place(level, pos, pos, new StructurePlacementData(), level.getRandom(), 2);
-            return TardisUtil.findBlockInTemplate(template, pos, Direction.SOUTH, AITBlocks.DOOR_BLOCK);
+            template.place(level, bpos, pos, new StructurePlacementData(), level.getRandom(), 2);
+            return TardisUtil.findBlockInTemplate(template, bpos, Direction.SOUTH, AITBlocks.DOOR_BLOCK);
         }
 
         AITMod.LOGGER.error("Couldn't find interior structure {}!", this.schema.id());

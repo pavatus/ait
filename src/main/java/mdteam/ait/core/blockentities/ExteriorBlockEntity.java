@@ -13,16 +13,19 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import the.mdteam.ait.*;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
+import static the.mdteam.ait.TardisTravel.State.LANDED;
 
 public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
@@ -34,25 +37,32 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
     }
 
-    public void useOn(ServerWorld world, boolean sneaking) {
-        if (this.getLeftDoorRotation() == 0) {
-            this.setLeftDoorRot(1.2f);
-        } else {
-            this.setLeftDoorRot(0);
+    public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
+
+        if(this.tardis.getTravel().getState() == LANDED) {
+            if (!this.tardis.getLockedTardis()) {
+                this.setLeftDoorRot(this.getLeftDoorRotation() == 0 ? 1.2f : 0);
+                world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
+            } else {
+                if (player != null) {
+                    world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
+                    player.sendMessage(Text.literal("TARDIS is locked!"), true);
+                }
+            }
         }
 
         if (sneaking)
             return;
 
-        world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
         DoorBlockEntity door = TardisUtil.getDoor(this.tardis);
 
-        if (door != null) {
-            TardisUtil.getTardisDimension().getChunk(door.getPos()); // force load the chunk
+        if(this.tardis.getTravel().getState() == LANDED)
+            if (door != null) {
+                TardisUtil.getTardisDimension().getChunk(door.getPos()); // force load the chunk
 
-            door.setLeftDoorRot(this.getLeftDoorRotation());
-            door.setRightDoorRot(this.getRightDoorRotation());
-        }
+                door.setLeftDoorRot(this.getLeftDoorRotation());
+                door.setRightDoorRot(this.getRightDoorRotation());
+            }
     }
 
     public void setExterior(ExteriorEnum exterior) {
@@ -182,7 +192,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
                 refindTardisClient();
         }
 
-        if (this.getWorld() != null && this.getWorld().isClient && this.tardis != null)
+        if (this.getWorld() != null && this.getWorld().isClient() && this.tardis != null)
             syncFromClientManager(); // i accidentally made it make a bajillion different instances when it syncs so this fixes that and i dont know how to fix the other thing so theo can do it
 
         return tardis;

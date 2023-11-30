@@ -28,7 +28,7 @@ public class AITMod implements ModInitializer {
 			ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "interiordoornbt"), InteriorDoorNBTComponent.class);
 
 	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"),
-			() -> Icon.of(AITItems.AITMODCREATIVETAB.getDefaultStack())).build();
+			() -> Icon.of(AITItems.TARDIS_ITEM.getDefaultStack())).build();
 
 	public static final String MOD_ID = "ait";
 
@@ -46,6 +46,6 @@ public class AITMod implements ModInitializer {
 		TardisUtil.init();
 
 		// makes sure the initialization for tardis managers runs
-		TardisManager.getInstance();
+		TardisManager.init();
 	}
 }

@@ -6,6 +6,7 @@ import mdteam.ait.client.models.doors.FalloutDoor;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blocks.DoorBlock;
+import mdteam.ait.core.helper.TardisUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -42,7 +43,9 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-        FalloutDoor doorModel = new FalloutDoor(this.exteriormap.get(entity.getTardis().getExterior().getType()));
+        FalloutDoor doorModel = (entity.getWorld() != TardisUtil.getTardisDimension()) ?
+                new FalloutDoor(FalloutDoor.getTexturedModelData().createModel()) :
+                new FalloutDoor(this.exteriormap.get(entity.getTardis().getExterior().getType()));
 
         doorModel.door.yaw = entity.getLeftDoorRotation() > 0 ? entity.getLeftDoorRotation() + 0.3f : entity.getLeftDoorRotation();
         doorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(DOOR_TEXTURE)), light, overlay, 1, 1, 1, 1);

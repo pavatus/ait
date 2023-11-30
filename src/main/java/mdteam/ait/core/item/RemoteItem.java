@@ -1,6 +1,8 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
@@ -23,6 +25,8 @@ import the.mdteam.ait.TardisTravel;
 
 import java.util.List;
 
+import static the.mdteam.ait.TardisTravel.State.*;
+
 public class RemoteItem extends Item {
 
     public RemoteItem(Settings settings) {
@@ -42,12 +46,19 @@ public class RemoteItem extends Item {
         NbtCompound nbt = itemStack.getOrCreateNbt();
 
         // Link to exteriors tardis if it exists and player is crouching
-        if (player.isSneaking() && world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
-            if (exterior.getTardis() == null)
-                return ActionResult.FAIL;
+        if (player.isSneaking()) {
+            if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
+                if (exterior.getTardis() == null)
+                    return ActionResult.FAIL;
 
-            nbt.putUuid("tardis", exterior.getTardis().getUuid());
-            return ActionResult.SUCCESS;
+                nbt.putUuid("tardis", exterior.getTardis().getUuid());
+                return ActionResult.SUCCESS;
+            } else if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
+                if (door.getTardis() == null)
+                    return ActionResult.FAIL;
+                nbt.putUuid("tardis", door.getTardis().getUuid());
+                return ActionResult.SUCCESS;
+            }
         }
 
         // Move tardis to the clicked pos
@@ -57,20 +68,26 @@ public class RemoteItem extends Item {
         Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
 
         if (tardis != null) {
-            world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
+            if(world != TardisUtil.getTardisDimension()) {
+                world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
-            TardisTravel travel = tardis.getTravel();
+                TardisTravel travel = tardis.getTravel();
 
-            travel.setDestination(new AbsoluteBlockPos.Directed(pos.up(), world, player.getMovementDirection().getOpposite()), true);
-            // travel.toggleHandbrake();
+                travel.setDestination(new AbsoluteBlockPos.Directed(pos.up(), world, player.getMovementDirection().getOpposite()), true);
+                // travel.toggleHandbrake();
 
-            //FIXME: this is not how you do it!
-            if (travel.getState() == TardisTravel.State.LANDED)
-                travel.dematerialise(true);
-            if (travel.getState() == TardisTravel.State.FLIGHT)
-                travel.materialise();
+                //FIXME: this is not how you do it!
+                if (travel.getState() == LANDED)
+                    travel.dematerialise(true);
+                if (travel.getState() == FLIGHT)
+                    travel.materialise();
 
-            return ActionResult.SUCCESS;
+                return ActionResult.SUCCESS;
+            } else {
+                world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                player.sendMessage(Text.literal("Cannot translocate exterior to interior dimension!"), true);
+                return ActionResult.PASS;
+            }
         }
 
         return ActionResult.PASS;
