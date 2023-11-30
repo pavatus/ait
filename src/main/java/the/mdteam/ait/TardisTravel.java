@@ -72,6 +72,22 @@ public class TardisTravel {
         this.setPosition(this.getDestination());
 
         this.runAnimations(blockEntity);
+
+        // A definite thing just in case the animation isnt run
+
+        Timer animTimer = new Timer();
+        TardisTravel travel = this;
+
+        animTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (travel.getState() != State.MAT)
+                    return;
+
+                travel.setState(TardisTravel.State.LANDED);
+                travel.runAnimations(blockEntity);
+            }
+        }, (long) 5 * 1000L);
     }
 
     public void dematerialise(boolean withRemat) {
@@ -97,7 +113,7 @@ public class TardisTravel {
         animTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (travel.getState() == State.FLIGHT)
+                if (travel.getState() != State.DEMAT)
                     return;
 
                 travel.toFlight();

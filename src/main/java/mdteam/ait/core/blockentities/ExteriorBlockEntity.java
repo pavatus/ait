@@ -212,7 +212,6 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T exterior) {
-
         if (((ExteriorBlockEntity) exterior).animation != null)
             ((ExteriorBlockEntity) exterior).getAnimation().tick();
     }
