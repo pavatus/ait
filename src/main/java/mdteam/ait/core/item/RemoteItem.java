@@ -66,8 +66,10 @@ public class RemoteItem extends Item {
             return ActionResult.FAIL;
 
         Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+        System.out.println(ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis")));
 
         if (tardis != null) {
+            tardis.setLockedTardis(true);
             if(world != TardisUtil.getTardisDimension()) {
                 world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
@@ -81,6 +83,8 @@ public class RemoteItem extends Item {
                     travel.dematerialise(true);
                 if (travel.getState() == FLIGHT)
                     travel.materialise();
+
+                //System.out.println(ServerTardisManager.getInstance().getLookup());
 
                 return ActionResult.SUCCESS;
             } else {

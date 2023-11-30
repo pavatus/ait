@@ -46,6 +46,7 @@ public class AITMod implements ModInitializer {
 		TardisUtil.init();
 
 		// makes sure the initialization for tardis managers runs
-		TardisManager.init();
+		TardisManager.getInstance();
+		//System.out.println(TardisManager.getInstance());
 	}
 }

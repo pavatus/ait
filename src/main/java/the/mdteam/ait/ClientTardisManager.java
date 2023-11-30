@@ -24,13 +24,13 @@ public class ClientTardisManager extends TardisManager {
 
     public static final Identifier ASK = new Identifier("ait", "ask_tardis");
     public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
-    private static ClientTardisManager instance;
+    private static final ClientTardisManager instance = new ClientTardisManager();
 
     private final Multimap<UUID, Consumer<Tardis>> subscribers = ArrayListMultimap.create();
     private final Deque<PacketByteBuf> buffers = new ArrayDeque<>();
 
     public ClientTardisManager() {
-        //if(FabricLauncherBase.getLauncher().getEnvironmentType() == EnvType.CLIENT) {
+        if(FabricLauncherBase.getLauncher().getEnvironmentType() == EnvType.CLIENT)
             ClientPlayNetworking.registerGlobalReceiver(ServerTardisManager.SEND,
                     (client, handler, buf, responseSender) -> this.sync(buf)
             );
@@ -52,11 +52,6 @@ public class ClientTardisManager extends TardisManager {
             });
 
             ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());
-        //}
-    }
-
-    public static void init() {
-        instance = new ClientTardisManager();
     }
 
     @Override

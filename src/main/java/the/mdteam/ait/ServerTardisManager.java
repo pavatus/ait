@@ -6,9 +6,12 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -28,7 +31,7 @@ public class ServerTardisManager extends TardisManager {
 
     public static final Identifier SEND = new Identifier("ait", "send_tardis");
     public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
-    private static ServerTardisManager instance;
+    private static final ServerTardisManager instance = new ServerTardisManager();
     private final Multimap<UUID, ServerPlayerEntity> subscribers = ArrayListMultimap.create();
 
     public ServerTardisManager() {
@@ -62,10 +65,6 @@ public class ServerTardisManager extends TardisManager {
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> this.reset());
         ServerLifecycleEvents.SERVER_STARTED.register(server -> this.loadTardises());
-    }
-
-    public static void init() {
-        instance = new ServerTardisManager();
     }
 
     public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, TardisDesktopSchema schema) {
@@ -170,6 +169,7 @@ public class ServerTardisManager extends TardisManager {
     }
 
     public static ServerTardisManager getInstance() {
+        System.out.println("getInstance() = " + instance);
         return instance;
     }
 

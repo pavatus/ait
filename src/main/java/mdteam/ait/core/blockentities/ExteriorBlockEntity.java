@@ -165,6 +165,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
     // same here
     public void refindTardis() {
+        System.out.println(this.tardis);
         if (this.tardis != null) // No issue
             return;
         if (this.getWorld().isClient())

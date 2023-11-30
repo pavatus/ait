@@ -49,8 +49,7 @@ public class TardisItemBuilder extends Item {
         AbsoluteBlockPos.Directed pos = new AbsoluteBlockPos.Directed(context.getBlockPos().up(), world, player.getHorizontalFacing().getOpposite());
 
         if (context.getHand() == Hand.MAIN_HAND) {
-            ServerTardisManager manager = (ServerTardisManager) TardisManager.getInstance();
-            manager.create(pos, this.exterior, AITDesktops.get(this.desktop));
+            ServerTardisManager.getInstance().create(pos, this.exterior, AITDesktops.get(this.desktop));
             context.getStack().decrement(1);
         }
 
