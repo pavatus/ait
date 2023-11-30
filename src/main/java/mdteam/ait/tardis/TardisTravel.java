@@ -18,6 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class TardisTravel {
 
@@ -184,11 +185,6 @@ public class TardisTravel {
             }
 
             @Override
-            public void schedule(TravelContext context) {
-
-            }
-
-            @Override
             public State getNext() {
                 return DEMAT;
             }
@@ -198,12 +194,17 @@ public class TardisTravel {
             public void onEnable(TravelContext context) {
                 AITMod.LOGGER.info("ON: DEMAT");
 
-                // context.travel().dematerialise(false);
+                context.travel().dematerialise(false);
             }
 
             @Override
             public void onDisable(TravelContext context) {
                 AITMod.LOGGER.info("OFF: DEMAT");
+            }
+
+            @Override
+            public long schedule(TravelContext context) {
+                return 2000;
             }
 
             @Override
@@ -223,11 +224,6 @@ public class TardisTravel {
             }
 
             @Override
-            public void schedule(TravelContext context) {
-
-            }
-
-            @Override
             public State getNext() {
                 return MAT;
             }
@@ -243,6 +239,11 @@ public class TardisTravel {
             @Override
             public void onDisable(TravelContext context) {
                 AITMod.LOGGER.info("OFF: LANDED");
+            }
+
+            @Override
+            public long schedule(TravelContext context) {
+                return 2000;
             }
 
             @Override
@@ -286,6 +287,22 @@ public class TardisTravel {
             context.travel().setState(next);
         }
 
-        public void schedule(TravelContext context) { }
+        public long schedule(TravelContext context) {
+            return -1;
+        }
+
+        public void scheduleAndRun(TravelContext context) {
+            long duration = this.schedule(context);
+
+            if (duration < 0)
+                throw new IllegalArgumentException("Schedule method was not implemented for non-static state " + this);
+
+            this.service.schedule(() -> {
+                if (this.isStatic)
+                    return;
+
+                this.next(context);
+            }, duration, TimeUnit.MILLISECONDS);
+        }
     }
 }
