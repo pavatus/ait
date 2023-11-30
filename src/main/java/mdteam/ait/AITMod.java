@@ -9,12 +9,13 @@ import mdteam.ait.core.*;
 import mdteam.ait.core.components.block.exterior.ExteriorNBTComponent;
 import mdteam.ait.core.components.block.interior_door.InteriorDoorNBTComponent;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
-import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.core.util.TardisUtil;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import the.mdteam.ait.TardisManager;
+import mdteam.ait.core.AITEvents;
+import mdteam.ait.tardis.manager.TardisManager;
 
 public class AITMod implements ModInitializer {
 
@@ -42,11 +43,11 @@ public class AITMod implements ModInitializer {
 		FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
 
 		AIT_ITEM_GROUP.initialize();
-		AITDesktops.init();
-		TardisUtil.init();
 
-		// makes sure the initialization for tardis managers runs
-		TardisManager.getInstance();
-		//System.out.println(TardisManager.getInstance());
+		AITEvents.init();
+		AITDesktops.init();
+
+		TardisUtil.init();
+		TardisManager.init();
 	}
 }

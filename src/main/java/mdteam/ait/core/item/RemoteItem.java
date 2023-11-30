@@ -2,8 +2,8 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.core.util.TardisUtil;
+import mdteam.ait.core.util.data.AbsoluteBlockPos;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,13 +19,13 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import the.mdteam.ait.ServerTardisManager;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
 
 import java.util.List;
 
-import static the.mdteam.ait.TardisTravel.State.*;
+import static mdteam.ait.tardis.TardisTravel.State.*;
 
 public class RemoteItem extends Item {
 
@@ -66,10 +66,9 @@ public class RemoteItem extends Item {
             return ActionResult.FAIL;
 
         Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
-        System.out.println(ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis")));
 
         if (tardis != null) {
-            tardis.setLockedTardis(true);
+            tardis.getExterior().setLocked(true);
             if(world != TardisUtil.getTardisDimension()) {
                 world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 

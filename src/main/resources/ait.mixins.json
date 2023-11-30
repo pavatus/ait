@@ -4,6 +4,7 @@
   "package": "mdteam.ait.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "server.BlockEntityMixin"
   ],
   "client": [
     "client.DefaultLogoMixin",

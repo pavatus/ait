@@ -6,7 +6,7 @@ import mdteam.ait.client.models.doors.FalloutDoor;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blocks.DoorBlock;
-import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.core.util.TardisUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;

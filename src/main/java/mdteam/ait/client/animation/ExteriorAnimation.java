@@ -2,7 +2,7 @@ package mdteam.ait.client.animation;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import org.joml.Math;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.TardisTravel;
 
 public abstract class ExteriorAnimation {
 
@@ -17,7 +17,7 @@ public abstract class ExteriorAnimation {
 
     // fixme bug that sometimes happens where server doesnt have animation
     protected void runAlphaChecks(TardisTravel.State state) {
-        if (this.exterior.getWorld().isClient)
+        if (this.exterior.getWorld().isClient())
             return;
 
         if (alpha <= 0f && state == TardisTravel.State.DEMAT) {

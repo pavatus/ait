@@ -9,7 +9,7 @@ import mdteam.ait.client.models.exteriors.ToyotaExteriorModel;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.TardisTravel;
 
 public enum ExteriorEnum {
     SHELTER() {

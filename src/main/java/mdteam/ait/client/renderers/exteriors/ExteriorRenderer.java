@@ -14,7 +14,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
-import the.mdteam.ait.TardisExterior;
+import mdteam.ait.tardis.TardisExterior;
 
 import java.util.Map;
 

@@ -2,9 +2,7 @@ package mdteam.ait.client.animation;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
-import the.mdteam.ait.ServerTardisManager;
-import the.mdteam.ait.TardisTravel;
-import the.mdteam.ait.wrapper.server.ServerTardis;
+import mdteam.ait.tardis.TardisTravel;
 
 public class PulsatingAnimation extends ExteriorAnimation{
     private int pulses = 0;

@@ -3,7 +3,7 @@ package mdteam.ait.core;
 import mdteam.ait.core.desktops.CaveDesktop;
 import mdteam.ait.core.desktops.WarDesktop;
 import net.minecraft.util.Identifier;
-import the.mdteam.ait.TardisDesktopSchema;
+import mdteam.ait.tardis.TardisDesktopSchema;
 
 import java.util.HashMap;
 import java.util.Map;
