@@ -22,6 +22,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
@@ -94,5 +95,19 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return type == AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE ? ExteriorBlockEntity::tick : null;
+    }
+
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        super.onBroken(world, pos, state);
+
+        if (!world.isClient()) {
+            BlockEntity entity = world.getBlockEntity(pos);
+
+            if (!(entity instanceof ExteriorBlockEntity))
+                return;
+
+            ((ExteriorBlockEntity) entity).onBroken();
+        }
     }
 }

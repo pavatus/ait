@@ -13,6 +13,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import the.mdteam.ait.wrapper.server.ServerTardisTravel;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -48,10 +50,10 @@ public class TardisTravel {
     }
 
     public void materialise() {
-        if (this.getPosition().getWorld().isClient())
+        if (this.getDestination() == null)
             return;
 
-        if (this.getDestination() == null)
+        if (this.getDestination().getWorld().isClient())
             return;
 
         this.shouldRemat = false;
@@ -86,6 +88,21 @@ public class TardisTravel {
         world.playSound(null, this.getPosition(), AITSounds.DEMAT, SoundCategory.BLOCKS);
 
         this.runAnimations();
+
+        // A definite thing just in case the animation isnt run
+
+        Timer animTimer = new Timer();
+        TardisTravel travel = this;
+
+        animTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (travel.getState() == State.FLIGHT)
+                    return;
+
+                travel.toFlight();
+            }
+        }, (long) 10 * 1000L);
     }
 
     public void toFlight() {

@@ -238,4 +238,6 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     public float getAlpha() {
         return this.getAnimation().getAlpha();
     }
+
+    public void onBroken() {}
 }
