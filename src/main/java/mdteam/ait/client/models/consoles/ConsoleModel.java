@@ -5,18 +5,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.animation.SnifferAnimations;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
-import net.minecraft.client.render.entity.model.SinglePartEntityModelWithChildTransform;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.SnifferEntity;
 import net.minecraft.util.Identifier;
+import the.mdteam.ait.TardisTravel;
 
 import java.util.function.Function;
-
-import static mdteam.ait.client.animation.console.borealis.BorealisAnimation.CONSOLE_ROTOR_MATERIALIZE;
 
 public abstract class ConsoleModel extends SinglePartEntityModel {
     public static int MAX_TICK_COUNT = 2 * 20;
@@ -30,11 +26,21 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
     }
 
     // Thanks craig for help w animation code
-    // @TODO animation stuff for ze console
     public void animateTile(ConsoleBlockEntity console) {
-        if (console.getAnimation().isRunning()) {
-            //updateAnimation(console.ANIMATION_STATE, console.getAnimation(), MinecraftClient.getInstance().player.age);
-        }
+        this.getPart().traverse().forEach(ModelPart::resetTransform);
+        if (console.getTardis() == null)
+            return;
+        // System.out.println(getAnimationForState(console.getTardis().getTravel().getState()));
+
+        TardisTravel.State state = console.getTardis().getTravel().getState();
+        if (state == TardisTravel.State.LANDED)
+            this.updateAnimation(console.ANIM_LANDED, getAnimationForState(state), console.animationTimer);
+        else if (state == TardisTravel.State.FLIGHT)
+            this.updateAnimation(console.ANIM_FLIGHT, getAnimationForState(state), console.animationTimer);
+        else if (state == TardisTravel.State.DEMAT)
+            this.updateAnimation(console.ANIM_DEMAT, getAnimationForState(state), console.animationTimer);
+        else if (state == TardisTravel.State.MAT)
+            this.updateAnimation(console.ANIM_MAT, getAnimationForState(state), console.animationTimer);
     }
     public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         if (console.getTardis() == null) return;
@@ -47,4 +53,5 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
 
     public abstract Identifier getTexture();
     public abstract Identifier getEmission();
+    public abstract Animation getAnimationForState(TardisTravel.State state);
 }

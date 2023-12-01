@@ -2,14 +2,15 @@ package mdteam.ait.client.models.consoles;
 
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.animation.console.borealis.BorealisAnimation;
+import mdteam.ait.client.animation.console.borealis.BorealisAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import the.mdteam.ait.TardisTravel;
 
 public class BorealisConsoleModel extends ConsoleModel {
 	public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/borealis_console.png"));
@@ -861,12 +862,7 @@ public class BorealisConsoleModel extends ConsoleModel {
 
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		this.base_console.traverse().forEach(ModelPart::resetTransform);
-		this.updateAnimation(console.getAnimation(), BorealisAnimation.CONSOLE_ROTOR_MATERIALIZE, MinecraftClient.getInstance().getTickDelta());
-		//System.out.println(console.getAnimation().isRunning());
 		if(console.getTardis() == null) return;
-		if(console.getTardis().getLockedTardis())
-			this.animate(BorealisAnimation.CONSOLE_ROTOR_MATERIALIZE);
 		matrices.push();
 		matrices.translate(0.5f, -0.75f, 0.5f);
 		matrices.scale(0.5f, 0.5f, 0.5f);
@@ -886,5 +882,15 @@ public class BorealisConsoleModel extends ConsoleModel {
 	@Override
 	public Identifier getEmission() {
 		return CONSOLE_TEXTURE_EMISSION;
+	}
+
+	@Override
+	public Animation getAnimationForState(TardisTravel.State state) {
+		return switch(state) {
+			case LANDED -> BorealisAnimations.LANDED; // todo animation
+			case DEMAT -> BorealisAnimations.DEMATERIALIZE;
+			case FLIGHT -> BorealisAnimations.MATERIALIZE;
+			case MAT -> BorealisAnimations.MATERIALIZE;
+		};
 	}
 }

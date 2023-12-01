@@ -1,8 +1,6 @@
 package mdteam.ait.core.blockentities;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
-import mdteam.ait.client.animation.console.ConsoleAnimation;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.ConsoleBlock;
@@ -22,21 +20,24 @@ import net.minecraft.world.World;
 import the.mdteam.ait.Tardis;
 import the.mdteam.ait.TardisDesktop;
 import the.mdteam.ait.TardisManager;
+import the.mdteam.ait.TardisTravel;
 
-import static the.mdteam.ait.TardisTravel.State.LANDED;
+import static the.mdteam.ait.TardisTravel.State.*;
 
 public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
 
+    public final AnimationState ANIM_DEMAT = new AnimationState();
+    public final AnimationState ANIM_LANDED = new AnimationState();
+    public final AnimationState ANIM_MAT = new AnimationState();
+    public final AnimationState ANIM_FLIGHT = new AnimationState();
+    public int animationTimer = 0;
+
     private Tardis tardis;
-    private ConsoleAnimation animation;
 
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
 
         this.setTardis(TardisUtil.findTardisByInterior(pos));
-    }
-
-    public static <T extends BlockEntity> void tick(World world, BlockPos blockPos, BlockState blockState, T console) {
     }
 
     @Override
@@ -76,7 +77,6 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
 
         // force re-link a desktop if it's not null
         this.linkDesktop();
-        this.getAnimation().setupAnimation(this.tardis.getTravel().getState());
     }
 
     public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
@@ -93,12 +93,6 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
             player.sendMessage(Text.literal(lockedState), true);
             world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
         } else if(this.tardis.getTravel().getState() == LANDED) {
-            if(this.tardis.getLockedTardis()) {
-                if(!this.getAnimation().isRunning())
-                    this.getAnimation().start(0);
-            } else if(this.getAnimation().isRunning()) {
-                this.getAnimation().stop();
-            }
             if (!this.tardis.getLockedTardis()) {
                 DoorBlockEntity door = TardisUtil.getDoor(this.tardis);
                 if(this.tardis.getTravel().getState() == LANDED)
@@ -127,21 +121,42 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
         );
     }
 
-    public void verifyAnimation() {
-        if (this.animation != null)
-            return;
-        if (this.getTardis() == null)
-            return;
+    public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T entity) {
+        ConsoleBlockEntity console = (ConsoleBlockEntity) entity;
 
-        this.animation = this.getConsole().createAnimation(this);
-        AITMod.LOGGER.debug("Created new ANIMATION for " + this);
-        this.animation.setupAnimation(this.getTardis().getTravel().getState());
+        // idk
+        if (world.isClient()) {
+            console.checkAnimations();
+        }
     }
+    public void checkAnimations() {
+        // DO NOT RUN THIS ON SERVER!!
 
-    public ConsoleAnimation getAnimation() {
-        this.verifyAnimation();
+        animationTimer++;
+        TardisTravel.State state = this.getTardis().getTravel().getState();
 
-        return this.animation;
+        if (state == LANDED && !ANIM_LANDED.isRunning()) {
+            // stop all others and start this one, theres likely a better way to do this. fixme
+            stopAllAnimations();
+            ANIM_LANDED.start(animationTimer);
+        } else if (state == DEMAT && !ANIM_DEMAT.isRunning()) {
+            stopAllAnimations();
+            ANIM_DEMAT.start(animationTimer);
+        } else if (state == FLIGHT && !ANIM_FLIGHT.isRunning()) {
+            stopAllAnimations();
+            ANIM_FLIGHT.start(animationTimer);
+        } else if (state == MAT && !ANIM_MAT.isRunning()) {
+            stopAllAnimations();
+            ANIM_MAT.start(animationTimer);
+        }
+    }
+    private void stopAllAnimations() {
+        // DO NOT RUN ON SERVER
+
+        ANIM_LANDED.stop();
+        ANIM_DEMAT.stop();
+        ANIM_FLIGHT.stop();
+        ANIM_MAT.stop();
     }
 
     public void onBroken() {}

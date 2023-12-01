@@ -1,37 +1,13 @@
 package mdteam.ait.client.animation.console.borealis;
 
-import mdteam.ait.client.animation.console.ConsoleAnimation;
-import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.sounds.MatSound;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.animation.AnimationHelper;
 import net.minecraft.client.render.entity.animation.Keyframe;
 import net.minecraft.client.render.entity.animation.Transformation;
-import the.mdteam.ait.TardisTravel;
 
-public class BorealisAnimation extends ConsoleAnimation {
+public class BorealisAnimations {
 
-    public BorealisAnimation(ConsoleBlockEntity console) {
-        super(console);
-    }
-
-    @Override
-    public void tick() {
-        if (console.getTardis() == null)
-            return;
-    }
-
-    @Override
-    public void setupAnimation(TardisTravel.State state) {
-        MatSound sound = console.getConsole().getSound(state);
-
-        timeLeft = sound.timeLeft();
-        maxTime = sound.maxTime();
-        startTime = sound.startTime();
-    }
-
-    public static final Animation CONSOLE_ROTOR_MATERIALIZE = Animation.Builder.create(21.5f).looping()
+    public static final Animation MATERIALIZE = Animation.Builder.create(21.5f).looping()
             .addBoneAnimation("bone110",
                     new Transformation(Transformation.Targets.ROTATE,
                             new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -394,7 +370,7 @@ public class BorealisAnimation extends ConsoleAnimation {
                                     Transformation.Interpolations.CUBIC),
                             new Keyframe(21.5f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
                                     Transformation.Interpolations.CUBIC))).build();
-    public static final Animation CONSOLE_ROTOR_DEMATERIALIZE = Animation.Builder.create(19.5f).looping()
+    public static final Animation DEMATERIALIZE = Animation.Builder.create(19.5f).looping()
             .addBoneAnimation("bone110",
                     new Transformation(Transformation.Targets.ROTATE,
                             new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -737,4 +713,6 @@ public class BorealisAnimation extends ConsoleAnimation {
                                     Transformation.Interpolations.CUBIC),
                             new Keyframe(19.5f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
                                     Transformation.Interpolations.CUBIC))).build();
+
+    public static final Animation LANDED = Animation.Builder.create(1).looping().build();
 }

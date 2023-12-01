@@ -47,7 +47,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         TardisConsole tardisConsole = entity.getTardis().getConsole();
         Class<? extends ConsoleModel> modelClass = tardisConsole.getType().getModelClass();
 
-        if (console != null && !(console.getClass().isInstance(modelClass)))
+        if (console != null && console.getClass() != modelClass)
             console = null;
 
         if (console == null)
@@ -60,6 +60,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         if(console != null) {
+            console.animateTile(entity);
             console.renderWithAnimations(entity,this.console.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(console.getTexture())), light, overlay, 1, 1, 1, 1);
             console.renderWithAnimations(entity,this.console.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(console.getEmission())), light, overlay, 1, 1, 1, 1);
         }
