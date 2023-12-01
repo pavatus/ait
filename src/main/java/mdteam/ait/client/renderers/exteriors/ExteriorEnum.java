@@ -9,6 +9,8 @@ import mdteam.ait.client.models.exteriors.ToyotaExteriorModel;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import the.mdteam.ait.TardisTravel;
 
 public enum ExteriorEnum {

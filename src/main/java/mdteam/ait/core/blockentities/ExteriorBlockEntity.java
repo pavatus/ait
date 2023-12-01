@@ -1,6 +1,7 @@
 package mdteam.ait.core.blockentities;
 
 import com.mojang.logging.LogUtils;
+import io.wispforest.owo.nbt.NbtKey;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.client.animation.ExteriorAnimation;
@@ -8,12 +9,17 @@ import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.AITItems;
 import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.core.item.KeyItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -23,6 +29,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import the.mdteam.ait.*;
+
+import java.util.Objects;
+import java.util.UUID;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
 import static the.mdteam.ait.TardisTravel.State.LANDED;
@@ -39,15 +48,38 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
     public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
 
+        if(player == null)
+            return;
+
+        if(player.getMainHandStack().getItem() == AITItems.GOLDEN_TARDIS_KEY) {
+            ItemStack key = player.getMainHandStack();
+            NbtCompound tag = key.getOrCreateNbt();
+            if(!tag.contains("tardis")) {
+                return;
+            }
+            if(Objects.equals(this.getTardis().getUuid().toString(), tag.getUuid("tardis").toString())) {
+                this.tardis.setLockedTardis(!this.getTardis().getLockedTardis());
+                this.setLeftDoorRot(0);
+                this.setRightDoorRot(0);
+                String lockedState = this.getTardis().getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
+                player.sendMessage(Text.literal(lockedState), true);
+                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+            } else {
+                world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
+            }
+            return;
+        }
+
+        System.out.println("WHAT?? " + this.getTardis().getTravel().getState());
+
         if(this.tardis.getTravel().getState() == LANDED) {
             if (!this.tardis.getLockedTardis()) {
                 this.setLeftDoorRot(this.getLeftDoorRotation() == 0 ? 1.2f : 0);
                 world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
             } else {
-                if (player != null) {
-                    world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
-                    player.sendMessage(Text.literal("TARDIS is locked!"), true);
-                }
+                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
+                player.sendMessage(Text.literal("\uD83D\uDD12"), true);
             }
         }
 
@@ -125,7 +157,8 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             return;
 
         if (this.getTardis() != null && (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0)) {
-            TardisUtil.teleportInside(this.getTardis(), player);
+            if(!this.getTardis().getLockedTardis())
+                TardisUtil.teleportInside(this.getTardis(), player);
         }
     }
 

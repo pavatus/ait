@@ -25,11 +25,12 @@ import the.mdteam.ait.TardisTravel;
 
 import java.util.List;
 
-import static the.mdteam.ait.TardisTravel.State.*;
+import static the.mdteam.ait.TardisTravel.State.FLIGHT;
+import static the.mdteam.ait.TardisTravel.State.LANDED;
 
-public class RemoteItem extends Item {
+public class KeyItem extends Item {
 
-    public RemoteItem(Settings settings) {
+    public KeyItem(Settings settings) {
         super(settings);
     }
 
@@ -45,7 +46,6 @@ public class RemoteItem extends Item {
 
         NbtCompound nbt = itemStack.getOrCreateNbt();
 
-        // Link to exteriors tardis if it exists and player is crouching
         if (player.isSneaking()) {
             if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
                 if (exterior.getTardis() == null)
@@ -61,39 +61,6 @@ public class RemoteItem extends Item {
             }
         }
 
-        // Move tardis to the clicked pos
-        if (!nbt.contains("tardis"))
-            return ActionResult.FAIL;
-
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
-        System.out.println(ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis")));
-
-        if (tardis != null) {
-            tardis.setLockedTardis(false);
-            if(world != TardisUtil.getTardisDimension()) {
-                world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
-
-                TardisTravel travel = tardis.getTravel();
-
-                travel.setDestination(new AbsoluteBlockPos.Directed(pos.up(), world, player.getMovementDirection().getOpposite()), true);
-                // travel.toggleHandbrake();
-
-                //FIXME: this is not how you do it!
-                if (travel.getState() == LANDED)
-                    travel.dematerialise(true);
-                if (travel.getState() == FLIGHT)
-                    travel.materialise();
-
-                //System.out.println(ServerTardisManager.getInstance().getLookup());
-
-                return ActionResult.SUCCESS;
-            } else {
-                world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-                player.sendMessage(Text.literal("Cannot translocate exterior to interior dimension"), true);
-                return ActionResult.PASS;
-            }
-        }
-
         return ActionResult.PASS;
     }
 
@@ -105,9 +72,9 @@ public class RemoteItem extends Item {
         }
 
         NbtCompound tag = stack.getOrCreateNbt();
-        String text = tag.contains("tardis") ? tag.getUuid("tardis").toString()
-                : "Remote does not identify with any TARDIS";
+        String text = tag.contains("tardis") ? tag.getUuid("tardis").toString().substring(0, 8)
+                : "Key does not identify with any TARDIS";
 
-        tooltip.add(Text.literal(text));
+        tooltip.add(Text.literal("→ " + text));
     }
 }

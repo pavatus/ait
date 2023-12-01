@@ -86,11 +86,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	 */
 	public AITLanguageProvider addEnglishTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
 		AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
+
 		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
 		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
+		aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Toyota Item | TEMP |");
 		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
-		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
+		aitLanguageProvider.addTranslation(AITItems.GOLDEN_TARDIS_KEY, "Golden TARDIS Key");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
+		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
 		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
 
@@ -106,13 +109,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	 */
 	public AITLanguageProvider addFrenchTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
 		AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
-		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Mod de stuff");
-		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
-		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
-		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
-		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
 
+		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Le Adventures In Time");
+		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "Le TARDIS");
+		aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Le Toyota Item | TEMP |");
+		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Le Stattenheim Remote");
+		aitLanguageProvider.addTranslation(AITItems.GOLDEN_TARDIS_KEY, "Le Golden TARDIS Key");
+		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Le Display Console");
+		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Le Radio");
+		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Le Exterior");
+		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Le Door");
 
 		return aitLanguageProvider;
 	}
@@ -126,12 +132,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	 */
 	public AITLanguageProvider addSpanishTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
 		AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
-		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Mod de stuff");
+
+		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventuro en timo");
 		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
-		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
-		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
-		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
+		aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Toyotota | TEMP |");
+		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stato Remoto");
+		aitLanguageProvider.addTranslation(AITItems.GOLDEN_TARDIS_KEY, "Goldo TARDIS Keyo");
+		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Consolo");
+		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radoio");
+		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterioro");
+		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Dooro");
 
 		return aitLanguageProvider;
 	}

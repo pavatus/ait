@@ -60,7 +60,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
         }
 
         if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
-            door.useOn(world, player.isSneaking());
+            door.useOn(world, player.isSneaking(), player);
         }
 
         return ActionResult.CONSUME;

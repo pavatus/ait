@@ -2,16 +2,20 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -19,7 +23,10 @@ import the.mdteam.ait.Tardis;
 import the.mdteam.ait.TardisDesktop;
 import the.mdteam.ait.TardisManager;
 
+import java.util.Objects;
+
 import static mdteam.ait.AITMod.INTERIORDOORNBT;
+import static the.mdteam.ait.TardisTravel.State.LANDED;
 
 public class DoorBlockEntity extends BlockEntity implements ILinkable {
 
@@ -32,11 +39,39 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         this.setTardis(TardisUtil.findTardisByInterior(pos));
     }
 
-    public void useOn(World world, boolean sneaking) {
-        if (this.getLeftDoorRotation() == 0) {
-            this.setLeftDoorRot(1.2f);
-        } else {
-            this.setLeftDoorRot(0);
+    public void useOn(World world, boolean sneaking, PlayerEntity player) {
+
+        if(player == null)
+            return;
+
+        if(player.getMainHandStack().getItem() == AITItems.GOLDEN_TARDIS_KEY) {
+            ItemStack key = player.getMainHandStack();
+            NbtCompound tag = key.getOrCreateNbt();
+            if(!tag.contains("tardis")) {
+                return;
+            }
+            if(Objects.equals(this.tardis.getUuid().toString(), tag.getUuid("tardis").toString())) {
+                this.tardis.setLockedTardis(!this.tardis.getLockedTardis());
+                this.setLeftDoorRot(0);
+                this.setRightDoorRot(0);
+                String lockedState = this.tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
+                player.sendMessage(Text.literal(lockedState), true);
+                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+            } else {
+                world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
+            }
+            return;
+        }
+
+        if(this.tardis.getTravel().getState() == LANDED) {
+            if (!this.tardis.getLockedTardis()) {
+                this.setLeftDoorRot(this.getLeftDoorRotation() == 0 ? 1.2f : 0);
+                world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
+            } else {
+                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
+                player.sendMessage(Text.literal("\uD83D\uDD12"), true);
+            }
         }
 
         if (sneaking)
@@ -96,8 +131,9 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
             return;
 
-        if (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
-            TardisUtil.teleportOutside(this.tardis, player);
+        if (this.getTardis() != null && this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
+            if(!this.getTardis().getLockedTardis())
+                TardisUtil.teleportOutside(this.tardis, player);
         }
     }
 
