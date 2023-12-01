@@ -33,14 +33,7 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
         // System.out.println(getAnimationForState(console.getTardis().getTravel().getState()));
 
         TardisTravel.State state = console.getTardis().getTravel().getState();
-        if (state == TardisTravel.State.LANDED)
-            this.updateAnimation(console.ANIM_LANDED, getAnimationForState(state), console.animationTimer);
-        else if (state == TardisTravel.State.FLIGHT)
-            this.updateAnimation(console.ANIM_FLIGHT, getAnimationForState(state), console.animationTimer);
-        else if (state == TardisTravel.State.DEMAT)
-            this.updateAnimation(console.ANIM_DEMAT, getAnimationForState(state), console.animationTimer);
-        else if (state == TardisTravel.State.MAT)
-            this.updateAnimation(console.ANIM_MAT, getAnimationForState(state), console.animationTimer);
+        this.updateAnimation(console.ANIM_FLIGHT, getAnimationForState(state), console.animationTimer);
     }
     public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         if (console.getTardis() == null) return;

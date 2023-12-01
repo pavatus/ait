@@ -25,10 +25,6 @@ import the.mdteam.ait.TardisTravel;
 import static the.mdteam.ait.TardisTravel.State.*;
 
 public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
-
-    public final AnimationState ANIM_DEMAT = new AnimationState();
-    public final AnimationState ANIM_LANDED = new AnimationState();
-    public final AnimationState ANIM_MAT = new AnimationState();
     public final AnimationState ANIM_FLIGHT = new AnimationState();
     public int animationTimer = 0;
 
@@ -135,28 +131,22 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
         animationTimer++;
         TardisTravel.State state = this.getTardis().getTravel().getState();
 
-        if (state == LANDED && !ANIM_LANDED.isRunning()) {
-            // stop all others and start this one, theres likely a better way to do this. fixme
-            stopAllAnimations();
-            ANIM_LANDED.start(animationTimer);
-        } else if (state == DEMAT && !ANIM_DEMAT.isRunning()) {
-            stopAllAnimations();
-            ANIM_DEMAT.start(animationTimer);
-        } else if (state == FLIGHT && !ANIM_FLIGHT.isRunning()) {
-            stopAllAnimations();
-            ANIM_FLIGHT.start(animationTimer);
-        } else if (state == MAT && !ANIM_MAT.isRunning()) {
-            stopAllAnimations();
-            ANIM_MAT.start(animationTimer);
+        if (!ANIM_FLIGHT.isRunning()) {
+            if (state == LANDED) {
+                // stop all others and start this one, theres likely a better way to do this. fixme
+                ANIM_FLIGHT.start(animationTimer);
+            } else if (state == DEMAT) {
+                ANIM_FLIGHT.start(animationTimer);
+            } else if (state == FLIGHT) {
+                ANIM_FLIGHT.start(animationTimer);
+            } else if (state == MAT) {
+                ANIM_FLIGHT.start(animationTimer);
+            }
         }
     }
     private void stopAllAnimations() {
         // DO NOT RUN ON SERVER
-
-        ANIM_LANDED.stop();
-        ANIM_DEMAT.stop();
         ANIM_FLIGHT.stop();
-        ANIM_MAT.stop();
     }
 
     public void onBroken() {}
