@@ -74,7 +74,7 @@ public class FalloutExteriorModel extends ExteriorModel {
 	public ModelPart bone53;
 	public ModelPart bone54;
 	public FalloutExteriorModel(ModelPart root) {
-		super(RenderLayer::getEntityTranslucent);
+		super(RenderLayer::getEntityCutoutNoCull);
 		this.tardis = root.getChild("tardis");
 		this.door = this.tardis.getChild("door");
 	}

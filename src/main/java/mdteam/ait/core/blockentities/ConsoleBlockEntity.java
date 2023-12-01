@@ -4,19 +4,14 @@ import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.client.animation.console.ConsoleAnimation;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blocks.ConsoleBlock;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -28,15 +23,11 @@ import the.mdteam.ait.Tardis;
 import the.mdteam.ait.TardisDesktop;
 import the.mdteam.ait.TardisManager;
 
-import java.util.Objects;
-
-import static mdteam.ait.AITMod.EXTERIORNBT;
 import static the.mdteam.ait.TardisTravel.State.LANDED;
 
 public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
 
     private Tardis tardis;
-    public final AnimationState ANIMATION_STATE = new AnimationState();
     private ConsoleAnimation animation;
 
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
@@ -46,8 +37,6 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos blockPos, BlockState blockState, T console) {
-        if (((ConsoleBlockEntity) console).animation != null)
-            ((ConsoleBlockEntity) console).getAnimation().tick();
     }
 
     @Override
@@ -104,6 +93,12 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
             player.sendMessage(Text.literal(lockedState), true);
             world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
         } else if(this.tardis.getTravel().getState() == LANDED) {
+            if(this.tardis.getLockedTardis()) {
+                if(!this.getAnimation().isRunning())
+                    this.getAnimation().start(0);
+            } else if(this.getAnimation().isRunning()) {
+                this.getAnimation().stop();
+            }
             if (!this.tardis.getLockedTardis()) {
                 DoorBlockEntity door = TardisUtil.getDoor(this.tardis);
                 if(this.tardis.getTravel().getState() == LANDED)

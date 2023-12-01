@@ -3,6 +3,7 @@ package mdteam.ait.client.renderers.consoles;
 import mdteam.ait.client.animation.console.ConsoleAnimation;
 import mdteam.ait.client.animation.console.borealis.BorealisAnimation;
 import mdteam.ait.client.animation.console.temp.TempAnimation;
+import mdteam.ait.client.models.consoles.BorealisConsoleModel;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.TempConsoleModel;
 import mdteam.ait.core.AITSounds;
@@ -26,7 +27,7 @@ public enum ConsoleEnum {
         public Class<? extends ConsoleModel> getModelClass() {
             return TempConsoleModel.class;
         }
-    }/*,
+    },
     BOREALIS() {
         @Override
         public ConsoleAnimation createAnimation(ConsoleBlockEntity entity) {
@@ -42,7 +43,7 @@ public enum ConsoleEnum {
         public Class<? extends ConsoleModel> getModelClass() {
             return BorealisConsoleModel.class;
         }
-    }*/;
+    };
 
     public abstract ConsoleAnimation createAnimation(ConsoleBlockEntity entity);
     public abstract ConsoleModel createModel();

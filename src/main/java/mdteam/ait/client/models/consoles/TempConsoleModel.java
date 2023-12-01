@@ -297,8 +297,9 @@ public class TempConsoleModel extends ConsoleModel {
 	public ModelPart cube_r106;
 	public ModelPart cube_r107;
 
+
 	public TempConsoleModel(ModelPart root) {
-		super(RenderLayer::getEntityTranslucent);
+		super(RenderLayer::getEntityCutoutNoCull);
 		this.console = root.getChild("console");
 	}
 
@@ -975,8 +976,11 @@ public class TempConsoleModel extends ConsoleModel {
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		//this.door.yaw = exterior.getLeftDoorRotation();
-
+		matrices.push();
+		matrices.translate(0.5, 1.35, 0.5);
+		matrices.scale(0.9f, 0.9f, 0.9f);
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+		matrices.pop();
 	}
 
 	@Override

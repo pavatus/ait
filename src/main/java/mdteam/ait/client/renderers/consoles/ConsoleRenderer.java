@@ -2,6 +2,7 @@ package mdteam.ait.client.renderers.consoles;
 
 import com.google.common.collect.ImmutableMap;
 import mdteam.ait.AITMod;
+import mdteam.ait.client.models.consoles.BorealisConsoleModel;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.TempConsoleModel;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
@@ -30,7 +31,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
     public Map<ConsoleEnum, ModelPart> getModels() {
         ImmutableMap.Builder<ConsoleEnum, ModelPart> builder = ImmutableMap.builder();
         builder.put(ConsoleEnum.TEMP, TempConsoleModel.getTexturedModelData().createModel());
-        //builder.put(ConsoleEnum.BOREALIS, BorealisConsoleModel.getTexturedModelData().createModel());
+        builder.put(ConsoleEnum.BOREALIS, BorealisConsoleModel.getTexturedModelData().createModel());
         return builder.build();
     }
 
@@ -56,11 +57,8 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         float f = blockState.get(ConsoleBlock.FACING).asRotation();
         int maxLight = 0xF000F0;
         matrices.push();
-
-        matrices.translate(0.5, 1.35, 0.5);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-        matrices.scale(0.9f, 0.9f, 0.9f);
         if(console != null) {
             console.renderWithAnimations(entity,this.console.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(console.getTexture())), light, overlay, 1, 1, 1, 1);
             console.renderWithAnimations(entity,this.console.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(console.getEmission())), light, overlay, 1, 1, 1, 1);
