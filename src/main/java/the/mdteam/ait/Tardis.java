@@ -1,5 +1,6 @@
 package the.mdteam.ait;
 
+import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.data.AbsoluteBlockPos;
 
@@ -12,18 +13,20 @@ public class Tardis {
     private final UUID uuid;
     private TardisDesktop desktop;
     private final TardisExterior exterior;
+    private final TardisConsole console;
     private boolean locked;
 
-    public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType) {
-        this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType), false);
+    public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, ConsoleEnum consoleType) {
+        this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType), (tardis) -> new TardisConsole(tardis, consoleType), false);
     }
 
-    protected Tardis(UUID uuid, Function<Tardis, TardisTravel> travel, Function<Tardis, TardisDesktop> desktop, Function<Tardis, TardisExterior> exterior, boolean locked) {
+    protected Tardis(UUID uuid, Function<Tardis, TardisTravel> travel, Function<Tardis, TardisDesktop> desktop, Function<Tardis, TardisExterior> exterior, Function<Tardis, TardisConsole> console, boolean locked) {
         this.uuid = uuid;
         this.travel = travel.apply(this);
         this.locked = locked;
         this.desktop = desktop.apply(this);
         this.exterior = exterior.apply(this);
+        this.console = console.apply(this);
     }
 
     public UUID getUuid() {
@@ -40,6 +43,10 @@ public class Tardis {
 
     public TardisExterior getExterior() {
         return exterior;
+    }
+
+    public TardisConsole getConsole() {
+        return console;
     }
 
     public void setLockedTardis(boolean bool) {

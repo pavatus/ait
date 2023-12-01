@@ -3,6 +3,7 @@ package the.mdteam.ait;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import mdteam.ait.AITMod;
+import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
@@ -67,10 +68,10 @@ public class ServerTardisManager extends TardisManager {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> this.loadTardises());
     }
 
-    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, TardisDesktopSchema schema) {
+    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, ConsoleEnum consoleType, TardisDesktopSchema schema) {
         UUID uuid = UUID.randomUUID();
 
-        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, false);
+        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, consoleType,false);
         this.lookup.put(uuid, tardis);
 
         tardis.getTravel().runAnimations();

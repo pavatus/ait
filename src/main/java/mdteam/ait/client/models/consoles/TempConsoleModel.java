@@ -1,13 +1,22 @@
-package mdteam.ait.client.models;
+package mdteam.ait.client.models.consoles;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import net.minecraft.client.model.*;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 // Made with Blockbench 4.8.3
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
-public class DisplayConsole {
+public class TempConsoleModel extends ConsoleModel {
+
+	public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/display_console.png"));
+	public static final Identifier CONSOLE_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/display_console_emission.png");
+
 	public ModelPart console;
 	public ModelPart cube_r1;
 	public ModelPart panel_three_small_lights_r1;
@@ -288,7 +297,8 @@ public class DisplayConsole {
 	public ModelPart cube_r106;
 	public ModelPart cube_r107;
 
-	public DisplayConsole(ModelPart root) {
+	public TempConsoleModel(ModelPart root) {
+		super(RenderLayer::getEntityTranslucent);
 		this.console = root.getChild("console");
 	}
 
@@ -955,5 +965,32 @@ public class DisplayConsole {
 
 		ModelPartData cube_r107 = console_plinth_one.addChild("cube_r107", ModelPartBuilder.create().uv(41, 88).cuboid(-4.9363F, -3.279F, -10.0349F, 10.0F, 1.0F, 20.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 42.064F, 0.0F, -3.1416F, 0.0F, 3.1416F));
 		return TexturedModelData.of(modelData, 256, 256);
+	}
+
+	@Override
+	public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
+		this.console.render(matrices, vertices, light, overlay,1, 1, 1, 1);
+	}
+
+	@Override
+	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+		//this.door.yaw = exterior.getLeftDoorRotation();
+
+		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+	}
+
+	@Override
+	public Identifier getTexture() {
+		return CONSOLE_TEXTURE;
+	}
+
+	@Override
+	public Identifier getEmission() {
+		return CONSOLE_TEXTURE_EMISSION;
+	}
+
+	@Override
+	public ModelPart getPart() {
+		return this.console;
 	}
 }

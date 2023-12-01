@@ -19,7 +19,7 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
         if (!(blockentity instanceof ExteriorBlockEntity))
             return;
 
-        this.currentExterior = null; // will be reassigned later
+        this.currentExterior = ExteriorEnum.SHELTER; // will be reassigned later
         this.blockEntity = blockentity;
         this.materialState = MaterialStateEnum.SOLID;
         this.leftDoorRotation = 0;

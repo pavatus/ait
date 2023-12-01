@@ -2,7 +2,7 @@ package mdteam.ait.core;
 
 import mdteam.ait.core.blockentities.AITRadioBlockEntity;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
-import mdteam.ait.core.blockentities.DisplayConsoleBlockEntity;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -15,8 +15,8 @@ public class AITBlockEntityTypes implements AutoRegistryContainer<BlockEntityTyp
     public static final BlockEntityType<AITRadioBlockEntity> AIT_RADIO_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
             AITRadioBlockEntity::new, AITBlocks.RADIO).build();
 
-    public static final BlockEntityType<DisplayConsoleBlockEntity> DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
-            DisplayConsoleBlockEntity::new, AITBlocks.DISPLAY_CONSOLE).build();
+    public static final BlockEntityType<ConsoleBlockEntity> DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
+            ConsoleBlockEntity::new, AITBlocks.DISPLAY_CONSOLE).build();
 
     public static final BlockEntityType<ExteriorBlockEntity> EXTERIOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
             ExteriorBlockEntity::new, AITBlocks.EXTERIOR_BLOCK).build();

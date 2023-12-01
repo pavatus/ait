@@ -2,18 +2,16 @@ package mdteam.ait.client;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.AITRadioRenderer;
-import mdteam.ait.client.renderers.DisplayConsoleRenderer;
+import mdteam.ait.client.renderers.consoles.ConsoleRenderer;
 import mdteam.ait.client.renderers.doors.DoorRenderer;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.AITItems;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -33,7 +31,7 @@ public class AITModClient implements ClientModInitializer {
 
 	public void blockEntityRendererRegister() {
 		BlockEntityRendererRegistry.register(AITBlockEntityTypes.AIT_RADIO_BLOCK_ENTITY_TYPE, AITRadioRenderer::new);
-		BlockEntityRendererRegistry.register(AITBlockEntityTypes.DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE, DisplayConsoleRenderer::new);
+		BlockEntityRendererRegistry.register(AITBlockEntityTypes.DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
 		BlockEntityRendererRegistry.register(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, ExteriorRenderer::new);
 		BlockEntityRendererRegistry.register(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, DoorRenderer::new);
 	}
@@ -43,7 +41,7 @@ public class AITModClient implements ClientModInitializer {
 				"key." + AITMod.MOD_ID + ".open",
 				InputUtil.Type.KEYSYM,
 				GLFW.GLFW_KEY_B,
-				"category." + AITMod.MOD_ID + ".pipboy"
+				"category." + AITMod.MOD_ID + ".snap"
 		));
 		//ClientTickEvents.END_CLIENT_TICK.register(client -> {
 		//	if (keyBinding.wasPressed()) {
