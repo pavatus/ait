@@ -132,16 +132,7 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
         TardisTravel.State state = this.getTardis().getTravel().getState();
 
         if (!ANIM_FLIGHT.isRunning()) {
-            if (state == LANDED) {
-                // stop all others and start this one, theres likely a better way to do this. fixme
-                ANIM_FLIGHT.start(animationTimer);
-            } else if (state == DEMAT) {
-                ANIM_FLIGHT.start(animationTimer);
-            } else if (state == FLIGHT) {
-                ANIM_FLIGHT.start(animationTimer);
-            } else if (state == MAT) {
-                ANIM_FLIGHT.start(animationTimer);
-            }
+            ANIM_FLIGHT.start(animationTimer);
         }
     }
     private void stopAllAnimations() {
