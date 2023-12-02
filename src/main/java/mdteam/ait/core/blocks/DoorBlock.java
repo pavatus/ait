@@ -1,6 +1,6 @@
 package mdteam.ait.core.blocks;
 
-import mdteam.ait.core.blockentities.DoorBlockEntity;
+import mdteam.ait.core.blockentities.door.DoorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -60,7 +60,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
         }
 
         if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
-            door.useOn(world, player.isSneaking());
+            door.useOn(world, player);
         }
 
         return ActionResult.CONSUME;

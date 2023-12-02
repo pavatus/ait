@@ -3,16 +3,15 @@ package mdteam.ait.tardis;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.blockentities.door.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.util.data.AbsoluteBlockPos;
-import mdteam.ait.core.util.data.Exclude;
+import mdteam.ait.tardis.travel.TravelContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
-import mdteam.ait.tardis.travel.TravelContext;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,28 +19,33 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class TardisTravel {
+public class TardisTravel extends AbstractTardisComponent {
 
     private State state;
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
     private boolean shouldRemat = false;
 
-    @Exclude
-    protected final Tardis tardis;
-
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-        this(tardis, pos, null, State.LANDED);
+        super(tardis);
 
-        this.runAnimations();
-        this.placeExterior();
+        this.position = pos;
+        this.destination = null;
+        this.state = State.LANDED;
     }
 
     protected TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
-        this.tardis = tardis;
+        super(tardis, false);
+
         this.position = pos;
         this.destination = dest;
         this.state = state;
+    }
+
+    @Override
+    public void init() {
+        this.runAnimations();
+        this.placeExterior();
     }
 
     public void setPosition(AbsoluteBlockPos.Directed pos) {
@@ -154,9 +158,7 @@ public class TardisTravel {
         );
 
         // this is needed for the initialization. when we call #setTardis(ITardis) the travel field is still null.
-        exterior.setTravel(this);
         exterior.setTardis(this.tardis);
-
         this.position.addBlockEntity(exterior);
     }
 

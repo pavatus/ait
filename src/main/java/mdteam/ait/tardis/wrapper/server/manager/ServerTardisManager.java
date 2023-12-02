@@ -54,7 +54,7 @@ public class ServerTardisManager extends TardisManager {
     public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, TardisDesktopSchema schema) {
         UUID uuid = UUID.randomUUID();
 
-        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, false);
+        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType);
         this.lookup.put(uuid, tardis);
 
         return tardis;

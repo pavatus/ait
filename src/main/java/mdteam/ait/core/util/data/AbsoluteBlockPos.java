@@ -35,11 +35,11 @@ public class AbsoluteBlockPos extends BlockPos {
     }
 
     public World getWorld() {
-        return dimension.get();
+        return this.dimension.get();
     }
 
     public SerialDimension getDimension() {
-        return dimension;
+        return this.dimension;
     }
 
     public BlockEntity getBlockEntity() {
@@ -61,6 +61,7 @@ public class AbsoluteBlockPos extends BlockPos {
     public Chunk getChunk() {
         return this.getWorld().getChunk(this);
     }
+
     public AbsoluteBlockPos above() {
         return new AbsoluteBlockPos(this.getX(), this.getY() + 1, this.getZ(), this.getWorld());
     }
@@ -78,6 +79,7 @@ public class AbsoluteBlockPos extends BlockPos {
         return super.equals(o);
     }
 
+    @Unmodifiable
     public static class Directed extends AbsoluteBlockPos {
 
         private final Direction direction;

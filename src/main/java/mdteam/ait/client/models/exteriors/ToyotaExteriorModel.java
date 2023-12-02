@@ -1,7 +1,7 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.blockentities.door.ExteriorBlockEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;

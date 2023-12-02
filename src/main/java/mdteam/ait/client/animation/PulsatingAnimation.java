@@ -1,6 +1,6 @@
 package mdteam.ait.client.animation;
 
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.blockentities.door.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
 
@@ -48,7 +48,7 @@ public class PulsatingAnimation extends ExteriorAnimation{
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
-        MatSound sound = exterior.getExterior().getSound(state);
+        MatSound sound = this.exterior.getTardis().getExterior().getType().getSound(state);
 
         timeLeft = sound.timeLeft();
         maxTime = sound.maxTime();

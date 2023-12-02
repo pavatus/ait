@@ -7,19 +7,13 @@ import mdteam.ait.tardis.Tardis;
 
 public class ServerTardisExterior extends TardisExterior {
 
-    public ServerTardisExterior(Tardis tardis, ExteriorEnum exterior, boolean locked) {
-        super(tardis, exterior, locked);
+    public ServerTardisExterior(Tardis tardis, ExteriorEnum exterior) {
+        super(tardis, exterior);
     }
 
     @Override
     public void setType(ExteriorEnum exterior) {
         super.setType(exterior);
-        this.sync();
-    }
-
-    @Override
-    public void setLocked(boolean locked) {
-        super.setLocked(locked);
         this.sync();
     }
 

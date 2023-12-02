@@ -1,7 +1,7 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.blockentities.door.ExteriorBlockEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -231,7 +231,7 @@ public class FalloutExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		this.door.yaw = exterior.getLeftDoorRotation();
+		this.door.yaw = exterior.getDoor().getState().getLeft();
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 	}

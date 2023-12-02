@@ -1,6 +1,6 @@
 package mdteam.ait.client.animation;
 
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.blockentities.door.ExteriorBlockEntity;
 import org.joml.Math;
 import mdteam.ait.tardis.TardisTravel;
 

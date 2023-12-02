@@ -1,8 +1,8 @@
 package mdteam.ait.core.util;
 
 import mdteam.ait.core.AITDimensions;
-import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.blockentities.door.DoorBlockEntity;
+import mdteam.ait.core.blockentities.door.ExteriorBlockEntity;
 import mdteam.ait.core.util.data.AbsoluteBlockPos;
 import mdteam.ait.core.util.data.Corners;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;

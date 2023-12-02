@@ -6,7 +6,7 @@ import mdteam.ait.tardis.Tardis;
 
 public class ClientTardisExterior extends TardisExterior {
 
-    public ClientTardisExterior(Tardis tardis, ExteriorEnum exterior, boolean locked) {
-        super(tardis, exterior, locked);
+    public ClientTardisExterior(Tardis tardis, ExteriorEnum exterior) {
+        super(tardis, exterior);
     }
 }

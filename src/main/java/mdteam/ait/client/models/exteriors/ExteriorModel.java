@@ -1,6 +1,6 @@
 package mdteam.ait.client.models.exteriors;
 
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.blockentities.door.ExteriorBlockEntity;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -22,12 +22,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         super(function);
     }
 
-    // Thanks craig for help w animation code @TODO more craig thank yous
-    public void animateTile(ExteriorBlockEntity exterior) {
-        if (exterior.ANIMATION_STATE.isRunning()) {
-            // updateAnimation(exterior.ANIMATION_STATE, exterior.getAnimation(), MinecraftClient.getInstance().player.age);
-        }
-    }
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         if (exterior.getTardis() == null) return;
 

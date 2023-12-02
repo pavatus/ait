@@ -1,7 +1,7 @@
 package mdteam.ait.core.item;
 
-import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.blockentities.door.DoorBlockEntity;
+import mdteam.ait.core.blockentities.door.ExteriorBlockEntity;
 import mdteam.ait.core.util.TardisUtil;
 import mdteam.ait.core.util.data.AbsoluteBlockPos;
 import net.minecraft.client.gui.screen.Screen;
@@ -68,7 +68,7 @@ public class RemoteItem extends Item {
         Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
 
         if (tardis != null) {
-            tardis.getExterior().setLocked(true);
+            tardis.getDoor().setLocked(true);
             if(world != TardisUtil.getTardisDimension()) {
                 world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
