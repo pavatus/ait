@@ -10,8 +10,6 @@ base {
 	archivesName = project.archives_base_name
 }
 
-
-
 repositories {
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
@@ -26,9 +24,8 @@ repositories {
 }
 
 loom {
-
     runs {
-		// This adds a new gradle task that runs the datagen API: "gradlew runDatagen"
+		// This adds a new gradle task that runs the datagen API
 		datagen {
 			inherit server
 			name "Data Generation"

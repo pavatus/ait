@@ -1,6 +1,5 @@
 package mdteam.ait.core.blockentities;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITSounds;
 import net.minecraft.block.BlockState;
@@ -12,18 +11,15 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.security.InvalidParameterException;
-
+import static java.lang.Double.NaN;
 import static mdteam.ait.AITMod.RADIONBT;
 import static mdteam.ait.core.blocks.RadioBlock.*;
-import static java.lang.Double.NaN;
 
 public class AITRadioBlockEntity extends BlockEntity {
 
@@ -40,9 +36,8 @@ public class AITRadioBlockEntity extends BlockEntity {
     }
 
     public static void tick(World world1, BlockPos pos, BlockState state, AITRadioBlockEntity be) {
-        ++be.timeInSeconds;
-        double d = (double) Util.getMeasuringTimeMs() / 1000.0;
-        if(be.getTickRot("volume") > 0 && be.hasSecondPassed()) {
+        be.timeInSeconds++;
+        if (be.getTickRot("volume") > 0 && be.hasSecondPassed()) {
             be.timeInSeconds = 0;
             be.spawnNoteParticle(world1, pos);
         }
@@ -53,12 +48,9 @@ public class AITRadioBlockEntity extends BlockEntity {
     }
 
     private void spawnNoteParticle(World world, BlockPos pos) {
-        if (world instanceof ServerWorld) {
-            ServerWorld serverWorld = (ServerWorld)world;
+        if (world instanceof ServerWorld serverWorld) {
             Vec3d vec3d = Vec3d.ofBottomCenter(pos).add(0.0, 1.2f, 0.0);
-            float f = (float)world.getRandom().nextInt(4) / 24.0f;
             serverWorld.spawnParticles(ParticleTypes.NOTE, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 0, NaN, 0.0, 0.0, 1.0F);
-            //System.out.println(Math.sin(Math.PI / 2 * Math.cos(Math.PI * 2 * d / f)) / 2.0 + 0.5);
         }
     }
 
@@ -86,17 +78,20 @@ public class AITRadioBlockEntity extends BlockEntity {
         boolean vmx = mouseX >= (xVolume[state.get(FACING).ordinal()] * 16) && mouseY >= (yVolume[state.get(FACING).ordinal()] * 16) && mouseZ >= (zVolume[state.get(FACING).ordinal()] * 16)
                 && mouseX <= ((xVolume[state.get(FACING).ordinal()] * 16) + width) && mouseY <= ((yVolume[state.get(FACING).ordinal()] * 16) + height) && mouseZ <= ((zVolume[state.get(FACING).ordinal()] * 16) + length);
 
-        if(tmx && this.isRadioOn() && !isSneaking) {
-            if (this.tickRotT < (360F - 22.5F) * ((float) Math.PI / 180f)) this.tickRotT = this.tickRotT + 22.5F * ((float) Math.PI / 180f); else if(this.tickRotT >= (360F - 22.5F) * ((float) Math.PI / 180f)) this.tickRotT = 0;
-            System.out.println(this.tickRotT +  " ?=? " + 360F * ((float) Math.PI / 180f));
+        if (tmx && this.isRadioOn() && !isSneaking) {
+            if (this.tickRotT < (360F - 22.5F) * ((float) Math.PI / 180f))
+                this.tickRotT = this.tickRotT + 22.5F * ((float) Math.PI / 180f);
+            else if (this.tickRotT >= (360F - 22.5F) * ((float) Math.PI / 180f)) this.tickRotT = 0;
+            System.out.println(this.tickRotT + " ?=? " + 360F * ((float) Math.PI / 180f));
             if (player != null) player.sendMessage(Text.literal("Changing Frequency..."), true);
-            world.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.MASTER, 0.1F, 1.0F * (this.tickRotT * this.tickRotT));
+            world.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.MASTER, 0.1F, this.tickRotT * this.tickRotT);
         }
-        if(vmx && this.isRadioOn() && !isSneaking) {
-            if(this.tickRotV <= (360F - multiVal) * ((float) Math.PI / 180f)) this.tickRotV = this.tickRotV + multiVal * ((float) Math.PI / 180f); else if(this.tickRotV <= 360F/* - multiVal*/ * ((float) Math.PI / 180f)) this.tickRotV = 0;
-            //System.out.println(this.tickRotV +  " ?=? " + 360 * ((float) Math.PI / 180f) + ": " + multiVal * ((float) Math.PI / 180f));
-            //if(this.player != null) player.sendMessage(Text.literal("Changing Volume..."), true);
-            world.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.MASTER, 0.1F, 1.0F * (this.tickRotV * this.tickRotV));
+        if (vmx && this.isRadioOn() && !isSneaking) {
+            if (this.tickRotV <= (360F - multiVal) * ((float) Math.PI / 180f))
+                this.tickRotV = this.tickRotV + multiVal * ((float) Math.PI / 180f);
+            else if (this.tickRotV <= 360F * ((float) Math.PI / 180f)) this.tickRotV = 0;
+
+            world.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.MASTER, 0.1F, this.tickRotV * this.tickRotV);
         }
 
         if (!isSneaking && tmx && this.isRadioOn()) this.setTickRot("tuner", this.tickRotT);
@@ -104,12 +99,12 @@ public class AITRadioBlockEntity extends BlockEntity {
         if (!isSneaking && vmx && this.isRadioOn()) this.setTickRot("volume", this.tickRotV);
 
         //@TODO Use SoundInstance and Minecraft.getInstance().getSoundManager() to play music. It allows for multiple values like looping and stopping the audio. It's perfect for our use case. - Loqor @Creativious
-        if(((int) (Math.nextUp(this.getTickRot("volume") * (180 / Math.PI) * 11) / 360) + 1) == 10) {
+        if (((int) (Math.nextUp(this.getTickRot("volume") * (180 / Math.PI) * 11) / 360) + 1) == 10) {
             world.playSound(null, pos, AITSounds.SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
         }
 
         if (this.isRadioOn()) {
-            if(isSneaking && !vmx && !tmx) {
+            if (isSneaking && !vmx && !tmx) {
                 this.toggleRadio(!this.isRadioOn());
                 if (player != null) player.sendMessage(Text.literal("Radio Off"), true);
                 world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_HIT, SoundCategory.MASTER, 0.2F, 1F);
@@ -119,24 +114,14 @@ public class AITRadioBlockEntity extends BlockEntity {
             if (player != null) player.sendMessage(Text.literal("Radio On"), true);
             world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_HIT, SoundCategory.MASTER, 0.2F, 2F);
         }
-
-
     }
 
     public double getTickRot(String name) {
-        double value;
-        switch (name) {
-            case "tuner":
-                value = RADIONBT.get(this).getTuner();
-                return value;
-            case "volume":
-                value = RADIONBT.get(this).getVolume();
-                return value;
-            default:
-                value = -1;
-        }
-        if(value < 0) throw new InvalidParameterException(AITMod.MOD_ID + ": Unexpected value in " + this.getClass().getCanonicalName());
-        return value;
+        return switch (name) {
+            case "tuner" -> RADIONBT.get(this).getTuner();
+            case "volume" -> RADIONBT.get(this).getVolume();
+            default -> throw new IllegalArgumentException("Unexpected value: " + name);
+        };
     }
 
     public boolean isRadioOn() {
@@ -144,9 +129,9 @@ public class AITRadioBlockEntity extends BlockEntity {
     }
 
     public void setTickRot(String name, double value) {
-        if(name.equals("tuner"))
+        if (name.equals("tuner"))
             RADIONBT.get(this).setTuner(value);
-        else if(name.equals("volume"))
+        else if (name.equals("volume"))
             RADIONBT.get(this).setVolume(value);
     }
 

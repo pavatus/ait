@@ -10,7 +10,8 @@ public class RadioNBTComponent implements RotationNBTComponent, AutoSyncedCompon
     private double tuner;
     private double volume;
     private boolean isOn;
-    private BlockEntity blockEntity;
+
+    private final BlockEntity blockEntity;
 
     public RadioNBTComponent(BlockEntity blockentity) {
         this.blockEntity = blockentity;
@@ -20,10 +21,12 @@ public class RadioNBTComponent implements RotationNBTComponent, AutoSyncedCompon
     public double getTuner() {
         return this.tuner;
     }
+
     @Override
     public double getVolume() {
         return this.volume;
     }
+
     @Override
     public boolean isOn() {
         return this.isOn;
@@ -34,11 +37,13 @@ public class RadioNBTComponent implements RotationNBTComponent, AutoSyncedCompon
         this.tuner = tuner;
         RADIONBT.sync(this.blockEntity);
     }
+
     @Override
     public void setVolume(double volume) {
         this.volume = volume;
         RADIONBT.sync(this.blockEntity);
     }
+
     @Override
     public void turnOn(boolean isOn) {
         this.isOn = isOn;
@@ -47,9 +52,16 @@ public class RadioNBTComponent implements RotationNBTComponent, AutoSyncedCompon
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        if(tag.contains("tuner"))  this.tuner = tag.getFloat("tuner"); RADIONBT.sync(this.blockEntity);
-        if(tag.contains("volume")) this.volume = tag.getFloat("volume"); RADIONBT.sync(this.blockEntity);
-        if(tag.contains("isOn"))   this.isOn = tag.getBoolean("isOn"); RADIONBT.sync(this.blockEntity);
+        if (tag.contains("tuner"))
+            this.tuner = tag.getFloat("tuner");
+
+        if (tag.contains("volume"))
+            this.volume = tag.getFloat("volume");
+
+        if (tag.contains("isOn"))
+            this.isOn = tag.getBoolean("isOn");
+
+        RADIONBT.sync(this.blockEntity);
     }
 
     @Override

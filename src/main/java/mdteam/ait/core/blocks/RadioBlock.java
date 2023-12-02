@@ -26,8 +26,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class RadioBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
-    VoxelShape shape;
-
     public static final VoxelShape X_AXIS_RADIO = Block.createCuboidShape(2.5, 0.0, 0.0, 13.5, 12.0, 16.0);
     public static final VoxelShape PX_AXIS_TUNER = Block.createCuboidShape(1.5, 2.5, 11.5, 3.5, 4.5, 13.5);
     public static final VoxelShape PX_AXIS_VOLUME = Block.createCuboidShape(1.5, 2.5, 2.5, 3.5, 4.5, 4.5);
@@ -44,29 +42,32 @@ public class RadioBlock extends HorizontalDirectionalBlock implements BlockEntit
     private static final VoxelShape PZ_AXIS_SHAPE = VoxelShapes.union(Z_AXIS_RADIO, PZ_AXIS_TUNER, PZ_AXIS_VOLUME);
     private static final VoxelShape NX_AXIS_SHAPE = VoxelShapes.union(X_AXIS_RADIO, NX_AXIS_TUNER, NX_AXIS_VOLUME);
     private static final VoxelShape NZ_AXIS_SHAPE = VoxelShapes.union(Z_AXIS_RADIO, NZ_AXIS_TUNER, NZ_AXIS_VOLUME);
+
+    private VoxelShape shape;
+
     public RadioBlock(Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState)((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH));
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
         this.shape = VoxelShapes.empty();
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return (BlockState)this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction direction = state.get(FACING);
         if (direction.getAxis() == Direction.Axis.X) {
-            if(direction == Direction.WEST) {
-                this.shape =  PX_AXIS_SHAPE;
+            if (direction == Direction.WEST) {
+                this.shape = PX_AXIS_SHAPE;
             } else {
                 this.shape = NX_AXIS_SHAPE;
             }
         }
-        if(direction.getAxis() == Direction.Axis.Z) {
-            if(direction == Direction.NORTH) {
+        if (direction.getAxis() == Direction.Axis.Z) {
+            if (direction == Direction.NORTH) {
                 this.shape = PZ_AXIS_SHAPE;
             } else {
                 this.shape = NZ_AXIS_SHAPE;

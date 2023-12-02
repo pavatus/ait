@@ -28,7 +28,7 @@ public class AITRadioRenderer<T extends AITRadioBlockEntity> implements BlockEnt
 	public static final Identifier RADIO_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/block/radio.png"));
 	public static final Identifier EMISSIVE_RADIO_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/block/radio_emissive.png"));
 	private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-	private ModelPart radio;
+	private final ModelPart radio;
 	private ModelPart volume;
 	private ModelPart tuner;
 	private ModelPart vu_module;
@@ -63,7 +63,7 @@ public class AITRadioRenderer<T extends AITRadioBlockEntity> implements BlockEnt
 
 	@Override
 	public void render(AITRadioBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        BlockState blockState = ((BlockEntity) entity).getCachedState();
+        BlockState blockState = entity.getCachedState();
         float f = blockState.get(RadioBlock.FACING).asRotation();
         boolean renderOnThings = entity.isRadioOn();
 
@@ -173,7 +173,7 @@ public class AITRadioRenderer<T extends AITRadioBlockEntity> implements BlockEnt
 			double d = (double) Util.getMeasuringTimeMs() / 1000.0;
 			double e = Math.max((double) l * 0.5, 3.0);
 			double f = Math.sin(Math.PI / 2 * Math.cos(Math.PI * 2 * d / e)) / 2.0 + 0.5;
-			double g = MathHelper.lerp(f, 0.0, (double) l);
+			double g = MathHelper.lerp(f, 0.0, l);
 			return p - (int) g;
 		}
 		return textRenderer.getWidth(x);

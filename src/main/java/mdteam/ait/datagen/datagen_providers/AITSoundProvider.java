@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class AITSoundProvider extends AITCustomSoundProvider {
     private final FabricDataOutput dataGenerator;
 
-    private HashMap<String, SoundEvent[]> soundEventList = new HashMap<>();
+    private final HashMap<String, SoundEvent[]> soundEventList = new HashMap<>();
     public AITSoundProvider(FabricDataOutput dataOutput) {
         super(dataOutput);
         dataGenerator = dataOutput;

@@ -5,7 +5,7 @@
 	"name": "Adventures In Time",
 	"description": "A secret Fabric version of AIT developed by Loqor and L0AInk!",
 	"authors": [
-		"Loqor, L0AInk"
+		"Loqor, L0AInk", "DrTheo_"
 	],
 	"contact": {
 		"homepage": "https://loqor.github.io",
@@ -24,14 +24,8 @@
 		"fabric-datagen": [
           "mdteam.ait.datagen.AITModDataGenerator"
 		],
-		"cardinal-components-item": [
-          "mdteam.ait.core.components.item.AITModItemComponents"
-		],
 		"cardinal-components-block": [
           "mdteam.ait.core.components.block.AITModBlockComponents"
-		],
-		"cardinal-components-world": [
-			"mdteam.ait.core.components.world.AITModWorldComponents"
 		]
 	},
 	"mixins": [

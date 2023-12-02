@@ -30,7 +30,7 @@ public class DisplayConsoleRenderer <T extends DisplayConsoleBlockEntity> implem
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
-        BlockState blockState = ((BlockEntity) entity).getCachedState();
+        BlockState blockState = entity.getCachedState();
         float f = blockState.get(DisplayConsoleBlock.FACING).asRotation();
         int maxLight = 0xF000F0;
         matrices.push();

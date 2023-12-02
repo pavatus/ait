@@ -1,34 +1,24 @@
 package mdteam.ait.core.blocks;
 
-import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
@@ -48,8 +38,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
             case EAST -> EAST_SHAPE;
             case SOUTH -> SOUTH_SHAPE;
             case WEST -> WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
+            default -> throw new RuntimeException("Invalid facing direction in " + this);
         };
     }
 
@@ -60,34 +49,31 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
             case EAST -> EAST_SHAPE;
             case SOUTH -> SOUTH_SHAPE;
             case WEST -> WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
+            default -> throw new RuntimeException("Invalid facing direction in " + this);
         };
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.SUCCESS;
         }
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof DoorBlockEntity doorBlock) {
-            doorBlock.useOn(hit, state, player, world, player.isSneaking());
+
+        if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
+            door.useOn(world, player.isSneaking());
         }
+
         return ActionResult.CONSUME;
     }
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        super.onEntityCollision(state, world, pos, entity);
-        if(world.isClient) return;
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof DoorBlockEntity doorBlockEntity) doorBlockEntity.onEntityCollision(state, world, pos, entity);
-    }
+        if(world.isClient())
+            return;
 
-    @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
-        return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof DoorBlockEntity door)
+            door.onEntityCollision(entity);
     }
 
     @Nullable
@@ -100,5 +86,4 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
     public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
         return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
     }
-
 }

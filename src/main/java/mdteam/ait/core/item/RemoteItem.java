@@ -1,9 +1,9 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.helper.AbsoluteBlockPos;
-import mdteam.ait.core.tardis.Tardis;
-import mdteam.ait.core.tardis.TardisHandler;
+import mdteam.ait.core.util.TardisUtil;
+import mdteam.ait.core.util.data.AbsoluteBlockPos;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,16 +11,21 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
 
 import java.util.List;
-import java.util.UUID;
+
+import static mdteam.ait.tardis.TardisTravel.State.*;
 
 public class RemoteItem extends Item {
 
@@ -34,50 +39,74 @@ public class RemoteItem extends Item {
         BlockPos pos = context.getBlockPos();
         PlayerEntity player = context.getPlayer();
         ItemStack itemStack = context.getStack();
-        if (!world.isClient()) {
 
-            // Link to exteriors tardis if it exists and player is crouching
-            if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && player.isSneaking()) {
-                if (exterior.getTardis() == null) return ActionResult.FAIL;
+        if (world.isClient() || player == null)
+            return ActionResult.PASS;
 
-                if(!itemStack.hasNbt()) {
-                    itemStack.getOrCreateNbt().putUuid("tardis", exterior.getTardis().getUuid());
-                    player.setStackInHand(context.getHand(), itemStack);
-                }
+        NbtCompound nbt = itemStack.getOrCreateNbt();
+
+        // Link to exteriors tardis if it exists and player is crouching
+        if (player.isSneaking()) {
+            if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
+                if (exterior.getTardis() == null)
+                    return ActionResult.FAIL;
+
+                nbt.putUuid("tardis", exterior.getTardis().getUuid());
                 return ActionResult.SUCCESS;
-            }
-
-            // Move tardis to the clicked pos
-
-            if(itemStack.hasNbt()) {
-                if(itemStack.getNbt().contains("tardis")) {
-                    Tardis tardis = TardisHandler.getTardis(itemStack.getNbt().getUuid("tardis"));
-                    if(tardis != null) {
-                        tardis.getTravel().moveTo(new AbsoluteBlockPos(pos.up(),player.getMovementDirection().getOpposite(),world));
-                    }
-                }
+            } else if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
+                if (door.getTardis() == null)
+                    return ActionResult.FAIL;
+                nbt.putUuid("tardis", door.getTardis().getUuid());
+                return ActionResult.SUCCESS;
             }
         }
 
-        return super.useOnBlock(context);
+        // Move tardis to the clicked pos
+        if (!nbt.contains("tardis"))
+            return ActionResult.FAIL;
+
+        Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+
+        if (tardis != null) {
+            tardis.getExterior().setLocked(true);
+            if(world != TardisUtil.getTardisDimension()) {
+                world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
+
+                TardisTravel travel = tardis.getTravel();
+
+                travel.setDestination(new AbsoluteBlockPos.Directed(pos.up(), world, player.getMovementDirection().getOpposite()), true);
+                // travel.toggleHandbrake();
+
+                //FIXME: this is not how you do it!
+                if (travel.getState() == LANDED)
+                    travel.dematerialise(true);
+                if (travel.getState() == FLIGHT)
+                    travel.materialise();
+
+                //System.out.println(ServerTardisManager.getInstance().getLookup());
+
+                return ActionResult.SUCCESS;
+            } else {
+                world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                player.sendMessage(Text.literal("Cannot translocate exterior to interior dimension!"), true);
+                return ActionResult.PASS;
+            }
+        }
+
+        return ActionResult.PASS;
     }
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if (Screen.hasShiftDown()) {
-            NbtCompound tag = new NbtCompound();
-            if(stack.hasNbt()) {
-                tag = stack.getNbt();
-            }
-            if(!tag.contains("tardis")) {
-                tooltip.add(Text.literal("When a TARDIS is linked, it's UUID will show here.").fillStyle(Style.EMPTY.withBold(true)));
-            }
-            else {
-                tooltip.add(Text.literal(tag.getUuid("tardis").toString()).fillStyle(Style.EMPTY.withBold(true)));
-            }
-        } else {
+        if (!Screen.hasShiftDown()) {
             tooltip.add(Text.of("Hold shift for more info"));
+            return;
         }
-        super.appendTooltip(stack, world, tooltip, context);
+
+        NbtCompound tag = stack.getOrCreateNbt();
+        String text = tag.contains("tardis") ? tag.getUuid("tardis").toString()
+                : "When a TARDIS is linked, it's UUID will show here.";
+
+        tooltip.add(Text.literal(text).fillStyle(Style.EMPTY.withBold(true)));
     }
 }

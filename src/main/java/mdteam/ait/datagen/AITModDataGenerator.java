@@ -30,8 +30,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 			provider.addSound("secret_music", AITSounds.SECRET_MUSIC);
 
 			// TARDIS
-			provider.addSound("demat", AITSounds.DEMAT);
-			provider.addSound("mat", AITSounds.MAT);
+			provider.addSound("tardis/demat", AITSounds.DEMAT);
+			provider.addSound("tardis/mat", AITSounds.MAT);
 			provider.addSound("hop_demat", AITSounds.HOP_DEMAT);
 			provider.addSound("hop_mat", AITSounds.HOP_MAT);
 			provider.addSound("fail_demat", AITSounds.FAIL_DEMAT);
@@ -88,6 +88,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
 		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
+		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
@@ -194,8 +195,4 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	public void generate_EN_NZ_Language(FabricDataGenerator.Pack pack) {
 		pack.addProvider(((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_NZ))); // en_nz (English New Zealand)
 	}
-
-
-
-
 }
