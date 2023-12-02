@@ -46,11 +46,11 @@ public class TardisDoor extends AbstractTardisComponent {
     }
 
     public AbsoluteBlockPos.Directed getInteriorDoorPosition() {
-        return this.tardis.getDesktop().getInteriorDoorPos();
+        return this.getTardis().getDesktop().getInteriorDoorPos();
     }
 
     public AbsoluteBlockPos.Directed getExteriorDoorPosition() {
-        return this.tardis.getTravel().getPosition();
+        return this.getTardis().getTravel().getPosition();
     }
 
     public enum State {

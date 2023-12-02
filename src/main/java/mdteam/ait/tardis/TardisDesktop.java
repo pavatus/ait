@@ -34,7 +34,7 @@ public class TardisDesktop extends AbstractTardisComponent {
             return;
         }
 
-        door.setTardis(this.tardis);
+        door.setTardis(this.getTardis());
     }
 
     @Override
