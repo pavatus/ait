@@ -2,7 +2,6 @@ package mdteam.ait.core;
 
 import io.wispforest.owo.registration.annotations.AssignedName;
 import io.wispforest.owo.registration.reflect.EntityRegistryContainer;
-import mdteam.ait.core.entities.BaseControlEntity;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;

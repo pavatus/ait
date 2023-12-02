@@ -5,12 +5,19 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.s2c.play.DamageTiltS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
 import the.mdteam.ait.wrapper.server.ServerTardisTravel;
 
 import java.util.Timer;
@@ -63,6 +70,9 @@ public class TardisTravel {
         destWorld.getChunk(this.getDestination());
 
         this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.MAT, SoundCategory.BLOCKS,1f,1f);
+        //TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.MAT, SoundCategory.BLOCKS, 10f, 1f);
+        if(this.tardis.getDesktop().getConsolePos() != null)
+            TardisUtil.getTardisDimension().playSound(null, this.tardis.getDesktop().getConsolePos(), AITSounds.MAT, SoundCategory.BLOCKS, 10f, 1f);
 
         ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
         BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING,this.getDestination().getDirection());
@@ -102,6 +112,13 @@ public class TardisTravel {
         this.setState(State.DEMAT);
 
         world.playSound(null, this.getPosition(), AITSounds.DEMAT, SoundCategory.BLOCKS);
+//        TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.DEMAT, SoundCategory.BLOCKS, 10f, 1f);
+        if(this.tardis != null)
+            if(this.tardis.getDesktop().getConsolePos() != null)
+                TardisUtil.getTardisDimension().playSound(null, this.tardis.getDesktop().getConsolePos(), AITSounds.DEMAT, SoundCategory.BLOCKS, 1f, 1f);
+
+
+        //PlayerEntity player = TardisUtil.getPlayerInsideInterior(this.tardis);
 
         this.runAnimations();
 
@@ -119,6 +136,19 @@ public class TardisTravel {
                 travel.toFlight();
             }
         }, (long) 10 * 1000L);
+    }
+
+    @NotNull
+    private BlockPos getInteriorCentre() {
+        BlockPos firstCorner = this.tardis.getDesktop().getCorners().getFirst();
+        BlockPos secondCorner = this.tardis.getDesktop().getCorners().getSecond();
+        // x^1 - x^2   z^1 - z^2
+        // --------- , ---------
+        //     2           2
+        // firstCorner.getX() + secondCorner.getX()   firstCorner.getZ() + secondCorner.getZ()
+        // ---------------------------------------- , ----------------------------------------
+        //                    2                                          2
+        return new BlockPos((firstCorner.getX() + secondCorner.getX()) / 2, firstCorner.getY(), (firstCorner.getZ() + secondCorner.getZ()) / 2);
     }
 
     public void toFlight() {

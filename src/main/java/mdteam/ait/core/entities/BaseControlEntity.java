@@ -8,7 +8,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -16,6 +19,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import the.mdteam.ait.Tardis;
 import the.mdteam.ait.TardisDesktop;
@@ -23,22 +27,12 @@ import the.mdteam.ait.TardisTravel;
 
 import java.util.Collections;
 
-public abstract class BaseControlEntity extends LivingEntity implements ILinkable {
+public abstract class BaseControlEntity extends MobEntity implements ILinkable {
 
     private Tardis tardis;
 
-    public BaseControlEntity(EntityType<? extends LivingEntity> type, World world) {
+    public BaseControlEntity(EntityType<? extends MobEntity> type, World world) {
         super(type, world);
-    }
-
-    protected BaseControlEntity(World world, Tardis tardis) {
-        super(AITEntityTypes.CONTROL_ENTITY_TYPE, world);
-        this.setTardis(tardis);
-    }
-
-    @Override
-    protected void initDataTracker() {
-
     }
 
     @Override
@@ -52,9 +46,7 @@ public abstract class BaseControlEntity extends LivingEntity implements ILinkabl
     }
 
     @Override
-    public void equipStack(EquipmentSlot slot, ItemStack stack) {
-
-    }
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {}
 
     @Override
     public Arm getMainArm() {
@@ -73,12 +65,26 @@ public abstract class BaseControlEntity extends LivingEntity implements ILinkabl
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        return super.damage(source, amount);
+        return super.damage(source, 0);
     }
 
     @Override
-    public ActionResult interact(PlayerEntity player, Hand hand) {
-        return super.interact(player, hand);
+    public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
+        return super.interactAt(player, hitPos, hand);
+    }
+
+    @Override
+    public void setAiDisabled(boolean aiDisabled) {
+        super.setAiDisabled(true);
+    }
+
+    @Override
+    public boolean hasNoGravity() {
+        return true;
+    }
+
+    public static DefaultAttributeContainer.Builder createControlAttributes() {
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3f).add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0);
     }
 
     @Override

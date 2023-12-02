@@ -3,13 +3,13 @@ package mdteam.ait.core.entities.control;
 import net.minecraft.entity.EntityDimensions;
 import org.joml.Vector3f;
 
-public abstract class ControlTypes {
+public class ControlTypes {
 
     private String controlName;
     private EntityDimensions scale;
     private Vector3f offset;
 
-    protected ControlTypes(String controlName, EntityDimensions scaling, Vector3f offset) {
+    public ControlTypes(String controlName, EntityDimensions scaling, Vector3f offset) {
         this.controlName = controlName;
         this.scale = scaling;
         this.offset= offset;

@@ -69,7 +69,6 @@ public class RemoteItem extends Item {
         System.out.println(ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis")));
 
         if (tardis != null) {
-            tardis.setLockedTardis(false);
             if(world != TardisUtil.getTardisDimension()) {
                 world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
@@ -83,6 +82,7 @@ public class RemoteItem extends Item {
                     travel.dematerialise(true);
                 if (travel.getState() == FLIGHT)
                     travel.materialise();
+                //whatState(travel.getState(), travel);
 
                 //System.out.println(ServerTardisManager.getInstance().getLookup());
 
@@ -109,5 +109,15 @@ public class RemoteItem extends Item {
                 : "Remote does not identify with any TARDIS";
 
         tooltip.add(Text.literal(text));
+    }
+
+    public void whatState(TardisTravel.State state, TardisTravel travel) {
+        switch (state) {
+            case LANDED:
+                travel.dematerialise(true);
+            case FLIGHT:
+                travel.materialise();
+            default:
+        }
     }
 }

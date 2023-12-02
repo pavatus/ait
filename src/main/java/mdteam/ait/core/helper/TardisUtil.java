@@ -8,6 +8,7 @@ import mdteam.ait.data.Corners;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -173,6 +174,15 @@ public class TardisUtil {
         for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
             if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos))
                 return tardis;
+        }
+
+        return null;
+    }
+
+    public static PlayerEntity getPlayerInsideInterior(Tardis tardis) {
+        for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
+            if (TardisUtil.inBox(tardis.getDesktop().getCorners(), player.getBlockPos()))
+                return player;
         }
 
         return null;

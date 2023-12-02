@@ -715,4 +715,19 @@ public class BorealisAnimations {
                                     Transformation.Interpolations.CUBIC))).build();
 
     public static final Animation LANDED = Animation.Builder.create(1).looping().build();
+    public static final Animation CONSOLE_IDLE_WHEATLEY = Animation.Builder.create(2.5f).looping()
+            .addBoneAnimation("wheatleyeye",
+                    new Transformation(Transformation.Targets.TRANSLATE,
+                            new Keyframe(0f, AnimationHelper.createTranslationalVector(-1f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(0.5f, AnimationHelper.createTranslationalVector(0f, 0.5f, 0.75f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(1f, AnimationHelper.createTranslationalVector(0f, -0.5f, -0.75f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(1.5f, AnimationHelper.createTranslationalVector(1f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(2f, AnimationHelper.createTranslationalVector(0f, 0.5f, 0.75f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(2.5f, AnimationHelper.createTranslationalVector(-1f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC))).build();
 }

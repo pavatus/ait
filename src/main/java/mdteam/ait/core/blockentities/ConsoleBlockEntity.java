@@ -3,31 +3,48 @@ package mdteam.ait.core.blockentities;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blocks.ConsoleBlock;
+import mdteam.ait.core.entities.ConsoleControlEntity;
+import mdteam.ait.core.entities.control.ControlTypes;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import the.mdteam.ait.Tardis;
 import the.mdteam.ait.TardisDesktop;
 import the.mdteam.ait.TardisManager;
 import the.mdteam.ait.TardisTravel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static the.mdteam.ait.TardisTravel.State.*;
 
-public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
+public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockEntityTicker<ConsoleBlockEntity> {
     public final AnimationState ANIM_FLIGHT = new AnimationState();
     public int animationTimer = 0;
 
+    private final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
+    private boolean markedDirty = true;
     private Tardis tardis;
 
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
@@ -49,13 +66,14 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-
-        //nbt.putFloat("alpha", this.getAlpha());
 
         if (nbt.contains("tardis")) {
             TardisManager.getInstance().link(nbt.getUuid("tardis"), this);
         }
+
+        super.readNbt(nbt);
+
+        spawnControls();
     }
 
     @Override
@@ -82,28 +100,6 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
 
         if(world != TardisUtil.getTardisDimension())
             return;
-
-        if(sneaking) {
-            this.tardis.setLockedTardis(!this.tardis.getLockedTardis());
-            String lockedState = this.tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
-            player.sendMessage(Text.literal(lockedState), true);
-            world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
-        } else if(this.tardis.getTravel().getState() == LANDED) {
-            if (!this.tardis.getLockedTardis()) {
-                DoorBlockEntity door = TardisUtil.getDoor(this.tardis);
-                if(this.tardis.getTravel().getState() == LANDED)
-                    if (door != null) {
-                        //TardisUtil.getTardisDimension().getChunk(door.getPos()); // force load the chunk
-
-                        door.setLeftDoorRot(door.getLeftDoorRotation() == 0 ? 1.2f : 0f);
-                        //door.setRightDoorRot(0);
-                    }
-                world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
-            } else {
-                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
-                player.sendMessage(Text.literal("\uD83D\uDD12"), true);
-            }
-        }
     }
 
     @Override
@@ -117,14 +113,6 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
         );
     }
 
-    public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T entity) {
-        ConsoleBlockEntity console = (ConsoleBlockEntity) entity;
-
-        // idk
-        if (world.isClient()) {
-            console.checkAnimations();
-        }
-    }
     public void checkAnimations() {
         // DO NOT RUN THIS ON SERVER!!
 
@@ -140,5 +128,56 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable {
         ANIM_FLIGHT.stop();
     }
 
-    public void onBroken() {}
+    public void onBroken() {
+    }
+
+    public void killControls() {
+        controlEntities.forEach(Entity::discard);
+        controlEntities.clear();
+        System.out.println("KillControls(): I'm getting run :) somewhere..");
+    }
+
+    public void spawnControls() {
+
+        BlockPos current = getPos();
+
+        if(getWorld() instanceof ServerWorld server) {
+
+            killControls();
+            ConsoleEnum consoleType = this.getConsole();
+            ControlTypes[] controls = consoleType.getControlTypesList();
+            Arrays.stream(controls).toList().forEach(control -> {
+
+                ConsoleControlEntity controlEntity = new ConsoleControlEntity(AITEntityTypes.CONTROL_ENTITY_TYPE, getWorld());
+
+                Vector3f position = current.toCenterPos().toVector3f().add(control.getOffsetFromCenter().x(), control.getOffsetFromCenter().y(), control.getOffsetFromCenter().z());
+                controlEntity.setPosition(position.x(), position.y(), position.z());
+                controlEntity.setYaw(0);
+                controlEntity.setPitch(0);
+
+                controlEntity.setControlData(consoleType, control, this.getPos());
+
+                server.spawnEntity(controlEntity);
+                controlEntities.add(controlEntity);
+            });
+
+            this.markedDirty = false;
+            System.out.println("SpawnControls(): I'm getting run :) somewhere..");
+        }
+    }
+    public void markDirty() {
+        this.markedDirty = true;
+    }
+
+    @Override
+    public void tick(World world, BlockPos pos, BlockState state, ConsoleBlockEntity blockEntity) {
+        if(this.markedDirty) {
+            spawnControls();
+        }
+
+        // idk
+        if (world.isClient()) {
+            this.checkAnimations();
+        }
+    }
 }

@@ -25,8 +25,6 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
     private final Map<ConsoleEnum, ModelPart> consolemap;
 
     private ConsoleModel console;
-    public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/display_console.png"));
-    public static final Identifier CONSOLE_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/display_console_emission.png"));
 
     public Map<ConsoleEnum, ModelPart> getModels() {
         ImmutableMap.Builder<ConsoleEnum, ModelPart> builder = ImmutableMap.builder();
@@ -54,10 +52,10 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
             this.console = entity.getTardis().getConsole().getType().createModel();
 
         BlockState blockState = entity.getCachedState();
-        float f = blockState.get(ConsoleBlock.FACING).asRotation();
+        //float f = blockState.get(ConsoleBlock.FACING).asRotation();
         int maxLight = 0xF000F0;
         matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
+        //matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         if(console != null) {
             console.animateTile(entity);

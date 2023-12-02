@@ -864,7 +864,8 @@ public class BorealisConsoleModel extends ConsoleModel {
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		if(console.getTardis() == null) return;
 		matrices.push();
-		matrices.translate(0.5f, -0.75f, 0.5f);
+		//matrices.translate(0.5f, -0.75f, 0.5f);
+		matrices.translate(0.5f, -0.75f, -0.5f);
 		matrices.scale(0.5f, 0.5f, 0.5f);
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();	}
@@ -887,7 +888,7 @@ public class BorealisConsoleModel extends ConsoleModel {
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
 		return switch(state) {
-			case LANDED -> BorealisAnimations.LANDED; // todo animation
+			case LANDED -> BorealisAnimations.CONSOLE_IDLE_WHEATLEY; // todo animation
 			case DEMAT -> BorealisAnimations.DEMATERIALIZE;
 			case FLIGHT -> BorealisAnimations.MATERIALIZE;
 			case MAT -> BorealisAnimations.MATERIALIZE;
