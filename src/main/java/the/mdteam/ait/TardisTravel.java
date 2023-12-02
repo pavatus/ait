@@ -32,6 +32,8 @@ public class TardisTravel {
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
     private boolean shouldRemat = false;
+    private static final double FORCE_LAND_TIMER = 25;
+    private static final double FORCE_FLIGHT_TIMER = 10;
 
     @Exclude
     protected final Tardis tardis;
@@ -97,7 +99,7 @@ public class TardisTravel {
                 travel.setState(TardisTravel.State.LANDED);
                 travel.runAnimations(blockEntity);
             }
-        }, (long) 5 * 1000L);
+        }, (long) FORCE_LAND_TIMER * 1000L);
     }
 
     public void dematerialise(boolean withRemat) {
@@ -135,7 +137,7 @@ public class TardisTravel {
 
                 travel.toFlight();
             }
-        }, (long) 10 * 1000L);
+        }, (long) FORCE_FLIGHT_TIMER * 1000L);
     }
 
     @NotNull

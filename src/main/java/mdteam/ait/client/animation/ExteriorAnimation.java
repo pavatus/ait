@@ -9,8 +9,6 @@ public abstract class ExteriorAnimation {
     protected float alpha = 1;
     protected ExteriorBlockEntity exterior;
     protected int timeLeft, maxTime, startTime;
-    protected float alphaChangeAmount = 0.005f;
-
     public ExteriorAnimation(ExteriorBlockEntity exterior) {
         this.exterior = exterior;
     }
