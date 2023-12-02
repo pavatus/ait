@@ -36,6 +36,8 @@ public class AITMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		AITItems.createExteriorItems();
+
 		FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);

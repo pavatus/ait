@@ -27,7 +27,7 @@ public enum ConsoleEnum {
         @Override
         public ControlTypes[] getControlTypesList() {
             return new ControlTypes[] {
-                    new ControlTypes("Monitor"       , EntityDimensions.changing(0.25f, 0.25f), new Vector3f(1, 2, 0)),
+                    new ControlTypes("Monitor"     , EntityDimensions.changing(0.25f, 0.25f), new Vector3f(1, 2, 0)),
                     new ControlTypes("Throttle"    , EntityDimensions.changing(0.175f, 0.175f), new Vector3f(0, 2, 1)),
                     new ControlTypes("Handbrake"   , EntityDimensions.changing(0.175f, 0.175f), new Vector3f(0.25f, 2, 0)),
                     new ControlTypes("Door Control", EntityDimensions.changing(0.175f, 0.175f), new Vector3f(0, 2, 0.25f)),

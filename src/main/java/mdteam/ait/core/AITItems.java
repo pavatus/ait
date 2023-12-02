@@ -4,16 +4,28 @@ import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.core.item.ExteriorSelectItem;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.RemoteItem;
 import mdteam.ait.core.item.TardisItemBuilder;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryOps;
+
+import java.util.List;
 
 public class AITItems implements ItemRegistryContainer {
     public static final Item AITMODCREATIVETAB = new Item(new OwoItemSettings());
 
     public static final Item TARDIS_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-    public static final Item TOYOTA_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), ExteriorEnum.TOYOTA);
+    // public static final Item TOYOTA_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), ExteriorEnum.TOYOTA);
     public static final Item REMOTE_ITEM = new RemoteItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item GOLDEN_TARDIS_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
+    public static void createExteriorItems() {
+        for (ExteriorEnum exterior : ExteriorEnum.values()) {
+            Registry.register(Registries.ITEM, exterior.name().toLowerCase() + "_item", new ExteriorSelectItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP),exterior));
+        }
+    }
 }

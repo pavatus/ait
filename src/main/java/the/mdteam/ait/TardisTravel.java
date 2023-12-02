@@ -167,6 +167,8 @@ public class TardisTravel {
         }
     }
     public void runAnimations(ExteriorBlockEntity exterior) {
+        if (exterior.getAnimation() == null) return;
+
         exterior.getAnimation().setupAnimation(this.state);
         System.out.println(this.state);
     }
