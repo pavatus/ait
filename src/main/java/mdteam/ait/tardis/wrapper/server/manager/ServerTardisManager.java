@@ -77,9 +77,11 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
                 throw new IOException("Tardis file " + file + " doesn't exist!");
 
             String json = Files.readString(file.toPath());
-            ServerTardis tardis = this.gson.fromJson(json, ServerTardis.class);
-            this.lookup.put(tardis.getUuid(), tardis);
 
+            ServerTardis tardis = this.gson.fromJson(json, ServerTardis.class);
+            tardis.init(true);
+
+            this.lookup.put(tardis.getUuid(), tardis);
             return tardis;
         } catch (IOException e) {
             AITMod.LOGGER.warn("Failed to load tardis with uuid {}!", file);
@@ -89,22 +91,22 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         return null;
     }
 
+    public void saveTardis() {
+        for (ServerTardis tardis : this.lookup.values()) {
+            this.saveTardis(tardis);
+        }
+    }
+
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void saveTardis(ServerTardis tardis) {
         File savePath = ServerTardisManager.getSavePath(tardis);
         savePath.getParentFile().mkdirs();
 
         try {
-            Files.writeString(savePath.toPath(), this.gson.toJson(tardis, ITardis.class));
+            Files.writeString(savePath.toPath(), this.gson.toJson(tardis, ServerTardis.class));
         } catch (IOException e) {
             AITMod.LOGGER.warn("Couldn't save Tardis {}", tardis.getUuid());
             AITMod.LOGGER.warn(e.getMessage());
-        }
-    }
-
-    public void saveTardis() {
-        for (ServerTardis tardis : this.lookup.values()) {
-            this.saveTardis(tardis);
         }
     }
 

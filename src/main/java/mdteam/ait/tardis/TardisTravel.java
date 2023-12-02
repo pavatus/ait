@@ -34,18 +34,17 @@ public class TardisTravel extends AbstractTardisComponent {
         this.state = State.LANDED;
     }
 
-    protected TardisTravel(ITardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
-        super(tardis, "travel", false);
+    @Override
+    public void init() {
+        System.out.println("Init travel!");
 
-        this.position = pos;
-        this.destination = dest;
-        this.state = state;
+        this.runAnimations();
+        this.placeExterior();
     }
 
     @Override
-    public void init() {
-        this.runAnimations();
-        this.placeExterior();
+    public Init getInitMode() {
+        return Init.FIRST;
     }
 
     public void setPosition(AbsoluteBlockPos.Directed pos) {
@@ -158,7 +157,7 @@ public class TardisTravel extends AbstractTardisComponent {
         );
 
         // this is needed for the initialization. when we call #setTardis(ITardis) the travel field is still null.
-        exterior.setTardis(this.tardis);
+        exterior.setTardis(this.getTardis());
         this.position.addBlockEntity(exterior);
     }
 

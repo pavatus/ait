@@ -11,19 +11,19 @@ import java.util.function.Function;
 
 public class ServerTardis implements ITardis {
 
-    private final TardisTravel travel;
+    private final ServerTardisTravel travel;
     private final UUID uuid;
-    private TardisDesktop desktop;
-    private final TardisExterior exterior;
-    private final TardisDoor door;
+    private ServerTardisDesktop desktop;
+    private final ServerTardisExterior exterior;
+    private final ServerTardisDoor door;
 
     public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType) {
         this(uuid, tardis -> new ServerTardisTravel(tardis, pos), tardis -> new ServerTardisDesktop(tardis, schema),
                 tardis -> new ServerTardisExterior(tardis, exteriorType), ServerTardisDoor::new);
     }
 
-    protected ServerTardis(UUID uuid, Function<ITardis, TardisTravel> travel, Function<ITardis, TardisDesktop> desktop,
-                           Function<ITardis, TardisExterior> exterior, Function<ITardis, TardisDoor> door) {
+    protected ServerTardis(UUID uuid, Function<ITardis, ServerTardisTravel> travel, Function<ITardis, ServerTardisDesktop> desktop,
+                           Function<ITardis, ServerTardisExterior> exterior, Function<ITardis, ServerTardisDoor> door) {
         this.uuid = uuid;
         this.travel = travel.apply(this);
         this.desktop = desktop.apply(this);
@@ -61,7 +61,7 @@ public class ServerTardis implements ITardis {
 
     @Override
     public void setDesktop(TardisDesktop desktop) {
-        this.desktop = desktop;
+        this.desktop = (ServerTardisDesktop) desktop;
         this.sync();
     }
 

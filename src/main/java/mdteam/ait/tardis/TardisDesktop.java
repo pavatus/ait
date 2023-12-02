@@ -16,12 +16,16 @@ public class TardisDesktop extends AbstractTardisComponent {
     private AbsoluteBlockPos.Directed doorPos;
 
     public TardisDesktop(ITardis tardis, TardisDesktopSchema schema) {
-        this(tardis, schema, TardisUtil.findInteriorSpot());
+        super(tardis, "desktop");
+
+        this.schema = schema;
+        this.corners = TardisUtil.findInteriorSpot();
     }
 
     @Override
     public void init() {
-        BlockPos doorPos = new DesktopGenerator(schema).place(
+        System.out.println("Init desktop!");
+        BlockPos doorPos = new DesktopGenerator(this.schema).place(
                 TardisUtil.getTardisDimension(), this.getCorners().getFirst()
         );
 
@@ -33,11 +37,9 @@ public class TardisDesktop extends AbstractTardisComponent {
         door.setTardis(this.tardis);
     }
 
-    protected TardisDesktop(ITardis tardis, TardisDesktopSchema schema, Corners corners) {
-        super(tardis, "desktop");
-
-        this.schema = schema;
-        this.corners = corners;
+    @Override
+    public Init getInitMode() {
+        return Init.FIRST;
     }
 
     public TardisDesktopSchema getSchema() {

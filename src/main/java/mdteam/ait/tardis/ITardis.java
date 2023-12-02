@@ -13,14 +13,30 @@ public interface ITardis {
     void setDesktop(TardisDesktop desktop);
 
     default void init() {
-        ITardis.init(this.getTravel());
-        ITardis.init(this.getDesktop());
-        ITardis.init(this.getExterior());
-        ITardis.init(this.getDoor());
+        this.init(false);
     }
 
-    private static void init(AbstractTardisComponent component) {
-        if (component.shouldInit())
-            component.init();
+    default void init(boolean dirty) {
+        this.init(this.getTravel(), dirty);
+        this.init(this.getDesktop(), dirty);
+        this.init(this.getExterior(), dirty);
+        this.init(this.getDoor(), dirty);
+    }
+
+    private void init(AbstractTardisComponent component, boolean dirty) {
+        AbstractTardisComponent.Init mode = component.getInitMode();
+        component.setTardis(this);
+
+        switch (mode) {
+            case NO_INIT -> {}
+            case ALWAYS -> component.init();
+            case FIRST -> {
+                if (!dirty) component.init();
+            }
+            case DESERIALIZE -> {
+                if (dirty) component.init();
+            }
+            default -> throw new IllegalArgumentException("Unimplemented init mode " + mode);
+        }
     }
 }

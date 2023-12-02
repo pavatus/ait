@@ -55,6 +55,7 @@ public abstract class AbstractDoorBlockEntity extends LinkableBlockEntity {
 
     @Override
     public void setTardis(ITardis tardis) {
+        System.out.println("Set tardis to " + tardis);
         super.setTardis(tardis);
         this.linkDoor();
     }

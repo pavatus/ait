@@ -1,5 +1,7 @@
 package mdteam.ait.tardis.linkable;
 
+import mdteam.ait.tardis.ITardis;
+import mdteam.ait.tardis.manager.TardisManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -9,8 +11,6 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
-import mdteam.ait.tardis.ITardis;
-import mdteam.ait.tardis.manager.TardisManager;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class LinkableBlockEntity extends BlockEntity implements Linkable {
@@ -19,6 +19,10 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
 
     public LinkableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    public boolean isLinked() {
+        return this.tardis != null;
     }
 
     @Override

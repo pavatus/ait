@@ -9,25 +9,18 @@ import mdteam.ait.core.util.data.Exclude;
 public abstract class AbstractTardisComponent {
 
     @Exclude
-    protected final ITardis tardis;
-    private final boolean shouldInit;
+    private ITardis tardis;
     private final String id;
 
     public AbstractTardisComponent(ITardis tardis, String id) {
-        this(tardis, id, true);
-    }
-
-    public AbstractTardisComponent(ITardis tardis, String id, boolean shouldInit) {
         this.tardis = tardis;
-        this.shouldInit = shouldInit;
-
         this.id = id;
     }
 
     public void init() { }
 
-    public boolean shouldInit() {
-        return shouldInit;
+    public Init getInitMode() {
+        return Init.ALWAYS;
     }
 
     public ITardis getTardis() {
@@ -36,5 +29,16 @@ public abstract class AbstractTardisComponent {
 
     public String getId() {
         return id;
+    }
+
+    public void setTardis(ITardis tardis) {
+        this.tardis = tardis;
+    }
+
+    public enum Init {
+        NO_INIT,
+        ALWAYS, // always init
+        FIRST, // when tardis placed
+        DESERIALIZE // when tardis deserialized
     }
 }
