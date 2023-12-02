@@ -15,7 +15,7 @@ public class TardisDesktop extends AbstractTardisComponent {
 
     private AbsoluteBlockPos.Directed doorPos;
 
-    public TardisDesktop(Tardis tardis, TardisDesktopSchema schema) {
+    public TardisDesktop(ITardis tardis, TardisDesktopSchema schema) {
         this(tardis, schema, TardisUtil.findInteriorSpot());
     }
 
@@ -33,8 +33,8 @@ public class TardisDesktop extends AbstractTardisComponent {
         door.setTardis(this.tardis);
     }
 
-    protected TardisDesktop(Tardis tardis, TardisDesktopSchema schema, Corners corners) {
-        super(tardis);
+    protected TardisDesktop(ITardis tardis, TardisDesktopSchema schema, Corners corners) {
+        super(tardis, "desktop");
 
         this.schema = schema;
         this.corners = corners;

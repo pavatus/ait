@@ -1,7 +1,7 @@
 package mdteam.ait.core.blockentities.door;
 
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
-import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.ITardis;
 import mdteam.ait.tardis.TardisDoor;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.linkable.LinkableBlockEntity;
@@ -54,7 +54,7 @@ public abstract class AbstractDoorBlockEntity extends LinkableBlockEntity {
     protected abstract void teleport(Entity entity);
 
     @Override
-    public void setTardis(Tardis tardis) {
+    public void setTardis(ITardis tardis) {
         super.setTardis(tardis);
         this.linkDoor();
     }

@@ -1,13 +1,13 @@
 package mdteam.ait.tardis.wrapper.server;
 
-import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.ITardis;
 import mdteam.ait.tardis.TardisDoor;
 import mdteam.ait.tardis.linkable.Linkable;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class ServerTardisDoor extends TardisDoor {
 
-    public ServerTardisDoor(Tardis tardis) {
+    public ServerTardisDoor(ITardis tardis) {
         super(tardis);
     }
 
@@ -45,6 +45,6 @@ public class ServerTardisDoor extends TardisDoor {
     }
 
     private void sync() {
-        ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
+        ServerTardisManager.getInstance().sendToSubscribers(this);
     }
 }

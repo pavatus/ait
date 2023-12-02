@@ -5,7 +5,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.core.events.BlockEntityPreLoadEvent;
-import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.ITardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.linkable.Linkable;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -26,9 +27,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public abstract class TardisManager {
+public abstract class TardisManager<T extends ITardis> {
 
-    protected final Map<UUID, Tardis> lookup = new HashMap<>();
+    public static final Identifier ASK = new Identifier("ait", "ask_tardis");
+    public static final Identifier SEND = new Identifier("ait", "send_tardis");
+    public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
+
+    protected final Map<UUID, T> lookup = new HashMap<>();
     protected final Gson gson;
 
     public TardisManager() {
@@ -70,28 +75,28 @@ public abstract class TardisManager {
         });
     }
 
-    public static TardisManager getInstance(Entity entity) {
+    public static TardisManager<?> getInstance(Entity entity) {
         return TardisManager.getInstance(entity.getWorld());
     }
 
-    public static TardisManager getInstance(BlockEntity entity) {
+    public static TardisManager<?> getInstance(BlockEntity entity) {
         return TardisManager.getInstance(entity.getWorld());
     }
 
-    public static TardisManager getInstance(World world) {
+    public static TardisManager<?> getInstance(World world) {
         return TardisManager.getInstance(!world.isClient());
     }
 
     @Deprecated
-    public static TardisManager getInstance() {
+    public static TardisManager<?> getInstance() {
         return TardisManager.getInstance(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER);
     }
 
-    public static TardisManager getInstance(boolean isServer) {
+    public static TardisManager<?> getInstance(boolean isServer) {
         return isServer ? ServerTardisManager.getInstance() : ClientTardisManager.getInstance();
     }
 
-    public void getTardis(UUID uuid, Consumer<Tardis> consumer) {
+    public void getTardis(UUID uuid, Consumer<T> consumer) {
         if (this.lookup.containsKey(uuid)) {
             consumer.accept(this.lookup.get(uuid));
             return;
@@ -104,14 +109,14 @@ public abstract class TardisManager {
         this.getTardis(uuid, linkable::setTardis);
     }
 
-    public abstract void loadTardis(UUID uuid, Consumer<Tardis> consumer);
+    public abstract void loadTardis(UUID uuid, Consumer<T> consumer);
 
     public void reset() {
         this.lookup.clear();
     }
 
     @Deprecated
-    public Map<UUID, Tardis> getLookup() {
+    public Map<UUID, T> getLookup() {
         return this.lookup;
     }
 }

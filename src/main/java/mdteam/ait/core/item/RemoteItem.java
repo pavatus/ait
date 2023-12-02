@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.ITardis;
 import mdteam.ait.tardis.TardisTravel;
 
 import java.util.List;
@@ -65,7 +65,7 @@ public class RemoteItem extends Item {
         if (!nbt.contains("tardis"))
             return ActionResult.FAIL;
 
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+        ITardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
 
         if (tardis != null) {
             tardis.getDoor().setLocked(true);

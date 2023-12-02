@@ -1,13 +1,13 @@
 package mdteam.ait.tardis.wrapper.server;
 
 import mdteam.ait.core.util.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.ITardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 
 public class ServerTardisTravel extends TardisTravel {
 
-    public ServerTardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
+    public ServerTardisTravel(ITardis tardis, AbsoluteBlockPos.Directed pos) {
         super(tardis, pos);
     }
 
@@ -42,6 +42,6 @@ public class ServerTardisTravel extends TardisTravel {
     }
 
     public void sync() {
-        ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
+        ServerTardisManager.getInstance().sendToSubscribers(this);
     }
 }

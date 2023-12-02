@@ -4,19 +4,18 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.TardisDesktopSchema;
-import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.core.util.TardisUtil;
 import mdteam.ait.core.util.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.AbstractTardisComponent;
+import mdteam.ait.tardis.ITardis;
+import mdteam.ait.tardis.TardisDesktopSchema;
+import mdteam.ait.tardis.manager.TardisManager;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
-import mdteam.ait.tardis.manager.TardisManager;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,11 +25,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ServerTardisManager extends TardisManager {
-
-    public static final Identifier SEND = new Identifier("ait", "send_tardis");
-    public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
-    private static final String SAVE_PATH = TardisUtil.getSavePath() + "ait/";
+public class ServerTardisManager extends TardisManager<ServerTardis> {
 
     private static ServerTardisManager instance;
 
@@ -40,7 +35,7 @@ public class ServerTardisManager extends TardisManager {
         this.loadTardises();
 
         ServerPlayNetworking.registerGlobalReceiver(
-                ClientTardisManager.ASK, (server, player, handler, buf, responseSender) -> {
+                ASK, (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
                     this.sendTardis(player, uuid);
 
@@ -60,7 +55,7 @@ public class ServerTardisManager extends TardisManager {
         return tardis;
     }
 
-    public Tardis getTardis(UUID uuid) {
+    public ITardis getTardis(UUID uuid) {
         if (this.lookup.containsKey(uuid))
             return this.lookup.get(uuid);
 
@@ -68,12 +63,12 @@ public class ServerTardisManager extends TardisManager {
     }
 
     @Override
-    public void loadTardis(UUID uuid, Consumer<Tardis> consumer) {
+    public void loadTardis(UUID uuid, Consumer<ServerTardis> consumer) {
         consumer.accept(this.loadTardis(uuid));
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private Tardis loadTardis(UUID uuid) {
+    private ServerTardis loadTardis(UUID uuid) {
         File file = ServerTardisManager.getSavePath(uuid);
         file.getParentFile().mkdirs();
 
@@ -82,7 +77,7 @@ public class ServerTardisManager extends TardisManager {
                 throw new IOException("Tardis file " + file + " doesn't exist!");
 
             String json = Files.readString(file.toPath());
-            Tardis tardis = this.gson.fromJson(json, Tardis.class);
+            ServerTardis tardis = this.gson.fromJson(json, ServerTardis.class);
             this.lookup.put(tardis.getUuid(), tardis);
 
             return tardis;
@@ -95,12 +90,12 @@ public class ServerTardisManager extends TardisManager {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void saveTardis(Tardis tardis) {
+    public void saveTardis(ServerTardis tardis) {
         File savePath = ServerTardisManager.getSavePath(tardis);
         savePath.getParentFile().mkdirs();
 
         try {
-            Files.writeString(savePath.toPath(), this.gson.toJson(tardis, Tardis.class));
+            Files.writeString(savePath.toPath(), this.gson.toJson(tardis, ITardis.class));
         } catch (IOException e) {
             AITMod.LOGGER.warn("Couldn't save Tardis {}", tardis.getUuid());
             AITMod.LOGGER.warn(e.getMessage());
@@ -108,22 +103,43 @@ public class ServerTardisManager extends TardisManager {
     }
 
     public void saveTardis() {
-        for (Tardis tardis : this.lookup.values()) {
+        for (ServerTardis tardis : this.lookup.values()) {
             this.saveTardis(tardis);
         }
     }
 
-    public void sendToSubscribers(Tardis tardis) {
+    public void sendToSubscribers(ITardis tardis) {
         for (ServerPlayerEntity player : this.subscribers.get(tardis.getUuid())) {
             this.sendTardis(player, tardis);
         }
+    }
+
+    public void sendToSubscribers(AbstractTardisComponent component) {
+        UUID uuid = component.getTardis().getUuid();
+
+        for (ServerPlayerEntity player : this.subscribers.get(uuid)) {
+            this.updateTardis(player, uuid, component);
+        }
+    }
+
+    private void updateTardis(ServerPlayerEntity player, UUID uuid, AbstractTardisComponent component) {
+        this.updateTardis(player, uuid, component.getId(), this.gson.toJson(component));
+    }
+
+    private void updateTardis(ServerPlayerEntity player, UUID uuid, String header, String json) {
+        PacketByteBuf data = PacketByteBufs.create();
+        data.writeUuid(uuid);
+        data.writeString(header);
+        data.writeString(json);
+
+        ServerPlayNetworking.send(player, UPDATE, data);
     }
 
     private void sendTardis(ServerPlayerEntity player, UUID uuid) {
         this.sendTardis(player, this.getTardis(uuid));
     }
 
-    private void sendTardis(ServerPlayerEntity player, Tardis tardis) {
+    private void sendTardis(ServerPlayerEntity player, ITardis tardis) {
         this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
     }
 
@@ -144,16 +160,19 @@ public class ServerTardisManager extends TardisManager {
     }
 
     private static File getSavePath(UUID uuid) {
-        // TODO: maybe, make WorldSavePath.AIT?
-        return new File(SAVE_PATH + uuid + ".json");
+        return new File(ServerTardisManager.getSavePath(), uuid + ".json");
     }
 
-    private static File getSavePath(Tardis tardis) {
+    private static File getSavePath(ITardis tardis) {
         return ServerTardisManager.getSavePath(tardis.getUuid());
     }
 
+    private static File getSavePath() {
+        return new File(TardisUtil.getSavePath() + "ait/");
+    }
+
     public void loadTardises() {
-        File[] saved = new File(SAVE_PATH).listFiles();
+        File[] saved = ServerTardisManager.getSavePath().listFiles();
 
         if (saved == null)
             return;
@@ -161,8 +180,8 @@ public class ServerTardisManager extends TardisManager {
         for (String name : Stream.of(saved)
                 .filter(file -> !file.isDirectory())
                 .map(File::getName)
-                .collect(Collectors.toSet())) {
-
+                .collect(Collectors.toSet())
+        ) {
             if (!name.substring(name.lastIndexOf(".") + 1).equalsIgnoreCase("json"))
                 continue;
 

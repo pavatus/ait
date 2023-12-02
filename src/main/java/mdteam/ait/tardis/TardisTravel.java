@@ -26,16 +26,16 @@ public class TardisTravel extends AbstractTardisComponent {
     private AbsoluteBlockPos.Directed destination;
     private boolean shouldRemat = false;
 
-    public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-        super(tardis);
+    public TardisTravel(ITardis tardis, AbsoluteBlockPos.Directed pos) {
+        super(tardis, "travel");
 
         this.position = pos;
         this.destination = null;
         this.state = State.LANDED;
     }
 
-    protected TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
-        super(tardis, false);
+    protected TardisTravel(ITardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
+        super(tardis, "travel", false);
 
         this.position = pos;
         this.destination = dest;

@@ -4,7 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.util.TardisUtil;
-import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.ITardis;
 import mdteam.ait.tardis.TardisTravel;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -43,7 +43,7 @@ public class ExteriorBlockEntity extends AbstractDoorBlockEntity {
     }
 
     @Override
-    public void setTardis(Tardis tardis) {
+    public void setTardis(ITardis tardis) {
         super.setTardis(tardis);
         this.linkTravel();
     }

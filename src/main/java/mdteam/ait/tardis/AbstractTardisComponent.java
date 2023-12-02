@@ -9,16 +9,19 @@ import mdteam.ait.core.util.data.Exclude;
 public abstract class AbstractTardisComponent {
 
     @Exclude
-    protected final Tardis tardis;
+    protected final ITardis tardis;
     private final boolean shouldInit;
+    private final String id;
 
-    public AbstractTardisComponent(Tardis tardis) {
-        this(tardis, true);
+    public AbstractTardisComponent(ITardis tardis, String id) {
+        this(tardis, id, true);
     }
 
-    public AbstractTardisComponent(Tardis tardis, boolean shouldInit) {
+    public AbstractTardisComponent(ITardis tardis, String id, boolean shouldInit) {
         this.tardis = tardis;
         this.shouldInit = shouldInit;
+
+        this.id = id;
     }
 
     public void init() { }
@@ -27,7 +30,11 @@ public abstract class AbstractTardisComponent {
         return shouldInit;
     }
 
-    public Tardis getTardis() {
+    public ITardis getTardis() {
         return tardis;
+    }
+
+    public String getId() {
+        return id;
     }
 }

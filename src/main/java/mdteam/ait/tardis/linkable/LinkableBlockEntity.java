@@ -9,13 +9,13 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
-import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.ITardis;
 import mdteam.ait.tardis.manager.TardisManager;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class LinkableBlockEntity extends BlockEntity implements Linkable {
 
-    protected Tardis tardis;
+    protected ITardis tardis;
 
     public LinkableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -64,12 +64,12 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
     }
 
     @Override
-    public Tardis getTardis() {
+    public ITardis getTardis() {
         return tardis;
     }
 
     @Override
-    public void setTardis(Tardis tardis) {
+    public void setTardis(ITardis tardis) {
         this.tardis = tardis;
     }
 }

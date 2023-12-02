@@ -1,14 +1,14 @@
 package mdteam.ait.tardis.linkable;
 
-import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.ITardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisDoor;
 import mdteam.ait.tardis.TardisTravel;
 
 public interface Linkable {
 
-    Tardis getTardis();
-    void setTardis(Tardis tardis);
+    ITardis getTardis();
+    void setTardis(ITardis tardis);
 
     default TardisDesktop getDesktop() { return this.getTardis().getDesktop(); }
     default void setDesktop(TardisDesktop desktop) { }
@@ -57,7 +57,7 @@ public interface Linkable {
     }
 
     /**
-     * If false, calling {@link Linkable#setTardis(Tardis)} might throw an exception!
+     * If false, calling {@link Linkable#setTardis(ITardis)} might throw an exception!
      */
     default boolean linkable() {
         return true;

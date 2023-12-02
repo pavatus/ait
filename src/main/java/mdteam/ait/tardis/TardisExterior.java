@@ -6,8 +6,8 @@ public class TardisExterior extends AbstractTardisComponent {
 
     private ExteriorEnum exterior;
 
-    public TardisExterior(Tardis tardis, ExteriorEnum exterior) {
-        super(tardis);
+    public TardisExterior(ITardis tardis, ExteriorEnum exterior) {
+        super(tardis, "exterior");
 
         this.exterior = exterior;
     }

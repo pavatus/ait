@@ -3,7 +3,7 @@ package mdteam.ait.core.blockentities.door;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.util.TardisUtil;
 import mdteam.ait.core.util.data.AbsoluteBlockPos;
-import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.ITardis;
 import mdteam.ait.tardis.TardisDesktop;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -22,7 +22,7 @@ public class DoorBlockEntity extends AbstractDoorBlockEntity {
     }
 
     @Override
-    public void setTardis(Tardis tardis) {
+    public void setTardis(ITardis tardis) {
         super.setTardis(tardis);
         this.linkDesktop();
     }

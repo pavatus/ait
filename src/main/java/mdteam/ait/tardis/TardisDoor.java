@@ -7,16 +7,16 @@ public class TardisDoor extends AbstractTardisComponent {
     private State state;
     private boolean locked;
 
-    public TardisDoor(Tardis tardis) {
+    public TardisDoor(ITardis tardis) {
         this(tardis, false);
     }
 
-    public TardisDoor(Tardis tardis, boolean locked) {
+    public TardisDoor(ITardis tardis, boolean locked) {
         this(tardis, State.CLOSED, locked);
     }
 
-    protected TardisDoor(Tardis tardis, State state, boolean locked) {
-        super(tardis);
+    protected TardisDoor(ITardis tardis, State state, boolean locked) {
+        super(tardis, "door");
 
         this.state = state;
         this.locked = locked;

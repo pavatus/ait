@@ -3,6 +3,7 @@ package mdteam.ait.core.util;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.door.DoorBlockEntity;
 import mdteam.ait.core.blockentities.door.ExteriorBlockEntity;
+import mdteam.ait.core.events.ServerLoadEvent;
 import mdteam.ait.core.util.data.AbsoluteBlockPos;
 import mdteam.ait.core.util.data.Corners;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -22,7 +23,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.ITardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisTravel;
 
@@ -46,10 +47,11 @@ public class TardisUtil {
             }
         });
 
-        ServerWorldEvents.LOAD.register((server, world) -> {
-            System.out.println("Loaded world " + world.getRegistryKey());
+        ServerLoadEvent.LOAD.register(server -> {
             SAVE_PATH = server.getSavePath(WorldSavePath.ROOT);
+        });
 
+        ServerWorldEvents.LOAD.register((server, world) -> {
             if (world.getRegistryKey() == World.OVERWORLD) {
                 SERVER = server;
             }
@@ -81,14 +83,14 @@ public class TardisUtil {
         return inBox(corners.getBox(), pos);
     }
 
-    public static DoorBlockEntity getDoor(Tardis tardis) {
+    public static DoorBlockEntity getDoor(ITardis tardis) {
         if (!(TardisUtil.getTardisDimension().getBlockEntity(tardis.getDesktop().getInteriorDoorPos()) instanceof DoorBlockEntity door))
             return null;
 
         return door;
     }
 
-    public static ExteriorBlockEntity getExterior(Tardis tardis) {
+    public static ExteriorBlockEntity getExterior(ITardis tardis) {
         if (!(tardis.getTravel().getPosition().getBlockEntity() instanceof ExteriorBlockEntity exterior))
             return null;
 
@@ -129,7 +131,7 @@ public class TardisUtil {
         };
     }
 
-    public static BlockPos offsetInteriorDoorPosition(Tardis tardis) {
+    public static BlockPos offsetInteriorDoorPosition(ITardis tardis) {
         return TardisUtil.offsetInteriorDoorPosition(tardis.getDesktop());
     }
 
@@ -137,7 +139,7 @@ public class TardisUtil {
         return TardisUtil.offsetDoorPosition(desktop.getInteriorDoorPos());
     }
 
-    public static BlockPos offsetExteriorDoorPosition(Tardis tardis) {
+    public static BlockPos offsetExteriorDoorPosition(ITardis tardis) {
         return TardisUtil.offsetExteriorDoorPosition(tardis.getTravel());
     }
 
@@ -155,11 +157,11 @@ public class TardisUtil {
         };
     }
 
-    public static void teleportOutside(Tardis tardis, ServerPlayerEntity player) {
+    public static void teleportOutside(ITardis tardis, ServerPlayerEntity player) {
         TardisUtil.teleportWithDoorOffset(player, tardis.getTravel().getPosition());
     }
 
-    public static void teleportInside(Tardis tardis, ServerPlayerEntity player) {
+    public static void teleportInside(ITardis tardis, ServerPlayerEntity player) {
         TardisUtil.teleportWithDoorOffset(player, tardis.getDesktop().getInteriorDoorPos());
     }
 
