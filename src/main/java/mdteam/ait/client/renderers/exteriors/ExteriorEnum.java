@@ -8,6 +8,7 @@ import mdteam.ait.client.models.doors.FalloutDoorModel;
 import mdteam.ait.client.models.doors.ToyotaDoorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.FalloutExteriorModel;
+import mdteam.ait.client.models.exteriors.TardimExteriorModel;
 import mdteam.ait.client.models.exteriors.ToyotaExteriorModel;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -65,6 +66,32 @@ public enum ExteriorEnum {
         @Override
         public Class<? extends DoorModel> getDoorClass() {
             return ToyotaDoorModel.class;
+        }
+    },
+    TARDIM() {
+        @Override
+        public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
+            return new ClassicAnimation(entity);
+        }
+
+        @Override
+        public ExteriorModel createModel() {
+            return new TardimExteriorModel(TardimExteriorModel.getTexturedModelData().createModel());
+        }
+
+        @Override
+        public DoorModel createDoorModel() {
+            return TOYOTA.createDoorModel();
+        }
+
+        @Override
+        public Class<? extends ExteriorModel> getModelClass() {
+            return TardimExteriorModel.class;
+        }
+
+        @Override
+        public Class<? extends DoorModel> getDoorClass() {
+            return TOYOTA.getDoorClass();
         }
     };
 
