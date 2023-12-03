@@ -213,7 +213,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     // fixme this is dog water, possibly into seperate entity files ;)
     public ActionResult interactionOrHurt(PlayerEntity player, Hand hand, ServerWorld serverWorld, boolean IorH) {
-        if(player.getMainHandStack().getItem() == AITItems.TOYOTA_ITEM) {
+        if(player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM) {
             this.remove(RemovalReason.DISCARDED);
         } else if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) {
             controlEditorHandler(player);

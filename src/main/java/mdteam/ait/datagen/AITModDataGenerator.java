@@ -89,7 +89,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
 		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
 		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-		aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Toyota Item | TEMP |");
+		// aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Toyota Item | TEMP |");
 		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
 		aitLanguageProvider.addTranslation(AITItems.GOLDEN_TARDIS_KEY, "Golden TARDIS Key");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Display Console");
@@ -112,7 +112,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
 		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Le Adventures In Time");
 		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "Le TARDIS");
-		aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Le Toyota Item | TEMP |");
+		// aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Le Toyota Item | TEMP |");
 		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Le Stattenheim Remote");
 		aitLanguageProvider.addTranslation(AITItems.GOLDEN_TARDIS_KEY, "Le Golden TARDIS Key");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Le Display Console");
@@ -135,7 +135,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
 		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventuro en timo");
 		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-		aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Toyotota | TEMP |");
+		// aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Toyotota | TEMP |");
 		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stato Remoto");
 		aitLanguageProvider.addTranslation(AITItems.GOLDEN_TARDIS_KEY, "Goldo TARDIS Keyo");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Consolo");
