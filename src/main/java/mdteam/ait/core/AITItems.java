@@ -15,8 +15,6 @@ import the.mdteam.ait.TardisDesktopSchema;
 import java.util.List;
 
 public class AITItems implements ItemRegistryContainer {
-    public static final Item AITMODCREATIVETAB = new Item(new OwoItemSettings());
-
     public static final Item TARDIS_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     // public static final Item TOYOTA_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), ExteriorEnum.TOYOTA);
     public static final Item REMOTE_ITEM = new RemoteItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));

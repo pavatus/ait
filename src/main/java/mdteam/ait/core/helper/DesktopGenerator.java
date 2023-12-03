@@ -41,5 +41,6 @@ public class DesktopGenerator {
         for (BlockPos pos : BlockPos.iterate(interiorCorners.getFirst(), interiorCorners.getSecond().add(0,128,0))) {
             level.removeBlock(pos, false);
         }
+        //System.out.println(level);
     }
 }
