@@ -37,6 +37,8 @@ public class AITMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		AITItems.createExteriorItems();
+		AITDesktops.init();
+		AITItems.createInteriorItems();
 
 		FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
@@ -45,7 +47,7 @@ public class AITMod implements ModInitializer {
 		FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
 
 		AIT_ITEM_GROUP.initialize();
-		AITDesktops.init();
+		// AITDesktops.init();
 		TardisUtil.init();
 
 		// makes sure the initialization for tardis managers runs

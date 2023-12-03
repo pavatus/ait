@@ -1,33 +1,29 @@
 package mdteam.ait.core.item;
 
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.ApiStatus;
-import the.mdteam.ait.ServerTardisManager;
 import the.mdteam.ait.TardisTravel;
 
 @Deprecated
 /**
- * Only for testing purposes to change exteriors, will be removed and replaced with proper changing
+ * Only for testing purposes to change interiors, will be removed and replaced with proper changing
  */
-public class ExteriorSelectItem extends Item {
-    private final ExteriorEnum exterior;
+public class InteriorSelectItem extends Item {
+    private final Identifier interior;
 
-    public ExteriorSelectItem(Settings settings, ExteriorEnum exterior) {
+    public InteriorSelectItem(Settings settings, Identifier interiorId) {
         super(settings);
-        this.exterior = exterior;
+        this.interior = interiorId;
     }
 
     @Override
@@ -47,14 +43,7 @@ public class ExteriorSelectItem extends Item {
                 if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                     return ActionResult.PASS;
 
-                exteriorBlock.getTardis().getExterior().setType(this.exterior);
-            } else if (entity instanceof ConsoleBlockEntity consoleBlock) {
-                TardisTravel.State state = consoleBlock.getTardis().getTravel().getState();
-
-                if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
-                    return ActionResult.PASS;
-
-                consoleBlock.getTardis().getExterior().setType(this.exterior);
+                exteriorBlock.getTardis().getDesktop().changeInterior(AITDesktops.get(this.interior));
             }
         }
 

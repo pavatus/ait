@@ -9,12 +9,15 @@ import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+
+import java.awt.*;
 
 public class TardisDesktop {
 
     @Exclude
     protected final Tardis tardis;
-    private final TardisDesktopSchema schema;
+    private TardisDesktopSchema schema;
     private AbsoluteBlockPos.Directed doorPos;
 
     private AbsoluteBlockPos.Directed consolePos;
@@ -75,5 +78,27 @@ public class TardisDesktop {
 
     public Corners getCorners() {
         return corners;
+    }
+    private boolean updateDoor() {
+        if (!(TardisUtil.getTardisDimension().getBlockEntity(doorPos) instanceof DoorBlockEntity door)) {
+            AITMod.LOGGER.error("Failed to find the interior door!");
+            return false;
+        }
+
+        // this is needed for door and console initialization. when we call #setTardis(ITardis) the desktop field is still null.
+        door.setDesktop(this);
+        //console.setDesktop(this);
+        door.setTardis(tardis);
+        return true;
+    }
+    public void changeInterior(TardisDesktopSchema schema) {
+        this.schema = schema;
+        DesktopGenerator generator = new DesktopGenerator(this.schema);
+
+        DesktopGenerator.clearArea(TardisUtil.getTardisDimension(), this.corners);
+
+        BlockPos doorPos = generator.place(TardisUtil.getTardisDimension(), this.corners.getFirst());
+        this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
+        this.updateDoor();
     }
 }

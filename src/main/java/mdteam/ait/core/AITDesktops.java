@@ -5,6 +5,7 @@ import mdteam.ait.core.desktops.WarDesktop;
 import net.minecraft.util.Identifier;
 import the.mdteam.ait.TardisDesktopSchema;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,5 +26,8 @@ public class AITDesktops {
     }
     public static TardisDesktopSchema get(Identifier id) {
         return interiors.get(id);
+    }
+    public static Collection<TardisDesktopSchema> iterator() {
+        return interiors.values();
     }
 }
