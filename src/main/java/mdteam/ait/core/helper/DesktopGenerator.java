@@ -51,8 +51,8 @@ public class DesktopGenerator {
         for (BlockPos pos : BlockPos.iterate(interiorCorners.getFirst().add(0,-64,0), interiorCorners.getSecond().add(0,256,0))) {
             level.setBlockState(pos, Blocks.AIR.getDefaultState());
         }
-        List<ItemEntity> items = (List<ItemEntity>) level.getEntitiesByType(EntityType.ITEM, EntityPredicates.EXCEPT_SPECTATOR);
 
+        List<ItemEntity> items = (List<ItemEntity>) level.getEntitiesByType(EntityType.ITEM, EntityPredicates.EXCEPT_SPECTATOR);
         // fixme the check for whether the item is inside the interior bounds doesnt work, so it just deletes all items instead
         for (ItemEntity item : items) {
             item.kill();
