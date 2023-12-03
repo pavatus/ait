@@ -3,6 +3,7 @@ package mdteam.ait.core.item;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,6 +39,14 @@ public class InteriorSelectItem extends Item {
             BlockEntity entity = world.getBlockEntity(context.getBlockPos());
 
             if (entity instanceof ExteriorBlockEntity exteriorBlock) {
+                TardisTravel.State state = exteriorBlock.getTardis().getTravel().getState();
+
+                if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
+                    return ActionResult.PASS;
+
+                exteriorBlock.getTardis().getDesktop().changeInterior(AITDesktops.get(this.interior));
+            }
+            if (entity instanceof DoorBlockEntity exteriorBlock) {
                 TardisTravel.State state = exteriorBlock.getTardis().getTravel().getState();
 
                 if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))

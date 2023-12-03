@@ -30,7 +30,7 @@ public class TardisDesktop {
         this.corners = TardisUtil.findInteriorSpot();
 
         BlockPos doorPos = new DesktopGenerator(schema).place(
-                TardisUtil.getTardisDimension(), this.getCorners().getFirst()
+                TardisUtil.getTardisDimension(), this.getCorners()
         );
 
         if (!(TardisUtil.getTardisDimension().getBlockEntity(doorPos) instanceof DoorBlockEntity door)) {
@@ -97,7 +97,7 @@ public class TardisDesktop {
 
         DesktopGenerator.clearArea(TardisUtil.getTardisDimension(), this.corners);
 
-        BlockPos doorPos = generator.place(TardisUtil.getTardisDimension(), this.corners.getFirst());
+        BlockPos doorPos = generator.place(TardisUtil.getTardisDimension(), this.corners);
         this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
         this.updateDoor();
     }
