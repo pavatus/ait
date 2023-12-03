@@ -5,8 +5,6 @@ import mdteam.ait.core.sounds.MatSound;
 import the.mdteam.ait.TardisTravel;
 
 public class ClassicAnimation extends ExteriorAnimation {
-    protected float alphaChangeAmount = 0.005f;
-
     public ClassicAnimation(ExteriorBlockEntity exterior) {
         super(exterior);
     }
@@ -21,14 +19,14 @@ public class ClassicAnimation extends ExteriorAnimation {
         // System.out.println(state);
 
         if (state == TardisTravel.State.DEMAT) {
-            alpha -= alphaChangeAmount;
+            alpha = (float) timeLeft / (maxTime);
             timeLeft--;
 
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.MAT) {
             if (timeLeft < startTime) {
                 // System.out.println(alpha + alphaChangeAmount);
-                this.setAlpha(alpha + alphaChangeAmount);
+                this.setAlpha(1f - ((float) timeLeft / (startTime))); // fixme takes too long
             }
             else
                 this.setAlpha(0f);
