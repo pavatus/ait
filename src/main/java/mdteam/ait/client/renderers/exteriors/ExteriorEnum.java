@@ -3,14 +3,15 @@ package mdteam.ait.client.renderers.exteriors;
 import mdteam.ait.client.animation.ClassicAnimation;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
+import mdteam.ait.client.models.doors.DoorModel;
+import mdteam.ait.client.models.doors.FalloutDoorModel;
+import mdteam.ait.client.models.doors.ToyotaDoorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.FalloutExteriorModel;
 import mdteam.ait.client.models.exteriors.ToyotaExteriorModel;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import the.mdteam.ait.TardisTravel;
 
 public enum ExteriorEnum {
@@ -26,8 +27,18 @@ public enum ExteriorEnum {
         }
 
         @Override
+        public DoorModel createDoorModel() {
+            return new FalloutDoorModel(FalloutDoorModel.getTexturedModelData().createModel());
+        }
+
+        @Override
         public Class<? extends ExteriorModel> getModelClass() {
             return FalloutExteriorModel.class;
+        }
+
+        @Override
+        public Class<? extends DoorModel> getDoorClass() {
+            return FalloutDoorModel.class;
         }
     },
     TOYOTA() {
@@ -42,14 +53,26 @@ public enum ExteriorEnum {
         }
 
         @Override
+        public DoorModel createDoorModel() {
+            return new ToyotaDoorModel(ToyotaDoorModel.getTexturedModelData().createModel());
+        }
+
+        @Override
         public Class<? extends ExteriorModel> getModelClass() {
             return ToyotaExteriorModel.class;
+        }
+
+        @Override
+        public Class<? extends DoorModel> getDoorClass() {
+            return ToyotaDoorModel.class;
         }
     };
 
     public abstract ExteriorAnimation createAnimation(ExteriorBlockEntity entity);
     public abstract ExteriorModel createModel();
+    public abstract DoorModel createDoorModel();
     public abstract Class<? extends ExteriorModel> getModelClass();
+    public abstract Class<? extends DoorModel> getDoorClass();
 
     public MatSound getSound(TardisTravel.State state) {
         return switch(state) {

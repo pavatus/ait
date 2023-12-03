@@ -1,18 +1,25 @@
 package mdteam.ait.client.models.doors;
 
+import mdteam.ait.AITMod;
+import mdteam.ait.core.blockentities.DoorBlockEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
 
 // Made with Blockbench 4.8.3
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
-public class FalloutDoor extends Model {
+public class FalloutDoorModel extends DoorModel {
+	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/shelter_door.png");
+
 	public ModelPart door;
 	public ModelPart frame;
-	public FalloutDoor(ModelPart root) {
+	public ModelPart root;
+	public FalloutDoorModel(ModelPart root) {
 		super(RenderLayer::getEntityCutoutNoCull);
+		this.root = root;
 		this.door = root.getChild("door");
 		this.frame = root.getChild("frame");
 	}
@@ -31,7 +38,28 @@ public class FalloutDoor extends Model {
 
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		door.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-		frame.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		this.door.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		this.frame.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+	}
+
+	@Override
+	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+		this.door.yaw = door.getLeftDoorRotation();
+
+		matrices.push();
+		matrices.translate(0,-1.5,0);
+
+		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+		matrices.pop();
+	}
+
+	@Override
+	public ModelPart getPart() {
+		return root;
+	}
+
+	@Override
+	public Identifier getTexture() {
+		return TEXTURE;
 	}
 }
