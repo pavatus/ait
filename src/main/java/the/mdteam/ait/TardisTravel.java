@@ -15,6 +15,7 @@ import net.minecraft.network.packet.s2c.play.DamageTiltS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -74,8 +75,9 @@ public class TardisTravel {
 
         this.getDestination().getWorld().playSound(null, this.getDestination(), getSoundForCurrentState(), SoundCategory.BLOCKS,1f,1f);
         //TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.MAT, SoundCategory.BLOCKS, 10f, 1f);
-        if(this.tardis.getDesktop().getConsolePos() != null)
-            TardisUtil.getTardisDimension().playSound(null, this.tardis.getDesktop().getConsolePos(), getSoundForCurrentState(), SoundCategory.BLOCKS, 10f, 1f);
+        if(this.tardis != null)
+            if(this.tardis.getDesktop().getConsolePos() != null)
+                TardisUtil.getTardisDimension().playSound(null, this.tardis.getDesktop().getConsolePos(), getSoundForCurrentState(), SoundCategory.BLOCKS, 10f, 1f);
 
         ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
         BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING,this.getDestination().getDirection());
@@ -216,8 +218,12 @@ public class TardisTravel {
 
         this.materialise();
     }
+
+    @NotNull
     public SoundEvent getSoundForCurrentState() {
-        return this.tardis.getExterior().getType().getSound(this.getState()).sound();
+        if(this.tardis != null)
+            return this.tardis.getExterior().getType().getSound(this.getState()).sound();
+        return SoundEvents.INTENTIONALLY_EMPTY;
     }
 
     public enum State {

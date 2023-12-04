@@ -13,6 +13,7 @@ import net.minecraft.util.Identifier;
 // Paste this class into your mod and generate all required imports
 public class FalloutDoorModel extends DoorModel {
 	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/shelter_door.png");
+	public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/shelter_door_emission.png");
 
 	public ModelPart door;
 	public ModelPart frame;
@@ -26,7 +27,7 @@ public class FalloutDoorModel extends DoorModel {
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData door = modelPartData.addChild("door", ModelPartBuilder.create().uv(24, 24).cuboid(0.0F, -16.0F, -0.5F, 11.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-5.5F, 8.0F, 6.975F));
+		ModelPartData door = modelPartData.addChild("door", ModelPartBuilder.create().uv(24, 24).cuboid(0.0F, -16.0F, -0.5F, 11.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(5.5F, 8.0F, 6.975F));
 
 		ModelPartData frame = modelPartData.addChild("frame", ModelPartBuilder.create().uv(24, 11).cuboid(-5.5F, -36.0F, -11.55F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F))
 		.uv(24, 0).cuboid(-7.5F, -41.0F, -11.55F, 15.0F, 5.0F, 2.0F, new Dilation(0.0F))
@@ -44,7 +45,7 @@ public class FalloutDoorModel extends DoorModel {
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		this.door.yaw = door.getLeftDoorRotation();
+		this.door.yaw = -door.getLeftDoorRotation();
 
 		matrices.push();
 		matrices.translate(0,-1.5,0);
@@ -61,5 +62,10 @@ public class FalloutDoorModel extends DoorModel {
 	@Override
 	public Identifier getTexture() {
 		return TEXTURE;
+	}
+
+	@Override
+	public Identifier getEmission() {
+		return EMISSION;
 	}
 }

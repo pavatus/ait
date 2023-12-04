@@ -36,6 +36,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -226,6 +227,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
                     BlockPos position = travel.getPosition();
                     World dimension = travel.getPosition().getDimension().get();
                     Direction direction = travel.getPosition().getDirection();
+                    int increment = 1;
+                    int X = travel.getDestination().getX() == position.getX() ? position.getX() : travel.getDestination().getX();
+                    int Y = travel.getDestination().getY() == position.getY() ? position.getY() : travel.getDestination().getY();
+                    int Z = travel.getDestination().getZ() == position.getZ() ? position.getZ() : travel.getDestination().getZ();
                     if(this.controlTypes.getControlName().matches("Throttle")) {
                         if(travel.getState() == LANDED) {
                             travel.dematerialise(true);
@@ -238,6 +243,30 @@ public class ConsoleControlEntity extends BaseControlEntity {
                         RegistryKey<World> registryKey;
                         player.sendMessage(Text.literal("Dimension: " + serverWorld.getServer().getWorld(this.getWorld().getRegistryKey() == World.NETHER ? World.OVERWORLD : World.NETHER).getDimension().toString()), true);
                         dimension = serverWorld.getServer().getWorld(World.NETHER);
+                    }
+                    if(this.controlTypes.getControlName().matches("Increment")) {
+                        if(increment == 1) {
+                            increment = 10;
+                        } if (increment == 10) {
+                            increment = 100;
+                        } if (increment == 100) {
+                            increment = 1000;
+                        } if (increment == 1000) {
+                            increment = 1;
+                        }
+                        player.sendMessage(Text.literal("" + increment), true);
+                    }
+                    if(this.controlTypes.getControlName().matches("X")) {
+                        X = X + increment;
+                        player.sendMessage(Text.literal(X + ", " + Y + ", " + Z), true);
+                    }
+                    if(this.controlTypes.getControlName().matches("Y")) {
+                        Y = MathHelper.clamp(player.isSneaking() ? Y - increment : Y + increment, -64, 256);
+                        player.sendMessage(Text.literal(X + ", " + Y + ", " + Z), true);
+                    }
+                    if(this.controlTypes.getControlName().matches("Z")) {
+                        Z = Z + increment;
+                        player.sendMessage(Text.literal(X + ", " + Y + ", " + Z), true);
                     }
                     if(this.controlTypes.getControlName().matches("Door Control")) {
                         if(player.isSneaking()) {
@@ -252,7 +281,17 @@ public class ConsoleControlEntity extends BaseControlEntity {
                                     if (door != null) {
                                         //TardisUtil.getTardisDimension().getChunk(door.getPos()); // force load the chunk
 
-                                        door.setLeftDoorRot(door.getLeftDoorRotation() == 0 ? 1.2f : 0f);
+                                        if(tardis.getExterior().getType().isDoubleDoor()) {
+                                            if (door.getRightDoorRotation() == 1.2f && door.getLeftDoorRotation() == 1.2f) {
+                                                door.setLeftDoorRot(0);
+                                                door.setRightDoorRot(0);
+                                            } else {
+                                                door.setRightDoorRot(door.getLeftDoorRotation() == 0 ? 0 : 1.2f);
+                                                door.setLeftDoorRot(1.2f);
+                                            }
+                                        }
+                                        else
+                                            door.setLeftDoorRot(door.getLeftDoorRotation() == 0 ? 1.2f : 0);
                                         //door.setRightDoorRot(0);
                                     }
                                 getWorld().playSound(null, this.consoleBlockPos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
@@ -262,7 +301,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
                             }
                         }
                     }
-                    travel.setDestination(new AbsoluteBlockPos.Directed(position,  serverWorld.getServer().getWorld(World.NETHER), direction), true);
+                    travel.setDestination(new AbsoluteBlockPos.Directed(new BlockPos(X, Y, Z), serverWorld.getServer().getWorld(World.OVERWORLD), direction), true);
                 }
         return ActionResult.SUCCESS;
     }

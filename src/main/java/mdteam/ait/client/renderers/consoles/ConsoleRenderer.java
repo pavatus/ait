@@ -53,14 +53,14 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
         BlockState blockState = entity.getCachedState();
         //float f = blockState.get(ConsoleBlock.FACING).asRotation();
-        int maxLight = 0xF000F0;
+        int maxLight = 0xFFFFFF;
         matrices.push();
         //matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         if(console != null) {
             console.animateTile(entity);
             console.renderWithAnimations(entity,this.console.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(console.getTexture())), light, overlay, 1, 1, 1, 1);
-            console.renderWithAnimations(entity,this.console.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(console.getEmission())), light, overlay, 1, 1, 1, 1);
+            console.renderWithAnimations(entity,this.console.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(console.getEmission())), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }

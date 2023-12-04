@@ -32,6 +32,11 @@ public enum ExteriorEnum {
         }
 
         @Override
+        public boolean isDoubleDoor() {
+            return false;
+        }
+
+        @Override
         public ExteriorModel createModel() {
             return new FalloutExteriorModel(FalloutExteriorModel.getTexturedModelData().createModel());
         }
@@ -55,6 +60,11 @@ public enum ExteriorEnum {
         @Override
         public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
             return new PulsatingAnimation(entity);
+        }
+
+        @Override
+        public boolean isDoubleDoor() {
+            return true;
         }
 
         @Override
@@ -84,6 +94,11 @@ public enum ExteriorEnum {
         }
 
         @Override
+        public boolean isDoubleDoor() {
+            return true;
+        }
+
+        @Override
         public ExteriorModel createModel() {
             return new TardimExteriorModel(TardimExteriorModel.getTexturedModelData().createModel());
         }
@@ -107,6 +122,7 @@ public enum ExteriorEnum {
     public abstract ExteriorAnimation createAnimation(ExteriorBlockEntity entity);
     public abstract ExteriorModel createModel();
     public abstract DoorModel createDoorModel();
+    public abstract boolean isDoubleDoor();
     public abstract Class<? extends ExteriorModel> getModelClass();
     public abstract Class<? extends DoorModel> getDoorClass();
 

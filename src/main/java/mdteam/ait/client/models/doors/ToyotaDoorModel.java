@@ -10,6 +10,7 @@ import net.minecraft.util.math.RotationAxis;
 
 public class ToyotaDoorModel extends DoorModel {
     public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/toyota.png");
+    public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/toyota_emission.png");
     private final ModelPart door;
     public ToyotaDoorModel(ModelPart root) {
         this.door = root.getChild("door");
@@ -54,6 +55,7 @@ public class ToyotaDoorModel extends DoorModel {
     @Override
     public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         this.door.getChild("Doors").getChild("Right").yaw = doorEntity.getLeftDoorRotation();
+        this.door.getChild("Doors").getChild("Left").yaw = -doorEntity.getRightDoorRotation();
 
         matrices.push();
         matrices.scale(0.6f,0.6f,0.6f);
@@ -67,6 +69,11 @@ public class ToyotaDoorModel extends DoorModel {
     @Override
     public Identifier getTexture() {
         return TEXTURE;
+    }
+
+    @Override
+    public Identifier getEmission() {
+        return EMISSION;
     }
 
     @Override
