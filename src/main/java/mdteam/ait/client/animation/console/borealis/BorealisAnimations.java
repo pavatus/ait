@@ -7,7 +7,7 @@ import net.minecraft.client.render.entity.animation.Transformation;
 
 public class BorealisAnimations {
 
-    public static final Animation MATERIALIZE = Animation.Builder.create(21.5f)
+    public static final Animation MATERIALIZE = Animation.Builder.create(21.5f).looping()
             .addBoneAnimation("bone110",
                     new Transformation(Transformation.Targets.ROTATE,
                             new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -370,7 +370,7 @@ public class BorealisAnimations {
                                     Transformation.Interpolations.CUBIC),
                             new Keyframe(21.5f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
                                     Transformation.Interpolations.CUBIC))).build();
-    public static final Animation DEMATERIALIZE = Animation.Builder.create(19.5f)
+    public static final Animation DEMATERIALIZE = Animation.Builder.create(19.5f).looping()
             .addBoneAnimation("bone110",
                     new Transformation(Transformation.Targets.ROTATE,
                             new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),

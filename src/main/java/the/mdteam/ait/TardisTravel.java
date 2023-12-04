@@ -2,31 +2,27 @@ package the.mdteam.ait;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
-import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.entities.control.impl.pos.PosManager;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.packet.s2c.play.DamageTiltS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import the.mdteam.ait.wrapper.server.ServerTardisTravel;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class TardisTravel {
 
@@ -34,8 +30,9 @@ public class TardisTravel {
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
     private boolean shouldRemat = false;
-    private static final double FORCE_LAND_TIMER = 25;
+    private static final double FORCE_LAND_TIMER = 10;
     private static final double FORCE_FLIGHT_TIMER = 10;
+    private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
 
     @Exclude
     protected final Tardis tardis;
@@ -181,8 +178,16 @@ public class TardisTravel {
     }
 
     public AbsoluteBlockPos.Directed getDestination() {
-        if(destination == null)
-            destination = position;
+        if (this.destination == null) {
+            if (this.getPosition() != null)
+                this.destination = this.getPosition();
+            else {
+                // PANIC!!
+                AITMod.LOGGER.error("Destination error! resetting to 0 0 0 in overworld");
+                this.destination = new AbsoluteBlockPos.Directed(0,0,0, TardisUtil.getServer().getOverworld(), Direction.NORTH);
+            }
+        }
+
         return destination;
     }
 
@@ -226,6 +231,13 @@ public class TardisTravel {
         if(this.tardis != null)
             return this.tardis.getExterior().getType().getSound(this.getState()).sound();
         return SoundEvents.INTENTIONALLY_EMPTY;
+    }
+
+    public PosManager getPosManager() {
+        if (this.posManager == null)
+            this.posManager = new PosManager();
+
+        return this.posManager;
     }
 
     public enum State {

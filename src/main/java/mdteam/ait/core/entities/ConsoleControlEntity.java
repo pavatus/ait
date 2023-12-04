@@ -11,6 +11,10 @@ import mdteam.ait.core.entities.control.ControlTypes;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.SerialDimension;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.report.ReporterEnvironment;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -24,6 +28,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -129,25 +134,45 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     @Override
     public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
-        if(hand == Hand.MAIN_HAND) {
-            if(getWorld() instanceof ServerWorld server) {
-                this.interactionOrHurt(player, hand, server, true);
-                return ActionResult.SUCCESS;
-            }
-        }
-        this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_CANDLE_STEP, SoundCategory.BLOCKS, 0.1f, 1f);
-        return ActionResult.FAIL;
+        if (hand == Hand.MAIN_HAND)
+            this.run(player, player.getWorld());
+
+        return ActionResult.SUCCESS;
     }
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if(source.getAttacker() instanceof PlayerEntity player) {
-            if (this.getWorld() instanceof ServerWorld server) {
-                this.interactionOrHurt(player, player.getActiveHand(), server, false);
-                return true;
-            }
+        if (source.getAttacker() instanceof PlayerEntity) {
+            this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld());
         }
+
         return super.damage(source, amount);
+    }
+
+    public boolean run(PlayerEntity player, World world) {
+        this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_CANDLE_STEP, SoundCategory.BLOCKS, 0.1f, 1f);
+
+        if (!world.isClient()) {
+            if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM) {
+                this.remove(RemovalReason.DISCARDED);
+            } else if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) {
+                controlEditorHandler(player);
+            }
+
+            return this.controlTypes.control().runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server
+        } else {
+            // fixme client doesnt have controltypes so this causes a null crash
+            return true;
+            // return this.controlTypes.control().runClient(this.getTardis(world), (ClientPlayerEntity) player, (ClientWorld) world);
+        }
+    }
+
+    // clearly loqor has trust issues with running this so i do too so im overwriting it to do what he did fixme pls
+    public Tardis getTardis(World world) {
+        if (!(this.consoleBlockPos != null && this.controlTypes != null && world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))
+            return null;
+
+        return console.getTardis();
     }
 
     public void setScaleAndCalculate(float scale) {
@@ -158,7 +183,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
     @Override
     public Text getName() {
         if(this.controlTypes != null)
-            return Text.translatable(this.controlTypes.getControlName());
+            return Text.translatable(this.controlTypes.control().id);
         else
             return super.getName();
     }
@@ -166,9 +191,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
     public void setControlData(ConsoleEnum consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
         this.consoleBlockPos = consoleBlockPosition;
         this.controlTypes = type;
+        // System.out.println(type);
         if(consoleType != null) {
             this.setScale(type.getScale().width);
-            this.setCustomName(Text.translatable(type.getControlName()).fillStyle(Style.EMPTY.withColor(Formatting.BLUE).withBold(true)));
+            this.setCustomName(Text.translatable(type.control().id).fillStyle(Style.EMPTY.withColor(Formatting.BLUE).withBold(true)));
         }
     }
 
@@ -200,111 +226,12 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     @Override
     public void tick() {
-        if(getWorld() instanceof ServerWorld server) {
-            if (this.controlTypes == null) {
-                if (this.consoleBlockPos != null) {
-                    if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
-                        console.markDirty();
-                    }
-                    discard();
-                }
+        if(getWorld() instanceof ServerWorld server && this.controlTypes == null && this.consoleBlockPos != null) {
+            if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
+                console.markDirty();
             }
+            discard();
         }
-    }
-
-    // fixme this is dog water, possibly into seperate entity files ;)
-    public ActionResult interactionOrHurt(PlayerEntity player, Hand hand, ServerWorld serverWorld, boolean IorH) {
-        if(player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM) {
-            this.remove(RemovalReason.DISCARDED);
-        } else if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) {
-            controlEditorHandler(player);
-        }
-        if(this.consoleBlockPos != null)
-            if(this.controlTypes != null)
-                if(serverWorld.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
-                    Tardis tardis = console.getTardis();
-                    TardisTravel travel= tardis.getTravel();
-                    BlockPos position = travel.getPosition();
-                    World dimension = travel.getPosition().getDimension().get();
-                    Direction direction = travel.getPosition().getDirection();
-                    int increment = 1;
-
-                    int X = travel.getDestination().getX() == position.getX() ? position.getX() : travel.getDestination().getX();
-                    int Y = travel.getDestination().getY() == position.getY() ? position.getY() : travel.getDestination().getY();
-                    int Z = travel.getDestination().getZ() == position.getZ() ? position.getZ() : travel.getDestination().getZ();
-                    if(this.controlTypes.getControlName().matches("Throttle")) {
-                        if(travel.getState() == LANDED) {
-                            travel.dematerialise(true);
-                            getWorld().playSound(null, this.consoleBlockPos, console.getTardis().getTravel().getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
-                        } else if(travel.getState() == TardisTravel.State.FLIGHT) {
-                            travel.checkShouldRemat();
-                        }
-                    }
-                    if(this.controlTypes.getControlName().matches("Dimension")) {
-                        RegistryKey<World> registryKey;
-                        player.sendMessage(Text.literal("Dimension: " + serverWorld.getServer().getWorld(this.getWorld().getRegistryKey() == World.NETHER ? World.OVERWORLD : World.NETHER).getDimension().toString()), true);
-                        dimension = serverWorld.getServer().getWorld(World.NETHER);
-                    }
-                    if(this.controlTypes.getControlName().matches("Increment")) {
-                        if(increment == 1) {
-                            increment = 10;
-                        } if (increment == 10) {
-                            increment = 100;
-                        } if (increment == 100) {
-                            increment = 1000;
-                        } if (increment == 1000) {
-                            increment = 1;
-                        }
-                        player.sendMessage(Text.literal("" + increment), true);
-                    }
-                    if(this.controlTypes.getControlName().matches("X")) {
-                        X = X + increment;
-                        player.sendMessage(Text.literal(X + ", " + Y + ", " + Z), true);
-                    }
-                    if(this.controlTypes.getControlName().matches("Y")) {
-                        Y = MathHelper.clamp(player.isSneaking() ? Y - increment : Y + increment, -64, 256);
-                        player.sendMessage(Text.literal(X + ", " + Y + ", " + Z), true);
-                    }
-                    if(this.controlTypes.getControlName().matches("Z")) {
-                        Z = Z + increment;
-                        player.sendMessage(Text.literal(X + ", " + Y + ", " + Z), true);
-                    }
-                    if(this.controlTypes.getControlName().matches("Door Control")) {
-                        if(player.isSneaking()) {
-                            tardis.setLockedTardis(!tardis.getLockedTardis());
-                            String lockedState = tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
-                            player.sendMessage(Text.literal(lockedState), true);
-                            getWorld().playSound(null, this.consoleBlockPos, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
-                        } else if(tardis.getTravel().getState() == LANDED) {
-                            if (!tardis.getLockedTardis()) {
-                                DoorBlockEntity door = TardisUtil.getDoor(tardis);
-                                if(tardis.getTravel().getState() == LANDED)
-                                    if (door != null) {
-                                        //TardisUtil.getTardisDimension().getChunk(door.getPos()); // force load the chunk
-
-                                        if(tardis.getExterior().getType().isDoubleDoor()) {
-                                            if (door.getRightDoorRotation() == 1.2f && door.getLeftDoorRotation() == 1.2f) {
-                                                door.setLeftDoorRot(0);
-                                                door.setRightDoorRot(0);
-                                            } else {
-                                                door.setRightDoorRot(door.getLeftDoorRotation() == 0 ? 0 : 1.2f);
-                                                door.setLeftDoorRot(1.2f);
-                                            }
-                                        }
-                                        else
-                                            door.setLeftDoorRot(door.getLeftDoorRotation() == 0 ? 1.2f : 0);
-                                        //door.setRightDoorRot(0);
-                                    }
-                                getWorld().playSound(null, this.consoleBlockPos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
-                            } else {
-                                getWorld().playSound(null, this.consoleBlockPos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
-                                player.sendMessage(Text.literal("\uD83D\uDD12"), true);
-                            }
-                        }
-                    }
-                    travel.setDestination(new AbsoluteBlockPos.Directed(new BlockPos(X, Y, Z), serverWorld.getServer().getWorld(World.OVERWORLD), direction), true);
-                }
-        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -333,7 +260,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         }
         if(this.consoleBlockPos != null) {
             Vec3d centered = this.getPos().subtract(this.consoleBlockPos.toCenterPos());
-            if(this.controlTypes != null) player.sendMessage(Text.literal(this.controlTypes.getControlName().toUpperCase() + ": " + "Position: " + centered + " & Scale: " + this.getScale()));
+            if(this.controlTypes != null) player.sendMessage(Text.literal(this.controlTypes.control().id.toUpperCase() + ": " + "Position: " + centered + " & Scale: " + this.getScale()));
         }
     }
 }

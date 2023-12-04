@@ -141,29 +141,29 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
 
         BlockPos current = getPos();
 
-        if(getWorld() instanceof ServerWorld server) {
+        if(!(getWorld() instanceof ServerWorld server))
+            return;
 
-            killControls();
-            ConsoleEnum consoleType = this.getConsole();
-            ControlTypes[] controls = consoleType.getControlTypesList();
-            Arrays.stream(controls).toList().forEach(control -> {
+        killControls();
+        ConsoleEnum consoleType = this.getConsole();
+        ControlTypes[] controls = consoleType.getControlTypesList();
+        Arrays.stream(controls).toList().forEach(control -> {
 
-                ConsoleControlEntity controlEntity = new ConsoleControlEntity(AITEntityTypes.CONTROL_ENTITY_TYPE, getWorld());
+            ConsoleControlEntity controlEntity = new ConsoleControlEntity(AITEntityTypes.CONTROL_ENTITY_TYPE, getWorld());
 
-                Vector3f position = current.toCenterPos().toVector3f().add(control.getOffsetFromCenter().x(), control.getOffsetFromCenter().y(), control.getOffsetFromCenter().z());
-                controlEntity.setPosition(position.x(), position.y(), position.z());
-                controlEntity.setYaw(0);
-                controlEntity.setPitch(0);
+            Vector3f position = current.toCenterPos().toVector3f().add(control.getOffsetFromCenter().x(), control.getOffsetFromCenter().y(), control.getOffsetFromCenter().z());
+            controlEntity.setPosition(position.x(), position.y(), position.z());
+            controlEntity.setYaw(0);
+            controlEntity.setPitch(0);
 
-                controlEntity.setControlData(consoleType, control, this.getPos());
+            controlEntity.setControlData(consoleType, control, this.getPos());
 
-                server.spawnEntity(controlEntity);
-                controlEntities.add(controlEntity);
-            });
+            server.spawnEntity(controlEntity);
+            this.controlEntities.add(controlEntity);
+        });
 
-            this.markedDirty = false;
-            System.out.println("SpawnControls(): I'm getting run :) somewhere..");
-        }
+        this.markedDirty = false;
+        System.out.println("SpawnControls(): I'm getting run :) somewhere..");
     }
     public void markDirty() {
         this.markedDirty = true;
@@ -174,10 +174,15 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
         if(this.markedDirty) {
             spawnControls();
         }
+//        if (this.controlEntities.isEmpty()) {
+//            killControls();
+//            spawnControls();
+//        }
 
         // idk
         if (world.isClient()) {
             this.checkAnimations();
         }
     }
+
 }

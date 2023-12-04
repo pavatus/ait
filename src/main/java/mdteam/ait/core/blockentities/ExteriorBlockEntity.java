@@ -73,6 +73,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
         System.out.println("WHAT?? " + this.getTardis().getTravel().getState());
 
+        // fixme this sucks
         if(this.tardis.getTravel().getState() == LANDED) {
             if (!this.tardis.getLockedTardis()) {
                 if(this.tardis.getExterior().getType().isDoubleDoor()) {

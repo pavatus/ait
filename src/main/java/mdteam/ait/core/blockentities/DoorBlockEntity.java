@@ -4,6 +4,7 @@ import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
+import mdteam.ait.core.entities.control.impl.DoorControl;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -51,12 +53,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
                 return;
             }
             if(Objects.equals(this.tardis.getUuid().toString(), tag.getUuid("tardis").toString())) {
-                this.tardis.setLockedTardis(!this.tardis.getLockedTardis());
-                this.setLeftDoorRot(0);
-                this.setRightDoorRot(0);
-                String lockedState = this.tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
-                player.sendMessage(Text.literal(lockedState), true);
-                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+                DoorControl.toggleLock(this.tardis, (ServerWorld) world, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
@@ -64,25 +61,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
             return;
         }
 
-        if(this.tardis.getTravel().getState() == LANDED) {
-            if (!this.tardis.getLockedTardis()) {
-                if(this.tardis.getExterior().getType().isDoubleDoor()) {
-                    if (this.getRightDoorRotation() == 1.2f && this.getLeftDoorRotation() == 1.2f) {
-                        this.setLeftDoorRot(0);
-                        this.setRightDoorRot(0);
-                    } else {
-                        this.setRightDoorRot(this.getLeftDoorRotation() == 0 ? 0 : 1.2f);
-                        this.setLeftDoorRot(1.2f);
-                    }
-                }
-                else
-                    this.setLeftDoorRot(this.getLeftDoorRotation() == 0 ? 1.2f : 0);
-                world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
-            } else {
-                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
-                player.sendMessage(Text.literal("\uD83D\uDD12"), true);
-            }
-        }
+        DoorControl.useDoor(this.getTardis(), (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
 
         if (sneaking)
             return;
