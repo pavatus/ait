@@ -51,7 +51,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         BlockState blockState = entity.getCachedState();
         float f = blockState.get(ExteriorBlock.FACING).asRotation();
-        int maxLight = 0x0;//0xF000F0;
+        int maxLight = 0xFFFFFF;//0xF000F0;
         // float exteriorState = getMaterialStateForAlpha(entity.getMaterialState());
         matrices.push();
         matrices.translate(0.5, 0, 0.5);
@@ -59,6 +59,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         if(model != null) {
             model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(model.getTexture())), light, overlay, 1, 1, 1, 1);
+            model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEyes(model.getEmission())), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }

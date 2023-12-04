@@ -60,7 +60,8 @@ public class TardimExteriorModel extends ExteriorModel {
         // matrices.scale(0.6F,0.6f,0.6f);
         matrices.translate(0, -1.5f, 0);
 
-        this.bone.getChild("doors").getChild("left").yaw = -exterior.getLeftDoorRotation(); //fixme pivot poitns
+        this.bone.getChild("doors").getChild("left").yaw = -exterior.getCorrectDoorRotations()[1]; //fixme pivot poitns
+        this.bone.getChild("doors").getChild("right").yaw = exterior.getCorrectDoorRotations()[0];
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

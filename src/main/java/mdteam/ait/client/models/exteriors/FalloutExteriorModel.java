@@ -231,7 +231,7 @@ public class FalloutExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		this.door.yaw = exterior.getLeftDoorRotation();
+		this.door.yaw = exterior.getCorrectDoorRotations()[0];
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 	}

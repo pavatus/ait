@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.FalloutExteriorModel;
 import mdteam.ait.client.models.exteriors.ToyotaExteriorModel;
+import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import net.minecraft.block.BlockState;
@@ -49,15 +50,15 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         BlockState blockState = entity.getCachedState();
         float f = blockState.get(ExteriorBlock.FACING).asRotation();
-        int maxLight = 0x0;//0xF000F0;
+        int maxLight = 0xFFFFFF;
        // float exteriorState = getMaterialStateForAlpha(entity.getMaterialState());
         matrices.push();
         matrices.translate(0.5, 0, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         if(model != null) {
-            model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(model.getTexture())), light, overlay, 1, 1, 1, 1);
-            model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(model.getEmission())), light, overlay, 1, 1, 1, 1);
+            model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(model.getTexture())), light, overlay, 1, 1, 1, 1);
+            model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getEmission(), false)), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }

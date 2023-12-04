@@ -35,4 +35,5 @@ public abstract class DoorModel extends SinglePartEntityModel {
     }
 
     public abstract Identifier getTexture();
+    public abstract Identifier getEmission();
 }

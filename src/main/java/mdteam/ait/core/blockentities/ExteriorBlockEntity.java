@@ -75,7 +75,17 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
         if(this.tardis.getTravel().getState() == LANDED) {
             if (!this.tardis.getLockedTardis()) {
-                this.setLeftDoorRot(this.getLeftDoorRotation() == 0 ? 1.2f : 0);
+                if(this.tardis.getExterior().getType().isDoubleDoor()) {
+                    if (this.getRightDoorRotation() == 1.2f && this.getLeftDoorRotation() == 1.2f) {
+                        this.setLeftDoorRot(0);
+                        this.setRightDoorRot(0);
+                    } else {
+                        this.setRightDoorRot(this.getLeftDoorRotation() == 0 ? 0 : 1.2f);
+                        this.setLeftDoorRot(1.2f);
+                    }
+                }
+                else
+                    this.setLeftDoorRot(this.getLeftDoorRotation() == 0 ? 1.2f : 0);
                 world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
@@ -95,6 +105,13 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
                 door.setLeftDoorRot(this.getLeftDoorRotation());
                 door.setRightDoorRot(this.getRightDoorRotation());
             }
+    }
+
+    public float[] getCorrectDoorRotations() {
+        if(this.tardis != null) {
+            return this.tardis.getExterior().getType().isDoubleDoor() ? new float[]{this.getLeftDoorRotation(), this.getRightDoorRotation()} : new float[]{this.getLeftDoorRotation()};
+        }
+        return null;
     }
 
     public void setExterior(ExteriorEnum exterior) {
@@ -134,7 +151,8 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
 
-        this.getAnimation().setAlpha(nbt.getFloat("alpha"));
+        if(this.getAnimation() != null)
+            this.getAnimation().setAlpha(nbt.getFloat("alpha"));
 
         if (this.tardis != null) {
             nbt.putUuid("tardis", this.tardis.getUuid());
