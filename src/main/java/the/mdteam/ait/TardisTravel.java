@@ -116,8 +116,10 @@ public class TardisTravel {
         world.playSound(null, this.getPosition(), getSoundForCurrentState(), SoundCategory.BLOCKS);
 //        TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.DEMAT, SoundCategory.BLOCKS, 10f, 1f);
         if(this.tardis != null)
-            if(this.tardis.getDesktop().getConsolePos() != null)
+            if(this.tardis.getDesktop().getConsolePos() != null) {
+                System.out.println("aaa");
                 TardisUtil.getTardisDimension().playSound(null, this.tardis.getDesktop().getConsolePos(), getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
+            }
 
 
         //PlayerEntity player = TardisUtil.getPlayerInsideInterior(this.tardis);
@@ -215,8 +217,8 @@ public class TardisTravel {
     }
 
     public void deleteExterior() {
-        this.destination.getWorld().getChunk(this.getDestination());
-        this.destination.getWorld().removeBlock(this.getPosition(),false);
+        this.getDestination().getWorld().getChunk(this.getDestination());
+        this.getDestination().getWorld().removeBlock(this.getPosition(),false);
     }
 
     public void checkShouldRemat() {

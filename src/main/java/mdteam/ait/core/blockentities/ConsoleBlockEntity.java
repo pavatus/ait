@@ -78,6 +78,12 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
 
     @Override
     public Tardis getTardis() {
+        if (this.tardis == null) {
+            Tardis found = TardisUtil.findTardisByInterior(this.getPos());
+            if (found != null)
+                this.setTardis(found);
+        }
+
         return tardis;
     }
 
@@ -109,7 +115,7 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
         if(this.getWorld() != TardisUtil.getTardisDimension())
             return;
         desktop.setConsolePos(new AbsoluteBlockPos.Directed(
-                this.pos, TardisUtil.getTardisDimension(), this.getWorld().getBlockState(this.getPos()).get(ConsoleBlock.FACING))
+                this.getPos(), TardisUtil.getTardisDimension(), this.getWorld().getBlockState(this.getPos()).get(ConsoleBlock.FACING))
         );
     }
 
@@ -117,6 +123,8 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
         // DO NOT RUN THIS ON SERVER!!
 
         animationTimer++;
+        if (this.getTardis() == null)
+            return;
         TardisTravel.State state = this.getTardis().getTravel().getState();
 
         if (!ANIM_FLIGHT.isRunning()) {
