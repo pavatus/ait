@@ -217,8 +217,8 @@ public class TardisTravel {
     }
 
     public void deleteExterior() {
-        this.getDestination().getWorld().getChunk(this.getDestination());
-        this.getDestination().getWorld().removeBlock(this.getPosition(),false);
+        this.getPosition().getWorld().getChunk(this.getPosition());
+        this.getPosition().getWorld().removeBlock(this.getPosition(),false);
     }
 
     public void checkShouldRemat() {
