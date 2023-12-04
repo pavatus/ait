@@ -13,10 +13,19 @@ import mdteam.ait.client.models.exteriors.ToyotaExteriorModel;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
+import net.fabricmc.api.Environment;
 import the.mdteam.ait.TardisTravel;
 
 public enum ExteriorEnum {
     SHELTER() {
+        @Override
+        public MatSound getSound(TardisTravel.State state) {
+            return switch(state) {
+                case LANDED, FLIGHT -> AITSounds.LANDED_ANIM;
+                case DEMAT -> AITSounds.EIGHT_DEMAT_ANIM;
+                case MAT -> AITSounds.EIGHT_MAT_ANIM;
+            };
+        }
         @Override
         public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
             return new ClassicAnimation(entity);

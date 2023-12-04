@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.DamageTiltS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -71,10 +72,10 @@ public class TardisTravel {
         ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
         destWorld.getChunk(this.getDestination());
 
-        this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.MAT, SoundCategory.BLOCKS,1f,1f);
+        this.getDestination().getWorld().playSound(null, this.getDestination(), getSoundForCurrentState(), SoundCategory.BLOCKS,1f,1f);
         //TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.MAT, SoundCategory.BLOCKS, 10f, 1f);
         if(this.tardis.getDesktop().getConsolePos() != null)
-            TardisUtil.getTardisDimension().playSound(null, this.tardis.getDesktop().getConsolePos(), AITSounds.MAT, SoundCategory.BLOCKS, 10f, 1f);
+            TardisUtil.getTardisDimension().playSound(null, this.tardis.getDesktop().getConsolePos(), getSoundForCurrentState(), SoundCategory.BLOCKS, 10f, 1f);
 
         ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
         BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING,this.getDestination().getDirection());
@@ -113,11 +114,11 @@ public class TardisTravel {
 
         this.setState(State.DEMAT);
 
-        world.playSound(null, this.getPosition(), AITSounds.DEMAT, SoundCategory.BLOCKS);
+        world.playSound(null, this.getPosition(), getSoundForCurrentState(), SoundCategory.BLOCKS);
 //        TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.DEMAT, SoundCategory.BLOCKS, 10f, 1f);
         if(this.tardis != null)
             if(this.tardis.getDesktop().getConsolePos() != null)
-                TardisUtil.getTardisDimension().playSound(null, this.tardis.getDesktop().getConsolePos(), AITSounds.DEMAT, SoundCategory.BLOCKS, 1f, 1f);
+                TardisUtil.getTardisDimension().playSound(null, this.tardis.getDesktop().getConsolePos(), getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
 
 
         //PlayerEntity player = TardisUtil.getPlayerInsideInterior(this.tardis);
@@ -214,6 +215,9 @@ public class TardisTravel {
             return;
 
         this.materialise();
+    }
+    public SoundEvent getSoundForCurrentState() {
+        return this.tardis.getExterior().getType().getSound(this.getState()).sound();
     }
 
     public enum State {

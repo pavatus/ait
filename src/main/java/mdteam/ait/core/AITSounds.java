@@ -18,6 +18,9 @@ public class AITSounds implements SoundRegistryContainer {
     public static final SoundEvent FAIL_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/fail_land"));
     public static final SoundEvent EMERG_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/emergency_land"));
 
+    public static final SoundEvent EIGHT_DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/eighth_demat"));
+    public static final SoundEvent EIGHT_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/eighth_mat"));
+
     // Controls
     public static final SoundEvent DEMAT_LEVER_PULL = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/demat_lever_pull"));
     public static final SoundEvent HANDBRAKE_LEVER_PULL = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/handbrake_pull"));
@@ -25,5 +28,7 @@ public class AITSounds implements SoundRegistryContainer {
     // FIXME: move somwehre else + these values suck
     public static final MatSound DEMAT_ANIM = new MatSound(DEMAT, 240, 240, 240, 0.1f, 0.3f);
     public static final MatSound MAT_ANIM = new MatSound(MAT, 460, 240, 240, 0.2f, 0.4f);
+    public static final MatSound EIGHT_DEMAT_ANIM = new MatSound(EIGHT_DEMAT, 8 * 20, 8 * 20, 8 * 20, 0.1f, 0.3f);
+    public static final MatSound EIGHT_MAT_ANIM = new MatSound(EIGHT_MAT, 11 * 20, 11 * 20, 9 * 20, 0.2f, 0.4f);
     public static final MatSound LANDED_ANIM = new MatSound(null, 0,0,0,0,0);
 }

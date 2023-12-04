@@ -229,7 +229,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
                     if(this.controlTypes.getControlName().matches("Throttle")) {
                         if(travel.getState() == LANDED) {
                             travel.dematerialise(true);
-                            getWorld().playSound(null, this.consoleBlockPos, AITSounds.DEMAT, SoundCategory.BLOCKS, 1f, 1f);
+                            getWorld().playSound(null, this.consoleBlockPos, console.getTardis().getTravel().getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
                         } else if(travel.getState() == TardisTravel.State.FLIGHT) {
                             travel.checkShouldRemat();
                         }
