@@ -657,9 +657,10 @@ public class BorealisConsoleModel extends ConsoleModel {
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
 		return switch(state) {
-			case LANDED -> BorealisAnimations.CONSOLE_IDLE_WHEATLEY; // todo animation
-			case DEMAT -> BorealisAnimations.DEMATERIALIZE;
-			case FLIGHT, MAT -> BorealisAnimations.MATERIALIZE;
+			case LANDED -> BorealisAnimations.CONSOLE_IDLE_WHEATLEY;
+			case DEMAT -> BorealisAnimations.CONSOLE_ROTOR_DEMATERIALIZE;
+			case FLIGHT -> BorealisAnimations.CONSOLE_ROTOR_INFLIGHT;
+			case MAT -> BorealisAnimations.CONSOLE_ROTOR_MATERIALIZE;
         };
 	}
 }

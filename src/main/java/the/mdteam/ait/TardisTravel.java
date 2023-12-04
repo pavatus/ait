@@ -5,6 +5,7 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.entities.control.impl.DoorControl;
 import mdteam.ait.core.entities.control.impl.pos.PosManager;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
@@ -37,7 +38,7 @@ public class TardisTravel {
     private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
 
     @Exclude
-    protected final Tardis tardis;
+    protected Tardis tardis;
 
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
         this.tardis = tardis;
@@ -62,10 +63,17 @@ public class TardisTravel {
     public static int getSoundLength(MatSound sound) {
         if (sound == null)
             return (int) FORCE_LAND_TIMER;
-
-        System.out.println(sound.timeLeft() / 20);
-
         return sound.timeLeft() / 20;
+    }
+
+    public Tardis getTardis() {
+        if (this.tardis == null && this.getPosition() != null) {
+            Tardis found = TardisUtil.findTardisByPosition(this.getPosition());
+            if (found != null)
+                this.tardis = found;
+        }
+
+        return this.tardis;
     }
 
     public void materialise() {
@@ -76,6 +84,9 @@ public class TardisTravel {
             return;
 
         this.shouldRemat = false;
+
+        DoorControl.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null);
+
         this.setState(State.MAT);
 
         ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
@@ -83,9 +94,9 @@ public class TardisTravel {
 
         this.getDestination().getWorld().playSound(null, this.getDestination(), getSoundForCurrentState(), SoundCategory.BLOCKS,1f,1f);
         //TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.MAT, SoundCategory.BLOCKS, 10f, 1f);
-        if(this.tardis != null)
-            if(this.tardis.getDesktop().getConsolePos() != null)
-                TardisUtil.getTardisDimension().playSound(null, this.tardis.getDesktop().getConsolePos(), getSoundForCurrentState(), SoundCategory.BLOCKS, 10f, 1f);
+        if(this.getTardis() != null)
+            if(this.getTardis().getDesktop().getConsolePos() != null)
+                TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), getSoundForCurrentState(), SoundCategory.BLOCKS, 10f, 1f);
 
         ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
         BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING,this.getDestination().getDirection());
@@ -122,14 +133,16 @@ public class TardisTravel {
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
+        DoorControl.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null);
+
         this.setState(State.DEMAT);
 
         world.playSound(null, this.getPosition(), getSoundForCurrentState(), SoundCategory.BLOCKS);
 //        TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.DEMAT, SoundCategory.BLOCKS, 10f, 1f);
-        if(this.tardis != null)
-            if(this.tardis.getDesktop().getConsolePos() != null) {
+        if(this.getTardis() != null)
+            if(this.getTardis().getDesktop().getConsolePos() != null) {
                 System.out.println("aaa");
-                TardisUtil.getTardisDimension().playSound(null, this.tardis.getDesktop().getConsolePos(), getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
+                TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
             }
 
 
@@ -155,8 +168,8 @@ public class TardisTravel {
 
     @NotNull
     private BlockPos getInteriorCentre() {
-        BlockPos firstCorner = this.tardis.getDesktop().getCorners().getFirst();
-        BlockPos secondCorner = this.tardis.getDesktop().getCorners().getSecond();
+        BlockPos firstCorner = this.getTardis().getDesktop().getCorners().getFirst();
+        BlockPos secondCorner = this.getTardis().getDesktop().getCorners().getSecond();
         // x^1 - x^2   z^1 - z^2
         // --------- , ---------
         //     2           2
@@ -223,7 +236,7 @@ public class TardisTravel {
                 this.position, this.position.getBlockState()
         );
 
-        exterior.setTardis(this.tardis);
+        exterior.setTardis(this.getTardis());
         this.position.addBlockEntity(exterior);
     }
 
@@ -241,13 +254,13 @@ public class TardisTravel {
 
     @NotNull
     public SoundEvent getSoundForCurrentState() {
-        if(this.tardis != null)
-            return this.tardis.getExterior().getType().getSound(this.getState()).sound();
+        if(this.getTardis() != null)
+            return this.getTardis().getExterior().getType().getSound(this.getState()).sound();
         return SoundEvents.INTENTIONALLY_EMPTY;
     }
     public MatSound getMatSoundForCurrentState() {
-        if (this.tardis != null)
-            return this.tardis.getExterior().getType().getSound(this.getState());
+        if (this.getTardis() != null)
+            return this.getTardis().getExterior().getType().getSound(this.getState());
         return null; // COUUULD be LANDED_ANIM but null is beteter
     }
 

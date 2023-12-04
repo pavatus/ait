@@ -179,6 +179,16 @@ public class TardisUtil {
         return null;
     }
 
+    public static Tardis findTardisByPosition(AbsoluteBlockPos.Directed pos) {
+        for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
+            if (tardis.getTravel().getPosition() != pos) continue;
+
+            return tardis;
+        }
+
+        return null;
+    }
+
     public static PlayerEntity getPlayerInsideInterior(Tardis tardis) {
         for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
             if (TardisUtil.inBox(tardis.getDesktop().getCorners(), player.getBlockPos()))

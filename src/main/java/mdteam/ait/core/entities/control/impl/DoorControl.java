@@ -67,7 +67,12 @@ public class DoorControl extends Control {
         return true;
     }
     public static boolean toggleLock(Tardis tardis, ServerWorld world, @Nullable ServerPlayerEntity player) {
-        tardis.setLockedTardis(!tardis.getLockedTardis());
+        return lockTardis(!tardis.getLockedTardis(),tardis,world,player);
+    }
+    public static boolean lockTardis(boolean locked, Tardis tardis, ServerWorld world, @Nullable ServerPlayerEntity player) {
+        if (tardis.getTravel().getState() != LANDED) return false;
+
+        tardis.setLockedTardis(locked);
 
         DoorBlockEntity door = TardisUtil.getDoor(tardis);
 
