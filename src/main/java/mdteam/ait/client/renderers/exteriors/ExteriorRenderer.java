@@ -1,23 +1,16 @@
 package mdteam.ait.client.renderers.exteriors;
 
-import com.google.common.collect.ImmutableMap;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.client.models.exteriors.FalloutExteriorModel;
-import mdteam.ait.client.models.exteriors.ToyotaExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
-import the.mdteam.ait.TardisExterior;
-
-import java.util.Map;
+import mdteam.ait.tardis.TardisExterior;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
     private ExteriorModel model;

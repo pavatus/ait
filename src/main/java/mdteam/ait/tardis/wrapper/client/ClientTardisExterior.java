@@ -1,8 +1,8 @@
-package the.mdteam.ait.wrapper.client;
+package mdteam.ait.tardis.wrapper.client;
 
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisExterior;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisExterior;
 
 public class ClientTardisExterior extends TardisExterior {
 

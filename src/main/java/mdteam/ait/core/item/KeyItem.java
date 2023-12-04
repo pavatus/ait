@@ -2,8 +2,6 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,22 +9,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import the.mdteam.ait.ServerTardisManager;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisTravel;
 
 import java.util.List;
-
-import static the.mdteam.ait.TardisTravel.State.FLIGHT;
-import static the.mdteam.ait.TardisTravel.State.LANDED;
 
 public class KeyItem extends Item {
 

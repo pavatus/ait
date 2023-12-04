@@ -1,7 +1,6 @@
 package mdteam.ait.core.entities.control.impl;
 
 import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.control.Control;
 import mdteam.ait.core.helper.TardisUtil;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -12,11 +11,10 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
-import the.mdteam.ait.Tardis;
+import mdteam.ait.tardis.Tardis;
 
-import static the.mdteam.ait.TardisTravel.State.LANDED;
+import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 
 public class DoorControl extends Control {
     public DoorControl() {

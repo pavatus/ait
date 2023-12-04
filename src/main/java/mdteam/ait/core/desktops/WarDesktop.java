@@ -2,7 +2,7 @@ package mdteam.ait.core.desktops;
 
 import mdteam.ait.AITMod;
 import net.minecraft.util.Identifier;
-import the.mdteam.ait.TardisDesktopSchema;
+import mdteam.ait.tardis.TardisDesktopSchema;
 
 public class WarDesktop extends TardisDesktopSchema {
 

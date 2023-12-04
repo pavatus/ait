@@ -1,11 +1,10 @@
-package the.mdteam.ait.wrapper.server;
+package mdteam.ait.tardis.wrapper.server;
 
 import mdteam.ait.data.AbsoluteBlockPos;
-import mdteam.ait.data.Corners;
-import the.mdteam.ait.ServerTardisManager;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisDesktop;
-import the.mdteam.ait.TardisDesktopSchema;
+import mdteam.ait.tardis.ServerTardisManager;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
+import mdteam.ait.tardis.TardisDesktopSchema;
 
 public class ServerTardisDesktop extends TardisDesktop {
 

@@ -1,8 +1,8 @@
-package the.mdteam.ait.wrapper.client;
+package mdteam.ait.tardis.wrapper.client;
 
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisConsole;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisConsole;
 
 public class ClientTardisConsole extends TardisConsole {
 

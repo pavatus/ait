@@ -1,8 +1,8 @@
 package mdteam.ait.api.tardis;
 
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisDesktop;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
+import mdteam.ait.tardis.TardisTravel;
 
 public interface ILinkable {
 

@@ -1,4 +1,4 @@
-package the.mdteam.ait;
+package mdteam.ait.tardis;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -13,7 +13,7 @@ import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import the.mdteam.ait.wrapper.client.ClientTardis;
+import mdteam.ait.tardis.wrapper.client.ClientTardis;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

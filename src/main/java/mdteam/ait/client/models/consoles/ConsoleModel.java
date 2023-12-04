@@ -1,7 +1,6 @@
 package mdteam.ait.client.models.consoles;
 
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -10,7 +9,7 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.TardisTravel;
 
 import java.util.function.Function;
 

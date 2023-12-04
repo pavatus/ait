@@ -4,15 +4,11 @@ import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.core.components.block.interior_door.InteriorDataComponent;
 import mdteam.ait.core.item.*;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryOps;
-import the.mdteam.ait.TardisDesktopSchema;
-
-import java.util.List;
+import mdteam.ait.tardis.TardisDesktopSchema;
 
 public class AITItems implements ItemRegistryContainer {
     public static final Item TARDIS_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));

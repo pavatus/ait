@@ -5,7 +5,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import the.mdteam.ait.Tardis;
+import mdteam.ait.tardis.Tardis;
 
 public class VisualiserControl extends Control {
     public VisualiserControl() {

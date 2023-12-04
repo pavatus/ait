@@ -1,12 +1,12 @@
-package the.mdteam.ait.wrapper.client;
+package mdteam.ait.tardis.wrapper.client;
 
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.data.AbsoluteBlockPos;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisDesktop;
-import the.mdteam.ait.TardisDesktopSchema;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
+import mdteam.ait.tardis.TardisDesktopSchema;
+import mdteam.ait.tardis.TardisTravel;
 
 import java.util.UUID;
 

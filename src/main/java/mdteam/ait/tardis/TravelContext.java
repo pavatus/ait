@@ -1,4 +1,4 @@
-package the.mdteam.ait;
+package mdteam.ait.tardis;
 
 import mdteam.ait.data.AbsoluteBlockPos;
 

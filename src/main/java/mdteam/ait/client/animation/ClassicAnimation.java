@@ -2,7 +2,7 @@ package mdteam.ait.client.animation;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.TardisTravel;
 
 public class ClassicAnimation extends ExteriorAnimation {
     public ClassicAnimation(ExteriorBlockEntity exterior) {

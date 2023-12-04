@@ -2,7 +2,7 @@ package mdteam.ait.client.animation;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import org.joml.Math;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.TardisTravel;
 
 public abstract class ExteriorAnimation {
 

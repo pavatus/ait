@@ -1,11 +1,9 @@
 package mdteam.ait.client.renderers.consoles;
 
-import mdteam.ait.client.animation.console.borealis.BorealisAnimations;
 import mdteam.ait.client.models.consoles.BorealisConsoleModel;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.TempConsoleModel;
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.entities.control.ControlTypes;
 import mdteam.ait.core.entities.control.impl.*;
 import mdteam.ait.core.entities.control.impl.pos.IncrementControl;
@@ -15,7 +13,7 @@ import mdteam.ait.core.entities.control.impl.pos.ZControl;
 import mdteam.ait.core.sounds.MatSound;
 import net.minecraft.entity.EntityDimensions;
 import org.joml.Vector3f;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.TardisTravel;
 
 public enum ConsoleEnum {
     TEMP() {

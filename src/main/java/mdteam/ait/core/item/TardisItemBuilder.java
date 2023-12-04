@@ -13,8 +13,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import the.mdteam.ait.ServerTardisManager;
-import the.mdteam.ait.TardisManager;
+import mdteam.ait.tardis.ServerTardisManager;
 
 public class TardisItemBuilder extends Item {
 

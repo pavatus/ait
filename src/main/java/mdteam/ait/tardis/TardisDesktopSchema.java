@@ -1,4 +1,4 @@
-package the.mdteam.ait;
+package mdteam.ait.tardis;
 
 import com.google.gson.*;
 import mdteam.ait.core.AITDesktops;

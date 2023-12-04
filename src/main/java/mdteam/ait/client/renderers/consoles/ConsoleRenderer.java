@@ -1,12 +1,10 @@
 package mdteam.ait.client.renderers.consoles;
 
 import com.google.common.collect.ImmutableMap;
-import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.BorealisConsoleModel;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.TempConsoleModel;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.blocks.ConsoleBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -14,9 +12,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
-import the.mdteam.ait.TardisConsole;
+import mdteam.ait.tardis.TardisConsole;
 
 import java.util.Map;
 

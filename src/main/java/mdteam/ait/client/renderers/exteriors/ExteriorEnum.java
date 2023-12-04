@@ -11,8 +11,7 @@ import mdteam.ait.client.models.exteriors.*;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
-import net.fabricmc.api.Environment;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.TardisTravel;
 
 public enum ExteriorEnum {
     SHELTER() {

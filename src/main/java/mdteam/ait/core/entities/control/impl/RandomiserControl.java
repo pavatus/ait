@@ -1,7 +1,6 @@
 package mdteam.ait.core.entities.control.impl;
 
 import mdteam.ait.core.entities.control.Control;
-import mdteam.ait.core.entities.control.impl.pos.PosManager;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -9,8 +8,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
 
 public class RandomiserControl extends Control {
     public RandomiserControl() {

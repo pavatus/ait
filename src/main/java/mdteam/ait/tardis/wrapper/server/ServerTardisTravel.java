@@ -1,29 +1,15 @@
-package the.mdteam.ait.wrapper.server;
+package mdteam.ait.tardis.wrapper.server;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.AITBlocks;
-import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
-import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.state.property.Properties;
-import the.mdteam.ait.ServerTardisManager;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisTravel;
-import the.mdteam.ait.TravelContext;
+import mdteam.ait.tardis.ServerTardisManager;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
-import javax.swing.plaf.synth.SynthUI;
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 //TODO: istg duzo :))))
 public class ServerTardisTravel extends TardisTravel {

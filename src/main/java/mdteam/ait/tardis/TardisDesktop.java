@@ -1,17 +1,13 @@
-package the.mdteam.ait;
+package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blocks.ConsoleBlock;
 import mdteam.ait.core.helper.DesktopGenerator;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-
-import java.awt.*;
 
 public class TardisDesktop {
 

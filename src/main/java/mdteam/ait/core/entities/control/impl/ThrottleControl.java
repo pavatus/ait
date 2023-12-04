@@ -5,8 +5,8 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
 
 public class ThrottleControl extends Control {
     public ThrottleControl() {

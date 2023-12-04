@@ -23,10 +23,10 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisDesktop;
-import the.mdteam.ait.TardisManager;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
+import mdteam.ait.tardis.TardisManager;
+import mdteam.ait.tardis.TardisTravel;
 
 import java.util.List;
 import java.util.Random;

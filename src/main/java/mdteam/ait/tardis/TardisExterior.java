@@ -1,4 +1,4 @@
-package the.mdteam.ait;
+package mdteam.ait.tardis;
 
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 

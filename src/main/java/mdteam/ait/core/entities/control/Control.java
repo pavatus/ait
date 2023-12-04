@@ -2,10 +2,9 @@ package mdteam.ait.core.entities.control;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import the.mdteam.ait.Tardis;
+import mdteam.ait.tardis.Tardis;
 
 public abstract class Control {
     public final String id; // a name to represent the control

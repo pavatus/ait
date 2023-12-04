@@ -21,14 +21,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisDesktop;
-import the.mdteam.ait.TardisManager;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
+import mdteam.ait.tardis.TardisManager;
 
 import java.util.Objects;
 
 import static mdteam.ait.AITMod.INTERIORDOORNBT;
-import static the.mdteam.ait.TardisTravel.State.LANDED;
 
 public class DoorBlockEntity extends BlockEntity implements ILinkable {
 

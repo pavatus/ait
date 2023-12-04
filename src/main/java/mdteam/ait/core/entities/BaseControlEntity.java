@@ -1,13 +1,8 @@
 package mdteam.ait.core.entities;
 
 import mdteam.ait.api.tardis.ILinkable;
-import mdteam.ait.core.AITEntityTypes;
-import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.data.AbsoluteBlockPos;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -18,12 +13,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import the.mdteam.ait.Tardis;
-import the.mdteam.ait.TardisDesktop;
-import the.mdteam.ait.TardisTravel;
+import mdteam.ait.tardis.Tardis;
 
 import java.util.Collections;
 

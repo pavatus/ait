@@ -1,8 +1,7 @@
-package the.mdteam.ait;
+package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
-import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.entities.control.impl.DoorControl;
@@ -19,7 +18,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Timer;

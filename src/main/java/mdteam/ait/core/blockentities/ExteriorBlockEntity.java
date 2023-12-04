@@ -1,25 +1,20 @@
 package mdteam.ait.core.blockentities;
 
-import com.mojang.logging.LogUtils;
-import io.wispforest.owo.nbt.NbtKey;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.client.animation.ExteriorAnimation;
-import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.core.item.KeyItem;
+import mdteam.ait.tardis.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -28,13 +23,11 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import the.mdteam.ait.*;
 
 import java.util.Objects;
-import java.util.UUID;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
-import static the.mdteam.ait.TardisTravel.State.LANDED;
+import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 
 public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 

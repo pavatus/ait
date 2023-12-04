@@ -1,18 +1,14 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import the.mdteam.ait.TardisTravel;
 
-import java.awt.geom.Point2D;
 import java.util.function.Function;
 
 public abstract class ExteriorModel extends SinglePartEntityModel {

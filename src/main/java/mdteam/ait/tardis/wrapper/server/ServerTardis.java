@@ -1,9 +1,12 @@
-package the.mdteam.ait.wrapper.server;
+package mdteam.ait.tardis.wrapper.server;
 
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.data.AbsoluteBlockPos;
-import the.mdteam.ait.*;
+import mdteam.ait.tardis.ServerTardisManager;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
+import mdteam.ait.tardis.TardisDesktopSchema;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package the.mdteam.ait;
+package mdteam.ait.tardis;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -8,10 +8,6 @@ import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.Corners;
 import mdteam.ait.data.SerialDimension;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 
 import java.util.HashMap;
 import java.util.Map;

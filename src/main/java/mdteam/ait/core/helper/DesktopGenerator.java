@@ -3,7 +3,6 @@ package mdteam.ait.core.helper;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.data.Corners;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -12,12 +11,9 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import the.mdteam.ait.TardisDesktopSchema;
+import mdteam.ait.tardis.TardisDesktopSchema;
 
-import javax.swing.text.html.parser.Entity;
-import java.awt.event.ItemEvent;
 import java.util.List;
 import java.util.Optional;
 
