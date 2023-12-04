@@ -228,6 +228,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
                     World dimension = travel.getPosition().getDimension().get();
                     Direction direction = travel.getPosition().getDirection();
                     int increment = 1;
+
                     int X = travel.getDestination().getX() == position.getX() ? position.getX() : travel.getDestination().getX();
                     int Y = travel.getDestination().getY() == position.getY() ? position.getY() : travel.getDestination().getY();
                     int Z = travel.getDestination().getZ() == position.getZ() ? position.getZ() : travel.getDestination().getZ();

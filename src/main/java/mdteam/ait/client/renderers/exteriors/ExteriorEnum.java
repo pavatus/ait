@@ -3,13 +3,11 @@ package mdteam.ait.client.renderers.exteriors;
 import mdteam.ait.client.animation.ClassicAnimation;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
+import mdteam.ait.client.models.doors.BoothDoorModel;
 import mdteam.ait.client.models.doors.DoorModel;
 import mdteam.ait.client.models.doors.FalloutDoorModel;
 import mdteam.ait.client.models.doors.ToyotaDoorModel;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.client.models.exteriors.FalloutExteriorModel;
-import mdteam.ait.client.models.exteriors.TardimExteriorModel;
-import mdteam.ait.client.models.exteriors.ToyotaExteriorModel;
+import mdteam.ait.client.models.exteriors.*;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
@@ -90,7 +88,7 @@ public enum ExteriorEnum {
     TARDIM() {
         @Override
         public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
-            return new ClassicAnimation(entity);
+            return new PulsatingAnimation(entity);
         }
 
         @Override
@@ -116,6 +114,37 @@ public enum ExteriorEnum {
         @Override
         public Class<? extends DoorModel> getDoorClass() {
             return TOYOTA.getDoorClass();
+        }
+    },
+    BOOTH {
+        @Override
+        public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
+            return new PulsatingAnimation(entity);
+        }
+
+        @Override
+        public ExteriorModel createModel() {
+            return new BoothExteriorModel(BoothExteriorModel.getTexturedModelData().createModel());
+        }
+
+        @Override
+        public DoorModel createDoorModel() {
+            return new BoothDoorModel(BoothDoorModel.getTexturedModelData().createModel());
+        }
+
+        @Override
+        public boolean isDoubleDoor() {
+            return false;
+        }
+
+        @Override
+        public Class<? extends ExteriorModel> getModelClass() {
+            return BoothExteriorModel.class;
+        }
+
+        @Override
+        public Class<? extends DoorModel> getDoorClass() {
+            return BoothDoorModel.class;
         }
     };
 

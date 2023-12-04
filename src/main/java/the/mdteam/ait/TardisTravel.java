@@ -181,6 +181,8 @@ public class TardisTravel {
     }
 
     public AbsoluteBlockPos.Directed getDestination() {
+        if(destination == null)
+            destination = position;
         return destination;
     }
 

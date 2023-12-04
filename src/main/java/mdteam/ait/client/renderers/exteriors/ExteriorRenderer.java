@@ -20,20 +20,8 @@ import the.mdteam.ait.TardisExterior;
 import java.util.Map;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
-    private final Map<ExteriorEnum, ModelPart> exteriormap;
     private ExteriorModel model;
-
-    // FIXME theres gotta be a better way
-    public Map<ExteriorEnum, ModelPart> getModels() {
-        ImmutableMap.Builder<ExteriorEnum, ModelPart> builder = ImmutableMap.builder();
-        builder.put(ExteriorEnum.SHELTER, FalloutExteriorModel.getTexturedModelData().createModel());
-        builder.put(ExteriorEnum.TOYOTA, ToyotaExteriorModel.getTexturedModelData().createModel());
-        return builder.build();
-    }
-    public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {
-        this.exteriormap = this.getModels();
-    }
-
+    public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {}
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (entity.getTardis() == null)
@@ -61,18 +49,5 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getEmission(), false)), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
-    }
-
-    public float getMaterialStateForAlpha(MaterialStateEnum materialState) {
-        switch(materialState) {
-            case DEMAT:
-                return -0.125F;
-            case IN_VORTEX:
-                return 0;
-            case REMAT:
-                return 0.125F;
-            default:
-                return 1;
-        }
     }
 }
