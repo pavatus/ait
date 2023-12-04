@@ -2,10 +2,12 @@ package the.mdteam.ait;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.entities.control.impl.pos.PosManager;
 import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -30,7 +32,7 @@ public class TardisTravel {
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
     private boolean shouldRemat = false;
-    private static final double FORCE_LAND_TIMER = 10;
+    private static final double FORCE_LAND_TIMER = 15;
     private static final double FORCE_FLIGHT_TIMER = 10;
     private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
 
@@ -55,6 +57,15 @@ public class TardisTravel {
 
     public AbsoluteBlockPos.Directed getPosition() {
         return position;
+    }
+
+    public static int getSoundLength(MatSound sound) {
+        if (sound == null)
+            return (int) FORCE_LAND_TIMER;
+
+        System.out.println(sound.timeLeft() / 20);
+
+        return sound.timeLeft() / 20;
     }
 
     public void materialise() {
@@ -99,7 +110,7 @@ public class TardisTravel {
                 travel.setState(TardisTravel.State.LANDED);
                 travel.runAnimations(blockEntity);
             }
-        }, (long) FORCE_LAND_TIMER * 1000L);
+        }, (long) getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
     }
 
     public void dematerialise(boolean withRemat) {
@@ -139,7 +150,7 @@ public class TardisTravel {
 
                 travel.toFlight();
             }
-        }, (long) FORCE_FLIGHT_TIMER * 1000L);
+        }, (long) getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
     }
 
     @NotNull
@@ -233,6 +244,11 @@ public class TardisTravel {
         if(this.tardis != null)
             return this.tardis.getExterior().getType().getSound(this.getState()).sound();
         return SoundEvents.INTENTIONALLY_EMPTY;
+    }
+    public MatSound getMatSoundForCurrentState() {
+        if (this.tardis != null)
+            return this.tardis.getExterior().getType().getSound(this.getState());
+        return null; // COUUULD be LANDED_ANIM but null is beteter
     }
 
     public PosManager getPosManager() {
