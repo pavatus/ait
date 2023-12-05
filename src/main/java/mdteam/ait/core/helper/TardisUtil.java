@@ -52,7 +52,7 @@ public class TardisUtil {
             TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
         });
 
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             SERVER = null;
         });
     }
