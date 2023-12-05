@@ -39,16 +39,6 @@ public class DesktopGenerator {
         return null;
     }
 
-    public static BlockPos centreCorners(Corners corners) {
-        int firstX = corners.getFirst().getX();
-        int firstY = corners.getFirst().getY();
-        int firstZ = corners.getFirst().getZ();
-        int secondX = corners.getSecond().getX();
-        int secondY = corners.getSecond().getY();
-        int secondZ = corners.getSecond().getZ();
-        return new BlockPos.Mutable((secondX + firstX) / 2, (secondY + firstY) / 2, (secondZ + firstZ) / 2);
-    }
-
     public static BlockPos centreTemplateAtCentre(BlockPos template, BlockPos centrePos) {
         return new BlockPos(centrePos.getX() - template.getX(), centrePos.getY() - template.getY(), centrePos.getZ() - template.getZ());
     }
