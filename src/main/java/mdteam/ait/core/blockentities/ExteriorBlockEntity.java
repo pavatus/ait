@@ -109,6 +109,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         return null;
     }
 
+    @Deprecated
     public void setExterior(ExteriorEnum exterior) {
         EXTERIORNBT.get(this).setExterior(exterior);
     }
@@ -269,7 +270,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         if (this.getTardis() == null)
             return;
 
-        this.animation = this.getExterior().createAnimation(this);
+        this.animation = this.getTardis().getExterior().getType().createAnimation(this);
         AITMod.LOGGER.debug("Created new ANIMATION for " + this);
         this.animation.setupAnimation(this.getTardis().getTravel().getState());
     }

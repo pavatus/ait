@@ -48,7 +48,7 @@ public class PulsatingAnimation extends ExteriorAnimation{
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
-        MatSound sound = exterior.getExterior().getSound(state);
+        MatSound sound = exterior.getTardis().getExterior().getType().getSound(state);
 
         timeLeft = sound.timeLeft();
         maxTime = sound.maxTime();
