@@ -14,7 +14,10 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item TARDIS_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     // public static final Item TOYOTA_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), ExteriorEnum.TOYOTA);
     public static final Item REMOTE_ITEM = new RemoteItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
-    public static final Item GOLDEN_TARDIS_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item IRON_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item GOLD_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item NETHERITE_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item CLASSIC_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
     // This is only temporary for testing until proper interior/exterior changing is done fixme todo whjatever
     public static void createExteriorItems() {

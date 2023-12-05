@@ -2,6 +2,7 @@ package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.entities.control.impl.DoorControl;
@@ -9,13 +10,18 @@ import mdteam.ait.core.entities.control.impl.pos.PosManager;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.data.AbsoluteBlockPos;
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.SnowBlock;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
@@ -72,6 +78,38 @@ public class TardisTravel {
         }
 
         return this.tardis;
+    }
+
+    //Yeah I know, I'm so cool :) - Loqor
+    public void checkPositionAndMaterialise(boolean check) {
+
+        if(this.getDestination() == null)
+            return;
+
+        if(this.getDestination().getWorld().isClient())
+            return;
+
+        if(check) {
+            BlockPos.Mutable mutable = new BlockPos.Mutable(this.getDestination().getX(), this.getDestination().getY(), this.getDestination().getZ());
+            for (int i = this.getDestination().getY(); i > this.getDestination().getWorld().getBottomY(); i--) {
+                BlockState state = this.getDestination().getWorld().getBlockState(mutable.setY(i));
+                if (state.isReplaceable() && !this.getDestination().getWorld().getBlockState(mutable.down()).isReplaceable()) {
+                    AbsoluteBlockPos.Directed abpd = new AbsoluteBlockPos.Directed(mutable.setY(i),
+                            this.getDestination().getWorld(), this.getDestination().getDirection());
+                    this.setDestination(abpd, false);
+                    materialise();
+                    return;
+                }
+            }
+            if (this.getTardis() != null) {
+                PlayerEntity player = TardisUtil.getPlayerInsideInterior(this.getTardis());
+                if (player != null) {
+                    player.sendMessage(Text.literal("Position not viable for translocation: " + mutable), true);
+                }
+            }
+        } else {
+            materialise();
+        }
     }
 
     public void materialise() {

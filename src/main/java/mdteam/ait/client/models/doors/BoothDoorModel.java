@@ -42,8 +42,8 @@ public class BoothDoorModel extends DoorModel {
 	@Override
 	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		matrices.push();
-		this.booth_door.getChild("door").yaw = -door.getLeftDoorRotation();
-		matrices.scale(0.93f, 0.93f, 0.93f);
+		this.booth_door.getChild("door").yaw = door.getLeftDoorRotation() == 0 ? 0 : -1.575f;
+		matrices.scale(0.95f, 0.95f, 0.95f);
 		matrices.translate(0, -1.5f, 0);
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
 

@@ -62,9 +62,9 @@ public class TardisDesktop {
 
     public AbsoluteBlockPos.Directed getConsolePos() {
         // fixme probably not a good idea but this is sometimes null and is currently only used to play sounds
-        if (consolePos == null) {
-            return new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getCorners().getBox().getCenter()), TardisUtil.getTardisDimension(), Direction.NORTH);
-        }
+        //if (consolePos == null) {
+        //    return new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getCorners().getBox().getCenter()), TardisUtil.getTardisDimension(), Direction.NORTH);
+        //}
 
         return consolePos;
     }

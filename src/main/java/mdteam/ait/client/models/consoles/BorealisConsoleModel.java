@@ -4,11 +4,13 @@ package mdteam.ait.client.models.consoles;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.console.borealis.BorealisAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.entities.ConsoleControlEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import mdteam.ait.tardis.TardisTravel;
 
@@ -636,8 +638,15 @@ public class BorealisConsoleModel extends ConsoleModel {
 		//matrices.translate(0.5f, -0.75f, 0.5f);
 		matrices.translate(0.5f, -0.75f, -0.5f);
 		matrices.scale(0.5f, 0.5f, 0.5f);
+		matrices.push();
+		this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel").getChild("throttle").pivotZ =
+				console.getTardis().getTravel().getState() != TardisTravel.State.LANDED
+						? this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel").getChild("throttle").pivotZ + 3f :
+						this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel").getChild("throttle").pivotZ;
+		matrices.pop();
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-		matrices.pop();	}
+		matrices.pop();
+	}
 
 	@Override
 	public ModelPart getPart() {

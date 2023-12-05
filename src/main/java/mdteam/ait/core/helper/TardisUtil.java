@@ -27,6 +27,7 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Random;
@@ -189,6 +190,7 @@ public class TardisUtil {
         return null;
     }
 
+    @Nullable
     public static PlayerEntity getPlayerInsideInterior(Tardis tardis) {
         for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
             if (TardisUtil.inBox(tardis.getDesktop().getCorners(), player.getBlockPos()))

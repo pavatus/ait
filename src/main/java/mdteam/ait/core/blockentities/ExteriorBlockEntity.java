@@ -8,6 +8,7 @@ import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -44,7 +45,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         if(player == null)
             return;
 
-        if(player.getMainHandStack().getItem() == AITItems.GOLDEN_TARDIS_KEY) {
+        if(player.getMainHandStack().getItem() instanceof KeyItem) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
             if(!tag.contains("tardis")) {

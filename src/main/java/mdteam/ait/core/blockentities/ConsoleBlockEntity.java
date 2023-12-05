@@ -33,7 +33,7 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
     public final AnimationState ANIM_FLIGHT = new AnimationState();
     public int animationTimer = 0;
 
-    private final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
+    public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
     private boolean markedDirty = true;
     private Tardis tardis;
 

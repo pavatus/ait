@@ -6,6 +6,7 @@ import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.control.impl.DoorControl;
 import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -45,7 +46,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         if(player == null)
             return;
 
-        if(player.getMainHandStack().getItem() == AITItems.GOLDEN_TARDIS_KEY) {
+        if(player.getMainHandStack().getItem() instanceof KeyItem) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
             if(!tag.contains("tardis")) {

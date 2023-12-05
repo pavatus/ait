@@ -58,7 +58,7 @@ public class ToyotaDoorModel extends DoorModel {
         this.door.getChild("Doors").getChild("Left").yaw = -doorEntity.getRightDoorRotation();
 
         matrices.push();
-        matrices.scale(0.6f,0.6f,0.6f);
+        matrices.scale(0.68F,0.68f,0.68f);
         matrices.translate(0,-1.5,0.35);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180));
 

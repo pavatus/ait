@@ -127,11 +127,12 @@ public class ConsoleControlEntity extends BaseControlEntity {
             this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld());
         }
 
-        return super.damage(source, amount);
+        return super.damage(source, source.getAttacker() instanceof PlayerEntity ? 0 : amount);
     }
 
     public boolean run(PlayerEntity player, World world) {
-        this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_CANDLE_STEP, SoundCategory.BLOCKS, 0.1f, 1f);
+        if(this.consoleBlockPos != null)
+            this.getWorld().playSound(null, this.consoleBlockPos, SoundEvents.BLOCK_CANDLE_STEP, SoundCategory.BLOCKS, 0.1f, 1f);
 
         if (!world.isClient()) {
             if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM) {

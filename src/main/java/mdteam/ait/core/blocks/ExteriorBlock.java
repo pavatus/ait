@@ -19,6 +19,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -48,6 +49,17 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
     }
 
     @Override
+    public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
+        return switch (state.get(FACING)) {
+            case NORTH -> NORTH_SHAPE;
+            case EAST -> EAST_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+            default -> throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
+        };
+    }
+
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return switch (state.get(FACING)) {
             case NORTH -> NORTH_SHAPE;
@@ -56,6 +68,11 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
             case WEST -> WEST_SHAPE;
             default -> throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
         };
+    }
+
+    @Override
+    public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return VoxelShapes.empty();
     }
 
     @Override

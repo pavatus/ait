@@ -31,7 +31,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         if (exterior.getTardis() == null) return;
 
-        root.render(matrices, vertices, light, overlay,red,green,blue,exterior.getAlpha());
+        root.render(matrices, vertices, light, overlay, red, green, blue, exterior.getAlpha());
     }
 
     @Override
