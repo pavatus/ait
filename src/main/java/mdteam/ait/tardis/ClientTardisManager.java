@@ -2,10 +2,8 @@ package mdteam.ait.tardis;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.gson.GsonBuilder;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.data.SerialDimension;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -27,11 +25,12 @@ public class ClientTardisManager extends TardisManager {
     public static final Identifier ASK = new Identifier("ait", "ask_tardis");
     public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
     private static final ClientTardisManager instance = new ClientTardisManager();
+
     private final Multimap<UUID, Consumer<Tardis>> subscribers = ArrayListMultimap.create();
     private final Deque<PacketByteBuf> buffers = new ArrayDeque<>();
 
     public ClientTardisManager() {
-        if(FabricLauncherBase.getLauncher().getEnvironmentType() == EnvType.CLIENT) {
+        if(FabricLauncherBase.getLauncher().getEnvironmentType() == EnvType.CLIENT)
             ClientPlayNetworking.registerGlobalReceiver(ServerTardisManager.SEND,
                     (client, handler, buf, responseSender) -> this.sync(buf)
             );
@@ -53,7 +52,6 @@ public class ClientTardisManager extends TardisManager {
             });
 
             ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());
-        }
     }
 
     @Override
@@ -77,12 +75,6 @@ public class ClientTardisManager extends TardisManager {
         for (Consumer<Tardis> consumer : this.subscribers.removeAll(uuid)) {
             consumer.accept(tardis);
         }
-    }
-
-    @Override
-    public GsonBuilder init(GsonBuilder builder) {
-        builder.registerTypeAdapter(SerialDimension.class, new SerialDimension.ClientSerializer());
-        return builder;
     }
 
     private void sync(UUID uuid, PacketByteBuf buf) {

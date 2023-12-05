@@ -20,25 +20,20 @@ public abstract class TardisManager {
     protected final Gson gson;
 
     public TardisManager() {
-        GsonBuilder builder = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
-                    @Override
-                    public boolean shouldSkipField(FieldAttributes field) {
-                        return field.getAnnotation(Exclude.class) != null;
-                    }
+        this.gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes field) {
+                return field.getAnnotation(Exclude.class) != null;
+            }
 
-                    @Override
-                    public boolean shouldSkipClass(Class<?> clazz) {
-                        return false;
-                    }
-                }).registerTypeAdapter(TardisDesktopSchema.class, TardisDesktopSchema.serializer())
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).registerTypeAdapter(TardisDesktopSchema.class, TardisDesktopSchema.serializer())
+                .registerTypeAdapter(SerialDimension.class, SerialDimension.serializer())
                 .registerTypeAdapter(Corners.class, Corners.serializer())
-                ;
-        builder = this.init(builder);
-        this.gson = builder.create();
-    }
-
-    public GsonBuilder init(GsonBuilder builder) {
-        return builder;
+                .create();
     }
 
     public static TardisManager getInstance() {

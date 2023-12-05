@@ -2,18 +2,14 @@ package mdteam.ait.tardis;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
-import mdteam.ait.data.SerialDimension;
-import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.mixin.networking.client.accessor.MinecraftClientAccessor;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -111,12 +107,6 @@ public class ServerTardisManager extends TardisManager {
         }
 
         return null;
-    }
-
-    @Override
-    public GsonBuilder init(GsonBuilder builder) {
-        builder.registerTypeAdapter(SerialDimension.class, SerialDimension.serializer());
-        return builder;
     }
 
     public void saveTardis(Tardis tardis) {

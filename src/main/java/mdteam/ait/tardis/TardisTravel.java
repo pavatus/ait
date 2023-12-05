@@ -65,10 +65,6 @@ public class TardisTravel {
         return position;
     }
 
-    public AbsoluteBlockPos.Client getClientPosition() {
-        return new AbsoluteBlockPos.Client(position, position.getDirection(), position.getWorld());
-    }
-
     public static int getSoundLength(MatSound sound) {
         if (sound == null)
             return (int) FORCE_LAND_TIMER;

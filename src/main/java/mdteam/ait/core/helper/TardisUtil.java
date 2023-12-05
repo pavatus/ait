@@ -213,8 +213,6 @@ public class TardisUtil {
     public static ServerWorld findWorld(String identifier) {
         return TardisUtil.findWorld(new Identifier(identifier));
     }
-
-    @Nullable
     public static ExteriorBlockEntity findExteriorEntity(Tardis tardis) {
         if (tardis.getTravel().getPosition().getWorld() == null)
             return null;
