@@ -118,5 +118,26 @@ public class AbsoluteBlockPos extends BlockPos {
             return super.equals(o);
         }
     }
+
+    public static class Client extends AbsoluteBlockPos.Directed {
+
+        private final World world;
+
+        public Client(AbsoluteBlockPos pos, Direction direction, World world) {
+            super(pos, direction);
+
+            this.world = world;
+        }
+
+        public World getClientWorld() {
+            return this.world;
+        }
+
+        public Client(int x, int y, int z, World world, Direction direction) {
+            super(x, y, z, world, direction);
+
+            this.world = world;
+        }
+    }
 }
 
