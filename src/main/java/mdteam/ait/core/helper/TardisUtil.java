@@ -27,6 +27,7 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class TardisUtil {
 
     private static final Random RANDOM = new Random();
 
-    private static MinecraftServer SERVER;
+    private static MinecraftServer SERVER; //@TODO fixme this does not work on multiplayer.
     private static ServerWorld TARDIS_DIMENSION;
 
     public static void init() {
@@ -51,12 +52,13 @@ public class TardisUtil {
             TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
         });
 
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
             SERVER = null;
         });
     }
 
     public static MinecraftServer getServer() {
+        //MinecraftServer server = TARDIS_DIMENSION.getServer();
         return SERVER;
     }
 

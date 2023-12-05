@@ -5,6 +5,7 @@ import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blocks.ConsoleBlock;
+import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.entities.control.ControlTypes;
 import mdteam.ait.core.helper.TardisUtil;
@@ -100,12 +101,8 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
 
     @Override
     public void setDesktop(TardisDesktop desktop) {
-        if(this.getWorld() == null)
-            return;
-        if(this.getWorld() != TardisUtil.getTardisDimension())
-            return;
         desktop.setConsolePos(new AbsoluteBlockPos.Directed(
-                this.getPos(), TardisUtil.getTardisDimension(), this.getWorld().getBlockState(this.getPos()).get(ConsoleBlock.FACING))
+                this.pos, TardisUtil.getTardisDimension(), this.getCachedState().get(HorizontalDirectionalBlock.FACING))
         );
     }
 
@@ -132,7 +129,7 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
     public void killControls() {
         controlEntities.forEach(Entity::discard);
         controlEntities.clear();
-        System.out.println("KillControls(): I'm getting run :) somewhere..");
+        //System.out.println("KillControls(): I'm getting run :) somewhere..");
     }
 
     public void spawnControls() {
@@ -161,7 +158,7 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
         });
 
         this.markedDirty = false;
-        System.out.println("SpawnControls(): I'm getting run :) somewhere..");
+        //System.out.println("SpawnControls(): I'm getting run :) somewhere..");
     }
     public void markDirty() {
         this.markedDirty = true;

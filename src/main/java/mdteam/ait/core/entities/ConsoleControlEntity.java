@@ -39,7 +39,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     private BlockPos consoleBlockPos;
     private ControlTypes controlTypes;
-
     private static final TrackedData<String> IDENTITY = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.STRING);
     private static final TrackedData<Float> SCALE = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Vector3f> OFFSET = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
@@ -132,7 +131,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     public boolean run(PlayerEntity player, World world) {
         if(this.consoleBlockPos != null)
-            this.getWorld().playSound(null, this.consoleBlockPos, SoundEvents.BLOCK_CANDLE_STEP, SoundCategory.BLOCKS, 0.1f, 1f);
+            this.getWorld().playSound(null, this.consoleBlockPos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 0.7f, 1f);
 
         if (!world.isClient()) {
             if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM) {
@@ -203,16 +202,21 @@ public class ConsoleControlEntity extends BaseControlEntity {
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.BLOCK_NOTE_BLOCK_BIT.value();
+        return SoundEvents.INTENTIONALLY_EMPTY;
     }
 
     @Override
     public void tick() {
-        if(getWorld() instanceof ServerWorld server && this.controlTypes == null && this.consoleBlockPos != null) {
-            if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
-                console.markDirty();
+        if(getWorld() instanceof ServerWorld server) {
+            if(this.controlTypes == null) {
+                if (this.consoleBlockPos != null) {
+                    if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
+
+                        console.markDirty();
+                    }
+                    discard();
+                }
             }
-            discard();
         }
     }
 

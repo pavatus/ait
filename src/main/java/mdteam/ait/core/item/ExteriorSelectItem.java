@@ -2,6 +2,7 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,7 +43,16 @@ public class ExteriorSelectItem extends Item {
                     return ActionResult.PASS;
 
                 exteriorBlock.getTardis().getExterior().setType(this.exterior);
-            } else if (entity instanceof ConsoleBlockEntity consoleBlock) {
+            }
+            if (entity instanceof DoorBlockEntity doorBlock) {
+                TardisTravel.State state = doorBlock.getTardis().getTravel().getState();
+
+                if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
+                    return ActionResult.PASS;
+
+                doorBlock.getTardis().getExterior().setType(this.exterior);
+            }
+            if (entity instanceof ConsoleBlockEntity consoleBlock) {
                 TardisTravel.State state = consoleBlock.getTardis().getTravel().getState();
 
                 if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))

@@ -18,4 +18,11 @@ public class ServerTardisDesktop extends TardisDesktop {
 
         ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
     }
+
+    @Override
+    public void setConsolePos(AbsoluteBlockPos.Directed pos) {
+        super.setConsolePos(pos);
+
+        ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
+    }
 }

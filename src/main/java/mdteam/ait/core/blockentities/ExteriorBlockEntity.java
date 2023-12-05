@@ -65,7 +65,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             return;
         }
 
-        System.out.println("WHAT?? " + this.getTardis().getTravel().getState());
+        //System.out.println("WHAT?? " + this.getTardis().getTravel().getState());
 
         // fixme this sucks
         if(this.tardis.getTravel().getState() == LANDED) {
@@ -216,7 +216,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
     // same here
     public void refindTardis() {
-        System.out.println(this.tardis);
+        //System.out.println(this.tardis);
         if (this.tardis != null) // No issue
             return;
         if (this.getWorld().isClient())

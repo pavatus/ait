@@ -65,7 +65,7 @@ public class RemoteItem extends Item {
             return ActionResult.FAIL;
 
         Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
-        System.out.println(ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis")));
+        //System.out.println(ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis")));
 
         if (tardis != null) {
             if(world != TardisUtil.getTardisDimension()) {
@@ -81,9 +81,6 @@ public class RemoteItem extends Item {
                     travel.dematerialise(true);
                 if (travel.getState() == FLIGHT)
                     travel.materialise();
-                //whatState(travel.getState(), travel);
-
-                //System.out.println(ServerTardisManager.getInstance().getLookup());
 
                 return ActionResult.SUCCESS;
             } else {
@@ -104,19 +101,9 @@ public class RemoteItem extends Item {
         }
 
         NbtCompound tag = stack.getOrCreateNbt();
-        String text = tag.contains("tardis") ? tag.getUuid("tardis").toString()
+        String text = tag.contains("tardis") ? tag.getUuid("tardis").toString().substring(0, 8)
                 : "Remote does not identify with any TARDIS";
 
-        tooltip.add(Text.literal(text));
-    }
-
-    public void whatState(TardisTravel.State state, TardisTravel travel) {
-        switch (state) {
-            case LANDED:
-                travel.dematerialise(true);
-            case FLIGHT:
-                travel.materialise();
-            default:
-        }
+        tooltip.add(Text.literal("→ " + text));
     }
 }

@@ -30,7 +30,7 @@ public class ExteriorNBTComponent implements ExteriorDataComponent, AutoSyncedCo
     @Override
     public ExteriorEnum getExterior() {
         if (this.currentExterior == null && ((ExteriorBlockEntity) this.blockEntity).getTardis() != null)
-            System.out.println(((ExteriorBlockEntity) this.blockEntity).getTardis());
+            //System.out.println(((ExteriorBlockEntity) this.blockEntity).getTardis());
             this.currentExterior = ((ExteriorBlockEntity) this.blockEntity).getTardis().getExterior().getType();
 
         return this.currentExterior;

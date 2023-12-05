@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.datagen.datagen_providers.AITItemTagProvider;
 import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.datagen.datagen_providers.AITModelProvider;
 import mdteam.ait.datagen.datagen_providers.AITSoundProvider;
@@ -19,6 +20,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 		generateLanguages(pack);
+		generateItemTags(pack); //fixme im not sure why this is being silly goofy
 		generateBlockModels(pack);
 		generateSoundData(pack);
 	}
@@ -46,6 +48,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
 			return provider;
 		})));
+	}
+
+	public void generateItemTags(FabricDataGenerator.Pack pack) {
+		pack.addProvider(AITItemTagProvider::new);
 	}
 
 	public void generateBlockModels(FabricDataGenerator.Pack pack) {
@@ -97,6 +103,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
 		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
 		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
+		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Console");
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
@@ -123,6 +132,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Le Gold Key");
 		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Le Netherite Key");
 		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Le Classic Key");
+		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Le Console");
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Le Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Le Exterior");
@@ -149,6 +161,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Goldo Keyo");
 		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Netherito Keyo");
 		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Keyo");
+		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
 		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Consolo");
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radoio");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterioro");

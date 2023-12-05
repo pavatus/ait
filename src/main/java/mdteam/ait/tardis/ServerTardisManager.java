@@ -167,7 +167,7 @@ public class ServerTardisManager extends TardisManager {
     }
 
     public static ServerTardisManager getInstance() {
-        System.out.println("getInstance() = " + instance);
+        //System.out.println("getInstance() = " + instance);
         return instance;
     }
 

@@ -33,10 +33,6 @@ public class TardisDesktop {
             AITMod.LOGGER.error("Failed to find the interior door!");
             return;
         }
-        //if (!(TardisUtil.getTardisDimension().getBlockEntity(this.consolePos) instanceof ConsoleBlockEntity console)) {
-        //AITMod.LOGGER.error("Failed to find console!");
-        //return;
-        //}
 
         // this is needed for door and console initialization. when we call #setTardis(ITardis) the desktop field is still null.
         door.setDesktop(this);
@@ -62,10 +58,10 @@ public class TardisDesktop {
 
     public AbsoluteBlockPos.Directed getConsolePos() {
         // fixme probably not a good idea but this is sometimes null and is currently only used to play sounds
+        // @TODO I fixed this, it was because the setConsolePos() wasn't overridden in the ServerTardisDesktop :p - Loqor
         //if (consolePos == null) {
         //    return new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getCorners().getBox().getCenter()), TardisUtil.getTardisDimension(), Direction.NORTH);
         //}
-
         return consolePos;
     }
 

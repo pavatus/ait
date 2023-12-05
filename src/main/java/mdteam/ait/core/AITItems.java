@@ -18,6 +18,9 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item GOLD_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item NETHERITE_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item CLASSIC_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item GOLD_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
     // This is only temporary for testing until proper interior/exterior changing is done fixme todo whjatever
     public static void createExteriorItems() {
