@@ -72,7 +72,7 @@ public class SerialDimension {
 
         @Override
         public SerialDimension deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return null;
+            return new SerialDimension(json.getAsString());
         }
 
         @Override
