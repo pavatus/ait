@@ -34,7 +34,7 @@ public class ServerTardisManager extends TardisManager {
     public static final Identifier SEND = new Identifier("ait", "send_tardis");
     public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
     private static final ServerTardisManager instance = new ServerTardisManager();
-    private final Multimap<UUID, ServerPlayerEntity> subscribers = ArrayListMultimap.create();
+    private final Multimap<UUID, ServerPlayerEntity> subscribers = ArrayListMultimap.create(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
 
     public ServerTardisManager() {
         ServerPlayNetworking.registerGlobalReceiver(

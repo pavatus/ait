@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -100,6 +101,13 @@ public class ClientTardisManager extends TardisManager {
         data.writeBlockPos(pos);
 
         ClientPlayNetworking.send(ASK_POS, data);
+    }
+
+    public void ask(UUID uuid) {
+        PacketByteBuf data = PacketByteBufs.create();
+        data.writeUuid(uuid);
+
+        ClientPlayNetworking.send(ASK, data);
     }
 
     @Override

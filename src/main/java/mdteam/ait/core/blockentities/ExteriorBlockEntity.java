@@ -10,6 +10,7 @@ import mdteam.ait.core.AITItems;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.*;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.AnimationState;
@@ -259,6 +260,17 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T exterior) {
+        // fixme look i know im MEANT to just put it where data gets changed but im gonna b real i cba w that
+        exterior.markDirty();
+
+        if (world.isClient()) {
+            // oh god please fixme i just dont know where this should properly go so sending a packet every tick is sooo fiiine :))))
+            if (((ExteriorBlockEntity) exterior).getTardis() != null)
+                ClientTardisManager.getInstance().ask(((ExteriorBlockEntity) exterior).getTardis().getUuid());
+            else
+                ClientTardisManager.getInstance().ask(exterior.getPos());
+        }
+
         if (((ExteriorBlockEntity) exterior).animation != null)
             ((ExteriorBlockEntity) exterior).getAnimation().tick();
     }
