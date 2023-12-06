@@ -38,8 +38,6 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
 
         // even though TardisDesktop links the door, we need to link it here as well to avoid desync
-        System.out.println(pos);
-
         this.setTardis(TardisUtil.findTardisByInterior(pos));
     }
 
@@ -72,32 +70,28 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         AbsoluteBlockPos exteriorPos = this.tardis.getTravel().getPosition();
         ExteriorBlockEntity exterior = TardisUtil.getExterior(this.tardis);
 
-//        if (exterior != null) {
-//            exteriorPos.getChunk();
-//
-//            exterior.setLeftDoorRot(this.getLeftDoorRotation());
-//            exterior.setRightDoorRot(this.getRightDoorRotation());
-//        }
+        if (exterior != null) {
+            exteriorPos.getChunk();
+
+            exterior.setLeftDoorRot(this.getLeftDoorRotation());
+            exterior.setRightDoorRot(this.getRightDoorRotation());
+        }
     }
 
     public void setLeftDoorRot(float rotation) {
-        this.getTardis().getDoor().setLeftRot(rotation);
+        INTERIORDOORNBT.get(this).setLeftDoorRotation(rotation);
     }
 
     public void setRightDoorRot(float rotation) {
-        this.getTardis().getDoor().setRightRot(rotation);
+        INTERIORDOORNBT.get(this).setRightDoorRotation(rotation);
     }
 
     public float getLeftDoorRotation() {
-        if (this.getTardis() == null) return 0;
-
-        return this.getTardis().getDoor().left();
+        return INTERIORDOORNBT.get(this).getLeftDoorRotation();
     }
 
     public float getRightDoorRotation() {
-        if (this.getTardis() == null) return 0;
-
-        return this.getTardis().getDoor().right();
+        return INTERIORDOORNBT.get(this).getRightDoorRotation();
     }
 
     public Direction getFacing() {

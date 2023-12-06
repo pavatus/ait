@@ -31,7 +31,6 @@ public class DoorControl extends Control {
         return (!player.isSneaking()) ? useDoor(tardis, world, tardis.getDesktop().getConsolePos(), player) : toggleLock(tardis,world,player);
     }
 
-    // todo move these methods to a util class as they are hard to find here
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
         if (tardis.getTravel().getState() != LANDED)
             return false;
