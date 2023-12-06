@@ -8,6 +8,7 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -40,5 +41,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     public abstract Identifier getTexture();
+
+    @Nullable
     public abstract Identifier getEmission();
 }

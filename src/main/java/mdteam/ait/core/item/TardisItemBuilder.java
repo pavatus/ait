@@ -17,8 +17,8 @@ import mdteam.ait.tardis.ServerTardisManager;
 
 public class TardisItemBuilder extends Item {
 
-    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "cave");
-    public static final ExteriorEnum DEFAULT_EXTERIOR = ExteriorEnum.SHELTER;
+    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "war"); //new Identifier(AITMod.MOD_ID, "cave");
+    public static final ExteriorEnum DEFAULT_EXTERIOR = ExteriorEnum.CAPSULE;
 
     private final ExteriorEnum exterior;
     private final Identifier desktop;

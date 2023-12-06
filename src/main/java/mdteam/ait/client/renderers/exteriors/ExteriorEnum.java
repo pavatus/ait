@@ -3,10 +3,7 @@ package mdteam.ait.client.renderers.exteriors;
 import mdteam.ait.client.animation.ClassicAnimation;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
-import mdteam.ait.client.models.doors.BoothDoorModel;
-import mdteam.ait.client.models.doors.DoorModel;
-import mdteam.ait.client.models.doors.FalloutDoorModel;
-import mdteam.ait.client.models.doors.ToyotaDoorModel;
+import mdteam.ait.client.models.doors.*;
 import mdteam.ait.client.models.exteriors.*;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -16,6 +13,40 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 public enum ExteriorEnum {
+
+    CAPSULE() {
+        @Override
+        public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
+            return new ClassicAnimation(entity);
+        }
+
+        @Override
+        public boolean isDoubleDoor() {
+            return true;
+        }
+
+        @Override
+        @Environment(value= EnvType.CLIENT)
+        public ExteriorModel createModel() {
+            return new CapsuleExteriorModel(CapsuleExteriorModel.getTexturedModelData().createModel());
+        }
+
+        @Override
+        @Environment(value= EnvType.CLIENT)
+        public DoorModel createDoorModel() {
+            return new CapsuleDoorModel(CapsuleDoorModel.getTexturedModelData().createModel());
+        }
+
+        @Override
+        public Class<? extends ExteriorModel> getModelClass() {
+            return CapsuleExteriorModel.class;
+        }
+
+        @Override
+        public Class<? extends DoorModel> getDoorClass() {
+            return CapsuleDoorModel.class;
+        }
+    },
     SHELTER() {
         @Override
         public MatSound getSound(TardisTravel.State state) {
