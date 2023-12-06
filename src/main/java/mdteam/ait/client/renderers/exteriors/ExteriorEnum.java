@@ -12,8 +12,6 @@ import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public enum ExteriorEnum {
     SHELTER() {
@@ -36,13 +34,11 @@ public enum ExteriorEnum {
         }
 
         @Override
-        @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new FalloutExteriorModel(FalloutExteriorModel.getTexturedModelData().createModel());
         }
 
         @Override
-        @Environment(value= EnvType.CLIENT)
         public DoorModel createDoorModel() {
             return new FalloutDoorModel(FalloutDoorModel.getTexturedModelData().createModel());
         }
@@ -69,13 +65,11 @@ public enum ExteriorEnum {
         }
 
         @Override
-        @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new ToyotaExteriorModel(ToyotaExteriorModel.getTexturedModelData().createModel());
         }
 
         @Override
-        @Environment(value= EnvType.CLIENT)
         public DoorModel createDoorModel() {
             return new ToyotaDoorModel(ToyotaDoorModel.getTexturedModelData().createModel());
         }
@@ -102,13 +96,11 @@ public enum ExteriorEnum {
         }
 
         @Override
-        @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new TardimExteriorModel(TardimExteriorModel.getTexturedModelData().createModel());
         }
 
         @Override
-        @Environment(value= EnvType.CLIENT)
         public DoorModel createDoorModel() {
             return TOYOTA.createDoorModel();
         }
@@ -130,13 +122,11 @@ public enum ExteriorEnum {
         }
 
         @Override
-        @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new BoothExteriorModel(BoothExteriorModel.getTexturedModelData().createModel());
         }
 
         @Override
-        @Environment(value= EnvType.CLIENT)
         public DoorModel createDoorModel() {
             return new BoothDoorModel(BoothDoorModel.getTexturedModelData().createModel());
         }
@@ -158,9 +148,7 @@ public enum ExteriorEnum {
     };
 
     public abstract ExteriorAnimation createAnimation(ExteriorBlockEntity entity);
-    @Environment(value= EnvType.CLIENT)
     public abstract ExteriorModel createModel();
-    @Environment(value= EnvType.CLIENT)
     public abstract DoorModel createDoorModel();
     public abstract boolean isDoubleDoor();
     public abstract Class<? extends ExteriorModel> getModelClass();
