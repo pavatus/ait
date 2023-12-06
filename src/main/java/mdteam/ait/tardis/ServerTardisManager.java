@@ -69,10 +69,10 @@ public class ServerTardisManager extends TardisManager {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> this.loadTardises());
     }
 
-    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, ConsoleEnum consoleType, TardisDesktopSchema schema) {
+    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, ConsoleEnum consoleType, TardisDesktopSchema schema, boolean locked) {
         UUID uuid = UUID.randomUUID();
 
-        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, consoleType);
+        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, consoleType, locked);
         this.lookup.put(uuid, tardis);
 
         tardis.getTravel().runAnimations();
