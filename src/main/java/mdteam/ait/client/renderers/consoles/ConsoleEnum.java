@@ -78,9 +78,9 @@ public enum ConsoleEnum {
             new ControlTypes(new LandTypeControl(),   EntityDimensions.changing(0.125f, 0.125f), new Vector3f(-0.23500000312924385f, 0.4899999788030982f, -0.8050000118091702f)), //9
             new ControlTypes(new DirectionControl(),  EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.8000000212341547f, 0.5249999780207872f, 0.14999999664723873f)), //10
             new ControlTypes(new DimensionControl(),  EntityDimensions.changing(0.125f, 0.125f), new Vector3f(0.4850000077858567f, 0.6449999799951911f, -0.28500001039355993f)), //11
-            //Do we really need a telepathic circuit yet?
-            new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.8750000037252903f, 0.5249999780207872f, 0.15156249701976776f)), //12
-            new ControlTypes(new RefuelerControl(),   EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.6593750026077032f, 0.5499999783933163f, -0.3812500014901161f)), //13
+            new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.275f, 0.175f), new Vector3f(-0.8000000212341547f, 1f, 0.14999999664723873f)), //12
+            new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.8750000037252903f, 0.5249999780207872f, 0.15156249701976776f)), //13
+            new ControlTypes(new RefuelerControl(),   EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.6593750026077032f, 0.5499999783933163f, -0.3812500014901161f)), //14
         };
 
         @Override

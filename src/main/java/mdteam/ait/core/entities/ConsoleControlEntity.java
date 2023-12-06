@@ -126,6 +126,11 @@ public class ConsoleControlEntity extends BaseControlEntity {
     }
 
     @Override
+    public boolean cannotDespawn() {
+        return true;
+    }
+
+    @Override
     public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
         if (hand == Hand.MAIN_HAND)
             this.run(player, player.getWorld());

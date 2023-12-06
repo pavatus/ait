@@ -12,7 +12,7 @@ import net.minecraft.text.Text;
 
 public class MonitorControl extends Control {
     public MonitorControl() {
-        super("monitors");
+        super("monitor");
     }
 
     // todo as there is no monitors yet and i dont know how loqor wants it, so loqor will need to do this.

@@ -16,7 +16,7 @@ public class AITBlockEntityTypes implements AutoRegistryContainer<BlockEntityTyp
             AITRadioBlockEntity::new, AITBlocks.RADIO).build();
 
     public static final BlockEntityType<ConsoleBlockEntity> DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
-            ConsoleBlockEntity::new, AITBlocks.DISPLAY_CONSOLE).build();
+            ConsoleBlockEntity::new, AITBlocks.CONSOLE).build();
 
     public static final BlockEntityType<ExteriorBlockEntity> EXTERIOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
             ExteriorBlockEntity::new, AITBlocks.EXTERIOR_BLOCK).build();

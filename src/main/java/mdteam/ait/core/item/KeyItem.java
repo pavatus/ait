@@ -1,5 +1,6 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import net.minecraft.client.gui.screen.Screen;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -36,16 +38,11 @@ public class KeyItem extends Item {
         NbtCompound nbt = itemStack.getOrCreateNbt();
 
         if (player.isSneaking()) {
-            if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
-                if (exterior.getTardis() == null)
+            if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock) {
+                if (consoleBlock.getTardis() == null)
                     return ActionResult.FAIL;
 
-                nbt.putUuid("tardis", exterior.getTardis().getUuid());
-                return ActionResult.SUCCESS;
-            } else if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
-                if (door.getTardis() == null)
-                    return ActionResult.FAIL;
-                nbt.putUuid("tardis", door.getTardis().getUuid());
+                nbt.putUuid("tardis", consoleBlock.getTardis().getUuid());
                 return ActionResult.SUCCESS;
             }
         }
@@ -64,6 +61,6 @@ public class KeyItem extends Item {
         String text = tag.contains("tardis") ? tag.getUuid("tardis").toString().substring(0, 8)
                 : "Key does not identify with any TARDIS";
 
-        tooltip.add(Text.literal("→ " + text));
+        tooltip.add(Text.literal("→ " + text).formatted(Formatting.DARK_AQUA));
     }
 }

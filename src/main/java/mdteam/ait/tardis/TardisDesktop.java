@@ -57,11 +57,6 @@ public class TardisDesktop {
     }
 
     public AbsoluteBlockPos.Directed getConsolePos() {
-        // fixme probably not a good idea but this is sometimes null and is currently only used to play sounds
-        // @TODO I fixed this, it was because the setConsolePos() wasn't overridden in the ServerTardisDesktop :p - Loqor
-        //if (consolePos == null) {
-        //    return new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getCorners().getBox().getCenter()), TardisUtil.getTardisDimension(), Direction.NORTH);
-        //}
         return consolePos;
     }
 

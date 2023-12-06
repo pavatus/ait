@@ -16,6 +16,7 @@ public enum PosType implements StringIdentifiable {
         public BlockPos add(BlockPos pos, int amount) {
             //fixed boundaries for the y value :) i spent like 45 minutes writing janky inline if statements checking for it.. it worked, but this is better :) - Loqor
             return pos.withY(MathHelper.clamp(pos.getY() + amount, -64, 256));
+            //@TODO in the nether, search below 128 and above 0.
         }
     },
     Z() {

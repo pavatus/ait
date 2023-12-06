@@ -1,7 +1,6 @@
 package mdteam.ait.core;
 
-import mdteam.ait.core.desktops.CaveDesktop;
-import mdteam.ait.core.desktops.WarDesktop;
+import mdteam.ait.core.desktops.*;
 import net.minecraft.util.Identifier;
 import mdteam.ait.tardis.TardisDesktopSchema;
 
@@ -17,8 +16,24 @@ public class AITDesktops {
      * Desktops are registered here:
      */
     public static void init() {
+
+        //Necessary
+        AITDesktops.register(new DefaultCaveDesktop());
         AITDesktops.register(new CaveDesktop());
+        AITDesktops.register(new RegalDesktop());
+
+        //In Order (without the necessities)
+        AITDesktops.register(new BotanistDesktop());
+        AITDesktops.register(new CopperDesktop());
+        AITDesktops.register(new DevDesktop());
+        AITDesktops.register(new OfficeDesktop());
+        AITDesktops.register(new PristineDesktop());
+        AITDesktops.register(new RegalDesktop());
+        AITDesktops.register(new VictorianDesktop());
         AITDesktops.register(new WarDesktop());
+
+        //Secret
+        AITDesktops.register(new Type40Desktop());
     }
 
     public static void register(TardisDesktopSchema interior) {

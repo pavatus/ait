@@ -1,5 +1,6 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
@@ -13,16 +14,15 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import mdteam.ait.tardis.TardisTravel;
 
+import java.io.Console;
+
 @Deprecated
 /**
  * Only for testing purposes to change exteriors, will be removed and replaced with proper changing
  */
 public class ExteriorSelectItem extends Item {
-    private final ExteriorEnum exterior;
-
-    public ExteriorSelectItem(Settings settings, ExteriorEnum exterior) {
+    public ExteriorSelectItem(Settings settings) {
         super(settings);
-        this.exterior = exterior;
     }
 
     @Override
@@ -39,26 +39,38 @@ public class ExteriorSelectItem extends Item {
             if (entity instanceof ExteriorBlockEntity exteriorBlock) {
                 TardisTravel.State state = exteriorBlock.getTardis().getTravel().getState();
 
-                if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
+                if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
                     return ActionResult.PASS;
+                }
 
-                exteriorBlock.getTardis().getExterior().setType(this.exterior);
+                ExteriorEnum[] values = ExteriorEnum.values();
+                int nextIndex = (exteriorBlock.getTardis().getExterior().getType().ordinal() + 1) % values.length;
+                exteriorBlock.getTardis().getExterior().setType(values[nextIndex]);
+                System.out.println(exteriorBlock.getTardis().getExterior().getType());
             }
             if (entity instanceof DoorBlockEntity doorBlock) {
                 TardisTravel.State state = doorBlock.getTardis().getTravel().getState();
 
-                if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
+                if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
                     return ActionResult.PASS;
+                }
 
-                doorBlock.getTardis().getExterior().setType(this.exterior);
+                ExteriorEnum[] values = ExteriorEnum.values();
+                int nextIndex = (doorBlock.getTardis().getExterior().getType().ordinal() + 1) % values.length;
+                doorBlock.getTardis().getExterior().setType(values[nextIndex]);
             }
             if (entity instanceof ConsoleBlockEntity consoleBlock) {
                 TardisTravel.State state = consoleBlock.getTardis().getTravel().getState();
 
-                if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
+                if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
                     return ActionResult.PASS;
+                }
 
-                consoleBlock.getTardis().getExterior().setType(this.exterior);
+                ConsoleEnum[] values = ConsoleEnum.values();
+                int nextIndex = (consoleBlock.getTardis().getConsole().getType().ordinal() + 1) % values.length;
+                consoleBlock.killControls();
+                consoleBlock.getTardis().getConsole().setType(values[nextIndex]);
+                consoleBlock.spawnControls();
             }
         }
 

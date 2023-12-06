@@ -3,7 +3,6 @@ package mdteam.ait.tardis;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.entities.control.impl.DoorControl;
@@ -11,10 +10,7 @@ import mdteam.ait.core.entities.control.impl.pos.PosManager;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.data.AbsoluteBlockPos;
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SnowBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -138,7 +134,7 @@ public class TardisTravel {
 
         this.shouldRemat = false;
 
-        DoorControl.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null);
+        DoorControl.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null);
 
         this.setState(State.MAT);
 
@@ -186,7 +182,7 @@ public class TardisTravel {
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
-        DoorControl.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null);
+        DoorControl.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null);
 
         this.setState(State.DEMAT);
 

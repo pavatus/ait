@@ -1,5 +1,6 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.TardisUtil;
@@ -15,6 +16,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -46,16 +48,11 @@ public class RemoteItem extends Item {
 
         // Link to exteriors tardis if it exists and player is crouching
         if (player.isSneaking()) {
-            if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
-                if (exterior.getTardis() == null)
+            if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock) {
+                if (consoleBlock.getTardis() == null)
                     return ActionResult.FAIL;
 
-                nbt.putUuid("tardis", exterior.getTardis().getUuid());
-                return ActionResult.SUCCESS;
-            } else if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
-                if (door.getTardis() == null)
-                    return ActionResult.FAIL;
-                nbt.putUuid("tardis", door.getTardis().getUuid());
+                nbt.putUuid("tardis", consoleBlock.getTardis().getUuid());
                 return ActionResult.SUCCESS;
             }
         }
@@ -104,6 +101,6 @@ public class RemoteItem extends Item {
         String text = tag.contains("tardis") ? tag.getUuid("tardis").toString().substring(0, 8)
                 : "Remote does not identify with any TARDIS";
 
-        tooltip.add(Text.literal("→ " + text));
+        tooltip.add(Text.literal("→ " + text).formatted(Formatting.DARK_AQUA));
     }
 }

@@ -17,6 +17,7 @@ import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -33,7 +34,6 @@ import java.util.List;
 public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockEntityTicker<ConsoleBlockEntity> {
     public final AnimationState ANIM_FLIGHT = new AnimationState();
     public int animationTimer = 0;
-
     public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
     private boolean markedDirty = true;
     private Tardis tardis;
@@ -48,11 +48,14 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
 
-        //this.getAnimation().setAlpha(nbt.getFloat("alpha"));
-
         if (this.tardis != null) {
             nbt.putUuid("tardis", this.tardis.getUuid());
         }
+
+        for(ConsoleControlEntity entity : this.controlEntities) {
+
+        }
+
     }
 
     @Override

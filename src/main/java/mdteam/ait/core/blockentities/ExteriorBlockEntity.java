@@ -65,12 +65,10 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             return;
         }
 
-        //System.out.println("WHAT?? " + this.getTardis().getTravel().getState());
-
         // fixme this sucks
         if(this.tardis.getTravel().getState() == LANDED) {
             if (!this.tardis.getLockedTardis()) {
-                if(this.tardis.getExterior().getType().isDoubleDoor()) {
+                if(this.getExteriorType().isDoubleDoor()) {
                     if (this.getRightDoorRotation() == 1.2f && this.getLeftDoorRotation() == 1.2f) {
                         this.setLeftDoorRot(0);
                         this.setRightDoorRot(0);
@@ -104,18 +102,9 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
     public float[] getCorrectDoorRotations() {
         if(this.tardis != null) {
-            return this.tardis.getExterior().getType().isDoubleDoor() ? new float[]{this.getLeftDoorRotation(), this.getRightDoorRotation()} : new float[]{this.getLeftDoorRotation()};
+            return this.getExteriorType().isDoubleDoor() ? new float[]{this.getLeftDoorRotation(), this.getRightDoorRotation()} : new float[]{this.getLeftDoorRotation()};
         }
         return null;
-    }
-
-    public void setExterior(ExteriorEnum exterior) {
-        EXTERIORNBT.get(this).setExterior(exterior);
-    }
-
-    @Deprecated
-    public ExteriorEnum getExterior() {
-        return EXTERIORNBT.get(this).getExterior();
     }
 
     public void setLeftDoorRot(float rotation) {
@@ -134,20 +123,11 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         return EXTERIORNBT.get(this).getRightDoorRotation();
     }
 
-    public void setMaterialState(MaterialStateEnum materialState) {
-        EXTERIORNBT.get(this).setMaterialState(materialState);
-    }
-
-    public MaterialStateEnum getMaterialState() {
-        return EXTERIORNBT.get(this).getCurrentMaterialState();
-    }
-
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
 
-        if(this.getAnimation() != null)
-            this.getAnimation().setAlpha(nbt.getFloat("alpha"));
+        nbt.putFloat("alpha", this.getAlpha());
 
         if (this.tardis != null) {
             nbt.putUuid("tardis", this.tardis.getUuid());
@@ -158,7 +138,8 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
 
-        nbt.putFloat("alpha", this.getAlpha());
+        if(this.getAnimation() != null)
+            this.getAnimation().setAlpha(nbt.getFloat("alpha"));
 
         if (nbt.contains("tardis")) {
             TardisManager.getInstance().link(nbt.getUuid("tardis"), this);
@@ -208,7 +189,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
         if (last != this.tardis.getTravel().getState()) {
             this.animation = null;
-            this.animation = this.getTardis().getExterior().getType().createAnimation(this);
+            this.animation = this.getExteriorType().createAnimation(this);
             AITMod.LOGGER.debug("Created new ANIMATION for " + this);
             this.animation.setupAnimation(this.getTardis().getTravel().getState());
             // this.getAnimation();
@@ -269,7 +250,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         if (this.getTardis() == null)
             return;
 
-        this.animation = this.getExterior().createAnimation(this);
+        this.animation = this.getExteriorType().createAnimation(this);
         AITMod.LOGGER.debug("Created new ANIMATION for " + this);
         this.animation.setupAnimation(this.getTardis().getTravel().getState());
     }
@@ -278,6 +259,10 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         this.verifyAnimation();
 
         return this.animation;
+    }
+
+    public ExteriorEnum getExteriorType() {
+        return this.tardis.getExterior().getType();
     }
 
     public float getAlpha() {

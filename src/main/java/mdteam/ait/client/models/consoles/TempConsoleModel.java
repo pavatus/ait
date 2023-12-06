@@ -15,8 +15,8 @@ import mdteam.ait.tardis.TardisTravel;
 // Paste this class into your mod and generate all required imports
 public class TempConsoleModel extends ConsoleModel {
 
-	public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/display_console.png"));
-	public static final Identifier CONSOLE_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/display_console_emission.png");
+	public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/console.png"));
+	public static final Identifier CONSOLE_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/console_emission.png");
 
 	public ModelPart console;
 	public ModelPart cube_r1;
@@ -978,7 +978,7 @@ public class TempConsoleModel extends ConsoleModel {
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		//this.door.yaw = exterior.getLeftDoorRotation();
 		matrices.push();
-		matrices.translate(0.5, 1.35, 0.5);
+		matrices.translate(0.5, -1.35, -0.5);
 		matrices.scale(0.9f, 0.9f, 0.9f);
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();

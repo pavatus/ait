@@ -20,7 +20,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 		generateLanguages(pack);
-		generateItemTags(pack); //fixme im not sure why this is being silly goofy
+		generateItemTags(pack); // fixme im not sure why this is being silly goofy
 		generateBlockModels(pack);
 		generateSoundData(pack);
 	}
@@ -58,7 +58,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(((output, registriesFuture) -> {
 			AITModelProvider aitModelProvider = new AITModelProvider(output);
 			aitModelProvider.registerDirectionalBlock(AITBlocks.RADIO);
-			aitModelProvider.registerDirectionalBlock(AITBlocks.DISPLAY_CONSOLE);
+			aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE);
 			aitModelProvider.registerDirectionalBlock(AITBlocks.EXTERIOR_BLOCK);
 			aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
 
@@ -97,19 +97,20 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
 		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
 		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-		// aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Toyota Item | TEMP |");
-		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
+		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
+		aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Console");
 		aitLanguageProvider.addTranslation(AITItems.IRON_KEY, "Iron Key");
 		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
 		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
 		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
+		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
+		aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
+		aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
 		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
 		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
 		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
-		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Console");
 		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
 		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
-		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
 
 		return aitLanguageProvider;
 	}
@@ -124,21 +125,22 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	public AITLanguageProvider addFrenchTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
 		AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
-		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Le Adventures In Time");
-		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "Le TARDIS");
-		// aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Le Toyota Item | TEMP |");
-		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Le Stattenheim Remote");
-		aitLanguageProvider.addTranslation(AITItems.IRON_KEY, "Le Iron Key");
-		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Le Gold Key");
-		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Le Netherite Key");
-		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Le Classic Key");
+		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
+		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
+		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
+		aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Console");
+		aitLanguageProvider.addTranslation(AITItems.IRON_KEY, "Iron Key");
+		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
+		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
+		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
+		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
+		aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
+		aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
 		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
 		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
 		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
-		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Le Console");
-		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Le Radio");
-		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Le Exterior");
-		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Le Door");
+		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
+		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
 
 		return aitLanguageProvider;
 	}
@@ -153,21 +155,22 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 	public AITLanguageProvider addSpanishTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
 		AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
-		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventuro en timo");
+		aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
 		aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-		// aitLanguageProvider.addTranslation(AITItems.TOYOTA_ITEM, "Toyotota | TEMP |");
-		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stato Remoto");
-		aitLanguageProvider.addTranslation(AITItems.IRON_KEY, "Irono Keyo");
-		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Goldo Keyo");
-		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Netherito Keyo");
-		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Keyo");
+		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
+		aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Console");
+		aitLanguageProvider.addTranslation(AITItems.IRON_KEY, "Iron Key");
+		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
+		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
+		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
+		aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
+		aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
+		aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
 		aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
 		aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
 		aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
-		aitLanguageProvider.addTranslation(AITBlocks.DISPLAY_CONSOLE, "Consolo");
-		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radoio");
-		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterioro");
-		aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Dooro");
+		aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
+		aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
 
 		return aitLanguageProvider;
 	}

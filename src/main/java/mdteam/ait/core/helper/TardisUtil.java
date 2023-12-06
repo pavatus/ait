@@ -167,7 +167,7 @@ public class TardisUtil {
 
     private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
         Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
-
+        //@TODO THEO FIX THIS GODDAMNED BUG I'M LITERALLY ABOUT TO GO COMPLETELY INSANE.
         player.teleport((ServerWorld) pos.getWorld(), vec.getX(), vec.getY(), vec.getZ(),
                 pos.getDirection().asRotation(), player.getPitch()
         );
