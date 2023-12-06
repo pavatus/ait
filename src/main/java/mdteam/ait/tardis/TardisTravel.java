@@ -85,8 +85,19 @@ public class TardisTravel {
         return this.tardis;
     }
 
+    public boolean __subCheckForPos(BlockPos.Mutable mutable, int i) {
+        BlockState state = this.getDestination().getWorld().getBlockState(mutable.setY(i));
+        if (state.isReplaceable() && !this.getDestination().getWorld().getBlockState(mutable.down()).isReplaceable()) {
+            AbsoluteBlockPos.Directed abpd = new AbsoluteBlockPos.Directed(mutable.setY(i),
+                    this.getDestination().getWorld(), this.getDestination().getDirection());
+            this.setDestination(abpd, false);
+            return true;
+        }
+        return false;
+    }
+
     //Yeah I know, I'm so cool :) - Loqor
-    public void checkPositionAndMaterialise(boolean check) {
+    public void checkPositionAndMaterialise(boolean landType) {
 
         if(this.getDestination() == null)
             return;
@@ -94,26 +105,27 @@ public class TardisTravel {
         if(this.getDestination().getWorld().isClient())
             return;
 
-        if(check) {
-            BlockPos.Mutable mutable = new BlockPos.Mutable(this.getDestination().getX(), this.getDestination().getY(), this.getDestination().getZ());
+        BlockPos.Mutable mutable = new BlockPos.Mutable(this.getDestination().getX(), this.getDestination().getY(), this.getDestination().getZ());
+        if(landType) {
             for (int i = this.getDestination().getY(); i > this.getDestination().getWorld().getBottomY(); i--) {
-                BlockState state = this.getDestination().getWorld().getBlockState(mutable.setY(i));
-                if (state.isReplaceable() && !this.getDestination().getWorld().getBlockState(mutable.down()).isReplaceable()) {
-                    AbsoluteBlockPos.Directed abpd = new AbsoluteBlockPos.Directed(mutable.setY(i),
-                            this.getDestination().getWorld(), this.getDestination().getDirection());
-                    this.setDestination(abpd, false);
+                if (__subCheckForPos(mutable, i)) {
                     materialise();
                     return;
                 }
             }
-            if (this.getTardis() != null) {
-                PlayerEntity player = TardisUtil.getPlayerInsideInterior(this.getTardis());
-                if (player != null) {
-                    player.sendMessage(Text.literal("Position not viable for translocation: " + mutable), true);
+        } else {
+            for (int i = this.getDestination().getY(); i < this.getDestination().getWorld().getBottomY(); i++) {
+                if (__subCheckForPos(mutable, i)) {
+                    materialise();
+                    return;
                 }
             }
-        } else {
-            materialise();
+        }
+        if (this.getTardis() != null) {
+            PlayerEntity player = TardisUtil.getPlayerInsideInterior(this.getTardis());
+            if (player != null) {
+                player.sendMessage(Text.literal("Position not viable for translocation: " + mutable), true);
+            }
         }
     }
 

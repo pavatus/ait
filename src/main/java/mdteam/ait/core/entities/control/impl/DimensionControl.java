@@ -51,15 +51,29 @@ public class DimensionControl extends Control {
         player.sendMessage(Text.literal("Dimension: " + convertWorldToReadable(world)), true); // fixme translatable is preferred
     }
     public static String convertWorldToReadable(World world) {
-        return world.getDimensionKey().getValue().getPath().replace("_"," ").toUpperCase();
+        String path = world.getDimensionKey().getValue().getPath();
+
+        // Split the string into words
+        String[] words = path.split("_");
+
+        // Capitalize the first letter of each word
+        for (int i = 0; i < words.length; i++) {
+            words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
+        }
+
+        // Join the words back together with spaces
+        return String.join(" ", words);
     }
 
     private List<ServerWorld> getDimensions() {
         List<ServerWorld> dims = new ArrayList<>();
         Iterable<ServerWorld> allDims = TardisUtil.getServer().getWorlds();
 
-        // todo an actual filter
-        allDims.forEach(dims::add);
+        // fixme this is easiest/stupidest way to do this without letting them get to the tardis dim :p - Loqor
+        allDims.forEach(dim -> {
+            if(dim.getRegistryKey() != TardisUtil.getTardisDimension().getRegistryKey())
+                dims.add(dim);
+        });
 
         return dims;
     }

@@ -45,10 +45,11 @@ public class FalloutDoorModel extends DoorModel {
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		this.door.yaw = -door.getLeftDoorRotation();
+		//this.door.yaw = -door.getLeftDoorRotation();
 
 		matrices.push();
 		matrices.translate(0,-1.5,0);
+		this.door.setPivot(this.frame.pivotX, this.frame.pivotY, this.frame.pivotZ);
 
 		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();

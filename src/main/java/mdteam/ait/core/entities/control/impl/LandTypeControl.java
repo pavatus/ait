@@ -1,6 +1,11 @@
 package mdteam.ait.core.entities.control.impl;
 
+import mdteam.ait.client.renderers.consoles.ConsoleEnum;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.blocks.ConsoleBlock;
+import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.entities.control.Control;
+import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.tardis.TardisTravel;
 import net.minecraft.block.AirBlock;
@@ -16,6 +21,8 @@ import net.minecraft.util.math.Box;
 
 import java.util.Iterator;
 
+import static mdteam.ait.client.renderers.consoles.ConsoleEnum.BOREALIS;
+
 public class LandTypeControl extends Control {
     public LandTypeControl() {
         super("land_type");
@@ -29,22 +36,10 @@ public class LandTypeControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
 
-        // fixme for this, i was originally gonna do the searching like you would if it was landing, then i changed it to just do it automatically and have this
-        // fixme configure the actual landing position on materialise by adding a new method called checkPositionAndMaterialise() that runs the loop and lands if possible. - Loqor
+        TardisTravel travel = tardis.getTravel();
 
-        //world.getChunk(tardis.getTravel().getDestination()).areSectionsEmptyBetween(-64, 256); perhaps a future use thing, doesn't return a list of air blocks though
+        // fixme ?? im not entirely sure how to do this but it's really just my brain being fried - Loqor
 
-        //TardisTravel travel = tardis.getTravel();
-        //BlockPos.Mutable mutable = new BlockPos.Mutable(travel.getDestination().getX(), travel.getDestination().getY(), travel.getDestination().getZ());
-        //for(int i = travel.getDestination().getY(); i < world.getTopY(); i++) {
-        //    BlockState state = world.getBlockState(mutable.setY(i));
-        //    if(state.getBlock() instanceof AirBlock) {
-        //        AbsoluteBlockPos.Directed abpd = new AbsoluteBlockPos.Directed(mutable.setY(i),
-        //                travel.getDestination().getWorld(), travel.getDestination().getDirection());
-        //        travel.setDestination(abpd, false);
-        //        break;
-        //    }
-        //}
         return false;
     }
 }

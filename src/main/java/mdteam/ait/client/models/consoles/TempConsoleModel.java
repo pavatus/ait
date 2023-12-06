@@ -377,7 +377,7 @@ public class TempConsoleModel extends ConsoleModel {
 
 		ModelPartData refuller_r1 = refuller.addChild("refuller_r1", ModelPartBuilder.create().uv(0, 11).cuboid(-3.0F, -0.6F, -0.5F, 6.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.1745F, -1.0472F, 0.0F));
 
-		ModelPartData monitor = console.addChild("monitor", ModelPartBuilder.create(), ModelTransform.pivot(12.3022F, -19.5876F, -6.1706F));
+		ModelPartData monitor = console.addChild("monitors", ModelPartBuilder.create(), ModelTransform.pivot(12.3022F, -19.5876F, -6.1706F));
 
 		ModelPartData monitor_r1 = monitor.addChild("monitor_r1", ModelPartBuilder.create().uv(134, 0).cuboid(-1.775F, 1.3F, -6.0F, 5.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.7418F, 2.0944F, 0.0F));
 

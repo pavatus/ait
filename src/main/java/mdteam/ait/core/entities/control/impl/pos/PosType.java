@@ -2,6 +2,7 @@ package mdteam.ait.core.entities.control.impl.pos;
 
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 public enum PosType implements StringIdentifiable {
     X() {
@@ -13,7 +14,8 @@ public enum PosType implements StringIdentifiable {
     Y() {
         @Override
         public BlockPos add(BlockPos pos, int amount) {
-            return pos.add(0,amount,0);
+            //fixed boundaries for the y value :) i spent like 45 minutes writing janky inline if statements checking for it.. it worked, but this is better :) - Loqor
+            return pos.withY(MathHelper.clamp(pos.getY() + amount, -64, 256));
         }
     },
     Z() {

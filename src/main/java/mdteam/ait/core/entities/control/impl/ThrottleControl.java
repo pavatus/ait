@@ -24,8 +24,6 @@ public class ThrottleControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         // fixme this is not right, but its okay for temporary. also see remoteitem where this is done again
-        // fixme sounds arent played in interior !!
-        // trust me, this runs. just be patient LOQOR.
         TardisTravel travel = tardis.getTravel();
 
         if (travel.getState() == TardisTravel.State.LANDED) {

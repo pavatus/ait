@@ -531,7 +531,7 @@ public class BorealisConsoleModel extends ConsoleModel {
 		.uv(76, 102).cuboid(3.0F, 1.024F, 0.0765F, 4.0F, 1.0F, 12.0F, new Dilation(0.0F))
 		.uv(133, 101).cuboid(-2.5F, -0.976F, 8.5765F, 5.0F, 2.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -4.0F, -27.8F, 0.48F, 0.0F, 0.0F));
 
-		ModelPartData monitor = northwestcontrolpanel.addChild("monitor", ModelPartBuilder.create().uv(100, 94).cuboid(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F, new Dilation(0.0F))
+		ModelPartData monitor = northwestcontrolpanel.addChild("monitors", ModelPartBuilder.create().uv(100, 94).cuboid(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F, new Dilation(0.0F))
 		.uv(98, 42).cuboid(-4.5F, -4.5F, -4.5F, 9.0F, 9.0F, 9.0F, new Dilation(0.0F))
 		.uv(70, 138).cuboid(4.0F, -2.0F, -2.0F, 2.0F, 4.0F, 4.0F, new Dilation(0.0F))
 		.uv(36, 138).cuboid(-6.0F, -2.0F, -2.0F, 2.0F, 4.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 1.274F, 6.0765F, -0.9163F, 0.0F, 0.0F));
@@ -636,7 +636,7 @@ public class BorealisConsoleModel extends ConsoleModel {
 		if(console.getTardis() == null) return;
 		matrices.push();
 		this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel").getChild("throttle").pivotZ =
-				console.getTardis().getTravel().getState() != TardisTravel.State.LANDED
+				console.getTardis().getTravel().getState() == TardisTravel.State.DEMAT || console.getTardis().getTravel().getState() == TardisTravel.State.FLIGHT
 						? this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel").getChild("throttle").pivotZ + 3f :
 						this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel").getChild("throttle").pivotZ;
 		matrices.pop();

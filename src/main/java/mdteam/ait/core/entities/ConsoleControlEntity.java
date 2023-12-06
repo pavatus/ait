@@ -4,6 +4,11 @@ import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.entities.control.ControlTypes;
+import mdteam.ait.core.helper.TardisUtil;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -26,8 +31,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -85,8 +93,11 @@ public class ConsoleControlEntity extends BaseControlEntity {
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
+        //if(this.controlTypes != null)
+        //    nbt.put("controlTypes", this.controlTypes.serializeTypes(nbt));
         if(consoleBlockPos != null)
             nbt.put("console", NbtHelper.fromBlockPos(this.consoleBlockPos));
+
         nbt.putString("identity", this.getIdentity());
         nbt.putFloat("scale", this.getScale());
         nbt.putFloat("offsetX", this.getOffset().x());
@@ -97,6 +108,8 @@ public class ConsoleControlEntity extends BaseControlEntity {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
+        //if(this.controlTypes != null)
+        //    this.controlTypes = this.controlTypes.deserializeTypes(nbt);
         var console = (NbtCompound) nbt.get("console");
         if(console != null)
             this.consoleBlockPos = NbtHelper.toBlockPos(console);
@@ -142,9 +155,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
             return this.controlTypes.control().runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server
         } else {
-            // fixme client doesnt have controltypes so this causes a null crash
-            return true;
-            // return this.controlTypes.control().runClient(this.getTardis(world), (ClientPlayerEntity) player, (ClientWorld) world);
+            //@TODO proper serialisation of the control types, because frankly, this is getting ridiculous.
+            if(this.controlTypes != null)
+                return this.controlTypes.control().runClient(this.getTardis(world), (ClientPlayerEntity) player, (ClientWorld) world);
+            return false;
         }
     }
 
@@ -175,7 +189,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         // System.out.println(type);
         if(consoleType != null) {
             this.setScale(type.getScale().width);
-            this.setCustomName(Text.translatable(type.control().id).fillStyle(Style.EMPTY.withColor(Formatting.BLUE).withBold(true)));
+            this.setCustomName(Text.translatable(type.control().id)/*.fillStyle(Style.EMPTY.withColor(Formatting.GOLD).withBold(true))*/);
         }
     }
 
@@ -211,13 +225,23 @@ public class ConsoleControlEntity extends BaseControlEntity {
             if(this.controlTypes == null) {
                 if (this.consoleBlockPos != null) {
                     if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
-
                         console.markDirty();
                     }
                     discard();
                 }
             }
         }
+        /*PlayerEntity player = MinecraftClient.getInstance().player;
+        if(player != null)
+            this.setCustomNameVisible(isPlayerLookingAtControl(player, this)); System.out.println("im being looked at ;) : " + this);*/
+    }
+
+    public static boolean isPlayerLookingAtControl(HitResult hitResult, ConsoleControlEntity entity) {
+        if (hitResult.getType() == HitResult.Type.ENTITY) {
+            Entity hitEntity = ((EntityHitResult) hitResult).getEntity();
+            return hitEntity != null && hitEntity.equals(entity);
+        }
+        return false;
     }
 
     @Override

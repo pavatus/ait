@@ -34,7 +34,16 @@ public class DirectionControl extends Control {
     }
 
     private void messagePlayer(ServerPlayerEntity player, Direction direction) {
-        player.sendMessage(Text.literal("Direction: " + direction), true); // fixme translatable is preferred
+        String arrow = "";
+        if(direction == Direction.NORTH)
+            arrow = "↑";
+        else if(direction == Direction.EAST)
+            arrow = "→";
+        else if(direction == Direction.SOUTH)
+            arrow = "↓";
+        else if(direction == Direction.WEST)
+            arrow = "←";
+        player.sendMessage(Text.literal("Direction: " + direction.toString().substring(0, 1).toUpperCase() + direction.toString().substring(1) + " | " + arrow), true); // fixme translatable is preferred
     }
     private Direction getNextDirection(Direction current) {
         return switch (current) {
