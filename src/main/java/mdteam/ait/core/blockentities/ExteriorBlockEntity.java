@@ -208,7 +208,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
         if (last != this.tardis.getTravel().getState()) {
             this.animation = null;
-            this.animation = this.getExterior().createAnimation(this);
+            this.animation = this.getTardis().getExterior().getType().createAnimation(this);
             AITMod.LOGGER.debug("Created new ANIMATION for " + this);
             this.animation.setupAnimation(this.getTardis().getTravel().getState());
             // this.getAnimation();
