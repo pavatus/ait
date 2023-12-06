@@ -5,6 +5,7 @@ import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
+import mdteam.ait.tardis.*;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.block.Block;
@@ -23,10 +24,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.TardisDesktop;
-import mdteam.ait.tardis.TardisManager;
-import mdteam.ait.tardis.TardisTravel;
 import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,6 +85,9 @@ public class TardisUtil {
             return null;
 
         return door;
+    }
+    public static DoorHandler getDoorHandler(Tardis tardis) {
+        return tardis.getDoor();
     }
 
     public static ExteriorBlockEntity getExterior(Tardis tardis) {

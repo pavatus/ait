@@ -7,6 +7,7 @@ import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITItems;
+import mdteam.ait.core.entities.control.impl.DoorControl;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.*;
@@ -42,7 +43,6 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
-
         if(player == null)
             return;
 
@@ -53,12 +53,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
                 return;
             }
             if(Objects.equals(this.getTardis().getUuid().toString(), tag.getUuid("tardis").toString())) {
-                this.tardis.setLockedTardis(!this.getTardis().getLockedTardis());
-                this.setLeftDoorRot(0);
-                this.setRightDoorRot(0);
-                String lockedState = this.getTardis().getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
-                player.sendMessage(Text.literal(lockedState), true);
-                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+                DoorControl.toggleLock(this.getTardis(), world, (ServerPlayerEntity) player); // safe cast because server
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
@@ -68,39 +63,34 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
         //System.out.println("WHAT?? " + this.getTardis().getTravel().getState());
 
-        // fixme this sucks
-        if(this.tardis.getTravel().getState() == LANDED) {
-            if (!this.tardis.getLockedTardis()) {
-                if(this.tardis.getExterior().getType().isDoubleDoor()) {
-                    if (this.getRightDoorRotation() == 1.2f && this.getLeftDoorRotation() == 1.2f) {
-                        this.setLeftDoorRot(0);
-                        this.setRightDoorRot(0);
-                    } else {
-                        this.setRightDoorRot(this.getLeftDoorRotation() == 0 ? 0 : 1.2f);
-                        this.setLeftDoorRot(1.2f);
-                    }
-                }
-                else
-                    this.setLeftDoorRot(this.getLeftDoorRotation() == 0 ? 1.2f : 0);
-                world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
-            } else {
-                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
-                player.sendMessage(Text.literal("\uD83D\uDD12"), true);
-            }
-        }
+        // this is useless
+//        if(this.tardis.getTravel().getState() == LANDED) {
+//            if (!this.tardis.getLockedTardis()) {
+//                if(this.tardis.getExterior().getType().isDoubleDoor()) {
+//                    if (this.getRightDoorRotation() == 1.2f && this.getLeftDoorRotation() == 1.2f) {
+//                        this.setLeftDoorRot(0);
+//                        this.setRightDoorRot(0);
+//                    } else {
+//                        this.setRightDoorRot(this.getLeftDoorRotation() == 0 ? 0 : 1.2f);
+//                        this.setLeftDoorRot(1.2f);
+//                    }
+//                }
+//                else
+//                    this.setLeftDoorRot(this.getLeftDoorRotation() == 0 ? 1.2f : 0);
+//                world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
+//            } else {
+//                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
+//                player.sendMessage(Text.literal("\uD83D\uDD12"), true);
+//            }
+//        }
+
+        if (this.getTardis() == null)
+            return;
+        DoorControl.useDoor(this.getTardis(), world, this.getPos(), (ServerPlayerEntity) player);
+
 
         if (sneaking)
             return;
-
-        DoorBlockEntity door = TardisUtil.getDoor(this.tardis);
-
-        if(this.tardis.getTravel().getState() == LANDED)
-            if (door != null) {
-                TardisUtil.getTardisDimension().getChunk(door.getPos()); // force load the chunk
-
-                door.setLeftDoorRot(this.getLeftDoorRotation());
-                door.setRightDoorRot(this.getRightDoorRotation());
-            }
     }
 
     public float[] getCorrectDoorRotations() {
@@ -120,6 +110,8 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         return EXTERIORNBT.get(this).getExterior();
     }
 
+    // todo use door rotations instead as theyre synced better
+    @Deprecated
     public void setLeftDoorRot(float rotation) {
         EXTERIORNBT.get(this).setLeftDoorRotation(rotation);
     }
@@ -129,11 +121,21 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public float getLeftDoorRotation() {
-        return EXTERIORNBT.get(this).getLeftDoorRotation();
+        if (this.getTardis() != null) {
+            DoorBlockEntity door = TardisUtil.getDoor(this.getTardis());
+            if (door != null)
+                return door.getLeftDoorRotation();
+        }
+        return 0;
     }
 
     public float getRightDoorRotation() {
-        return EXTERIORNBT.get(this).getRightDoorRotation();
+        if (this.getTardis() != null) {
+            DoorBlockEntity door = TardisUtil.getDoor(this.getTardis());
+            if (door != null)
+                return door.getRightDoorRotation();
+        }
+        return 0;
     }
 
     public void setMaterialState(MaterialStateEnum materialState) {
@@ -275,7 +277,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             ((ExteriorBlockEntity) exterior).getAnimation().tick();
     }
 
-    // theo please stop deleting my shit theres a reason its there rarely its not just schizophrenic code rambles that are useless
+    // theo please stop deleting my shit theres a reason its there. rarely its not just schizophrenic code rambles that are useless
     public void verifyAnimation() {
         if (this.animation != null)
             return;
