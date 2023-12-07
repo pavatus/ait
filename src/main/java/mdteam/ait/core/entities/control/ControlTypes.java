@@ -10,7 +10,6 @@ import net.minecraft.server.world.ServerWorld;
 import org.joml.Vector3f;
 
 public class ControlTypes {
-
     private Control control;
     private EntityDimensions scale;
     private Vector3f offset;

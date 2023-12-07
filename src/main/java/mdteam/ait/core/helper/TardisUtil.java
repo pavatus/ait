@@ -1,11 +1,13 @@
 package mdteam.ait.core.helper;
 
+import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,8 +32,12 @@ import mdteam.ait.tardis.TardisTravel;
 import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.List;
 import java.util.Random;
+
+import static javax.management.timer.Timer.ONE_SECOND;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
@@ -168,9 +174,16 @@ public class TardisUtil {
     private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
         Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
         //@TODO THEO FIX THIS GODDAMNED BUG I'M LITERALLY ABOUT TO GO COMPLETELY INSANE.
-        player.teleport((ServerWorld) pos.getWorld(), vec.getX(), vec.getY(), vec.getZ(),
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
+            }
+        }, 20);
+        /*player.teleport((ServerWorld) pos.getWorld(), vec.getX(), vec.getY(), vec.getZ(),
                 pos.getDirection().asRotation(), player.getPitch()
-        );
+        );*/
     }
 
     public static Tardis findTardisByInterior(BlockPos pos) {
