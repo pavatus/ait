@@ -121,7 +121,7 @@ public class TardisTravel {
         if (this.getTardis() != null) {
             PlayerEntity player = TardisUtil.getPlayerInsideInterior(this.getTardis());
             if (player != null) {
-                player.sendMessage(Text.literal("Position not viable for translocation: " + mutable), true);
+                player.sendMessage(Text.literal("Position not viable for translocation: " + mutable.getX() + " | " + mutable.getY() + " | " + mutable.getZ()), true);
             }
         }
     }

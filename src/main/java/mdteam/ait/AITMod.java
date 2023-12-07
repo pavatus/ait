@@ -47,5 +47,6 @@ public class AITMod implements ModInitializer {
 		AIT_ITEM_GROUP.initialize();
 		TardisUtil.init();
 		TardisManager.getInstance();
+		TardisManager.init();
 	}
 }

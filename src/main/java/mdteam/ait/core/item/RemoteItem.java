@@ -73,11 +73,11 @@ public class RemoteItem extends Item {
                 travel.setDestination(new AbsoluteBlockPos.Directed(pos.up(), world, player.getMovementDirection().getOpposite()), true);
                 // travel.toggleHandbrake();
 
-                //FIXME: this is not how you do it!
+                //FIXME: this is not how you do it! (cope)
                 if (travel.getState() == LANDED)
                     travel.dematerialise(true);
                 if (travel.getState() == FLIGHT)
-                    travel.materialise();
+                    travel.checkPositionAndMaterialise(true);
 
                 return ActionResult.SUCCESS;
             } else {

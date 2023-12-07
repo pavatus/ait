@@ -5,9 +5,14 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.api.tardis.ILinkable;
+import mdteam.ait.core.events.BlockEntityPreLoadEvent;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.Corners;
 import mdteam.ait.data.SerialDimension;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +39,30 @@ public abstract class TardisManager {
                 .registerTypeAdapter(Corners.class, Corners.serializer());
         builder = this.init(builder);
         this.gson = builder.create();
+    }
+
+    public static void init() {
+        // nicked this off theo
+
+        // this will re-register the client tardis manager on every join (that includes local worlds as well)
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            ClientPlayConnectionEvents.INIT.register((handler, client) -> ClientTardisManager.init());
+        }
+
+        // this is a race between what happens first:
+        // if it's a world with tardises - then we need to initialize server tardis manager before any of the block entities load
+        BlockEntityPreLoadEvent.LOAD.register(() -> {
+            if (ServerTardisManager.getInstance() == null) {
+                ServerTardisManager.init();
+            }
+        });
+
+        // if it's a brand-new world without any tardises - then there's no need to run ahead of the train and break things
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            if (ServerTardisManager.getInstance() == null) {
+                ServerTardisManager.init();
+            }
+        });
     }
 
     public GsonBuilder init(GsonBuilder builder) {

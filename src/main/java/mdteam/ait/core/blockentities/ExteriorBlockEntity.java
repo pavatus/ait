@@ -239,6 +239,13 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T exterior) {
+        if (exterior.getWorld() != null && exterior.getWorld().isClient()) { // fixme idk where a load method is
+            if (((ExteriorBlockEntity) exterior).getTardis() != null)
+                ClientTardisManager.getInstance().ask(((ExteriorBlockEntity) exterior).getTardis().getUuid());
+            else
+                ClientTardisManager.getInstance().ask(((ExteriorBlockEntity) exterior).getPos());
+        }
+
         if (((ExteriorBlockEntity) exterior).animation != null)
             ((ExteriorBlockEntity) exterior).getAnimation().tick();
     }

@@ -3,6 +3,7 @@ package mdteam.ait.core.entities.control.impl.pos;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 
 public enum PosType implements StringIdentifiable {
     X() {
@@ -13,9 +14,13 @@ public enum PosType implements StringIdentifiable {
     },
     Y() {
         @Override
+        public BlockPos add(BlockPos pos, int amount, World world) {
+            return pos.withY(MathHelper.clamp(pos.getY(), world.getBottomY(), world.getTopY()));
+        }
+
+        @Override
         public BlockPos add(BlockPos pos, int amount) {
-            //fixed boundaries for the y value :) i spent like 45 minutes writing janky inline if statements checking for it.. it worked, but this is better :) - Loqor
-            return pos.withY(MathHelper.clamp(pos.getY() + amount, -64, 256));
+            return pos.withY(pos.getY() + amount);
             //@TODO in the nether, search below 128 and above 0.
         }
     },
@@ -28,6 +33,9 @@ public enum PosType implements StringIdentifiable {
 
     // adds an amount to a blockpos based on this type
     public abstract BlockPos add(BlockPos pos, int amount);
+    public BlockPos add(BlockPos pos, int amount, World world) {
+        return add(pos,amount);
+    }
 
     @Override
     public String asString() {

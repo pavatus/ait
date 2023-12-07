@@ -44,9 +44,9 @@
       "ait:tardis/demat"
     ]
   },
-  "tardis/mat": {
+  "tardis/eighth_demat": {
     "sounds": [
-      "ait:tardis/mat"
+      "ait:tardis/eighth_demat"
     ]
   },
   "tardis/eighth_mat": {
@@ -54,9 +54,9 @@
       "ait:tardis/eighth_mat"
     ]
   },
-  "tardis/eighth_demat": {
+  "tardis/mat": {
     "sounds": [
-      "ait:tardis/eighth_demat"
+      "ait:tardis/mat"
     ]
   }
 }
