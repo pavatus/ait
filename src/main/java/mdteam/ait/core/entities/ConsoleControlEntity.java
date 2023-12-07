@@ -3,9 +3,9 @@ package mdteam.ait.core.entities;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.entities.control.ControlTypes;
-import mdteam.ait.core.helper.TardisUtil;
-import net.minecraft.client.MinecraftClient;
+import mdteam.ait.core.entities.control.Control;
+import mdteam.ait.tardis.ClientTardisManager;
+import mdteam.ait.tardis.ControlTypes;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -26,29 +26,29 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import mdteam.ait.tardis.Tardis;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class ConsoleControlEntity extends BaseControlEntity {
 
     private BlockPos consoleBlockPos;
-    private ControlTypes controlTypes;
+    private Control control;
     private static final TrackedData<String> IDENTITY = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.STRING);
-    private static final TrackedData<Float> SCALE = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final TrackedData<Float> WIDTH = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final TrackedData<Float> HEIGHT = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Vector3f> OFFSET = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
 
     public ConsoleControlEntity(EntityType<? extends BaseControlEntity> entityType, World world) {
@@ -64,7 +64,8 @@ public class ConsoleControlEntity extends BaseControlEntity {
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(IDENTITY, "");
-        this.dataTracker.startTracking(SCALE, 0.125f);
+        this.dataTracker.startTracking(WIDTH, 0.125f);
+        this.dataTracker.startTracking(HEIGHT, 0.125f);
         this.dataTracker.startTracking(OFFSET, new Vector3f(0));
     }
 
@@ -75,12 +76,18 @@ public class ConsoleControlEntity extends BaseControlEntity {
     public void setIdentity(String string) {
         this.dataTracker.set(IDENTITY, string);
     }
-    public float getScale() {
-        return this.dataTracker.get(SCALE);
+    public float getControlWidth() {
+        return this.dataTracker.get(WIDTH);
+    }
+    public float getControlHeight() {
+        return this.dataTracker.get(HEIGHT);
     }
 
-    public void setScale(float scale) {
-        this.dataTracker.set(SCALE, scale);
+    public void setControlWidth(float width) {
+        this.dataTracker.set(WIDTH, width);
+    }
+    public void setControlHeight(float height) {
+        this.dataTracker.set(HEIGHT, height);
     }
     public Vector3f getOffset() {
         return this.dataTracker.get(OFFSET);
@@ -99,7 +106,8 @@ public class ConsoleControlEntity extends BaseControlEntity {
             nbt.put("console", NbtHelper.fromBlockPos(this.consoleBlockPos));
 
         nbt.putString("identity", this.getIdentity());
-        nbt.putFloat("scale", this.getScale());
+        nbt.putFloat("width", this.getControlWidth());
+        nbt.putFloat("height", this.getControlHeight());
         nbt.putFloat("offsetX", this.getOffset().x());
         nbt.putFloat("offsetY", this.getOffset().y());
         nbt.putFloat("offsetZ", this.getOffset().z());
@@ -116,8 +124,9 @@ public class ConsoleControlEntity extends BaseControlEntity {
         if (nbt.contains("identity")) {
             this.setIdentity(nbt.getString("identity"));
         }
-        if (nbt.contains("scale")) {
-            this.setScale(nbt.getFloat("scale"));
+        if (nbt.contains("width") && nbt.contains("height")) {
+            this.setControlWidth(nbt.getFloat("width"));
+            this.setControlWidth(nbt.getFloat("height"));
             this.calculateDimensions();
         }
         if(nbt.contains("offsetX") && nbt.contains("offsetY") && nbt.contains("offsetZ")) {
@@ -140,7 +149,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (source.getAttacker() instanceof PlayerEntity) {
+        if (source.getAttacker() instanceof PlayerEntity player) {
+            if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) {
+                controlEditorHandler(player);
+            }
             this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld());
         }
 
@@ -154,47 +166,54 @@ public class ConsoleControlEntity extends BaseControlEntity {
         if (!world.isClient()) {
             if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM) {
                 this.remove(RemovalReason.DISCARDED);
-            } else if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) {
+            }/* else if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) {
                 controlEditorHandler(player);
-            }
+            }*/
 
-            return this.controlTypes.control().runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server
+            return this.control.runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server
         } else {
-            //@TODO proper serialisation of the control types, because frankly, this is getting ridiculous.
-            if(this.controlTypes != null)
-                return this.controlTypes.control().runClient(this.getTardis(world), (ClientPlayerEntity) player, (ClientWorld) world);
+            if(this.getTardis() != null) {
+                System.out.println(this.getCustomName());
+                for (ControlTypes control : this.getTardis().getConsole().getType().getControlTypesList()) {
+                    if (control.getControl().getId().matches("monitor")) {
+                        return control.getControl().runClient(this.getTardis(), (ClientPlayerEntity) player, (ClientWorld) world);
+                    }
+                }
+            }
             return false;
         }
     }
 
     // clearly loqor has trust issues with running this so i do too so im overwriting it to do what he did fixme pls
     public Tardis getTardis(World world) {
-        if (!(this.consoleBlockPos != null && this.controlTypes != null && world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))
+        if (!(this.consoleBlockPos != null && this.control != null && world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))
             return null;
 
         return console.getTardis();
     }
 
-    public void setScaleAndCalculate(float scale) {
-        this.setScale(scale);
+    public void setScaleAndCalculate(float width, float height) {
+        this.setControlWidth(width);
+        this.setControlHeight(height);
         this.calculateDimensions();
     }
 
     @Override
     public Text getName() {
-        if(this.controlTypes != null)
-            return Text.translatable(this.controlTypes.control().id);
+        if(this.control != null)
+            return Text.translatable(this.control.getId());
         else
             return super.getName();
     }
 
     public void setControlData(ConsoleEnum consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
         this.consoleBlockPos = consoleBlockPosition;
-        this.controlTypes = type;
+        this.control = type.getControl();
         // System.out.println(type);
         if(consoleType != null) {
-            this.setScale(type.getScale().width);
-            this.setCustomName(Text.translatable(type.control().id)/*.fillStyle(Style.EMPTY.withColor(Formatting.GOLD).withBold(true))*/);
+            this.setControlWidth(type.getScale().width);
+            this.setControlHeight(type.getScale().height);
+            this.setCustomName(Text.translatable(type.getControl().id)/*.fillStyle(Style.EMPTY.withColor(Formatting.GOLD).withBold(true))*/);
         }
     }
 
@@ -208,13 +227,13 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     @Override
     public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
-        this.setScaleAndCalculate(this.getDataTracker().get(SCALE));
+        this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
     }
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        if(this.getDataTracker().containsKey(SCALE))
-            return EntityDimensions.changing(this.getScale(), this.getScale());
+        if(this.getDataTracker().containsKey(WIDTH) && this.getDataTracker().containsKey(HEIGHT))
+            return EntityDimensions.changing(this.getControlWidth(), this.getControlHeight());
         return super.getDimensions(pose);
     }
 
@@ -227,7 +246,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
     @Override
     public void tick() {
         if(getWorld() instanceof ServerWorld server) {
-            if(this.controlTypes == null) {
+            if(this.control == null) {
                 if (this.consoleBlockPos != null) {
                     if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
                         console.markDirty();
@@ -271,11 +290,16 @@ public class ConsoleControlEntity extends BaseControlEntity {
             this.setPosition(this.getPos().add(0, 0, player.isSneaking() ? -increment : increment));
         }
         if(player.getOffHandStack().getItem() == Items.COD) {
-            this.setScaleAndCalculate(player.isSneaking() ? this.getDataTracker().get(SCALE) - increment : this.getDataTracker().get(SCALE) + increment);
+            this.setScaleAndCalculate(player.isSneaking() ? this.getDataTracker().get(WIDTH) - increment : this.getDataTracker().get(WIDTH) + increment,
+                    this.getDataTracker().get(HEIGHT));
+        }
+        if(player.getOffHandStack().getItem() == Items.COOKED_COD) {
+            this.setScaleAndCalculate(this.getDataTracker().get(WIDTH),
+                    player.isSneaking() ? this.getDataTracker().get(HEIGHT) - increment : this.getDataTracker().get(HEIGHT) + increment);
         }
         if(this.consoleBlockPos != null) {
             Vec3d centered = this.getPos().subtract(this.consoleBlockPos.toCenterPos());
-            if(this.controlTypes != null) player.sendMessage(Text.literal(this.controlTypes.control().id.toUpperCase() + ": " + "Position: " + centered + " & Scale: " + this.getScale()));
+            if(this.control != null) player.sendMessage(Text.literal("EntityDimensions.changing(" + this.getControlWidth() + ", " + this.getControlHeight() + "), new Vector3f(" + centered.getX() + "f, " + centered.getY() + "f, "+ centered.getZ() + "f)),"));
         }
     }
 }

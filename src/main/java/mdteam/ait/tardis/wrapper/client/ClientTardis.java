@@ -12,7 +12,8 @@ import java.util.UUID;
 
 public class ClientTardis extends Tardis {
 
-    public ClientTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, ConsoleEnum consoleType, boolean locked) {
-        super(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), tardis -> new ClientTardisExterior(tardis, exteriorType), tardis -> new ClientTardisConsole(tardis, consoleType),locked);
+    public ClientTardis(UUID uuid, AbsoluteBlockPos.Client pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, ConsoleEnum consoleType, boolean locked) {
+        super(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), tardis -> new ClientTardisExterior(tardis, exteriorType), tardis -> new ClientTardisConsole(tardis, consoleType, consoleType.getControlTypesList()),locked);
     }
+
 }

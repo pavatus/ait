@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ServerTardis extends Tardis {
 
     public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, ConsoleEnum consoleType, boolean locked) {
-        super(uuid, tardis -> new ServerTardisTravel(tardis, pos), tardis -> new ServerTardisDesktop(tardis, schema), tardis -> new ServerTardisExterior(tardis, exteriorType), tardis -> new ServerTardisConsole(tardis, consoleType), locked);
+        super(uuid, tardis -> new ServerTardisTravel(tardis, pos), tardis -> new ServerTardisDesktop(tardis, schema), tardis -> new ServerTardisExterior(tardis, exteriorType), tardis -> new ServerTardisConsole(tardis, consoleType, consoleType.getControlTypesList()), locked);
     }
 
     @Override

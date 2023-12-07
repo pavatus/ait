@@ -120,7 +120,6 @@ public class AbsoluteBlockPos extends BlockPos {
     }
 
     public static class Client extends AbsoluteBlockPos.Directed {
-
         private final World world;
 
         public Client(AbsoluteBlockPos pos, Direction direction, World world) {

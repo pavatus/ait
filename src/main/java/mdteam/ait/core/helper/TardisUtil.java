@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -20,10 +21,7 @@ import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
@@ -173,17 +171,14 @@ public class TardisUtil {
 
     private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
         Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
-        //@TODO THEO FIX THIS GODDAMNED BUG I'M LITERALLY ABOUT TO GO COMPLETELY INSANE.
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
+                player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
             }
         }, 20);
-        /*player.teleport((ServerWorld) pos.getWorld(), vec.getX(), vec.getY(), vec.getZ(),
-                pos.getDirection().asRotation(), player.getPitch()
-        );*/
     }
 
     public static Tardis findTardisByInterior(BlockPos pos) {
@@ -207,8 +202,13 @@ public class TardisUtil {
 
     @Nullable
     public static PlayerEntity getPlayerInsideInterior(Tardis tardis) {
+        return getPlayerInsideInterior(tardis.getDesktop().getCorners());
+    }
+
+    @Nullable
+    public static PlayerEntity getPlayerInsideInterior(Corners corners) {
         for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
-            if (TardisUtil.inBox(tardis.getDesktop().getCorners(), player.getBlockPos()))
+            if (TardisUtil.inBox(corners, player.getBlockPos()))
                 return player;
         }
 
@@ -229,6 +229,8 @@ public class TardisUtil {
 
     @Nullable
     public static ExteriorBlockEntity findExteriorEntity(Tardis tardis) {
+        if(tardis.getTravel().getPosition().getWorld().isClient())
+            return null;
         if (tardis.getTravel().getPosition().getWorld() == null)
             return null;
 

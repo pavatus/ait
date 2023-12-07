@@ -21,6 +21,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Timer;
@@ -256,7 +257,7 @@ public class TardisTravel {
             else {
                 // PANIC!!
                 AITMod.LOGGER.error("Destination error! resetting to 0 0 0 in overworld");
-                this.destination = new AbsoluteBlockPos.Directed(0,0,0, TardisUtil.getServer().getOverworld(), Direction.NORTH);
+                this.destination = new AbsoluteBlockPos.Directed(0,0,0, TardisUtil.findWorld(World.OVERWORLD), Direction.NORTH);
             }
         }
 

@@ -7,10 +7,20 @@ public class TardisConsole {
     @Exclude
     protected final Tardis tardis;
     private ConsoleEnum console;
+    private ControlTypes[] controlTypes;
 
-    public TardisConsole(Tardis tardis, ConsoleEnum console) {
+    public TardisConsole(Tardis tardis, ConsoleEnum console, ControlTypes[] controlTypes) {
         this.tardis = tardis;
         this.console = console;
+        this.controlTypes = controlTypes;
+    }
+
+    public ControlTypes[] getControlTypes() {
+        return controlTypes;
+    }
+
+    public void setControlTypes(ControlTypes[] controlTypes) {
+        this.controlTypes = controlTypes;
     }
 
     public ConsoleEnum getType() {

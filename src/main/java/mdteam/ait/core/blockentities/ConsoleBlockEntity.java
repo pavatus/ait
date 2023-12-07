@@ -4,10 +4,9 @@ import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITEntityTypes;
-import mdteam.ait.core.blocks.ConsoleBlock;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.ConsoleControlEntity;
-import mdteam.ait.core.entities.control.ControlTypes;
+import mdteam.ait.tardis.ControlTypes;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
@@ -17,7 +16,6 @@ import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -149,7 +147,7 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
 
             ConsoleControlEntity controlEntity = new ConsoleControlEntity(AITEntityTypes.CONTROL_ENTITY_TYPE, getWorld());
 
-            Vector3f position = current.toCenterPos().toVector3f().add(control.getOffsetFromCenter().x(), control.getOffsetFromCenter().y(), control.getOffsetFromCenter().z());
+            Vector3f position = current.toCenterPos().toVector3f().add(control.getOffset().x(), control.getOffset().y(), control.getOffset().z());
             controlEntity.setPosition(position.x(), position.y(), position.z());
             controlEntity.setYaw(0);
             controlEntity.setPitch(0);

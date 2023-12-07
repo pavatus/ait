@@ -6,7 +6,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
 
-public abstract class Control {
+public class Control {
     public String id; // a name to represent the control
 
     public Control(String id) {
@@ -21,8 +21,12 @@ public abstract class Control {
         this.id = id;
     }
 
-    public abstract boolean runClient(Tardis tardis, ClientPlayerEntity player, ClientWorld world);
-    public abstract boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world);
+    public boolean runClient(Tardis tardis, ClientPlayerEntity player, ClientWorld world) {
+        return false;
+    };
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+        return false;
+    }
 
     @Override
     public String toString() {

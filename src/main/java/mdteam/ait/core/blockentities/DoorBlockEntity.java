@@ -39,6 +39,8 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
 
         // even though TardisDesktop links the door, we need to link it here as well to avoid desync
         this.setTardis(TardisUtil.findTardisByInterior(pos));
+        if(this.getTardis() != null)
+            this.setDesktop(this.getDesktop());
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {

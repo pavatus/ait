@@ -4,8 +4,12 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.data.Corners;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.decoration.GlowItemFrameEntity;
+import net.minecraft.entity.decoration.ItemFrameEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
@@ -58,11 +62,23 @@ public class DesktopGenerator {
         for (BlockPos pos : BlockPos.iterate(interiorCorners.getFirst().add(0,-64,0), interiorCorners.getSecond().add(0,256,0))) {
             level.setBlockState(pos, Blocks.AIR.getDefaultState());
         }
-
-        List<ItemEntity> items = (List<ItemEntity>) level.getEntitiesByType(EntityType.ITEM, EntityPredicates.EXCEPT_SPECTATOR);
-        // fixme the check for whether the item is inside the interior bounds doesnt work, so it just deletes all items instead
-        for (ItemEntity item : items) {
-            item.kill();
+        for (ItemEntity entity : level.getEntitiesByType(EntityType.ITEM/*TardisUtil.getPlayerInsideInterior(interiorCorners)*/, /*interiorCorners.getBox()*/EntityPredicates.EXCEPT_SPECTATOR)) {
+            if (TardisUtil.inBox(interiorCorners.getBox(), entity.getBlockPos())) {
+                System.out.println(entity);
+                entity.kill();
+            }
         }
+        /*for (ItemFrameEntity entity : level.getEntitiesByType(EntityType.ITEM_FRAME*//*TardisUtil.getPlayerInsideInterior(interiorCorners)*//*, *//*interiorCorners.getBox()*//*EntityPredicates.EXCEPT_SPECTATOR)) {
+            if (TardisUtil.inBox(interiorCorners.getBox(), entity.getBlockPos())) {
+                System.out.println(entity);
+                entity.kill();
+            }
+        }
+        for (GlowItemFrameEntity entity : level.getEntitiesByType(EntityType.GLOW_ITEM_FRAME*//*TardisUtil.getPlayerInsideInterior(interiorCorners)*//*, *//*interiorCorners.getBox()*//*EntityPredicates.EXCEPT_SPECTATOR)) {
+            if (TardisUtil.inBox(interiorCorners.getBox(), entity.getBlockPos())) {
+                System.out.println(entity);
+                entity.kill();
+            }
+        }*/
     }
 }

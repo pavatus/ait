@@ -6,6 +6,9 @@ import mdteam.ait.core.helper.DesktopGenerator;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
@@ -90,6 +93,12 @@ public class TardisDesktop {
         DesktopGenerator.clearArea(TardisUtil.getTardisDimension(), this.corners);
 
         BlockPos doorPos = generator.place(TardisUtil.getTardisDimension(), this.corners);
+        /*for (ItemEntity entity : TardisUtil.getTardisDimension().getEntitiesByType(EntityType.ITEM*//*TardisUtil.getPlayerInsideInterior(interiorCorners)*//*, *//*interiorCorners.getBox()*//*EntityPredicates.EXCEPT_SPECTATOR)) {
+            if (TardisUtil.inBox(this.corners.getBox(), entity.getBlockPos())) {
+                System.out.println(entity);
+                entity.kill();
+            }
+        }*/
         this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
         this.updateDoor();
     }
