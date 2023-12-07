@@ -1,5 +1,7 @@
 package mdteam.ait.client.renderers;
 
+import com.google.common.collect.ImmutableMap;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;

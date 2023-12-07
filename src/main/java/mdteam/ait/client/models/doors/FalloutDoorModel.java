@@ -1,12 +1,24 @@
 package mdteam.ait.client.models.doors;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import io.wispforest.owo.mixin.shader.ShaderProgramAccessor;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.gl.PostEffectProcessor;
+import net.minecraft.client.gl.ShaderProgram;
+import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.model.*;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.RotationAxis;
 
 // Made with Blockbench 4.8.3
 // Exported for Minecraft version 1.17+ for Yarn
@@ -14,6 +26,8 @@ import net.minecraft.util.Identifier;
 public class FalloutDoorModel extends DoorModel {
 	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/shelter_door.png");
 	public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/shelter_door_emission.png");
+
+	private Framebuffer framebuffer;
 
 	public ModelPart door;
 	public ModelPart frame;
@@ -39,8 +53,20 @@ public class FalloutDoorModel extends DoorModel {
 
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+
+
 		this.door.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 		this.frame.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+	}
+
+	private void bindCustomShader(float red, float green, float blue, float alpha) {
+		RenderSystem.setShaderTexture(0, framebuffer.getColorAttachment());
+		RenderSystem.setShaderColor(red, green, blue, alpha);
+		RenderSystem.setShader(GameRenderer::getRenderTypeEndPortalProgram);
+	}
+
+	private void unbindCustomShader() {
+		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 	}
 
 	@Override
@@ -49,9 +75,37 @@ public class FalloutDoorModel extends DoorModel {
 
 		matrices.push();
 		matrices.translate(0,-1.5,0);
-		this.door.setPivot(this.frame.pivotX, this.frame.pivotY, this.frame.pivotZ);
 
-		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+		this.door.setPivot(this.frame.pivotX, this.frame.pivotY, this.frame.pivotZ);
+		/*MinecraftClient client = MinecraftClient.getInstance();
+
+		Entity cameraEntity = client.getCameraEntity();
+		framebuffer = new SimpleFramebuffer(MinecraftClient.getInstance().getWindow().getFramebufferWidth(),
+				MinecraftClient.getInstance().getWindow().getFramebufferHeight(), false, MinecraftClient.IS_SYSTEM_MAC);
+
+		if (cameraEntity != null) {
+			matrices.loadIdentity();
+			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(cameraEntity.getPitch()));
+			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(cameraEntity.getYaw()));
+			matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180.0f));
+
+			Camera camera = client.gameRenderer.getCamera();
+			camera.update(
+					client.world,
+					cameraEntity instanceof Entity ? (Entity) cameraEntity : null,
+					!client.options.getBobView().getValue(),
+					!client.options.getBobView().getValue(),
+					client.getTickDelta()
+			);
+			matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(camera.getRotation().z()));
+			framebuffer.beginWrite(true);
+			client.getFramebuffer().beginWrite(true);
+			bindCustomShader(red, green, blue, pAlpha);*/
+			super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+			/*unbindCustomShader();
+			framebuffer.endWrite();
+			client.getFramebuffer().endWrite();
+		}*/
 		matrices.pop();
 	}
 
