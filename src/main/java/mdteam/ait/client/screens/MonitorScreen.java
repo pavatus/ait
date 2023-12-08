@@ -10,12 +10,15 @@ import mdteam.ait.tardis.ClientTardisManager;
 import mdteam.ait.tardis.Tardis;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.option.CreditsAndAttributionScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextReorderingProcessor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
@@ -48,10 +51,21 @@ public class MonitorScreen extends TardisScreen {
     @Override
     protected void init() {
         super.init();
-        this.buttons.clear();
+
+        this.createButtons();
+    }
+
+
+    private void createButtons() {
         int i= (this.width - this.backgroundWidth / 2);
         int j = (this.height - this.backgroundHeight / 2);
-        this.addButton(new ButtonWidget.Builder(Text.literal("<>"), button -> TardisUtil.changeExteriorWithScreen(this.tardisId)).dimensions(i - 4 - 100, j / 4 + 140 + 12, 20, 20).build()); // todo replace this with invisible buttons / text choices or smth
+
+        this.buttons.clear();
+
+        // exterior change text button
+        // fixme i think we're overloading with packets because the client side of all the code kinda desperately needs a redo
+        this.addButton(new PressableTextWidget((width / 2 - 105), (height / 2 + 28), this.textRenderer.getWidth("exterior"), 10, Text.literal("exterior"), button -> TardisUtil.changeExteriorWithScreen(this.tardisId), this.textRenderer));
+
         this.buttons.forEach(buttons -> {
             // buttons.visible = false;
             buttons.active = true;
@@ -92,6 +106,8 @@ public class MonitorScreen extends TardisScreen {
     protected void drawDestinationText(DrawContext context) {
         int i = ((this.height - this.backgroundHeight) / 2);
         int j = ((this.width - this.backgroundWidth) / 2);
+
+        if (this.tardis() == null) return;
 
         AbsoluteBlockPos.Directed abpd = this.updateTardis().getTravel().getDestination();
         context.getMatrices().push();
