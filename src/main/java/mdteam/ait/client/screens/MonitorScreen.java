@@ -106,19 +106,14 @@ public class MonitorScreen extends TardisScreen {
     protected void drawDestinationText(DrawContext context) {
         int i = ((this.height - this.backgroundHeight) / 2);
         int j = ((this.width - this.backgroundWidth) / 2);
-
         if (this.tardis() == null) return;
-
         AbsoluteBlockPos.Directed abpd = this.updateTardis().getTravel().getDestination();
-        context.getMatrices().push();
-        // context.getMatrices().scale(0.9f, 0.9f, 0.9f); // dont scale text it causes issues
-        String destinationText = abpd.getX() + ", " +
-                abpd.getY() + ", " +
-                abpd.getZ() + " | " +
-                convertWorldToReadable(abpd.getWorld()) + " | " +
-                abpd.getDirection().toString().toUpperCase();
-        context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 42), (height / 2 - 40), 0x46BFE3, true);
-        context.getMatrices().pop();
+        String destinationText = abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
+        String dimensionText = convertWorldToReadable(abpd.getWorld());
+        String directionText = abpd.getDirection().toString().toUpperCase();
+        context.drawText(this.textRenderer, Text.literal("> " + destinationText), (width / 2 - 42), (height / 2 - 40), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal("> " + dimensionText), (width / 2 - 42), (height / 2 - 28), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal("> " + directionText), (width / 2 - 42), (height / 2 - 16), 0xFFFFFF, true);
     }
 
     @Override

@@ -119,7 +119,8 @@ public class DoorHandler {
 
         world.playSound(null, door.getPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
 
-        tardis.getDoor().sync();
+        if(door != null)
+            tardis.getDoor().sync();
 
         return true;
     }
