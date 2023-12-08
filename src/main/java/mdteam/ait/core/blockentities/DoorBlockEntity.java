@@ -8,6 +8,7 @@ import mdteam.ait.core.entities.control.impl.DoorControl;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -55,7 +56,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
                 return;
             }
             if(Objects.equals(this.tardis.getUuid().toString(), tag.getUuid("tardis").toString())) {
-                DoorControl.toggleLock(this.tardis, (ServerWorld) world, (ServerPlayerEntity) player);
+                DoorHandler.toggleLock(this.tardis, (ServerWorld) world, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
@@ -63,7 +64,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
             return;
         }
 
-        DoorControl.useDoor(this.getTardis(), (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
+        DoorHandler.useDoor(this.getTardis(), (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
 
         if (sneaking)
             return;
