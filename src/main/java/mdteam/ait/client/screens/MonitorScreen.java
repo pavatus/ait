@@ -51,9 +51,9 @@ public class MonitorScreen extends TardisScreen {
         this.buttons.clear();
         int i= (this.width - this.backgroundWidth / 2);
         int j = (this.height - this.backgroundHeight / 2);
-        this.addButton(new ButtonWidget.Builder(Text.literal("<>"), button -> TardisUtil.changeExteriorWithScreen(this.tardisId)).dimensions(this.width / 2 - 4 - 150, this.height / 4 + 120 + 12, 150, 20).build());
+        this.addButton(new ButtonWidget.Builder(Text.literal("<>"), button -> TardisUtil.changeExteriorWithScreen(this.tardisId)).dimensions(i - 4 - 100, j / 4 + 140 + 12, 20, 20).build()); // todo replace this with invisible buttons / text choices or smth
         this.buttons.forEach(buttons -> {
-            buttons.visible = false;
+            // buttons.visible = false;
             buttons.active = true;
         });
     }
