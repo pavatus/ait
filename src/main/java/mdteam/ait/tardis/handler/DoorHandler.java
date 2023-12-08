@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.handler;
 
 import mdteam.ait.core.blockentities.DoorBlockEntity;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.tardis.ClientTardisManager;
 import mdteam.ait.tardis.ServerTardisManager;
@@ -87,12 +88,13 @@ public class DoorHandler {
         }
 
         DoorBlockEntity door = TardisUtil.getDoor(tardis); // i need to remember these utils exist fr fr
+        //ExteriorBlockEntity exterior = TardisUtil.getExterior(tardis);
 
         if (door == null)
             return false;
 
         // fixme this is loqors code so there might be a better way
-        if(tardis.getExterior().getType().isDoubleDoor()) {
+        if (tardis.getExterior().getType().isDoubleDoor()) {
             if (door.getRightDoorRotation() == 1.2f && door.getLeftDoorRotation() == 1.2f) {
                 door.setLeftDoorRot(0);
                 door.setRightDoorRot(0);
@@ -100,8 +102,20 @@ public class DoorHandler {
                 door.setRightDoorRot(door.getLeftDoorRotation() == 0 ? 0 : 1.2f);
                 door.setLeftDoorRot(1.2f);
             }
-        } else
+            /*if(exterior != null)
+                if (exterior.getRightDoorRotation() == 1.2f && exterior.getLeftDoorRotation() == 1.2f) {
+                    exterior.setLeftDoorRot(0);
+                    exterior.setRightDoorRot(0);
+                } else {
+                    exterior.setRightDoorRot(door.getLeftDoorRotation() == 0 ? 0 : 1.2f);
+                    exterior.setLeftDoorRot(1.2f);
+                }*/
+        } else {
             door.setLeftDoorRot(door.getLeftDoorRotation() == 0 ? 1.2f : 0);
+            /*if (exterior != null) {
+                exterior.setLeftDoorRot(door.getLeftDoorRotation() == 0 ? 1.2f : 0);
+            }*/
+        }
 
         world.playSound(null, door.getPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
 

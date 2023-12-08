@@ -1,5 +1,6 @@
 package mdteam.ait.core.blockentities;
 
+import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.client.animation.ExteriorAnimation;
@@ -9,6 +10,7 @@ import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
+import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.block.BlockState;
@@ -71,15 +73,19 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             if (!this.tardis.getLockedTardis()) {
                 if(this.getExteriorType().isDoubleDoor()) {
                     if (this.getRightDoorRotation() == 1.2f && this.getLeftDoorRotation() == 1.2f) {
+                        DoorHandler.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
                         this.setLeftDoorRot(0);
                         this.setRightDoorRot(0);
                     } else {
+                        DoorHandler.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
                         this.setRightDoorRot(this.getLeftDoorRotation() == 0 ? 0 : 1.2f);
                         this.setLeftDoorRot(1.2f);
                     }
                 }
-                else
+                else {
+                    DoorHandler.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
                     this.setLeftDoorRot(this.getLeftDoorRotation() == 0 ? 1.2f : 0);
+                }
                 world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
@@ -99,7 +105,8 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 //                // door.setLeftDoorRot(this.getLeftDoorRotation());
 //                // door.setRightDoorRot(this.getRightDoorRotation());
 //            }
-        this.tardis.getDoor().sync();
+        //WorldOps.updateIfOnServer(TardisUtil.getTardisDimension(), this.getTardis().getDesktop().getInteriorDoorPos());
+        this.getTardis().getDoor().sync();
     }
 
     public float[] getCorrectDoorRotations() {
@@ -110,64 +117,67 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public void setLeftDoorRot(float rotation) {
-        // EXTERIORNBT.get(this).setLeftDoorRotation(rotation);
         if (this.tardis == null) return;
 
-        this.tardis.getDoor().setLeftRot(rotation);
+        this.getTardis().getDoor().setLeftRot(rotation);
     }
 
     public void setRightDoorRot(float rotation) {
-        // EXTERIORNBT.get(this).setRightDoorRotation(rotation);
-
         if (this.tardis == null) return;
 
-        this.tardis.getDoor().setRightRot(rotation);
+        this.getTardis().getDoor().setRightRot(rotation);
     }
 
     public float getLeftDoorRotation() {
-        // return EXTERIORNBT.get(this).getLeftDoorRotation();
 
         if (this.tardis == null) return 5;
 
-        return this.tardis.getDoor().left();
+        return this.getTardis().getDoor().left();
     }
 
     public float getRightDoorRotation() {
-        // return EXTERIORNBT.get(this).getRightDoorRotation();
 
         if (this.tardis == null) return 5;
 
-        return this.tardis.getDoor().right();
+        return this.getTardis().getDoor().right();
     }
 
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
 
-        nbt.putFloat("alpha", this.getAlpha());
-
         if (this.tardis != null) {
             nbt.putUuid("tardis", this.tardis.getUuid());
         }
+
+        nbt.putFloat("alpha", this.getAlpha());
+
+        /*nbt.putFloat("leftDoor", this.getLeftDoorRotation());
+        nbt.putFloat("rightDoor", this.getRightDoorRotation());*/
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
 
-        if(this.getAnimation() != null)
-            this.getAnimation().setAlpha(nbt.getFloat("alpha"));
-
         if (nbt.contains("tardis")) {
             TardisManager.getInstance().link(nbt.getUuid("tardis"), this);
         }
 
+        if(this.getAnimation() != null)
+            this.getAnimation().setAlpha(nbt.getFloat("alpha"));
+
+        /*if(nbt.contains("leftDoor"))
+            this.setLeftDoorRot(nbt.getFloat("leftDoor"));
+        if(nbt.contains("rightDoor"))
+            this.setLeftDoorRot(nbt.getFloat("rightDoor"));*/
+
         System.out.println(this.getTardis());
 
-        if (this.getTardis() != null) {
-            ServerTardisManager.getInstance().subscribeEveryone(this.getTardis());
+        /*if (this.getTardis() != null) {
+            //ServerTardisManager.getInstance().subscribeEveryone(this.getTardis());
             ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
-        }
+        }*/
     }
 
     public void onEntityCollision(Entity entity) {

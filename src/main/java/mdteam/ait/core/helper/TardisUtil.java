@@ -1,16 +1,25 @@
 package mdteam.ait.core.helper;
 
 import io.wispforest.owo.ops.WorldOps;
+import mdteam.ait.AITMod;
+import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
+import mdteam.ait.tardis.*;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -23,17 +32,11 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.TardisDesktop;
-import mdteam.ait.tardis.TardisManager;
-import mdteam.ait.tardis.TardisTravel;
+import net.minecraft.world.WorldAccess;
 import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static javax.management.timer.Timer.ONE_SECOND;
 
@@ -41,9 +44,9 @@ import static javax.management.timer.Timer.ONE_SECOND;
 public class TardisUtil {
 
     private static final Random RANDOM = new Random();
-
     private static MinecraftServer SERVER; //@TODO fixme this does not work on multiplayer.
     private static ServerWorld TARDIS_DIMENSION;
+    public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
 
     public static void init() {
         ServerWorldEvents.UNLOAD.register((server, world) -> {
@@ -59,6 +62,24 @@ public class TardisUtil {
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             SERVER = null;
         });
+        ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
+                (server, player, handler, buf, responseSender) -> {
+                    UUID uuid = buf.readUuid();
+
+                    ExteriorEnum[] values = ExteriorEnum.values();
+                    int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
+                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(values[nextIndex]);
+                    WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
+                                    .getTravel().getPosition().getWorld().getRegistryKey()),
+                            ServerTardisManager.getInstance().getTardis(uuid).getTravel().getPosition());
+                }
+        );
+    }
+
+    public static void changeExteriorWithScreen(UUID uuid) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(uuid);
+        ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);
     }
 
     public static MinecraftServer getServer() {
