@@ -20,6 +20,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.io.File;
 import java.io.IOException;
@@ -141,6 +142,14 @@ public class ServerTardisManager extends TardisManager {
         for (ServerPlayerEntity player : this.subscribers.get(tardis.getUuid())) {
             this.sendTardis(player, tardis);
         }
+    }
+
+    // fixme i think its easier if all clients just get updated about the tardises
+    public void subscribeEveryone(Tardis tardis) {
+        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
+            this.subscribers.put(tardis.getUuid(), player);
+        }
+        System.out.println(this.subscribers);
     }
 
     private void sendTardis(ServerPlayerEntity player, UUID uuid) {

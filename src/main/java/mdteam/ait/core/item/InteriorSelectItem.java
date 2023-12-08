@@ -88,6 +88,7 @@ public class InteriorSelectItem extends Item {
         //}
 
         // If not found (shouldn't happen in a proper iterator)
+
         return getNextInterior(currentId.getPath());
     }
 

@@ -144,6 +144,13 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         if (nbt.contains("tardis")) {
             TardisManager.getInstance().link(nbt.getUuid("tardis"), this);
         }
+
+        System.out.println(this.getTardis());
+
+        if (this.getTardis() != null)
+            ServerTardisManager.getInstance().subscribeEveryone(this.getTardis());
+
+        ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
     }
 
     public void onEntityCollision(Entity entity) {
@@ -194,6 +201,15 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             this.animation.setupAnimation(this.getTardis().getTravel().getState());
             // this.getAnimation();
         }
+
+        // fixme oh god all this code is so bad just because i realised the client stops syncing propelry on relaoad and im too lazy to do it properly
+
+        if (this.getWorld() != null && this.getWorld().isClient()) {
+            if (this.tardis != null)
+                ClientTardisManager.getInstance().ask(this.tardis.getUuid());
+            else
+                ClientTardisManager.getInstance().ask(this.getPos());
+        }
     }
     // same here
     public void refindTardis() {
@@ -218,6 +234,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
     @Override
     public Tardis getTardis() {
+        // fixme unsure if still needed
         if (this.tardis == null && this.getWorld() != null) {
             if (!this.getWorld().isClient())
                 refindTardis();
@@ -239,13 +256,6 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T exterior) {
-        if (exterior.getWorld() != null && exterior.getWorld().isClient()) { // fixme idk where a load method is
-            if (((ExteriorBlockEntity) exterior).getTardis() != null)
-                ClientTardisManager.getInstance().ask(((ExteriorBlockEntity) exterior).getTardis().getUuid());
-            else
-                ClientTardisManager.getInstance().ask(exterior.getPos());
-        }
-
         if (((ExteriorBlockEntity) exterior).animation != null)
             ((ExteriorBlockEntity) exterior).getAnimation().tick();
     }
