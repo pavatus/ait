@@ -63,7 +63,7 @@ public class MonitorScreen extends TardisScreen {
         this.buttons.clear();
 
         // exterior change text button
-        // fixme i think we're overloading with packets because the client side of all the code kinda desperately needs a redo
+        // fixme i think we're overloading with packets because the client side of all the code kinda desperately needs a redo / if you spam the button everything slows OR you get kicked
         this.addButton(new PressableTextWidget((width / 2 - 105), (height / 2 + 28), this.textRenderer.getWidth("exterior"), 10, Text.literal("exterior"), button -> TardisUtil.changeExteriorWithScreen(this.tardisId), this.textRenderer));
 
         this.buttons.forEach(buttons -> {
