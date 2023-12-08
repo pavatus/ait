@@ -243,7 +243,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             if (((ExteriorBlockEntity) exterior).getTardis() != null)
                 ClientTardisManager.getInstance().ask(((ExteriorBlockEntity) exterior).getTardis().getUuid());
             else
-                ClientTardisManager.getInstance().ask(((ExteriorBlockEntity) exterior).getPos());
+                ClientTardisManager.getInstance().ask(exterior.getPos());
         }
 
         if (((ExteriorBlockEntity) exterior).animation != null)
