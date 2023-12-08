@@ -24,13 +24,12 @@ public class MonitorControl extends Control {
     // todo as there is no monitors yet and i dont know how loqor wants it, so loqor will need to do this.
     @Override
     public boolean runClient(Tardis tardis, ClientPlayerEntity player, ClientWorld world) {
-        MinecraftClient.getInstance().setScreenAndRender(new MonitorScreen(Text.literal("WHAT")));
         return true;
     }
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        AITModClient.openScreen(player, 0);
+        AITModClient.openScreen(player, 0, tardis.getUuid());
         return true;
     }
 }

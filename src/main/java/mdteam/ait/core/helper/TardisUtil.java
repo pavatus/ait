@@ -175,8 +175,8 @@ public class TardisUtil {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
-                player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+                SERVER.executeSync(() -> {WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
+                player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player)); });
             }
         }, 20);
     }

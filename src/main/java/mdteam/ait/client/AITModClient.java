@@ -58,6 +58,7 @@ public class AITModClient implements ClientModInitializer {
 
 	private final Identifier PORTAL_EFFECT_SHADER = new Identifier(AITMod.MOD_ID, "shaders/core/portal_effect.json");
 	public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
+	public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
 
 	@Override
 	public void onInitializeClient() {
@@ -74,6 +75,15 @@ public class AITModClient implements ClientModInitializer {
 				if (screen == null) return;
 				MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
 		});
+		ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN_TARDIS, // fixme this might not be necessary could just be easier to always use the other method.
+				(client, handler, buf, responseSender) -> {
+					int id = buf.readInt();
+					UUID uuid = buf.readUuid();
+
+					Screen screen = screenFromId(id, uuid);
+					if (screen == null) return;
+					MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
+				});
 
 		//setKeyBinding();
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
@@ -84,11 +94,24 @@ public class AITModClient implements ClientModInitializer {
 		buf.writeInt(id);
 		ServerPlayNetworking.send(player, OPEN_SCREEN, buf);
 	}
+	public static void openScreen(ServerPlayerEntity player, int id, UUID tardis) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeInt(id);
+		buf.writeUuid(tardis);
+		ServerPlayNetworking.send(player, OPEN_SCREEN_TARDIS, buf);
+	}
 
+	/**
+	 * This is for screens without a tardis
+	 */
 	public static Screen screenFromId(int id) {
+		return screenFromId(id, null);
+	}
+
+	public static Screen screenFromId(int id, UUID tardis) {
 		return switch(id) {
 			default -> null;
-			case 0 -> new MonitorScreen(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"));
+			case 0 -> new MonitorScreen(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
 		};
 	}
 
