@@ -75,25 +75,41 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         if (exterior != null) {
             exteriorPos.getChunk();
 
-            exterior.setLeftDoorRot(this.getLeftDoorRotation());
-            exterior.setRightDoorRot(this.getRightDoorRotation());
+            // exterior.setLeftDoorRot(this.getLeftDoorRotation());
+            // exterior.setRightDoorRot(this.getRightDoorRotation());
         }
     }
 
     public void setLeftDoorRot(float rotation) {
-        INTERIORDOORNBT.get(this).setLeftDoorRotation(rotation);
+        // INTERIORDOORNBT.get(this).setLeftDoorRotation(rotation);
+
+        if (this.tardis == null) return;
+
+        this.tardis.getDoor().setLeftRot(rotation);
     }
 
     public void setRightDoorRot(float rotation) {
-        INTERIORDOORNBT.get(this).setRightDoorRotation(rotation);
+        // INTERIORDOORNBT.get(this).setRightDoorRotation(rotation);
+
+        if (this.tardis == null) return;
+
+        this.tardis.getDoor().setRightRot(rotation);
     }
 
     public float getLeftDoorRotation() {
-        return INTERIORDOORNBT.get(this).getLeftDoorRotation();
+        // return INTERIORDOORNBT.get(this).getLeftDoorRotation();
+
+        if (this.tardis == null) return 5;
+
+        return this.tardis.getDoor().left();
     }
 
     public float getRightDoorRotation() {
-        return INTERIORDOORNBT.get(this).getRightDoorRotation();
+        // return INTERIORDOORNBT.get(this).getRightDoorRotation();
+
+        if (this.tardis == null) return 5;
+
+        return this.tardis.getDoor().right();
     }
 
     public Direction getFacing() {

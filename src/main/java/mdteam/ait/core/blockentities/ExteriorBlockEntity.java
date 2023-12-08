@@ -53,8 +53,6 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             }
             if(Objects.equals(this.getTardis().getUuid().toString(), tag.getUuid("tardis").toString())) {
                 this.tardis.setLockedTardis(!this.getTardis().getLockedTardis());
-                this.setLeftDoorRot(0);
-                this.setRightDoorRot(0);
                 String lockedState = this.getTardis().getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
                 player.sendMessage(Text.literal(lockedState), true);
                 world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
@@ -95,9 +93,10 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             if (door != null) {
                 TardisUtil.getTardisDimension().getChunk(door.getPos()); // force load the chunk
 
-                door.setLeftDoorRot(this.getLeftDoorRotation());
-                door.setRightDoorRot(this.getRightDoorRotation());
+                // door.setLeftDoorRot(this.getLeftDoorRotation());
+                // door.setRightDoorRot(this.getRightDoorRotation());
             }
+        this.tardis.getDoor().sync();
     }
 
     public float[] getCorrectDoorRotations() {
@@ -108,19 +107,34 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     }
 
     public void setLeftDoorRot(float rotation) {
-        EXTERIORNBT.get(this).setLeftDoorRotation(rotation);
+        // EXTERIORNBT.get(this).setLeftDoorRotation(rotation);
+        if (this.tardis == null) return;
+
+        this.tardis.getDoor().setLeftRot(rotation);
     }
 
     public void setRightDoorRot(float rotation) {
-        EXTERIORNBT.get(this).setRightDoorRotation(rotation);
+        // EXTERIORNBT.get(this).setRightDoorRotation(rotation);
+
+        if (this.tardis == null) return;
+
+        this.tardis.getDoor().setRightRot(rotation);
     }
 
     public float getLeftDoorRotation() {
-        return EXTERIORNBT.get(this).getLeftDoorRotation();
+        // return EXTERIORNBT.get(this).getLeftDoorRotation();
+
+        if (this.tardis == null) return 5;
+
+        return this.tardis.getDoor().left();
     }
 
     public float getRightDoorRotation() {
-        return EXTERIORNBT.get(this).getRightDoorRotation();
+        // return EXTERIORNBT.get(this).getRightDoorRotation();
+
+        if (this.tardis == null) return 5;
+
+        return this.tardis.getDoor().right();
     }
 
     @Override

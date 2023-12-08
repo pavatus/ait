@@ -62,6 +62,8 @@ public class DoorControl extends Control {
 
         world.playSound(null, door.getPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
 
+        tardis.getDoor().sync();
+
         return true;
     }
     public static boolean toggleLock(Tardis tardis, ServerWorld world, @Nullable ServerPlayerEntity player) {
@@ -85,6 +87,9 @@ public class DoorControl extends Control {
             player.sendMessage(Text.literal(lockedState), true);
 
         world.playSound(null, door.getPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+
+        tardis.getDoor().sync();
+
         return true;
     }
 }
