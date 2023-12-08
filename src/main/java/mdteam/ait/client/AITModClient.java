@@ -111,7 +111,7 @@ public class AITModClient implements ClientModInitializer {
 	public static Screen screenFromId(int id, UUID tardis) {
 		return switch(id) {
 			default -> null;
-			case 0 -> new MonitorScreen(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
+			case 0 -> new MonitorScreen(tardis);
 		};
 	}
 
