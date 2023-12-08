@@ -10,6 +10,7 @@ import mdteam.ait.core.AITItems;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.*;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.AnimationState;
@@ -52,10 +53,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
                 return;
             }
             if(Objects.equals(this.getTardis().getUuid().toString(), tag.getUuid("tardis").toString())) {
-                this.tardis.setLockedTardis(!this.getTardis().getLockedTardis());
-                String lockedState = this.getTardis().getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
-                player.sendMessage(Text.literal(lockedState), true);
-                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+                DoorHandler.toggleLock(this.tardis, world, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
@@ -64,6 +62,11 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         }
 
         // fixme this sucks
+        if (this.tardis == null) {
+            this.getTardis();
+            return;
+        }
+
         if(this.tardis.getTravel().getState() == LANDED) {
             if (!this.tardis.getLockedTardis()) {
                 if(this.getExteriorType().isDoubleDoor()) {
@@ -86,16 +89,16 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
         if (sneaking)
             return;
-
-        DoorBlockEntity door = TardisUtil.getDoor(this.tardis);
-
-        if(this.tardis.getTravel().getState() == LANDED)
-            if (door != null) {
-                TardisUtil.getTardisDimension().getChunk(door.getPos()); // force load the chunk
-
-                // door.setLeftDoorRot(this.getLeftDoorRotation());
-                // door.setRightDoorRot(this.getRightDoorRotation());
-            }
+//
+//        DoorBlockEntity door = TardisUtil.getDoor(this.tardis);
+//
+//        if(this.tardis.getTravel().getState() == LANDED)
+//            if (door != null) {
+//                TardisUtil.getTardisDimension().getChunk(door.getPos()); // force load the chunk
+//
+//                // door.setLeftDoorRot(this.getLeftDoorRotation());
+//                // door.setRightDoorRot(this.getRightDoorRotation());
+//            }
         this.tardis.getDoor().sync();
     }
 

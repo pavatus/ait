@@ -54,11 +54,13 @@ public class ServerTardisTravel extends TardisTravel {
     @Override
     public void dematerialise(boolean withRemat) {
         super.dematerialise(withRemat);
+        this.sync();
     }
 
     @Override
     public void materialise() {
         super.materialise();
+        this.sync();
     }
 
     public void sync() {
