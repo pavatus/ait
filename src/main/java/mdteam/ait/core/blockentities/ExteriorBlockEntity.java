@@ -20,18 +20,21 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 
 import java.util.Objects;
 
 import static mdteam.ait.AITMod.EXTERIORNBT;
 import static mdteam.ait.tardis.TardisTravel.State.LANDED;
+import static mdteam.ait.tardis.TardisTravel.State.MAT;
 
 public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
@@ -285,7 +288,15 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T exterior) {
         if (((ExteriorBlockEntity) exterior).animation != null)
             ((ExteriorBlockEntity) exterior).getAnimation().tick();
+
+        if (!world.isClient() && ((ExteriorBlockEntity) exterior).getTardis().getTravel().getState() == MAT) {
+            for (Entity entity : world.getEntitiesByClass(Entity.class, new Box(exterior.getPos()).expand(0,1,0), EntityPredicates.EXCEPT_SPECTATOR)) {
+                // TardisUtil.teleportInside(((ExteriorBlockEntity) exterior).getTardis(), entity);
+                // code go here
+            }
+        }
     }
+
 
     // theo please stop deleting my shit theres a reason its there rarely its not just schizophrenic code rambles that are useless
     public void verifyAnimation() {
