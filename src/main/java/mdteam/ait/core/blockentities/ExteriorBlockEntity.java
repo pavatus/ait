@@ -164,10 +164,10 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
         System.out.println(this.getTardis());
 
-        if (this.getTardis() != null)
+        if (this.getTardis() != null) {
             ServerTardisManager.getInstance().subscribeEveryone(this.getTardis());
-
-        ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
+            ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
+        }
     }
 
     public void onEntityCollision(Entity entity) {
