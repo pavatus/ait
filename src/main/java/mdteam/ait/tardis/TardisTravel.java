@@ -10,6 +10,7 @@ import mdteam.ait.core.entities.control.impl.pos.PosManager;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -135,7 +136,7 @@ public class TardisTravel {
 
         this.shouldRemat = false;
 
-        DoorControl.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null);
+        DoorHandler.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null);
 
         this.setState(State.MAT);
 
@@ -183,7 +184,7 @@ public class TardisTravel {
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
-        DoorControl.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null);
+        DoorHandler.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null);
 
         this.setState(State.DEMAT);
 

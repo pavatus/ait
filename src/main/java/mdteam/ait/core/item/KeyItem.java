@@ -22,7 +22,7 @@ import java.util.List;
 public class KeyItem extends Item {
 
     public KeyItem(Settings settings) {
-        super(settings);
+        super(settings.maxCount(1));
     }
 
     @Override

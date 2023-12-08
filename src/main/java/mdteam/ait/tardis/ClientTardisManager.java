@@ -45,7 +45,7 @@ public class ClientTardisManager extends TardisManager {
                             return;
 
                         this.sync(uuid, buf);
-                    });
+            });
 
             ClientTickEvents.END_WORLD_TICK.register(world -> {
                 for (int i = 0; i < this.buffers.size(); i++) {

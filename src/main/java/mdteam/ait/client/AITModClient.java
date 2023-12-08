@@ -13,15 +13,19 @@ import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.AITScreenHandlers;
 import mdteam.ait.core.entities.BaseControlEntity;
 import mdteam.ait.core.entities.ConsoleControlEntity;
+import mdteam.ait.tardis.ServerTardisManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -29,18 +33,23 @@ import net.fabricmc.fabric.impl.client.rendering.FabricShaderProgram;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.ShaderStage;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.debug.GameEventDebugRenderer;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryLoader;
 import net.minecraft.resource.ResourceReloader;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.UUID;
 
 @Environment(value= EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
@@ -48,6 +57,8 @@ public class AITModClient implements ClientModInitializer {
 	private static KeyBinding keyBinding;
 
 	private final Identifier PORTAL_EFFECT_SHADER = new Identifier(AITMod.MOD_ID, "shaders/core/portal_effect.json");
+	public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
+	public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
 
 	@Override
 	public void onInitializeClient() {
@@ -55,8 +66,53 @@ public class AITModClient implements ClientModInitializer {
 		blockEntityRendererRegister();
 		entityAttributeRegister();
 		entityRenderRegister();
+
+		ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
+			(client, handler, buf, responseSender) -> {
+				int id = buf.readInt();
+
+				Screen screen = screenFromId(id);
+				if (screen == null) return;
+				MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
+		});
+		ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN_TARDIS, // fixme this might not be necessary could just be easier to always use the other method.
+				(client, handler, buf, responseSender) -> {
+					int id = buf.readInt();
+					UUID uuid = buf.readUuid();
+
+					Screen screen = screenFromId(id, uuid);
+					if (screen == null) return;
+					MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
+				});
+
 		//setKeyBinding();
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
+	}
+
+	public static void openScreen(ServerPlayerEntity player, int id) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeInt(id);
+		ServerPlayNetworking.send(player, OPEN_SCREEN, buf);
+	}
+	public static void openScreen(ServerPlayerEntity player, int id, UUID tardis) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeInt(id);
+		buf.writeUuid(tardis);
+		ServerPlayNetworking.send(player, OPEN_SCREEN_TARDIS, buf);
+	}
+
+	/**
+	 * This is for screens without a tardis
+	 */
+	public static Screen screenFromId(int id) {
+		return screenFromId(id, null);
+	}
+
+	public static Screen screenFromId(int id, UUID tardis) {
+		return switch(id) {
+			default -> null;
+			case 0 -> new MonitorScreen(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
+		};
 	}
 
 

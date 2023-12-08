@@ -5,6 +5,7 @@ import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.tardis.ServerTardisManager;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -47,6 +48,8 @@ public class ExteriorSelectItem extends Item {
                 int nextIndex = (exteriorBlock.getTardis().getExterior().getType().ordinal() + 1) % values.length;
                 exteriorBlock.getTardis().getExterior().setType(values[nextIndex]);
                 System.out.println(exteriorBlock.getTardis().getExterior().getType());
+
+                ServerTardisManager.getInstance().sendToSubscribers(exteriorBlock.getTardis());
             }
             if (entity instanceof DoorBlockEntity doorBlock) {
                 TardisTravel.State state = doorBlock.getTardis().getTravel().getState();
@@ -58,6 +61,8 @@ public class ExteriorSelectItem extends Item {
                 ExteriorEnum[] values = ExteriorEnum.values();
                 int nextIndex = (doorBlock.getTardis().getExterior().getType().ordinal() + 1) % values.length;
                 doorBlock.getTardis().getExterior().setType(values[nextIndex]);
+
+                ServerTardisManager.getInstance().sendToSubscribers(doorBlock.getTardis());
             }
             if (entity instanceof ConsoleBlockEntity consoleBlock) {
                 TardisTravel.State state = consoleBlock.getTardis().getTravel().getState();
@@ -71,6 +76,8 @@ public class ExteriorSelectItem extends Item {
                 consoleBlock.killControls();
                 consoleBlock.getTardis().getConsole().setType(values[nextIndex]);
                 consoleBlock.spawnControls();
+
+                ServerTardisManager.getInstance().sendToSubscribers(consoleBlock.getTardis());
             }
         }
 
