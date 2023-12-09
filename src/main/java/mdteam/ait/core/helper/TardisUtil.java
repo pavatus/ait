@@ -192,14 +192,8 @@ public class TardisUtil {
 
     private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
         Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                SERVER.executeSync(() -> {WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
-                player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player)); });
-            }
-        }, 20);
+        SERVER.execute(() -> {WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
+            player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player)); });
     }
 
     public static Tardis findTardisByInterior(BlockPos pos) {

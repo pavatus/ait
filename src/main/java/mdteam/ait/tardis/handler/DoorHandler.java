@@ -3,6 +3,8 @@ package mdteam.ait.tardis.handler;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.data.SerialDimension;
 import mdteam.ait.tardis.ClientTardisManager;
 import mdteam.ait.tardis.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
@@ -15,6 +17,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,6 +54,8 @@ public class DoorHandler {
 
     public void setLocked(boolean var) {
         this.locked = var;
+
+        sync();
     }
     public void setLockedAndDoors(boolean var) {
         this.setLocked(var);
@@ -76,9 +82,6 @@ public class DoorHandler {
     }
 
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
-        if (tardis.getTravel().getState() != LANDED)
-            return false;
-
         if (tardis.getLockedTardis()) {
             if (pos != null)
                 world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
@@ -87,20 +90,25 @@ public class DoorHandler {
             return false;
         }
 
-        DoorBlockEntity door = TardisUtil.getDoor(tardis); // i need to remember these utils exist fr fr
-        //ExteriorBlockEntity exterior = TardisUtil.getExterior(tardis);
-
-        if (door == null)
+        if (tardis.getTravel().getState() != LANDED)
             return false;
+
+        DoorHandler door = tardis.getDoor();
+
+        if (door == null) return false; // how would that happen anyway
 
         // fixme this is loqors code so there might be a better way
         if (tardis.getExterior().getType().isDoubleDoor()) {
-            if (door.getRightDoorRotation() == 1.2f && door.getLeftDoorRotation() == 1.2f) {
-                door.setLeftDoorRot(0);
-                door.setRightDoorRot(0);
+            if (door.right() == 1.2f && door.left() == 1.2f) {
+                world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 0.6F, 1F);
+                world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 0.6F, 1F);
+                door.setLeftRot(0);
+                door.setRightRot(0);
             } else {
-                door.setRightDoorRot(door.getLeftDoorRotation() == 0 ? 0 : 1.2f);
-                door.setLeftDoorRot(1.2f);
+                world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);
+                world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);
+                door.setRightRot(door.left() == 0 ? 0 : 1.2f);
+                door.setLeftRot(1.2f);
             }
             /*if(exterior != null)
                 if (exterior.getRightDoorRotation() == 1.2f && exterior.getLeftDoorRotation() == 1.2f) {
@@ -111,44 +119,56 @@ public class DoorHandler {
                     exterior.setLeftDoorRot(1.2f);
                 }*/
         } else {
-            door.setLeftDoorRot(door.getLeftDoorRotation() == 0 ? 1.2f : 0);
+            world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);
+            world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);
+            door.setLeftRot(door.left() == 0 ? 1.2f : 0);
             /*if (exterior != null) {
                 exterior.setLeftDoorRot(door.getLeftDoorRotation() == 0 ? 1.2f : 0);
             }*/
         }
 
-        world.playSound(null, door.getPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
-
-        if(door != null)
-            tardis.getDoor().sync();
+        tardis.getDoor().sync();
 
         return true;
     }
     public static boolean toggleLock(Tardis tardis, ServerWorld world, @Nullable ServerPlayerEntity player) {
-        return lockTardis(!tardis.getLockedTardis(),tardis,world,player);
+        return lockTardis(!tardis.getLockedTardis(),tardis,world,player, false);
     }
-    public static boolean lockTardis(boolean locked, Tardis tardis, ServerWorld world, @Nullable ServerPlayerEntity player) {
-        if (tardis.getTravel().getState() != LANDED) return false;
-
+    public static boolean lockTardis(boolean locked, Tardis tardis, ServerWorld world, @Nullable ServerPlayerEntity player, boolean forced) {
+        if (!forced) {
+            if (tardis.getTravel().getState() != LANDED) return false;
+        }
         tardis.setLockedTardis(locked);
 
-        DoorBlockEntity door = TardisUtil.getDoor(tardis);
+        DoorHandler door = tardis.getDoor();
 
         if (door == null)
             return false; // could have a case where the door is null but the thing above works fine meaning this false is wrong fixme
 
-        door.setLeftDoorRot(0);
-        door.setRightDoorRot(0);
+        door.setLeftRot(0);
+        door.setRightRot(0);
 
         String lockedState = tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
         if (player != null)
             player.sendMessage(Text.literal(lockedState), true);
 
-        world.playSound(null, door.getPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+        world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+        world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
 
         tardis.getDoor().sync();
 
         return true;
+    }
+
+    public AbsoluteBlockPos.Directed getDoorPos() {
+        Tardis tardis = tardis();
+        if (tardis == null || tardis.getDesktop() == null) return new AbsoluteBlockPos.Directed(0,0,0, new SerialDimension(World.OVERWORLD.getValue()), Direction.NORTH);;
+        return tardis.getDesktop().getInteriorDoorPos();
+    }
+    public AbsoluteBlockPos.Directed getExteriorPos() {
+        Tardis tardis = tardis();
+        if (tardis == null || tardis.getTravel() == null) return new AbsoluteBlockPos.Directed(0,0,0, new SerialDimension(World.OVERWORLD.getValue()), Direction.NORTH);
+        return tardis.getTravel().getPosition();
     }
 
     public static boolean isClient() {

@@ -136,7 +136,7 @@ public class TardisTravel {
 
         this.shouldRemat = false;
 
-        DoorHandler.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null);
+        DoorHandler.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null, true);
 
         this.setState(State.MAT);
 
@@ -184,7 +184,7 @@ public class TardisTravel {
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
-        DoorHandler.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null);
+        DoorHandler.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null, true);
 
         this.setState(State.DEMAT);
 

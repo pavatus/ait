@@ -72,29 +72,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             return;
         }
 
-        if(this.tardis.getTravel().getState() == LANDED) {
-            if (!this.tardis.getLockedTardis()) {
-                if(this.getExteriorType().isDoubleDoor()) {
-                    if (this.getRightDoorRotation() == 1.2f && this.getLeftDoorRotation() == 1.2f) {
-                        //DoorHandler.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
-                        this.setLeftDoorRot(0);
-                        this.setRightDoorRot(0);
-                    } else {
-                        //DoorHandler.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
-                        this.setRightDoorRot(this.getLeftDoorRotation() == 0 ? 0 : 1.2f);
-                        this.setLeftDoorRot(1.2f);
-                    }
-                }
-                else {
-                    //DoorHandler.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
-                    this.setLeftDoorRot(this.getLeftDoorRotation() == 0 ? 1.2f : 0);
-                }
-                world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6f, 1f);
-            } else {
-                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
-                player.sendMessage(Text.literal("\uD83D\uDD12"), true);
-            }
-        }
+        DoorHandler.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
 
         if (sneaking)
             return;

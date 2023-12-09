@@ -69,7 +69,6 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         if (sneaking)
             return;
 
-        world.playSound(null, pos, SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS,0.6f, 1f);
         AbsoluteBlockPos exteriorPos = this.tardis.getTravel().getPosition();
         ExteriorBlockEntity exterior = TardisUtil.getExterior(this.tardis);
 
