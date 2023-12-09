@@ -67,6 +67,42 @@ public class DoorHandler {
         return this.locked;
     }
 
+    public boolean isDoubleDoor() {
+        return tardis().getExterior().getType().isDoubleDoor();
+    }
+
+    public boolean isRightOpen() {
+        return this.right() == 1.2f;
+    }
+    public boolean isLeftOpen() {
+        return this.left() == 1.2f;
+    }
+
+    public boolean isOpen() {
+        if (isDoubleDoor()) {
+            return this.isRightOpen() || this.isLeftOpen();
+        }
+
+        return this.left() == 1.2f;
+    }
+    public boolean isClosed() {
+        return !isOpen();
+    }
+    public boolean isBothOpen() {
+        return this.isRightOpen() && this.isLeftOpen();
+    }
+    public void openDoors() {
+        setLeftRot(1.2f);
+
+        if (isDoubleDoor()) {
+            setRightRot(1.2f);
+        }
+    }
+    public void closeDoors() {
+        setLeftRot(0);
+        setRightRot(0);
+    }
+
     public void sync() {
         if (isClient()) return;
 
@@ -99,11 +135,10 @@ public class DoorHandler {
 
         // fixme this is loqors code so there might be a better way
         if (tardis.getExterior().getType().isDoubleDoor()) {
-            if (door.right() == 1.2f && door.left() == 1.2f) {
+            if (door.isBothOpen()) {
                 world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 0.6F, 1F);
                 world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 0.6F, 1F);
-                door.setLeftRot(0);
-                door.setRightRot(0);
+                door.openDoors();
             } else {
                 world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);
                 world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);

@@ -136,7 +136,7 @@ public class TardisTravel {
 
         this.shouldRemat = false;
 
-        DoorHandler.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null, true);
+        DoorHandler.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null, true);
 
         this.setState(State.MAT);
 
@@ -171,6 +171,8 @@ public class TardisTravel {
 
                 travel.setState(TardisTravel.State.LANDED);
                 travel.runAnimations(blockEntity);
+                if (DoorHandler.isClient()) return;
+                DoorHandler.lockTardis(false, travel.getTardis(), (ServerWorld) travel.position.getWorld(), null, true); // force unlock door @todo should remember last locked state before takeoff
             }
         }, (long) getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
     }
@@ -184,7 +186,7 @@ public class TardisTravel {
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
-        DoorHandler.lockTardis(this.getTardis().getLockedTardis(), this.getTardis(), TardisUtil.getTardisDimension(), null, true);
+        DoorHandler.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null, true);
 
         this.setState(State.DEMAT);
 
