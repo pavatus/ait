@@ -23,6 +23,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         }
 
         TardisExterior tardisExterior = entity.getTardis().getExterior();
+
+        if (tardisExterior == null) return;
+
         Class<? extends ExteriorModel> modelClass = tardisExterior.getType().getModelClass();
 
         if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.

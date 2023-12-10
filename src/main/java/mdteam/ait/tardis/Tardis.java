@@ -8,7 +8,9 @@ import mdteam.ait.tardis.handler.PropertiesHolder;
 import mdteam.ait.tardis.handler.WaypointHandler;
 import mdteam.ait.tardis.handler.loyalty.LoyaltyHandler;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -85,7 +87,10 @@ public class Tardis {
      * Called at the end of a servers tick
      * @param server the server being ticked
      */
-    public void tick(MinecraftServer server) {}
+    public void tick(MinecraftServer server) {
+//         this one line alone increased the percentage by ticks from 1% to 5% :)
+//         ServerTardisManager.getInstance().subscribeEveryone(this); // fixme god every tick too?? this is getting bad.
+    }
 
     /**
      * Called at the end of a worlds tick

@@ -260,6 +260,8 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
     public void setTardis(Tardis tardis) {
         this.tardis = tardis;
 
+        if (this.getAnimation() == null) return;
+
         this.getAnimation().setupAnimation(this.tardis.getTravel().getState());
     }
 
@@ -278,9 +280,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
     // theo please stop deleting my shit theres a reason its there rarely its not just schizophrenic code rambles that are useless
     public void verifyAnimation() {
-        if (this.animation != null)
-            return;
-        if (this.getTardis() == null)
+        if (this.animation != null || this.getTardis() == null || this.getTardis().getExterior() == null || this.getExteriorType() == null)
             return;
 
         this.animation = this.getExteriorType().createAnimation(this);

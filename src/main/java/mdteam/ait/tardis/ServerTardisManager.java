@@ -17,6 +17,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.mixin.networking.client.accessor.MinecraftClientAccessor;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
@@ -152,6 +153,7 @@ public class ServerTardisManager extends TardisManager {
         }
     }
 
+    // fixme this shit broken bro something about being edited while iterating through it
     public void sendToSubscribers(Tardis tardis) {
         if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
 
@@ -163,9 +165,16 @@ public class ServerTardisManager extends TardisManager {
     // fixme i think its easier if all clients just get updated about the tardises
     public void subscribeEveryone(Tardis tardis) {
         for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
+            if (this.subscribers.containsKey(player.getUuid())) continue;
+
             this.subscribers.put(tardis.getUuid(), player);
         }
-        //System.out.println(this.subscribers);
+    }
+    // fixme im desperate ok
+    public void subscribeEveryoneToEverything() {
+        for (Tardis tardis : this.lookup.values()) {
+            this.subscribeEveryone(tardis);
+        }
     }
 
     private void sendTardis(ServerPlayerEntity player, UUID uuid) {
