@@ -5,13 +5,12 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
-import mdteam.ait.core.entities.control.impl.DoorControl;
 import mdteam.ait.core.entities.control.impl.pos.PosManager;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.PropertiesHolder;
+import mdteam.ait.tardis.handler.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -134,7 +133,7 @@ public class TardisTravel {
         if (this.getDestination().getWorld().isClient())
             return;
 
-        PropertiesHolder.setAutoLand(this.getTardis().getProperties(), false);
+        PropertiesHandler.setAutoLand(this.getTardis().getProperties(), false);
 
         DoorHandler.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null, true);
 
@@ -181,7 +180,7 @@ public class TardisTravel {
         if (this.getPosition().getWorld().isClient())
             return;
 
-        PropertiesHolder.setAutoLand(this.getTardis().getProperties(), withRemat);
+        PropertiesHandler.setAutoLand(this.getTardis().getProperties(), withRemat);
 
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
@@ -296,7 +295,7 @@ public class TardisTravel {
     }
 
     public void checkShouldRemat() {
-        if (!PropertiesHolder.willAutoLand(this.getTardis().getProperties()))
+        if (!PropertiesHandler.willAutoLand(this.getTardis().getProperties()))
             return;
 
         this.materialise();

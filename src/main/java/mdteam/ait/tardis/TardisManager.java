@@ -8,15 +8,10 @@ import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.core.events.BlockEntityPreLoadEvent;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.Corners;
-import mdteam.ait.data.SerialDimension;
-import mdteam.ait.tardis.handler.PropertiesHandler;
-import mdteam.ait.tardis.handler.PropertiesHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 
 import java.util.HashMap;
 import java.util.Map;

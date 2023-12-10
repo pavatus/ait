@@ -1,38 +1,19 @@
 package mdteam.ait.tardis.handler;
 
-import com.google.gson.*;
-import it.unimi.dsi.fastutil.Hash;
-import mdteam.ait.data.AbsoluteBlockPos;
-import mdteam.ait.data.Corners;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.util.math.BlockPos;
+public class PropertiesHandler { // todo move more things over to properties
+    public static final String AUTO_LAND = "auto_land";
 
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.UUID;
+    public static void setAutoLand(PropertiesHolder handler, boolean val) {
+        if (handler.getData().containsKey(AUTO_LAND)) {
+            handler.getData().replace(AUTO_LAND, val);
+            return;
+        }
 
-import static mdteam.ait.tardis.handler.PropertiesHolder.AUTO_LAND;
-
-public class PropertiesHandler extends TardisHandler {
-    private final HashMap<String, Object> data; // might replace the generic object with a property class that has impls eg Property.Boolean, etc
-    public PropertiesHandler(UUID tardisId, HashMap<String, Object> data) {
-        super(tardisId);
-        this.data = data;
+        handler.getData().put(AUTO_LAND, val);
     }
-    public PropertiesHandler(UUID tardis) {
-        this(tardis, createDefaultProperties());
-    }
+    public static boolean willAutoLand(PropertiesHolder handler) {
+        if (!handler.getData().containsKey(AUTO_LAND)) return false; // this shouldnt happen due to default properties, but if necessary could set the value here
 
-    public HashMap<String, Object> getData() {
-        return this.data;
-    }
-
-    public static HashMap<String, Object> createDefaultProperties() {
-        HashMap<String, Object> map = new HashMap<>();
-
-        map.put(AUTO_LAND, false);
-
-        return map;
+        return (boolean) handler.getData().get(AUTO_LAND); // tons of risky casts for this unless i do it the other way i mentioned
     }
 }
