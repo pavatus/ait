@@ -6,6 +6,7 @@ import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.PropertiesHolder;
 import mdteam.ait.tardis.handler.WaypointHandler;
+import mdteam.ait.tardis.handler.loyalty.LoyaltyHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
@@ -22,6 +23,7 @@ public class Tardis {
     private final DoorHandler door;
     private final PropertiesHolder properties;
     private final WaypointHandler waypoints;
+    private final LoyaltyHandler loyalties;
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, ConsoleEnum consoleType) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType), (tardis) -> new TardisConsole(tardis, consoleType, consoleType.getControlTypesList()), false);
@@ -34,6 +36,7 @@ public class Tardis {
         this.door.setLocked(locked);
         this.properties = new PropertiesHolder(uuid);
         this.waypoints = new WaypointHandler(uuid);
+        this.loyalties = new LoyaltyHandler(uuid);
         this.desktop = desktop.apply(this);
         this.exterior = exterior.apply(this);
         this.console = console.apply(this);
@@ -76,6 +79,7 @@ public class Tardis {
 
     public PropertiesHolder getProperties() { return properties; }
     public WaypointHandler getWaypoints() { return waypoints; }
+    public LoyaltyHandler getLoyalties() { return loyalties; }
 
     /**
      * Called at the end of a servers tick
