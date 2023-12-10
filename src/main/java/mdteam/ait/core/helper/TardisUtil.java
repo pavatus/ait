@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
@@ -228,6 +229,21 @@ public class TardisUtil {
         }
 
         return null;
+    }
+
+    public static List<PlayerEntity> getPlayersInInterior(Tardis tardis) {
+        return getPlayersInInterior(tardis);
+    }
+
+    @Nullable
+    public static List<PlayerEntity> getPlayersInInterior(Corners corners) {
+        List<PlayerEntity> list = List.of();
+
+        for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
+            if (inBox(corners, player.getBlockPos())) list.add(player);
+        }
+
+        return list;
     }
 
     public static ServerWorld findWorld(RegistryKey<World> key) {
