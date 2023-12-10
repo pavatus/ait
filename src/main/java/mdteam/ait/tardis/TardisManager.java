@@ -40,8 +40,7 @@ public abstract class TardisManager {
                         return false;
                     }
                 }).registerTypeAdapter(TardisDesktopSchema.class, TardisDesktopSchema.serializer())
-                .registerTypeAdapter(Corners.class, Corners.serializer())
-                .registerTypeAdapter(NbtElement.class, PropertiesHandler.nbtSerializer());
+                .registerTypeAdapter(Corners.class, Corners.serializer());
         builder = this.init(builder);
         this.gson = builder.create();
     }

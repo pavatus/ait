@@ -1,49 +1,38 @@
 package mdteam.ait.tardis.handler;
 
 import com.google.gson.*;
+import it.unimi.dsi.fastutil.Hash;
+import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.Corners;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.math.BlockPos;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.UUID;
 
 import static mdteam.ait.tardis.handler.PropertiesHolder.AUTO_LAND;
 
 public class PropertiesHandler extends TardisHandler {
-    private final NbtCompound nbt; // using nbt as its convenient for storing data in this case, can be replaced with lists/hashmap if its needed
-    public PropertiesHandler(UUID tardisId, NbtCompound data) {
+    private final HashMap<String, Object> data; // might replace the generic object with a property class that has impls eg Property.Boolean, etc
+    public PropertiesHandler(UUID tardisId, HashMap<String, Object> data) {
         super(tardisId);
-        this.nbt = data;
+        this.data = data;
     }
     public PropertiesHandler(UUID tardis) {
         this(tardis, createDefaultProperties());
     }
 
-    public NbtCompound getData() {
-        return this.nbt;
+    public HashMap<String, Object> getData() {
+        return this.data;
     }
 
-    public static NbtCompound createDefaultProperties() {
-        NbtCompound data = new NbtCompound();
+    public static HashMap<String, Object> createDefaultProperties() {
+        HashMap<String, Object> map = new HashMap<>();
 
-        data.putBoolean(AUTO_LAND, false);
+        map.put(AUTO_LAND, false);
 
-        return data;
-    }
-
-    public static Object nbtSerializer() {
-        return new NbtElementSerializer();
-    }
-
-    private static class NbtElementSerializer implements JsonDeserializer<NbtElement> {
-
-        @Override
-        public NbtElement deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            JsonObject corners = json.getAsJsonObject();
-
-            return new NbtCompound(); // fixme dont no no
-        }
+        return map;
     }
 }

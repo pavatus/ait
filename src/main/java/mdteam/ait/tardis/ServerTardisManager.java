@@ -153,7 +153,9 @@ public class ServerTardisManager extends TardisManager {
     }
 
     public void sendToSubscribers(Tardis tardis) {
-        for (ServerPlayerEntity player : this.subscribers.get(tardis.getUuid())) {
+        var temp = this.subscribers; // fixme this fixes ConcurrentModificationException jankily ( i think it does anyway )
+
+        for (ServerPlayerEntity player : temp.get(tardis.getUuid())) {
             this.sendTardis(player, tardis);
         }
     }
