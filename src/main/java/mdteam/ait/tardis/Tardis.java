@@ -4,6 +4,7 @@ import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.handler.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
@@ -18,6 +19,7 @@ public class Tardis {
     private final TardisExterior exterior;
     private final TardisConsole console;
     private final DoorHandler door;
+    private final PropertiesHandler properties;
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, ConsoleEnum consoleType) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType), (tardis) -> new TardisConsole(tardis, consoleType, consoleType.getControlTypesList()), false);
@@ -28,6 +30,7 @@ public class Tardis {
         this.travel = travel.apply(this);
         this.door = new DoorHandler(uuid);
         this.door.setLocked(locked);
+        this.properties = new PropertiesHandler(uuid);
         this.desktop = desktop.apply(this);
         this.exterior = exterior.apply(this);
         this.console = console.apply(this);
@@ -58,7 +61,6 @@ public class Tardis {
 
     public void setLockedTardis(boolean bool) {
         this.getDoor().setLocked(bool);
-        this.getDoor().sync();
     }
 
     public boolean getLockedTardis() {
@@ -68,6 +70,8 @@ public class Tardis {
     public TardisTravel getTravel() {
         return travel;
     }
+
+    public PropertiesHandler getProperties() { return properties; }
 
     /**
      * Called at the end of a servers tick

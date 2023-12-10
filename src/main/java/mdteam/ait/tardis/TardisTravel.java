@@ -11,6 +11,7 @@ import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.handler.PropertiesHolder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +36,6 @@ public class TardisTravel {
     private State state = State.LANDED;
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
-    private boolean shouldRemat = false;
     private static final double FORCE_LAND_TIMER = 15;
     private static final double FORCE_FLIGHT_TIMER = 10;
     private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
@@ -134,7 +134,7 @@ public class TardisTravel {
         if (this.getDestination().getWorld().isClient())
             return;
 
-        this.shouldRemat = false;
+        PropertiesHolder.setAutoLand(this.getTardis().getProperties(), false);
 
         DoorHandler.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null, true);
 
@@ -181,7 +181,7 @@ public class TardisTravel {
         if (this.getPosition().getWorld().isClient())
             return;
 
-        this.shouldRemat = withRemat;
+        PropertiesHolder.setAutoLand(this.getTardis().getProperties(), withRemat);
 
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
@@ -296,7 +296,7 @@ public class TardisTravel {
     }
 
     public void checkShouldRemat() {
-        if (!this.shouldRemat)
+        if (!PropertiesHolder.willAutoLand(this.getTardis().getProperties()))
             return;
 
         this.materialise();
