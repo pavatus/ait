@@ -4,6 +4,8 @@ import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -66,4 +68,16 @@ public class Tardis {
     public TardisTravel getTravel() {
         return travel;
     }
+
+    /**
+     * Called at the end of a servers tick
+     * @param server the server being ticked
+     */
+    public void tick(MinecraftServer server) {}
+
+    /**
+     * Called at the end of a worlds tick
+     * @param world the world being ticked
+     */
+    public void tick(ServerWorld world) {}
 }

@@ -9,8 +9,10 @@ import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.SerialDimension;
+import mdteam.ait.tardis.wrapper.server.ServerTardisDesktop;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.mixin.networking.client.accessor.MinecraftClientAccessor;
@@ -68,6 +70,18 @@ public class ServerTardisManager extends TardisManager {
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> this.reset());
         ServerLifecycleEvents.SERVER_STARTED.register(server -> this.loadTardises());
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            // fixme would this cause lag?
+            for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
+                tardis.tick(server);
+            }
+        });
+        ServerTickEvents.END_WORLD_TICK.register(world -> {
+            // fixme lag?
+            for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
+                tardis.tick(world);
+            }
+        });
     }
 
     public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, ConsoleEnum consoleType, TardisDesktopSchema schema, boolean locked) {

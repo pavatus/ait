@@ -1,38 +1,24 @@
 package mdteam.ait.tardis.handler;
 
-import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.data.AbsoluteBlockPos;
-import mdteam.ait.data.SerialDimension;
-import mdteam.ait.tardis.ClientTardisManager;
-import mdteam.ait.tardis.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.tab.Tab;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 
-public class DoorHandler {
-    private final UUID tardisId;
+public class DoorHandler extends TardisHandler {
     private float left, right;
     private boolean locked;
 
     public DoorHandler(UUID tardis) {
-        this.tardisId = tardis;
+        super(tardis);
     }
 
     public void setLeftRot(float var) {
@@ -103,20 +89,6 @@ public class DoorHandler {
         setRightRot(0);
     }
 
-    public void sync() {
-        if (isClient()) return;
-
-        ServerTardisManager.getInstance().sendToSubscribers(this.tardis());
-    }
-
-    public Tardis tardis() {
-        if (isClient()) {
-            return ClientTardisManager.getInstance().getLookup().get(tardisId);
-        }
-
-        return ServerTardisManager.getInstance().getTardis(tardisId);
-    }
-
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
         if (tardis.getLockedTardis()) {
             if (pos != null)
@@ -138,7 +110,7 @@ public class DoorHandler {
             if (door.isBothOpen()) {
                 world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 0.6F, 1F);
                 world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 0.6F, 1F);
-                door.openDoors();
+                door.closeDoors();
             } else {
                 world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);
                 world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);
@@ -193,23 +165,5 @@ public class DoorHandler {
         tardis.getDoor().sync();
 
         return true;
-    }
-
-    public AbsoluteBlockPos.Directed getDoorPos() {
-        Tardis tardis = tardis();
-        if (tardis == null || tardis.getDesktop() == null) return new AbsoluteBlockPos.Directed(0,0,0, new SerialDimension(World.OVERWORLD.getValue()), Direction.NORTH);;
-        return tardis.getDesktop().getInteriorDoorPos();
-    }
-    public AbsoluteBlockPos.Directed getExteriorPos() {
-        Tardis tardis = tardis();
-        if (tardis == null || tardis.getTravel() == null) return new AbsoluteBlockPos.Directed(0,0,0, new SerialDimension(World.OVERWORLD.getValue()), Direction.NORTH);
-        return tardis.getTravel().getPosition();
-    }
-
-    public static boolean isClient() {
-        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
-    }
-    public static boolean isServer() {
-        return !isClient();
     }
 }
