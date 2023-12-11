@@ -34,17 +34,17 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 			// TARDIS
 			provider.addSound("tardis/demat", AITSounds.DEMAT);
 			provider.addSound("tardis/mat", AITSounds.MAT);
-			provider.addSound("hop_demat", AITSounds.HOP_DEMAT);
-			provider.addSound("hop_mat", AITSounds.HOP_MAT);
-			provider.addSound("fail_demat", AITSounds.FAIL_DEMAT);
-			provider.addSound("fail_mat", AITSounds.FAIL_MAT);
-			provider.addSound("emergency_mat", AITSounds.EMERG_MAT);
+			provider.addSound("tardis/hop_demat", AITSounds.HOP_DEMAT);
+			provider.addSound("tardis/hop_mat", AITSounds.HOP_MAT);
+			provider.addSound("tardis/fail_demat", AITSounds.FAIL_DEMAT);
+			provider.addSound("tardis/fail_mat", AITSounds.FAIL_MAT);
+			provider.addSound("tardis/emergency_mat", AITSounds.EMERG_MAT);
 			provider.addSound("tardis/eighth_demat", AITSounds.EIGHT_DEMAT);
 			provider.addSound("tardis/eighth_mat", AITSounds.EIGHT_MAT);
 
 			// Controls
-			provider.addSound("demat_lever_pull", AITSounds.DEMAT_LEVER_PULL);
-			provider.addSound("handbrake_lever_pull", AITSounds.HANDBRAKE_LEVER_PULL);
+			provider.addSound("controls/demat_lever_pull", AITSounds.DEMAT_LEVER_PULL);
+			provider.addSound("controls/handbrake_lever_pull", AITSounds.HANDBRAKE_LEVER_PULL);
 
 			return provider;
 		})));
