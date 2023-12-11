@@ -157,7 +157,9 @@ public class ServerTardisManager extends TardisManager {
     public void sendToSubscribers(Tardis tardis) {
         if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
 
-        for (ServerPlayerEntity player : this.subscribers.get(tardis.getUuid())) {
+        var temp = ArrayListMultimap.create(this.subscribers);
+
+        for (ServerPlayerEntity player : temp.get(tardis.getUuid())) {
             this.sendTardis(player, tardis);
         }
     }
