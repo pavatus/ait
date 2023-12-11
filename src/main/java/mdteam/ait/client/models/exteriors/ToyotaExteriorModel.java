@@ -94,7 +94,7 @@ public class ToyotaExteriorModel extends ExteriorModel {
     @Override
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         matrices.push();
-        matrices.scale(0.68F,0.68f,0.68f);
+        matrices.scale(0.685F,0.685f,0.685f);
         matrices.translate(0, -1.5f, 0);
 
         this.bone.getChild("Doors").getChild("Right").yaw = exterior.getCorrectDoorRotations()[0];
