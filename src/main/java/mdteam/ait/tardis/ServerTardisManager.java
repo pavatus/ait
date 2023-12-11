@@ -70,7 +70,18 @@ public class ServerTardisManager extends TardisManager {
                 }
         );
 
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> this.reset());
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+            // force all dematting to go flight and all matting to go land
+            for (Tardis tardis : this.getLookup().values()) {
+                if (tardis.getTravel().getState() == TardisTravel.State.DEMAT) {
+                    tardis.getTravel().toFlight();
+                } else if (tardis.getTravel().getState() == TardisTravel.State.MAT) {
+                    tardis.getTravel().forceLand();
+                }
+            }
+
+            this.reset();
+        });
         ServerLifecycleEvents.SERVER_STARTED.register(server -> this.loadTardises());
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             // fixme would this cause lag?

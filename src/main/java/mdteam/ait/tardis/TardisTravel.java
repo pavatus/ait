@@ -146,7 +146,7 @@ public class TardisTravel {
 
             if (player == null) return; // Interior is probably empty
 
-            player.sendMessage(Text.literal("Unable to land!")); // fixme translatable
+            player.sendMessage(Text.literal("Unable to land!"), true); // fixme translatable
             return;
         }
 
@@ -182,13 +182,7 @@ public class TardisTravel {
         animTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (travel.getState() != State.MAT)
-                    return;
-
-                travel.setState(TardisTravel.State.LANDED);
-                travel.runAnimations(blockEntity);
-                if (DoorHandler.isClient()) return;
-                DoorHandler.lockTardis(false, travel.getTardis(), (ServerWorld) travel.position.getWorld(), null, true); // force unlock door @todo should remember last locked state before takeoff
+                travel.forceLand(blockEntity);
             }
         }, (long) getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
     }
@@ -259,12 +253,12 @@ public class TardisTravel {
         if (isDestinationTardisExterior()) { // fixme this portion of the code just deletes the other tardis' exterior!
             ExteriorBlockEntity target = (ExteriorBlockEntity) world.getBlockEntity(this.getDestination()); // safe
 
-            System.out.println(target);
-            System.out.println(target.getTardis());
-
             if (target.getTardis() == null) return false;
 
-            setDestinationToTardisInterior(target.getTardis(), false);
+            setDestinationToTardisInterior(target.getTardis(), true, true, 256); // how many times should this be
+
+            System.out.println(this.getDestination());
+
             return this.checkDestination(2,CHECK_DOWN); // limit at a small number cus it might get too laggy
         }
 
@@ -297,21 +291,58 @@ public class TardisTravel {
 
         return false;
     }
-    private void setDestinationToTardisInterior(Tardis target, boolean checks) {
+
+    /**
+     * Picks a random pos within the placed tardis interior and sets the destination
+     * @param target tardis to land in
+     * @param checks whether to run usual landing checks
+     * @param checks2 whether to run special checks
+     * @param limit how many times to check / rerun this
+     */
+    private void setDestinationToTardisInterior(Tardis target, boolean checks, boolean checks2, int limit) {
         if (target == null) return; // i hate null shit
 
         this.setDestination(new AbsoluteBlockPos.Directed(
-                TardisUtil.offsetInteriorDoorPosition(target),
+                TardisUtil.getRandomPosInPlacedInterior(target),
                 TardisUtil.getTardisDimension(),
                 this.getDestination().getDirection()),
                 checks
         );
+
+        // check this cuh
+        if (!checks2) return;
+
+        BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
+        ServerWorld world = (ServerWorld) this.getDestination().getWorld();
+
+
+        for (int i = 0; i < limit; i++) {
+            if (world.getBlockState(temp).isAir() && world.getBlockState(temp.up()).isAir() && !world.getBlockState(temp.down()).isAir()) { // check two blocks cus tardis is two blocks tall yk and check below for solid ground
+                this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), true);
+                return;
+            }
+
+            this.setDestinationToTardisInterior(target, true, false, limit);
+        }
     }
 
     public void toFlight() {
         this.setState(TardisTravel.State.FLIGHT);
         this.deleteExterior();
         this.checkShouldRemat();
+    }
+    public void forceLand(ExteriorBlockEntity blockEntity) {
+        if (this.getState() != State.MAT)
+            return;
+
+        this.setState(TardisTravel.State.LANDED);
+        if (blockEntity != null)
+            this.runAnimations(blockEntity);
+        if (DoorHandler.isClient()) return;
+        DoorHandler.lockTardis(false, this.getTardis(), (ServerWorld) this.position.getWorld(), null, true); // force unlock door @todo should remember last locked state before takeoff
+    }
+    public void forceLand() {
+        this.forceLand(null);
     }
     public void runAnimations() {
         ServerWorld level = (ServerWorld) this.position.getWorld();

@@ -271,7 +271,8 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         if (((ExteriorBlockEntity) exterior).animation != null)
             ((ExteriorBlockEntity) exterior).getAnimation().tick();
 
-        if (!world.isClient() && ((ExteriorBlockEntity) exterior).getTardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
+
+        if (!world.isClient() && ((ExteriorBlockEntity) exterior).getTardis() != null && ((ExteriorBlockEntity) exterior).getTardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
             for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(exterior.getPos()).expand(0,1,0), EntityPredicates.EXCEPT_SPECTATOR)) {
                 TardisUtil.teleportInside(((ExteriorBlockEntity) exterior).getTardis(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
             }
