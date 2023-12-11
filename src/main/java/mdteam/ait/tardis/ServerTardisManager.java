@@ -1,6 +1,7 @@
 package mdteam.ait.tardis;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
@@ -159,12 +160,11 @@ public class ServerTardisManager extends TardisManager {
 
         if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
 
-        Iterator<Map.Entry<UUID, ServerPlayerEntity>> i = this.subscribers.entries().iterator();
-        while (i.hasNext()) {
-            var next = i.next();
-            if (next.getKey().equals(tardis.getUuid())) {
-                this.sendTardis(next.getValue(), tardis);
-            }
+        var deepy = this.gson.fromJson(this.gson.toJson(this.subscribers), ArrayListMultimap.class);
+
+        for (Object obj : deepy.get(tardis.getUuid())) {
+            ServerPlayerEntity player = (ServerPlayerEntity) obj;
+            this.sendTardis(player, tardis);
         }
     }
 
