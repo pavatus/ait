@@ -256,7 +256,7 @@ public class TardisTravel {
 
         ServerWorld world = (ServerWorld) this.getDestination().getWorld(); // this cast is fine, we know its server
 
-        if (isDestinationTardisExterior()) {
+        if (isDestinationTardisExterior()) { // fixme this portion of the code just deletes the other tardis' exterior!
             ExteriorBlockEntity target = (ExteriorBlockEntity) world.getBlockEntity(this.getDestination()); // safe
 
             if (target.getTardis() == null) return false;
@@ -268,8 +268,6 @@ public class TardisTravel {
         BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
 
         for (int i = 0; i < limit; i++) {
-            System.out.println(world.getBlockState(temp).isAir() && world.getBlockState(temp.up()).isAir());
-
             if (world.getBlockState(temp).isAir() && world.getBlockState(temp.up()).isAir()) { // check two blocks cus tardis is two blocks tall yk
                 this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
                 return true;
@@ -282,7 +280,19 @@ public class TardisTravel {
         return false;
     }
     private boolean isDestinationTardisExterior() {
-        return this.getDestination().getWorld().getBlockEntity(this.getDestination()) instanceof ExteriorBlockEntity;
+        ServerWorld world = (ServerWorld) this.getDestination().getWorld();
+
+        // bad code but its 4am i cba anymore
+        if (world.getBlockEntity(this.getDestination()) instanceof ExteriorBlockEntity) {
+            return true;
+        }
+
+        if (world.getBlockEntity(this.getDestination().down()) instanceof ExteriorBlockEntity) {
+            this.setDestination(new AbsoluteBlockPos.Directed(this.getDestination().down(), world, this.getDestination().getDirection()),false);
+            return true;
+        }
+
+        return false;
     }
     private void setDestinationToTardisInterior(Tardis target, boolean checks) {
         if (target == null) return; // i hate null shit
