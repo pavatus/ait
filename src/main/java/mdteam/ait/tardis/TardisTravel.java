@@ -99,6 +99,7 @@ public class TardisTravel {
     }
 
     //Yeah I know, I'm so cool :) - Loqor
+    @Deprecated
     public void checkPositionAndMaterialise(boolean landType) {
 
         if(this.getDestination() == null)

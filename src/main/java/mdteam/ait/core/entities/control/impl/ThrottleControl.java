@@ -29,7 +29,7 @@ public class ThrottleControl extends Control {
         if (travel.getState() == TardisTravel.State.LANDED) {
             travel.dematerialise(false);
         } else if (travel.getState() == TardisTravel.State.FLIGHT) {
-            travel.checkPositionAndMaterialise(true);
+            travel.materialise();
         }
 
         return true;

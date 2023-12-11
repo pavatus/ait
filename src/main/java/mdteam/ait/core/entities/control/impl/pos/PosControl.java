@@ -33,7 +33,7 @@ public abstract class PosControl extends Control {
         PosManager manager = travel.getPosManager();
 
         BlockPos pos = this.type.add(destination, (player.isSneaking()) ? -manager.increment : manager.increment, destination.getWorld());
-        travel.setDestination(new AbsoluteBlockPos.Directed(pos,destination.getWorld(),destination.getDirection()), true);
+        travel.setDestination(new AbsoluteBlockPos.Directed(pos,destination.getWorld(),destination.getDirection()), false);
 
         messagePlayerDestination(player, travel);
 

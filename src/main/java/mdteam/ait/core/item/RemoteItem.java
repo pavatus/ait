@@ -77,7 +77,7 @@ public class RemoteItem extends Item {
                 if (travel.getState() == LANDED)
                     travel.dematerialise(true);
                 if (travel.getState() == FLIGHT)
-                    travel.checkPositionAndMaterialise(true);
+                    travel.materialise();
 
                 return ActionResult.SUCCESS;
             } else {
