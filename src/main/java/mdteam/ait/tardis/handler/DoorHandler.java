@@ -24,12 +24,12 @@ public class DoorHandler extends TardisHandler {
     public void setLeftRot(float var) {
         this.left = var;
 
-        sync();
+        this.sync();
     }
     public void setRightRot(float var) {
         this.right = var;
 
-        sync();
+        this.sync();
     }
     public float right() {
         return this.right;
@@ -41,7 +41,7 @@ public class DoorHandler extends TardisHandler {
     public void setLocked(boolean var) {
         this.locked = var;
 
-        sync();
+        this.sync();
     }
     public void setLockedAndDoors(boolean var) {
         this.setLocked(var);
@@ -108,12 +108,12 @@ public class DoorHandler extends TardisHandler {
         // fixme this is loqors code so there might be a better way
         if (tardis.getExterior().getType().isDoubleDoor()) {
             if (door.isBothOpen()) {
-                world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 0.6F, 1F);
-                world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 0.6F, 1F);
+                world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorCloseSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+                world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorCloseSound(), SoundCategory.BLOCKS, 0.6F, 1F);
                 door.closeDoors();
             } else {
-                world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);
-                world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);
+                world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+                world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
                 door.setRightRot(door.left() == 0 ? 0 : 1.2f);
                 door.setLeftRot(1.2f);
             }
@@ -126,8 +126,8 @@ public class DoorHandler extends TardisHandler {
                     exterior.setLeftDoorRot(1.2f);
                 }*/
         } else {
-            world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);
-            world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.6F, 1F);
+            world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+            world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
             door.setLeftRot(door.left() == 0 ? 1.2f : 0);
             /*if (exterior != null) {
                 exterior.setLeftDoorRot(door.getLeftDoorRotation() == 0 ? 1.2f : 0);

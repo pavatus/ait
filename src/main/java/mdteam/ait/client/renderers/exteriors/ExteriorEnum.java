@@ -11,6 +11,8 @@ import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 
 public enum ExteriorEnum {
 
@@ -45,6 +47,15 @@ public enum ExteriorEnum {
         @Override
         public Class<? extends DoorModel> getDoorClass() {
             return CapsuleDoorModel.class;
+        }
+        @Override
+        public SoundEvent getDoorCloseSound() {
+            return SoundEvents.BLOCK_IRON_DOOR_CLOSE;
+        }
+
+        @Override
+        public SoundEvent getDoorOpenSound() {
+            return SoundEvents.BLOCK_IRON_DOOR_OPEN;
         }
     },
     SHELTER() {
@@ -86,6 +97,15 @@ public enum ExteriorEnum {
         @Override
         public Class<? extends DoorModel> getDoorClass() {
             return FalloutDoorModel.class;
+        }
+        @Override
+        public SoundEvent getDoorCloseSound() {
+            return SoundEvents.BLOCK_IRON_DOOR_CLOSE;
+        }
+
+        @Override
+        public SoundEvent getDoorOpenSound() {
+            return SoundEvents.BLOCK_IRON_DOOR_OPEN;
         }
     },
     TOYOTA() {
@@ -186,6 +206,16 @@ public enum ExteriorEnum {
         public Class<? extends DoorModel> getDoorClass() {
             return BoothDoorModel.class;
         }
+
+        @Override
+        public SoundEvent getDoorCloseSound() {
+            return SoundEvents.BLOCK_IRON_DOOR_CLOSE;
+        }
+
+        @Override
+        public SoundEvent getDoorOpenSound() {
+            return SoundEvents.BLOCK_IRON_DOOR_OPEN;
+        }
     };
 
     public abstract ExteriorAnimation createAnimation(ExteriorBlockEntity entity);
@@ -196,6 +226,13 @@ public enum ExteriorEnum {
     public abstract boolean isDoubleDoor();
     public abstract Class<? extends ExteriorModel> getModelClass();
     public abstract Class<? extends DoorModel> getDoorClass();
+
+    public SoundEvent getDoorCloseSound() {
+        return SoundEvents.BLOCK_WOODEN_DOOR_CLOSE;
+    }
+    public SoundEvent getDoorOpenSound() {
+        return SoundEvents.BLOCK_WOODEN_DOOR_OPEN;
+    }
 
     public MatSound getSound(TardisTravel.State state) {
         return switch(state) {

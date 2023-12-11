@@ -259,6 +259,9 @@ public class TardisTravel {
         if (isDestinationTardisExterior()) { // fixme this portion of the code just deletes the other tardis' exterior!
             ExteriorBlockEntity target = (ExteriorBlockEntity) world.getBlockEntity(this.getDestination()); // safe
 
+            System.out.println(target);
+            System.out.println(target.getTardis());
+
             if (target.getTardis() == null) return false;
 
             setDestinationToTardisInterior(target.getTardis(), false);

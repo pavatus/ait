@@ -236,6 +236,8 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             return;
         }
 
+        if (this.tardis != null) return;
+
         AITMod.LOGGER.warn("Deleting exterior block at " + this.pos + " due to lack of Tardis!");
         this.getWorld().removeBlock(this.pos, false);
     }
