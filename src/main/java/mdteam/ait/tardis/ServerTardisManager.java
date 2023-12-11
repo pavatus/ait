@@ -28,6 +28,7 @@ import org.apache.logging.log4j.core.jmx.Server;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -157,9 +158,8 @@ public class ServerTardisManager extends TardisManager {
     public void sendToSubscribers(Tardis tardis) {
         if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
 
-        var temp = ArrayListMultimap.create(this.subscribers);
-
-        for (ServerPlayerEntity player : temp.get(tardis.getUuid())) {
+        for (Iterator<ServerPlayerEntity> it = this.subscribers.get(tardis.getUuid()).iterator(); it.hasNext(); ) {
+            ServerPlayerEntity player = it.next();
             this.sendTardis(player, tardis);
         }
     }
