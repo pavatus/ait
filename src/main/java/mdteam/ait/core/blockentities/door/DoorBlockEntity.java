@@ -14,6 +14,9 @@ public class DoorBlockEntity extends AbstractDoorBlockEntity {
 
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
+
+        // even though TardisDesktop links the door, we need to link it here as well to avoid desync
+        this.setTardis(TardisUtil.findTardisByInterior(pos));
     }
 
     @Override
