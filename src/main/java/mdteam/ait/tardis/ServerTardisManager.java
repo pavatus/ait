@@ -159,9 +159,12 @@ public class ServerTardisManager extends TardisManager {
 
         if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
 
-        for (Iterator<ServerPlayerEntity> it = this.subscribers.get(tardis.getUuid()).iterator(); it.hasNext(); ) {
-            ServerPlayerEntity player = it.next();
-            this.sendTardis(player, tardis);
+        Iterator<Map.Entry<UUID, ServerPlayerEntity>> i = this.subscribers.entries().iterator();
+        while (i.hasNext()) {
+            var next = i.next();
+            if (next.getKey().equals(tardis.getUuid())) {
+                this.sendTardis(next.getValue(), tardis);
+            }
         }
     }
 
