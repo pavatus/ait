@@ -143,7 +143,11 @@ public class TardisTravel {
             // Not safe to land here!
             ServerPlayerEntity player = (ServerPlayerEntity) TardisUtil.getPlayerInsideInterior(this.getTardis()); // may not necessarily be the person piloting the tardis, but todo this can be replaced with the player with the highest loyalty in future
 
+            this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f,1f); // fixme can be spammed by remote
+
             if (player == null) return; // Interior is probably empty
+
+            TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f,1f);
 
             player.sendMessage(Text.literal("Unable to land!"), true); // fixme translatable
             return;
