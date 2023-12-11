@@ -319,4 +319,16 @@ public class TardisUtil {
 
         return corners;
     }
+    public static BlockPos getPlacedInteriorCentre(Tardis tardis) {
+        Corners corners = getPlacedInteriorCorners(tardis);
+
+        if (!tardis.getDesktop().getSchema().findTemplate().isPresent()) {
+            AITMod.LOGGER.warn("Could not get desktop schema! Returning bad centre instead.");
+            return BlockPos.ofFloored(corners.getBox().getCenter());
+        }
+
+        Vec3i size = tardis.getDesktop().getSchema().findTemplate().get().getSize();
+
+        return corners.getFirst().add(size.getX(),size.getY()/2,size.getZ());
+    }
 }

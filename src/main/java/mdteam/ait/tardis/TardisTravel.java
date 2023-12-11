@@ -6,15 +6,12 @@ import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.entities.control.impl.pos.PosManager;
+import mdteam.ait.core.entities.control.impl.pos.PosType;
 import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.PropertiesHandler;
-import mdteam.ait.tardis.handler.TardisHandler;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,6 +27,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -255,17 +253,15 @@ public class TardisTravel {
 
             if (target.getTardis() == null) return false;
 
-            setDestinationToTardisInterior(target.getTardis(), true, true, 256); // how many times should this be
+            setDestinationToTardisInterior(target.getTardis(), true, 256); // how many times should this be
 
-            System.out.println(this.getDestination());
-
-            return this.checkDestination(2,CHECK_DOWN); // limit at a small number cus it might get too laggy
+            return this.checkDestination(CHECK_LIMIT,CHECK_DOWN); // limit at a small number cus it might get too laggy
         }
 
         BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
 
         for (int i = 0; i < limit; i++) {
-            if (world.getBlockState(temp).isAir() && world.getBlockState(temp.up()).isAir()) { // check two blocks cus tardis is two blocks tall yk
+            if (world.getBlockState(temp).isAir() && world.getBlockState(temp.up()).isAir() && !world.getBlockState(temp.down()).isAir()) { // check two blocks cus tardis is two blocks tall yk and check for groud
                 this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
                 return true;
             }
@@ -296,34 +292,22 @@ public class TardisTravel {
      * Picks a random pos within the placed tardis interior and sets the destination
      * @param target tardis to land in
      * @param checks whether to run usual landing checks
-     * @param checks2 whether to run special checks
      * @param limit how many times to check / rerun this
      */
-    private void setDestinationToTardisInterior(Tardis target, boolean checks, boolean checks2, int limit) {
+    private void setDestinationToTardisInterior(Tardis target, boolean checks, int limit) { // fixme as this causes problems sometimes
         if (target == null) return; // i hate null shit
 
+        Random random = new Random();
+        BlockPos h = TardisUtil.getPlacedInteriorCentre(target); // bad variable name
+        h = PosType.X.add(h, random.nextBoolean() ? -random.nextInt(8) : random.nextInt(8));
+        h = PosType.Z.add(h, random.nextBoolean() ? -random.nextInt(8) : random.nextInt(8));
+
         this.setDestination(new AbsoluteBlockPos.Directed(
-                TardisUtil.getRandomPosInPlacedInterior(target),
+                        h,
                 TardisUtil.getTardisDimension(),
                 this.getDestination().getDirection()),
                 checks
         );
-
-        // check this cuh
-        if (!checks2) return;
-
-        BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
-        ServerWorld world = (ServerWorld) this.getDestination().getWorld();
-
-
-        for (int i = 0; i < limit; i++) {
-            if (world.getBlockState(temp).isAir() && world.getBlockState(temp.up()).isAir() && !world.getBlockState(temp.down()).isAir()) { // check two blocks cus tardis is two blocks tall yk and check below for solid ground
-                this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), true);
-                return;
-            }
-
-            this.setDestinationToTardisInterior(target, true, false, limit);
-        }
     }
 
     public void toFlight() {
@@ -356,7 +340,6 @@ public class TardisTravel {
         if (exterior.getAnimation() == null) return;
 
         exterior.getAnimation().setupAnimation(this.state);
-        //System.out.println(this.state);
     }
 
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
