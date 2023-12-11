@@ -28,8 +28,7 @@ import org.apache.logging.log4j.core.jmx.Server;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Iterator;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -156,6 +155,8 @@ public class ServerTardisManager extends TardisManager {
 
     // fixme this shit broken bro something about being edited while iterating through it
     public void sendToSubscribers(Tardis tardis) {
+        if (tardis == null) return;
+
         if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
 
         for (Iterator<ServerPlayerEntity> it = this.subscribers.get(tardis.getUuid()).iterator(); it.hasNext(); ) {

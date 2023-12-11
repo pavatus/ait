@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.handler;
 
+import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.data.SerialDimension;
 import mdteam.ait.tardis.ClientTardisManager;
@@ -54,9 +55,9 @@ public abstract class TardisHandler implements TardisTickable {
     }
 
     public static boolean isClient() {
-        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+        return TardisUtil.isClient();
     }
     public static boolean isServer() {
-        return !isClient();
+        return TardisUtil.isServer();
     }
 }

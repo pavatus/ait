@@ -7,13 +7,18 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.entities.control.impl.pos.PosManager;
 import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.PropertiesHandler;
+import mdteam.ait.tardis.handler.TardisHandler;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -38,6 +43,8 @@ public class TardisTravel {
     private static final double FORCE_LAND_TIMER = 15;
     private static final double FORCE_FLIGHT_TIMER = 10;
     private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
+    private static final int CHECK_LIMIT = 10; // todo move into a config
+    private static final boolean CHECK_DOWN = true; // todo config
 
     @Exclude
     protected Tardis tardis;
@@ -132,6 +139,16 @@ public class TardisTravel {
 
         if (this.getDestination().getWorld().isClient())
             return;
+
+        if (!this.checkDestination(CHECK_LIMIT, CHECK_DOWN)) {
+            // Not safe to land here!
+            ServerPlayerEntity player = (ServerPlayerEntity) TardisUtil.getPlayerInsideInterior(this.getTardis()); // may not necessarily be the person piloting the tardis, but todo this can be replaced with the player with the highest loyalty in future
+
+            if (player == null) return; // Interior is probably empty
+
+            player.sendMessage(Text.literal("Unable to land!")); // fixme translatable
+            return;
+        }
 
         PropertiesHandler.setAutoLand(this.getTardis().getProperties(), false);
 
@@ -228,6 +245,56 @@ public class TardisTravel {
         return new BlockPos((firstCorner.getX() + secondCorner.getX()) / 2, firstCorner.getY(), (firstCorner.getZ() + secondCorner.getZ()) / 2);
     }
 
+    /**
+     * Checks whether the destination is valid otherwise searches for a new one
+     * @param limit how many times the search can happen (should stop hanging)
+     * @param downwards whether to search downwards or upwards
+     * @return whether its safe to land
+     */
+    private boolean checkDestination(int limit, boolean downwards) {
+        if (TardisUtil.isClient()) return true;
+
+        ServerWorld world = (ServerWorld) this.getDestination().getWorld(); // this cast is fine, we know its server
+
+        if (isDestinationTardisExterior()) {
+            ExteriorBlockEntity target = (ExteriorBlockEntity) world.getBlockEntity(this.getDestination()); // safe
+
+            if (target.getTardis() == null) return false;
+
+            setDestinationToTardisInterior(target.getTardis(), false);
+            return this.checkDestination(2,CHECK_DOWN); // limit at a small number cus it might get too laggy
+        }
+
+        BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
+
+        for (int i = 0; i < limit; i++) {
+            System.out.println(world.getBlockState(temp).isAir() && world.getBlockState(temp.up()).isAir());
+
+            if (world.getBlockState(temp).isAir() && world.getBlockState(temp.up()).isAir()) { // check two blocks cus tardis is two blocks tall yk
+                this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
+                return true;
+            }
+
+            if (downwards) temp = temp.down().mutableCopy();
+            else temp = temp.up().mutableCopy();
+        }
+
+        return false;
+    }
+    private boolean isDestinationTardisExterior() {
+        return this.getDestination().getWorld().getBlockEntity(this.getDestination()) instanceof ExteriorBlockEntity;
+    }
+    private void setDestinationToTardisInterior(Tardis target, boolean checks) {
+        if (target == null) return; // i hate null shit
+
+        this.setDestination(new AbsoluteBlockPos.Directed(
+                TardisUtil.offsetInteriorDoorPosition(target),
+                TardisUtil.getTardisDimension(),
+                this.getDestination().getDirection()),
+                checks
+        );
+    }
+
     public void toFlight() {
         this.setState(TardisTravel.State.FLIGHT);
         this.deleteExterior();
@@ -250,6 +317,8 @@ public class TardisTravel {
 
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
         this.destination = pos;
+
+        if (withChecks) this.checkDestination(CHECK_LIMIT, CHECK_DOWN);
     }
 
     public AbsoluteBlockPos.Directed getDestination() {
