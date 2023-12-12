@@ -61,13 +61,19 @@ public class TardisUtil {
         ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
                 (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
+                    int exteriorValue = buf.readInt();
 
-                    ExteriorEnum[] values = ExteriorEnum.values();
+                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(ExteriorEnum.values()[exteriorValue]);
+                    WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
+                                    .getTravel().getPosition().getWorld().getRegistryKey()),
+                            ServerTardisManager.getInstance().getTardis(uuid).getTravel().getPosition());
+
+                    /*ExteriorEnum[] values = ExteriorEnum.values();
                     int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
                     ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(values[nextIndex]);
                     WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
-                            ServerTardisManager.getInstance().getTardis(uuid).getTravel().getPosition());
+                            ServerTardisManager.getInstance().getTardis(uuid).getTravel().getPosition());*/
                 }
         );
         ServerPlayNetworking.registerGlobalReceiver(SNAP,
@@ -89,9 +95,10 @@ public class TardisUtil {
         );
     }
 
-    public static void changeExteriorWithScreen(UUID uuid) {
+    public static void changeExteriorWithScreen(UUID uuid, int exterior) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(uuid);
+        buf.writeInt(exterior);
         ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);
     }
 
