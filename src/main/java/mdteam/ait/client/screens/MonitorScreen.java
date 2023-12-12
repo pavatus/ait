@@ -6,11 +6,7 @@ import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.data.AbsoluteBlockPos;
-import mdteam.ait.tardis.ClientTardisManager;
-import mdteam.ait.tardis.Tardis;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.CreditsAndAttributionScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
@@ -18,7 +14,6 @@ import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextReorderingProcessor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
@@ -26,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static mdteam.ait.client.renderers.exteriors.ExteriorEnum.*;
-import static mdteam.ait.core.entities.control.impl.DimensionControl.convertWorldToReadable;
+import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldToReadable;
 
 public class MonitorScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/borealis_monitor.png");

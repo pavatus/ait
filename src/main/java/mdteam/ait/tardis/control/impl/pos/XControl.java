@@ -1,4 +1,4 @@
-package mdteam.ait.core.entities.control.impl.pos;
+package mdteam.ait.tardis.control.impl.pos;
 
 public class XControl extends PosControl {
     public XControl() {

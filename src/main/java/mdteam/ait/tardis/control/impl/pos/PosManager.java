@@ -1,6 +1,4 @@
-package mdteam.ait.core.entities.control.impl.pos;
-
-import java.util.Arrays;
+package mdteam.ait.tardis.control.impl.pos;
 
 public class PosManager {
     // private final ConsoleBlockEntity console;

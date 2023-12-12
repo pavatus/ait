@@ -1,6 +1,7 @@
-package mdteam.ait.tardis;
+package mdteam.ait.tardis.control;
 
-import mdteam.ait.core.entities.control.Control;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.control.Control;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityDimensions;

@@ -1,6 +1,6 @@
-package mdteam.ait.core.entities.control.impl.pos;
+package mdteam.ait.tardis.control.impl.pos;
 
-import mdteam.ait.core.entities.control.Control;
+import mdteam.ait.tardis.control.Control;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.network.ServerPlayerEntity;

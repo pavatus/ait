@@ -1,7 +1,7 @@
 package mdteam.ait.tardis.wrapper.client;
 
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.tardis.ControlTypes;
+import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisConsole;
 

@@ -5,8 +5,8 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
-import mdteam.ait.core.entities.control.impl.pos.PosManager;
-import mdteam.ait.core.entities.control.impl.pos.PosType;
+import mdteam.ait.tardis.control.impl.pos.PosManager;
+import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.data.AbsoluteBlockPos;
@@ -153,7 +153,7 @@ public class TardisTravel {
             return;
         }
 
-        PropertiesHandler.setAutoLand(this.getTardis().getProperties(), false);
+        // PropertiesHandler.setAutoLand(this.getTardis().getProperties(), false);
 
         DoorHandler.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null, true);
 

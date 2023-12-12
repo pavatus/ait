@@ -3,9 +3,8 @@ package mdteam.ait.core.entities;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.entities.control.Control;
-import mdteam.ait.tardis.ClientTardisManager;
-import mdteam.ait.tardis.ControlTypes;
+import mdteam.ait.tardis.control.Control;
+import mdteam.ait.tardis.control.ControlTypes;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -38,9 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import mdteam.ait.tardis.Tardis;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public class ConsoleControlEntity extends BaseControlEntity {
 

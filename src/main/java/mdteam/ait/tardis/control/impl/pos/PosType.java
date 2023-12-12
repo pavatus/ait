@@ -1,4 +1,4 @@
-package mdteam.ait.core.entities.control.impl.pos;
+package mdteam.ait.tardis.control.impl.pos;
 
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;

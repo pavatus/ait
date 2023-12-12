@@ -1,4 +1,4 @@
-package mdteam.ait.core.entities.control;
+package mdteam.ait.tardis.control;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;

@@ -1,6 +1,6 @@
-package mdteam.ait.core.entities.control.impl;
+package mdteam.ait.tardis.control.impl;
 
-import mdteam.ait.core.entities.control.Control;
+import mdteam.ait.tardis.control.Control;
 import mdteam.ait.data.AbsoluteBlockPos;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
