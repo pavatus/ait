@@ -139,7 +139,7 @@ public class TardisTravel {
 
         if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN))) {
             // Not safe to land here!
-            this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f,1f); // fixme can be spammed by remote
+            this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f,1f); // fixme can be spammed
 
             if (!TardisUtil.isInteriorEmpty(tardis))
                 TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f,1f);
@@ -198,7 +198,7 @@ public class TardisTravel {
 
         if (PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HANDBRAKE)) {
             // fail to take off when handbrake is on
-            this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f,1f); // fixme can be spammed by remote
+            this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f,1f); // fixme can be spammed
 
             if (!TardisUtil.isInteriorEmpty(tardis))
                 TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f,1f);
@@ -356,7 +356,7 @@ public class TardisTravel {
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
         this.destination = pos;
 
-        if (withChecks) this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN));
+        if (withChecks) this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(this.getTardis().getProperties(), PropertiesHandler.SEARCH_DOWN));
     }
 
     public AbsoluteBlockPos.Directed getDestination() {
