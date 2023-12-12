@@ -24,19 +24,35 @@ public class RandomiserControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         TardisTravel travel = tardis.getTravel();
-        int increment = travel.getPosManager().increment;
-        AbsoluteBlockPos.Directed current = travel.getPosition();
-        AbsoluteBlockPos.Directed dest = travel.getDestination();
 
-        int x = current.getX() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
-        int z = current.getZ() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
-        BlockPos pos = new BlockPos(x,current.getY(),z);
-
-        travel.setDestination(new AbsoluteBlockPos.Directed(pos, dest.getWorld(), dest.getDirection()), true);
+        randomiseDestination(tardis, 10);
 
         messagePlayer(player, travel);
 
         return true;
+    }
+    // fixme this is LAGGYYY
+    public static AbsoluteBlockPos.Directed randomiseDestination(Tardis tardis, int limit) {
+        TardisTravel travel = tardis.getTravel();
+        int increment = travel.getPosManager().increment;
+        AbsoluteBlockPos.Directed current = travel.getPosition();
+        AbsoluteBlockPos.Directed dest = travel.getDestination();
+        ServerWorld world = (ServerWorld) current.getWorld();
+
+        BlockPos pos;
+        int x,z;
+
+        for (int i = 0; i <= limit; i++) {
+            x = current.getX() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
+            z = current.getZ() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
+            pos = new BlockPos(x, current.getY(), z);
+
+            travel.setDestination(new AbsoluteBlockPos.Directed(pos, dest.getWorld(), dest.getDirection()), false);
+
+            if (travel.checkDestination()) return travel.getDestination();
+        }
+
+        return travel.getDestination();
     }
 
     private void messagePlayer(ServerPlayerEntity player, TardisTravel travel) {

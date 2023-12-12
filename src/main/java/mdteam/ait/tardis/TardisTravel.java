@@ -283,6 +283,11 @@ public class TardisTravel {
 
         return false;
     }
+
+    public boolean checkDestination() {
+        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN));
+    }
+
     private boolean isDestinationTardisExterior() {
         ServerWorld world = (ServerWorld) this.getDestination().getWorld();
 

@@ -1,6 +1,6 @@
 package mdteam.ait.tardis.control.impl.pos;
 
-public class PosManager {
+public class PosManager { // todo can likely be moved into the properties / use properties instead
     // private final ConsoleBlockEntity console;
     public int increment;
     private int[] validIncrements = new int[] {
