@@ -39,7 +39,7 @@ public enum ConsoleEnum {
                     new ControlTypes(new ZControl(),          EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.12499999813735485f, 0.6499999798834324f, -0.5250000040978193f)), //6
                     new ControlTypes(new IncrementControl(),  EntityDimensions.changing(0.15f, 0.15f), new Vector3f(-1.862645149230957E-9f, 0.5249999780207872f, -0.6984375026077032f)), //7
                     new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(0.23500000406056643f, 0.48499997798353434f, -0.8034375039860606f)), //8
-                    new ControlTypes(new AutoLandControl(),   EntityDimensions.changing(0.125f, 0.125f), new Vector3f(-0.23500000312924385f, 0.4899999788030982f, -0.8050000118091702f)), //9
+                    new ControlTypes(new LandTypeControl(),   EntityDimensions.changing(0.125f, 0.125f), new Vector3f(-0.23500000312924385f, 0.4899999788030982f, -0.8050000118091702f)), //9
                     new ControlTypes(new DirectionControl(),  EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.8000000212341547f, 0.5249999780207872f, 0.14999999664723873f)), //10
                     new ControlTypes(new DimensionControl(),  EntityDimensions.changing(0.125f, 0.125f), new Vector3f(0.4850000077858567f, 0.6449999799951911f, -0.28500001039355993f)), //11
                     new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.325f, 0.125f), new Vector3f(-0.5507812462747097f, 0.5499999932944775f, 0.3234375026077032f)), //12
@@ -83,7 +83,7 @@ public enum ConsoleEnum {
                 new ControlTypes(new ZControl(),          EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.12499999813735485f, 0.6499999798834324f, -0.5250000040978193f)), //6
                 new ControlTypes(new IncrementControl(),  EntityDimensions.changing(0.15f, 0.15f), new Vector3f(-1.862645149230957E-9f, 0.5249999780207872f, -0.6984375026077032f)), //7
                 new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(0.23500000406056643f, 0.48499997798353434f, -0.8034375039860606f)), //8
-                new ControlTypes(new AutoLandControl(),   EntityDimensions.changing(0.125f, 0.125f), new Vector3f(-0.23500000312924385f, 0.4899999788030982f, -0.8050000118091702f)), //9
+                new ControlTypes(new LandTypeControl(),   EntityDimensions.changing(0.125f, 0.125f), new Vector3f(-0.23500000312924385f, 0.4899999788030982f, -0.8050000118091702f)), //9
                 new ControlTypes(new DirectionControl(),  EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.8000000212341547f, 0.5249999780207872f, 0.14999999664723873f)), //10
                 new ControlTypes(new DimensionControl(),  EntityDimensions.changing(0.125f, 0.125f), new Vector3f(0.4850000077858567f, 0.6449999799951911f, -0.28500001039355993f)), //11
                 new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.325f, 0.125f), new Vector3f(-0.5507812462747097f, 0.5499999932944775f, 0.3234375026077032f)), //12
