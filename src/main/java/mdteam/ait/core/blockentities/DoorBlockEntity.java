@@ -128,6 +128,7 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
         if(nbt.contains("tardis")) {
             TardisManager.getInstance().link(nbt.getUuid("tardis"), this);
         }
+        this.sync();
     }
 
     public void onEntityCollision(Entity entity) {
