@@ -8,13 +8,11 @@ import mdteam.ait.client.renderers.entities.ControlEntityRenderer;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
 import mdteam.ait.client.screens.MonitorScreen;
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
-import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -30,23 +28,17 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.ModelPredicateProvider;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Environment(value= EnvType.CLIENT)
@@ -175,18 +167,14 @@ public class AITModClient implements ClientModInitializer {
 		));
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			ClientPlayerEntity player = client.player;
-			if (keyBinding.wasPressed()) {
-				if(player != null) {
-					if (player.getMainHandStack().getItem() instanceof KeyItem item) {
-						if(item == AITItems.GOLD_KEY || item == AITItems.NETHERITE_KEY || item == AITItems.CLASSIC_KEY) {
-							ItemStack key = player.getMainHandStack();
-							NbtCompound tag = key.getOrCreateNbt();
-							if (!tag.contains("tardis")) {
-								return;
-							}
-							TardisUtil.snapToOpenDoors(tag.getUuid("tardis"));
-						}
+			if (keyBinding.wasPressed() && player != null) {
+				ItemStack stack = KeyItem.getFirstKeyStackInInventory(player);
+				if (stack != null && stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
+					NbtCompound tag = stack.getOrCreateNbt();
+					if (!tag.contains("tardis")) {
+						return;
 					}
+					TardisUtil.snapToOpenDoors(tag.getUuid("tardis"));
 				}
 			}
 		});
