@@ -32,7 +32,7 @@ public class LandTypeControl extends Control {
 
     public void messagePlayer(ServerPlayerEntity player, boolean var) {
         // fixme translatable
-        String s = var ? "down" : "up";
+        String s = var ? "DOWN" : "UP";
 
         player.sendMessage(Text.literal("Searching: " + s), true);
     }
