@@ -1,5 +1,6 @@
 package mdteam.ait.api.tardis;
 
+import mdteam.ait.tardis.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisTravel;
@@ -53,5 +54,9 @@ public interface ILinkable {
      */
     default boolean linkable() {
         return true;
+    }
+
+    default void sync() {
+        ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
     }
 }
