@@ -70,7 +70,11 @@ public class RemoteItem extends Item {
 
                 TardisTravel travel = tardis.getTravel();
 
-                travel.setDestination(new AbsoluteBlockPos.Directed(pos.up(), world, player.getMovementDirection().getOpposite()), true);
+                BlockPos temp = pos.up();
+
+                if (world.getBlockState(pos).isReplaceable()) temp = pos;
+
+                travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection().getOpposite()), true);
                 // travel.toggleHandbrake();
 
                 //FIXME: this is not how you do it! (cope)
