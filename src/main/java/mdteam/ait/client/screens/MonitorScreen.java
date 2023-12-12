@@ -123,7 +123,7 @@ public class MonitorScreen extends TardisScreen {
         this.scrollPosition = MathHelper.clamp(this.scrollPosition - f, 0.0f, 1.0f);
         this.visibleTopRow = Math.max((int)(this.scrollPosition * (float)2 + 0.5f), 0);
         return true;*/
-        return mouseScrolled(mouseX, mouseY, amount);
+        return super.mouseScrolled(mouseX, mouseY, amount);
     }
     /*@Override
     protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
