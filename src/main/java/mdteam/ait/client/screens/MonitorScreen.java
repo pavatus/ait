@@ -78,11 +78,11 @@ public class MonitorScreen extends TardisScreen {
             }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 - 110), (height / 2 - 24),
                 this.textRenderer.getWidth("<"), 10, Text.literal("<"), button -> {
-            exteriorBack();
+            whichDirectionExterior(false);
         }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 - 76), (height / 2 - 24),
                 this.textRenderer.getWidth(">"), 10, Text.literal(">"), button -> {
-            exteriorForward();
+            whichDirectionExterior(true);
         }, this.textRenderer));
         this.buttons.forEach(buttons -> {
             // buttons.visible = false;
@@ -93,14 +93,13 @@ public class MonitorScreen extends TardisScreen {
         if(this.getCurrentModel() != tardis().getExterior().getType())
             TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel().ordinal());
     }
-    public void exteriorBack() {
-        ExteriorEnum setBack = ExteriorEnum.values()[Math.abs(this.getCurrentModel().ordinal() - 1) % values().length];
-        this.setCurrentModel(setBack);
+    public void whichDirectionExterior(boolean direction) {
+        ExteriorEnum[] values = ExteriorEnum.values();
+        int currentIndex = this.getCurrentModel().ordinal();
+        int newIndex = (currentIndex + (direction ? 1 : -1) + values.length) % values.length;
+        this.setCurrentModel(values[newIndex]);
     }
-    public void exteriorForward() {
-        ExteriorEnum setForward = ExteriorEnum.values()[Math.abs(this.getCurrentModel().ordinal() + 1) % values().length];
-        this.setCurrentModel(setForward);
-    }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         return super.mouseClicked(mouseX, mouseY, button);
@@ -125,10 +124,6 @@ public class MonitorScreen extends TardisScreen {
         return true;*/
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
-    /*@Override
-    protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
-        return mouseX < (double)left || mouseY < (double)top || mouseX >= (double)(left + this.backgroundWidth) || mouseY >= (double)(top + this.backgroundHeight);
-    }*/
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         int i = (this.width - this.backgroundWidth) / 2;
         int j = ((this.height) - this.backgroundHeight) / 2;
