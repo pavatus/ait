@@ -155,6 +155,10 @@ public class DoorHandler extends TardisHandler {
         door.setLeftRot(0);
         door.setRightRot(0);
 
+        if (!forced) {
+            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, locked);
+        }
+
         String lockedState = tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
         if (player != null)
             player.sendMessage(Text.literal(lockedState), true);

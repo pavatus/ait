@@ -327,7 +327,7 @@ public class TardisTravel {
         if (blockEntity != null)
             this.runAnimations(blockEntity);
         if (DoorHandler.isClient()) return;
-        DoorHandler.lockTardis(false, this.getTardis(), (ServerWorld) this.position.getWorld(), null, true); // force unlock door @todo should remember last locked state before takeoff
+        DoorHandler.lockTardis(PropertiesHandler.get(this.getTardis().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), (ServerWorld) this.position.getWorld(), null, false);
     }
     public void forceLand() {
         this.forceLand(null);

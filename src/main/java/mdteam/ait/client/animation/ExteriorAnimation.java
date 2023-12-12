@@ -24,10 +24,7 @@ public abstract class ExteriorAnimation {
             exterior.getTardis().getTravel().toFlight();
         }
         if (alpha >= 1f && state == TardisTravel.State.MAT) {
-            exterior.getTardis().getTravel().setState(TardisTravel.State.LANDED);
-            exterior.getTardis().getTravel().runAnimations(exterior);
-            if (DoorHandler.isClient()) return;
-            DoorHandler.lockTardis(false, exterior.getTardis(), (ServerWorld) exterior.getWorld(), null, true); // force unlock door @todo should remember last locked state before takeoff
+            exterior.getTardis().getTravel().forceLand(this.exterior);
         }
     }
 

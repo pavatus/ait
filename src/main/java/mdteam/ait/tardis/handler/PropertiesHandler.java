@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.handler;
 
+import com.sun.jna.platform.win32.WinUser;
 import mdteam.ait.AITMod;
 
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 public class PropertiesHandler { // todo move more things over to properties
     public static final String AUTO_LAND = "auto_land";
     public static final String SEARCH_DOWN = "search_down";
+    public static final String PREVIOUSLY_LOCKED = "last_locked";
 
     // Should these methods be in the holder instead?
 
@@ -45,6 +47,7 @@ public class PropertiesHandler { // todo move more things over to properties
 
         map.put(AUTO_LAND, false);
         map.put(SEARCH_DOWN, false);
+        map.put(PREVIOUSLY_LOCKED, false);
 
         return map;
     }
