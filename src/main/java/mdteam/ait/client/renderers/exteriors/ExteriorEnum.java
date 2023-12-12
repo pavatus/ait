@@ -216,7 +216,40 @@ public enum ExteriorEnum {
         public SoundEvent getDoorOpenSound() {
             return SoundEvents.BLOCK_IRON_DOOR_OPEN;
         }
-    };
+    },
+    COOB() {
+        @Override
+        public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
+            return new PulsatingAnimation(entity);
+        }
+
+        @Override
+        public boolean isDoubleDoor() {
+            return false;
+        }
+
+        @Override
+        @Environment(value= EnvType.CLIENT)
+        public ExteriorModel createModel() {
+            return new CoobExteriorModel(CoobExteriorModel.getTexturedModelData().createModel());
+        }
+
+        @Override
+        @Environment(value= EnvType.CLIENT)
+        public DoorModel createDoorModel() {
+            return CAPSULE.createDoorModel();
+        }
+
+        @Override
+        public Class<? extends ExteriorModel> getModelClass() {
+            return CoobExteriorModel.class;
+        }
+
+        @Override
+        public Class<? extends DoorModel> getDoorClass() {
+            return CAPSULE.getDoorClass();
+        }
+    },;
 
     public abstract ExteriorAnimation createAnimation(ExteriorBlockEntity entity);
     @Environment(value= EnvType.CLIENT)
