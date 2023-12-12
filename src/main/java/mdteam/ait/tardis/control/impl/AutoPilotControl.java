@@ -23,6 +23,6 @@ public class AutoPilotControl extends Control {
 
     public void messagePlayer(ServerPlayerEntity player, boolean autopilot) {
         // fixme translatable
-        player.sendMessage(Text.literal("Auto Pilot: " + (autopilot ? "INACTIVE" : "ACTIVE")), true);
+        player.sendMessage(Text.literal("Auto Pilot: " + (autopilot ? "ACTIVE" : "INACTIVE")), true);
     }
 }
