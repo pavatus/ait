@@ -41,7 +41,7 @@ public class TardisTravel {
     private static final double FORCE_LAND_TIMER = 15;
     private static final double FORCE_FLIGHT_TIMER = 10;
     private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
-    private static final int CHECK_LIMIT = 10; // todo move into a config
+    private static final int CHECK_LIMIT = 32; // todo move into a config
     private static final boolean CHECK_DOWN = true; // todo config
 
     @Exclude
