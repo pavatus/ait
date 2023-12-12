@@ -34,14 +34,14 @@
       "ait:tardis/emergency_land"
     ]
   },
-  "tardis/fail_demat": {
-    "sounds": [
-      "ait:tardis/fail_takeoff"
-    ]
-  },
   "tardis/fail_land": {
     "sounds": [
       "ait:tardis/fail_land"
+    ]
+  },
+  "tardis/fail_takeoff": {
+    "sounds": [
+      "ait:tardis/fail_takeoff"
     ]
   },
   "tardis/hop_demat": {

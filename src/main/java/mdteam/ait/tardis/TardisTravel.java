@@ -15,7 +15,6 @@ import mdteam.ait.tardis.handler.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -140,15 +139,12 @@ public class TardisTravel {
 
         if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN))) {
             // Not safe to land here!
-            ServerPlayerEntity player = (ServerPlayerEntity) TardisUtil.getPlayerInsideInterior(this.getTardis()); // may not necessarily be the person piloting the tardis, but todo this can be replaced with the player with the highest loyalty in future
-
             this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f,1f); // fixme can be spammed by remote
 
-            if (player == null) return; // Interior is probably empty
+            if (!TardisUtil.isInteriorEmpty(tardis))
+                TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f,1f);
 
-            TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f,1f);
-
-            player.sendMessage(Text.literal("Unable to land!"), true); // fixme translatable
+            TardisUtil.sendMessageToPilot(this.getTardis(),Text.literal("Unable to land!")); // fixme translatable
             return;
         }
 
@@ -199,6 +195,17 @@ public class TardisTravel {
         world.getChunk(this.getPosition());
 
         DoorHandler.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null, true);
+
+        if (PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HANDBRAKE)) {
+            // fail to take off when handbrake is on
+            this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f,1f); // fixme can be spammed by remote
+
+            if (!TardisUtil.isInteriorEmpty(tardis))
+                TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f,1f);
+
+            TardisUtil.sendMessageToPilot(this.getTardis(),Text.literal("Unable to takeoff!")); // fixme translatable
+            return;
+        }
 
         this.setState(State.DEMAT);
 

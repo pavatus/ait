@@ -26,6 +26,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
+import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
@@ -237,6 +238,18 @@ public class TardisUtil {
         }
 
         return list;
+    }
+
+    public static boolean isInteriorEmpty(Tardis tardis) {
+        return TardisUtil.getPlayerInsideInterior(tardis) == null;
+    }
+
+    public static void sendMessageToPilot(Tardis tardis, Text text) {
+        ServerPlayerEntity player = (ServerPlayerEntity) TardisUtil.getPlayerInsideInterior(tardis); // may not necessarily be the person piloting the tardis, but todo this can be replaced with the player with the highest loyalty in future
+
+        if (player == null) return; // Interior is probably empty
+
+        player.sendMessage(text, true);
     }
 
     public static ServerWorld findWorld(RegistryKey<World> key) {
