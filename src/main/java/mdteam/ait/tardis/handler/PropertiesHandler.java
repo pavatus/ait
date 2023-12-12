@@ -2,6 +2,8 @@ package mdteam.ait.tardis.handler;
 
 import mdteam.ait.AITMod;
 
+import java.util.HashMap;
+
 public class PropertiesHandler { // todo move more things over to properties
     public static final String AUTO_LAND = "auto_land";
     public static final String SEARCH_DOWN = "search_down";
@@ -36,5 +38,14 @@ public class PropertiesHandler { // todo move more things over to properties
     }
     public static boolean willAutoLand(PropertiesHolder holder) {
         return get(holder, AUTO_LAND);
+    }
+
+    public static HashMap<String, Object> createDefaultProperties() {
+        HashMap<String, Object> map = new HashMap<>();
+
+        map.put(AUTO_LAND, false);
+        map.put(SEARCH_DOWN, false);
+
+        return map;
     }
 }
