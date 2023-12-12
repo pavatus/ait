@@ -1,6 +1,12 @@
 package mdteam.ait.core.item;
 
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
@@ -23,6 +29,8 @@ import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 
 public class SonicItem extends Item {
 
@@ -59,19 +67,49 @@ public class SonicItem extends Item {
                 if (consoleBlock.getTardis() == null)
                     return ActionResult.PASS;
 
-                if(!nbt.contains("tardis")) {
+                if (!nbt.contains("tardis")) {
                     nbt.putUuid("tardis", consoleBlock.getTardis().getUuid());
                     nbt.putInt(MODE_KEY, 0);
+                    nbt.putBoolean(INACTIVE, true);
                 }
                 return ActionResult.SUCCESS;
             }
-        }
-        BlockState blockState = world.getBlockState(pos);
-        if (CampfireBlock.canBeLit(blockState) || CandleBlock.canBeLit(blockState) || CandleCakeBlock.canBeLit(blockState)) {
-            world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
-            world.setBlockState(pos, blockState.with(Properties.LIT, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-            return ActionResult.success(world.isClient());
+
+            if(world.isClient())
+                return ActionResult.PASS;
+
+            if (nbt.contains(MODE_KEY)) {
+                if (nbt.getInt(MODE_KEY) == 3) {
+                    Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+                    if (tardis != null) {
+                        if (world != TardisUtil.getTardisDimension()) {
+                            world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
+                            TardisTravel travel = tardis.getTravel();
+                            BlockPos temp = player.getBlockPos();
+                            if (world.getBlockState(pos).isReplaceable()) temp = pos;
+                            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HANDBRAKE, false);
+                            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.AUTO_LAND, true);
+                            travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()), true);
+                            if(travel.getState() == LANDED) travel.dematerialise(true);
+                            player.sendMessage(Text.literal("Handbrake disengaged, destination set to current position"), true);
+                            return ActionResult.SUCCESS;
+                        } else {
+                            world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                            player.sendMessage(Text.literal("Cannot translocate exterior to interior dimension"), true);
+                            return ActionResult.PASS;
+                        }
+                    }
+                }
+            }
+            if (nbt.getInt(MODE_KEY) == 0) {
+                BlockState blockState = world.getBlockState(pos);
+                if (CampfireBlock.canBeLit(blockState) || CandleBlock.canBeLit(blockState) || CandleCakeBlock.canBeLit(blockState)) {
+                    world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
+                    world.setBlockState(pos, blockState.with(Properties.LIT, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                    return ActionResult.success(world.isClient());
+                }
+            }
         }
         return ActionResult.FAIL;
     }
