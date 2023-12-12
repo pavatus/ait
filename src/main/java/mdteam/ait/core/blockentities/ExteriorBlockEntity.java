@@ -1,19 +1,17 @@
 package mdteam.ait.core.blockentities;
 
-import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.MaterialStateEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.AITItems;
-import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
-import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.PropertiesHandler;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.AnimationState;
@@ -33,8 +31,6 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
-import static mdteam.ait.AITMod.EXTERIORNBT;
-import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 import static mdteam.ait.tardis.TardisTravel.State.MAT;
 
 public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
@@ -160,6 +156,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             //ServerTardisManager.getInstance().subscribeEveryone(this.getTardis());
             ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
         }*/
+        this.sync();
     }
 
     public void onEntityCollision(Entity entity) {

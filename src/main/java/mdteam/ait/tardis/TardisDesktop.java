@@ -2,13 +2,10 @@ package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.helper.DesktopGenerator;
-import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.data.AbsoluteBlockPos;
-import mdteam.ait.data.Corners;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.predicate.entity.EntityPredicates;
+import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.Corners;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 

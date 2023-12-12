@@ -21,7 +21,7 @@ import mdteam.ait.tardis.TardisTravel;
 
 import java.util.Iterator;
 
-@Deprecated
+
 /**
  * Only for testing purposes to change interiors, will be removed and replaced with proper changing
  */

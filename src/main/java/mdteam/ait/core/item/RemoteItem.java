@@ -1,10 +1,8 @@
 package mdteam.ait.core.item;
 
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,7 +18,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import mdteam.ait.tardis.ServerTardisManager;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 
@@ -97,7 +95,7 @@ public class RemoteItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (!Screen.hasShiftDown()) {
-            tooltip.add(Text.of("Hold shift for more info"));
+            tooltip.add(Text.literal("Hold shift for more info").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
             return;
         }
 
@@ -105,6 +103,6 @@ public class RemoteItem extends Item {
         String text = tag.contains("tardis") ? tag.getUuid("tardis").toString().substring(0, 8)
                 : "Remote does not identify with any TARDIS";
 
-        tooltip.add(Text.literal("→ " + text).formatted(Formatting.DARK_AQUA));
+        tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
     }
 }

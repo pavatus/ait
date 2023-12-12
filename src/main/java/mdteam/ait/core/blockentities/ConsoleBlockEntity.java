@@ -7,11 +7,13 @@ import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.tardis.control.ControlTypes;
-import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Camera;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,11 +51,6 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
         if (this.tardis != null) {
             nbt.putUuid("tardis", this.tardis.getUuid());
         }
-
-        for(ConsoleControlEntity entity : this.controlEntities) {
-
-        }
-
     }
 
     @Override
@@ -65,6 +62,7 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
 
         super.readNbt(nbt);
 
+        this.sync();
         spawnControls();
     }
 
@@ -111,6 +109,7 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
         // DO NOT RUN THIS ON SERVER!!
 
         animationTimer++;
+
         if (this.getTardis() == null)
             return;
         TardisTravel.State state = this.getTardis().getTravel().getState();
@@ -130,7 +129,18 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
     public void killControls() {
         controlEntities.forEach(Entity::discard);
         controlEntities.clear();
+        this.sync();
         //System.out.println("KillControls(): I'm getting run :) somewhere..");
+    }
+
+    public void killForGood() {
+        controlEntities.forEach(control -> {
+            this.markedDirty = false;
+            control.discard();
+            this.markedDirty = false;
+        });
+        controlEntities.clear();
+        this.sync();
     }
 
     public void spawnControls() {

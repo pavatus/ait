@@ -1,6 +1,6 @@
 package mdteam.ait.client.screens;
 
-import mdteam.ait.tardis.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.Tardis;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;

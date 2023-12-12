@@ -1,6 +1,6 @@
 {
 	"parent": "ait:item/tardis_key",
 	"textures": {
-		"texture": "ait:item/iron_key"
+		"texture": "ait:item/keys/iron_key"
 	}
 }

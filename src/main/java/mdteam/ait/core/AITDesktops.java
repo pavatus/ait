@@ -1,6 +1,6 @@
 package mdteam.ait.core;
 
-import mdteam.ait.core.desktops.*;
+import mdteam.ait.tardis.desktops.*;
 import net.minecraft.util.Identifier;
 import mdteam.ait.tardis.TardisDesktopSchema;
 

@@ -4,7 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.AITDesktops;
-import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
@@ -13,7 +13,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import mdteam.ait.tardis.ServerTardisManager;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class TardisItemBuilder extends Item {
 

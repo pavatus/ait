@@ -72,8 +72,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     @Override
     public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
         if(world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
-            if(!world.isClient())
-                consoleBlockEntity.killControls();
+            consoleBlockEntity.killForGood();
         }
         super.afterBreak(world, player, pos, state, blockEntity, tool);
     }
@@ -81,8 +80,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     @Override
     public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
         if(world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
-            if(!world.isClient())
-                consoleBlockEntity.killControls();
+            consoleBlockEntity.killForGood();
         }
         super.onBroken(world, pos, state);
     }

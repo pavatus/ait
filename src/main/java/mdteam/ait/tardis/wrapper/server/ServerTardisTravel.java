@@ -1,10 +1,10 @@
 package mdteam.ait.tardis.wrapper.server;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.sound.SoundEvent;
-import mdteam.ait.tardis.ServerTardisManager;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 

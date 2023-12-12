@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
-import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -78,12 +78,9 @@ public class MonitorScreen extends TardisScreen {
 
     protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX) {
         // testing @todo
-        if (tardis() == null) return;
-
+        if (updateTardis() == null) return;
         ExteriorModel model = updateTardis().getExterior().getType().createModel();
-
         MatrixStack stack = context.getMatrices();
-
         // fixme is bad
         stack.push();
         stack.translate(x,tardis().getExterior().getType() != SHELTER ? tardis().getExterior().getType() == TOYOTA ? y + 12 : tardis().getExterior().getType() == BOOTH ? y + 4 : y : y + 24,100f);

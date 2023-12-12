@@ -7,11 +7,11 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.control.impl.pos.PosManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
-import mdteam.ait.core.helper.TardisUtil;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
-import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.PropertiesHandler;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -141,14 +141,14 @@ public class TardisTravel {
             // Not safe to land here!
             this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f,1f); // fixme can be spammed
 
-            if (!TardisUtil.isInteriorEmpty(tardis))
+            if (TardisUtil.isInteriorEmpty(tardis))
                 TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f,1f);
 
             TardisUtil.sendMessageToPilot(this.getTardis(),Text.literal("Unable to land!")); // fixme translatable
             return;
         }
 
-        // PropertiesHandler.setAutoLand(this.getTardis().getProperties(), false);
+        // PropertiesHandler.setAutoPilot(this.getTardis().getProperties(), false);
 
         DoorHandler.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null, true);
 
@@ -189,7 +189,7 @@ public class TardisTravel {
         if (this.getPosition().getWorld().isClient())
             return;
 
-        PropertiesHandler.setAutoLand(this.getTardis().getProperties(), withRemat);
+        PropertiesHandler.setAutoPilot(this.getTardis().getProperties(), withRemat);
 
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
@@ -200,7 +200,7 @@ public class TardisTravel {
             // fail to take off when handbrake is on
             this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f,1f); // fixme can be spammed
 
-            if (!TardisUtil.isInteriorEmpty(tardis))
+            if (TardisUtil.isInteriorEmpty(tardis))
                 TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f,1f);
 
             TardisUtil.sendMessageToPilot(this.getTardis(),Text.literal("Unable to takeoff!")); // fixme translatable
@@ -407,7 +407,7 @@ public class TardisTravel {
     }
 
     public void checkShouldRemat() {
-        if (!PropertiesHandler.willAutoLand(this.getTardis().getProperties()))
+        if (!PropertiesHandler.willAutoPilot(this.getTardis().getProperties()))
             return;
 
         this.materialise();

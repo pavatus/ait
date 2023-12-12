@@ -1,7 +1,7 @@
 package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.tardis.control.Control;
-import mdteam.ait.tardis.handler.PropertiesHandler;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -25,7 +25,7 @@ public class ThrottleControl extends Control {
         TardisTravel travel = tardis.getTravel();
 
         if (travel.getState() == TardisTravel.State.LANDED) {
-            travel.dematerialise(PropertiesHandler.willAutoLand(tardis.getProperties()));
+            travel.dematerialise(PropertiesHandler.willAutoPilot(tardis.getProperties()));
         } else if (travel.getState() == TardisTravel.State.FLIGHT) {
             travel.materialise();
         }

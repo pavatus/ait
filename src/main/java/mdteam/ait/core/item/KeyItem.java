@@ -53,7 +53,7 @@ public class KeyItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (!Screen.hasShiftDown()) {
-            tooltip.add(Text.of("Hold shift for more info"));
+            tooltip.add(Text.literal("Hold shift for more info").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
             return;
         }
 
@@ -61,6 +61,6 @@ public class KeyItem extends Item {
         String text = tag.contains("tardis") ? tag.getUuid("tardis").toString().substring(0, 8)
                 : "Key does not identify with any TARDIS";
 
-        tooltip.add(Text.literal("→ " + text).formatted(Formatting.DARK_AQUA));
+        tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
     }
 }

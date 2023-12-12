@@ -2,53 +2,51 @@ package mdteam.ait.client;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.AITRadioRenderer;
-import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.client.renderers.consoles.ConsoleRenderer;
 import mdteam.ait.client.renderers.doors.DoorRenderer;
 import mdteam.ait.client.renderers.entities.ControlEntityRenderer;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
 import mdteam.ait.client.screens.MonitorScreen;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITEntityTypes;
-import mdteam.ait.core.AITScreenHandlers;
-import mdteam.ait.core.entities.BaseControlEntity;
+import mdteam.ait.core.AITItems;
 import mdteam.ait.core.entities.ConsoleControlEntity;
-import mdteam.ait.tardis.ServerTardisManager;
+import mdteam.ait.core.item.KeyItem;
+import mdteam.ait.core.item.SonicItem;
+import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.impl.client.rendering.FabricShaderProgram;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.gl.ShaderStage;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.client.item.ModelPredicateProvider;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.debug.GameEventDebugRenderer;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.RegistryLoader;
-import net.minecraft.resource.ResourceReloader;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
-import java.io.IOException;
-import java.text.ParseException;
+import java.util.Objects;
 import java.util.UUID;
 
 @Environment(value= EnvType.CLIENT)
@@ -66,6 +64,8 @@ public class AITModClient implements ClientModInitializer {
 		blockEntityRendererRegister();
 		entityAttributeRegister();
 		entityRenderRegister();
+		sonicModelPredicate();
+		setKeyBinding();
 
 		ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
 			(client, handler, buf, responseSender) -> {
@@ -85,7 +85,6 @@ public class AITModClient implements ClientModInitializer {
 					MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
 				});
 
-		//setKeyBinding();
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 	}
 
@@ -113,6 +112,31 @@ public class AITModClient implements ClientModInitializer {
 			default -> null;
 			case 0 -> new MonitorScreen(tardis);
 		};
+	}
+
+	public void sonicModelPredicate() {
+		ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> {
+			if (livingEntity == null) return 0.0F;
+			ItemStack stack = livingEntity.getActiveItem();
+			NbtCompound nbt = stack.getOrCreateNbt();
+			return nbt.getBoolean(SonicItem.INACTIVE) ? 0.0F : 1.0F;
+		});
+		ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> {
+			if (livingEntity == null) return 0.0F;
+			return SonicItem.whatMode(itemStack) == 0 ? 1.0F : 0.0F;
+		});
+		ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> {
+			if (livingEntity == null) return 0.0F;
+			return SonicItem.whatMode(itemStack) == 1 ? 1.0F : 0.0F;
+		});
+		ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> {
+			if (livingEntity == null) return 0.0F;
+			return SonicItem.whatMode(itemStack) == 2 ? 1.0F : 0.0F;
+		});
+		ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
+			if (livingEntity == null) return 0.0F;
+			return SonicItem.whatMode(itemStack) == 3 ? 1.0F : 0.0F;
+		});
 	}
 
 
@@ -149,14 +173,23 @@ public class AITModClient implements ClientModInitializer {
 				GLFW.GLFW_KEY_B,
 				"category." + AITMod.MOD_ID + ".snap"
 		));
-		//ClientTickEvents.END_CLIENT_TICK.register(client -> {
-		//	if (keyBinding.wasPressed()) {
-		//		if(client.player.getMainHandStack().getItem() instanceof PipboyItem) {
-		//			//item.setPipColor(client.player.getMainHandStack(), item.getPipColor(client.player.getMainHandStack()));
-		//			client.setScreen(new PipboyMainScreen(MinecraftClient.getInstance().player, null));
-		//		}
-		//	}
-		//});
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			ClientPlayerEntity player = client.player;
+			if (keyBinding.wasPressed()) {
+				if(player != null) {
+					if (player.getMainHandStack().getItem() instanceof KeyItem item) {
+						if(item == AITItems.GOLD_KEY || item == AITItems.NETHERITE_KEY || item == AITItems.CLASSIC_KEY) {
+							ItemStack key = player.getMainHandStack();
+							NbtCompound tag = key.getOrCreateNbt();
+							if (!tag.contains("tardis")) {
+								return;
+							}
+							TardisUtil.snapToOpenDoors(tag.getUuid("tardis"));
+						}
+					}
+				}
+			}
+		});
 	}
 
 	public void setupBlockRendering() {

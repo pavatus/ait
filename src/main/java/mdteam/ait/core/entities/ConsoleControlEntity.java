@@ -3,8 +3,10 @@ package mdteam.ait.core.entities;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.control.ControlTypes;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -16,6 +18,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
@@ -38,6 +41,7 @@ import org.joml.Vector3f;
 import mdteam.ait.tardis.Tardis;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ConsoleControlEntity extends BaseControlEntity {
 
@@ -248,21 +252,13 @@ public class ConsoleControlEntity extends BaseControlEntity {
                     if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
                         console.markDirty();
                     }
-                    discard();
                 }
+                discard();
             }
         }
         /*PlayerEntity player = MinecraftClient.getInstance().player;
         if(player != null)
             this.setCustomNameVisible(isPlayerLookingAtControl(player, this)); System.out.println("im being looked at ;) : " + this);*/
-    }
-
-    public static boolean isPlayerLookingAtControl(HitResult hitResult, ConsoleControlEntity entity) {
-        if (hitResult.getType() == HitResult.Type.ENTITY) {
-            Entity hitEntity = ((EntityHitResult) hitResult).getEntity();
-            return hitEntity != null && hitEntity.equals(entity);
-        }
-        return false;
     }
 
     @Override

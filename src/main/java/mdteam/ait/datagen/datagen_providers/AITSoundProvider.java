@@ -1,7 +1,7 @@
 package mdteam.ait.datagen.datagen_providers;
 
-import mdteam.ait.datagen.datagen_providers.special.AITCustomSoundBuilder;
-import mdteam.ait.datagen.datagen_providers.special.AITCustomSoundProvider;
+import mdteam.ait.datagen.datagen_providers.sound.AITCustomSoundBuilder;
+import mdteam.ait.datagen.datagen_providers.sound.AITCustomSoundProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.sound.SoundEvent;
 

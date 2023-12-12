@@ -5,6 +5,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.console.borealis.BorealisAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.entities.ConsoleControlEntity;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -13,6 +14,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import mdteam.ait.tardis.TardisTravel;
+import org.joml.Vector3f;
 
 public class BorealisConsoleModel extends ConsoleModel {
 	public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/borealis_console.png"));
@@ -635,11 +637,19 @@ public class BorealisConsoleModel extends ConsoleModel {
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		if(console.getTardis() == null) return;
 		matrices.push();
-		this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel").getChild("throttle").pivotZ =
-				console.getTardis().getTravel().getState() == TardisTravel.State.DEMAT || console.getTardis().getTravel().getState() == TardisTravel.State.FLIGHT
-						? this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel").getChild("throttle").pivotZ + 3f :
-						this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel").getChild("throttle").pivotZ;
-		matrices.pop();
+		ModelPart southEastControls = this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel");
+		ModelPart northControls = this.base_console.getChild("NORTH").getChild("northcontrolpanel");
+		boolean isInFlight = console.getTardis().getTravel().getState() == TardisTravel.State.DEMAT || console.getTardis().getTravel().getState() == TardisTravel.State.FLIGHT;
+		boolean isHandbrakeActive = PropertiesHandler.get(console.getTardis().getProperties(), PropertiesHandler.HANDBRAKE);
+		boolean leftDoor = console.getTardis().getDoor().isLeftOpen();
+		boolean rightDoor = console.getTardis().getDoor().isRightOpen();
+		float throttleZ = southEastControls.getChild("throttle").pivotZ;
+		float doorZ = northControls.getChild("door_control").pivotZ;
+		Vector3f handbrakeRotation = new Vector3f(isHandbrakeActive ? 0 : -1.309F * -2, 0 , 0);
+		southEastControls.getChild("throttle").pivotZ = isInFlight ? throttleZ + 3f : throttleZ;
+		southEastControls.getChild("handbrake").rotate(handbrakeRotation);
+        northControls.getChild("door_control").pivotZ = leftDoor ? rightDoor ? doorZ + 2: doorZ + 1 : doorZ;
+        matrices.pop();
 		matrices.push();
 		//matrices.translate(0.5f, -0.75f, 0.5f);
 		matrices.translate(0.5f, -0.75f, -0.5f);

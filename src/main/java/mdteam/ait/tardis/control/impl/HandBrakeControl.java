@@ -2,17 +2,13 @@ package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.Control;
-import mdteam.ait.tardis.control.impl.pos.IncrementControl;
-import mdteam.ait.tardis.handler.PropertiesHandler;
-import net.fabricmc.loader.impl.lib.sat4j.specs.RandomAccessModel;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
 import net.minecraft.text.Text;
-
-import java.util.Random;
 
 public class HandBrakeControl extends Control {
     public HandBrakeControl() {

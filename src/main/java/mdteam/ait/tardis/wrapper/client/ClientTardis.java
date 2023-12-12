@@ -2,7 +2,7 @@ package mdteam.ait.tardis.wrapper.client;
 
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisDesktopSchema;

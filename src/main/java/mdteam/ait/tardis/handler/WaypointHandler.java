@@ -1,7 +1,6 @@
 package mdteam.ait.tardis.handler;
 
-import mdteam.ait.data.AbsoluteBlockPos;
-import net.minecraft.registry.entry.RegistryEntry;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

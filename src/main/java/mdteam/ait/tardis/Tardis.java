@@ -2,15 +2,13 @@ package mdteam.ait.tardis;
 
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.data.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.PropertiesHolder;
+import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import mdteam.ait.tardis.handler.WaypointHandler;
 import mdteam.ait.tardis.handler.loyalty.LoyaltyHandler;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.UUID;
 import java.util.function.Function;

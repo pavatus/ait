@@ -3,13 +3,13 @@
 	"id": "ait",
 	"version": "${version}",
 	"name": "Adventures In Time",
-	"description": "A secret Fabric version of AIT developed by Loqor and L0AInk!",
+	"description": "AIT, brought to you in gleaming Fabric 1.20.1!",
 	"authors": [
-		"Loqor, L0AInk", "DrTheo_"
+		"Loqor", "Duzo", "DrTheo"
 	],
 	"contact": {
-		"homepage": "https://loqor.github.io",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://m-d-team.github.io",
+		"sources": "https://github.com/M-D-Team/ait-fabric-1.20.1/"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/ait/icon.png",
@@ -43,10 +43,7 @@
 	},
 	"custom": {
 		"cardinal-components": [
-			"ait:radionbt",
-			"ait:exteriornbt",
-			"ait:interiordoornbt",
-			"ait:tardisclassnbt"
+			"ait:radionbt"
 		]
 	}
 }

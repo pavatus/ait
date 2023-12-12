@@ -25,9 +25,9 @@ public class KeySmithingTemplateItem extends Item {
         super.appendTooltip(stack, world, tooltip, context);
         tooltip.add(Text.literal("Upgrade").formatted(TITLE_FORMATTING));
         tooltip.add(ScreenTexts.EMPTY);
-        tooltip.add(Text.literal("Gold Key").formatted(DESCRIPTION_FORMATTING));
-        tooltip.add(ScreenTexts.space().append(Text.literal("Gold Key")));
-        tooltip.add(Text.literal("Netherite Ingot").formatted(DESCRIPTION_FORMATTING));
-        tooltip.add(ScreenTexts.space().append(Text.literal("Netherite Ingot")));
+        tooltip.add(Text.literal("Key type:").formatted(TITLE_FORMATTING));
+        tooltip.add(ScreenTexts.space().append(Text.literal("Gold Key")).formatted(DESCRIPTION_FORMATTING));
+        tooltip.add(Text.literal("Material:").formatted(TITLE_FORMATTING));
+        tooltip.add(ScreenTexts.space().append(Text.literal("Netherite Ingot")).formatted(DESCRIPTION_FORMATTING));
     }
 }

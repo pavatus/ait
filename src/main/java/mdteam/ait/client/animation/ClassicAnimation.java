@@ -1,9 +1,7 @@
 package mdteam.ait.client.animation;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.helper.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
-import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 
 public class ClassicAnimation extends ExteriorAnimation {

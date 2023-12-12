@@ -1,14 +1,12 @@
 package mdteam.ait.tardis.handler;
 
-import mdteam.ait.core.helper.TardisUtil;
-import mdteam.ait.data.AbsoluteBlockPos;
-import mdteam.ait.data.SerialDimension;
-import mdteam.ait.tardis.ClientTardisManager;
-import mdteam.ait.tardis.ServerTardisManager;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.SerialDimension;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTickable;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Direction;

@@ -1,6 +1,6 @@
 package mdteam.ait.api.tardis;
 
-import mdteam.ait.tardis.ServerTardisManager;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisTravel;
