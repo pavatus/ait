@@ -240,7 +240,7 @@ public class TardisUtil {
     }
 
     public static ServerWorld findWorld(RegistryKey<World> key) {
-        return TardisUtil.getServer().getWorld(key);
+        return TardisUtil.getTardisDimension().getServer().getWorld(key);
     }
 
     public static ServerWorld findWorld(Identifier identifier) {

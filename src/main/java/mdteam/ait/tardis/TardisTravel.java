@@ -266,7 +266,7 @@ public class TardisTravel {
         BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
 
         for (int i = 0; i < limit; i++) {
-            if (world.getBlockState(temp).isAir() && world.getBlockState(temp.up()).isAir() && !world.getBlockState(temp.down()).isAir()) { // check two blocks cus tardis is two blocks tall yk and check for groud
+            if (world.getBlockState(temp).isReplaceable() && world.getBlockState(temp.up()).isReplaceable() && !world.getBlockState(temp.down()).isReplaceable()) { // check two blocks cus tardis is two blocks tall yk and check for groud
                 this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
                 return true;
             }
