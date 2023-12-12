@@ -42,7 +42,6 @@ public class TardisTravel {
     private static final double FORCE_FLIGHT_TIMER = 10;
     private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
     private static final int CHECK_LIMIT = 32; // todo move into a config
-    private static final boolean CHECK_DOWN = true; // todo config
 
     @Exclude
     protected Tardis tardis;
@@ -139,7 +138,7 @@ public class TardisTravel {
         if (this.getDestination().getWorld().isClient())
             return;
 
-        if (!this.checkDestination(CHECK_LIMIT, CHECK_DOWN)) {
+        if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN))) {
             // Not safe to land here!
             ServerPlayerEntity player = (ServerPlayerEntity) TardisUtil.getPlayerInsideInterior(this.getTardis()); // may not necessarily be the person piloting the tardis, but todo this can be replaced with the player with the highest loyalty in future
 
@@ -260,7 +259,7 @@ public class TardisTravel {
 
             setDestinationToTardisInterior(target.getTardis(), true, 256); // how many times should this be
 
-            return this.checkDestination(CHECK_LIMIT,CHECK_DOWN); // limit at a small number cus it might get too laggy
+            return this.checkDestination(CHECK_LIMIT,PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN)); // limit at a small number cus it might get too laggy
         }
 
         BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
@@ -350,7 +349,7 @@ public class TardisTravel {
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
         this.destination = pos;
 
-        if (withChecks) this.checkDestination(CHECK_LIMIT, CHECK_DOWN);
+        if (withChecks) this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN));
     }
 
     public AbsoluteBlockPos.Directed getDestination() {

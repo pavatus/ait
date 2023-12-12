@@ -1,19 +1,40 @@
 package mdteam.ait.tardis.handler;
 
+import mdteam.ait.AITMod;
+
 public class PropertiesHandler { // todo move more things over to properties
     public static final String AUTO_LAND = "auto_land";
+    public static final String SEARCH_DOWN = "search_down";
 
-    public static void setAutoLand(PropertiesHolder handler, boolean val) {
-        if (handler.getData().containsKey(AUTO_LAND)) {
-            handler.getData().replace(AUTO_LAND, val);
+    // Should these methods be in the holder instead?
+
+    /**
+     * used for setting things to a boolean
+     */
+    public static void set(PropertiesHolder holder, String key, boolean val) {
+        if (holder.getData().containsKey(key)) {
+            holder.getData().replace(key, val);
             return;
         }
 
-        handler.getData().put(AUTO_LAND, val);
+        holder.getData().put(key, val);
     }
-    public static boolean willAutoLand(PropertiesHolder handler) {
-        if (!handler.getData().containsKey(AUTO_LAND)) return false; // this shouldnt happen due to default properties, but if necessary could set the value here
 
-        return (boolean) handler.getData().get(AUTO_LAND); // tons of risky casts for this unless i do it the other way i mentioned
+    public static boolean get(PropertiesHolder holder, String key) {
+        if (!holder.getData().containsKey(key)) return false;
+
+        if (!(holder.getData().get(key) instanceof Boolean)) {
+            AITMod.LOGGER.warn("Tried to grab key " + key + " which was not a boolean!");
+            return false;
+        }
+
+        return (boolean) holder.getData().get(key);
+    }
+
+    public static void setAutoLand(PropertiesHolder handler, boolean val) {
+        set(handler, AUTO_LAND, val);
+    }
+    public static boolean willAutoLand(PropertiesHolder holder) {
+        return get(holder, AUTO_LAND);
     }
 }

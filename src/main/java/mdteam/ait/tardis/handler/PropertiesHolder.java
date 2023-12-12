@@ -23,6 +23,7 @@ public class PropertiesHolder extends TardisHandler {
         HashMap<String, Object> map = new HashMap<>();
 
         map.put(AUTO_LAND, false);
+        map.put(PropertiesHandler.SEARCH_DOWN, true);
 
         return map;
     }
