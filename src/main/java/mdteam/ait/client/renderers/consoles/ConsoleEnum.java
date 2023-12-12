@@ -89,6 +89,7 @@ public enum ConsoleEnum {
                 new ControlTypes(new DimensionControl(),  EntityDimensions.changing(0.125f, 0.125f), new Vector3f(0.4850000077858567f, 0.6449999799951911f, -0.28500001039355993f)), //11
                 new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.325f, 0.125f), new Vector3f(-0.5507812462747097f, 0.5499999932944775f, 0.3234375026077032f)), //12
                 new ControlTypes(new AutoPilotControl(),  EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.421875f, 0.6750001907348633f, 0.25f)), //13
+                new ControlTypes(new HailMaryControl(),   EntityDimensions.changing(0.074999996f, 0.074999996f), new Vector3f(-0.5468749962747097f, 0.6749999076128006f, -0.17421874962747097f)), //2
                 new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.8750000037252903f, 0.5249999780207872f, 0.15156249701976776f)), //14
                 new ControlTypes(new RefuelerControl(),   EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.6593750026077032f, 0.5499999783933163f, -0.3812500014901161f)), //15
         };

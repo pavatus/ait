@@ -125,6 +125,10 @@ public class TardisUtil {
         return TARDIS_DIMENSION;
     }
 
+    public static AbsoluteBlockPos.Directed createFromPlayer(PlayerEntity player) {
+        return new AbsoluteBlockPos.Directed(player.getBlockPos(), player.getWorld(), player.getMovementDirection());
+    }
+
     public static boolean inBox(Box box, BlockPos pos) {
         return pos.getX() <= box.maxX && pos.getX() >= box.minX &&
                 pos.getZ() <= box.maxZ && pos.getZ() >= box.minZ;

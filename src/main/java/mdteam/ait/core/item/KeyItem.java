@@ -2,13 +2,22 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -68,6 +77,56 @@ public class KeyItem extends Item {
             }
         }
         return null;
+    }
+
+    public Tardis getTardis(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        if (!(nbt.contains("tardis"))) return null;
+
+        UUID uuid = nbt.getUuid("tardis");
+
+        if (TardisUtil.isClient()) {
+            return ClientTardisManager.getInstance().getLookup().get(uuid);
+        }
+
+        return ServerTardisManager.getInstance().getTardis(uuid);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+
+        if (!(entity instanceof ServerPlayerEntity player)) return;
+
+        Tardis tardis = getTardis(stack);
+        if (tardis == null) return;
+
+        hailMary(tardis, stack, player);
+    }
+
+    private void hailMary(Tardis tardis, ItemStack stack, PlayerEntity player) {
+        if (player.getItemCooldownManager().isCoolingDown(stack.getItem())) return;
+        if (!PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HAIL_MARY)) return;
+
+        KeyItem keyType = (KeyItem) stack.getItem().asItem();
+        boolean handbrake = PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HANDBRAKE);
+
+        if (keyType.hasProtocol(Protocols.HAIL) && !handbrake && player.getHealth() <= 4 && player.getWorld() != TardisUtil.getTardisDimension()) {
+            tardis.getTravel().setDestination(TardisUtil.createFromPlayer(player), true);
+
+            if (tardis.getTravel().getState() == TardisTravel.State.LANDED) {
+                tardis.getTravel().dematerialise(true);
+            } else if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
+                tardis.getTravel().materialise();
+            }
+
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3)); // this kinda stops it from being spammed but still this should kinda be toggleable fixme
+
+            player.getItemCooldownManager().set(stack.getItem(), 60 * 20);
+
+            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HAIL_MARY, false);
+        }
     }
 
     @Override
