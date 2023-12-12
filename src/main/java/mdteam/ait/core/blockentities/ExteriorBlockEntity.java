@@ -13,6 +13,7 @@ import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.data.AbsoluteBlockPos;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.handler.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.AnimationState;
@@ -272,7 +273,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
             ((ExteriorBlockEntity) exterior).getAnimation().tick();
 
 
-        if (!world.isClient() && ((ExteriorBlockEntity) exterior).getTardis() != null && ((ExteriorBlockEntity) exterior).getTardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
+        if (!world.isClient() && ((ExteriorBlockEntity) exterior).getTardis() != null && !PropertiesHandler.get(((ExteriorBlockEntity) exterior).getTardis().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && ((ExteriorBlockEntity) exterior).getTardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
             for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(exterior.getPos()).expand(0,1,0), EntityPredicates.EXCEPT_SPECTATOR)) {
                 TardisUtil.teleportInside(((ExteriorBlockEntity) exterior).getTardis(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
             }
