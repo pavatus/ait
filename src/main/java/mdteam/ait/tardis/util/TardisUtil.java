@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
@@ -122,6 +123,10 @@ public class TardisUtil {
     }
 
     public static ServerWorld getTardisDimension() {
+        if (TARDIS_DIMENSION == null && isClient()) {
+            return MinecraftClient.getInstance().getServer().getWorld(AITDimensions.TARDIS_DIM_WORLD);
+        }
+
         return TARDIS_DIMENSION;
     }
 
