@@ -18,6 +18,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -125,7 +127,9 @@ public class KeyItem extends Item {
 
             player.getItemCooldownManager().set(stack.getItem(), 60 * 20);
 
-            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HAIL_MARY, false);
+            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HAIL_MARY, false); // should this just set the handbrake on instead?
+            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, false); // so you get SUCKED up
+            player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f); // like a sound to show its been called
         }
     }
 
