@@ -118,9 +118,12 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
         if (!(entity instanceof ServerPlayerEntity player))
             return;
 
-        if (this.tardis() != null && (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0)) {
-            if(!this.tardis().getLockedTardis())
-                TardisUtil.teleportInside(this.tardis(), player);
+        if (this.tardis() != null && this.tardis().getDoor().isLeftOpen()) {
+            if(this.tardis().getDoor().isLeftOpen()) {
+                if (!this.tardis().getLockedTardis()) {
+                    TardisUtil.teleportInside(this.tardis(), player);
+                }
+            }
         }
     }
 
@@ -233,7 +236,7 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
         if (!world.isClient() && ((ExteriorBlockEntity) exterior).getTardis() != null && !PropertiesHandler.get(((ExteriorBlockEntity) exterior).getTardis().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && ((ExteriorBlockEntity) exterior).getTardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
             for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(exterior.getPos()).expand(0,1,0), EntityPredicates.EXCEPT_SPECTATOR)) {
-                TardisUtil.teleportInside(((ExteriorBlockEntity) exterior).getTardis(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
+                TardisUtil.teleportInside(((ExteriorBlockEntity) exterior).getTardis(), entity);
             }
         }
     }
