@@ -25,6 +25,10 @@ public enum ExteriorEnum {
             return true;
         }
         @Override
+        public boolean hasEmission() {
+            return false;
+        }
+        @Override
         @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new CapsuleExteriorModel(CapsuleExteriorModel.getTexturedModelData().createModel());
@@ -69,6 +73,10 @@ public enum ExteriorEnum {
             return false;
         }
         @Override
+        public boolean hasEmission() {
+            return true;
+        }
+        @Override
         @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new FalloutExteriorModel(FalloutExteriorModel.getTexturedModelData().createModel());
@@ -105,6 +113,10 @@ public enum ExteriorEnum {
             return true;
         }
         @Override
+        public boolean hasEmission() {
+            return true;
+        }
+        @Override
         @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new PoliceBoxModel(PoliceBoxModel.getTexturedModelData().createModel());
@@ -133,6 +145,10 @@ public enum ExteriorEnum {
             return true;
         }
         @Override
+        public boolean hasEmission() {
+            return true;
+        }
+        @Override
         @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new TardimExteriorModel(TardimExteriorModel.getTexturedModelData().createModel());
@@ -140,7 +156,7 @@ public enum ExteriorEnum {
         @Override
         @Environment(value= EnvType.CLIENT)
         public DoorModel createDoorModel() {
-            return POLICE_BOX.createDoorModel();
+            return new TardimDoorModel(TardimDoorModel.getTexturedModelData().createModel());
         }
         @Override
         public Class<? extends ExteriorModel> getModelClass() {
@@ -148,7 +164,7 @@ public enum ExteriorEnum {
         }
         @Override
         public Class<? extends DoorModel> getDoorClass() {
-            return POLICE_BOX.getDoorClass();
+            return TardimDoorModel.class;
         }
     },
     BOOTH {
@@ -169,6 +185,10 @@ public enum ExteriorEnum {
         @Override
         public boolean isDoubleDoor() {
             return false;
+        }
+        @Override
+        public boolean hasEmission() {
+            return true;
         }
         @Override
         public Class<? extends ExteriorModel> getModelClass() {
@@ -193,6 +213,7 @@ public enum ExteriorEnum {
     @Environment(value= EnvType.CLIENT)
     public abstract DoorModel createDoorModel();
     public abstract boolean isDoubleDoor();
+    public abstract boolean hasEmission();
     public abstract Class<? extends ExteriorModel> getModelClass();
     public abstract Class<? extends DoorModel> getDoorClass();
     public SoundEvent getDoorCloseSound() {

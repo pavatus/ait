@@ -3,6 +3,7 @@ package mdteam.ait.core.item;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,8 +18,10 @@ import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class TardisItemBuilder extends Item {
 
-    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "cave"); //new Identifier(AITMod.MOD_ID, "war");
+    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "office"); //new Identifier(AITMod.MOD_ID, "war");
     public static final ExteriorEnum DEFAULT_EXTERIOR = ExteriorEnum.CAPSULE;
+    public static final VariantEnum DEFAULT_VARIANT = VariantEnum.DEFAULT;
+    public static final ConsoleEnum DEFAULT_CONSOLE = ConsoleEnum.BOREALIS;
 
     private final ExteriorEnum exterior;
     private final Identifier desktop;
@@ -51,7 +54,7 @@ public class TardisItemBuilder extends Item {
         if (context.getHand() == Hand.MAIN_HAND) {
             System.out.println(this.exterior);
 
-            ServerTardisManager.getInstance().create(pos, this.exterior, ConsoleEnum.BOREALIS, AITDesktops.get(this.desktop), false);
+            ServerTardisManager.getInstance().create(pos, this.exterior, DEFAULT_VARIANT, DEFAULT_CONSOLE, AITDesktops.get(this.desktop), false);
             context.getStack().decrement(1);
         }
 

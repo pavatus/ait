@@ -3,6 +3,7 @@ package mdteam.ait.tardis.util;
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -63,11 +64,19 @@ public class TardisUtil {
                 (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
                     int exteriorValue = buf.readInt();
+                    boolean variantChange = buf.readBoolean();
+                    int variantValue = buf.readInt();
 
                     ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(ExteriorEnum.values()[exteriorValue]);
                     WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
+                    if(variantChange) {
+                        ServerTardisManager.getInstance().getTardis(uuid).getExterior().setVariant(VariantEnum.values()[variantValue]);
+                        WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
+                                        .getTravel().getPosition().getWorld().getRegistryKey()),
+                                ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
+                    }
 
                     /*ExteriorEnum[] values = ExteriorEnum.values();
                     int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
@@ -96,10 +105,12 @@ public class TardisUtil {
         );
     }
 
-    public static void changeExteriorWithScreen(UUID uuid, int exterior) {
+    public static void changeExteriorWithScreen(UUID uuid, int exterior, int variant, boolean variantchange) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(uuid);
         buf.writeInt(exterior);
+        buf.writeBoolean(variantchange);
+        buf.writeInt(variant);
         ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);
     }
 

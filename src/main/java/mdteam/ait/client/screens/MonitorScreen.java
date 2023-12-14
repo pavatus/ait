@@ -15,6 +15,7 @@ import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
@@ -28,6 +29,7 @@ public class MonitorScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     private ExteriorEnum currentModel;
+    private VariantEnum currentVariant;
     private float scrollPosition;
     private boolean scrollbarClicked;
     private int visibleTopRow;
@@ -35,8 +37,10 @@ public class MonitorScreen extends TardisScreen {
     int backgroundWidth = 236;
     public MonitorScreen(UUID tardis) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
-        if(tardis() != null)
+        if(tardis() != null) {
             this.currentModel = tardis().getExterior().getType();
+            this.currentVariant = tardis().getExterior().getVariant();
+        }
     }
     @Override
     public boolean shouldPause() {
@@ -57,6 +61,12 @@ public class MonitorScreen extends TardisScreen {
     public void setCurrentModel(ExteriorEnum currentModel) {
         this.currentModel = currentModel;
     }
+    public VariantEnum getCurrentVariant() {
+        return currentVariant;
+    }
+    public void setCurrentVariant(VariantEnum currentVariant) {
+        this.currentVariant = currentVariant;
+    }
     private void createButtons() {
         int i = (this.width - this.backgroundWidth / 2);
         int j = (this.height - this.backgroundHeight / 2);
@@ -75,20 +85,33 @@ public class MonitorScreen extends TardisScreen {
                 this.textRenderer.getWidth(">"), 10, Text.literal(">"), button -> {
             whichDirectionExterior(true);
         }, this.textRenderer));
+        this.addButton(new PressableTextWidget((width / 2 - 110), (height / 2 - 14),
+                this.textRenderer.getWidth("<"), 10, Text.literal("<").formatted(Formatting.LIGHT_PURPLE), button -> {
+            whichDirectionVariant(false);
+        }, this.textRenderer));
+        this.addButton(new PressableTextWidget((width / 2 - 76), (height / 2 - 14),
+                this.textRenderer.getWidth(">"), 10, Text.literal(">").formatted(Formatting.LIGHT_PURPLE), button -> {
+            whichDirectionVariant(true);
+        }, this.textRenderer));
         this.buttons.forEach(buttons -> {
             // buttons.visible = false;
             buttons.active = true;
         });
     }
     public void sendExteriorPacket() {
-        if(this.getCurrentModel() != tardis().getExterior().getType())
-            TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel().ordinal());
+        TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel() != tardis().getExterior().getType() ? this.getCurrentModel().ordinal() : tardis().getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(), this.getCurrentVariant() != tardis().getExterior().getVariant());
     }
     public void whichDirectionExterior(boolean direction) {
         ExteriorEnum[] values = ExteriorEnum.values();
         int currentIndex = this.getCurrentModel().ordinal();
         int newIndex = (currentIndex + (direction ? 1 : -1) + values.length) % values.length;
         this.setCurrentModel(values[newIndex]);
+    }
+    public void whichDirectionVariant(boolean direction) {
+        VariantEnum[] values = VariantEnum.values();
+        int currentIndex = this.getCurrentVariant().ordinal();
+        int newIndex = (currentIndex + (direction ? 1 : -1) + values.length) % values.length;
+        this.setCurrentVariant(values[newIndex]);
     }
 
     @Override
@@ -147,7 +170,7 @@ public class MonitorScreen extends TardisScreen {
         //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
         stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(mouseX));
         DiffuseLighting.disableGuiDepthLighting();
-        model.render(stack,context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(model.getVariousTextures(this.getCurrentModel(), VariantEnum.DEFAULT))), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1,1,1,1);
+        model.render(stack,context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(model.getVariousTextures(this.getCurrentModel(), this.getCurrentVariant()))), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1,1,1,1);
         DiffuseLighting.enableGuiDepthLighting();
         stack.pop();
     }

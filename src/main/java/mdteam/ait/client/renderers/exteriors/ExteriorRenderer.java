@@ -33,7 +33,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             model = null;
 
         if (model == null)
-            this.model = entity.getTardis().getExterior().getType().createModel();
+            this.model = tardisExterior.getType().createModel();
 
         BlockState blockState = entity.getCachedState();
         float f = blockState.get(ExteriorBlock.FACING).asRotation();
@@ -42,11 +42,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.translate(0.5, 0, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-        Identifier texture = model.getVariousTextures(entity.getTardis().getExterior().getType(), VariantEnum.DEFAULT);
+        Identifier texture = model.getVariousTextures(tardisExterior.getType(), tardisExterior.getVariant());
         if(model != null) {
             //@TODO use another instance of the model for alpha transparency to get rid of the weird z-fighting alpha stuff like on the fallout exterior (recommended by Bug1312) - Loqor
             model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
-            if(model.getVariousEmission(texture, entity.getTardis().getExterior().getType()) != null) model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getVariousEmission(texture, entity.getTardis().getExterior().getType()), false)), maxLight, overlay, 1, 1, 1, 1);
+            if(model.getVariousEmission(texture, tardisExterior.getType()) != null)
+                if(tardisExterior.getType().hasEmission())
+                    model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getVariousEmission(texture, tardisExterior.getType()), false)), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }

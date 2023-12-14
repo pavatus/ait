@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.SerialDimension;
@@ -92,10 +93,10 @@ public class ServerTardisManager extends TardisManager {
         });
     }
 
-    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, ConsoleEnum consoleType, TardisDesktopSchema schema, boolean locked) {
+    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, VariantEnum variantType, ConsoleEnum consoleType, TardisDesktopSchema schema, boolean locked) {
         UUID uuid = UUID.randomUUID();
 
-        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, consoleType, locked);
+        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, consoleType, locked);
         //this.saveTardis(tardis);
         this.lookup.put(uuid, tardis);
 

@@ -54,13 +54,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     public Identifier getVariousEmission(Identifier id, ExteriorEnum exterior) {
         String originalPathNoPng = id.getPath().substring(0, id.getPath().length() - 4);
         String addedEmission = originalPathNoPng + "_emission.png";
-        Identifier emission = new Identifier(AITMod.MOD_ID, addedEmission);
-        Identifier shelter = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/shelter_emission.png");
-        if(exterior == ExteriorEnum.SHELTER) {
-            return shelter;
-        } else if (exterior == ExteriorEnum.CAPSULE) {
-            return null;
-        }
-        return emission;
+        return new Identifier(AITMod.MOD_ID, addedEmission);
     }
 }

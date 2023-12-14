@@ -1,14 +1,10 @@
 package mdteam.ait.client.models.exteriors;
 
-import mdteam.ait.AITMod;
-import mdteam.ait.client.models.doors.DoorModel;
-import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 
 public class CapsuleExteriorModel extends ExteriorModel {
 	private final ModelPart body;
@@ -21,15 +17,15 @@ public class CapsuleExteriorModel extends ExteriorModel {
 		ModelPartData modelPartData = modelData.getRoot();
 		ModelPartData body = modelPartData.addChild("body", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 3.0F, 0.0F));
 
-		ModelPartData top = body.addChild("top", ModelPartBuilder.create().uv(45, 92).cuboid(-4.9706F, -42.0F, -12.0F, 9.9411F, 8.0F, 24.0F, new Dilation(0.0F))
-				.uv(73, 1).cuboid(-12.0F, -42.1F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F))
-				.uv(0, 25).cuboid(-12.0F, -33.89F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 21.0F, 0.0F));
+		ModelPartData top = body.addChild("top", ModelPartBuilder.create().uv(45, 92).cuboid(-4.9706F, -42.0F, -12.0F, 9.9411F, 8.0F, 24.0F, new Dilation(0.001F))
+		.uv(73, 1).cuboid(-12.0F, -42.1F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F))
+		.uv(0, 25).cuboid(-12.0F, -33.89F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 21.0F, 0.0F));
 
-		ModelPartData octagon_r1 = top.addChild("octagon_r1", ModelPartBuilder.create().uv(73, 26).cuboid(-4.9706F, -42.0F, -12.0F, 9.9411F, 8.0F, 24.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+		ModelPartData octagon_r1 = top.addChild("octagon_r1", ModelPartBuilder.create().uv(73, 26).cuboid(-4.9706F, -42.0F, -12.0F, 9.9411F, 8.0F, 24.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
 		ModelPartData octagon_r2 = top.addChild("octagon_r2", ModelPartBuilder.create().uv(73, 59).cuboid(-4.9706F, -42.0F, -12.0F, 9.9411F, 8.0F, 24.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
 
-		ModelPartData octagon_r3 = top.addChild("octagon_r3", ModelPartBuilder.create().uv(0, 75).cuboid(-4.9706F, -42.0F, -12.0F, 9.9411F, 8.0F, 24.0F, new Dilation(0.01F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
+		ModelPartData octagon_r3 = top.addChild("octagon_r3", ModelPartBuilder.create().uv(0, 75).cuboid(-22.9706F, -42.0F, -12.0F, 9.9411F, 8.0F, 24.0F, new Dilation(0.0F)), ModelTransform.of(12.7279F, 0.0F, -12.7279F, 0.0F, 0.7854F, 0.0F));
 
 		ModelPartData middle = body.addChild("middle", ModelPartBuilder.create().uv(26, 135).cuboid(-4.7635F, -34.0F, 9.5F, 9.5269F, 32.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 21.0F, 0.0F));
 
@@ -45,11 +41,11 @@ public class CapsuleExteriorModel extends ExteriorModel {
 
 		ModelPartData octagon_r9 = middle.addChild("octagon_r9", ModelPartBuilder.create().uv(1, 135).cuboid(-4.7635F, -34.0F, 9.5F, 9.5269F, 32.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
 
-		ModelPartData bottom = body.addChild("bottom", ModelPartBuilder.create().uv(118, 68).cuboid(-4.9706F, -2.0F, -12.0F, 9.9411F, 2.0F, 24.0F, new Dilation(0.0F))
-				.uv(0, 50).cuboid(-12.0F, 0.01F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F))
-				.uv(0, 0).cuboid(-12.0F, -2.1F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 21.0F, 0.0F));
+		ModelPartData bottom = body.addChild("bottom", ModelPartBuilder.create().uv(118, 68).cuboid(-4.9706F, -2.0F, -12.0F, 9.9411F, 2.0F, 24.0F, new Dilation(0.001F))
+		.uv(0, 50).cuboid(-12.0F, 0.01F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F))
+		.uv(0, 0).cuboid(-12.0F, -2.1F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 21.0F, 0.0F));
 
-		ModelPartData octagon_r10 = bottom.addChild("octagon_r10", ModelPartBuilder.create().uv(90, 101).cuboid(-4.9706F, -2.0F, -12.0F, 9.9411F, 2.0F, 24.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+		ModelPartData octagon_r10 = bottom.addChild("octagon_r10", ModelPartBuilder.create().uv(90, 101).cuboid(-4.9706F, -2.0F, -12.0F, 9.9411F, 2.0F, 24.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
 		ModelPartData octagon_r11 = bottom.addChild("octagon_r11", ModelPartBuilder.create().uv(118, 35).cuboid(-4.9706F, -2.0F, -12.0F, 9.9411F, 2.0F, 24.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
 
@@ -62,7 +58,6 @@ public class CapsuleExteriorModel extends ExteriorModel {
 		ModelPartData left_door = doors.addChild("left_door", ModelPartBuilder.create().uv(161, 95).cuboid(-6.5294F, -11.0F, -0.5F, 6.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(6.5F, 0.0F, -8.5F));
 		return TexturedModelData.of(modelData, 256, 256);
 	}
-
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		matrices.push();
