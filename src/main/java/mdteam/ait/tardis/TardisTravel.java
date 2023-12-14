@@ -151,7 +151,7 @@ public class TardisTravel {
 
         // PropertiesHandler.setAutoPilot(this.getTardis().getProperties(), false);
 
-        DoorHandler.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null, true);
+        DoorHandler.lockTardis(true, this.getTardis(), (ServerWorld) TardisUtil.getTardisDimension(), null, true);
 
         this.setState(State.MAT);
 
@@ -195,7 +195,7 @@ public class TardisTravel {
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
-        DoorHandler.lockTardis(true, this.getTardis(), TardisUtil.getTardisDimension(), null, true);
+        DoorHandler.lockTardis(true, this.getTardis(), (ServerWorld) TardisUtil.getTardisDimension(), null, true);
 
         if (PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HANDBRAKE)) {
             // fail to take off when handbrake is on
@@ -286,7 +286,7 @@ public class TardisTravel {
     }
 
     public boolean checkDestination() {
-        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN));
+        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(this.getTardis().getProperties(), PropertiesHandler.SEARCH_DOWN));
     }
 
     private boolean isDestinationTardisExterior() {

@@ -1,6 +1,8 @@
 package mdteam.ait.client.renderers.doors;
 
 import mdteam.ait.client.models.doors.DoorModel;
+import mdteam.ait.client.renderers.AITRenderLayers;
+import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import net.minecraft.block.BlockState;
@@ -9,6 +11,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import mdteam.ait.tardis.TardisExterior;
 
@@ -39,9 +42,10 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         matrices.translate(0.5, 0, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+        Identifier texture = model.getVariousTextures(entity.getTardis().getExterior().getType(), VariantEnum.DEFAULT);
         if(model != null) {
-            model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(model.getTexture())), light, overlay, 1, 1, 1, 1);
-            if(model.getEmission() != null) model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEyes(model.getEmission())), maxLight, overlay, 1, 1, 1, 1);
+            model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
+            if(model.getVariousEmission(texture, entity.getTardis().getExterior().getType()) != null) model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getVariousEmission(texture, entity.getTardis().getExterior().getType()), false)), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }

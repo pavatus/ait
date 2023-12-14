@@ -15,35 +15,29 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 
 public enum ExteriorEnum {
-
     CAPSULE() {
         @Override
         public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
             return new ClassicAnimation(entity);
         }
-
         @Override
         public boolean isDoubleDoor() {
             return true;
         }
-
         @Override
         @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new CapsuleExteriorModel(CapsuleExteriorModel.getTexturedModelData().createModel());
         }
-
         @Override
         @Environment(value= EnvType.CLIENT)
         public DoorModel createDoorModel() {
             return new CapsuleDoorModel(CapsuleDoorModel.getTexturedModelData().createModel());
         }
-
         @Override
         public Class<? extends ExteriorModel> getModelClass() {
             return CapsuleExteriorModel.class;
         }
-
         @Override
         public Class<? extends DoorModel> getDoorClass() {
             return CapsuleDoorModel.class;
@@ -52,7 +46,6 @@ public enum ExteriorEnum {
         public SoundEvent getDoorCloseSound() {
             return SoundEvents.BLOCK_IRON_DOOR_CLOSE;
         }
-
         @Override
         public SoundEvent getDoorOpenSound() {
             return SoundEvents.BLOCK_IRON_DOOR_OPEN;
@@ -71,29 +64,24 @@ public enum ExteriorEnum {
         public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
             return new ClassicAnimation(entity);
         }
-
         @Override
         public boolean isDoubleDoor() {
             return false;
         }
-
         @Override
         @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new FalloutExteriorModel(FalloutExteriorModel.getTexturedModelData().createModel());
         }
-
         @Override
         @Environment(value= EnvType.CLIENT)
         public DoorModel createDoorModel() {
             return new FalloutDoorModel(FalloutDoorModel.getTexturedModelData().createModel());
         }
-
         @Override
         public Class<? extends ExteriorModel> getModelClass() {
             return FalloutExteriorModel.class;
         }
-
         @Override
         public Class<? extends DoorModel> getDoorClass() {
             return FalloutDoorModel.class;
@@ -102,43 +90,37 @@ public enum ExteriorEnum {
         public SoundEvent getDoorCloseSound() {
             return SoundEvents.BLOCK_IRON_DOOR_CLOSE;
         }
-
         @Override
         public SoundEvent getDoorOpenSound() {
             return SoundEvents.BLOCK_IRON_DOOR_OPEN;
         }
     },
-    TOYOTA() {
+    POLICE_BOX() {
         @Override
         public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
             return new PulsatingAnimation(entity);
         }
-
         @Override
         public boolean isDoubleDoor() {
             return true;
         }
-
         @Override
         @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
-            return new ToyotaExteriorModel(ToyotaExteriorModel.getTexturedModelData().createModel());
+            return new PoliceBoxModel(PoliceBoxModel.getTexturedModelData().createModel());
         }
-
         @Override
         @Environment(value= EnvType.CLIENT)
         public DoorModel createDoorModel() {
-            return new ToyotaDoorModel(ToyotaDoorModel.getTexturedModelData().createModel());
+            return new PoliceBoxDoorModel(PoliceBoxDoorModel.getTexturedModelData().createModel());
         }
-
         @Override
         public Class<? extends ExteriorModel> getModelClass() {
-            return ToyotaExteriorModel.class;
+            return PoliceBoxModel.class;
         }
-
         @Override
         public Class<? extends DoorModel> getDoorClass() {
-            return ToyotaDoorModel.class;
+            return PoliceBoxDoorModel.class;
         }
     },
     TARDIM() {
@@ -146,32 +128,27 @@ public enum ExteriorEnum {
         public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
             return new PulsatingAnimation(entity);
         }
-
         @Override
         public boolean isDoubleDoor() {
             return true;
         }
-
         @Override
         @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new TardimExteriorModel(TardimExteriorModel.getTexturedModelData().createModel());
         }
-
         @Override
         @Environment(value= EnvType.CLIENT)
         public DoorModel createDoorModel() {
-            return TOYOTA.createDoorModel();
+            return POLICE_BOX.createDoorModel();
         }
-
         @Override
         public Class<? extends ExteriorModel> getModelClass() {
             return TardimExteriorModel.class;
         }
-
         @Override
         public Class<? extends DoorModel> getDoorClass() {
-            return TOYOTA.getDoorClass();
+            return POLICE_BOX.getDoorClass();
         }
     },
     BOOTH {
@@ -179,78 +156,37 @@ public enum ExteriorEnum {
         public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
             return new PulsatingAnimation(entity);
         }
-
         @Override
         @Environment(value= EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new BoothExteriorModel(BoothExteriorModel.getTexturedModelData().createModel());
         }
-
         @Override
         @Environment(value= EnvType.CLIENT)
         public DoorModel createDoorModel() {
             return new BoothDoorModel(BoothDoorModel.getTexturedModelData().createModel());
         }
-
         @Override
         public boolean isDoubleDoor() {
             return false;
         }
-
         @Override
         public Class<? extends ExteriorModel> getModelClass() {
             return BoothExteriorModel.class;
         }
-
         @Override
         public Class<? extends DoorModel> getDoorClass() {
             return BoothDoorModel.class;
         }
-
         @Override
         public SoundEvent getDoorCloseSound() {
             return SoundEvents.BLOCK_IRON_DOOR_CLOSE;
         }
-
         @Override
         public SoundEvent getDoorOpenSound() {
             return SoundEvents.BLOCK_IRON_DOOR_OPEN;
         }
-    },
-    COOB() {
-        @Override
-        public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
-            return new PulsatingAnimation(entity);
-        }
-
-        @Override
-        public boolean isDoubleDoor() {
-            return false;
-        }
-
-        @Override
-        @Environment(value= EnvType.CLIENT)
-        public ExteriorModel createModel() {
-            return new CoobExteriorModel(CoobExteriorModel.getTexturedModelData().createModel());
-        }
-
-        @Override
-        @Environment(value= EnvType.CLIENT)
-        public DoorModel createDoorModel() {
-            return CAPSULE.createDoorModel();
-        }
-
-        @Override
-        public Class<? extends ExteriorModel> getModelClass() {
-            return CoobExteriorModel.class;
-        }
-
-        @Override
-        public Class<? extends DoorModel> getDoorClass() {
-            return CAPSULE.getDoorClass();
-        }
     },;
-
     public abstract ExteriorAnimation createAnimation(ExteriorBlockEntity entity);
     @Environment(value= EnvType.CLIENT)
     public abstract ExteriorModel createModel();
@@ -259,14 +195,12 @@ public enum ExteriorEnum {
     public abstract boolean isDoubleDoor();
     public abstract Class<? extends ExteriorModel> getModelClass();
     public abstract Class<? extends DoorModel> getDoorClass();
-
     public SoundEvent getDoorCloseSound() {
         return SoundEvents.BLOCK_WOODEN_DOOR_CLOSE;
     }
     public SoundEvent getDoorOpenSound() {
         return SoundEvents.BLOCK_WOODEN_DOOR_OPEN;
     }
-
     public MatSound getSound(TardisTravel.State state) {
         return switch(state) {
             case LANDED, FLIGHT -> AITSounds.LANDED_ANIM;

@@ -3,8 +3,6 @@ package mdteam.ait.core.components.block;
 import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer;
 import mdteam.ait.core.blockentities.AITRadioBlockEntity;
-import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 
 import static mdteam.ait.AITMod.*;

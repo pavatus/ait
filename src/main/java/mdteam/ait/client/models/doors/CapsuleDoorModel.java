@@ -11,8 +11,6 @@ import net.minecraft.util.math.RotationAxis;
 
 public class CapsuleDoorModel extends DoorModel {
 
-	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/doors/capsule_door.png"));
-
 	public ModelPart body;
 	public CapsuleDoorModel(ModelPart root) {
 		super(RenderLayer::getEntityCutoutNoCull);
@@ -73,16 +71,6 @@ public class CapsuleDoorModel extends DoorModel {
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
 		this.body.render(matrices, vertices, light, overlay, red, green, blue, alpha);
-	}
-
-	@Override
-	public Identifier getTexture() {
-		return TEXTURE;
-	}
-
-	@Override
-	public Identifier getEmission() {
-		return null;
 	}
 
 	@Override

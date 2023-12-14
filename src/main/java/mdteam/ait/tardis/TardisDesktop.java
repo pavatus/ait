@@ -6,6 +6,7 @@ import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.Corners;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
@@ -26,7 +27,7 @@ public class TardisDesktop {
         this.corners = TardisUtil.findInteriorSpot();
 
         BlockPos doorPos = new DesktopGenerator(schema).place(
-                TardisUtil.getTardisDimension(), this.getCorners()
+                (ServerWorld) TardisUtil.getTardisDimension(), this.getCorners()
         );
 
         if (!(TardisUtil.getTardisDimension().getBlockEntity(doorPos) instanceof DoorBlockEntity door)) {
@@ -71,7 +72,7 @@ public class TardisDesktop {
     public Corners getCorners() {
         return corners;
     }
-    private boolean updateDoor() {
+    public boolean updateDoor() {
         if (!(TardisUtil.getTardisDimension().getBlockEntity(doorPos) instanceof DoorBlockEntity door)) {
             AITMod.LOGGER.error("Failed to find the interior door!");
             return false;
@@ -87,9 +88,9 @@ public class TardisDesktop {
         this.schema = schema;
         DesktopGenerator generator = new DesktopGenerator(this.schema);
 
-        DesktopGenerator.clearArea(TardisUtil.getTardisDimension(), this.corners);
+        DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
 
-        BlockPos doorPos = generator.place(TardisUtil.getTardisDimension(), this.corners);
+        BlockPos doorPos = generator.place((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
         /*for (ItemEntity entity : TardisUtil.getTardisDimension().getEntitiesByType(EntityType.ITEM*//*TardisUtil.getPlayerInsideInterior(interiorCorners)*//*, *//*interiorCorners.getBox()*//*EntityPredicates.EXCEPT_SPECTATOR)) {
             if (TardisUtil.inBox(this.corners.getBox(), entity.getBlockPos())) {
                 System.out.println(entity);

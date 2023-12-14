@@ -45,7 +45,6 @@ public class ServerTardisManager extends TardisManager {
                 ClientTardisManager.ASK, (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
                     this.sendTardis(player, uuid);
-
                     this.subscribers.put(uuid, player);
                 }
         );
@@ -54,16 +53,13 @@ public class ServerTardisManager extends TardisManager {
                 ClientTardisManager.ASK_POS, (server, player, handler, buf, responseSender) -> {
                     BlockPos pos = buf.readBlockPos();
                     UUID uuid = null;
-
                     for (Tardis tardis : this.getLookup().values()) {
                         if (!tardis.getTravel().getPosition().equals(pos)) continue;
 
                         uuid = tardis.getUuid();
                     }
-
                     if (uuid == null)
                         return;
-
                     this.sendTardis(player, uuid);
                     this.subscribers.put(uuid, player);
                 }
@@ -100,6 +96,7 @@ public class ServerTardisManager extends TardisManager {
         UUID uuid = UUID.randomUUID();
 
         ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, consoleType, locked);
+        //this.saveTardis(tardis);
         this.lookup.put(uuid, tardis);
 
         tardis.getTravel().runAnimations();

@@ -3,6 +3,7 @@ package mdteam.ait.tardis;
 import com.google.gson.*;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.tardis.util.TardisUtil;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.Identifier;
 
@@ -22,7 +23,7 @@ public abstract class TardisDesktopSchema {
     }
 
     public Optional<StructureTemplate> findTemplate() {
-        return TardisUtil.getTardisDimension().getStructureTemplateManager().getTemplate(this.getStructureLocation());
+        return ((ServerWorld) TardisUtil.getTardisDimension()).getStructureTemplateManager().getTemplate(this.getStructureLocation());
     }
 
     private Identifier getStructureLocation() {

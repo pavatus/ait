@@ -42,7 +42,7 @@ public class RandomiserControl extends Control {
         BlockPos pos;
         int x,z;
 
-        for (int i = 0; i <= limit; i++) {
+//        for (int i = 0; i <= limit; i++) {
             x = current.getX() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
             z = current.getZ() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
             pos = new BlockPos(x, current.getY(), z);
@@ -50,7 +50,7 @@ public class RandomiserControl extends Control {
             travel.setDestination(new AbsoluteBlockPos.Directed(pos, dest.getWorld(), dest.getDirection()), false);
 
             if (travel.checkDestination()) return travel.getDestination();
-        }
+//        }
 
         return travel.getDestination();
     }

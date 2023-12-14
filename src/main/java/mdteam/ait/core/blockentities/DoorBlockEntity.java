@@ -36,15 +36,18 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
 
         // even though TardisDesktop links the door, we need to link it here as well to avoid desync
         this.setTardis(TardisUtil.findTardisByInterior(pos));
-        if(this.getTardis() != null)
+        if(this.getTardis() != null) {
             this.setDesktop(this.getDesktop());
+            /*if(this.getDesktop() != null) {
+                this.getDesktop().setInteriorDoorPos(new AbsoluteBlockPos.Directed(pos, TardisUtil.getTardisDimension(), this.getFacing()));
+                this.getDesktop().updateDoor();
+            }*/
+        }
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
-
         if(player == null)
             return;
-
         if(player.getMainHandStack().getItem() instanceof KeyItem) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
@@ -59,52 +62,25 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
             }
             return;
         }
-
         DoorHandler.useDoor(this.getTardis(), (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
-
         if (sneaking)
             return;
-
         AbsoluteBlockPos exteriorPos = this.tardis.getTravel().getPosition();
         ExteriorBlockEntity exterior = TardisUtil.getExterior(this.tardis);
-
         if (exterior != null) {
             exteriorPos.getChunk();
-
-            // exterior.setLeftDoorRot(this.getLeftDoorRotation());
-            // exterior.setRightDoorRot(this.getRightDoorRotation());
+            if(!world.isClient())
+                exterior.sync();
         }
+        this.sync();
     }
-
-    public void setLeftDoorRot(float rotation) {
-        // INTERIORDOORNBT.get(this).setLeftDoorRotation(rotation);
-
-        if (this.tardis == null) return;
-
-        this.tardis.getDoor().setLeftRot(rotation);
-    }
-
-    public void setRightDoorRot(float rotation) {
-        // INTERIORDOORNBT.get(this).setRightDoorRotation(rotation);
-
-        if (this.tardis == null) return;
-
-        this.tardis.getDoor().setRightRot(rotation);
-    }
-
     public float getLeftDoorRotation() {
-        // return INTERIORDOORNBT.get(this).getLeftDoorRotation();
-
         if (this.tardis == null) return 5;
-
         return this.tardis.getDoor().left();
     }
 
     public float getRightDoorRotation() {
-        // return INTERIORDOORNBT.get(this).getRightDoorRotation();
-
         if (this.tardis == null) return 5;
-
         return this.tardis.getDoor().right();
     }
 
@@ -115,7 +91,6 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-
         if(this.tardis != null) {
             nbt.putUuid("tardis", this.tardis.getUuid());
         }
@@ -124,17 +99,14 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-
         if(nbt.contains("tardis")) {
             TardisManager.getInstance().link(nbt.getUuid("tardis"), this);
         }
-        this.sync();
     }
 
     public void onEntityCollision(Entity entity) {
         if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
             return;
-
         if (this.getTardis() != null && this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
             if(!this.getTardis().getLockedTardis())
                 TardisUtil.teleportOutside(this.tardis, player);
@@ -149,7 +121,6 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
     @Override
     public void setTardis(Tardis tardis) {
         this.tardis = tardis;
-
         // force re-link a desktop if it's not null
         this.linkDesktop();
     }

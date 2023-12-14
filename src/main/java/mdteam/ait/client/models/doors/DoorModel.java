@@ -1,5 +1,8 @@
 package mdteam.ait.client.models.doors;
 
+import mdteam.ait.AITMod;
+import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import net.minecraft.client.model.ModelPart;
@@ -14,6 +17,7 @@ import java.util.function.Function;
 
 public abstract class DoorModel extends SinglePartEntityModel {
     public static int MAX_TICK_COUNT = 2 * 20;
+    public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
 
     public DoorModel() {
         this(RenderLayer::getEntityCutoutNoCull);
@@ -34,6 +38,30 @@ public abstract class DoorModel extends SinglePartEntityModel {
 
     }
 
-    public abstract Identifier getTexture();
-    public abstract Identifier getEmission();
+    public Identifier getVariousTextures(ExteriorEnum exterior, VariantEnum variant) {
+        /*new Identifier(AITMod.MOD_ID, TEXTURE_PATH + exterior.toString().toLowerCase() + "/" + exterior.toString().toLowerCase() + ".png");
+        new Identifier(AITMod.MOD_ID, TEXTURE_PATH + exterior.toString().toLowerCase() + "/" + exterior.toString().toLowerCase() + "_emission" + ".png");*/
+        Identifier texture = new Identifier(AITMod.MOD_ID, TEXTURE_PATH + exterior.toString().toLowerCase() + "/" + exterior.toString().toLowerCase() + "_" + variant.toString().toLowerCase() + ".png");
+        Identifier capsule = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/capsule_door.png");
+        Identifier shelter = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/shelter_door.png");
+        if(exterior == ExteriorEnum.CAPSULE) {
+            return capsule;
+        } else if (exterior == ExteriorEnum.SHELTER) {
+            return shelter;
+        }
+        return texture;
+    }
+
+    public Identifier getVariousEmission(Identifier id, ExteriorEnum exterior) {
+        String originalPathNoPng = id.getPath().substring(0, id.getPath().length() - 4);
+        String addedEmission = originalPathNoPng + "_emission.png";
+        Identifier emission = new Identifier(AITMod.MOD_ID, addedEmission);
+        Identifier shelter = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/shelter_door_emission.png");
+        if(exterior == ExteriorEnum.SHELTER) {
+            return shelter;
+        } else if (exterior == ExteriorEnum.CAPSULE) {
+            return null;
+        }
+        return emission;
+    }
 }

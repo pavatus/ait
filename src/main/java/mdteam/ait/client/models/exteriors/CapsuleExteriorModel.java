@@ -11,8 +11,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class CapsuleExteriorModel extends ExteriorModel {
-
-	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/exteriors/capsule.png"));
 	private final ModelPart body;
 	public CapsuleExteriorModel(ModelPart root) {
 		super(RenderLayer::getEntityCutoutNoCull);
@@ -81,17 +79,6 @@ public class CapsuleExteriorModel extends ExteriorModel {
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		this.body.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 	}
-
-	@Override
-	public Identifier getTexture() {
-		return TEXTURE;
-	}
-
-	@Override
-	public Identifier getEmission() {
-		return null;
-	}
-
 	@Override
 	public ModelPart getPart() {
 		return this.body;

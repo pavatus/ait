@@ -3,6 +3,7 @@ package mdteam.ait.core.blockentities;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.ConsoleControlEntity;
@@ -62,7 +63,6 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
 
         super.readNbt(nbt);
 
-        this.sync();
         spawnControls();
     }
 
@@ -133,21 +133,13 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
         //System.out.println("KillControls(): I'm getting run :) somewhere..");
     }
 
-    public void killForGood() {
-        controlEntities.forEach(control -> {
-            this.markedDirty = false;
-            control.discard();
-            this.markedDirty = false;
-        });
-        controlEntities.clear();
-        this.sync();
-    }
-
     public void spawnControls() {
 
         BlockPos current = getPos();
 
         if(!(getWorld() instanceof ServerWorld server))
+            return;
+        if(getWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
             return;
 
         killControls();
@@ -180,10 +172,9 @@ public class ConsoleBlockEntity extends BlockEntity implements ILinkable, BlockE
         if(this.markedDirty) {
             spawnControls();
         }
-//        if (this.controlEntities.isEmpty()) {
-//            killControls();
-//            spawnControls();
-//        }
+
+        if(world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+            this.markRemoved();
 
         // idk
         if (world.isClient()) {

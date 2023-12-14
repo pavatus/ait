@@ -67,7 +67,7 @@ public class TardisUtil {
                     ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(ExteriorEnum.values()[exteriorValue]);
                     WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
-                            ServerTardisManager.getInstance().getTardis(uuid).getTravel().getPosition());
+                            ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
 
                     /*ExteriorEnum[] values = ExteriorEnum.values();
                     int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
@@ -122,11 +122,10 @@ public class TardisUtil {
         return SERVER != null;
     }
 
-    public static ServerWorld getTardisDimension() {
-        if (TARDIS_DIMENSION == null && isClient()) {
-            return MinecraftClient.getInstance().getServer().getWorld(AITDimensions.TARDIS_DIM_WORLD);
-        }
-
+    public static World getTardisDimension() {
+        if (isClient()) if(MinecraftClient.getInstance().world != null)
+            if(MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
+                return MinecraftClient.getInstance().world;
         return TARDIS_DIMENSION;
     }
 
@@ -218,11 +217,11 @@ public class TardisUtil {
     }
 
     public static void teleportOutside(Tardis tardis, ServerPlayerEntity player) {
-        TardisUtil.teleportWithDoorOffset(player, tardis.getTravel().getPosition());
+        TardisUtil.teleportWithDoorOffset(player, tardis.getDoor().getExteriorPos());
     }
 
     public static void teleportInside(Tardis tardis, ServerPlayerEntity player) {
-        TardisUtil.teleportWithDoorOffset(player, tardis.getDesktop().getInteriorDoorPos());
+        TardisUtil.teleportWithDoorOffset(player, tardis.getDoor().getDoorPos());
     }
 
     private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
@@ -242,7 +241,7 @@ public class TardisUtil {
 
     public static Tardis findTardisByPosition(AbsoluteBlockPos.Directed pos) {
         for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
-            if (tardis.getTravel().getPosition() != pos) continue;
+            if (tardis.getDoor().getExteriorPos() != pos) continue;
 
             return tardis;
         }
@@ -302,12 +301,8 @@ public class TardisUtil {
 
     @Nullable
     public static ExteriorBlockEntity findExteriorEntity(Tardis tardis) {
-        if(tardis.getTravel().getPosition().getWorld().isClient())
-            return null;
-        if (tardis.getTravel().getPosition().getWorld() == null)
-            return null;
-
-        return (ExteriorBlockEntity) tardis.getTravel().getPosition().getWorld().getBlockEntity(tardis.getTravel().getPosition());
+        if (isClient()) return null;
+        return (ExteriorBlockEntity) tardis.getDoor().getExteriorPos().getWorld().getBlockEntity(tardis.getDoor().getExteriorPos());
     }
 
     public static BlockPos addRandomAmount(PosType type, BlockPos pos, int limit, Random random) {

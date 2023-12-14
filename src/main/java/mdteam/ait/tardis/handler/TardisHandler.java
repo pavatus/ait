@@ -43,12 +43,12 @@ public abstract class TardisHandler implements TardisTickable {
 
     public AbsoluteBlockPos.Directed getDoorPos() {
         Tardis tardis = tardis();
-        if (tardis == null || tardis.getDesktop() == null) return new AbsoluteBlockPos.Directed(0,0,0, new SerialDimension(World.OVERWORLD.getValue()), Direction.NORTH);;
+        if (tardis == null || tardis.getDesktop() == null) return new AbsoluteBlockPos.Directed(0,0,0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);;
         return tardis.getDesktop().getInteriorDoorPos();
     }
     public AbsoluteBlockPos.Directed getExteriorPos() {
         Tardis tardis = tardis();
-        if (tardis == null || tardis.getTravel() == null) return new AbsoluteBlockPos.Directed(0,0,0, new SerialDimension(World.OVERWORLD.getValue()), Direction.NORTH);
+        if (tardis == null || tardis.getTravel() == null) return new AbsoluteBlockPos.Directed(0,0,0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
         return tardis.getTravel().getPosition();
     }
 

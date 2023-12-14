@@ -5,11 +5,11 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisTravel;
 
-public interface ILinkable {
+import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
+public interface ILinkable {
     Tardis getTardis();
     void setTardis(Tardis tardis);
-
     default TardisDesktop getDesktop() { return this.getTardis().getDesktop(); }
     default void setDesktop(TardisDesktop desktop) { }
 
@@ -57,6 +57,8 @@ public interface ILinkable {
     }
 
     default void sync() {
+        if (isClient()) return;
+
         ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
     }
 }

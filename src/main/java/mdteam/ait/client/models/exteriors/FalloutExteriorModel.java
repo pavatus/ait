@@ -12,67 +12,9 @@ import net.minecraft.util.Identifier;
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 public class FalloutExteriorModel extends ExteriorModel {
-	public static final Identifier EXTERIOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/exteriors/shelter.png"));
-	public static final Identifier EXTERIOR_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/shelter_emission.png");
 
 	public ModelPart tardis;
 	public ModelPart door;
-	public ModelPart frame;
-	public ModelPart bone37;
-	public ModelPart bone38;
-	public ModelPart bone39;
-	public ModelPart bone40;
-	public ModelPart bone41;
-	public ModelPart bone42;
-	public ModelPart bone7;
-	public ModelPart bone8;
-	public ModelPart bone9;
-	public ModelPart bone10;
-	public ModelPart bone11;
-	public ModelPart bone12;
-	public ModelPart bone31;
-	public ModelPart bone32;
-	public ModelPart bone33;
-	public ModelPart bone34;
-	public ModelPart bone35;
-	public ModelPart bone36;
-	public ModelPart bone25;
-	public ModelPart bone26;
-	public ModelPart bone27;
-	public ModelPart bone28;
-	public ModelPart bone29;
-	public ModelPart bone30;
-	public ModelPart bone19;
-	public ModelPart bone20;
-	public ModelPart bone21;
-	public ModelPart bone22;
-	public ModelPart bone23;
-	public ModelPart bone24;
-	public ModelPart bone43;
-	public ModelPart bone44;
-	public ModelPart bone45;
-	public ModelPart bone46;
-	public ModelPart bone47;
-	public ModelPart bone48;
-	public ModelPart bone13;
-	public ModelPart bone14;
-	public ModelPart bone15;
-	public ModelPart bone16;
-	public ModelPart bone17;
-	public ModelPart bone18;
-	public ModelPart bone;
-	public ModelPart bone2;
-	public ModelPart bone3;
-	public ModelPart bone4;
-	public ModelPart bone5;
-	public ModelPart bone6;
-	public ModelPart glow;
-	public ModelPart bone49;
-	public ModelPart bone50;
-	public ModelPart bone51;
-	public ModelPart bone52;
-	public ModelPart bone53;
-	public ModelPart bone54;
 	public FalloutExteriorModel(ModelPart root) {
 		super(RenderLayer::getEntityCutoutNoCull);
 		this.tardis = root.getChild("tardis");
@@ -231,18 +173,8 @@ public class FalloutExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		this.door.yaw = exterior.getCorrectDoorRotations()[0];
+		this.door.yaw = exterior.getLeftDoorRotation();
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-	}
-
-	@Override
-	public Identifier getTexture() {
-		return EXTERIOR_TEXTURE;
-	}
-
-	@Override
-	public Identifier getEmission() {
-		return EXTERIOR_TEXTURE_EMISSION;
 	}
 }

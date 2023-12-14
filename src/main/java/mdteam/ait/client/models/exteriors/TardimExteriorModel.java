@@ -9,8 +9,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class TardimExteriorModel extends ExteriorModel {
-    public static final Identifier EXTERIOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/exteriors/tardim.png"));
-    public static final Identifier EXTERIOR_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/tardim_emission.png");
 
     public ModelPart tardis;
     public TardimExteriorModel(ModelPart root) {
@@ -41,23 +39,13 @@ public class TardimExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public Identifier getTexture() {
-        return EXTERIOR_TEXTURE;
-    }
-
-    @Override
-    public Identifier getEmission() {
-        return EXTERIOR_TEXTURE_EMISSION;
-    }
-
-    @Override
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         matrices.push();
         // matrices.scale(0.6F,0.6f,0.6f);
         matrices.translate(0, -1.5f, 0);
 
-        this.tardis.getChild("left_door").yaw = exterior.getCorrectDoorRotations()[0] == 0 ? 0: -1.575f;
-        this.tardis.getChild("right_door").yaw = exterior.getCorrectDoorRotations()[1] == 0 ? 0: 1.575f;
+        this.tardis.getChild("left_door").yaw = exterior.getLeftDoorRotation() == 0 ? 0: -1.575f;
+        this.tardis.getChild("right_door").yaw = exterior.getRightDoorRotation() == 0 ? 0: 1.575f;
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

@@ -91,6 +91,9 @@ public class DoorHandler extends TardisHandler {
     }
 
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
+        if(isClient()) {
+            return false;
+        }
         if (tardis.getLockedTardis()) {
             if (pos != null)
                 world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);

@@ -24,9 +24,6 @@ import net.minecraft.util.math.RotationAxis;
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 public class FalloutDoorModel extends DoorModel {
-	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/shelter_door.png");
-	public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/doors/shelter_door_emission.png");
-
 	private Framebuffer framebuffer;
 
 	public ModelPart door;
@@ -112,15 +109,5 @@ public class FalloutDoorModel extends DoorModel {
 	@Override
 	public ModelPart getPart() {
 		return root;
-	}
-
-	@Override
-	public Identifier getTexture() {
-		return TEXTURE;
-	}
-
-	@Override
-	public Identifier getEmission() {
-		return EMISSION;
 	}
 }

@@ -9,7 +9,6 @@ import java.util.UUID;
 
 public abstract class TardisScreen extends Screen {
     UUID tardisId;
-
     protected TardisScreen(Text title, UUID tardis) {
         super(title);
         this.tardisId = tardis;

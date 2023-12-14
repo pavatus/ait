@@ -1,6 +1,9 @@
 package mdteam.ait.tardis.util;
 
 import com.google.gson.*;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import mdteam.ait.tardis.Exclude;
@@ -8,21 +11,21 @@ import mdteam.ait.tardis.Exclude;
 import java.lang.reflect.Type;
 
 public class SerialDimension {
-
     @Exclude
     private final World dimension;
     private final String value;
-    @Exclude
-    private final String registry;
 
     public SerialDimension(World dimension) {
         this.dimension = dimension;
         this.value = this.dimension.getRegistryKey().getValue().toString();
-        this.registry = this.dimension.getRegistryKey().getRegistry().toString();
     }
 
-    public SerialDimension(Identifier value) {
-        this(TardisUtil.findWorld(value));
+    /**
+     * @Deprecated This method is strictly for serialization purposes to the client. - Loqor
+     **/
+    private SerialDimension(Identifier value) {
+        this.dimension = null;
+        this.value = value.getPath();
     }
 
     public SerialDimension(String value) {
@@ -31,10 +34,6 @@ public class SerialDimension {
 
     public String getValue() {
         return value;
-    }
-
-    public String getRegistry() {
-        return registry;
     }
 
     public World get() {
@@ -70,7 +69,7 @@ public class SerialDimension {
 
         @Override
         public SerialDimension deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return new SerialDimension(json.getAsString());
+            return new SerialDimension(new Identifier(json.getAsString()));
         }
 
         @Override

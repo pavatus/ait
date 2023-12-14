@@ -1,37 +1,28 @@
 package mdteam.ait.client.screens;
 
 import com.google.common.collect.Lists;
-import io.wispforest.owo.ui.component.SliderComponent;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.JigsawBlockScreen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.LoomScreenHandler;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
-import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
 import static mdteam.ait.client.renderers.exteriors.ExteriorEnum.*;
-import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldToReadable;
+import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 
 public class MonitorScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
@@ -149,14 +140,14 @@ public class MonitorScreen extends TardisScreen {
         MatrixStack stack = context.getMatrices();
         // fixme is bad
         stack.push();
-        stack.translate(x,this.getCurrentModel() != SHELTER ? this.getCurrentModel() == TOYOTA ? y + 8 : y : y + 23,100f);
-        if(this.getCurrentModel() == TOYOTA) stack.scale(-10, 10, 10);
+        stack.translate(x,this.getCurrentModel() != SHELTER ? this.getCurrentModel() == POLICE_BOX ? y + 8 : y : y + 23,100f);
+        if(this.getCurrentModel() == POLICE_BOX) stack.scale(-10, 10, 10);
         else if(this.getCurrentModel() == BOOTH) stack.scale(-scale, scale, scale);
         else stack.scale(-scale, scale, scale);
         //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
         stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(mouseX));
         DiffuseLighting.disableGuiDepthLighting();
-        model.render(stack,context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(model.getTexture())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1,1,1,1);
+        model.render(stack,context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(model.getVariousTextures(this.getCurrentModel(), VariantEnum.DEFAULT))), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1,1,1,1);
         DiffuseLighting.enableGuiDepthLighting();
         stack.pop();
     }
@@ -170,7 +161,7 @@ public class MonitorScreen extends TardisScreen {
         if (this.tardis() == null) return;
         AbsoluteBlockPos.Directed abpd = this.updateTardis().getTravel().getDestination();
         String destinationText = "> " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
-        String dimensionText = "> " + convertWorldToReadable(abpd.getWorld());
+        String dimensionText = "> " + convertWorldValueToModified(abpd.getDimension().getValue());
         String directionText = "> " + abpd.getDirection().toString().toUpperCase();
         context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 67), (height / 2 + 38), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(dimensionText), (width / 2 - 19), (height / 2 + 48), 0xFFFFFF, true);
