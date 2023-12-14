@@ -38,8 +38,8 @@ public class MonitorScreen extends TardisScreen {
     public MonitorScreen(UUID tardis) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
         if(tardis() != null) {
-            this.currentModel = tardis().getExterior().getType();
-            this.currentVariant = tardis().getExterior().getVariant();
+            this.currentModel = updateTardis().getExterior().getType();
+            this.currentVariant = updateTardis().getExterior().getVariant();
         }
     }
     @Override
