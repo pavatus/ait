@@ -45,13 +45,13 @@ public class InteriorSelectItem extends Item {
             BlockEntity entity = world.getBlockEntity(context.getBlockPos());
 
             if (entity instanceof ExteriorBlockEntity exteriorBlock) {
-                TardisTravel.State state = exteriorBlock.getTardis().getTravel().getState();
+                TardisTravel.State state = exteriorBlock.tardis().getTravel().getState();
 
                 if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                     return ActionResult.PASS;
 
-                Identifier nextInteriorId = getNextInteriorId(exteriorBlock.getTardis().getDesktop().getSchema().id());
-                exteriorBlock.getTardis().getDesktop().changeInterior(AITDesktops.get(nextInteriorId));
+                Identifier nextInteriorId = getNextInteriorId(exteriorBlock.tardis().getDesktop().getSchema().id());
+                exteriorBlock.tardis().getDesktop().changeInterior(AITDesktops.get(nextInteriorId));
                 player.sendMessage(Text.literal(nextInteriorId.toString()));
             }
             if (entity instanceof DoorBlockEntity doorBlock) {

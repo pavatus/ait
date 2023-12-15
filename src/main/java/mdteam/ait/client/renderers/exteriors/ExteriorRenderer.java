@@ -18,12 +18,11 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
     public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {}
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.getTardis() == null) {
-            entity.syncFromClientManager();
+        if (entity.tardis() == null) {
             return;
         }
 
-        TardisExterior tardisExterior = entity.getTardis().getExterior();
+        TardisExterior tardisExterior = entity.tardis().getExterior();
 
         if (tardisExterior == null) return;
 

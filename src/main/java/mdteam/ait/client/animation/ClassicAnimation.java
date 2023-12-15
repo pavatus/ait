@@ -11,10 +11,10 @@ public class ClassicAnimation extends ExteriorAnimation {
 
     @Override
     public void tick() {
-        if (exterior.getTardis() == null)
+        if (exterior.tardis() == null)
             return;
 
-        TardisTravel.State state = exterior.getTardis().getTravel().getState();
+        TardisTravel.State state = exterior.tardis().getTravel().getState();
 
         if (state == TardisTravel.State.DEMAT) {
             alpha = (float) timeLeft / (maxTime);
@@ -39,7 +39,9 @@ public class ClassicAnimation extends ExteriorAnimation {
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
-        MatSound sound = exterior.getTardis().getExterior().getType().getSound(state);
+        super.setupAnimation(state);
+
+        MatSound sound = exterior.tardis().getExterior().getType().getSound(state);
 
         timeLeft = sound.timeLeft();
         maxTime = sound.maxTime();

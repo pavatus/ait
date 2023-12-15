@@ -129,6 +129,7 @@ public class TardisUtil {
         return !TardisUtil.isServer();
     }
 
+    // fixme on singleplayer worlds this isnt correct
     public static boolean isServer() {
         return SERVER != null;
     }
@@ -253,6 +254,24 @@ public class TardisUtil {
     public static Tardis findTardisByPosition(AbsoluteBlockPos.Directed pos) {
         for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
             if (tardis.getDoor().getExteriorPos() != pos) continue;
+
+            return tardis;
+        }
+
+        return null;
+    }
+    public static Tardis findTardisByPosition(AbsoluteBlockPos pos) {
+        for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
+            if (!tardis.getDoor().getExteriorPos().equals(pos)) continue;
+
+            return tardis;
+        }
+
+        return null;
+    }
+    public static Tardis findTardisByPosition(BlockPos pos) {
+        for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
+            if (!tardis.getDoor().getExteriorPos().equals(pos)) continue;
 
             return tardis;
         }
