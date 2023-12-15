@@ -159,6 +159,7 @@ public class MonitorScreen extends TardisScreen {
     }
     protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX) {
         // testing @todo
+        if (this.getCurrentModel() == null) return;
         ExteriorModel model = this.getCurrentModel().createModel();
         MatrixStack stack = context.getMatrices();
         // fixme is bad
