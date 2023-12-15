@@ -1,6 +1,10 @@
 package mdteam.ait.core.entities;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -18,10 +22,13 @@ import net.minecraft.world.World;
 import mdteam.ait.tardis.Tardis;
 
 import java.util.Collections;
+import java.util.UUID;
 
-public abstract class BaseControlEntity extends MobEntity implements ILinkable {
+import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
-    private Tardis tardis;
+public abstract class BaseControlEntity extends MobEntity {
+
+    private UUID tardisId;
 
     public BaseControlEntity(EntityType<? extends MobEntity> type, World world) {
         super(type, world);
@@ -45,14 +52,37 @@ public abstract class BaseControlEntity extends MobEntity implements ILinkable {
         return Arm.LEFT;
     }
 
-    @Override
     public Tardis getTardis() {
-        return tardis;
+        if (this.tardisId == null) {
+            AITMod.LOGGER.warn("Door at " + this.getPos() + " is finding TARDIS!");
+            this.findTardis();
+        }
+
+        if (isClient()) {
+            return ClientTardisManager.getInstance().getLookup().get(this.tardisId);
+        }
+
+        return ServerTardisManager.getInstance().getTardis(this.tardisId);
+    }
+    private void findTardis() {
+        this.setTardis(TardisUtil.findTardisByInterior(this.getBlockPos()));
+    }
+    public void sync() {
+        if (isClient()) return;
+
+        ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
     }
 
-    @Override
     public void setTardis(Tardis tardis) {
-        this.tardis = tardis;
+        if (tardis == null) {
+            AITMod.LOGGER.error("Tardis was null in DoorBlockEntity at " + this.getPos());
+            return;
+        }
+
+        this.tardisId = tardis.getUuid();
+    }
+    public void setTardis(UUID uuid) {
+        this.tardisId = uuid;
     }
 
     @Override
