@@ -14,6 +14,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 
+@Deprecated // try to avoid using this until i finish exterior-rewrite plsplspls
 public enum ExteriorEnum {
     CAPSULE() {
         @Override
