@@ -149,8 +149,6 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
     private void findTardisFromPosition() { // should only be used if tardisId is null so we can hopefully refind the tardis
         Tardis found = findTardisByPosition(new AbsoluteBlockPos(this.getPos(),this.getWorld()));
 
-        System.out.println(found);
-
         if (found == null) return;
 
         this.tardisId = found.getUuid();
