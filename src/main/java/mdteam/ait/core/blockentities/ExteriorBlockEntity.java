@@ -175,7 +175,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
         AITMod.LOGGER.warn("Created new ANIMATION for " + this);
         this.animation.setupAnimation(this.tardis().getTravel().getState());
 
-        if (TardisUtil.isServer()) {
+        if (!this.getWorld().isClient()) {
             this.animation.tellClientsToSetup(this.tardis().getTravel().getState());
         }
     }

@@ -346,17 +346,19 @@ public class TardisTravel {
         this.forceLand(null);
     }
     public void runAnimations() {
-        ServerWorld level = (ServerWorld) this.position.getWorld();
+        ServerWorld level = (ServerWorld) this.getPosition().getWorld();
         level.getChunk(this.getPosition());
         BlockEntity entity = level.getBlockEntity(this.getPosition());
-        if (entity instanceof ExteriorBlockEntity) {
-            ((ExteriorBlockEntity) entity).getAnimation().setupAnimation(this.state);
+        if (entity instanceof ExteriorBlockEntity exterior) {
+            exterior.getAnimation().setupAnimation(this.state);
+            exterior.getAnimation().tellClientsToSetup(this.state);
         }
     }
     public void runAnimations(ExteriorBlockEntity exterior) {
         if (exterior.getAnimation() == null) return;
 
         exterior.getAnimation().setupAnimation(this.state);
+        exterior.getAnimation().tellClientsToSetup(this.state);
     }
 
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
