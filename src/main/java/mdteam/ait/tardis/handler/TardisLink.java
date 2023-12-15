@@ -14,10 +14,10 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
-public abstract class TardisHandler implements TardisTickable {
+public abstract class TardisLink implements TardisTickable {
     protected final UUID tardisId;
 
-    public TardisHandler(UUID tardisId) {
+    public TardisLink(UUID tardisId) {
         this.tardisId = tardisId;
     }
 

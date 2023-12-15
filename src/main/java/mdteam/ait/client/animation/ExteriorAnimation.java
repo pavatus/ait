@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier;
 import org.joml.Math;
 import mdteam.ait.tardis.TardisTravel;
 
-public abstract class ExteriorAnimation {
+public abstract class ExteriorAnimation { // hay una problema: no hay animacion excepto MAT
 
     protected float alpha = 1;
     protected ExteriorBlockEntity exterior;
@@ -27,7 +27,7 @@ public abstract class ExteriorAnimation {
     public ExteriorAnimation(ExteriorBlockEntity exterior) {
         this.exterior = exterior;
 
-        if(FabricLauncherBase.getLauncher().getEnvironmentType() == EnvType.CLIENT) {
+        if(exterior.getWorld().isClient()) {
             ClientPlayNetworking.registerGlobalReceiver(UPDATE,
                     (client, handler, buf, responseSender) -> {
                         int p = buf.readInt();
@@ -40,7 +40,7 @@ public abstract class ExteriorAnimation {
 
     // fixme bug that sometimes happens where server doesnt have animation
     protected void runAlphaChecks(TardisTravel.State state) {
-        if (this.exterior.getWorld().isClient)
+        if (this.exterior.getWorld().isClient())
             return;
 
         if (alpha <= 0f && state == TardisTravel.State.DEMAT) {
@@ -52,23 +52,24 @@ public abstract class ExteriorAnimation {
     }
 
     public float getAlpha() {
+        if (this.timeLeft < 0) {
+            this.setupAnimation(exterior.tardis().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+            return 1f;
+        }
+
         return Math.clamp(0.0F,1.0F,this.alpha);
     }
 
     public abstract void tick();
 
-    public void setupAnimation(TardisTravel.State state) {
-//        if () {
-//            tellClientsToSetup(state);
-//        }
-    }
+    public abstract void setupAnimation(TardisTravel.State state);
 
     public void setAlpha(float alpha) {
         this.alpha = Math.clamp(0.0F,1.0F, alpha);
     }
 
     public void tellClientsToSetup(TardisTravel.State state) {
-        if (TardisUtil.isClient()) return;
+        if (exterior.getWorld().isClient()) return;
 
         for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
             // System.out.println(player);
@@ -76,7 +77,7 @@ public abstract class ExteriorAnimation {
         }
     }
     public void tellClientToSetup(TardisTravel.State state, ServerPlayerEntity player) {
-        if (TardisUtil.isClient()) return;
+        if (exterior.getWorld().isClient()) return;
 
         PacketByteBuf data = PacketByteBufs.create();
         data.writeInt(state.ordinal());

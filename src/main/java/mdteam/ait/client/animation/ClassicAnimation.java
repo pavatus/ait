@@ -3,6 +3,7 @@ package mdteam.ait.client.animation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
+import net.minecraft.network.packet.s2c.play.EntitySetHeadYawS2CPacket;
 
 public class ClassicAnimation extends ExteriorAnimation {
     public ClassicAnimation(ExteriorBlockEntity exterior) {
@@ -16,20 +17,23 @@ public class ClassicAnimation extends ExteriorAnimation {
 
         TardisTravel.State state = exterior.tardis().getTravel().getState();
 
+        if (this.timeLeft < 0)
+            this.setupAnimation(exterior.tardis().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+
         if (state == TardisTravel.State.DEMAT) {
-            alpha = (float) timeLeft / (maxTime);
-            timeLeft--;
+            this.alpha = (float) this.timeLeft / (this.maxTime);
+            this.timeLeft--;
 
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.MAT) {
-            if (timeLeft < startTime) {
+            if (this.timeLeft <= this.startTime) {
                 // System.out.println(alpha + alphaChangeAmount);
-                this.setAlpha(1f - ((float) timeLeft / (startTime))); // fixme takes too long
+                this.setAlpha(1f - ((float) this.timeLeft / (this.startTime))); // fixme takes too long
             }
             else
                 this.setAlpha(0f);
 
-            timeLeft--;
+            this.timeLeft--;
 
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.LANDED/* && alpha != 1f*/) {
@@ -39,20 +43,18 @@ public class ClassicAnimation extends ExteriorAnimation {
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
-        super.setupAnimation(state);
-
         MatSound sound = exterior.tardis().getExterior().getType().getSound(state);
 
-        timeLeft = sound.timeLeft();
-        maxTime = sound.maxTime();
-        startTime = sound.startTime();
+        this.timeLeft = sound.timeLeft();
+        this.maxTime = sound.maxTime();
+        this.startTime = sound.startTime();
 
         if (state == TardisTravel.State.DEMAT) {
-            alpha = 1f;
+            this.alpha = 1f;
         } else if (state == TardisTravel.State.MAT){
-            alpha = 0f;
+            this.alpha = 0f;
         } else if (state == TardisTravel.State.LANDED) {
-            alpha = 1f;
+            this.alpha = 1f;
         }
     }
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
 
-public class WaypointHandler extends TardisHandler implements Iterable<AbsoluteBlockPos.Directed> { // todo eventually move into a positionhandler but thats too much work for rn
+public class WaypointHandler extends TardisLink implements Iterable<AbsoluteBlockPos.Directed> { // todo eventually move into a positionhandler but thats too much work for rn
     private ArrayList<AbsoluteBlockPos.Directed> data;
 
     public WaypointHandler(UUID tardisId, ArrayList<AbsoluteBlockPos.Directed> waypoints) {

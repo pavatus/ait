@@ -3,6 +3,7 @@ package mdteam.ait.core.blockentities;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
+import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -40,7 +41,9 @@ public class DoorBlockEntity extends BlockEntity {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
 
         // even though TardisDesktop links the door, we need to link it here as well to avoid desync
-        this.setTardis(TardisUtil.findTardisByInterior(pos));
+        Tardis found = TardisUtil.findTardisByPosition(pos);
+        if (found != null)
+            this.setTardis(found);
         if(this.getTardis() != null) {
             this.setDesktop(this.getDesktop());
             /*if(this.getDesktop() != null) {
@@ -140,6 +143,11 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     public void setTardis(Tardis tardis) {
+        if (tardis == null) {
+            AITMod.LOGGER.error("Tardis was null in DoorBlockEntity at " + this.getPos());
+            return;
+        }
+
         this.tardisId = tardis.getUuid();
         // force re-link a desktop if it's not null
         this.linkDesktop();
