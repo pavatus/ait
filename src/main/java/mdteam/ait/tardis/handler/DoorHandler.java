@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 
-public class DoorHandler extends TardisHandler {
+public class DoorHandler extends TardisLink {
     private boolean locked, left, right;
 
     public DoorHandler(UUID tardis) {
