@@ -34,7 +34,7 @@ import java.util.Objects;
 import static mdteam.ait.tardis.TardisTravel.State.MAT;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
-public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
+public class ExteriorBlockEntity extends BlockEntity implements ILinkable { // fixme copy tardishandler and refactor to use uuids instead, this is incredibly inefficient and the main cause of lag.
 
     private Tardis tardis;
     public final AnimationState ANIMATION_STATE = new AnimationState();
@@ -78,14 +78,14 @@ public class ExteriorBlockEntity extends BlockEntity implements ILinkable {
 
         if (this.tardis == null) return 5;
 
-        return this.tardis().getDoor().left();
+        return this.tardis().getDoor().isLeftOpen() ? 1.2f : 0;
     }
 
     public float getRightDoorRotation() {
 
         if (this.tardis == null) return 5;
 
-        return this.tardis().getDoor().right();
+        return this.tardis().getDoor().isRightOpen() ? 1.2f : 0;
     }
 
     @Override

@@ -76,12 +76,12 @@ public class DoorBlockEntity extends BlockEntity implements ILinkable {
     }
     public float getLeftDoorRotation() {
         if (this.tardis == null) return 5;
-        return this.tardis.getDoor().left();
+        return this.tardis.getDoor().isLeftOpen() ? 1.2f : 0;
     }
 
     public float getRightDoorRotation() {
         if (this.tardis == null) return 5;
-        return this.tardis.getDoor().right();
+        return this.tardis.getDoor().isRightOpen() ? 1.2f : 0;
     }
 
     public Direction getFacing() {

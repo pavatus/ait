@@ -15,27 +15,26 @@ import java.util.UUID;
 import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 
 public class DoorHandler extends TardisHandler {
-    private float left, right;
-    private boolean locked;
+    private boolean locked, left, right;
 
     public DoorHandler(UUID tardis) {
         super(tardis);
     }
 
-    public void setLeftRot(float var) {
+    public void setLeftRot(boolean var) {
         this.left = var;
 
         this.sync();
     }
-    public void setRightRot(float var) {
+    public void setRightRot(boolean var) {
         this.right = var;
 
         this.sync();
     }
-    public float right() {
+    public boolean isRightOpen() {
         return this.right;
     }
-    public float left() {
+    public boolean isLeftOpen() {
         return this.left;
     }
 
@@ -47,8 +46,8 @@ public class DoorHandler extends TardisHandler {
     public void setLockedAndDoors(boolean var) {
         this.setLocked(var);
 
-        this.setLeftRot(0);
-        this.setRightRot(0);
+        this.setLeftRot(false);
+        this.setRightRot(false);
     }
     public boolean locked() {
         return this.locked;
@@ -58,19 +57,12 @@ public class DoorHandler extends TardisHandler {
         return tardis().getExterior().getType().isDoubleDoor();
     }
 
-    public boolean isRightOpen() {
-        return this.right() == 1.2f;
-    }
-    public boolean isLeftOpen() {
-        return this.left() == 1.2f;
-    }
-
     public boolean isOpen() {
         if (isDoubleDoor()) {
-            return this.isRightOpen() || this.isLeftOpen();
+            return this.right || this.left;
         }
 
-        return this.left() == 1.2f;
+        return this.isLeftOpen();
     }
     public boolean isClosed() {
         return !isOpen();
@@ -79,15 +71,15 @@ public class DoorHandler extends TardisHandler {
         return this.isRightOpen() && this.isLeftOpen();
     }
     public void openDoors() {
-        setLeftRot(1.2f);
+        setLeftRot(true);
 
         if (isDoubleDoor()) {
-            setRightRot(1.2f);
+            setRightRot(true);
         }
     }
     public void closeDoors() {
-        setLeftRot(0);
-        setRightRot(0);
+        setLeftRot(false);
+        setRightRot(false);
     }
 
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
@@ -118,8 +110,8 @@ public class DoorHandler extends TardisHandler {
             } else {
                 world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
                 world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-                door.setRightRot(door.left() == 0 ? 0 : 1.2f);
-                door.setLeftRot(1.2f);
+                door.setRightRot(door.isLeftOpen());
+                door.setLeftRot(true);
             }
             /*if(exterior != null)
                 if (exterior.getRightDoorRotation() == 1.2f && exterior.getLeftDoorRotation() == 1.2f) {
@@ -132,7 +124,7 @@ public class DoorHandler extends TardisHandler {
         } else {
             world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
             world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-            door.setLeftRot(door.left() == 0 ? 1.2f : 0);
+            door.setLeftRot(!door.isLeftOpen());
             /*if (exterior != null) {
                 exterior.setLeftDoorRot(door.getLeftDoorRotation() == 0 ? 1.2f : 0);
             }*/
@@ -156,8 +148,8 @@ public class DoorHandler extends TardisHandler {
         if (door == null)
             return false; // could have a case where the door is null but the thing above works fine meaning this false is wrong fixme
 
-        door.setLeftRot(0);
-        door.setRightRot(0);
+        door.setLeftRot(false);
+        door.setRightRot(false);
 
         if (!forced) {
             PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, locked);
