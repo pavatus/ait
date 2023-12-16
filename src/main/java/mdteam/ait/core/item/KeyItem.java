@@ -124,11 +124,13 @@ public class KeyItem extends Item {
             }
 
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3)); // this kinda stops it from being spammed but still this should kinda be toggleable fixme
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 6 * 20, 3)); // funny
 
             player.getItemCooldownManager().set(stack.getItem(), 60 * 20);
 
             PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HAIL_MARY, false); // should this just set the handbrake on instead?
             PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, false); // so you get SUCKED up
+
             player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f); // like a sound to show its been called
             player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
         }
