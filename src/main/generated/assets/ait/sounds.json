@@ -9,6 +9,16 @@
       "ait:controls/handbrake_pull"
     ]
   },
+  "controls/knock": {
+    "sounds": [
+      "ait:controls/knock"
+    ]
+  },
+  "controls/snap": {
+    "sounds": [
+      "ait:controls/snap"
+    ]
+  },
   "secret_music": {
     "sounds": [
       "ait:secret_music"

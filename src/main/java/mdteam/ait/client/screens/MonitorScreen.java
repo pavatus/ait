@@ -187,7 +187,7 @@ public class MonitorScreen extends TardisScreen {
             MatrixStack stack = context.getMatrices();
             // fixme is bad
             stack.push();
-            stack.translate(x, this.getCurrentModel() != SHELTER ? this.getCurrentModel() == POLICE_BOX ? y + 8 : y : y + 23, 100f);
+            stack.translate(x, this.getCurrentModel() == POLICE_BOX ? y + 8 : y, 100f);
             if (this.getCurrentModel() == POLICE_BOX) stack.scale(-10, 10, 10);
             else if (this.getCurrentModel() == BOOTH) stack.scale(-scale, scale, scale);
             else stack.scale(-scale, scale, scale);

@@ -63,63 +63,6 @@ public enum ExteriorEnum {
             return SoundEvents.BLOCK_IRON_DOOR_OPEN;
         }
     },
-    SHELTER() {
-        @Override
-        public MatSound getSound(TardisTravel.State state) {
-            return switch (state) {
-                case LANDED, FLIGHT, CRASH -> AITSounds.LANDED_ANIM;
-                case DEMAT -> AITSounds.EIGHT_DEMAT_ANIM;
-                case MAT -> AITSounds.EIGHT_MAT_ANIM;
-            };
-        }
-
-        @Override
-        public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
-            return new ClassicAnimation(entity);
-        }
-
-        @Override
-        public boolean isDoubleDoor() {
-            return false;
-        }
-
-        @Override
-        public boolean hasEmission() {
-            return true;
-        }
-
-        @Override
-        @Environment(value = EnvType.CLIENT)
-        public ExteriorModel createModel() {
-            return new FalloutExteriorModel(FalloutExteriorModel.getTexturedModelData().createModel());
-        }
-
-        @Override
-        @Environment(value = EnvType.CLIENT)
-        public DoorModel createDoorModel() {
-            return new FalloutDoorModel(FalloutDoorModel.getTexturedModelData().createModel());
-        }
-
-        @Override
-        public Class<? extends ExteriorModel> getModelClass() {
-            return FalloutExteriorModel.class;
-        }
-
-        @Override
-        public Class<? extends DoorModel> getDoorClass() {
-            return FalloutDoorModel.class;
-        }
-
-        @Override
-        public SoundEvent getDoorCloseSound() {
-            return SoundEvents.BLOCK_IRON_DOOR_CLOSE;
-        }
-
-        @Override
-        public SoundEvent getDoorOpenSound() {
-            return SoundEvents.BLOCK_IRON_DOOR_OPEN;
-        }
-    },
     POLICE_BOX() {
         @Override
         public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
