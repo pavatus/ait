@@ -27,6 +27,7 @@ public abstract class ExteriorAnimation { // hay una problema: no hay animacion 
     public ExteriorAnimation(ExteriorBlockEntity exterior) {
         this.exterior = exterior;
 
+        if (!exterior.hasWorld()) return;
         if(exterior.getWorld().isClient()) {
             ClientPlayNetworking.registerGlobalReceiver(UPDATE,
                     (client, handler, buf, responseSender) -> {
