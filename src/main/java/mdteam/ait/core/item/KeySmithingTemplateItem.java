@@ -15,9 +15,13 @@ public class KeySmithingTemplateItem extends Item {
 
     private static final Formatting TITLE_FORMATTING = Formatting.GRAY;
     private static final Formatting DESCRIPTION_FORMATTING = Formatting.BLUE;
+    private final String KEY;
+    private final String INGREDIENT;
 
-    public KeySmithingTemplateItem(Settings settings) {
+    public KeySmithingTemplateItem(Settings settings, String key, String ingredient) {
         super(settings);
+        this.KEY = key;
+        this.INGREDIENT = ingredient;
     }
 
     @Override
@@ -26,8 +30,8 @@ public class KeySmithingTemplateItem extends Item {
         tooltip.add(Text.literal("Upgrade").formatted(TITLE_FORMATTING));
         tooltip.add(ScreenTexts.EMPTY);
         tooltip.add(Text.literal("Key type:").formatted(TITLE_FORMATTING));
-        tooltip.add(ScreenTexts.space().append(Text.literal("Gold Key")).formatted(DESCRIPTION_FORMATTING));
+        tooltip.add(ScreenTexts.space().append(Text.literal(this.KEY)).formatted(DESCRIPTION_FORMATTING));
         tooltip.add(Text.literal("Material:").formatted(TITLE_FORMATTING));
-        tooltip.add(ScreenTexts.space().append(Text.literal("Netherite Ingot")).formatted(DESCRIPTION_FORMATTING));
+        tooltip.add(ScreenTexts.space().append(Text.literal(this.INGREDIENT)).formatted(DESCRIPTION_FORMATTING));
     }
 }

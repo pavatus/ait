@@ -12,12 +12,6 @@ public class RefuelerControl extends Control {
         super("refueler");
     }
 
-    // todo
-    @Override
-    public boolean runClient(Tardis tardis, ClientPlayerEntity player, ClientWorld world) {
-        return false;
-    }
-
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         return false;

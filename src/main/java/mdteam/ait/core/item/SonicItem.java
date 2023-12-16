@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 
@@ -190,7 +191,7 @@ public class SonicItem extends Item {
 
         if (!nbt.contains("tardis")) return null;
 
-        return ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+        return ServerTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")));
     }
 
     public static void link(Tardis tardis, ItemStack item) {
@@ -199,7 +200,7 @@ public class SonicItem extends Item {
         if (tardis == null) return;
 
         if (!nbt.contains("tardis")) { // fixme dont think you can relink to new tardis
-            nbt.putUuid("tardis", tardis.getUuid());
+            nbt.putString("tardis", tardis.getUuid().toString());
             nbt.putInt(MODE_KEY, 0);
             nbt.putBoolean(INACTIVE, true);
         }
@@ -256,7 +257,7 @@ public class SonicItem extends Item {
         }
 
         NbtCompound tag = stack.getOrCreateNbt();
-        String text = tag.contains("tardis") ? tag.getUuid("tardis").toString().substring(0, 8)
+        String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
                 : "None";
 
         if(tag.contains("tardis")) { // Adding the sonics mode

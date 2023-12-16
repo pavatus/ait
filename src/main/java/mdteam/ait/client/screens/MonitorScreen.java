@@ -37,10 +37,7 @@ public class MonitorScreen extends TardisScreen {
     int backgroundWidth = 236;
     public MonitorScreen(UUID tardis) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
-        if(tardis() != null) {
-            this.currentModel = updateTardis().getExterior().getType();
-            this.currentVariant = updateTardis().getExterior().getVariant();
-        }
+        updateTardis();
     }
     @Override
     public boolean shouldPause() {
@@ -56,13 +53,13 @@ public class MonitorScreen extends TardisScreen {
         this.createButtons();
     }
     public ExteriorEnum getCurrentModel() {
-        return currentModel;
+        return currentModel == null ? tardis().getExterior().getType() : currentModel;
     }
     public void setCurrentModel(ExteriorEnum currentModel) {
         this.currentModel = currentModel;
     }
     public VariantEnum getCurrentVariant() {
-        return currentVariant;
+        return currentVariant == null ? tardis().getExterior().getVariant() : currentVariant;
     }
     public void setCurrentVariant(VariantEnum currentVariant) {
         this.currentVariant = currentVariant;
@@ -99,17 +96,26 @@ public class MonitorScreen extends TardisScreen {
         });
     }
     public void sendExteriorPacket() {
-        TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel() != tardis().getExterior().getType() ? this.getCurrentModel().ordinal() : tardis().getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(), this.getCurrentVariant() != tardis().getExterior().getVariant());
+        if (tardis() != null) {
+            /*TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel() != tardis().getExterior().getType() ?
+                    this.getCurrentModel().ordinal() : tardis().getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(),
+                    this.getCurrentVariant() != tardis().getExterior().getVariant());*/
+            if(this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant() != tardis().getExterior().getVariant()) {
+                TardisUtil.changeExteriorWithScreen(this.tardisId,
+                                this.getCurrentModel().ordinal(), this.getCurrentVariant().ordinal(),
+                        this.getCurrentVariant() != tardis().getExterior().getVariant());
+            }
+        }
     }
     public void whichDirectionExterior(boolean direction) {
         ExteriorEnum[] values = ExteriorEnum.values();
-        int currentIndex = this.getCurrentModel().ordinal();
+        int currentIndex = this.getCurrentModel() == null ? 0 : this.getCurrentModel().ordinal();
         int newIndex = (currentIndex + (direction ? 1 : -1) + values.length) % values.length;
         this.setCurrentModel(values[newIndex]);
     }
     public void whichDirectionVariant(boolean direction) {
         VariantEnum[] values = VariantEnum.values();
-        int currentIndex = this.getCurrentVariant().ordinal();
+        int currentIndex = this.getCurrentVariant() == null ? 0 : this.getCurrentVariant().ordinal();
         int newIndex = (currentIndex + (direction ? 1 : -1) + values.length) % values.length;
         this.setCurrentVariant(values[newIndex]);
     }
@@ -159,21 +165,23 @@ public class MonitorScreen extends TardisScreen {
     }
     protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX) {
         // testing @todo
-        if (this.getCurrentModel() == null) return;
-        ExteriorModel model = this.getCurrentModel().createModel();
-        MatrixStack stack = context.getMatrices();
-        // fixme is bad
-        stack.push();
-        stack.translate(x,this.getCurrentModel() != SHELTER ? this.getCurrentModel() == POLICE_BOX ? y + 8 : y : y + 23,100f);
-        if(this.getCurrentModel() == POLICE_BOX) stack.scale(-10, 10, 10);
-        else if(this.getCurrentModel() == BOOTH) stack.scale(-scale, scale, scale);
-        else stack.scale(-scale, scale, scale);
-        //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
-        stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(mouseX));
-        DiffuseLighting.disableGuiDepthLighting();
-        model.render(stack,context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(model.getVariousTextures(this.getCurrentModel(), this.getCurrentVariant()))), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1,1,1,1);
-        DiffuseLighting.enableGuiDepthLighting();
-        stack.pop();
+        if (tardis() != null) {
+            if (this.getCurrentModel() == null || this.getCurrentVariant() == null) return;
+            ExteriorModel model = this.getCurrentModel().createModel();
+            MatrixStack stack = context.getMatrices();
+            // fixme is bad
+            stack.push();
+            stack.translate(x, this.getCurrentModel() != SHELTER ? this.getCurrentModel() == POLICE_BOX ? y + 8 : y : y + 23, 100f);
+            if (this.getCurrentModel() == POLICE_BOX) stack.scale(-10, 10, 10);
+            else if (this.getCurrentModel() == BOOTH) stack.scale(-scale, scale, scale);
+            else stack.scale(-scale, scale, scale);
+            //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
+            stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(mouseX));
+            DiffuseLighting.disableGuiDepthLighting();
+            model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(model.getVariousTextures(this.getCurrentModel(), this.getCurrentVariant()))), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+            DiffuseLighting.enableGuiDepthLighting();
+            stack.pop();
+        }
     }
     @Override
     public void renderBackground(DrawContext context) {
@@ -182,8 +190,8 @@ public class MonitorScreen extends TardisScreen {
     protected void drawDestinationText(DrawContext context) {
         int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
         int j = ((this.width - this.backgroundWidth) / 2);
-        if (this.tardis() == null) return;
-        AbsoluteBlockPos.Directed abpd = this.updateTardis().getTravel().getDestination();
+        if (tardis() == null) return;
+        AbsoluteBlockPos.Directed abpd = tardis().getTravel().getDestination();
         String destinationText = "> " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
         String dimensionText = "> " + convertWorldValueToModified(abpd.getDimension().getValue());
         String directionText = "> " + abpd.getDirection().toString().toUpperCase();

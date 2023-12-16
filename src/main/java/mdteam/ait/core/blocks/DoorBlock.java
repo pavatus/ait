@@ -14,18 +14,22 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+import java.util.Optional;
+
 public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
-    public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 14.0, 16.0, 32.0, 16.0);
-    public static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 2.0, 32.0, 16.0);
-    public static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 2.0);
-    public static final VoxelShape WEST_SHAPE = Block.createCuboidShape(14.0, 0.0, 0.0, 16.0, 32.0, 16.0);
+    public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 14.1, 16.0, 32.0, 16.0);
+    public static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 1.9, 32.0, 16.0);
+    public static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 1.9);
+    public static final VoxelShape WEST_SHAPE = Block.createCuboidShape(14.1, 0.0, 0.0, 16.0, 32.0, 16.0);
 
     public DoorBlock(Settings settings) {
         super(settings);
@@ -33,17 +37,6 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return switch (state.get(FACING)) {
-            case NORTH -> NORTH_SHAPE;
-            case EAST -> EAST_SHAPE;
-            case SOUTH -> SOUTH_SHAPE;
-            case WEST -> WEST_SHAPE;
-            default -> throw new RuntimeException("Invalid facing direction in " + this);
-        };
-    }
-
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return switch (state.get(FACING)) {
             case NORTH -> NORTH_SHAPE;
             case EAST -> EAST_SHAPE;
@@ -72,8 +65,10 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
             return;
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof DoorBlockEntity door)
-            door.onEntityCollision(entity);
+        //if(Objects.equals(this.getOutlineShape(state, world, pos, ShapeContext.of(entity)).getClosestPointTo(entity.getPos()), Optional.of(new Vec3d(0, 0, 0)))) {
+            if (blockEntity instanceof DoorBlockEntity door)
+                door.onEntityCollision(entity);
+        //}
     }
 
     @Nullable

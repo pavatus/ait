@@ -22,9 +22,13 @@ import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
@@ -55,23 +59,26 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
     @Override
     public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-
-        if (this.getTardis() != null) {
-            nbt.putUuid("tardis", this.tardisId);
+        if (this.getTardis() == null) {
+            AITMod.LOGGER.error("this.getTardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
+        super.writeNbt(nbt);
+        nbt.putString("tardis", this.tardisId.toString());
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
-
-        if (nbt.contains("tardis")) {
-            this.setTardis(nbt.getUuid("tardis"));
-        }
-
         super.readNbt(nbt);
-
+        if (nbt.contains("tardis")) {
+            this.setTardis(UUID.fromString(nbt.getString("tardis")));
+        }
         spawnControls();
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
     public Tardis getTardis() {

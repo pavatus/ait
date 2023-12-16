@@ -17,11 +17,6 @@ public class TelepathicControl extends Control {
     }
 
     @Override
-    public boolean runClient(Tardis tardis, ClientPlayerEntity player, ClientWorld world) {
-        return false;
-    }
-
-    @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         BlockPos destinationPos = tardis.getTravel().getDestination();
         ServerWorld newWorld = (ServerWorld) tardis.getTravel().getDestination().getWorld();

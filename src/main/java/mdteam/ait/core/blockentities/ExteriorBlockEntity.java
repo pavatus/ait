@@ -18,11 +18,16 @@ import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -32,6 +37,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.plaf.synth.SynthTableUI;
 import java.util.Objects;
@@ -91,28 +97,28 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
         return this.tardis().getDoor().isRightOpen() ? 1.2f : 0;
     }
 
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
     @Override
     public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-
-        if (this.tardis() != null) {
-            nbt.putUuid("tardis", this.tardisId);
+        if (this.tardis() == null) {
+            AITMod.LOGGER.error("this.tardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
-
+        super.writeNbt(nbt);
+        nbt.putString("tardis", this.tardisId.toString());
         nbt.putFloat("alpha", this.getAlpha());
-
-        /*nbt.putFloat("leftDoor", this.getLeftDoorRotation());
-        nbt.putFloat("rightDoor", this.getRightDoorRotation());*/
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-
         if (nbt.contains("tardis")) {
-            this.tardisId = nbt.getUuid("tardis");
+            this.tardisId = UUID.fromString(nbt.getString("tardis"));
         }
-
         if(this.getAnimation() != null)
             this.getAnimation().setAlpha(nbt.getFloat("alpha"));
     }
@@ -175,8 +181,10 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
         AITMod.LOGGER.warn("Created new ANIMATION for " + this);
         this.animation.setupAnimation(this.tardis().getTravel().getState());
 
-        if (!this.getWorld().isClient()) {
-            this.animation.tellClientsToSetup(this.tardis().getTravel().getState());
+        if(this.getWorld() != null) {
+            if (!this.getWorld().isClient()) {
+                this.animation.tellClientsToSetup(this.tardis().getTravel().getState());
+            }
         }
     }
 

@@ -21,11 +21,6 @@ public class DimensionControl extends Control {
     }
 
     @Override
-    public boolean runClient(Tardis tardis, ClientPlayerEntity player, ClientWorld world) {
-        return true;
-    }
-
-    @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         TardisTravel travel = tardis.getTravel();
         AbsoluteBlockPos.Directed dest = travel.getDestination();

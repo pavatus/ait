@@ -18,6 +18,10 @@ public abstract class TardisScreen extends Screen {
         return ClientTardisManager.getInstance().getLookup().get(tardisId);
     }
 
+    protected Tardis getFromUUID(UUID tardisid) {
+        return ClientTardisManager.getInstance().getLookup().get(tardisid);
+    }
+
     protected Tardis updateTardis() {
         ClientTardisManager.getInstance().ask(this.tardisId);
         return tardis();

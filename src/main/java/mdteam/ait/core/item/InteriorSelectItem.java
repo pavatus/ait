@@ -72,7 +72,8 @@ public class InteriorSelectItem extends Item {
                 }
 
                 consoleBlock.killControls();
-                consoleBlock.markRemoved();
+                world.removeBlock(context.getBlockPos(), false);
+                world.removeBlockEntity(context.getBlockPos());
             }
         }
 

@@ -1,6 +1,7 @@
 package mdteam.ait.core.item;
 
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.gui.screen.Screen;
@@ -23,6 +24,7 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 
 import java.util.List;
+import java.util.UUID;
 
 import static mdteam.ait.tardis.TardisTravel.State.*;
 
@@ -50,7 +52,7 @@ public class RemoteItem extends Item {
                 if (consoleBlock.getTardis() == null)
                     return ActionResult.FAIL;
 
-                nbt.putUuid("tardis", consoleBlock.getTardis().getUuid());
+                nbt.putString("tardis", consoleBlock.getTardis().getUuid().toString());
                 return ActionResult.SUCCESS;
             }
         }
@@ -59,7 +61,7 @@ public class RemoteItem extends Item {
         if (!nbt.contains("tardis"))
             return ActionResult.FAIL;
 
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+        Tardis tardis = ServerTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")));
         //System.out.println(ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis")));
 
         if (tardis != null) {
@@ -76,10 +78,13 @@ public class RemoteItem extends Item {
                 // travel.toggleHandbrake();
 
                 //FIXME: this is not how you do it! (cope)
-                if (travel.getState() == LANDED)
+                if (travel.getState() == LANDED) {
+                    PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HANDBRAKE, false);
                     travel.dematerialise(true);
-                if (travel.getState() == FLIGHT)
+                }
+                if (travel.getState() == FLIGHT) {
                     travel.materialise();
+                }
 
                 return ActionResult.SUCCESS;
             } else {
@@ -100,7 +105,7 @@ public class RemoteItem extends Item {
         }
 
         NbtCompound tag = stack.getOrCreateNbt();
-        String text = tag.contains("tardis") ? tag.getUuid("tardis").toString().substring(0, 8)
+        String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
                 : "Remote does not identify with any TARDIS";
 
         tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));

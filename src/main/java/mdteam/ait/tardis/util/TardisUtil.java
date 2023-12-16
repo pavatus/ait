@@ -135,9 +135,13 @@ public class TardisUtil {
     }
 
     public static World getTardisDimension() {
-        if (isClient()) if(MinecraftClient.getInstance().world != null)
-            if(MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
-                return MinecraftClient.getInstance().world;
+        /*if (isClient()) {
+            if (MinecraftClient.getInstance().world != null) {
+                if (MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
+                    return MinecraftClient.getInstance().world;
+                }
+            }
+        }*/
         return TARDIS_DIMENSION;
     }
 
@@ -238,8 +242,10 @@ public class TardisUtil {
 
     private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
         Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
-        SERVER.execute(() -> {WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
-            player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player)); });
+        SERVER.execute(() -> {
+            WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
+            player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+        });
     }
 
     public static Tardis findTardisByInterior(BlockPos pos) {

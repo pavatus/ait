@@ -15,11 +15,6 @@ public class ThrottleControl extends Control {
     }
 
     @Override
-    public boolean runClient(Tardis tardis, ClientPlayerEntity player, ClientWorld world) {
-        return true;
-    }
-
-    @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         // fixme this is not right, but its okay for temporary. also see remoteitem where this is done again
         TardisTravel travel = tardis.getTravel();

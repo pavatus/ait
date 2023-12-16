@@ -6,9 +6,14 @@ import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import mdteam.ait.core.*;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.blocks.ConsoleBlock;
+import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +35,14 @@ public class AITMod implements ModInitializer {
 		FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
 		AIT_ITEM_GROUP.initialize();
+		PlayerBlockBreakEvents.BEFORE.register(((world, player, pos, state, blockEntity) -> {
+			if(!world.isClient()) {
+				if (world.getRegistryKey().getRegistry() == AITDimensions.TARDIS_DIM_WORLD.getRegistry()) {
+					return !(world.getBlockEntity(pos) instanceof ConsoleBlockEntity);
+				}
+			}
+			return !(state.getBlock() instanceof ConsoleBlock || state.getBlock() instanceof ExteriorBlock);
+		}));
 		TardisUtil.init();
 		TardisManager.getInstance();
 		TardisManager.init();

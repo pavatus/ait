@@ -172,17 +172,8 @@ public class ConsoleControlEntity extends BaseControlEntity {
             }*/
 
             return this.control.runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server
-        } else {
-            if(this.getTardis() != null) {
-                System.out.println(this.getCustomName());
-                for (ControlTypes control : this.getTardis().getConsole().getType().getControlTypesList()) {
-                    if (control.getControl().getId().matches("monitor")) {
-                        return control.getControl().runClient(this.getTardis(), (ClientPlayerEntity) player, (ClientWorld) world);
-                    }
-                }
-            }
-            return false;
         }
+        return false;
     }
 
     // clearly loqor has trust issues with running this so i do too so im overwriting it to do what he did fixme pls

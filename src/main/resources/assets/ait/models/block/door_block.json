@@ -1,5 +1,5 @@
 {
   "textures": {
-    "particle": "ait:block/door_block"
+    "particle": "minecraft:item/barrier"
   }
 }

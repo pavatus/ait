@@ -16,6 +16,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -27,6 +30,7 @@ import net.minecraft.world.World;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisManager;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -62,7 +66,7 @@ public class DoorBlockEntity extends BlockEntity {
             if(!tag.contains("tardis")) {
                 return;
             }
-            if(Objects.equals(this.getTardis().getUuid().toString(), tag.getUuid("tardis").toString())) {
+            if(Objects.equals(this.getTardis().getUuid().toString(), tag.getString("tardis"))) {
                 DoorHandler.toggleLock(this.getTardis(), (ServerWorld) world, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
@@ -96,19 +100,26 @@ public class DoorBlockEntity extends BlockEntity {
         return this.getCachedState().get(HorizontalDirectionalBlock.FACING);
     }
 
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
     @Override
     public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        if(this.getTardis() != null) {
-            nbt.putUuid("tardis", this.getTardis().getUuid());
+        if (this.getTardis() == null) {
+            AITMod.LOGGER.error("this.getTardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
+        super.writeNbt(nbt);
+        nbt.putString("tardis", this.getTardis().getUuid().toString());
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         if(nbt.contains("tardis")) {
-            this.setTardis(nbt.getUuid("tardis"));
+            this.setTardis(UUID.fromString(nbt.getString("tardis")));
         }
     }
 

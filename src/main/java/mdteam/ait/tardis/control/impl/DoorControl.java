@@ -16,11 +16,6 @@ public class DoorControl extends Control {
     }
 
     @Override
-    public boolean runClient(Tardis tardis, ClientPlayerEntity player, ClientWorld world) {
-        return true;
-    }
-
-    @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         return (!player.isSneaking()) ? useDoor(tardis, world, tardis.getDesktop().getConsolePos(), player) : toggleLock(tardis,world,player);
     }

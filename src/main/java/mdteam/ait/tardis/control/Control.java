@@ -20,10 +20,6 @@ public class Control {
     public void setId(String id) {
         this.id = id;
     }
-
-    public boolean runClient(Tardis tardis, ClientPlayerEntity player, ClientWorld world) {
-        return false;
-    };
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         return false;
     }

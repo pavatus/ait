@@ -162,7 +162,7 @@ public class AITModClient implements ClientModInitializer {
 		keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 				"key." + AITMod.MOD_ID + ".open",
 				InputUtil.Type.KEYSYM,
-				GLFW.GLFW_KEY_B,
+				GLFW.GLFW_KEY_V,
 				"category." + AITMod.MOD_ID + ".snap"
 		));
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -174,7 +174,7 @@ public class AITModClient implements ClientModInitializer {
 					if (!tag.contains("tardis")) {
 						return;
 					}
-					TardisUtil.snapToOpenDoors(tag.getUuid("tardis"));
+					TardisUtil.snapToOpenDoors(UUID.fromString(tag.getString("tardis")));
 				}
 			}
 		});

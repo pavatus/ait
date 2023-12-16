@@ -15,11 +15,6 @@ public class LandTypeControl extends Control {
     }
 
     @Override
-    public boolean runClient(Tardis tardis, ClientPlayerEntity player, ClientWorld world) {
-        return false;
-    }
-
-    @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN, !PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN));
 

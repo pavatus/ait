@@ -13,15 +13,10 @@ public class MonitorControl extends Control {
         super("monitor");
     }
 
-    // todo as there is no monitors yet and i dont know how loqor wants it, so loqor will need to do this.
-    @Override
-    public boolean runClient(Tardis tardis, ClientPlayerEntity player, ClientWorld world) {
-        return true;
-    }
-
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        AITModClient.openScreen(player, 0, tardis.getUuid());
+        if(tardis != null)
+            AITModClient.openScreen(player, 0, tardis.getUuid());
         return true;
     }
 }

@@ -58,7 +58,7 @@ public class KeyItem extends Item {
     private void link(ItemStack stack,UUID uuid) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        nbt.putUuid("tardis", uuid);
+        nbt.putString("tardis", uuid.toString());
     }
 
     public static boolean isKeyInInventory(PlayerEntity player) {
@@ -86,7 +86,7 @@ public class KeyItem extends Item {
 
         if (!(nbt.contains("tardis"))) return null;
 
-        UUID uuid = nbt.getUuid("tardis");
+        UUID uuid = UUID.fromString(nbt.getString("tardis"));
 
         if (TardisUtil.isClient()) {
             return ClientTardisManager.getInstance().getLookup().get(uuid);
@@ -167,7 +167,7 @@ public class KeyItem extends Item {
         }
 
         NbtCompound tag = stack.getOrCreateNbt();
-        String text = tag.contains("tardis") ? tag.getUuid("tardis").toString().substring(0, 8)
+        String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
                 : "Key does not identify with any TARDIS";
 
         tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
