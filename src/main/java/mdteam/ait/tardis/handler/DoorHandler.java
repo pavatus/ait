@@ -70,6 +70,9 @@ public class DoorHandler extends TardisLink {
     public boolean isBothOpen() {
         return this.isRightOpen() && this.isLeftOpen();
     }
+    public boolean isBothClosed() {
+        return !isBothOpen();
+    }
     public void openDoors() {
         setLeftRot(true);
 
@@ -102,6 +105,7 @@ public class DoorHandler extends TardisLink {
         if (door == null) return false; // how would that happen anyway
 
         // fixme this is loqors code so there might be a better way
+        // PLEASE FIXME ALL THIS CODE IS SO JANK I CANT
         if (tardis.getExterior().getType().isDoubleDoor()) {
             if (door.isBothOpen()) {
                 world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorCloseSound(), SoundCategory.BLOCKS, 0.6F, 1F);
@@ -110,8 +114,15 @@ public class DoorHandler extends TardisLink {
             } else {
                 world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
                 world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-                door.setRightRot(door.isLeftOpen());
-                door.setLeftRot(true);
+
+                if (door.isLeftOpen() && player.isSneaking()) {
+                    door.closeDoors();
+                } else if (door.isBothClosed() && player.isSneaking()) {
+                    door.openDoors();
+                } else {
+                    door.setRightRot(door.isLeftOpen());
+                    door.setLeftRot(true);
+                }
             }
             /*if(exterior != null)
                 if (exterior.getRightDoorRotation() == 1.2f && exterior.getLeftDoorRotation() == 1.2f) {
