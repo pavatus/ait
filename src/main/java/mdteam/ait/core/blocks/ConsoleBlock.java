@@ -68,4 +68,13 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
         }
         super.onPlaced(world, pos, state, placer, itemStack);
     }
+
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        super.onBroken(world, pos, state);
+
+        if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity console) {
+            console.onBroken();
+        }
+    }
 }

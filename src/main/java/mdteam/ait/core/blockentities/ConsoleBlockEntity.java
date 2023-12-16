@@ -156,6 +156,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     }
 
     public void onBroken() {
+        this.killControls();
     }
 
     public void killControls() {
