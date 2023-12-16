@@ -48,7 +48,7 @@ public class DoorBlockEntity extends BlockEntity {
         Tardis found = TardisUtil.findTardisByPosition(pos);
         if (found != null)
             this.setTardis(found);
-        if(this.getTardis() != null) {
+        if (this.getTardis() != null) {
             this.setDesktop(this.getDesktop());
             /*if(this.getDesktop() != null) {
                 this.getDesktop().setInteriorDoorPos(new AbsoluteBlockPos.Directed(pos, TardisUtil.getTardisDimension(), this.getFacing()));
@@ -58,15 +58,15 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
-        if(player == null)
+        if (player == null)
             return;
-        if(player.getMainHandStack().getItem() instanceof KeyItem) {
+        if (player.getMainHandStack().getItem() instanceof KeyItem) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
-            if(!tag.contains("tardis")) {
+            if (!tag.contains("tardis")) {
                 return;
             }
-            if(Objects.equals(this.getTardis().getUuid().toString(), tag.getString("tardis"))) {
+            if (Objects.equals(this.getTardis().getUuid().toString(), tag.getString("tardis"))) {
                 DoorHandler.toggleLock(this.getTardis(), (ServerWorld) world, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
@@ -81,11 +81,12 @@ public class DoorBlockEntity extends BlockEntity {
         ExteriorBlockEntity exterior = TardisUtil.getExterior(this.getTardis());
         if (exterior != null) {
             exteriorPos.getChunk();
-            if(!world.isClient())
+            if (!world.isClient())
                 exterior.sync();
         }
         this.sync();
     }
+
     public float getLeftDoorRotation() {
         if (this.getTardis() == null) return 5;
         return this.getTardis().getDoor().isLeftOpen() ? 1.2f : 0;
@@ -118,7 +119,7 @@ public class DoorBlockEntity extends BlockEntity {
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        if(nbt.contains("tardis")) {
+        if (nbt.contains("tardis")) {
             this.setTardis(UUID.fromString(nbt.getString("tardis")));
         }
     }
@@ -127,7 +128,7 @@ public class DoorBlockEntity extends BlockEntity {
         if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
             return;
         if (this.getTardis() != null && this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
-            if(!this.getTardis().getLockedTardis())
+            if (!this.getTardis().getLockedTardis())
                 TardisUtil.teleportOutside(this.getTardis(), player);
         }
     }
@@ -144,9 +145,11 @@ public class DoorBlockEntity extends BlockEntity {
 
         return ServerTardisManager.getInstance().getTardis(this.tardisId);
     }
+
     private void findTardis() {
         this.setTardis(TardisUtil.findTardisByInterior(pos));
     }
+
     public void sync() {
         if (isClient()) return;
 
@@ -163,6 +166,7 @@ public class DoorBlockEntity extends BlockEntity {
         // force re-link a desktop if it's not null
         this.linkDesktop();
     }
+
     public void setTardis(UUID uuid) {
         this.tardisId = uuid;
 
@@ -176,7 +180,9 @@ public class DoorBlockEntity extends BlockEntity {
             this.setDesktop(this.getDesktop());
     }
 
-    public TardisDesktop getDesktop() { return this.getTardis().getDesktop(); }
+    public TardisDesktop getDesktop() {
+        return this.getTardis().getDesktop();
+    }
 
     public void setDesktop(TardisDesktop desktop) {
         if (isClient()) return;

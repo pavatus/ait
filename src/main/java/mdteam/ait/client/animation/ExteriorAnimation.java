@@ -24,11 +24,12 @@ public abstract class ExteriorAnimation { // hay una problema: no hay animacion 
     protected ExteriorBlockEntity exterior;
     protected int timeLeft, maxTime, startTime;
     protected static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_setup_anim");
+
     public ExteriorAnimation(ExteriorBlockEntity exterior) {
         this.exterior = exterior;
 
         if (!exterior.hasWorld()) return;
-        if(exterior.getWorld().isClient()) {
+        if (exterior.getWorld().isClient()) {
             ClientPlayNetworking.registerGlobalReceiver(UPDATE,
                     (client, handler, buf, responseSender) -> {
                         int p = buf.readInt();
@@ -58,7 +59,7 @@ public abstract class ExteriorAnimation { // hay una problema: no hay animacion 
             return 1f;
         }
 
-        return Math.clamp(0.0F,1.0F,this.alpha);
+        return Math.clamp(0.0F, 1.0F, this.alpha);
     }
 
     public abstract void tick();
@@ -66,7 +67,7 @@ public abstract class ExteriorAnimation { // hay una problema: no hay animacion 
     public abstract void setupAnimation(TardisTravel.State state);
 
     public void setAlpha(float alpha) {
-        this.alpha = Math.clamp(0.0F,1.0F, alpha);
+        this.alpha = Math.clamp(0.0F, 1.0F, alpha);
     }
 
     public boolean hasAnimationStarted() {
@@ -81,6 +82,7 @@ public abstract class ExteriorAnimation { // hay una problema: no hay animacion 
             tellClientToSetup(state, player);
         }
     }
+
     public void tellClientToSetup(TardisTravel.State state, ServerPlayerEntity player) {
         if (exterior.getWorld().isClient()) return;
 

@@ -29,8 +29,7 @@ public class ClassicAnimation extends ExteriorAnimation {
             if (this.timeLeft <= this.startTime) {
                 // System.out.println(alpha + alphaChangeAmount);
                 this.setAlpha(1f - ((float) this.timeLeft / (this.startTime))); // fixme takes too long
-            }
-            else
+            } else
                 this.setAlpha(0f);
 
             this.timeLeft--;
@@ -43,7 +42,7 @@ public class ClassicAnimation extends ExteriorAnimation {
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
-        if(exterior.tardis() == null) return;
+        if (exterior.tardis() == null) return;
         MatSound sound = exterior.tardis().getExterior().getType().getSound(state);
 
         this.timeLeft = sound.timeLeft();
@@ -52,7 +51,7 @@ public class ClassicAnimation extends ExteriorAnimation {
 
         if (state == TardisTravel.State.DEMAT) {
             this.alpha = 1f;
-        } else if (state == TardisTravel.State.MAT){
+        } else if (state == TardisTravel.State.MAT) {
             this.alpha = 0f;
         } else if (state == TardisTravel.State.LANDED) {
             this.alpha = 1f;

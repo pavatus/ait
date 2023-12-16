@@ -39,9 +39,11 @@ public class AITDesktops {
     public static void register(TardisDesktopSchema interior) {
         interiors.put(interior.id(), interior);
     }
+
     public static TardisDesktopSchema get(Identifier id) {
         return interiors.get(id);
     }
+
     public static Collection<TardisDesktopSchema> iterator() {
         return interiors.values();
     }

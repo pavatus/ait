@@ -18,7 +18,9 @@ public abstract class AITCustomSoundProvider implements DataProvider {
     protected AITCustomSoundProvider(FabricDataOutput dataOutput) {
         this.dataOutput = dataOutput;
     }
+
     public abstract void generateSoundsData(AITCustomSoundBuilder aitCustomSoundBuilder);
+
     @Override
     public CompletableFuture<?> run(DataWriter writer) {
         HashMap<String, SoundEvent[]> soundEventsHashMap = new HashMap<>();
@@ -26,11 +28,9 @@ public abstract class AITCustomSoundProvider implements DataProvider {
         generateSoundsData(((soundName, soundEvents) -> {
             if (soundEventsHashMap.containsKey(soundName)) {
                 throw new RuntimeException("Duplicate sound event: " + soundName + " - Duplicate will be ignored!");
-            }
-            else if(soundName.contains(" ")) {
+            } else if (soundName.contains(" ")) {
                 throw new RuntimeException("Sound event name cannot contain spaces: " + soundName);
-            }
-            else {
+            } else {
                 for (Character character : soundName.toCharArray()) {
                     if (Character.isTitleCase(character)) {
                         throw new RuntimeException("Sound event name cannot contain capital letters: " + soundName);

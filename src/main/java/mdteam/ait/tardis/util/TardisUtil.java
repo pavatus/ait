@@ -5,6 +5,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.AITDimensions;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.control.impl.pos.PosType;
@@ -27,6 +28,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.text.Text;
@@ -72,7 +74,7 @@ public class TardisUtil {
                     WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
-                    if(variantChange) {
+                    if (variantChange) {
                         ServerTardisManager.getInstance().getTardis(uuid).getExterior().setVariant(VariantEnum.values()[variantValue]);
                         WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                         .getTravel().getPosition().getWorld().getRegistryKey()),
@@ -93,8 +95,8 @@ public class TardisUtil {
                     Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
                     BlockPos pos = player.getWorld().getRegistryKey() ==
                             TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
-                    if((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
-                        if(!player.isSneaking()) {
+                    if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
+                        if (!player.isSneaking()) {
                             DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
                                     player);
                         } else {
@@ -102,6 +104,7 @@ public class TardisUtil {
                         }
                         tardis.getDoor().sync();
                     }
+                    player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
                 }
         );
     }
@@ -225,7 +228,8 @@ public class TardisUtil {
 
     public static BlockPos offsetDoorPosition(AbsoluteBlockPos.Directed pos) {
         return switch (pos.getDirection()) {
-            case DOWN, UP -> throw new IllegalArgumentException("Cannot adjust door position with direction: " + pos.getDirection());
+            case DOWN, UP ->
+                    throw new IllegalArgumentException("Cannot adjust door position with direction: " + pos.getDirection());
             case NORTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() - 1);
             case SOUTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() + 1);
             case EAST -> new BlockPos.Mutable(pos.getX() + 1, pos.getY(), pos.getZ() + 0.5);
@@ -267,6 +271,7 @@ public class TardisUtil {
 
         return null;
     }
+
     public static Tardis findTardisByPosition(AbsoluteBlockPos pos) {
         for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
             if (!tardis.getDoor().getExteriorPos().equals(pos)) continue;
@@ -276,6 +281,7 @@ public class TardisUtil {
 
         return null;
     }
+
     public static Tardis findTardisByPosition(BlockPos pos) {
         for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
             if (!tardis.getDoor().getExteriorPos().equals(pos)) continue;
@@ -362,18 +368,22 @@ public class TardisUtil {
     public static BlockPos getRandomPosInWholeInterior(Tardis tardis, Random random) {
         return getRandomPos(tardis.getDesktop().getCorners(), random);
     }
+
     public static BlockPos getRandomPosInWholeInterior(Tardis tardis) {
         return getRandomPosInWholeInterior(tardis, new Random());
     }
+
     public static BlockPos getRandomPosInPlacedInterior(Tardis tardis, Random random) {
         return getRandomPos(getPlacedInteriorCorners(tardis), random);
     }
+
     public static BlockPos getRandomPosInPlacedInterior(Tardis tardis) {
         return getRandomPosInPlacedInterior(tardis, new Random());
     }
+
     public static Corners getPlacedInteriorCorners(Tardis tardis) {
         BlockPos centre = BlockPos.ofFloored(tardis.getDesktop().getCorners().getBox().getCenter());
-        BlockPos first,second;
+        BlockPos first, second;
 
         if (!tardis.getDesktop().getSchema().findTemplate().isPresent()) {
             AITMod.LOGGER.warn("Could not get desktop schema! Using whole interior instead.");
@@ -382,17 +392,18 @@ public class TardisUtil {
 
         Vec3i size = tardis.getDesktop().getSchema().findTemplate().get().getSize();
 
-        first = PosType.X.add(centre, -size.getX()/2);
-        first = PosType.Z.add(first, -size.getZ()/2);
+        first = PosType.X.add(centre, -size.getX() / 2);
+        first = PosType.Z.add(first, -size.getZ() / 2);
 
-        second = PosType.X.add(centre, size.getX()/2);
+        second = PosType.X.add(centre, size.getX() / 2);
         second = PosType.Y.add(second, size.getY());
-        second = PosType.Z.add(second, size.getZ()/2);
+        second = PosType.Z.add(second, size.getZ() / 2);
 
         Corners corners = new Corners(first, second);
 
         return corners;
     }
+
     public static BlockPos getPlacedInteriorCentre(Tardis tardis) {
         Corners corners = getPlacedInteriorCorners(tardis);
 
@@ -403,6 +414,6 @@ public class TardisUtil {
 
         Vec3i size = tardis.getDesktop().getSchema().findTemplate().get().getSize();
 
-        return corners.getFirst().add(size.getX(),size.getY()/2,size.getZ());
+        return corners.getFirst().add(size.getX(), size.getY() / 2, size.getZ());
     }
 }

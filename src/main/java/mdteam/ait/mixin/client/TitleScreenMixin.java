@@ -29,7 +29,7 @@ public abstract class TitleScreenMixin extends Screen {
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V", ordinal = 0))
     private void something(RotatingCubeMapRenderer instance, float delta, float alpha) {
         boolean isConfigEnabled = true;
-        if(isConfigEnabled) NEWPANO.render(delta, alpha);
+        if (isConfigEnabled) NEWPANO.render(delta, alpha);
         else instance.render(delta, alpha);
     }
 

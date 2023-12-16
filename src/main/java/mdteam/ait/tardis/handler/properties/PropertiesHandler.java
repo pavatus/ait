@@ -39,6 +39,7 @@ public class PropertiesHandler { // todo move more things over to properties
     public static void setAutoPilot(PropertiesHolder handler, boolean val) {
         set(handler, AUTO_LAND, val);
     }
+
     public static boolean willAutoPilot(PropertiesHolder holder) {
         return get(holder, AUTO_LAND);
     }

@@ -65,7 +65,7 @@ public class RemoteItem extends Item {
         //System.out.println(ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis")));
 
         if (tardis != null) {
-            if(world != TardisUtil.getTardisDimension()) {
+            if (world != TardisUtil.getTardisDimension()) {
                 world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
                 TardisTravel travel = tardis.getTravel();

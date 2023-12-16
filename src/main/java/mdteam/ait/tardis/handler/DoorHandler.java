@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.handler;
 
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -26,14 +27,17 @@ public class DoorHandler extends TardisLink {
 
         this.sync();
     }
+
     public void setRightRot(boolean var) {
         this.right = var;
 
         this.sync();
     }
+
     public boolean isRightOpen() {
         return this.right;
     }
+
     public boolean isLeftOpen() {
         return this.left;
     }
@@ -43,12 +47,14 @@ public class DoorHandler extends TardisLink {
 
         this.sync();
     }
+
     public void setLockedAndDoors(boolean var) {
         this.setLocked(var);
 
         this.setLeftRot(false);
         this.setRightRot(false);
     }
+
     public boolean locked() {
         return this.locked;
     }
@@ -64,15 +70,19 @@ public class DoorHandler extends TardisLink {
 
         return this.isLeftOpen();
     }
+
     public boolean isClosed() {
         return !isOpen();
     }
+
     public boolean isBothOpen() {
         return this.isRightOpen() && this.isLeftOpen();
     }
+
     public boolean isBothClosed() {
         return !isBothOpen();
     }
+
     public void openDoors() {
         setLeftRot(true);
 
@@ -80,20 +90,24 @@ public class DoorHandler extends TardisLink {
             setRightRot(true);
         }
     }
+
     public void closeDoors() {
         setLeftRot(false);
         setRightRot(false);
     }
 
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
-        if(isClient()) {
+        if (isClient()) {
             return false;
         }
         if (tardis.getLockedTardis()) {
             if (pos != null)
                 world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
-            if (player != null)
+            if (player != null) {
                 player.sendMessage(Text.literal("\uD83D\uDD12"), true);
+                world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
+                world.playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
+            }
             return false;
         }
 
@@ -145,9 +159,11 @@ public class DoorHandler extends TardisLink {
 
         return true;
     }
+
     public static boolean toggleLock(Tardis tardis, ServerWorld world, @Nullable ServerPlayerEntity player) {
-        return lockTardis(!tardis.getLockedTardis(),tardis,world,player, false);
+        return lockTardis(!tardis.getLockedTardis(), tardis, world, player, false);
     }
+
     public static boolean lockTardis(boolean locked, Tardis tardis, ServerWorld world, @Nullable ServerPlayerEntity player, boolean forced) {
         if (!forced) {
             if (tardis.getTravel().getState() != LANDED) return false;

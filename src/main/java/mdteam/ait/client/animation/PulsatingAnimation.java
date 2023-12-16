@@ -4,7 +4,7 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
 
-public class PulsatingAnimation extends ExteriorAnimation{
+public class PulsatingAnimation extends ExteriorAnimation {
     private int pulses = 0;
     private int PULSE_LENGTH = 20;
     private float frequency, intensity;
@@ -62,7 +62,7 @@ public class PulsatingAnimation extends ExteriorAnimation{
 
         if (state == TardisTravel.State.DEMAT) {
             alpha = 1f;
-        } else if (state == TardisTravel.State.MAT){
+        } else if (state == TardisTravel.State.MAT) {
             alpha = 0f;
         } else if (state == TardisTravel.State.LANDED) {
             alpha = 1f;

@@ -13,6 +13,7 @@ import java.util.List;
 public class AITModelProvider extends FabricModelProvider {
     private final List<Block> directionalBlocksToRegister = new ArrayList<>();
     private final List<Block> simpleBlocksToRegister = new ArrayList<>();
+
     public AITModelProvider(FabricDataOutput output) {
         super(output);
     }

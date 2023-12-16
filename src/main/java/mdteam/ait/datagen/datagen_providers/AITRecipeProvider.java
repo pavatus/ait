@@ -19,6 +19,7 @@ public class AITRecipeProvider extends FabricRecipeProvider {
     public List<ShapedRecipeJsonBuilder> shapedRecipes = new ArrayList<>();
     public HashMap<SmithingTransformRecipeJsonBuilder, Identifier> smithingTransformRecipes = new HashMap<>();
     public HashMap<ShapelessRecipeJsonBuilder, Identifier> shapelessRecipesWithNameHashMap = new HashMap<>();
+
     public AITRecipeProvider(FabricDataOutput output) {
         super(output);
     }

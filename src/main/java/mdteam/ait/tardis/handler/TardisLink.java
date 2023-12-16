@@ -36,25 +36,32 @@ public abstract class TardisLink implements TardisTickable {
     }
 
     @Override
-    public void tick(ServerWorld world) {}
+    public void tick(ServerWorld world) {
+    }
 
     @Override
-    public void tick(MinecraftServer server) {}
+    public void tick(MinecraftServer server) {
+    }
 
     public AbsoluteBlockPos.Directed getDoorPos() {
         Tardis tardis = tardis();
-        if (tardis == null || tardis.getDesktop() == null) return new AbsoluteBlockPos.Directed(0,0,0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);;
+        if (tardis == null || tardis.getDesktop() == null)
+            return new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
+        ;
         return tardis.getDesktop().getInteriorDoorPos();
     }
+
     public AbsoluteBlockPos.Directed getExteriorPos() {
         Tardis tardis = tardis();
-        if (tardis == null || tardis.getTravel() == null) return new AbsoluteBlockPos.Directed(0,0,0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
+        if (tardis == null || tardis.getTravel() == null)
+            return new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
         return tardis.getTravel().getPosition();
     }
 
     public static boolean isClient() {
         return TardisUtil.isClient();
     }
+
     public static boolean isServer() {
         return TardisUtil.isServer();
     }

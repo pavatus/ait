@@ -61,7 +61,8 @@ public class SonicItem extends Item {
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 BlockState blockState = world.getBlockState(pos);
 
-                if (!(CampfireBlock.canBeLit(blockState) || CandleBlock.canBeLit(blockState) || CandleCakeBlock.canBeLit(blockState))) return;
+                if (!(CampfireBlock.canBeLit(blockState) || CandleBlock.canBeLit(blockState) || CandleCakeBlock.canBeLit(blockState)))
+                    return;
 
                 world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
                 world.setBlockState(pos, blockState.with(Properties.LIT, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
@@ -130,13 +131,14 @@ public class SonicItem extends Item {
                 PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.AUTO_LAND, true);
 
                 travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()), true);
-                if(travel.getState() == LANDED) travel.dematerialise(true);
+                if (travel.getState() == LANDED) travel.dematerialise(true);
 
                 player.sendMessage(Text.literal("Handbrake disengaged, destination set to current position"), true);
             }
         };
 
         public Formatting format;
+
         Mode(Formatting format) {
             this.format = format;
         }
@@ -157,7 +159,7 @@ public class SonicItem extends Item {
         PlayerEntity player = context.getPlayer();
         ItemStack itemStack = context.getStack();
 
-        if(player == null)
+        if (player == null)
             return ActionResult.FAIL;
         if (world.isClient()) return ActionResult.SUCCESS;
 
@@ -208,7 +210,7 @@ public class SonicItem extends Item {
     }
 
     public static void playSonicSounds(PlayerEntity player) {
-        player.getWorld().playSound(null,player.getBlockPos(),SoundEvents.BLOCK_BEACON_AMBIENT, SoundCategory.PLAYERS,1f,2f);
+        player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BEACON_AMBIENT, SoundCategory.PLAYERS, 1f, 2f);
     }
 
     public static void cycleMode(ItemStack stack) {
@@ -235,7 +237,7 @@ public class SonicItem extends Item {
 
     public static int findModeInt(ItemStack stack) {
         NbtCompound nbtCompound = stack.getNbt();
-        if(nbtCompound == null || !nbtCompound.contains("tardis"))
+        if (nbtCompound == null || !nbtCompound.contains("tardis"))
             return 0;
         return nbtCompound.getInt(MODE_KEY);
     }
@@ -261,7 +263,7 @@ public class SonicItem extends Item {
         String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
                 : "None";
 
-        if(tag.contains("tardis")) { // Adding the sonics mode
+        if (tag.contains("tardis")) { // Adding the sonics mode
             tooltip.add(Text.literal("Mode:").formatted(Formatting.BLUE));
 
             Mode mode = intToMode(tag.getInt(MODE_KEY));

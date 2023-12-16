@@ -11,6 +11,7 @@ public class AITSoundProvider extends AITCustomSoundProvider {
     private final FabricDataOutput dataGenerator;
 
     private final HashMap<String, SoundEvent[]> soundEventList = new HashMap<>();
+
     public AITSoundProvider(FabricDataOutput dataOutput) {
         super(dataOutput);
         dataGenerator = dataOutput;
@@ -24,6 +25,7 @@ public class AITSoundProvider extends AITCustomSoundProvider {
     public void addSound(String soundName, SoundEvent sound) {
         soundEventList.put(soundName, new SoundEvent[]{sound});
     }
+
     public void addSound(String soundName, SoundEvent[] soundEvents) {
         soundEventList.put(soundName, soundEvents);
     }

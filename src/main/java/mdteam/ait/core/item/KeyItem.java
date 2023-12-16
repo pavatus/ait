@@ -52,10 +52,11 @@ public class KeyItem extends Item {
         return this.protocols.contains(var);
     }
 
-    private void link(ItemStack stack,Tardis tardis) {
-        this.link(stack,tardis.getUuid());
+    private void link(ItemStack stack, Tardis tardis) {
+        this.link(stack, tardis.getUuid());
     }
-    private void link(ItemStack stack,UUID uuid) {
+
+    private void link(ItemStack stack, UUID uuid) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
         nbt.putString("tardis", uuid.toString());
@@ -64,9 +65,11 @@ public class KeyItem extends Item {
     public static boolean isKeyInInventory(PlayerEntity player) {
         return getFirstKeyStackInInventory(player) != null;
     }
+
     public static KeyItem getFirstKeyInInventory(PlayerEntity player) {
         return (KeyItem) getFirstKeyStackInInventory(player).getItem();
     }
+
     public static ItemStack getFirstKeyStackInInventory(PlayerEntity player) {
         // from playerinventory
 

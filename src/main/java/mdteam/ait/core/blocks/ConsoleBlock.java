@@ -40,6 +40,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
         return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
     }
+
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient())
@@ -63,7 +64,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if(world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
+        if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
             consoleBlockEntity.markDirty();
         }
         super.onPlaced(world, pos, state, placer, itemStack);

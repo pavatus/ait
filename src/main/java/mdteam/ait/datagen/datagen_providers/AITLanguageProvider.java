@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class AITLanguageProvider extends FabricLanguageProvider {
 
-    public HashMap <String, String> translations = new HashMap<>();
+    public HashMap<String, String> translations = new HashMap<>();
 
     public LanguageType languageType;
     private final FabricDataOutput dataGenerator;
@@ -39,7 +39,8 @@ public class AITLanguageProvider extends FabricLanguageProvider {
 
     /**
      * Adds a translation to the language file.
-     * @param item The item to add the translation for.
+     *
+     * @param item        The item to add the translation for.
      * @param translation The translation.
      */
     public void addTranslation(Item item, String translation) {
@@ -48,7 +49,8 @@ public class AITLanguageProvider extends FabricLanguageProvider {
 
     /**
      * Adds a translation to the language file.
-     * @param itemGroup The item group to add the translation for.
+     *
+     * @param itemGroup   The item group to add the translation for.
      * @param translation The translation.
      */
     public void addTranslation(OwoItemGroup itemGroup, String translation) {
@@ -57,7 +59,8 @@ public class AITLanguageProvider extends FabricLanguageProvider {
 
     /**
      * Adds a translation to the language file.
-     * @param key The key to add the translation for.
+     *
+     * @param key         The key to add the translation for.
      * @param translation The translation.
      */
     public void addTranslation(String key, String translation) {
@@ -66,7 +69,8 @@ public class AITLanguageProvider extends FabricLanguageProvider {
 
     /**
      * Adds a translation to the language file
-     * @param block The block to add the translation for
+     *
+     * @param block       The block to add the translation for
      * @param translation The translation
      */
     public void addTranslation(Block block, String translation) {
@@ -74,7 +78,8 @@ public class AITLanguageProvider extends FabricLanguageProvider {
     }
 
     /**
-     *  Get the translation key for the OwoItemGroup
+     * Get the translation key for the OwoItemGroup
+     *
      * @param itemGroup The item group to get the translation key for
      * @return The translation key for the item group
      */

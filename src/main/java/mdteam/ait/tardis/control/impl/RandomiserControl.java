@@ -26,6 +26,7 @@ public class RandomiserControl extends Control {
 
         return true;
     }
+
     // fixme this is LAGGYYY
     public static AbsoluteBlockPos.Directed randomiseDestination(Tardis tardis, int limit) {
         TardisTravel travel = tardis.getTravel();
@@ -35,16 +36,16 @@ public class RandomiserControl extends Control {
         ServerWorld world = (ServerWorld) current.getWorld();
 
         BlockPos pos;
-        int x,z;
+        int x, z;
 
 //        for (int i = 0; i <= limit; i++) {
-            x = current.getX() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
-            z = current.getZ() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
-            pos = new BlockPos(x, current.getY(), z);
+        x = current.getX() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
+        z = current.getZ() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
+        pos = new BlockPos(x, current.getY(), z);
 
-            travel.setDestination(new AbsoluteBlockPos.Directed(pos, dest.getWorld(), dest.getDirection()), false);
+        travel.setDestination(new AbsoluteBlockPos.Directed(pos, dest.getWorld(), dest.getDirection()), false);
 
-            if (travel.checkDestination()) return travel.getDestination();
+        if (travel.checkDestination()) return travel.getDestination();
 //        }
 
         return travel.getDestination();

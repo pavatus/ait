@@ -58,16 +58,16 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
     }
 
     public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
-        if(player == null)
+        if (player == null)
             return;
 
-        if(player.getMainHandStack().getItem() instanceof KeyItem) {
+        if (player.getMainHandStack().getItem() instanceof KeyItem) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
-            if(!tag.contains("tardis")) {
+            if (!tag.contains("tardis")) {
                 return;
             }
-            if(Objects.equals(this.tardis().getUuid().toString(), tag.getUuid("tardis").toString())) {
+            if (Objects.equals(this.tardis().getUuid().toString(), tag.getUuid("tardis").toString())) {
                 DoorHandler.toggleLock(this.tardis(), world, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
@@ -119,7 +119,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
         if (nbt.contains("tardis")) {
             this.tardisId = UUID.fromString(nbt.getString("tardis"));
         }
-        if(this.getAnimation() != null)
+        if (this.getAnimation() != null)
             this.getAnimation().setAlpha(nbt.getFloat("alpha"));
     }
 
@@ -128,10 +128,11 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
             return;
 
         if (this.tardis() != null && (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0)) {
-            if(!this.tardis().getLockedTardis())
+            if (!this.tardis().getLockedTardis())
                 TardisUtil.teleportInside(this.tardis(), player);
         }
     }
+
     public Tardis tardis() {
         if (this.tardisId == null) {
             AITMod.LOGGER.warn("Exterior at " + this.getPos() + " is finding TARDIS!");
@@ -144,14 +145,17 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
 
         return ServerTardisManager.getInstance().getTardis(this.tardisId);
     }
+
     public void setTardis(Tardis tardis) {
         this.tardisId = tardis.getUuid();
     }
+
     public void sync() {
         if (isClient()) return;
 
         ServerTardisManager.getInstance().sendToSubscribers(this.tardis());
     }
+
     private void findTardisFromPosition() { // should only be used if tardisId is null so we can hopefully refind the tardis
         Tardis found = findTardisByPosition(this.getPos());
 
@@ -166,7 +170,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
 
 
         if (!world.isClient() && ((ExteriorBlockEntity) exterior).tardis() != null && !PropertiesHandler.get(((ExteriorBlockEntity) exterior).tardis().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && ((ExteriorBlockEntity) exterior).tardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
-            for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(exterior.getPos()).expand(0,1,0), EntityPredicates.EXCEPT_SPECTATOR)) {
+            for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(exterior.getPos()).expand(0, 1, 0), EntityPredicates.EXCEPT_SPECTATOR)) {
                 TardisUtil.teleportInside(((ExteriorBlockEntity) exterior).tardis(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
             }
         }
@@ -181,7 +185,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
         AITMod.LOGGER.warn("Created new ANIMATION for " + this);
         this.animation.setupAnimation(this.tardis().getTravel().getState());
 
-        if(this.getWorld() != null) {
+        if (this.getWorld() != null) {
             if (!this.getWorld().isClient()) {
                 this.animation.tellClientsToSetup(this.tardis().getTravel().getState());
             }
@@ -205,5 +209,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
 
         return this.getAnimation().getAlpha();
     }
-    public void onBroken() {}
+
+    public void onBroken() {
+    }
 }

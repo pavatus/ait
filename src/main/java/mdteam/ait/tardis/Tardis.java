@@ -62,6 +62,7 @@ public class Tardis {
     public TardisConsole getConsole() {
         return console;
     }
+
     public DoorHandler getDoor() {
         return door;
     }
@@ -78,12 +79,21 @@ public class Tardis {
         return travel;
     }
 
-    public PropertiesHolder getProperties() { return properties; }
-    public WaypointHandler getWaypoints() { return waypoints; }
-    public LoyaltyHandler getLoyalties() { return loyalties; }
+    public PropertiesHolder getProperties() {
+        return properties;
+    }
+
+    public WaypointHandler getWaypoints() {
+        return waypoints;
+    }
+
+    public LoyaltyHandler getLoyalties() {
+        return loyalties;
+    }
 
     /**
      * Called at the end of a servers tick
+     *
      * @param server the server being ticked
      */
     public void tick(MinecraftServer server) {
@@ -93,7 +103,9 @@ public class Tardis {
 
     /**
      * Called at the end of a worlds tick
+     *
      * @param world the world being ticked
      */
-    public void tick(ServerWorld world) {}
+    public void tick(ServerWorld world) {
+    }
 }

@@ -61,13 +61,13 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if(world.isClient())
+        if (world.isClient())
             return;
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
         //if(Objects.equals(this.getOutlineShape(state, world, pos, ShapeContext.of(entity)).getClosestPointTo(entity.getPos()), Optional.of(new Vec3d(0, 0, 0)))) {
-            if (blockEntity instanceof DoorBlockEntity door)
-                door.onEntityCollision(entity);
+        if (blockEntity instanceof DoorBlockEntity door)
+            door.onEntityCollision(entity);
         //}
     }
 

@@ -9,9 +9,15 @@ import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public interface ILinkable {
     Tardis getTardis();
+
     void setTardis(Tardis tardis);
-    default TardisDesktop getDesktop() { return this.getTardis().getDesktop(); }
-    default void setDesktop(TardisDesktop desktop) { }
+
+    default TardisDesktop getDesktop() {
+        return this.getTardis().getDesktop();
+    }
+
+    default void setDesktop(TardisDesktop desktop) {
+    }
 
     /**
      * This method forces the {@link ILinkable} to update its desktop!
@@ -25,7 +31,6 @@ public interface ILinkable {
         if (desktop != null)
             this.setDesktop(desktop);
     }*/
-
     default void linkDesktop() {
         if (this.getTardis() == null)
             return;
@@ -33,8 +38,12 @@ public interface ILinkable {
             this.setDesktop(this.getDesktop());
     }
 
-    default TardisTravel getTravel() { return this.getTardis().getTravel(); }
-    default void setTravel(TardisTravel travel) { }
+    default TardisTravel getTravel() {
+        return this.getTardis().getTravel();
+    }
+
+    default void setTravel(TardisTravel travel) {
+    }
 
     /**
      * This method forces the {@link ILinkable} to update its travel!

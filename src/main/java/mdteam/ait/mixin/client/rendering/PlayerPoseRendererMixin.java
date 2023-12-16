@@ -8,8 +8,12 @@ import org.spongepowered.asm.mixin.*;
 @Mixin(value = BipedEntityModel.class, priority = 1001)
 
 public abstract class PlayerPoseRendererMixin {
-    @Shadow @Final public ModelPart rightArm;
-    @Shadow @Final public ModelPart leftArm;
+    @Shadow
+    @Final
+    public ModelPart rightArm;
+    @Shadow
+    @Final
+    public ModelPart leftArm;
     private final MinecraftClient client = MinecraftClient.getInstance();
 
     //@Inject(method = "positionRightArm", at = @At("HEAD"), cancellable = true)

@@ -35,7 +35,7 @@ public class DimensionControl extends Control {
             next = ((current - 1) < 0) ? dims.size() - 1 : current - 1;
         }
 
-        travel.setDestination(new AbsoluteBlockPos.Directed(dest, dims.get(next), dest.getDirection()),false);
+        travel.setDestination(new AbsoluteBlockPos.Directed(dest, dims.get(next), dest.getDirection()), false);
 
         messagePlayer(player, (ServerWorld) travel.getDestination().getWorld());
 
@@ -45,6 +45,7 @@ public class DimensionControl extends Control {
     private void messagePlayer(ServerPlayerEntity player, ServerWorld world) {
         player.sendMessage(Text.literal("Dimension: " + convertWorldToReadable(world)), true); // fixme translatable is preferred
     }
+
     public static String convertWorldToReadable(World world) {
         String path = world.getDimensionKey().getValue().getPath();
 
@@ -93,7 +94,7 @@ public class DimensionControl extends Control {
 
         // fixme this is easiest/stupidest way to do this without letting them get to the tardis dim :p - Loqor
         allDims.forEach(dim -> {
-            if(dim.getRegistryKey() != TardisUtil.getTardisDimension().getRegistryKey())
+            if (dim.getRegistryKey() != TardisUtil.getTardisDimension().getRegistryKey())
                 dims.add(dim);
         });
 

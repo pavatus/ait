@@ -30,7 +30,7 @@ public abstract class DoorModel extends SinglePartEntityModel {
     public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         if (door.getTardis() == null) return;
 
-        root.render(matrices, vertices, light, overlay,red,green,blue,pAlpha);
+        root.render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
     }
 
     @Override

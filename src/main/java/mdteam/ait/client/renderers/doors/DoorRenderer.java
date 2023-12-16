@@ -19,7 +19,8 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
     private DoorModel model;
 
-    public DoorRenderer(BlockEntityRendererFactory.Context ctx) {}
+    public DoorRenderer(BlockEntityRendererFactory.Context ctx) {
+    }
 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
@@ -43,11 +44,11 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         Identifier texture = model.getVariousTextures(tardisExterior.getType(), tardisExterior.getVariant());
-        if(model != null) {
-            model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
-            if(model.getVariousEmission(texture, tardisExterior.getType()) != null)
-                if(tardisExterior.getType().hasEmission())
-                    model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getVariousEmission(texture, tardisExterior.getType()), false)), maxLight, overlay, 1, 1, 1, 1);
+        if (model != null) {
+            model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
+            if (model.getVariousEmission(texture, tardisExterior.getType()) != null)
+                if (tardisExterior.getType().hasEmission())
+                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getVariousEmission(texture, tardisExterior.getType()), false)), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }

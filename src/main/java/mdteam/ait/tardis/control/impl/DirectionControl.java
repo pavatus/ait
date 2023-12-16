@@ -21,7 +21,7 @@ public class DirectionControl extends Control {
         TardisTravel travel = tardis.getTravel();
         AbsoluteBlockPos.Directed dest = travel.getDestination();
 
-        travel.setDestination(new AbsoluteBlockPos.Directed(dest,getNextDirection(dest.getDirection())), false);
+        travel.setDestination(new AbsoluteBlockPos.Directed(dest, getNextDirection(dest.getDirection())), false);
 
         messagePlayer(player, travel.getDestination().getDirection());
 
@@ -30,16 +30,17 @@ public class DirectionControl extends Control {
 
     private void messagePlayer(ServerPlayerEntity player, Direction direction) {
         String arrow = "";
-        if(direction == Direction.NORTH)
+        if (direction == Direction.NORTH)
             arrow = "↑";
-        else if(direction == Direction.EAST)
+        else if (direction == Direction.EAST)
             arrow = "→";
-        else if(direction == Direction.SOUTH)
+        else if (direction == Direction.SOUTH)
             arrow = "↓";
-        else if(direction == Direction.WEST)
+        else if (direction == Direction.WEST)
             arrow = "←";
         player.sendMessage(Text.literal("Direction: " + direction.toString().substring(0, 1).toUpperCase() + direction.toString().substring(1) + " | " + arrow), true); // fixme translatable is preferred
     }
+
     private Direction getNextDirection(Direction current) {
         return switch (current) {
             case DOWN -> Direction.NORTH;

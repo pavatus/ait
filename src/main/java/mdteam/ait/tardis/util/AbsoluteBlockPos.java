@@ -61,6 +61,7 @@ public class AbsoluteBlockPos extends BlockPos {
     public Chunk getChunk() {
         return this.getWorld().getChunk(this);
     }
+
     public AbsoluteBlockPos above() {
         return new AbsoluteBlockPos(this.getX(), this.getY() + 1, this.getZ(), this.getWorld());
     }
