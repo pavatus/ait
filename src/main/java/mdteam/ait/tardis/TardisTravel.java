@@ -513,6 +513,29 @@ public class TardisTravel {
             public State getNext() {
                 return LANDED;
             }
+        },
+        CRASH(true) {
+            @Override
+            public void onEnable(TravelContext context) {
+                AITMod.LOGGER.info("ON: CRASH");
+
+                // context.travel().materialise();
+            }
+
+            @Override
+            public void onDisable(TravelContext context) {
+                AITMod.LOGGER.info("OFF: LANDED");
+            }
+
+            @Override
+            public void schedule(TravelContext context) {
+
+            }
+
+            @Override
+            public State getNext() {
+                return LANDED;
+            }
         };
 
         private final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();

@@ -676,7 +676,7 @@ public class BorealisConsoleModel extends ConsoleModel {
 		return switch(state) {
 			case LANDED -> BorealisAnimations.CONSOLE_IDLE_WHEATLEY;
 			case DEMAT -> BorealisAnimations.CONSOLE_ROTOR_DEMATERIALIZE;
-			case FLIGHT -> BorealisAnimations.CONSOLE_ROTOR_INFLIGHT;
+			case FLIGHT, CRASH -> BorealisAnimations.CONSOLE_ROTOR_INFLIGHT;
 			case MAT -> BorealisAnimations.CONSOLE_ROTOR_MATERIALIZE;
         };
 	}

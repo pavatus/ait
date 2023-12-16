@@ -59,7 +59,7 @@ public enum ExteriorEnum {
         @Override
         public MatSound getSound(TardisTravel.State state) {
             return switch(state) {
-                case LANDED, FLIGHT -> AITSounds.LANDED_ANIM;
+                case LANDED, FLIGHT, CRASH -> AITSounds.LANDED_ANIM;
                 case DEMAT -> AITSounds.EIGHT_DEMAT_ANIM;
                 case MAT -> AITSounds.EIGHT_MAT_ANIM;
             };
@@ -224,7 +224,7 @@ public enum ExteriorEnum {
     }
     public MatSound getSound(TardisTravel.State state) {
         return switch(state) {
-            case LANDED, FLIGHT -> AITSounds.LANDED_ANIM;
+            case LANDED, FLIGHT, CRASH -> AITSounds.LANDED_ANIM;
             case DEMAT -> AITSounds.DEMAT_ANIM;
             case MAT -> AITSounds.MAT_ANIM;
         };

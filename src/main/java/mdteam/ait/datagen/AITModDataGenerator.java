@@ -127,7 +127,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 								FabricRecipeProvider.conditionsFromItem(AITItems.GOLD_KEY)),
 				new Identifier(AITMod.MOD_ID, "gold_key_smithing"));
 		provider.addSmithingTransformRecipe(SmithingTransformRecipeJsonBuilder.create(
-						Ingredient.ofItems(AITItems.NETHERITE_KEY),
+						Ingredient.ofItems(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE),
 						Ingredient.ofItems(AITItems.GOLD_KEY),
 						Ingredient.ofItems(Items.NETHERITE_SCRAP),
 						RecipeCategory.TOOLS, AITItems.NETHERITE_KEY)
