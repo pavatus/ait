@@ -84,12 +84,6 @@ public class AITModClient implements ClientModInitializer {
 		buf.writeInt(id);
 		ServerPlayNetworking.send(player, OPEN_SCREEN, buf);
 	}
-	public static void openScreen(ServerPlayerEntity player, int id, UUID tardis) {
-		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeInt(id);
-		buf.writeUuid(tardis);
-		ServerPlayNetworking.send(player, OPEN_SCREEN_TARDIS, buf);
-	}
 
 	/**
 	 * This is for screens without a tardis

@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.control.impl;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.client.AITModClient;
 import mdteam.ait.tardis.control.Control;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -16,7 +17,7 @@ public class MonitorControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         if(tardis != null)
-            AITModClient.openScreen(player, 0, tardis.getUuid());
+            AITMod.openScreen(player, 0, tardis.getUuid());
         return true;
     }
 }

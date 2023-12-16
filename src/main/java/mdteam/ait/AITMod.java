@@ -15,11 +15,17 @@ import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import mdteam.ait.tardis.TardisManager;
+
+import java.util.UUID;
 
 public class AITMod implements ModInitializer {
 	public static final String MOD_ID = "ait";
@@ -54,5 +60,13 @@ public class AITMod implements ModInitializer {
 
 	public void entityAttributeRegister() {
 		FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createControlAttributes());
+	}
+
+	public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis"); // fixes "AITModClient in env type SERVER"
+	public static void openScreen(ServerPlayerEntity player, int id, UUID tardis) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeInt(id);
+		buf.writeUuid(tardis);
+		ServerPlayNetworking.send(player, OPEN_SCREEN_TARDIS, buf);
 	}
 }
