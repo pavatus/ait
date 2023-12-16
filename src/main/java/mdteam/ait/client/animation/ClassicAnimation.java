@@ -43,6 +43,7 @@ public class ClassicAnimation extends ExteriorAnimation {
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
+        if(exterior.tardis() == null) return;
         MatSound sound = exterior.tardis().getExterior().getType().getSound(state);
 
         this.timeLeft = sound.timeLeft();
