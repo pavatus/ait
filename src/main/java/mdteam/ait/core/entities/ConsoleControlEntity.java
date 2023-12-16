@@ -77,9 +77,11 @@ public class ConsoleControlEntity extends BaseControlEntity {
     public void setIdentity(String string) {
         this.dataTracker.set(IDENTITY, string);
     }
+
     public float getControlWidth() {
         return this.dataTracker.get(WIDTH);
     }
+
     public float getControlHeight() {
         return this.dataTracker.get(HEIGHT);
     }
@@ -87,9 +89,11 @@ public class ConsoleControlEntity extends BaseControlEntity {
     public void setControlWidth(float width) {
         this.dataTracker.set(WIDTH, width);
     }
+
     public void setControlHeight(float height) {
         this.dataTracker.set(HEIGHT, height);
     }
+
     public Vector3f getOffset() {
         return this.dataTracker.get(OFFSET);
     }
@@ -103,7 +107,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         super.writeCustomDataToNbt(nbt);
         //if(this.controlTypes != null)
         //    nbt.put("controlTypes", this.controlTypes.serializeTypes(nbt));
-        if(consoleBlockPos != null)
+        if (consoleBlockPos != null)
             nbt.put("console", NbtHelper.fromBlockPos(this.consoleBlockPos));
 
         nbt.putString("identity", this.getIdentity());
@@ -120,7 +124,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         //if(this.controlTypes != null)
         //    this.controlTypes = this.controlTypes.deserializeTypes(nbt);
         var console = (NbtCompound) nbt.get("console");
-        if(console != null)
+        if (console != null)
             this.consoleBlockPos = NbtHelper.toBlockPos(console);
         if (nbt.contains("identity")) {
             this.setIdentity(nbt.getString("identity"));
@@ -130,7 +134,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
             this.setControlWidth(nbt.getFloat("height"));
             this.calculateDimensions();
         }
-        if(nbt.contains("offsetX") && nbt.contains("offsetY") && nbt.contains("offsetZ")) {
+        if (nbt.contains("offsetX") && nbt.contains("offsetY") && nbt.contains("offsetZ")) {
             this.setOffset(new Vector3f(nbt.getFloat("offsetX"), nbt.getFloat("offsetY"), nbt.getFloat("offsetZ")));
         }
     }
@@ -161,7 +165,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
     }
 
     public boolean run(PlayerEntity player, World world) {
-        if(this.consoleBlockPos != null)
+        if (this.consoleBlockPos != null)
             this.getWorld().playSound(null, this.consoleBlockPos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 0.7f, 1f);
 
         if (!world.isClient()) {
@@ -192,7 +196,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     @Override
     public Text getName() {
-        if(this.control != null)
+        if (this.control != null)
             return Text.translatable(this.control.getId());
         else
             return super.getName();
@@ -202,7 +206,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         this.consoleBlockPos = consoleBlockPosition;
         this.control = type.getControl();
         // System.out.println(type);
-        if(consoleType != null) {
+        if (consoleType != null) {
             this.setControlWidth(type.getScale().width);
             this.setControlHeight(type.getScale().height);
             this.setCustomName(Text.translatable(type.getControl().id)/*.fillStyle(Style.EMPTY.withColor(Formatting.GOLD).withBold(true))*/);
@@ -224,7 +228,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        if(this.getDataTracker().containsKey(WIDTH) && this.getDataTracker().containsKey(HEIGHT))
+        if (this.getDataTracker().containsKey(WIDTH) && this.getDataTracker().containsKey(HEIGHT))
             return EntityDimensions.changing(this.getControlWidth(), this.getControlHeight());
         return super.getDimensions(pose);
     }
@@ -237,8 +241,8 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     @Override
     public void tick() {
-        if(getWorld() instanceof ServerWorld server) {
-            if(this.control == null) {
+        if (getWorld() instanceof ServerWorld server) {
+            if (this.control == null) {
                 if (this.consoleBlockPos != null) {
                     if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
                         console.markDirty();
@@ -264,26 +268,27 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     public void controlEditorHandler(PlayerEntity player) {
         float increment = 0.025f;
-        if(player.getOffHandStack().getItem() == Items.EMERALD_BLOCK) {
+        if (player.getOffHandStack().getItem() == Items.EMERALD_BLOCK) {
             this.setPosition(this.getPos().add(player.isSneaking() ? -increment : increment, 0, 0));
         }
-        if(player.getOffHandStack().getItem() == Items.DIAMOND_BLOCK) {
+        if (player.getOffHandStack().getItem() == Items.DIAMOND_BLOCK) {
             this.setPosition(this.getPos().add(0, player.isSneaking() ? -increment : increment, 0));
         }
-        if(player.getOffHandStack().getItem() == Items.REDSTONE_BLOCK) {
+        if (player.getOffHandStack().getItem() == Items.REDSTONE_BLOCK) {
             this.setPosition(this.getPos().add(0, 0, player.isSneaking() ? -increment : increment));
         }
-        if(player.getOffHandStack().getItem() == Items.COD) {
+        if (player.getOffHandStack().getItem() == Items.COD) {
             this.setScaleAndCalculate(player.isSneaking() ? this.getDataTracker().get(WIDTH) - increment : this.getDataTracker().get(WIDTH) + increment,
                     this.getDataTracker().get(HEIGHT));
         }
-        if(player.getOffHandStack().getItem() == Items.COOKED_COD) {
+        if (player.getOffHandStack().getItem() == Items.COOKED_COD) {
             this.setScaleAndCalculate(this.getDataTracker().get(WIDTH),
                     player.isSneaking() ? this.getDataTracker().get(HEIGHT) - increment : this.getDataTracker().get(HEIGHT) + increment);
         }
-        if(this.consoleBlockPos != null) {
+        if (this.consoleBlockPos != null) {
             Vec3d centered = this.getPos().subtract(this.consoleBlockPos.toCenterPos());
-            if(this.control != null) player.sendMessage(Text.literal("EntityDimensions.changing(" + this.getControlWidth() + ", " + this.getControlHeight() + "), new Vector3f(" + centered.getX() + "f, " + centered.getY() + "f, "+ centered.getZ() + "f)),"));
+            if (this.control != null)
+                player.sendMessage(Text.literal("EntityDimensions.changing(" + this.getControlWidth() + ", " + this.getControlHeight() + "), new Vector3f(" + centered.getX() + "f, " + centered.getY() + "f, " + centered.getZ() + "f)),"));
         }
     }
 }

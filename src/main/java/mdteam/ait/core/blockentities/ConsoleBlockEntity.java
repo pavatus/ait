@@ -93,9 +93,11 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
         return ServerTardisManager.getInstance().getTardis(this.tardisId);
     }
+
     private void findTardis() {
         this.setTardis(TardisUtil.findTardisByInterior(pos));
     }
+
     public void sync() {
         if (isClient()) return;
 
@@ -112,18 +114,23 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         // force re-link a desktop if it's not null
         this.linkDesktop();
     }
+
     public void setTardis(UUID uuid) {
         this.tardisId = uuid;
 
         this.linkDesktop();
     }
+
     public void linkDesktop() {
         if (this.getTardis() == null)
             return;
         if (this.getTardis() != null)
             this.setDesktop(this.getDesktop());
     }
-    public TardisDesktop getDesktop() { return this.getTardis().getDesktop(); }
+
+    public TardisDesktop getDesktop() {
+        return this.getTardis().getDesktop();
+    }
 
     public ConsoleEnum getConsole() {
         return this.getTardis().getConsole().getType();
@@ -131,10 +138,10 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
     public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
 
-        if(player == null)
+        if (player == null)
             return;
 
-        if(world != TardisUtil.getTardisDimension())
+        if (world != TardisUtil.getTardisDimension())
             return;
     }
 
@@ -159,6 +166,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             ANIM_FLIGHT.start(animationTimer);
         }
     }
+
     private void stopAllAnimations() {
         // DO NOT RUN ON SERVER
         ANIM_FLIGHT.stop();
@@ -179,9 +187,9 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
         BlockPos current = getPos();
 
-        if(!(getWorld() instanceof ServerWorld server))
+        if (!(getWorld() instanceof ServerWorld server))
             return;
-        if(getWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+        if (getWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
             return;
 
         killControls();
@@ -205,17 +213,18 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         this.markedDirty = false;
         //System.out.println("SpawnControls(): I'm getting run :) somewhere..");
     }
+
     public void markDirty() {
         this.markedDirty = true;
     }
 
     @Override
     public void tick(World world, BlockPos pos, BlockState state, ConsoleBlockEntity blockEntity) {
-        if(this.markedDirty) {
+        if (this.markedDirty) {
             spawnControls();
         }
 
-        if(world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
             this.markRemoved();
 
         // idk

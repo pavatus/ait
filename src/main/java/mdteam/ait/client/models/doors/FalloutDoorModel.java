@@ -24,56 +24,58 @@ import net.minecraft.util.math.RotationAxis;
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 public class FalloutDoorModel extends DoorModel {
-	private Framebuffer framebuffer;
+    private Framebuffer framebuffer;
 
-	public ModelPart door;
-	public ModelPart frame;
-	public ModelPart root;
-	public FalloutDoorModel(ModelPart root) {
-		super(RenderLayer::getEntityCutoutNoCull);
-		this.root = root;
-		this.door = root.getChild("door");
-		this.frame = root.getChild("frame");
-	}
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData door = modelPartData.addChild("door", ModelPartBuilder.create().uv(24, 24).cuboid(0.0F, -16.0F, -0.5F, 11.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(5.5F, 8.0F, 6.975F));
+    public ModelPart door;
+    public ModelPart frame;
+    public ModelPart root;
 
-		ModelPartData frame = modelPartData.addChild("frame", ModelPartBuilder.create().uv(24, 11).cuboid(-5.5F, -36.0F, -11.55F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(24, 0).cuboid(-7.5F, -41.0F, -11.55F, 15.0F, 5.0F, 2.0F, new Dilation(0.0F))
-		.uv(0, 35).cuboid(5.5F, -36.0F, -11.55F, 2.0F, 34.0F, 2.0F, new Dilation(0.0F))
-		.uv(8, 35).cuboid(-7.5F, -36.0F, -11.55F, 2.0F, 34.0F, 2.0F, new Dilation(0.0F))
-		.uv(0, 0).cuboid(-5.5F, -36.0F, -10.55F, 11.0F, 34.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 26.0F, 17.55F));
-		return TexturedModelData.of(modelData, 128, 128);
-	}
+    public FalloutDoorModel(ModelPart root) {
+        super(RenderLayer::getEntityCutoutNoCull);
+        this.root = root;
+        this.door = root.getChild("door");
+        this.frame = root.getChild("frame");
+    }
 
-	@Override
-	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+    public static TexturedModelData getTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+        ModelPartData door = modelPartData.addChild("door", ModelPartBuilder.create().uv(24, 24).cuboid(0.0F, -16.0F, -0.5F, 11.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(5.5F, 8.0F, 6.975F));
+
+        ModelPartData frame = modelPartData.addChild("frame", ModelPartBuilder.create().uv(24, 11).cuboid(-5.5F, -36.0F, -11.55F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F))
+                .uv(24, 0).cuboid(-7.5F, -41.0F, -11.55F, 15.0F, 5.0F, 2.0F, new Dilation(0.0F))
+                .uv(0, 35).cuboid(5.5F, -36.0F, -11.55F, 2.0F, 34.0F, 2.0F, new Dilation(0.0F))
+                .uv(8, 35).cuboid(-7.5F, -36.0F, -11.55F, 2.0F, 34.0F, 2.0F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(-5.5F, -36.0F, -10.55F, 11.0F, 34.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 26.0F, 17.55F));
+        return TexturedModelData.of(modelData, 128, 128);
+    }
+
+    @Override
+    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 
 
-		this.door.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-		this.frame.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-	}
+        this.door.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        this.frame.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+    }
 
-	private void bindCustomShader(float red, float green, float blue, float alpha) {
-		RenderSystem.setShaderTexture(0, framebuffer.getColorAttachment());
-		RenderSystem.setShaderColor(red, green, blue, alpha);
-		RenderSystem.setShader(GameRenderer::getRenderTypeEndPortalProgram);
-	}
+    private void bindCustomShader(float red, float green, float blue, float alpha) {
+        RenderSystem.setShaderTexture(0, framebuffer.getColorAttachment());
+        RenderSystem.setShaderColor(red, green, blue, alpha);
+        RenderSystem.setShader(GameRenderer::getRenderTypeEndPortalProgram);
+    }
 
-	private void unbindCustomShader() {
-		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-	}
+    private void unbindCustomShader() {
+        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+    }
 
-	@Override
-	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		//this.door.yaw = -door.getLeftDoorRotation();
+    @Override
+    public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        //this.door.yaw = -door.getLeftDoorRotation();
 
-		matrices.push();
-		matrices.translate(0,-1.5,0);
+        matrices.push();
+        matrices.translate(0, -1.5, 0);
 
-		this.door.setPivot(this.frame.pivotX, this.frame.pivotY, this.frame.pivotZ);
+        this.door.setPivot(this.frame.pivotX, this.frame.pivotY, this.frame.pivotZ);
 		/*MinecraftClient client = MinecraftClient.getInstance();
 
 		Entity cameraEntity = client.getCameraEntity();
@@ -98,16 +100,16 @@ public class FalloutDoorModel extends DoorModel {
 			framebuffer.beginWrite(true);
 			client.getFramebuffer().beginWrite(true);
 			bindCustomShader(red, green, blue, pAlpha);*/
-			super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+        super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 			/*unbindCustomShader();
 			framebuffer.endWrite();
 			client.getFramebuffer().endWrite();
 		}*/
-		matrices.pop();
-	}
+        matrices.pop();
+    }
 
-	@Override
-	public ModelPart getPart() {
-		return root;
-	}
+    @Override
+    public ModelPart getPart() {
+        return root;
+    }
 }

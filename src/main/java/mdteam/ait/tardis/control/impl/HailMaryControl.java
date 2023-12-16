@@ -14,9 +14,9 @@ public class HailMaryControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        PropertiesHandler.set(tardis.getProperties(),PropertiesHandler.HAIL_MARY, !PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HAIL_MARY));
+        PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HAIL_MARY, !PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HAIL_MARY));
 
-        messagePlayer(player,PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HAIL_MARY));
+        messagePlayer(player, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HAIL_MARY));
 
         return true;
     }

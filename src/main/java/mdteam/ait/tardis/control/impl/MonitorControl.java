@@ -16,7 +16,7 @@ public class MonitorControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        if(tardis != null)
+        if (tardis != null)
             AITMod.openScreen(player, 0, tardis.getUuid());
         return true;
     }

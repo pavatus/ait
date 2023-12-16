@@ -10,5 +10,6 @@ import net.minecraft.server.world.ServerWorld;
  */
 public interface TardisTickable { // todo, actually use this class where its needed eg desktop, exterior, console, etc.
     void tick(MinecraftServer server);
+
     void tick(ServerWorld world);
 }

@@ -14,6 +14,7 @@ public class WaypointHandler extends TardisLink implements Iterable<AbsoluteBloc
         super(tardisId);
         this.data = waypoints;
     }
+
     public WaypointHandler(UUID tardis) {
         this(tardis, new ArrayList<>());
     }
@@ -21,24 +22,29 @@ public class WaypointHandler extends TardisLink implements Iterable<AbsoluteBloc
     public ArrayList<AbsoluteBlockPos.Directed> data() {
         return this.data;
     }
+
     public boolean contains(AbsoluteBlockPos.Directed var) {
         return this.data().contains(var);
     }
+
     public void add(AbsoluteBlockPos.Directed var) {
         this.data().add(var);
 
         this.sync();
     }
+
     public void remove(AbsoluteBlockPos.Directed var) {
         if (!this.data().contains(var)) return;
 
         this.data().remove(var);
         this.sync();
     }
+
     public void remove(int index) {
         this.data().remove(index);
         this.sync();
     }
+
     public AbsoluteBlockPos.Directed get(int index) {
         return this.data().get(index);
     }

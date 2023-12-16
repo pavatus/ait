@@ -34,6 +34,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
             // updateAnimation(exterior.ANIMATION_STATE, exterior.getAnimation(), MinecraftClient.getInstance().player.age);
         }
     }
+
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         if (exterior.tardis() == null) return;
 

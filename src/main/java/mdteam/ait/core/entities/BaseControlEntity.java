@@ -45,7 +45,8 @@ public abstract class BaseControlEntity extends MobEntity {
     }
 
     @Override
-    public void equipStack(EquipmentSlot slot, ItemStack stack) {}
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+    }
 
     @Override
     public Arm getMainArm() {
@@ -64,9 +65,11 @@ public abstract class BaseControlEntity extends MobEntity {
 
         return ServerTardisManager.getInstance().getTardis(this.tardisId);
     }
+
     private void findTardis() {
         this.setTardis(TardisUtil.findTardisByInterior(this.getBlockPos()));
     }
+
     public void sync() {
         if (isClient()) return;
 
@@ -81,6 +84,7 @@ public abstract class BaseControlEntity extends MobEntity {
 
         this.tardisId = tardis.getUuid();
     }
+
     public void setTardis(UUID uuid) {
         this.tardisId = uuid;
     }

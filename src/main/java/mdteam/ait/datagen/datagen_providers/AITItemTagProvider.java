@@ -19,9 +19,10 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
     }
 
     public static final TagKey<Item> TEST_ITEMS = TagKey.of(RegistryKeys.ITEM, new Identifier(AITMod.MOD_ID, ("test_items")));
+
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         getOrCreateTagBuilder(TEST_ITEMS);
-                //.add();
+        //.add();
     }
 }

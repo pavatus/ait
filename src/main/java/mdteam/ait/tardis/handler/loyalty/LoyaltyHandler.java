@@ -13,6 +13,7 @@ public class LoyaltyHandler extends TardisLink { // todo currently will be usele
         super(tardisId);
         this.data = data;
     }
+
     public LoyaltyHandler(UUID tardis) {
         this(tardis, new HashMap<>());
     }
@@ -20,14 +21,17 @@ public class LoyaltyHandler extends TardisLink { // todo currently will be usele
     public HashMap<UUID, Loyalty> data() {
         return this.data;
     }
+
     public void add(ServerPlayerEntity player) {
         this.add(player, Loyalty.NONE);
     }
+
     public void add(ServerPlayerEntity player, Loyalty loyalty) {
         this.data().put(player.getUuid(), loyalty);
 
         this.sync();
     }
+
     public Loyalty get(ServerPlayerEntity player) {
         return this.data().get(player.getUuid());
     }

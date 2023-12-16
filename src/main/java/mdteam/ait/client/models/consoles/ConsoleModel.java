@@ -34,9 +34,10 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
         TardisTravel.State state = console.getTardis().getTravel().getState();
         this.updateAnimation(console.ANIM_FLIGHT, getAnimationForState(state), console.animationTimer);
     }
+
     public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         if (console.getTardis() == null) return;
-        root.render(matrices, vertices, light, overlay,red,green,blue,pAlpha);
+        root.render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
     }
 
     @Override
@@ -44,6 +45,8 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
     }
 
     public abstract Identifier getTexture();
+
     public abstract Identifier getEmission();
+
     public abstract Animation getAnimationForState(TardisTravel.State state);
 }

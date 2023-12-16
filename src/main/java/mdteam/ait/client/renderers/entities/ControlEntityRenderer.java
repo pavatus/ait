@@ -26,7 +26,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.joml.Matrix4f;
 
-@Environment(value= EnvType.CLIENT)
+@Environment(value = EnvType.CLIENT)
 public class ControlEntityRenderer
         extends LivingEntityRenderer<ConsoleControlEntity, ControlModel> {
 
@@ -77,7 +77,7 @@ public class ControlEntityRenderer
         float h = (float) -textRenderer.getWidth(text) / 2;
         //textRenderer.draw(text, h, (float)text.getString().length(), 0x20FFFFFF, false, matrix4f, vertexConsumers, TextRenderer.TextLayerType.NORMAL, j, light);
         HitResult hitresult = MinecraftClient.getInstance().crosshairTarget;
-        if(hitresult != null) {
+        if (hitresult != null) {
             boolean isPlayerLooking = isPlayerLookingAtControl(hitresult, entity);
             OrderedText orderedText = Text.of(text.getString().toUpperCase().replace("_", " ")).asOrderedText();
             if (isPlayerLooking) {
@@ -88,7 +88,7 @@ public class ControlEntityRenderer
     }
 
     public static boolean isPlayerLookingAtControl(HitResult hitResult, ConsoleControlEntity entity) {
-        if(!entity.getWorld().isClient())
+        if (!entity.getWorld().isClient())
             return false;
         PlayerEntity player = MinecraftClient.getInstance().player;
         if (player != null) {
@@ -99,7 +99,7 @@ public class ControlEntityRenderer
                     Entity hitEntity = ((EntityHitResult) hitResult).getEntity();
                     return hitEntity != null && hitEntity.equals(entity) && nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;
                 }
-            } else if(player.getOffHandStack().getItem() instanceof SonicItem) {
+            } else if (player.getOffHandStack().getItem() instanceof SonicItem) {
                 ItemStack sonic = player.getOffHandStack();
                 NbtCompound nbt = sonic.getOrCreateNbt();
                 if (hitResult.getType() == HitResult.Type.ENTITY) {

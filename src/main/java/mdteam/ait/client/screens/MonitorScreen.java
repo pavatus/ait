@@ -35,35 +35,44 @@ public class MonitorScreen extends TardisScreen {
     private int visibleTopRow;
     int backgroundHeight = 133;
     int backgroundWidth = 236;
+
     public MonitorScreen(UUID tardis) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
         updateTardis();
     }
+
     @Override
     public boolean shouldPause() {
         return false;
     }
+
     private <T extends ClickableWidget> void addButton(T button) {
         this.addDrawableChild(button);
-        this.buttons.add((ButtonWidget)button);
+        this.buttons.add((ButtonWidget) button);
     }
+
     @Override
     protected void init() {
         super.init();
         this.createButtons();
     }
+
     public ExteriorEnum getCurrentModel() {
         return currentModel == null ? tardis().getExterior().getType() : currentModel;
     }
+
     public void setCurrentModel(ExteriorEnum currentModel) {
         this.currentModel = currentModel;
     }
+
     public VariantEnum getCurrentVariant() {
         return currentVariant == null ? tardis().getExterior().getVariant() : currentVariant;
     }
+
     public void setCurrentVariant(VariantEnum currentVariant) {
         this.currentVariant = currentVariant;
     }
+
     private void createButtons() {
         int i = (this.width - this.backgroundWidth / 2);
         int j = (this.height - this.backgroundHeight / 2);
@@ -73,7 +82,7 @@ public class MonitorScreen extends TardisScreen {
         this.addButton(new PressableTextWidget((width / 2 - 103), (height / 2 + 12),
                 this.textRenderer.getWidth("Apply"), 10, Text.literal("Apply"), button -> {
             sendExteriorPacket();
-            }, this.textRenderer));
+        }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 - 110), (height / 2 - 24),
                 this.textRenderer.getWidth("<"), 10, Text.literal("<"), button -> {
             whichDirectionExterior(false);
@@ -95,24 +104,27 @@ public class MonitorScreen extends TardisScreen {
             buttons.active = true;
         });
     }
+
     public void sendExteriorPacket() {
         if (tardis() != null) {
             /*TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel() != tardis().getExterior().getType() ?
                     this.getCurrentModel().ordinal() : tardis().getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(),
                     this.getCurrentVariant() != tardis().getExterior().getVariant());*/
-            if(this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant() != tardis().getExterior().getVariant()) {
+            if (this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant() != tardis().getExterior().getVariant()) {
                 TardisUtil.changeExteriorWithScreen(this.tardisId,
-                                this.getCurrentModel().ordinal(), this.getCurrentVariant().ordinal(),
+                        this.getCurrentModel().ordinal(), this.getCurrentVariant().ordinal(),
                         this.getCurrentVariant() != tardis().getExterior().getVariant());
             }
         }
     }
+
     public void whichDirectionExterior(boolean direction) {
         ExteriorEnum[] values = ExteriorEnum.values();
         int currentIndex = this.getCurrentModel() == null ? 0 : this.getCurrentModel().ordinal();
         int newIndex = (currentIndex + (direction ? 1 : -1) + values.length) % values.length;
         this.setCurrentModel(values[newIndex]);
     }
+
     public void whichDirectionVariant(boolean direction) {
         VariantEnum[] values = VariantEnum.values();
         int currentIndex = this.getCurrentVariant() == null ? 0 : this.getCurrentVariant().ordinal();
@@ -124,6 +136,7 @@ public class MonitorScreen extends TardisScreen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         return super.mouseClicked(mouseX, mouseY, button);
     }
+
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         /*if (this.scrollbarClicked) {
@@ -136,6 +149,7 @@ public class MonitorScreen extends TardisScreen {
         }*/
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
+
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         /*float f = (float)amount / (float)2;
@@ -144,6 +158,7 @@ public class MonitorScreen extends TardisScreen {
         return true;*/
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
+
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         int i = (this.width - this.backgroundWidth) / 2;
         int j = ((this.height) - this.backgroundHeight) / 2;
@@ -156,13 +171,14 @@ public class MonitorScreen extends TardisScreen {
         // Slider
         context.drawTexture(TEXTURE, i + 215, j + 21, 20, 145, 12, 15);
         // Panes
-        for(int k = 0; k < 8; k++) {
+        for (int k = 0; k < 8; k++) {
             context.drawTexture(TEXTURE, (i + 51) + (k * 20), j + 21, 0, 133, 20, 40);
             context.drawTexture(TEXTURE, (i + 51) + (k * 20), j + 61, 0, 133, 20, 40);
         }
         context.pop();
         //context.drawTexture(TEXTURE, i + 18, j + 67, 1, 87, 25, 8);
     }
+
     protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX) {
         // testing @todo
         if (tardis() != null) {
@@ -183,10 +199,12 @@ public class MonitorScreen extends TardisScreen {
             stack.pop();
         }
     }
+
     @Override
     public void renderBackground(DrawContext context) {
         super.renderBackground(context);
     }
+
     protected void drawDestinationText(DrawContext context) {
         int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
         int j = ((this.width - this.backgroundWidth) / 2);
@@ -199,6 +217,7 @@ public class MonitorScreen extends TardisScreen {
         context.drawText(this.textRenderer, Text.literal(dimensionText), (width / 2 - 19), (height / 2 + 48), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 67), (height / 2 + 48), 0xFFFFFF, true);
     }
+
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)

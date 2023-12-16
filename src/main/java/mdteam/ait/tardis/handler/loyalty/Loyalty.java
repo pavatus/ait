@@ -8,6 +8,7 @@ public enum Loyalty { // fixme someone like loqor who had that hour long rant on
 
     public final String id;
     public final int level;
+
     Loyalty(String id, int level) {
         this.id = id;
         this.level = level;
@@ -19,6 +20,7 @@ public enum Loyalty { // fixme someone like loqor who had that hour long rant on
         }
         return null;
     }
+
     public static Loyalty get(int level) {
         Loyalty best = null;
 

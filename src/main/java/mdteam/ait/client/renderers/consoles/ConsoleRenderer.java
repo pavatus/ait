@@ -54,10 +54,10 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         matrices.push();
         //matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-        if(console != null) {
+        if (console != null) {
             console.animateTile(entity);
-            console.renderWithAnimations(entity,this.console.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(console.getTexture())), light, overlay, 1, 1, 1, 1);
-            console.renderWithAnimations(entity,this.console.getPart(),matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(console.getEmission())), maxLight, overlay, 1, 1, 1, 1);
+            console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(console.getTexture())), light, overlay, 1, 1, 1, 1);
+            console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(console.getEmission())), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }

@@ -15,7 +15,10 @@ import mdteam.ait.tardis.TardisExterior;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
     private ExteriorModel model;
-    public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {}
+
+    public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {
+    }
+
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (entity.tardis() == null) {
@@ -42,12 +45,12 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         Identifier texture = model.getVariousTextures(tardisExterior.getType(), tardisExterior.getVariant());
-        if(model != null) {
+        if (model != null) {
             //@TODO use another instance of the model for alpha transparency to get rid of the weird z-fighting alpha stuff like on the fallout exterior (recommended by Bug1312) - Loqor
-            model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
-            if(model.getVariousEmission(texture, tardisExterior.getType()) != null)
-                if(tardisExterior.getType().hasEmission())
-                    model.renderWithAnimations(entity,this.model.getPart(),matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getVariousEmission(texture, tardisExterior.getType()), false)), maxLight, overlay, 1, 1, 1, 1);
+            model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
+            if (model.getVariousEmission(texture, tardisExterior.getType()) != null)
+                if (tardisExterior.getType().hasEmission())
+                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getVariousEmission(texture, tardisExterior.getType()), false)), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }

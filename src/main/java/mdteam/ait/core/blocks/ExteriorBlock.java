@@ -48,7 +48,8 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
             case EAST -> EAST_SHAPE;
             case SOUTH -> SOUTH_SHAPE;
             case WEST -> WEST_SHAPE;
-            default -> throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
+            default ->
+                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
         };
     }
 
@@ -59,7 +60,8 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
             case EAST -> EAST_SHAPE;
             case SOUTH -> SOUTH_SHAPE;
             case WEST -> WEST_SHAPE;
-            default -> throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
+            default ->
+                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
         };
     }
 
@@ -70,7 +72,8 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
             case EAST -> EAST_SHAPE;
             case SOUTH -> SOUTH_SHAPE;
             case WEST -> WEST_SHAPE;
-            default -> throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
+            default ->
+                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
         };
     }
 
@@ -93,7 +96,7 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if(world.isClient())
+        if (world.isClient())
             return;
 
         BlockEntity blockEntity = world.getBlockEntity(pos);

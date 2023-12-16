@@ -41,6 +41,7 @@ public class TardisDesktop {
         door.setTardis(tardis);
         //console.setTardis(tardis);
     }
+
     public TardisDesktop(Tardis tardis, TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed door, AbsoluteBlockPos.Directed console) {
         this.tardis = tardis;
         this.schema = schema;
@@ -72,6 +73,7 @@ public class TardisDesktop {
     public Corners getCorners() {
         return corners;
     }
+
     public boolean updateDoor() {
         if (!(TardisUtil.getTardisDimension().getBlockEntity(doorPos) instanceof DoorBlockEntity door)) {
             AITMod.LOGGER.error("Failed to find the interior door!");
@@ -84,6 +86,7 @@ public class TardisDesktop {
         door.setTardis(tardis);
         return true;
     }
+
     public void changeInterior(TardisDesktopSchema schema) {
         this.schema = schema;
         DesktopGenerator generator = new DesktopGenerator(this.schema);

@@ -10,7 +10,7 @@ import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 
-@Environment(value= EnvType.CLIENT)
+@Environment(value = EnvType.CLIENT)
 public class ControlModel extends SinglePartEntityModel<ConsoleControlEntity> {
     private final ModelPart root;
 
