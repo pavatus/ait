@@ -179,6 +179,8 @@ public class DoorBlockEntity extends BlockEntity {
     public TardisDesktop getDesktop() { return this.getTardis().getDesktop(); }
 
     public void setDesktop(TardisDesktop desktop) {
+        if (isClient()) return;
+
         desktop.setInteriorDoorPos(new AbsoluteBlockPos.Directed(
                 this.pos, TardisUtil.getTardisDimension(), this.getFacing())
         );

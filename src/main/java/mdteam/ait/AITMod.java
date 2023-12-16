@@ -11,9 +11,11 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ConsoleBlock;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
+import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,5 +48,11 @@ public class AITMod implements ModInitializer {
 		TardisUtil.init();
 		TardisManager.getInstance();
 		TardisManager.init();
+
+		entityAttributeRegister();
+	}
+
+	public void entityAttributeRegister() {
+		FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createControlAttributes());
 	}
 }

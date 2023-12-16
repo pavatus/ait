@@ -69,6 +69,10 @@ public abstract class ExteriorAnimation { // hay una problema: no hay animacion 
         this.alpha = Math.clamp(0.0F,1.0F, alpha);
     }
 
+    public boolean hasAnimationStarted() {
+        return this.timeLeft < this.startTime;
+    }
+
     public void tellClientsToSetup(TardisTravel.State state) {
         if (exterior.getWorld().isClient()) return;
 

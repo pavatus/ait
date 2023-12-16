@@ -63,6 +63,7 @@ public class ServerTardisManager extends TardisManager {
                         return;
                     this.sendTardis(player, uuid);
                     this.subscribers.put(uuid, player);
+                    this.subscribeEveryone(getTardis(uuid));
                 }
         );
 
@@ -168,10 +169,7 @@ public class ServerTardisManager extends TardisManager {
 
         if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
 
-        var deepy = this.gson.fromJson(this.gson.toJson(this.subscribers), ArrayListMultimap.class);
-
-        for (Object obj : deepy.get(tardis.getUuid())) {
-            ServerPlayerEntity player = (ServerPlayerEntity) obj;
+        for (ServerPlayerEntity player : this.subscribers.get(tardis.getUuid())) {
             this.sendTardis(player, tardis);
         }
     }
@@ -196,6 +194,9 @@ public class ServerTardisManager extends TardisManager {
     }
 
     private void sendTardis(ServerPlayerEntity player, Tardis tardis) {
+        System.out.println(player);
+        System.out.println(tardis);
+
         this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
     }
 

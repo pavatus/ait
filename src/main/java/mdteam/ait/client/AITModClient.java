@@ -54,7 +54,6 @@ public class AITModClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		setupBlockRendering();
 		blockEntityRendererRegister();
-		entityAttributeRegister();
 		entityRenderRegister();
 		sonicModelPredicate();
 		setKeyBinding();
@@ -152,10 +151,6 @@ public class AITModClient implements ClientModInitializer {
 
 	public void entityRenderRegister() {
 		EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
-	}
-
-	public void entityAttributeRegister() {
-		FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createControlAttributes());
 	}
 
 	public void setKeyBinding() {

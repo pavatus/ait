@@ -139,6 +139,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     }
 
     public void setDesktop(TardisDesktop desktop) {
+        if (isClient()) return;
+
         desktop.setConsolePos(new AbsoluteBlockPos.Directed(
                 this.pos, TardisUtil.getTardisDimension(), this.getCachedState().get(HorizontalDirectionalBlock.FACING))
         );

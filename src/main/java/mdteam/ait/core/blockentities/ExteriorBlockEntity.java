@@ -153,7 +153,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
         ServerTardisManager.getInstance().sendToSubscribers(this.tardis());
     }
     private void findTardisFromPosition() { // should only be used if tardisId is null so we can hopefully refind the tardis
-        Tardis found = findTardisByPosition(new AbsoluteBlockPos(this.getPos(),this.getWorld()));
+        Tardis found = findTardisByPosition(this.getPos());
 
         if (found == null) return;
 
@@ -205,6 +205,5 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
 
         return this.getAnimation().getAlpha();
     }
-
     public void onBroken() {}
 }
