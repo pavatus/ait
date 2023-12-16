@@ -20,6 +20,7 @@ public class PulsatingAnimation extends ExteriorAnimation{
 
         TardisTravel.State state = exterior.tardis().getTravel().getState();
 
+
         if (this.timeLeft < 0)
             this.setupAnimation(exterior.tardis().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 

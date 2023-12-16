@@ -106,7 +106,7 @@ public class AITModClient implements ClientModInitializer {
 		};
 	}
 
-	public void sonicModelPredicate() {
+	public void sonicModelPredicate() { // fixme lord give me strength
 		ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> {
 			if (livingEntity == null) return 0.0F;
 			ItemStack stack = livingEntity.getActiveItem();
@@ -115,19 +115,19 @@ public class AITModClient implements ClientModInitializer {
 		});
 		ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> {
 			if (livingEntity == null) return 0.0F;
-			return SonicItem.whatMode(itemStack) == 0 ? 1.0F : 0.0F;
+			return SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F;
 		});
 		ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> {
 			if (livingEntity == null) return 0.0F;
-			return SonicItem.whatMode(itemStack) == 1 ? 1.0F : 0.0F;
+			return SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F;
 		});
 		ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> {
 			if (livingEntity == null) return 0.0F;
-			return SonicItem.whatMode(itemStack) == 2 ? 1.0F : 0.0F;
+			return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
 		});
 		ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
 			if (livingEntity == null) return 0.0F;
-			return SonicItem.whatMode(itemStack) == 3 ? 1.0F : 0.0F;
+			return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
 		});
 	}
 

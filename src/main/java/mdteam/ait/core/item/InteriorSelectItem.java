@@ -79,7 +79,7 @@ public class InteriorSelectItem extends Item {
         return ActionResult.SUCCESS;
     }
 
-    private Identifier getNextInteriorId(Identifier currentId) {
+    private static Identifier getNextInteriorId(Identifier currentId) {
         // Assuming AITDesktops.iterator() returns an iterator for TardisDesktopSchema
         //for (Iterator<TardisDesktopSchema> it = AITDesktops.iterator().iterator(); it.hasNext(); ) {
         //    TardisDesktopSchema interior = it.next();
@@ -92,7 +92,7 @@ public class InteriorSelectItem extends Item {
         return getNextInterior(currentId.getPath());
     }
 
-    public Identifier getNextInterior(String identifier) {
+    public static Identifier getNextInterior(String identifier) {
         System.out.println("OOGLY BOOGLY BITCH" + identifier);
         return switch (identifier) {
             default -> new Identifier(AITMod.MOD_ID, "cave");

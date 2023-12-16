@@ -21,7 +21,7 @@ public class ClassicAnimation extends ExteriorAnimation {
             this.setupAnimation(exterior.tardis().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 
         if (state == TardisTravel.State.DEMAT) {
-            this.alpha = (float) this.timeLeft / (this.maxTime);
+            this.alpha = (float) this.timeLeft / (this.startTime);
             this.timeLeft--;
 
             runAlphaChecks(state);

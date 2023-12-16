@@ -1,6 +1,9 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
@@ -8,9 +11,9 @@ import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,6 +28,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -49,6 +53,99 @@ public class SonicItem extends Item {
         return stack;
     }
 
+    public enum Mode implements StringIdentifiable {
+        INTERACTION(Formatting.GREEN) {
+            @Override
+            public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                BlockState blockState = world.getBlockState(pos);
+
+                if (!(CampfireBlock.canBeLit(blockState) || CandleBlock.canBeLit(blockState) || CandleCakeBlock.canBeLit(blockState))) return;
+
+                world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
+                world.setBlockState(pos, blockState.with(Properties.LIT, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+            }
+        },
+        SCANNING(Formatting.RED) {
+            @Override
+            public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                // fixme temporary replacement for exterior changing
+
+                BlockEntity entity = world.getBlockEntity(pos);
+
+                if (entity instanceof ExteriorBlockEntity exteriorBlock) {
+                    TardisTravel.State state = exteriorBlock.tardis().getTravel().getState();
+
+                    if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
+                        return;
+                    }
+
+                    ExteriorEnum[] values = ExteriorEnum.values();
+                    int nextIndex = (exteriorBlock.tardis().getExterior().getType().ordinal() + 1) % values.length;
+                    exteriorBlock.tardis().getExterior().setType(values[nextIndex]);
+                    //System.out.println(exteriorBlock.getTardis().getExterior().getType());
+
+                    exteriorBlock.sync();
+                }
+            }
+        },
+        OVERLOAD(Formatting.AQUA) {
+            @Override
+            public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                // fixme temporary replacement for interior changing
+
+                BlockEntity entity = world.getBlockEntity(pos);
+
+                if (entity instanceof ExteriorBlockEntity exteriorBlock) {
+                    TardisTravel.State state = exteriorBlock.tardis().getTravel().getState();
+
+                    if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
+                        return;
+
+                    Identifier nextInteriorId = InteriorSelectItem.getNextInterior(exteriorBlock.tardis().getDesktop().getSchema().id().getPath());
+                    exteriorBlock.tardis().getDesktop().changeInterior(AITDesktops.get(nextInteriorId));
+                    player.sendMessage(Text.literal(nextInteriorId.toString()), true);
+                }
+            }
+        },
+        TARDIS(Formatting.BLUE) {
+            @Override
+            public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (world == TardisUtil.getTardisDimension()) {
+                    world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                    player.sendMessage(Text.literal("Cannot translocate exterior to interior dimension"), true);
+                    return;
+                }
+
+                world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
+
+                TardisTravel travel = tardis.getTravel();
+                BlockPos temp = player.getBlockPos();
+
+                if (world.getBlockState(pos).isReplaceable()) temp = pos;
+
+                PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HANDBRAKE, false);
+                PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.AUTO_LAND, true);
+
+                travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()), true);
+                if(travel.getState() == LANDED) travel.dematerialise(true);
+
+                player.sendMessage(Text.literal("Handbrake disengaged, destination set to current position"), true);
+            }
+        };
+
+        public Formatting format;
+        Mode(Formatting format) {
+            this.format = format;
+        }
+
+        public abstract void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack);
+
+        @Override
+        public String asString() {
+            return StringUtils.capitalize(this.toString().replace("_", " "));
+        }
+    }
 
     // fixme no me gusta nada
     @Override
@@ -60,6 +157,7 @@ public class SonicItem extends Item {
 
         if(player == null)
             return ActionResult.FAIL;
+        if (world.isClient()) return ActionResult.SUCCESS;
 
         NbtCompound nbt = itemStack.getOrCreateNbt();
 
@@ -68,82 +166,72 @@ public class SonicItem extends Item {
                 if (consoleBlock.getTardis() == null)
                     return ActionResult.PASS;
 
-                if (!nbt.contains("tardis")) {
-                    nbt.putUuid("tardis", consoleBlock.getTardis().getUuid());
-                    nbt.putInt(MODE_KEY, 0);
-                    nbt.putBoolean(INACTIVE, true);
-                }
+                link(consoleBlock.getTardis(), itemStack);
                 return ActionResult.SUCCESS;
             }
 
-            if(world.isClient())
-                return ActionResult.PASS;
-
-            if (nbt.contains(MODE_KEY)) {
-                if (nbt.getInt(MODE_KEY) == 3) {
-                    Tardis tardis = ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
-                    if (tardis != null) {
-                        if (world != TardisUtil.getTardisDimension()) {
-                            world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
-                            TardisTravel travel = tardis.getTravel();
-                            BlockPos temp = player.getBlockPos();
-                            if (world.getBlockState(pos).isReplaceable()) temp = pos;
-                            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HANDBRAKE, false);
-                            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.AUTO_LAND, true);
-                            travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()), true);
-                            if(travel.getState() == LANDED) travel.dematerialise(true);
-                            player.sendMessage(Text.literal("Handbrake disengaged, destination set to current position"), true);
-                            return ActionResult.SUCCESS;
-                        } else {
-                            world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-                            player.sendMessage(Text.literal("Cannot translocate exterior to interior dimension"), true);
-                            return ActionResult.PASS;
-                        }
-                    }
-                }
-            }
-            if (nbt.getInt(MODE_KEY) == 0) {
-                BlockState blockState = world.getBlockState(pos);
-                if (CampfireBlock.canBeLit(blockState) || CandleBlock.canBeLit(blockState) || CandleCakeBlock.canBeLit(blockState)) {
-                    world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
-                    world.setBlockState(pos, blockState.with(Properties.LIT, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                    return ActionResult.success(world.isClient());
-                }
-            }
+            // cycleMode(itemStack);
+            // return ActionResult.SUCCESS;
         }
-        return ActionResult.FAIL;
+
+        if (!nbt.contains(MODE_KEY)) return ActionResult.FAIL;
+
+        Tardis tardis = getTardis(itemStack);
+        if (tardis == null) return ActionResult.FAIL;
+
+        Mode mode = intToMode(nbt.getInt(MODE_KEY));
+        mode.run(tardis, world, pos, player, itemStack);
+
+        return ActionResult.SUCCESS;
     }
 
-    @Override
-    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if(user.isSneaking()) {
-            NbtCompound nbt = stack.getOrCreateNbt();
-            if(nbt.contains("tardis")) {
-                if (nbt.contains(MODE_KEY)) {
-                    SonicItem.setMode(stack, nbt.getInt(MODE_KEY) + 1 <= 3 ? nbt.getInt(MODE_KEY) + 1 : 0);
-                    //System.out.println(SonicItem.whatMode(stack));
-                }
-            }
+    public static Tardis getTardis(ItemStack item) {
+        NbtCompound nbt = item.getOrCreateNbt();
+
+        if (!nbt.contains("tardis")) return null;
+
+        return ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis"));
+    }
+
+    public static void link(Tardis tardis, ItemStack item) {
+        NbtCompound nbt = item.getOrCreateNbt();
+
+        if (tardis == null) return;
+
+        if (!nbt.contains("tardis")) { // fixme dont think you can relink to new tardis
+            nbt.putUuid("tardis", tardis.getUuid());
+            nbt.putInt(MODE_KEY, 0);
+            nbt.putBoolean(INACTIVE, true);
         }
+    }
+
+    public static void playSonicSounds(PlayerEntity player) {
+        player.getWorld().playSound(null,player.getBlockPos(),SoundEvents.BLOCK_BEACON_AMBIENT, SoundCategory.PLAYERS,1f,2f);
+    }
+
+    public static void cycleMode(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        if (!(nbt.contains("tardis")) || !(nbt.contains(MODE_KEY))) return;
+
+        SonicItem.setMode(stack, nbt.getInt(MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(MODE_KEY) + 1 : 0);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         NbtCompound nbt = itemStack.getOrCreateNbt();
-        if(nbt == null || !nbt.contains("tardis")) {
-            return TypedActionResult.fail(itemStack);
-        }
-        if (user.isSneaking()) {
-            user.setCurrentHand(hand);
-            nbt.putBoolean(INACTIVE, true);
-            return TypedActionResult.consume(itemStack);
-        }
-        return TypedActionResult.fail(itemStack);
+
+        if (world.isClient()) return TypedActionResult.pass(itemStack);
+
+        if (user.isSneaking())
+            cycleMode(itemStack);
+        else playSonicSounds(user);
+
+        return TypedActionResult.pass(itemStack);
     }
 
-    public static int whatMode(ItemStack stack) {
+    public static int findModeInt(ItemStack stack) {
         NbtCompound nbtCompound = stack.getNbt();
         if(nbtCompound == null || !nbtCompound.contains("tardis"))
             return 0;
@@ -169,35 +257,22 @@ public class SonicItem extends Item {
 
         NbtCompound tag = stack.getOrCreateNbt();
         String text = tag.contains("tardis") ? tag.getUuid("tardis").toString().substring(0, 8)
-                : "Sonic does not identify with any TARDIS";
+                : "None";
 
-        if(tag.contains("tardis")) {
+        if(tag.contains("tardis")) { // Adding the sonics mode
             tooltip.add(Text.literal("Mode:").formatted(Formatting.BLUE));
-            String mode = intToMode(tag.getInt(MODE_KEY));
-            tooltip.add(Text.literal(mode).formatted(modeToColour(mode)).formatted(Formatting.BOLD));
+
+            Mode mode = intToMode(tag.getInt(MODE_KEY));
+            tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
+
             tooltip.add(ScreenTexts.EMPTY);
         }
+
         tooltip.add(Text.literal("TARDIS: ").formatted(Formatting.BLUE));
         tooltip.add(Text.literal("> " + text).formatted(Formatting.GRAY));
     }
 
-    public String intToMode(int mode) {
-        return switch (mode) {
-            case 0 -> "Interaction";
-            case 1 -> "Overload";
-            case 2 -> "Scanning";
-            case 3 -> "TARDIS";
-            default -> "None";
-        };
-    }
-
-    public Formatting modeToColour(String mode) {
-        return switch (mode) {
-            case "Interaction" -> Formatting.GREEN;
-            case "Overload" -> Formatting.RED;
-            case "Scanning" -> Formatting.AQUA;
-            case "TARDIS" -> Formatting.BLUE;
-            default -> Formatting.DARK_GRAY;
-        };
+    public Mode intToMode(int mode) {
+        return Mode.values()[mode];
     }
 }
