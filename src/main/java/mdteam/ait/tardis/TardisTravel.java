@@ -85,48 +85,13 @@ public class TardisTravel {
         return this.tardis;
     }
 
-    public boolean __subCheckForPos(BlockPos.Mutable mutable, int i) {
-        BlockState state = this.getDestination().getWorld().getBlockState(mutable.setY(i));
-        if (state.isReplaceable() && !this.getDestination().getWorld().getBlockState(mutable.down()).isReplaceable()) {
-            AbsoluteBlockPos.Directed abpd = new AbsoluteBlockPos.Directed(mutable.setY(i),
-                    this.getDestination().getWorld(), this.getDestination().getDirection());
-            this.setDestination(abpd, false);
-            return true;
-        }
-        return false;
-    }
+    public void travelTo(AbsoluteBlockPos.Directed pos) {
+        this.setDestination(pos, true);
 
-    //Yeah I know, I'm so cool :) - Loqor
-    @Deprecated
-    public void checkPositionAndMaterialise(boolean landType) {
-
-        if (this.getDestination() == null)
-            return;
-
-        if (this.getDestination().getWorld().isClient())
-            return;
-
-        BlockPos.Mutable mutable = new BlockPos.Mutable(this.getDestination().getX(), this.getDestination().getY(), this.getDestination().getZ());
-        if (landType) {
-            for (int i = this.getDestination().getY(); i > this.getDestination().getWorld().getBottomY(); i--) {
-                if (__subCheckForPos(mutable, i)) {
-                    materialise();
-                    return;
-                }
-            }
-        } else {
-            for (int i = this.getDestination().getY(); i < this.getDestination().getWorld().getBottomY(); i++) {
-                if (__subCheckForPos(mutable, i)) {
-                    materialise();
-                    return;
-                }
-            }
-        }
-        if (this.getTardis() != null) {
-            PlayerEntity player = TardisUtil.getPlayerInsideInterior(this.getTardis());
-            if (player != null) {
-                player.sendMessage(Text.literal("Position not viable for translocation: " + mutable.getX() + " | " + mutable.getY() + " | " + mutable.getZ()), true);
-            }
+        if (this.getState() == State.LANDED) {
+            this.dematerialise(true);
+        } else if (this.getState() == State.FLIGHT) {
+            this.materialise();
         }
     }
 
@@ -137,7 +102,7 @@ public class TardisTravel {
         if (this.getDestination().getWorld().isClient())
             return;
 
-        if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN))) {
+        if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.FIND_GROUND))) {
             // Not safe to land here!
             this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
@@ -252,10 +217,10 @@ public class TardisTravel {
      * Checks whether the destination is valid otherwise searches for a new one
      *
      * @param limit     how many times the search can happen (should stop hanging)
-     * @param downwards whether to search downwards or upwards
+     * @param fullCheck whether to search downwards or upwards
      * @return whether its safe to land
      */
-    private boolean checkDestination(int limit, boolean downwards) {
+    private boolean checkDestination(int limit, boolean fullCheck) {
         if (TardisUtil.isClient()) return true;
 
         ServerWorld world = (ServerWorld) this.getDestination().getWorld(); // this cast is fine, we know its server
@@ -267,10 +232,14 @@ public class TardisTravel {
 
             setDestinationToTardisInterior(target.tardis(), true, 256); // how many times should this be
 
-            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN)); // limit at a small number cus it might get too laggy
+            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
         }
 
         BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
+
+        if (!fullCheck) {
+            return (world.getBlockState(temp).isReplaceable()) && (world.getBlockState(temp.up()).isReplaceable());
+        }
 
         for (int i = 0; i < limit; i++) {
             if (world.getBlockState(temp).isReplaceable() && world.getBlockState(temp.up()).isReplaceable() && !world.getBlockState(temp.down()).isReplaceable()) { // check two blocks cus tardis is two blocks tall yk and check for groud
@@ -278,15 +247,25 @@ public class TardisTravel {
                 return true;
             }
 
-            if (downwards) temp = temp.down().mutableCopy();
-            else temp = temp.up().mutableCopy();
+            temp = temp.down().mutableCopy();
+        }
+
+        temp = this.getDestination().mutableCopy();
+
+        for (int i = 0; i < limit; i++) {
+            if (world.getBlockState(temp).isReplaceable() && world.getBlockState(temp.up()).isReplaceable() && !world.getBlockState(temp.down()).isReplaceable()) { // check two blocks cus tardis is two blocks tall yk and check for groud
+                this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
+                return true;
+            }
+
+            temp = temp.up().mutableCopy();
         }
 
         return false;
     }
 
     public boolean checkDestination() {
-        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getProperties(), PropertiesHandler.SEARCH_DOWN));
+        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getProperties(), PropertiesHandler.FIND_GROUND));
     }
 
     private boolean isDestinationTardisExterior() {
@@ -370,7 +349,7 @@ public class TardisTravel {
         this.destination = pos;
 
         if (withChecks)
-            this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getProperties(), PropertiesHandler.SEARCH_DOWN));
+            this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getProperties(), PropertiesHandler.FIND_GROUND));
     }
 
     public AbsoluteBlockPos.Directed getDestination() {

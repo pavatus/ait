@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class PropertiesHandler { // todo move more things over to properties
     public static final String AUTO_LAND = "auto_land";
-    public static final String SEARCH_DOWN = "search_down";
+    public static final String FIND_GROUND = "find_ground"; // whether the destination checks will try to find the ground or not
     public static final String PREVIOUSLY_LOCKED = "last_locked";
     public static final String HANDBRAKE = "handbrake";
     public static final String HAIL_MARY = "hail_mary";
@@ -76,7 +76,7 @@ public class PropertiesHandler { // todo move more things over to properties
         HashMap<String, Object> map = new HashMap<>();
 
         map.put(AUTO_LAND, false);
-        map.put(SEARCH_DOWN, false);
+        map.put(FIND_GROUND, true);
         map.put(PREVIOUSLY_LOCKED, false);
         map.put(HANDBRAKE, true);
         map.put(HAIL_MARY, true);

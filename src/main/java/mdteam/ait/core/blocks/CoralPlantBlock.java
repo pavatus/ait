@@ -83,7 +83,6 @@ public class CoralPlantBlock extends Block {
             if (i < this.getMaxAge()) {
                 if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)) {
                     world.breakBlock(pos, true);
-
                     return;
                 }
 
