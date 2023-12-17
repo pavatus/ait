@@ -34,4 +34,4 @@ run/
 
 # java
 
-src/main/generated/
+src/main/generated/.cache
