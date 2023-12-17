@@ -1,5 +1,6 @@
 package mdteam.ait;
 
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import io.wispforest.owo.itemgroup.Icon;
@@ -10,10 +11,14 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ConsoleBlock;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.commands.SetLockedCommand;
+import mdteam.ait.core.commands.SummonTardisCommand;
+import mdteam.ait.core.commands.TeleportInteriorCommand;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -57,6 +62,12 @@ public class AITMod implements ModInitializer {
         TardisManager.init();
 
         entityAttributeRegister();
+
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
+            TeleportInteriorCommand.register(dispatcher);
+            SummonTardisCommand.register(dispatcher);
+            SetLockedCommand.register(dispatcher);
+        }));
     }
 
     public void entityAttributeRegister() {
