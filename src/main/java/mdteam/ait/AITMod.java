@@ -11,6 +11,7 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ConsoleBlock;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.commands.IsRiftChunkCommand;
 import mdteam.ait.core.commands.SetLockedCommand;
 import mdteam.ait.core.commands.SummonTardisCommand;
 import mdteam.ait.core.commands.TeleportInteriorCommand;
@@ -67,6 +68,7 @@ public class AITMod implements ModInitializer {
             TeleportInteriorCommand.register(dispatcher);
             SummonTardisCommand.register(dispatcher);
             SetLockedCommand.register(dispatcher);
+            IsRiftChunkCommand.register(dispatcher); // should probably have a tp to rift chunk instead but i cba
         }));
     }
 

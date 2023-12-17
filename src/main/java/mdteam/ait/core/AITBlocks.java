@@ -14,6 +14,7 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block EXTERIOR_BLOCK = new ExteriorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing());
     public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque().noCollision().noBlockBreakParticles());
     public static final Block CONSOLE = new ConsoleBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing());
+    public static final Block CORAL_PLANT = new CoralPlantBlock(FabricBlockSettings.create().ticksRandomly().nonOpaque().noCollision());
     @NoBlockItem
     public static final Block RADIO = new RadioBlock(FabricBlockSettings.create().nonOpaque());
 

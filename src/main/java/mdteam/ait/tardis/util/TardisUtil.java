@@ -35,6 +35,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.random.ChunkRandom;
+import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -147,6 +149,12 @@ public class TardisUtil {
             }
         }*/
         return TARDIS_DIMENSION;
+    }
+
+    public static boolean isRiftChunk(ServerWorld world,BlockPos pos) {
+        ChunkPos chunkPos = new ChunkPos(pos);
+        boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, world.getSeed(), 987234911L).nextInt(10) == 0; // for now itll be the same as slime chunks (fuck you classic) but if needed change that big number beginning with 9 to a slightly different number and wowow its entirely different
+        return bl;
     }
 
     public static AbsoluteBlockPos.Directed createFromPlayer(PlayerEntity player) {

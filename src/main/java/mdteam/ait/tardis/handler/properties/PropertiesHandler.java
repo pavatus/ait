@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.handler.properties;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 
 import java.util.HashMap;
 
@@ -54,8 +55,9 @@ public class PropertiesHandler { // todo move more things over to properties
     public static int getInt(PropertiesHolder holder, String key) {
         if (!holder.getData().containsKey(key)) return 0;
 
-        if (!(holder.getData().get(key) instanceof Integer)) {
-            AITMod.LOGGER.warn("Tried to grab key " + key + " which was not an Integer!");
+        if (!(holder.getData().get(key) instanceof Integer) && !(holder.getData().get(key) instanceof Double) && !(holder.getData().get(key) instanceof Float)) {
+            AITMod.LOGGER.error("Tried to grab key " + key + " which was not an Integer!");
+            AITMod.LOGGER.warn("Value was instead: " + holder.getData().get(key));
             return 0;
         }
 
