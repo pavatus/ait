@@ -61,6 +61,13 @@ public class PropertiesHandler { // todo move more things over to properties
             return 0;
         }
 
+        if (holder.getData().get(key) instanceof Double d) {
+            return d.intValue();
+        }
+        if (holder.getData().get(key) instanceof Float d) {
+            return d.intValue();
+        }
+
         return (int) holder.getData().get(key);
     }
 

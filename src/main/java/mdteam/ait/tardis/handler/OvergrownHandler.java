@@ -38,7 +38,7 @@ public class OvergrownHandler extends TardisLink {
     public boolean isOvergrown() {
         return PropertiesHandler.getBool(this.tardis().getProperties(), IS_OVERGROWN);
     }
-    private void setOvergrown(boolean var) {
+    public void setOvergrown(boolean var) {
         PropertiesHandler.setBool(this.tardis().getProperties(), IS_OVERGROWN, var);
     }
 

@@ -92,7 +92,8 @@ public class CoralPlantBlock extends Block {
 
         if (this.getAge(state) >= this.getMaxAge()) {
             // Create a new tardis
-            ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), ExteriorEnum.CAPSULE, VariantEnum.DEFAULT, ConsoleEnum.BOREALIS, AITDesktops.get(new Identifier(AITMod.MOD_ID, "default_cave")), false);
+            ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), ExteriorEnum.CAPSULE, VariantEnum.DEFAULT, ConsoleEnum.BOREALIS, AITDesktops.get(new Identifier(AITMod.MOD_ID, "default_cave")), false);
+            created.getOvergrownHandler().setOvergrown(true);
 
             LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world);
             lightning.setPos(pos.getX(),pos.getY(),pos.getZ());
