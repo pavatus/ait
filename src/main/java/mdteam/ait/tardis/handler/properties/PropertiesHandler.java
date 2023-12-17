@@ -16,7 +16,7 @@ public class PropertiesHandler { // todo move more things over to properties
     /**
      * used for setting things to a boolean
      */
-    public static void set(PropertiesHolder holder, String key, boolean val) {
+    public static void setBool(PropertiesHolder holder, String key, boolean val) {
         if (holder.getData().containsKey(key)) {
             holder.getData().replace(key, val);
             return;
@@ -25,7 +25,22 @@ public class PropertiesHandler { // todo move more things over to properties
         holder.getData().put(key, val);
     }
 
-    public static boolean get(PropertiesHolder holder, String key) {
+    public static void set(PropertiesHolder holder, String key, Object val) {
+        if (holder.getData().containsKey(key)) {
+            holder.getData().replace(key, val);
+            return;
+        }
+
+        holder.getData().put(key, val);
+    }
+
+    public static Object get(PropertiesHolder holder, String key) {
+        if (!holder.getData().containsKey(key)) return null;
+
+        return holder.getData().get(key);
+    }
+
+    public static boolean getBool(PropertiesHolder holder, String key) {
         if (!holder.getData().containsKey(key)) return false;
 
         if (!(holder.getData().get(key) instanceof Boolean)) {
@@ -36,12 +51,23 @@ public class PropertiesHandler { // todo move more things over to properties
         return (boolean) holder.getData().get(key);
     }
 
+    public static int getInt(PropertiesHolder holder, String key) {
+        if (!holder.getData().containsKey(key)) return 0;
+
+        if (!(holder.getData().get(key) instanceof Integer)) {
+            AITMod.LOGGER.warn("Tried to grab key " + key + " which was not an Integer!");
+            return 0;
+        }
+
+        return (int) holder.getData().get(key);
+    }
+
     public static void setAutoPilot(PropertiesHolder handler, boolean val) {
-        set(handler, AUTO_LAND, val);
+        setBool(handler, AUTO_LAND, val);
     }
 
     public static boolean willAutoPilot(PropertiesHolder holder) {
-        return get(holder, AUTO_LAND);
+        return getBool(holder, AUTO_LAND);
     }
 
     public static HashMap<String, Object> createDefaultProperties() {

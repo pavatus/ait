@@ -3,6 +3,7 @@ package mdteam.ait.tardis;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
+import mdteam.ait.tardis.handler.OvergrownHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHolder;
@@ -25,6 +26,7 @@ public class Tardis {
     private final PropertiesHolder properties;
     private final WaypointHandler waypoints;
     private final LoyaltyHandler loyalties;
+    private final OvergrownHandler overgrown;
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, VariantEnum variant, ConsoleEnum consoleType) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), (tardis) -> new TardisConsole(tardis, consoleType, consoleType.getControlTypesList()), false);
@@ -38,6 +40,7 @@ public class Tardis {
         this.properties = new PropertiesHolder(uuid);
         this.waypoints = new WaypointHandler(uuid);
         this.loyalties = new LoyaltyHandler(uuid);
+        this.overgrown = new OvergrownHandler(uuid);
         this.desktop = desktop.apply(this);
         this.exterior = exterior.apply(this);
         this.console = console.apply(this);
@@ -90,6 +93,7 @@ public class Tardis {
     public LoyaltyHandler getLoyalties() {
         return loyalties;
     }
+    public OvergrownHandler getOvergrownHandler() {return overgrown;}
 
     /**
      * Called at the end of a servers tick
@@ -97,8 +101,7 @@ public class Tardis {
      * @param server the server being ticked
      */
     public void tick(MinecraftServer server) {
-//         this one line alone increased the percentage by ticks from 1% to 5% :)
-//         ServerTardisManager.getInstance().subscribeEveryone(this); // fixme god every tick too?? this is getting bad.
+        this.getOvergrownHandler().tick(server);
     }
 
     /**

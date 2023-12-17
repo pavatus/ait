@@ -14,7 +14,6 @@ import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -138,7 +137,7 @@ public class TardisTravel {
         if (this.getDestination().getWorld().isClient())
             return;
 
-        if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN))) {
+        if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN))) {
             // Not safe to land here!
             this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
@@ -197,7 +196,7 @@ public class TardisTravel {
 
         DoorHandler.lockTardis(true, this.getTardis(), (ServerWorld) TardisUtil.getTardisDimension(), null, true);
 
-        if (PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HANDBRAKE)) {
+        if (PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE)) {
             // fail to take off when handbrake is on
             this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
@@ -268,7 +267,7 @@ public class TardisTravel {
 
             setDestinationToTardisInterior(target.tardis(), true, 256); // how many times should this be
 
-            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN)); // limit at a small number cus it might get too laggy
+            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN)); // limit at a small number cus it might get too laggy
         }
 
         BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
@@ -287,7 +286,7 @@ public class TardisTravel {
     }
 
     public boolean checkDestination() {
-        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(this.getTardis().getProperties(), PropertiesHandler.SEARCH_DOWN));
+        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getProperties(), PropertiesHandler.SEARCH_DOWN));
     }
 
     private boolean isDestinationTardisExterior() {
@@ -343,7 +342,7 @@ public class TardisTravel {
         if (blockEntity != null)
             this.runAnimations(blockEntity);
         if (DoorHandler.isClient()) return;
-        DoorHandler.lockTardis(PropertiesHandler.get(this.getTardis().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), (ServerWorld) this.position.getWorld(), null, false);
+        DoorHandler.lockTardis(PropertiesHandler.getBool(this.getTardis().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), (ServerWorld) this.position.getWorld(), null, false);
     }
 
     public void forceLand() {
@@ -371,7 +370,7 @@ public class TardisTravel {
         this.destination = pos;
 
         if (withChecks)
-            this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(this.getTardis().getProperties(), PropertiesHandler.SEARCH_DOWN));
+            this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getProperties(), PropertiesHandler.SEARCH_DOWN));
     }
 
     public AbsoluteBlockPos.Directed getDestination() {

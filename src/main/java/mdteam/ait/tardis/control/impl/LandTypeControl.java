@@ -2,8 +2,6 @@ package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
@@ -16,9 +14,9 @@ public class LandTypeControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN, !PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN));
+        PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN, !PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN));
 
-        messagePlayer(player, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN));
+        messagePlayer(player, PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN));
 
         return false;
     }

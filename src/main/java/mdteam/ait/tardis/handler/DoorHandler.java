@@ -179,7 +179,7 @@ public class DoorHandler extends TardisLink {
         door.setRightRot(false);
 
         if (!forced) {
-            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, locked);
+            PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, locked);
         }
 
         String lockedState = tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";

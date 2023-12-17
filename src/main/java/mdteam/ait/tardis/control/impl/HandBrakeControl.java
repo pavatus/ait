@@ -4,8 +4,6 @@ import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
@@ -13,7 +11,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 public class HandBrakeControl extends Control {
     public HandBrakeControl() {
@@ -22,9 +19,9 @@ public class HandBrakeControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HANDBRAKE, !PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HANDBRAKE));
+        PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE, !PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE));
 
-        messagePlayer(player, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HANDBRAKE));
+        messagePlayer(player, PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE));
 
         if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
             // randomise and force land @todo something better ive got no ideas at 1am loqor

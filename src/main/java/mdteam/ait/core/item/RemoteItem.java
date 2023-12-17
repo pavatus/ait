@@ -79,7 +79,7 @@ public class RemoteItem extends Item {
 
                 //FIXME: this is not how you do it! (cope)
                 if (travel.getState() == LANDED) {
-                    PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HANDBRAKE, false);
+                    PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE, false);
                     travel.dematerialise(true);
                 }
                 if (travel.getState() == FLIGHT) {

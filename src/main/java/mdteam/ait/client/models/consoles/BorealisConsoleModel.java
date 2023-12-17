@@ -640,7 +640,7 @@ public class BorealisConsoleModel extends ConsoleModel {
         ModelPart southEastControls = this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel");
         ModelPart northControls = this.base_console.getChild("NORTH").getChild("northcontrolpanel");
         boolean isInFlight = console.getTardis().getTravel().getState() == TardisTravel.State.DEMAT || console.getTardis().getTravel().getState() == TardisTravel.State.FLIGHT;
-        boolean isHandbrakeActive = PropertiesHandler.get(console.getTardis().getProperties(), PropertiesHandler.HANDBRAKE);
+        boolean isHandbrakeActive = PropertiesHandler.getBool(console.getTardis().getProperties(), PropertiesHandler.HANDBRAKE);
         boolean leftDoor = console.getTardis().getDoor().isLeftOpen();
         boolean rightDoor = console.getTardis().getDoor().isRightOpen();
         float throttleZ = southEastControls.getChild("throttle").pivotZ;

@@ -27,7 +27,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -112,10 +111,10 @@ public class KeyItem extends Item {
 
     private void hailMary(Tardis tardis, ItemStack stack, PlayerEntity player) {
         if (player.getItemCooldownManager().isCoolingDown(stack.getItem())) return;
-        if (!PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HAIL_MARY)) return;
+        if (!PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.HAIL_MARY)) return;
 
         KeyItem keyType = (KeyItem) stack.getItem().asItem();
-        boolean handbrake = PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HANDBRAKE);
+        boolean handbrake = PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE);
 
         if (keyType.hasProtocol(Protocols.HAIL) && !handbrake && player.getHealth() <= 4 && player.getWorld() != TardisUtil.getTardisDimension()) {
             tardis.getTravel().setDestination(TardisUtil.createFromPlayer(player), true);
@@ -131,8 +130,8 @@ public class KeyItem extends Item {
 
             player.getItemCooldownManager().set(stack.getItem(), 60 * 20);
 
-            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HAIL_MARY, false); // should this just set the handbrake on instead?
-            PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, false); // so you get SUCKED up
+            PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.HAIL_MARY, false); // should this just set the handbrake on instead?
+            PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, false); // so you get SUCKED up
 
             player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f); // like a sound to show its been called
             player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);

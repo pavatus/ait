@@ -1,30 +1,23 @@
 package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import mdteam.ait.tardis.wrapper.client.ClientTardis;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -39,7 +32,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.plaf.synth.SynthTableUI;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -169,7 +161,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
             ((ExteriorBlockEntity) exterior).getAnimation().tick();
 
 
-        if (!world.isClient() && ((ExteriorBlockEntity) exterior).tardis() != null && !PropertiesHandler.get(((ExteriorBlockEntity) exterior).tardis().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && ((ExteriorBlockEntity) exterior).tardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
+        if (!world.isClient() && ((ExteriorBlockEntity) exterior).tardis() != null && !PropertiesHandler.getBool(((ExteriorBlockEntity) exterior).tardis().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && ((ExteriorBlockEntity) exterior).tardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
             for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(exterior.getPos()).expand(0, 1, 0), EntityPredicates.EXCEPT_SPECTATOR)) {
                 TardisUtil.teleportInside(((ExteriorBlockEntity) exterior).tardis(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
             }

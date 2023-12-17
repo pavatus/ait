@@ -19,7 +19,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -127,8 +126,8 @@ public class SonicItem extends Item {
 
                 if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
-                PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HANDBRAKE, false);
-                PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.AUTO_LAND, true);
+                PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE, false);
+                PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.AUTO_LAND, true);
 
                 travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()), true);
                 if (travel.getState() == LANDED) travel.dematerialise(true);

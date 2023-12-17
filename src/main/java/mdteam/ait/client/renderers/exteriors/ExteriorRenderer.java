@@ -48,6 +48,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         if (model != null) {
             //@TODO use another instance of the model for alpha transparency to get rid of the weird z-fighting alpha stuff like on the fallout exterior (recommended by Bug1312) - Loqor
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
+            if (entity.tardis().getOvergrownHandler().isOvergrown()) {
+                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.tardis().getOvergrownHandler().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+            }
             if (model.getVariousEmission(texture, tardisExterior.getType()) != null)
                 if (tardisExterior.getType().hasEmission())
                     model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getVariousEmission(texture, tardisExterior.getType()), false)), maxLight, overlay, 1, 1, 1, 1);
