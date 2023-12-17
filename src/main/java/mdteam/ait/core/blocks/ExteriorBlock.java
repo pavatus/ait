@@ -4,6 +4,7 @@ import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
+import mdteam.ait.tardis.TardisTravel;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -43,30 +44,38 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return switch (state.get(FACING)) {
-            case NORTH -> NORTH_SHAPE;
-            case EAST -> EAST_SHAPE;
-            case SOUTH -> SOUTH_SHAPE;
-            case WEST -> WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
-        };
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
+
+        TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
+        if (travelState == TardisTravel.State.LANDED) return getNormalShape(state, world, pos);
+
+        return VoxelShapes.empty();
     }
 
     @Override
     public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
-        return switch (state.get(FACING)) {
-            case NORTH -> NORTH_SHAPE;
-            case EAST -> EAST_SHAPE;
-            case SOUTH -> SOUTH_SHAPE;
-            case WEST -> WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
-        };
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
+
+        TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
+        if (travelState == TardisTravel.State.LANDED) return getNormalShape(state, world, pos);
+
+        return VoxelShapes.empty();
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
+
+        TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
+        if (travelState == TardisTravel.State.LANDED) return getNormalShape(state, world, pos);
+
+        return VoxelShapes.empty();
+    }
+
+    public VoxelShape getNormalShape(BlockState state, BlockView world, BlockPos pos) {
         return switch (state.get(FACING)) {
             case NORTH -> NORTH_SHAPE;
             case EAST -> EAST_SHAPE;
@@ -79,6 +88,12 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
 
     @Override
     public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
+
+        TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
+        if (travelState == TardisTravel.State.LANDED) return getNormalShape(state, world, pos);
+
         return VoxelShapes.empty();
     }
 
