@@ -68,7 +68,7 @@ public class SonicItem extends Item {
                 world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             }
         },
-        SCANNING(Formatting.RED) {
+        OVERLOAD(Formatting.RED) {
             @Override
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 // fixme temporary replacement for exterior changing
@@ -91,7 +91,7 @@ public class SonicItem extends Item {
                 }
             }
         },
-        OVERLOAD(Formatting.AQUA) {
+        SCANNING(Formatting.AQUA) {
             @Override
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 // fixme temporary replacement for interior changing

@@ -138,21 +138,10 @@ public class DoorHandler extends TardisLink {
                     door.setLeftRot(true);
                 }
             }
-            /*if(exterior != null)
-                if (exterior.getRightDoorRotation() == 1.2f && exterior.getLeftDoorRotation() == 1.2f) {
-                    exterior.setLeftDoorRot(0);
-                    exterior.setRightDoorRot(0);
-                } else {
-                    exterior.setRightDoorRot(door.getLeftDoorRotation() == 0 ? 0 : 1.2f);
-                    exterior.setLeftDoorRot(1.2f);
-                }*/
         } else {
             world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
             world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
             door.setLeftRot(!door.isLeftOpen());
-            /*if (exterior != null) {
-                exterior.setLeftDoorRot(door.getLeftDoorRotation() == 0 ? 1.2f : 0);
-            }*/
         }
 
         tardis.getDoor().sync();

@@ -5,7 +5,10 @@ import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.AITDesktops;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
@@ -52,6 +55,21 @@ public class TardisItemBuilder extends Item {
         AbsoluteBlockPos.Directed pos = new AbsoluteBlockPos.Directed(context.getBlockPos().up(), world, Direction.NORTH);
 
         if (context.getHand() == Hand.MAIN_HAND) {
+            BlockEntity entity = world.getBlockEntity(context.getBlockPos());
+
+            if (entity instanceof ConsoleBlockEntity consoleBlock) {
+                TardisTravel.State state = consoleBlock.getTardis().getTravel().getState();
+
+                if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
+                    return ActionResult.PASS;
+                }
+
+                consoleBlock.killControls();
+                world.removeBlock(context.getBlockPos(), false);
+                world.removeBlockEntity(context.getBlockPos());
+                return ActionResult.SUCCESS;
+            }
+
             System.out.println(this.exterior);
 
             ServerTardisManager.getInstance().create(pos, this.exterior, DEFAULT_VARIANT, DEFAULT_CONSOLE, AITDesktops.get(this.desktop), false);

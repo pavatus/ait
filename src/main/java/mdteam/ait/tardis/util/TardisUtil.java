@@ -99,8 +99,19 @@ public class TardisUtil {
                             TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
                     if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
                         if (!player.isSneaking()) {
-                            DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
-                                    player);
+                            /*DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
+                                    player);*/
+                            if (tardis.getDoor().isLeftOpen()) {
+                                tardis.getDoor().closeDoors();
+                                tardis.getDoor().sync();
+                            } else if (tardis.getDoor().isBothClosed()) {
+                                tardis.getDoor().openDoors();
+                                tardis.getDoor().sync();
+                            } else {
+                                tardis.getDoor().setRightRot(tardis.getDoor().isLeftOpen());
+                                tardis.getDoor().setLeftRot(true);
+                                tardis.getDoor().sync();
+                            }
                         } else {
                             DoorHandler.toggleLock(tardis, server.getWorld(player.getWorld().getRegistryKey()), player);
                         }
@@ -153,7 +164,7 @@ public class TardisUtil {
 
     public static boolean isRiftChunk(ServerWorld world,BlockPos pos) {
         ChunkPos chunkPos = new ChunkPos(pos);
-        boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, world.getSeed(), 987234911L).nextInt(10) == 0; // for now itll be the same as slime chunks (fuck you classic) but if needed change that big number beginning with 9 to a slightly different number and wowow its entirely different
+        boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, world.getSeed(), 987234910L).nextInt(8) == 0; // for now itll be the same as slime chunks (fuck you classic) but if needed change that big number beginning with 9 to a slightly different number and wowow its entirely different
         return bl;
     }
 

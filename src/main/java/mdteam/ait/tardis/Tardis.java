@@ -93,7 +93,9 @@ public class Tardis {
     public LoyaltyHandler getLoyalties() {
         return loyalties;
     }
-    public OvergrownHandler getOvergrownHandler() {return overgrown;}
+    public OvergrownHandler getOvergrownHandler() {
+        return overgrown;
+    }
 
     /**
      * Called at the end of a servers tick

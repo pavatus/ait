@@ -95,7 +95,7 @@ public class AITModClient implements ClientModInitializer {
     public static Screen screenFromId(int id, UUID tardis) {
         return switch (id) {
             default -> null;
-            case 0 -> new MonitorScreen(tardis);
+            case 0 -> new MonitorScreen(tardis); // todo new MonitorScreen(tardis);
         };
     }
 
@@ -119,6 +119,44 @@ public class AITModClient implements ClientModInitializer {
             return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
         });
         ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
+        });
+        ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            ItemStack stack = livingEntity.getActiveItem();
+            NbtCompound nbt = stack.getOrCreateNbt();
+            return nbt.getBoolean(SonicItem.INACTIVE) ? 0.0F : 1.0F;
+        });
+        ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            return SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F;
+        });
+        ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            return SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F;
+        });
+        ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
+        });
+        ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
+        });
+        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            return SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F;
+        });
+        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            return SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F;
+        });
+        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
+        });
+        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
             return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
         });
