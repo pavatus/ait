@@ -80,7 +80,7 @@ public class ClientHumHandler extends SoundHandler {
     }
 
     public boolean isPlayerInATardis() {
-        if (MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return false;
+        if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return false;
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos());
 

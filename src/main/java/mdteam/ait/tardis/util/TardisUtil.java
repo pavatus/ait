@@ -12,6 +12,7 @@ import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -329,7 +330,17 @@ public class TardisUtil {
     }
 
     public static List<PlayerEntity> getPlayersInInterior(Tardis tardis) {
-        return getPlayersInInterior(tardis.getDesktop().getCorners());
+        Tardis found;
+        List<PlayerEntity> list = new ArrayList<>();
+
+        for (ServerPlayerEntity player : getServer().getPlayerManager().getPlayerList()) {
+            if (player.getServerWorld() != getTardisDimension()) continue;
+
+            found = findTardisByInterior(player.getBlockPos());
+            if (found.getUuid().equals(tardis.getUuid())) list.add(player);
+        }
+
+        return list;
     }
 
     public static List<PlayerEntity> getPlayersInInterior(Corners corners) {

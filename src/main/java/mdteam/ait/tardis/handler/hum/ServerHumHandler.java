@@ -2,6 +2,7 @@ package mdteam.ait.tardis.handler.hum;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.tardis.handler.TardisLink;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -41,7 +42,7 @@ public class ServerHumHandler extends TardisLink {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeIdentifier(this.current.getId());
 
-        for (PlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) { // is bad? fixme
+        for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.tardis())) { // is bad? fixme
             ServerPlayNetworking.send((ServerPlayerEntity) player, SEND, buf);
         }
     }
