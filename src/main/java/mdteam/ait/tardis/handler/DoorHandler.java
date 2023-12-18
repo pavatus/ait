@@ -3,11 +3,14 @@ package mdteam.ait.tardis.handler;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
@@ -100,6 +103,33 @@ public class DoorHandler extends TardisLink {
         if (isClient()) {
             return false;
         }
+
+        if (tardis.getOvergrownHandler().isOvergrown()) {
+            // Bro cant escape
+            if (player == null) return false;
+
+            // if holding an axe then break off the vegetation
+            ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
+            if (stack.getItem() instanceof AxeItem) {
+                player.swingHand(Hand.MAIN_HAND);
+                tardis.getOvergrownHandler().removeVegetation();
+                stack.setDamage(stack.getDamage() - 1);
+
+                if (pos != null)
+                    world.playSound(null, pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 1f, 1f);
+                world.playSound(null, tardis.getDoor().getDoorPos(), SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
+
+                return false;
+            }
+
+            if (pos != null) // fixme will play sound twice on interior door
+                world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
+
+            world.playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
+
+            return false;
+        }
+
         if (tardis.getLockedTardis()) {
             if (pos != null)
                 world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);

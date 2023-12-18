@@ -14,7 +14,7 @@ import java.util.UUID;
 public class OvergrownHandler extends TardisLink {
     public static final String IS_OVERGROWN = "overgrown";
     public static final String OVERGROWN_TICKS = "overgrown_ticks";
-    public static final int MAXIMUM_TICKS = 400;
+    public static final int MAXIMUM_TICKS = 100;
     public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
     private static Random random;
 
@@ -43,6 +43,10 @@ public class OvergrownHandler extends TardisLink {
         PropertiesHandler.setBool(this.tardis().getProperties(), IS_OVERGROWN, var);
 
         this.sync();
+    }
+    public void removeVegetation() {
+        this.setOvergrown(false);
+        this.setTicks(0);
     }
 
     public Identifier getOvergrownTexture() {
@@ -74,10 +78,11 @@ public class OvergrownHandler extends TardisLink {
         if (hasReachedMaxTicks()) {
             this.setOvergrown(true);
             this.setTicks(0);
+            this.tardis().getDoor().closeDoors();
             return;
         }
 
-        if (random().nextFloat() < 0.025f) {
+        if (random().nextFloat() < 0.5f) {
             this.addTick();
         }
     }
