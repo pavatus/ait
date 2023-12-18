@@ -7,11 +7,15 @@ import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.AITDimensions;
+import mdteam.ait.core.blockentities.CoralBlockEntity;
+import mdteam.ait.core.blockentities.DoorBlockEntity;
+import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
@@ -33,15 +37,14 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class CoralPlantBlock extends Block {
+public class CoralPlantBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
+
+    private final VoxelShape DEFAULT = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 16.0);
 
     public static final int MAX_AGE = 7;
     public static final IntProperty AGE;
@@ -93,7 +96,7 @@ public class CoralPlantBlock extends Block {
         if (this.getAge(state) >= this.getMaxAge()) {
             // Create a new tardis
             ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), ExteriorEnum.CAPSULE, VariantEnum.DEFAULT, ConsoleEnum.BOREALIS, AITDesktops.get(new Identifier(AITMod.MOD_ID, "default_cave")), false);
-            created.getOvergrownHandler().setOvergrown(true);
+            //created.getOvergrownHandler().setOvergrown(true); fixme created.getEnvironmentHandler().setCoralCovered(true);
 
             LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world);
             lightning.setPos(pos.getX(),pos.getY(),pos.getZ());
@@ -109,6 +112,7 @@ public class CoralPlantBlock extends Block {
         if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) || !TardisUtil.isRiftChunk((ServerWorld) world,pos)) {
             // GET IT OUTTA HERE!!!
             world.breakBlock(pos, true);
+            world.removeBlockEntity(pos);
         }
     }
 
@@ -146,6 +150,16 @@ public class CoralPlantBlock extends Block {
         super.onEntityCollision(state, world, pos, entity);
     }
 
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return DEFAULT;
+    }
+
+    @Override
+    public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
+        return DEFAULT;
+    }
+
     protected ItemConvertible getSeedsItem() {
         return Items.WHEAT_SEEDS;
     }
@@ -163,10 +177,21 @@ public class CoralPlantBlock extends Block {
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(new Property[]{AGE});
+        builder.add(new Property[]{AGE}).add(FACING);
     }
 
     static {
         AGE = Properties.AGE_7;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new CoralBlockEntity(pos, state);
+    }
+
+    @Override
+    public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
+        return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
     }
 }

@@ -26,7 +26,7 @@ public class ClassicAnimation extends ExteriorAnimation {
 
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.MAT) {
-            if (this.timeLeft <= this.startTime) {
+            if (this.timeLeft < this.startTime) {
                 // System.out.println(alpha + alphaChangeAmount);
                 this.setAlpha(1f - ((float) this.timeLeft / (this.startTime))); // fixme takes too long
             } else

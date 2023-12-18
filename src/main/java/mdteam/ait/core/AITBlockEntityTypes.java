@@ -1,11 +1,9 @@
 package mdteam.ait.core;
 
-import mdteam.ait.core.blockentities.AITRadioBlockEntity;
+import mdteam.ait.core.blockentities.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
-import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.minecraft.block.CoralBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -23,6 +21,9 @@ public class AITBlockEntityTypes implements AutoRegistryContainer<BlockEntityTyp
 
     public static final BlockEntityType<DoorBlockEntity> DOOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
             DoorBlockEntity::new, AITBlocks.DOOR_BLOCK).build();
+
+    public static final BlockEntityType<CoralBlockEntity> CORAL_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
+            CoralBlockEntity::new, AITBlocks.CORAL_PLANT).build();
 
     @Override
     public Registry<BlockEntityType<?>> getRegistry() {

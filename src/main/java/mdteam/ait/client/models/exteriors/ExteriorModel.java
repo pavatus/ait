@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
+@SuppressWarnings("rawtypes")
 public abstract class ExteriorModel extends SinglePartEntityModel {
     public static int MAX_TICK_COUNT = 2 * 20;
 

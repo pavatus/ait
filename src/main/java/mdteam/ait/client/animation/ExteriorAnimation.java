@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier;
 import org.joml.Math;
 import mdteam.ait.tardis.TardisTravel;
 
-public abstract class ExteriorAnimation { // hay una problema: no hay animacion excepto MAT
+public abstract class ExteriorAnimation {
 
     protected float alpha = 1;
     protected ExteriorBlockEntity exterior;

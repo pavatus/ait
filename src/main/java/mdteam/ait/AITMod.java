@@ -1,6 +1,5 @@
 package mdteam.ait;
 
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import io.wispforest.owo.itemgroup.Icon;
@@ -8,12 +7,12 @@ import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ConsoleBlock;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.commands.*;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
+import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -33,6 +32,9 @@ import java.util.UUID;
 public class AITMod implements ModInitializer {
     public static final String MOD_ID = "ait";
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
+
+    public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
+
     public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"),
             () -> Icon.of(AITItems.TARDIS_ITEM.getDefaultStack())).build();
     public static final ComponentKey<RadioNBTComponent> RADIONBT =

@@ -34,7 +34,7 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
     public static final VoxelShape WEST_SHAPE = Block.createCuboidShape(0.01, 0.0, 0.0, 16.0, 32.0, 16.0);
 
     public ExteriorBlock(Settings settings) {
-        super(settings);
+        super(settings.nonOpaque());
     }
 
     @Override

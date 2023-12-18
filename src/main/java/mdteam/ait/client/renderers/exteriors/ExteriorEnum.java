@@ -101,6 +101,44 @@ public enum ExteriorEnum {
             return PoliceBoxDoorModel.class;
         }
     },
+    CLASSIC() {
+        @Override
+        public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {
+            return new ClassicAnimation(entity);
+        }
+
+        @Override
+        public boolean isDoubleDoor() {
+            return true;
+        }
+
+        @Override
+        public boolean hasEmission() {
+            return true;
+        }
+
+        @Override
+        @Environment(value = EnvType.CLIENT)
+        public ExteriorModel createModel() {
+            return new ClassicExteriorModel(ClassicExteriorModel.getTexturedModelData().createModel());
+        }
+
+        @Override
+        @Environment(value = EnvType.CLIENT)
+        public DoorModel createDoorModel() {
+            return new ClassicDoorModel(ClassicDoorModel.getTexturedModelData().createModel());
+        }
+
+        @Override
+        public Class<? extends ExteriorModel> getModelClass() {
+            return ClassicExteriorModel.class;
+        }
+
+        @Override
+        public Class<? extends DoorModel> getDoorClass() {
+            return ClassicDoorModel.class;
+        }
+    },
     TARDIM() {
         @Override
         public ExteriorAnimation createAnimation(ExteriorBlockEntity entity) {

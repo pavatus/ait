@@ -15,6 +15,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
 
+@SuppressWarnings("rawtypes")
 public abstract class DoorModel extends SinglePartEntityModel {
     public static int MAX_TICK_COUNT = 2 * 20;
     public static String TEXTURE_PATH = "textures/blockentities/exteriors/";

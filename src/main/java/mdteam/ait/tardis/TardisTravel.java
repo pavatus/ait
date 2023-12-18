@@ -5,6 +5,7 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.util.AITConfigModel;
 import mdteam.ait.tardis.control.impl.pos.PosManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -32,6 +33,8 @@ import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import static mdteam.ait.AITMod.AIT_CONFIG;
+
 public class TardisTravel {
 
     private State state = State.LANDED;
@@ -40,7 +43,7 @@ public class TardisTravel {
     private static final double FORCE_LAND_TIMER = 15;
     private static final double FORCE_FLIGHT_TIMER = 10;
     private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
-    private static final int CHECK_LIMIT = 320; // todo move into a config
+    private static final int CHECK_LIMIT = AIT_CONFIG.SEARCH_HEIGHT(); // todo move into a config
 
     @Exclude
     protected Tardis tardis;

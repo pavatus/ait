@@ -3,15 +3,32 @@
 	"id": "ait",
 	"version": "${version}",
 	"name": "Adventures In Time",
-	"description": "AIT, brought to you in gleaming Fabric 1.20.1!",
+	"description": "Adventures In Time (name subject to change); a mod that's been in development so long Valve released Counter-Strike 2 :skull:.",
 	"authors": [
-		"Loqor", "Duzo", "DrTheo"
+		"Programmers: \n",
+		"Loqor, Duzo, DrTheo \n",
+		"Artists: \n",
+		"Tright",
+		"MagicMan(?)",
+		"Monsterwaill",
+		"L0AInk \n",
+		"Builders: \n",
+		"panda_red (classic_account)",
+		"coypu \n",
+		"Special Thanks To: \n",
+		"Tryzo (Ben)",
+		"Suff99 (Craig)",
+		"Bug1312",
+		"Jayson",
+		"Creativious",
+		"TheVale"
 	],
 	"contact": {
 		"homepage": "https://m-d-team.github.io",
-		"sources": "https://github.com/M-D-Team/ait-fabric-1.20.1/"
+		"sources": "https://github.com/M-D-Team/ait-fabric-1.20.1/",
+		"issues": "https://github.com/M-D-Team/ait-fabric-1.20.1/issues"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/ait/icon.png",
 	"environment": "*",
 	"entrypoints": {
