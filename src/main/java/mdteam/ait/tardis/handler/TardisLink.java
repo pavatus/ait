@@ -7,6 +7,7 @@ import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTickable;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Direction;
@@ -41,6 +42,11 @@ public abstract class TardisLink implements TardisTickable {
 
     @Override
     public void tick(MinecraftServer server) {
+    }
+
+    @Override
+    public void tick(MinecraftClient client) {
+
     }
 
     public AbsoluteBlockPos.Directed getDoorPos() {

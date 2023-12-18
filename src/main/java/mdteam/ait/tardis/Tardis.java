@@ -4,11 +4,13 @@ import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.tardis.handler.OvergrownHandler;
+import mdteam.ait.tardis.handler.hum.ServerHumHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import mdteam.ait.tardis.handler.WaypointHandler;
 import mdteam.ait.tardis.handler.loyalty.LoyaltyHandler;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
@@ -16,6 +18,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 public class Tardis {
+    // this is starting to get a little bloated..
 
     private final TardisTravel travel;
     private final UUID uuid;
@@ -27,6 +30,7 @@ public class Tardis {
     private final WaypointHandler waypoints;
     private final LoyaltyHandler loyalties;
     private final OvergrownHandler overgrown;
+    private ServerHumHandler hum = null;
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, VariantEnum variant, ConsoleEnum consoleType) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), (tardis) -> new TardisConsole(tardis, consoleType, consoleType.getControlTypesList()), false);
@@ -96,6 +100,11 @@ public class Tardis {
     public OvergrownHandler getOvergrownHandler() {
         return overgrown;
     }
+    public ServerHumHandler getHum() {
+        if (this.hum == null) this.hum = new ServerHumHandler(this.getUuid());
+
+        return this.hum;
+    }
 
     /**
      * Called at the end of a servers tick
@@ -112,5 +121,13 @@ public class Tardis {
      * @param world the world being ticked
      */
     public void tick(ServerWorld world) {
+    }
+
+    /**
+     * Called at the end of a clients tick, ONLY FOR CLIENT STUFF!!
+     * @param client the remote being ticked
+     */
+    public void tick(MinecraftClient client) { // fixme should likely be in ClientTardis instead, same with  other server-only things should be in ServerTardis
+
     }
 }

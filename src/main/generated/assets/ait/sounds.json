@@ -64,6 +64,16 @@
       "ait:tardis/hop_land"
     ]
   },
+  "tardis/hums/coral_hum": {
+    "sounds": [
+      "ait:tardis/hums/coral_hum"
+    ]
+  },
+  "tardis/hums/toyota_hum": {
+    "sounds": [
+      "ait:tardis/hums/toyota_hum"
+    ]
+  },
   "tardis/mat": {
     "sounds": [
       "ait:tardis/mat"

@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 public class PropertiesHandler { // todo move more things over to properties
     public static final String AUTO_LAND = "auto_land";
+    public static final String HUM_ENABLED = "hum_enabled";
     public static final String FIND_GROUND = "find_ground"; // whether the destination checks will try to find the ground or not
     public static final String PREVIOUSLY_LOCKED = "last_locked";
     public static final String HANDBRAKE = "handbrake";
@@ -87,6 +88,7 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(PREVIOUSLY_LOCKED, false);
         map.put(HANDBRAKE, true);
         map.put(HAIL_MARY, true);
+        map.put(HUM_ENABLED, true);
 
         return map;
     }

@@ -3,6 +3,8 @@ package mdteam.ait.tardis.wrapper.client.manager;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
+import mdteam.ait.AITMod;
+import mdteam.ait.client.AITModClient;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.SerialDimension;
@@ -53,6 +55,16 @@ public class ClientTardisManager extends TardisManager {
                 for (int i = 0; i < this.buffers.size(); i++) {
                     ClientPlayNetworking.send(ASK, this.buffers.pop());
                 }
+            });
+
+            ClientTickEvents.END_CLIENT_TICK.register(client -> {
+                for (Tardis tardis : ClientTardisManager.getInstance().getLookup().values()) {
+                    tardis.tick(client);
+                }
+
+                if (AITModClient.getClientHum() == null) return;
+
+                AITModClient.getClientHum().tick(client);
             });
 
             ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());

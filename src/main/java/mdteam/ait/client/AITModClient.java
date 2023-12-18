@@ -13,7 +13,10 @@ import mdteam.ait.core.AITItems;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.handler.hum.ClientHumHandler;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,6 +42,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 @Environment(value = EnvType.CLIENT)
@@ -46,6 +50,7 @@ public class AITModClient implements ClientModInitializer {
 
     private static KeyBinding keyBinding;
 
+    private static ClientHumHandler clientHum;
     private final Identifier PORTAL_EFFECT_SHADER = new Identifier(AITMod.MOD_ID, "shaders/core/portal_effect.json");
     public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
     public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
@@ -77,6 +82,14 @@ public class AITModClient implements ClientModInitializer {
                 });
 
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
+    }
+
+    public static ClientHumHandler getClientHum() {
+        if (clientHum == null) {
+            clientHum = ClientHumHandler.create();
+        }
+
+        return clientHum;
     }
 
     public static void openScreen(ServerPlayerEntity player, int id) {
