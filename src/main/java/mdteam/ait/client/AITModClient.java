@@ -34,12 +34,17 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
@@ -108,70 +113,70 @@ public class AITModClient implements ClientModInitializer {
     public static Screen screenFromId(int id, UUID tardis) {
         return switch (id) {
             default -> null;
-            case 0 -> new MonitorScreen(tardis); // todo new MonitorScreen(tardis);
+            case 0 -> new MonitorScreen(tardis); // todo new OwoMonitorScreen(tardis); god rest ye merry gentlemen
         };
     }
 
-    public void sonicModelPredicate() { // fixme lord give me strength
+    public void sonicModelPredicate() { // fixme lord give me strength - amen brother
         ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
-            ItemStack stack = livingEntity.getActiveItem();
-            NbtCompound nbt = stack.getOrCreateNbt();
-            return nbt.getBoolean(SonicItem.INACTIVE) ? 0.0F : 1.0F;
+            return SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F;
         });
         ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F;
+            return SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F;
         });
         ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F;
+            return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
         });
         ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
+            return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
         });
         ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
+            return SonicItem.findModeInt(itemStack) == 4 ? 1.0F : 0.0F;
         });
         ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
-            ItemStack stack = livingEntity.getActiveItem();
-            NbtCompound nbt = stack.getOrCreateNbt();
-            return nbt.getBoolean(SonicItem.INACTIVE) ? 0.0F : 1.0F;
+            return SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F;
         });
         ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F;
+            return SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F;
         });
         ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F;
+            return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
         });
         ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
+            return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
         });
         ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
+            return SonicItem.findModeInt(itemStack) == 4 ? 1.0F : 0.0F;
         });
-        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> {
+        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
             return SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F;
         });
-        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> {
+        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
             return SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F;
         });
-        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> {
+        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
             return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
         });
-        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
+        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
             return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
+        });
+        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            return SonicItem.findModeInt(itemStack) == 4 ? 1.0F : 0.0F;
         });
     }
 
@@ -198,6 +203,8 @@ public class AITModClient implements ClientModInitializer {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
     }
 
+    private boolean keyHeldDown = false;
+
     public void setKeyBinding() {
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key." + AITMod.MOD_ID + ".open",
@@ -205,16 +212,24 @@ public class AITModClient implements ClientModInitializer {
                 GLFW.GLFW_KEY_V,
                 "category." + AITMod.MOD_ID + ".snap"
         ));
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             ClientPlayerEntity player = client.player;
-            if (keyBinding.wasPressed() && player != null) {
-                ItemStack stack = KeyItem.getFirstKeyStackInInventory(player);
-                if (stack != null && stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
-                    NbtCompound tag = stack.getOrCreateNbt();
-                    if (!tag.contains("tardis")) {
-                        return;
+            if (player != null) {
+                if (keyBinding.isPressed()) {
+                    if (!keyHeldDown) {
+                        keyHeldDown = true;
+                        ItemStack stack = KeyItem.getFirstKeyStackInInventory(player);
+                        if (stack != null && stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
+                            NbtCompound tag = stack.getOrCreateNbt();
+                            if (!tag.contains("tardis")) {
+                                return;
+                            }
+                            TardisUtil.snapToOpenDoors(UUID.fromString(tag.getString("tardis")));
+                        }
                     }
-                    TardisUtil.snapToOpenDoors(UUID.fromString(tag.getString("tardis")));
+                } else {
+                    keyHeldDown = false;
                 }
             }
         });

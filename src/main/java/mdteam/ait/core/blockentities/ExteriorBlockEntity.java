@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
+import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 import static mdteam.ait.tardis.TardisTravel.State.MAT;
 import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
@@ -59,7 +60,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
             if (!tag.contains("tardis")) {
                 return;
             }
-            if (Objects.equals(this.tardis().getUuid().toString(), tag.getUuid("tardis").toString())) {
+            if (Objects.equals(this.tardis().getUuid().toString(), tag.getString("tardis"))) {
                 DoorHandler.toggleLock(this.tardis(), world, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
@@ -185,7 +186,9 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
     }
 
     public ExteriorAnimation getAnimation() {
-        this.verifyAnimation();
+        if(this.tardis() != null)
+            if(this.tardis().getTravel().getState() != LANDED)
+                this.verifyAnimation();
 
         return this.animation;
     }
@@ -203,5 +206,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
     }
 
     public void onBroken() {
+        if(this.tardis() != null)
+            this.tardis().getTravel().setState(TardisTravel.State.FLIGHT);
     }
 }

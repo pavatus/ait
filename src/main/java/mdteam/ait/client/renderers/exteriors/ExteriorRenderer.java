@@ -5,6 +5,7 @@ import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -46,7 +47,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         Identifier texture = model.getVariousTextures(tardisExterior.getType(), tardisExterior.getVariant());
         if (model != null) {
-            //@TODO use another instance of the model for alpha transparency to get rid of the weird z-fighting alpha stuff like on the fallout exterior (recommended by Bug1312) - Loqor
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
             if (entity.tardis().getOvergrownHandler().isOvergrown()) {
                 model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.tardis().getOvergrownHandler().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);

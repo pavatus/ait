@@ -70,7 +70,7 @@ public class TardisItemBuilder extends Item {
                 return ActionResult.SUCCESS;
             }
 
-            System.out.println(this.exterior);
+            //System.out.println(this.exterior);
 
             ServerTardisManager.getInstance().create(pos, this.exterior, DEFAULT_VARIANT, DEFAULT_CONSOLE, AITDesktops.get(this.desktop), false);
             context.getStack().decrement(1);

@@ -94,7 +94,7 @@ public class InteriorSelectItem extends Item {
     }
 
     public static Identifier getNextInterior(String identifier) {
-        System.out.println("OOGLY BOOGLY BITCH" + identifier);
+        //System.out.println("OOGLY BOOGLY BITCH" + identifier);
         return switch (identifier) {
             default -> new Identifier(AITMod.MOD_ID, "cave");
             case "cave" -> new Identifier(AITMod.MOD_ID, "botanist");
