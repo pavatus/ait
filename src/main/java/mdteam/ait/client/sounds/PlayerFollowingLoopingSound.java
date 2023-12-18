@@ -3,20 +3,31 @@ package mdteam.ait.client.sounds;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.sound.Sound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 
 // fixme long name
 
 public class PlayerFollowingLoopingSound extends LoopingSound {
-    public PlayerFollowingLoopingSound(SoundEvent soundEvent, SoundCategory soundCategory) {
+    public PlayerFollowingLoopingSound(SoundEvent soundEvent, SoundCategory soundCategory, float volume, float pitch) {
         super(soundEvent, soundCategory);
 
         ClientPlayerEntity client = MinecraftClient.getInstance().player;
         this.x = client.getX();
         this.y = client.getY();
         this.z = client.getZ();
+        this.volume = volume;
+        this.pitch = pitch;
         this.repeat = true;
+    }
+
+    public PlayerFollowingLoopingSound(SoundEvent soundEvent, SoundCategory soundCategory, float volume) {
+        this(soundEvent, soundCategory, volume, 1);
+    }
+
+    public PlayerFollowingLoopingSound(SoundEvent soundEvent, SoundCategory soundCategory) {
+        this(soundEvent, soundCategory, 1, 1);
     }
 
     @Override
