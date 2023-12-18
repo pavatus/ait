@@ -27,6 +27,7 @@ public class OvergrownHandler extends TardisLink {
     }
     private void setTicks(int ticks) {
         PropertiesHandler.set(this.tardis().getProperties(), OVERGROWN_TICKS, ticks);
+        this.sync();
     }
     private void addTick() {
         this.setTicks(this.getTicks() + 1);
@@ -40,6 +41,8 @@ public class OvergrownHandler extends TardisLink {
     }
     public void setOvergrown(boolean var) {
         PropertiesHandler.setBool(this.tardis().getProperties(), IS_OVERGROWN, var);
+
+        this.sync();
     }
 
     public Identifier getOvergrownTexture() {
