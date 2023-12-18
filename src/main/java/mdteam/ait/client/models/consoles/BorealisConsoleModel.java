@@ -15,8 +15,8 @@ import mdteam.ait.tardis.TardisTravel;
 import org.joml.Vector3f;
 
 public class BorealisConsoleModel extends ConsoleModel {
-    public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/borealis_console.png"));
-    public static final Identifier CONSOLE_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/borealis_console_emission.png");
+    public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/borealis_console_autumn.png"));
+    public static final Identifier CONSOLE_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/borealis_console_autumn_emission.png");
 
     public ModelPart base_console;
 
@@ -639,16 +639,23 @@ public class BorealisConsoleModel extends ConsoleModel {
         matrices.push();
         ModelPart southEastControls = this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel");
         ModelPart northControls = this.base_console.getChild("NORTH").getChild("northcontrolpanel");
+        ModelPart southControls = this.base_console.getChild("SOUTH").getChild("southcontrolpanel");
         boolean isInFlight = console.getTardis().getTravel().getState() == TardisTravel.State.DEMAT || console.getTardis().getTravel().getState() == TardisTravel.State.FLIGHT;
         boolean isHandbrakeActive = PropertiesHandler.getBool(console.getTardis().getProperties(), PropertiesHandler.HANDBRAKE);
         boolean leftDoor = console.getTardis().getDoor().isLeftOpen();
         boolean rightDoor = console.getTardis().getDoor().isRightOpen();
+        boolean isUpOrDown = PropertiesHandler.getBool(console.getTardis().getProperties(), PropertiesHandler.FIND_GROUND);
+        int increment = console.getTardis().getTravel().getPosManager().increment;
         float throttleZ = southEastControls.getChild("throttle").pivotZ;
         float doorZ = northControls.getChild("door_control").pivotZ;
+        float incrementModZ = southControls.getChild("XYZmod").pivotZ;
+        float landTypeY = southControls.getChild("land_type").pivotY;
         Vector3f handbrakeRotation = new Vector3f(isHandbrakeActive ? 0 : -1.309F * -2, 0, 0);
         southEastControls.getChild("throttle").pivotZ = isInFlight ? throttleZ + 3f : throttleZ;
         southEastControls.getChild("handbrake").rotate(handbrakeRotation);
         northControls.getChild("door_control").pivotZ = leftDoor ? rightDoor ? doorZ + 2 : doorZ + 1 : doorZ;
+        southControls.getChild("XYZmod").pivotZ = increment == 10 ? incrementModZ + 1 : increment == 100 ? incrementModZ + 2 : increment == 1000 ? incrementModZ + 3 : incrementModZ;
+        southControls.getChild("land_type").pivotY = isUpOrDown ? landTypeY : landTypeY + 1;
         matrices.pop();
         matrices.push();
         //matrices.translate(0.5f, -0.75f, 0.5f);

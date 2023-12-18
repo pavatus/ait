@@ -12,6 +12,7 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,11 +51,15 @@ public class SonicItem extends Item {
         ItemStack stack = new ItemStack(this);
         NbtCompound nbt = stack.getOrCreateNbt();
         nbt.putInt(MODE_KEY, 0);
-        nbt.putBoolean(INACTIVE, false);
         return stack;
     }
 
     public enum Mode implements StringIdentifiable {
+        INACTIVE(Formatting.GRAY) {
+            @Override
+            public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+            }
+        },
         INTERACTION(Formatting.GREEN) {
             @Override
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
@@ -74,6 +79,7 @@ public class SonicItem extends Item {
                 // fixme temporary replacement for exterior changing
 
                 BlockEntity entity = world.getBlockEntity(pos);
+                Block block = world.getBlockState(pos).getBlock();
 
                 if (entity instanceof ExteriorBlockEntity exteriorBlock) {
                     TardisTravel.State state = exteriorBlock.tardis().getTravel().getState();
@@ -88,6 +94,18 @@ public class SonicItem extends Item {
                     //System.out.println(exteriorBlock.getTardis().getExterior().getType());
 
                     exteriorBlock.sync();
+                }
+
+                // fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor
+                /*if(player.isSneaking() && block instanceof DispenserBlock dispenser) {
+                    world.setBlockState(pos, world.getBlockState(pos).with(Properties.TRIGGERED, true), Block.NO_REDRAW);
+                    //world.emitGameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
+                }*/
+
+                if(block instanceof TntBlock tnt) {
+                    TntBlock.primeTnt(world, pos);
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
             }
         },

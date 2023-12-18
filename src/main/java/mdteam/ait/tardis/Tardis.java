@@ -1,17 +1,31 @@
 package mdteam.ait.tardis;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
+import mdteam.ait.core.AITDesktops;
+import mdteam.ait.core.AITDimensions;
 import mdteam.ait.tardis.handler.OvergrownHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import mdteam.ait.tardis.handler.WaypointHandler;
 import mdteam.ait.tardis.handler.loyalty.LoyaltyHandler;
+import mdteam.ait.tardis.util.TardisUtil;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
+import net.minecraft.item.NetherStarItem;
+import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -112,5 +126,6 @@ public class Tardis {
      * @param world the world being ticked
      */
     public void tick(ServerWorld world) {
+        // @TODO i was trying to do testing for a nether star in water but the game was like "nuh uh" and crashed on me like 70 times - Loqor
     }
 }

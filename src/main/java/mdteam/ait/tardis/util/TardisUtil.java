@@ -99,18 +99,18 @@ public class TardisUtil {
                             TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
                     if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
                         if (!player.isSneaking()) {
+                            if(!tardis.getDoor().locked()) {
                             /*DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
                                     player);*/
-                            if (tardis.getDoor().isLeftOpen()) {
-                                tardis.getDoor().closeDoors();
-                                tardis.getDoor().sync();
-                            } else if (tardis.getDoor().isBothClosed()) {
-                                tardis.getDoor().openDoors();
-                                tardis.getDoor().sync();
-                            } else {
-                                tardis.getDoor().setRightRot(tardis.getDoor().isLeftOpen());
-                                tardis.getDoor().setLeftRot(true);
-                                tardis.getDoor().sync();
+                                if (tardis.getDoor().isLeftOpen()) {
+                                    tardis.getDoor().closeDoors();
+                                } else if (tardis.getDoor().isBothClosed()) {
+                                    tardis.getDoor().openDoors();
+                                    tardis.getDoor().sync();
+                                } else {
+                                    tardis.getDoor().setRightRot(tardis.getDoor().isLeftOpen());
+                                    tardis.getDoor().setLeftRot(true);
+                                }
                             }
                         } else {
                             DoorHandler.toggleLock(tardis, server.getWorld(player.getWorld().getRegistryKey()), player);

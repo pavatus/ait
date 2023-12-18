@@ -195,8 +195,8 @@ public class ServerTardisManager extends TardisManager {
     }
 
     private void sendTardis(ServerPlayerEntity player, Tardis tardis) {
-        System.out.println(player);
-        System.out.println(tardis);
+        //System.out.println(player);
+        //System.out.println(tardis);
 
         this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
     }

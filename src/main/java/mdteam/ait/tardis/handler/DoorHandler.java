@@ -131,8 +131,8 @@ public class DoorHandler extends TardisLink {
         }
 
         if (tardis.getLockedTardis()) {
-            if (pos != null)
-                world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
+            //if (pos != null)
+                //world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
             if (player != null) {
                 player.sendMessage(Text.literal("\uD83D\uDD12"), true);
                 world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
