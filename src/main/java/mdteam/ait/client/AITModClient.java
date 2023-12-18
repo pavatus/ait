@@ -15,6 +15,7 @@ import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.handler.alarm.ClientAlarmHandler;
 import mdteam.ait.tardis.handler.hum.ClientHumHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -58,6 +59,7 @@ public class AITModClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
 
     private static ClientHumHandler clientHum;
+    private static ClientAlarmHandler clientAlarm;
     private final Identifier PORTAL_EFFECT_SHADER = new Identifier(AITMod.MOD_ID, "shaders/core/portal_effect.json");
     public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
     public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
@@ -98,6 +100,14 @@ public class AITModClient implements ClientModInitializer {
 
         return clientHum;
     }
+    public static ClientAlarmHandler getClientAlarm() {
+        if (clientAlarm == null) {
+            clientAlarm = ClientAlarmHandler.create();
+        }
+
+        return clientAlarm;
+    }
+
 
     public static void openScreen(ServerPlayerEntity player, int id) {
         PacketByteBuf buf = PacketByteBufs.create();

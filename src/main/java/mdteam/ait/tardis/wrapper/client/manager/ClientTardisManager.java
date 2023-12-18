@@ -62,9 +62,10 @@ public class ClientTardisManager extends TardisManager {
                     tardis.tick(client);
                 }
 
-                if (AITModClient.getClientHum() == null) return;
-
-                AITModClient.getClientHum().tick(client);
+                if (AITModClient.getClientHum() != null)
+                    AITModClient.getClientHum().tick(client);
+                if (AITModClient.getClientAlarm() != null)
+                    AITModClient.getClientAlarm().tick(client);
             });
 
             ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());

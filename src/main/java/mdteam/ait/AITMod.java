@@ -69,6 +69,7 @@ public class AITMod implements ModInitializer {
             SetLockedCommand.register(dispatcher);
             SetHumCommand.register(dispatcher);
             ToggleHumCommand.register(dispatcher);
+            ToggleAlarmCommand.register(dispatcher);
             IsRiftChunkCommand.register(dispatcher); // should probably have a tp to rift chunk instead but i cba
         }));
     }

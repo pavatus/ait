@@ -24,6 +24,11 @@
       "ait:secret_music"
     ]
   },
+  "tardis/cloister": {
+    "sounds": [
+      "ait:tardis/cloister"
+    ]
+  },
   "tardis/demat": {
     "sounds": [
       "ait:tardis/demat"
