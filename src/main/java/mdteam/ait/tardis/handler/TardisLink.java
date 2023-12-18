@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.handler;
 
+import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.SerialDimension;
@@ -17,14 +18,25 @@ import java.util.UUID;
 
 public abstract class TardisLink implements TardisTickable {
     protected final UUID tardisId;
+    @Exclude
+    private boolean dirty = false;
 
     public TardisLink(UUID tardisId) {
         this.tardisId = tardisId;
     }
 
-    public void sync() {
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    public void markDirty() {
+        dirty = true;
+    }
+
+    private void sync() {
         if (isClient()) return;
 
+        dirty = false;
         ServerTardisManager.getInstance().sendToSubscribers(this.tardis());
     }
 
@@ -42,6 +54,7 @@ public abstract class TardisLink implements TardisTickable {
 
     @Override
     public void tick(MinecraftServer server) {
+        if (isDirty()) this.sync();
     }
 
     @Override

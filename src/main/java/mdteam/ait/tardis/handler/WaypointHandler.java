@@ -30,19 +30,19 @@ public class WaypointHandler extends TardisLink implements Iterable<AbsoluteBloc
     public void add(AbsoluteBlockPos.Directed var) {
         this.data().add(var);
 
-        this.sync();
+        markDirty();
     }
 
     public void remove(AbsoluteBlockPos.Directed var) {
         if (!this.data().contains(var)) return;
 
         this.data().remove(var);
-        this.sync();
+        markDirty();
     }
 
     public void remove(int index) {
         this.data().remove(index);
-        this.sync();
+        markDirty();
     }
 
     public AbsoluteBlockPos.Directed get(int index) {

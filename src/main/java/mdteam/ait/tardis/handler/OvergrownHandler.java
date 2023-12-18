@@ -40,6 +40,7 @@ public class OvergrownHandler extends TardisLink {
     }
     public void setOvergrown(boolean var) {
         PropertiesHandler.setBool(this.tardis().getProperties(), IS_OVERGROWN, var);
+        this.markDirty();
     }
     public void removeVegetation() {
         this.setOvergrown(false);

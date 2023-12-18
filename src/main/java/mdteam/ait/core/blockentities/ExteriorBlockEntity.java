@@ -73,7 +73,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
         if (sneaking)
             return;
         this.sync();
-        this.tardis().getDoor().sync();
+        this.tardis().getDoor().markDirty();
     }
 
     public float getLeftDoorRotation() {

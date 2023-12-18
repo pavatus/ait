@@ -107,7 +107,7 @@ public class TardisUtil {
                                     tardis.getDoor().closeDoors();
                                 } else if (tardis.getDoor().isBothClosed()) {
                                     tardis.getDoor().openDoors();
-                                    tardis.getDoor().sync();
+                                    tardis.getDoor().markDirty();
                                 } else {
                                     tardis.getDoor().setRightRot(tardis.getDoor().isLeftOpen());
                                     tardis.getDoor().setLeftRot(true);
@@ -116,7 +116,7 @@ public class TardisUtil {
                         } else {
                             DoorHandler.toggleLock(tardis, server.getWorld(player.getWorld().getRegistryKey()), player);
                         }
-                        tardis.getDoor().sync();
+                        tardis.getDoor().markDirty();
                     }
                     player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
                 }
