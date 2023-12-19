@@ -11,6 +11,8 @@ import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import mdteam.ait.tardis.handler.WaypointHandler;
 import mdteam.ait.tardis.handler.loyalty.LoyaltyHandler;
+import mdteam.ait.tardis.wrapper.server.*;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -114,6 +116,13 @@ public class Tardis {
      * @param server
      */
     public void startTick(MinecraftServer server) {
+        if (!(this instanceof ServerTardis)) return;
 
+        // safe casts trust
+        ((ServerTardisExterior) this.exterior).startTick(server);
+        ((ServerTardisTravel) this.travel).startTick(server);
+        ((ServerTardisTravel) this.travel).startTick(server);
+        ((ServerTardisDesktop) this.desktop).startTick(server);
+        ((ServerTardisConsole) this.console).startTick(server);
     }
 }
