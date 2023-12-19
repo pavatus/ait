@@ -59,6 +59,11 @@
       "ait:tardis/fail_takeoff"
     ]
   },
+  "tardis/flight_loop": {
+    "sounds": [
+      "ait:tardis/flight_loop"
+    ]
+  },
   "tardis/hop_demat": {
     "sounds": [
       "ait:tardis/hop_takeoff"

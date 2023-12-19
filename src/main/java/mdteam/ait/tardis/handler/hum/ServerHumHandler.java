@@ -20,7 +20,6 @@ import java.util.UUID;
 public class ServerHumHandler extends TardisLink {
     public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_hum");
     private SoundEvent current;
-
     public ServerHumHandler(UUID tardisId) {
         super(tardisId);
     }
