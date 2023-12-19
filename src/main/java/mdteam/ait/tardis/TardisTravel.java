@@ -124,6 +124,8 @@ public class TardisTravel extends TardisLink {
         ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
         destWorld.getChunk(this.getDestination());
 
+        TardisUtil.forceLoadTardisChunk(tardis());
+
         this.getDestination().getWorld().playSound(null, this.getDestination(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
         //TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.MAT, SoundCategory.BLOCKS, 10f, 1f);
         if (this.getTardis() != null)
@@ -163,7 +165,7 @@ public class TardisTravel extends TardisLink {
 
         DoorHandler.lockTardis(true, this.getTardis(), (ServerWorld) TardisUtil.getTardisDimension(), null, true);
 
-        if (PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
+        if (PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
             // fail to take off when handbrake is on
             this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
@@ -175,6 +177,8 @@ public class TardisTravel extends TardisLink {
         }
 
         this.setState(State.DEMAT);
+
+        TardisUtil.stopForceTardisChunk(tardis());
 
         world.playSound(null, this.getPosition(), this.getSoundForCurrentState(), SoundCategory.BLOCKS);
         //TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.DEMAT, SoundCategory.BLOCKS, 10f, 1f);
@@ -324,6 +328,8 @@ public class TardisTravel extends TardisLink {
             this.runAnimations(blockEntity);
         if (DoorHandler.isClient()) return;
         DoorHandler.lockTardis(PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), (ServerWorld) this.position.getWorld(), null, false);
+
+
     }
 
     public void forceLand() {

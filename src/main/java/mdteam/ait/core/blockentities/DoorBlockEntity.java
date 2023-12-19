@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -122,7 +123,7 @@ public class DoorBlockEntity extends BlockEntity {
         if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
             return;
         if (this.getTardis() != null && this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
-            if (!this.getTardis().getLockedTardis())
+            if (!this.getTardis().getLockedTardis() && !PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
                 TardisUtil.teleportOutside(this.getTardis(), player);
         }
     }

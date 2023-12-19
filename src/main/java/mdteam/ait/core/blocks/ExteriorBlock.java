@@ -7,6 +7,7 @@ import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -68,10 +69,12 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
+        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null)
+            return getNormalShape(state, world, pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
-        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75) return getNormalShape(state, world, pos);
+        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
+            return getNormalShape(state, world, pos);
 
         return VoxelShapes.empty();
     }
@@ -79,10 +82,12 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
     @Override
     public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
+        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null)
+            return getNormalShape(state, world, pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
-        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75) return getNormalShape(state, world, pos);
+        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
+            return getNormalShape(state, world, pos);
 
         return VoxelShapes.empty();
     }
@@ -92,10 +97,12 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
         // todo move these to a reusable method
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
+        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null)
+            return getNormalShape(state, world, pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
-        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75) return getNormalShape(state, world, pos);
+        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
+            return getNormalShape(state, world, pos);
 
         return VoxelShapes.empty();
     }
@@ -114,10 +121,12 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
     @Override
     public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
+        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null)
+            return getNormalShape(state, world, pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
-        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75) return getNormalShape(state, world, pos);
+        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
+            return getNormalShape(state, world, pos);
 
         return VoxelShapes.empty();
     }
@@ -181,8 +190,12 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
     }
 
     public void tryFall(BlockState state, ServerWorld world, BlockPos pos) {
-        if (canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY() && findTardis(world,pos) != null && findTardis(world,pos).getTravel().getState() == TardisTravel.State.LANDED) {
+        if (canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY()
+                && findTardis(world, pos) != null
+                && !PropertiesHandler.getBool(findTardis(world, pos).getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)
+                && findTardis(world, pos).getTravel().getState() == TardisTravel.State.LANDED) {
             FallingTardisEntity falling = FallingTardisEntity.spawnFromBlock(world, pos, state);
+            // OH SHIT WE FALLING
             this.configureFallingTardis(falling, world, pos);
         }
     }
@@ -196,10 +209,10 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
 
     public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingTardisEntity falling) {
         falling.tardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, falling.tardis().getTravel().getPosition().getDirection()));
-        BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (!(blockEntity instanceof ExteriorBlockEntity))
-            return;
+        PropertiesHandler.set(falling.tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, false);
+        PropertiesHandler.set(falling.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, false);
+        falling.tardis().markDirty();
     }
 
     protected void configureFallingTardis(FallingTardisEntity entity, ServerWorld world, BlockPos pos) {

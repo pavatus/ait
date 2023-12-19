@@ -7,6 +7,7 @@ import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.wrapper.client.ClientTardis;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
@@ -95,6 +96,10 @@ public class FallingTardisEntity extends Entity {
 
         if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
             fallingBlockEntity.setTardisId(exterior.tardis().getUuid());
+
+            PropertiesHandler.setBool(exterior.tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, true);
+            PropertiesHandler.setBool(exterior.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
+            exterior.tardis().markDirty();
         }
 
         world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
