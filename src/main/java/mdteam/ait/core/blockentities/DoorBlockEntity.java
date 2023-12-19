@@ -9,6 +9,7 @@ import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.ServerTardisExterior;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -78,13 +79,8 @@ public class DoorBlockEntity extends BlockEntity {
         if (sneaking)
             return;
         AbsoluteBlockPos exteriorPos = this.getTardis().getTravel().getPosition();
-        ExteriorBlockEntity exterior = TardisUtil.getExterior(this.getTardis());
-        if (exterior != null) {
-            exteriorPos.getChunk();
-            if (!world.isClient())
-                exterior.sync();
-        }
-        this.sync();
+        // this.sync();
+        ((ServerTardisExterior) getTardis().getExterior()).markDirty();
     }
 
     public float getLeftDoorRotation() {
