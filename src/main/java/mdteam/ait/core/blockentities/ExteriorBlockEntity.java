@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.*;
@@ -154,6 +155,11 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
         if (((ExteriorBlockEntity) exterior).animation != null)
             ((ExteriorBlockEntity) exterior).getAnimation().tick();
 
+        // Should be when tardis is set to landed / position is changed instead. fixme
+        if (!world.isClient() && (blockState.getBlock() instanceof ExteriorBlock)) {
+            // For checking falling
+            ((ExteriorBlock) blockState.getBlock()).tryFall(blockState, (ServerWorld) world, pos);
+        }
 
         if (!world.isClient() && ((ExteriorBlockEntity) exterior).tardis() != null && !PropertiesHandler.getBool(((ExteriorBlockEntity) exterior).tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && ((ExteriorBlockEntity) exterior).tardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
             for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(exterior.getPos()).expand(0, 1, 0), EntityPredicates.EXCEPT_SPECTATOR)) {

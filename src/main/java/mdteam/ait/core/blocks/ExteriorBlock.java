@@ -176,6 +176,11 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
     }
 
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        // this is called when the block is first placed, but we have a demat anim..
+        tryFall(state, world, pos);
+    }
+
+    public void tryFall(BlockState state, ServerWorld world, BlockPos pos) {
         if (canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY() && findTardis(world,pos) != null && findTardis(world,pos).getTravel().getState() == TardisTravel.State.LANDED) {
             FallingTardisEntity falling = FallingTardisEntity.spawnFromBlock(world, pos, state);
             this.configureFallingTardis(falling, world, pos);

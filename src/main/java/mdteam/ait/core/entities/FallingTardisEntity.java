@@ -98,6 +98,7 @@ public class FallingTardisEntity extends Entity {
 
         world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
         world.spawnEntity(fallingBlockEntity);
+        fallingBlockEntity.setHurtEntities(100.0F, 100);
         return fallingBlockEntity;
     }
 
