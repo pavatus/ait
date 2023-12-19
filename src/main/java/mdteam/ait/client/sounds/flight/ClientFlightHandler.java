@@ -12,6 +12,7 @@ import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,8 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private void generate() {
+        if (tardis() == null) return;
+
         if (FLIGHT == null) FLIGHT = new PositionedLoopingSound(AITSounds.FLIGHT_LOOP, SoundCategory.AMBIENT, tardis().getDesktop().getConsolePos(), 2.5f);
 
         this.sounds = new ArrayList<>();
@@ -55,6 +58,7 @@ public class ClientFlightHandler extends SoundHandler {
 
     public Tardis tardis() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        if (player == null) return null;
         Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos());
         return found;
     }

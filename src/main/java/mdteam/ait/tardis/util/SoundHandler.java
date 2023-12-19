@@ -64,6 +64,8 @@ public class SoundHandler {
         MinecraftClient.getInstance().getSoundManager().stop(sound);
     }
     public void stopSounds() {
+        if (this.sounds == null) return;
+
         for (LoopingSound sound : this.sounds) {
             this.stopSound(sound);
         }
