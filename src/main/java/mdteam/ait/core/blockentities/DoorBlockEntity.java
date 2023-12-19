@@ -80,6 +80,7 @@ public class DoorBlockEntity extends BlockEntity {
             return;
         AbsoluteBlockPos exteriorPos = this.getTardis().getTravel().getPosition();
         // this.sync();
+        if (!(getTardis().getExterior() instanceof ServerTardisExterior)) return;
         ((ServerTardisExterior) getTardis().getExterior()).markDirty();
     }
 

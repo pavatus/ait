@@ -118,6 +118,8 @@ public class Tardis {
     public void startTick(MinecraftServer server) {
         if (!(this instanceof ServerTardis)) return;
 
+        System.out.println(this.handlers.getOvergrownHandler().getTicks());
+
         // safe casts trust
         ((ServerTardisExterior) this.exterior).startTick(server);
         ((ServerTardisTravel) this.travel).startTick(server);

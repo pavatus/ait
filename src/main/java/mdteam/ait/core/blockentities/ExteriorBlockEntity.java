@@ -10,6 +10,7 @@ import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.ServerTardisExterior;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -70,10 +71,12 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
         }
         DoorHandler.useDoor(this.tardis(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
 
+        if (!(tardis().getExterior() instanceof ServerTardisExterior)) return;
+        ((ServerTardisExterior) tardis().getExterior()).markDirty();
+
         if (sneaking)
             return;
         // this.sync(); // this is fiiine
-        this.tardis().getDoor().markDirty();
     }
 
     public float getLeftDoorRotation() {

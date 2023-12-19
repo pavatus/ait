@@ -25,16 +25,13 @@ public class DoorHandler extends TardisLink {
         super(tardis);
     }
 
+    // Remember to markDirty for these setters!!
     public void setLeftRot(boolean var) {
         this.left = var;
-
-        markDirty();
     }
 
     public void setRightRot(boolean var) {
         this.right = var;
-
-        markDirty();
     }
 
     public boolean isRightOpen() {
