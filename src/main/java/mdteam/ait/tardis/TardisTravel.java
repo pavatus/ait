@@ -105,7 +105,7 @@ public class TardisTravel {
         if (this.getDestination().getWorld().isClient())
             return;
 
-        if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.FIND_GROUND))) {
+        if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND))) {
             // Not safe to land here!
             this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
@@ -157,14 +157,14 @@ public class TardisTravel {
         if (this.getPosition().getWorld().isClient())
             return;
 
-        PropertiesHandler.setAutoPilot(this.getTardis().getProperties(), withRemat);
+        PropertiesHandler.setAutoPilot(this.getTardis().getHandlers().getProperties(), withRemat);
 
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
         DoorHandler.lockTardis(true, this.getTardis(), (ServerWorld) TardisUtil.getTardisDimension(), null, true);
 
-        if (PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE)) {
+        if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
             // fail to take off when handbrake is on
             this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
@@ -235,7 +235,7 @@ public class TardisTravel {
 
             setDestinationToTardisInterior(target.tardis(), true, 256); // how many times should this be
 
-            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
+            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
         }
 
         BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
@@ -268,7 +268,7 @@ public class TardisTravel {
     }
 
     public boolean checkDestination() {
-        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getProperties(), PropertiesHandler.FIND_GROUND));
+        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
     }
 
     private boolean isDestinationTardisExterior() {
@@ -324,7 +324,7 @@ public class TardisTravel {
         if (blockEntity != null)
             this.runAnimations(blockEntity);
         if (DoorHandler.isClient()) return;
-        DoorHandler.lockTardis(PropertiesHandler.getBool(this.getTardis().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), (ServerWorld) this.position.getWorld(), null, false);
+        DoorHandler.lockTardis(PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), (ServerWorld) this.position.getWorld(), null, false);
     }
 
     public void forceLand() {
@@ -352,7 +352,7 @@ public class TardisTravel {
         this.destination = pos;
 
         if (withChecks)
-            this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getProperties(), PropertiesHandler.FIND_GROUND));
+            this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
     }
 
     public AbsoluteBlockPos.Directed getDestination() {
@@ -398,7 +398,7 @@ public class TardisTravel {
     }
 
     public void checkShouldRemat() {
-        if (!PropertiesHandler.willAutoPilot(this.getTardis().getProperties()))
+        if (!PropertiesHandler.willAutoPilot(this.getTardis().getHandlers().getProperties()))
             return;
 
         this.materialise();

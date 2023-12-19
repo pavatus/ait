@@ -46,7 +46,7 @@ public class ClientHumHandler extends SoundHandler {
 
     public LoopingSound getHum() {
         if (this.current == null) {
-            this.current = (LoopingSound) findSoundByEvent(this.tardis().getHum().getHum());
+            this.current = (LoopingSound) findSoundByEvent(this.tardis().getHandlers().getHum().getHum());
         }
 
         return this.current;
@@ -94,7 +94,7 @@ public class ClientHumHandler extends SoundHandler {
     }
 
     public boolean isEnabled() {
-        return PropertiesHandler.getBool(this.tardis().getProperties(), PropertiesHandler.HUM_ENABLED);
+        return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.HUM_ENABLED);
     }
 
     public void tick(MinecraftClient client) {

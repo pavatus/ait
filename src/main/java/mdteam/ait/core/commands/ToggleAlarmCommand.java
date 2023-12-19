@@ -31,9 +31,9 @@ public class ToggleAlarmCommand {
 
         if (tardis == null || source == null) return 0;
 
-        PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.ALARM_ENABLED));
+        PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED));
 
-        source.sendMessage(Text.literal("Alarms set to: " + PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.ALARM_ENABLED)), true);
+        source.sendMessage(Text.literal("Alarms set to: " + PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)), true);
 
         return Command.SINGLE_SUCCESS;
     }

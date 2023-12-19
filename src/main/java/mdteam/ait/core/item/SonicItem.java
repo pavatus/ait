@@ -144,8 +144,8 @@ public class SonicItem extends Item {
 
                 if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
-                PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE, false);
-                PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.AUTO_LAND, true);
+                PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
+                PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, true);
 
                 travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()), true);
                 if (travel.getState() == LANDED) travel.dematerialise(true);

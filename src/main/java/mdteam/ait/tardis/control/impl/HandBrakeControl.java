@@ -19,9 +19,9 @@ public class HandBrakeControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE, !PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE));
+        PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
 
-        messagePlayer(player, PropertiesHandler.getBool(tardis.getProperties(), PropertiesHandler.HANDBRAKE));
+        messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
 
         if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
             // randomise and force land @todo something better ive got no ideas at 1am loqor

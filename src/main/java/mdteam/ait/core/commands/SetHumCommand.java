@@ -37,7 +37,7 @@ public class SetHumCommand {
 
         if (tardis == null || source == null) return 0;
 
-        tardis.getHum().setHum(hum);
+        tardis.getHandlers().getHum().setHum(hum);
 
         return Command.SINGLE_SUCCESS;
     }

@@ -23,10 +23,10 @@ public class OvergrownHandler extends TardisLink {
     }
 
     public int getTicks() {
-        return PropertiesHandler.getInt(this.tardis().getProperties(), OVERGROWN_TICKS);
+        return PropertiesHandler.getInt(this.tardis().getHandlers().getProperties(), OVERGROWN_TICKS);
     }
     private void setTicks(int ticks) {
-        PropertiesHandler.set(this.tardis().getProperties(), OVERGROWN_TICKS, ticks);
+        PropertiesHandler.set(this.tardis().getHandlers().getProperties(), OVERGROWN_TICKS, ticks);
     }
     private void addTick() {
         this.setTicks(this.getTicks() + 1);
@@ -36,10 +36,10 @@ public class OvergrownHandler extends TardisLink {
     }
 
     public boolean isOvergrown() {
-        return PropertiesHandler.getBool(this.tardis().getProperties(), IS_OVERGROWN);
+        return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), IS_OVERGROWN);
     }
     public void setOvergrown(boolean var) {
-        PropertiesHandler.setBool(this.tardis().getProperties(), IS_OVERGROWN, var);
+        PropertiesHandler.setBool(this.tardis().getHandlers().getProperties(), IS_OVERGROWN, var);
         this.markDirty();
     }
     public void removeVegetation() {

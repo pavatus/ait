@@ -20,7 +20,7 @@ public class ThrottleControl extends Control {
         TardisTravel travel = tardis.getTravel();
 
         if (travel.getState() == TardisTravel.State.LANDED) {
-            travel.dematerialise(PropertiesHandler.willAutoPilot(tardis.getProperties()));
+            travel.dematerialise(PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));
         } else if (travel.getState() == TardisTravel.State.FLIGHT) {
             travel.materialise();
         }

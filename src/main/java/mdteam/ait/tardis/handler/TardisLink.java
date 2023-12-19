@@ -1,6 +1,9 @@
 package mdteam.ait.tardis.handler;
 
+import com.google.gson.*;
+import mdteam.ait.core.AITDesktops;
 import mdteam.ait.tardis.Exclude;
+import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.SerialDimension;
@@ -11,9 +14,11 @@ import mdteam.ait.tardis.TardisTickable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import java.lang.reflect.Type;
 import java.util.UUID;
 
 public abstract class TardisLink implements TardisTickable {
@@ -54,12 +59,16 @@ public abstract class TardisLink implements TardisTickable {
 
     @Override
     public void tick(MinecraftServer server) {
-        if (isDirty()) this.sync();
     }
 
     @Override
     public void tick(MinecraftClient client) {
 
+    }
+
+    @Override
+    public void startTick(MinecraftServer server) {
+        if (isDirty()) this.sync();
     }
 
     public AbsoluteBlockPos.Directed getDoorPos() {

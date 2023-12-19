@@ -14,4 +14,5 @@ public interface TardisTickable { // todo, actually use this class where its nee
 
     void tick(ServerWorld world);
     void tick(MinecraftClient client);
+    void startTick(MinecraftServer server);
 }

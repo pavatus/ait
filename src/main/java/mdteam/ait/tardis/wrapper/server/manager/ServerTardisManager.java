@@ -92,6 +92,11 @@ public class ServerTardisManager extends TardisManager {
                 tardis.tick(world);
             }
         });
+        ServerTickEvents.START_SERVER_TICK.register(server -> {
+            for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
+                tardis.startTick(server);
+            }
+        });
     }
 
     public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, VariantEnum variantType, ConsoleEnum consoleType, TardisDesktopSchema schema, boolean locked) {

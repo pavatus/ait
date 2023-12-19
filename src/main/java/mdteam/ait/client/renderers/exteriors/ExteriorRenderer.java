@@ -48,8 +48,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         Identifier texture = model.getVariousTextures(tardisExterior.getType(), tardisExterior.getVariant());
         if (model != null) {
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
-            if (entity.tardis().getOvergrownHandler().isOvergrown()) {
-                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.tardis().getOvergrownHandler().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+            if (entity.tardis().getHandlers().getOvergrownHandler().isOvergrown()) {
+                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.tardis().getHandlers().getOvergrownHandler().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
             }
             if (model.getVariousEmission(texture, tardisExterior.getType()) != null)
                 if (tardisExterior.getType().hasEmission())

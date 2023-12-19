@@ -162,7 +162,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
             ((ExteriorBlockEntity) exterior).getAnimation().tick();
 
 
-        if (!world.isClient() && ((ExteriorBlockEntity) exterior).tardis() != null && !PropertiesHandler.getBool(((ExteriorBlockEntity) exterior).tardis().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && ((ExteriorBlockEntity) exterior).tardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
+        if (!world.isClient() && ((ExteriorBlockEntity) exterior).tardis() != null && !PropertiesHandler.getBool(((ExteriorBlockEntity) exterior).tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && ((ExteriorBlockEntity) exterior).tardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
             for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(exterior.getPos()).expand(0, 1, 0), EntityPredicates.EXCEPT_SPECTATOR)) {
                 TardisUtil.teleportInside(((ExteriorBlockEntity) exterior).tardis(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
             }

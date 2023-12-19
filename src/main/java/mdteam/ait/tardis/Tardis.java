@@ -4,6 +4,7 @@ import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.tardis.handler.OvergrownHandler;
+import mdteam.ait.tardis.handler.TardisHandlersManager;
 import mdteam.ait.tardis.handler.hum.ServerHumHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
@@ -25,12 +26,7 @@ public class Tardis {
     private TardisDesktop desktop;
     private final TardisExterior exterior;
     private final TardisConsole console;
-    private final DoorHandler door;
-    private final PropertiesHolder properties;
-    private final WaypointHandler waypoints;
-    private final LoyaltyHandler loyalties;
-    private final OvergrownHandler overgrown;
-    private ServerHumHandler hum = null;
+    private TardisHandlersManager handlers;
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, VariantEnum variant, ConsoleEnum consoleType) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), (tardis) -> new TardisConsole(tardis, consoleType, consoleType.getControlTypesList()), false);
@@ -39,15 +35,10 @@ public class Tardis {
     protected Tardis(UUID uuid, Function<Tardis, TardisTravel> travel, Function<Tardis, TardisDesktop> desktop, Function<Tardis, TardisExterior> exterior, Function<Tardis, TardisConsole> console, boolean locked) {
         this.uuid = uuid;
         this.travel = travel.apply(this);
-        this.door = new DoorHandler(uuid);
-        this.door.setLocked(locked);
-        this.properties = new PropertiesHolder(uuid);
-        this.waypoints = new WaypointHandler(uuid);
-        this.loyalties = new LoyaltyHandler(uuid);
-        this.overgrown = new OvergrownHandler(uuid);
         this.desktop = desktop.apply(this);
         this.exterior = exterior.apply(this);
         this.console = console.apply(this);
+        this.handlers = new TardisHandlersManager(uuid);
     }
 
     public UUID getUuid() {
@@ -71,7 +62,7 @@ public class Tardis {
     }
 
     public DoorHandler getDoor() {
-        return door;
+        return this.getHandlers().getDoor();
     }
 
     public void setLockedTardis(boolean bool) {
@@ -85,25 +76,12 @@ public class Tardis {
     public TardisTravel getTravel() {
         return travel;
     }
+    public TardisHandlersManager getHandlers() {
+        if (handlers == null) {
+            handlers = new TardisHandlersManager(getUuid());
+        }
 
-    public PropertiesHolder getProperties() {
-        return properties;
-    }
-
-    public WaypointHandler getWaypoints() {
-        return waypoints;
-    }
-
-    public LoyaltyHandler getLoyalties() {
-        return loyalties;
-    }
-    public OvergrownHandler getOvergrownHandler() {
-        return overgrown;
-    }
-    public ServerHumHandler getHum() {
-        if (this.hum == null) this.hum = new ServerHumHandler(this.getUuid());
-
-        return this.hum;
+        return handlers;
     }
 
     /**
@@ -112,7 +90,7 @@ public class Tardis {
      * @param server the server being ticked
      */
     public void tick(MinecraftServer server) {
-        this.getOvergrownHandler().tick(server);
+        this.getHandlers().getOvergrownHandler().tick(server);
     }
 
     /**
@@ -128,6 +106,14 @@ public class Tardis {
      * @param client the remote being ticked
      */
     public void tick(MinecraftClient client) { // fixme should likely be in ClientTardis instead, same with  other server-only things should be in ServerTardis
+
+    }
+
+    /**
+     * Called at the START of a servers tick, ONLY to be used for syncing data to avoid comodification errors
+     * @param server
+     */
+    public void startTick(MinecraftServer server) {
 
     }
 }

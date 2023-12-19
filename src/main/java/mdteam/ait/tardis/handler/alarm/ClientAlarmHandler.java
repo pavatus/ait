@@ -59,7 +59,7 @@ public class ClientAlarmHandler extends SoundHandler {
     }
 
     public boolean isEnabled() {
-        return PropertiesHandler.getBool(this.tardis().getProperties(), PropertiesHandler.ALARM_ENABLED);
+        return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
     }
 
     public void tick(MinecraftClient client) {

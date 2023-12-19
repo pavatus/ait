@@ -104,7 +104,7 @@ public class DoorHandler extends TardisLink {
             return false;
         }
 
-        if (tardis.getOvergrownHandler().isOvergrown()) {
+        if (tardis.getHandlers().getOvergrownHandler().isOvergrown()) {
             // Bro cant escape
             if (player == null) return false;
 
@@ -112,7 +112,7 @@ public class DoorHandler extends TardisLink {
             ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
             if (stack.getItem() instanceof AxeItem) {
                 player.swingHand(Hand.MAIN_HAND);
-                tardis.getOvergrownHandler().removeVegetation();
+                tardis.getHandlers().getOvergrownHandler().removeVegetation();
                 stack.setDamage(stack.getDamage() - 1);
 
                 if (pos != null)
@@ -198,7 +198,7 @@ public class DoorHandler extends TardisLink {
         door.setRightRot(false);
 
         if (!forced) {
-            PropertiesHandler.setBool(tardis.getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, locked);
+            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, locked);
         }
 
         String lockedState = tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
