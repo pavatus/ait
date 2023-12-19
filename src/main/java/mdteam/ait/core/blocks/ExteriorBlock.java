@@ -48,7 +48,7 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
         if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
-        if (travelState == TardisTravel.State.LANDED) return getNormalShape(state, world, pos);
+        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75) return getNormalShape(state, world, pos);
 
         return VoxelShapes.empty();
     }
@@ -59,18 +59,20 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
         if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
-        if (travelState == TardisTravel.State.LANDED) return getNormalShape(state, world, pos);
+        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75) return getNormalShape(state, world, pos);
 
         return VoxelShapes.empty();
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        // todo move these to a reusable method
+
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
-        if (travelState == TardisTravel.State.LANDED) return getNormalShape(state, world, pos);
+        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75) return getNormalShape(state, world, pos);
 
         return VoxelShapes.empty();
     }
@@ -92,7 +94,7 @@ public class ExteriorBlock extends HorizontalDirectionalBlock implements BlockEn
         if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null) return getNormalShape(state,world,pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
-        if (travelState == TardisTravel.State.LANDED) return getNormalShape(state, world, pos);
+        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75) return getNormalShape(state, world, pos);
 
         return VoxelShapes.empty();
     }
