@@ -121,7 +121,6 @@ public class Tardis {
         // safe casts trust
         ((ServerTardisExterior) this.exterior).startTick(server);
         ((ServerTardisTravel) this.travel).startTick(server);
-        ((ServerTardisTravel) this.travel).startTick(server);
         ((ServerTardisDesktop) this.desktop).startTick(server);
         ((ServerTardisConsole) this.console).startTick(server);
     }
