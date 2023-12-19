@@ -42,9 +42,11 @@ import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandler and refactor to use uuids instead, this is incredibly inefficient and the main cause of lag.
-
     private UUID tardisId;
     public final AnimationState ANIMATION_STATE = new AnimationState();
+
+    // todo duzo do this stuff idk how you did the console and exterior animations - Loqor
+    public final AnimationState DOOR_STATE = new AnimationState();
     private ExteriorAnimation animation;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
@@ -79,6 +81,8 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
 
         if (this.tardis() == null) return 5;
 
+
+        // todo idk how this is gonna be anymore, maybe just return a boolean instead?
         return this.tardis().getDoor().isLeftOpen() ? 1.2f : 0;
     }
 
