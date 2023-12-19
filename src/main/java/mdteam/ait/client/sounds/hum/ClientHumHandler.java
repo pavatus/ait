@@ -20,6 +20,8 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import static mdteam.ait.AITMod.AIT_CONFIG;
+
 // All this is CLIENT ONLY!!
 // Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
 public class ClientHumHandler extends SoundHandler {
@@ -68,8 +70,8 @@ public class ClientHumHandler extends SoundHandler {
     }
 
     private void generateHums() {
-        if (TOYOTA_HUM == null) TOYOTA_HUM = new PlayerFollowingLoopingSound(AITSounds.TOYOTA_HUM, SoundCategory.AMBIENT, 0.2f);
-        if (CORAL_HUM == null) CORAL_HUM = new PlayerFollowingLoopingSound(AITSounds.CORAL_HUM, SoundCategory.AMBIENT, 0.2f);
+        if (TOYOTA_HUM == null) TOYOTA_HUM = new PlayerFollowingLoopingSound(AITSounds.TOYOTA_HUM, SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME());
+        if (CORAL_HUM == null) CORAL_HUM = new PlayerFollowingLoopingSound(AITSounds.CORAL_HUM, SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME());
 
         this.sounds = new ArrayList<>();
         this.sounds.addAll(List.of(
