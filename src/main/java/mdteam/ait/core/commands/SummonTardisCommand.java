@@ -48,7 +48,7 @@ public class SummonTardisCommand {
             tardis.getTravel().materialise();
         }
 
-        source.sendMessage(Text.literal("TARDIS [" + tardis.getUuid().toString().substring(1, 8) + "] is on the way!"), true); // testing purposes can be removed if ugly
+        source.sendMessage(Text.literal("TARDIS [" + tardis.getUuid().toString().substring(0, 7) + "] is on the way!"), true); // testing purposes can be removed if ugly
 
         return Command.SINGLE_SUCCESS;
     }

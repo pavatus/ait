@@ -58,7 +58,7 @@ public final class TeleportInteriorCommand {
         for (ServerPlayerEntity player : players) {
             TardisUtil.teleportInside(tardis, player);
         }
-        source.sendMessage(Text.literal("Successful teleport - interior of [" + tardis.getUuid().toString().substring(1, 8) + "]"), true); // testing purposes can be removed if ugly
+        source.sendMessage(Text.literal("Successful teleport - interior of [" + tardis.getUuid().toString().substring(0, 7) + "]"), true); // testing purposes can be removed if ugly
 
         return Command.SINGLE_SUCCESS;
     }

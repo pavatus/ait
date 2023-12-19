@@ -39,6 +39,8 @@ public class HandBrakeControl extends Control {
                     null, tardis.getTravel().getDestination().getX(),
                     tardis.getTravel().getDestination().getY(),
                     tardis.getTravel().getDestination().getZ(), 4f, true, World.ExplosionSourceType.MOB);
+                    PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED));
+                    tardis.markDirty();
             tardis.getTravel().materialise();
             // fixme }
         }

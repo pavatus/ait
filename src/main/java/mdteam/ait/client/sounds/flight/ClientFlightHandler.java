@@ -25,7 +25,7 @@ public class ClientFlightHandler extends SoundHandler {
     protected ClientFlightHandler() {}
 
     public LoopingSound getFlightLoop() {
-        if (FLIGHT == null) FLIGHT = new PositionedLoopingSound(AITSounds.FLIGHT_LOOP, SoundCategory.AMBIENT, tardis().getDesktop().getConsolePos(), 2.5f); // should this be positioned at the console pos or global?
+        if (FLIGHT == null) FLIGHT = new PositionedLoopingSound(AITSounds.FLIGHT_LOOP, SoundCategory.BLOCKS, tardis().getDesktop().getConsolePos(), 2.5f); // should this be positioned at the console pos or global?
 
         return FLIGHT;
     }
@@ -40,7 +40,7 @@ public class ClientFlightHandler extends SoundHandler {
     private void generate() {
         if (tardis() == null || tardis().getDesktop().getConsolePos() == null) return;
 
-        if (FLIGHT == null) FLIGHT = new PositionedLoopingSound(AITSounds.FLIGHT_LOOP, SoundCategory.AMBIENT, tardis().getDesktop().getConsolePos(), 2.5f);
+        if (FLIGHT == null) FLIGHT = new PositionedLoopingSound(AITSounds.FLIGHT_LOOP, SoundCategory.BLOCKS, tardis().getDesktop().getConsolePos(), 2.5f);
 
         this.sounds = new ArrayList<>();
         this.sounds.add(
