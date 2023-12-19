@@ -1,4 +1,4 @@
-package mdteam.ait.mixin.client;
+package mdteam.ait.client.mixin;
 
 import mdteam.ait.AITMod;
 import net.minecraft.client.MinecraftClient;

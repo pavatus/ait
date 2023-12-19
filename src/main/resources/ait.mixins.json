@@ -1,14 +1,14 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "mdteam.ait.mixin",
+  "package": "mdteam.ait.client.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
-    "client.DefaultLogoMixin",
-    "client.TitleScreenMixin",
-    "client.rendering.PlayerPoseRendererMixin"
+    "DefaultLogoMixin",
+    "TitleScreenMixin",
+    "rendering.PlayerPoseRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
