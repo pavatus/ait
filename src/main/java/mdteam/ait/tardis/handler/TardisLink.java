@@ -22,7 +22,7 @@ import java.lang.reflect.Type;
 import java.util.UUID;
 
 public abstract class TardisLink implements TardisTickable {
-    protected final UUID tardisId;
+    protected UUID tardisId;
 
     public TardisLink(UUID tardisId) {
         this.tardisId = tardisId;

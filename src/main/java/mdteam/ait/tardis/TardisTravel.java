@@ -8,6 +8,7 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.util.AITConfigModel;
 import mdteam.ait.tardis.control.impl.pos.PosManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
+import mdteam.ait.tardis.handler.TardisLink;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -35,7 +36,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import static mdteam.ait.AITMod.AIT_CONFIG;
 
-public class TardisTravel {
+public class TardisTravel extends TardisLink {
 
     private State state = State.LANDED;
     private AbsoluteBlockPos.Directed position;
@@ -45,16 +46,13 @@ public class TardisTravel {
     private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
     private static final int CHECK_LIMIT = AIT_CONFIG.SEARCH_HEIGHT(); // todo move into a config
 
-    @Exclude
-    protected Tardis tardis;
-
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-        this.tardis = tardis;
+        super(tardis.getUuid());
         this.position = pos;
     }
 
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
-        this.tardis = tardis;
+        super(tardis.getUuid());
         this.position = pos;
         this.destination = dest;
         this.state = state;
@@ -79,15 +77,16 @@ public class TardisTravel {
     }
 
     public Tardis getTardis() {
-        if (this.tardis == null && this.getPosition() != null) {
+        if (this.tardisId == null && this.getPosition() != null) {
             Tardis found = TardisUtil.findTardisByPosition(this.getPosition());
             if (found != null)
-                this.tardis = found;
+                this.tardisId = found.getUuid();
         }
 
-        return this.tardis;
+        return this.tardis();
     }
 
+    // todo use me in places where similar things are used
     public void travelTo(AbsoluteBlockPos.Directed pos) {
         this.setDestination(pos, true);
 
@@ -109,7 +108,7 @@ public class TardisTravel {
             // Not safe to land here!
             this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
-            if (TardisUtil.isInteriorEmpty(tardis))
+            if (TardisUtil.isInteriorEmpty(tardis()))
                 TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
             TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!")); // fixme translatable
@@ -164,11 +163,11 @@ public class TardisTravel {
 
         DoorHandler.lockTardis(true, this.getTardis(), (ServerWorld) TardisUtil.getTardisDimension(), null, true);
 
-        if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
+        if (PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
             // fail to take off when handbrake is on
             this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
-            if (TardisUtil.isInteriorEmpty(tardis))
+            if (TardisUtil.isInteriorEmpty(tardis()))
                 TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
 
             TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to takeoff!")); // fixme translatable
@@ -235,7 +234,7 @@ public class TardisTravel {
 
             setDestinationToTardisInterior(target.tardis(), true, 256); // how many times should this be
 
-            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
+            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
         }
 
         BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
