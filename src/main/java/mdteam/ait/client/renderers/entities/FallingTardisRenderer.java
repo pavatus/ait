@@ -52,7 +52,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 
         getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light,1,1,1,1,1);
 
-        if (model.getVariousEmission(getTexture(entity), tardisExterior.getType()) != null)
+        if (tardisExterior.getType().hasEmission())
             getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), light,1,1,1,1,1);
 
         matrices.pop();
