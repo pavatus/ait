@@ -38,14 +38,14 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private void generate() {
-        if (tardis() == null) return;
+        if (tardis() == null || tardis().getDesktop().getConsolePos() == null) return;
 
         if (FLIGHT == null) FLIGHT = new PositionedLoopingSound(AITSounds.FLIGHT_LOOP, SoundCategory.AMBIENT, tardis().getDesktop().getConsolePos(), 2.5f);
 
         this.sounds = new ArrayList<>();
-        this.sounds.addAll(List.of(
+        this.sounds.add(
                 FLIGHT
-        ));
+        );
     }
 
     public boolean isPlayerInATardis() {
