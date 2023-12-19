@@ -72,7 +72,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
 
         if (sneaking)
             return;
-        this.sync(); // this is fiiine
+        // this.sync(); // this is fiiine
         this.tardis().getDoor().markDirty();
     }
 
