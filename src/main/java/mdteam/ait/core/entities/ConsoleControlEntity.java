@@ -175,6 +175,8 @@ public class ConsoleControlEntity extends BaseControlEntity {
                 controlEditorHandler(player);
             }*/
 
+            if (this.getTardis() == null) return false; // AAAAAAAAAAA
+
             return this.control.runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server
         }
         return false;
