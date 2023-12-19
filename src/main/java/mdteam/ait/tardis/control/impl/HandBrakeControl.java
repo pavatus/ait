@@ -21,6 +21,8 @@ public class HandBrakeControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
 
+        tardis.markDirty();
+
         messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
 
         if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
