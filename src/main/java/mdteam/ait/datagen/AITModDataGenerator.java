@@ -2,6 +2,7 @@ package mdteam.ait.datagen;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.AITDamageTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.datagen.datagen_providers.*;
@@ -253,6 +254,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
         aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
+        aitLanguageProvider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
 
         return aitLanguageProvider;
     }

@@ -2,6 +2,7 @@ package mdteam.ait.core.entities;
 
 import com.mojang.logging.LogUtils;
 import mdteam.ait.AITMod;
+import mdteam.ait.core.AITDamageTypes;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
@@ -260,15 +261,7 @@ public class FallingTardisEntity extends Entity {
             } else {
                 Predicate<Entity> predicate = EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(EntityPredicates.VALID_LIVING_ENTITY);
                 Block var8 = this.block.getBlock();
-                DamageSource var10000;
-                if (var8 instanceof LandingBlock) {
-                    LandingBlock landingBlock = (LandingBlock)var8;
-                    var10000 = landingBlock.getDamageSource(this);
-                } else {
-                    var10000 = this.getDamageSources().fallingBlock(this);
-                }
-
-                DamageSource damageSource2 = var10000;
+                DamageSource damageSource2 = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
                 float f = (float)Math.min(MathHelper.floor((float)i * this.fallHurtAmount), this.fallHurtMax);
                 this.getWorld().getOtherEntities(this, this.getBoundingBox(), predicate).forEach((entity) -> {
                     entity.damage(damageSource2, f);
