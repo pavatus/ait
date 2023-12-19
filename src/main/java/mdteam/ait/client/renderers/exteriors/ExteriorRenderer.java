@@ -4,12 +4,16 @@ import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import mdteam.ait.tardis.TardisExterior;
@@ -52,8 +56,11 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
                 model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.tardis().getHandlers().getOvergrownHandler().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
             }
             if (model.getVariousEmission(texture, tardisExterior.getType()) != null)
-                if (tardisExterior.getType().hasEmission())
-                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getVariousEmission(texture, tardisExterior.getType()), false)), maxLight, overlay, 1, 1, 1, 1);
+                if (tardisExterior.getType().hasEmission()) {
+                    boolean alarms = PropertiesHandler.getBool(entity.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
+
+                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getVariousEmission(texture, tardisExterior.getType()), false)), maxLight, overlay, 1, alarms ? 0.3f : 1 , alarms ? 0.3f : 1, 1);
+                }
         }
         matrices.pop();
     }
