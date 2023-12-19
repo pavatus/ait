@@ -11,7 +11,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
 public class ServerTardisConsole extends TardisConsole implements TardisTickable {
-    private boolean dirty = false;
 
     public ServerTardisConsole(Tardis tardis, ConsoleEnum console, ControlTypes[] controlTypes) {
         super(tardis, console, controlTypes);
@@ -20,32 +19,17 @@ public class ServerTardisConsole extends TardisConsole implements TardisTickable
     @Override
     public void setControlTypes(ControlTypes[] controlTypes) {
         super.setControlTypes(controlTypes);
-
-        markDirty();
+        this.tardis.markDirty();
     }
 
     @Override
     public void setType(ConsoleEnum console) {
         super.setType(console);
-
-        markDirty();
-    }
-
-    private void sync() {
-        dirty = false;
-        ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
-    }
-
-    public boolean isDirty() {
-        return dirty;
-    }
-    public void markDirty() {
-        dirty = true;
+        this.tardis.markDirty();
     }
 
     @Override
     public void startTick(MinecraftServer server) {
-        if (isDirty()) this.sync();
     }
 
     @Override

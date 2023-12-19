@@ -1,7 +1,6 @@
 package mdteam.ait.tardis.handler.properties;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 
 import java.util.HashMap;
 

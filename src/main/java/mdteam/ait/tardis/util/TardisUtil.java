@@ -8,11 +8,13 @@ import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
+import mdteam.ait.tardis.TardisManager;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.PosType;
-import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -20,7 +22,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
@@ -37,11 +38,13 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.ChunkRandom;
-import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
@@ -107,7 +110,7 @@ public class TardisUtil {
                                     tardis.getDoor().closeDoors();
                                 } else if (tardis.getDoor().isBothClosed()) {
                                     tardis.getDoor().openDoors();
-                                    tardis.getDoor().markDirty();
+                                    tardis.markDirty();
                                 } else {
                                     tardis.getDoor().setRightRot(tardis.getDoor().isLeftOpen());
                                     tardis.getDoor().setLeftRot(true);
@@ -116,7 +119,7 @@ public class TardisUtil {
                         } else {
                             DoorHandler.toggleLock(tardis, server.getWorld(player.getWorld().getRegistryKey()), player);
                         }
-                        tardis.getDoor().markDirty();
+                        tardis.markDirty();
                     }
                     player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
                 }

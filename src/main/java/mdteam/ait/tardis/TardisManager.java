@@ -21,7 +21,6 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public abstract class TardisManager {
-
     protected final Map<UUID, Tardis> lookup = new HashMap<>();
     protected final Gson gson;
 

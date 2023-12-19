@@ -70,13 +70,9 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
             return;
         }
         DoorHandler.useDoor(this.tardis(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
-
-        if (!(tardis().getExterior() instanceof ServerTardisExterior)) return;
-        ((ServerTardisExterior) tardis().getExterior()).markDirty();
-
+        // fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
         if (sneaking)
             return;
-        // this.sync(); // this is fiiine
     }
 
     public float getLeftDoorRotation() {
@@ -131,7 +127,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
 
     public Tardis tardis() {
         if (this.tardisId == null) {
-            AITMod.LOGGER.warn("Exterior at " + this.getPos() + " is finding TARDIS!");
+            //AITMod.LOGGER.warn("Exterior at " + this.getPos() + " is finding TARDIS!");
             this.findTardisFromPosition();
         }
 
@@ -144,12 +140,6 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
 
     public void setTardis(Tardis tardis) {
         this.tardisId = tardis.getUuid();
-    }
-
-    public void sync() {
-        if (isClient()) return;
-
-        ServerTardisManager.getInstance().sendToSubscribers(this.tardis());
     }
 
     private void findTardisFromPosition() { // should only be used if tardisId is null so we can hopefully refind the tardis

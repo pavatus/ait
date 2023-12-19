@@ -253,7 +253,8 @@ public enum ExteriorEnum {
 
     public MatSound getSound(TardisTravel.State state) {
         return switch (state) {
-            case LANDED, FLIGHT, CRASH -> AITSounds.LANDED_ANIM;
+            case LANDED, CRASH -> AITSounds.LANDED_ANIM;
+            case FLIGHT -> AITSounds.FLIGHT_ANIM;
             case DEMAT -> AITSounds.DEMAT_ANIM;
             case MAT -> AITSounds.MAT_ANIM;
         };

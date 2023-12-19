@@ -93,7 +93,7 @@ public class SonicItem extends Item {
                     exteriorBlock.tardis().getExterior().setType(values[nextIndex]);
                     //System.out.println(exteriorBlock.getTardis().getExterior().getType());
 
-                    exteriorBlock.sync();
+                    exteriorBlock.tardis().markDirty();
                 }
 
                 // fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor

@@ -17,7 +17,6 @@ import javax.sound.sampled.AudioInputStream;
 
 //TODO: istg duzo :))))
 public class ServerTardisTravel extends TardisTravel implements TardisTickable {
-    private boolean dirty = false;
 
     public ServerTardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
         super(tardis, pos);
@@ -26,19 +25,19 @@ public class ServerTardisTravel extends TardisTravel implements TardisTickable {
     @Override
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
         super.setDestination(pos, withChecks);
-        markDirty();
+        this.tardis.markDirty();
     }
 
     @Override
     public void setPosition(AbsoluteBlockPos.Directed pos) {
         super.setPosition(pos);
-        markDirty();
+        this.tardis.markDirty();
     }
 
     @Override
     public void setState(State state) {
         super.setState(state);
-        markDirty();
+        this.tardis.markDirty();
     }
 
     public static double getSoundEventLengthInSeconds(SoundEvent sound) {
@@ -59,31 +58,17 @@ public class ServerTardisTravel extends TardisTravel implements TardisTickable {
     @Override
     public void dematerialise(boolean withRemat) {
         super.dematerialise(withRemat);
-        markDirty();
+        this.tardis.markDirty();
     }
 
     @Override
     public void materialise() {
         super.materialise();
-        markDirty();
-    }
-
-    public void sync() {
-        dirty = false;
-        ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
-    }
-
-    public boolean isDirty() {
-        return dirty;
-    }
-    public void markDirty() {
-        dirty = true;
+        this.tardis.markDirty();
     }
 
     @Override
-    public void startTick(MinecraftServer server) {
-        if (isDirty()) this.sync();
-    }
+    public void startTick(MinecraftServer server) {}
 
     @Override
     public void tick(MinecraftServer server) {}

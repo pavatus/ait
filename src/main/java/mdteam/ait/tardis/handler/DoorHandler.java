@@ -28,10 +28,14 @@ public class DoorHandler extends TardisLink {
     // Remember to markDirty for these setters!!
     public void setLeftRot(boolean var) {
         this.left = var;
+
+        tardis().markDirty();
     }
 
     public void setRightRot(boolean var) {
         this.right = var;
+
+        tardis().markDirty();
     }
 
     public boolean isRightOpen() {
@@ -45,7 +49,7 @@ public class DoorHandler extends TardisLink {
     public void setLocked(boolean var) {
         this.locked = var;
 
-        markDirty();
+        tardis().markDirty();
     }
 
     public void setLockedAndDoors(boolean var) {
@@ -171,7 +175,7 @@ public class DoorHandler extends TardisLink {
             door.setLeftRot(!door.isLeftOpen());
         }
 
-        tardis.getDoor().markDirty();
+        tardis.markDirty();
 
         return true;
     }
@@ -205,7 +209,7 @@ public class DoorHandler extends TardisLink {
         world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
         world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
 
-        tardis.getDoor().markDirty();
+        tardis.markDirty();
 
         return true;
     }

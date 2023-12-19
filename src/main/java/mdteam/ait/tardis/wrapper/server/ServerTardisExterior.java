@@ -11,7 +11,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
 public class ServerTardisExterior extends TardisExterior implements TardisTickable {
-    private boolean dirty = false;
 
     public ServerTardisExterior(Tardis tardis, ExteriorEnum exterior, VariantEnum variant) {
         super(tardis, exterior, variant);
@@ -20,32 +19,18 @@ public class ServerTardisExterior extends TardisExterior implements TardisTickab
     @Override
     public void setType(ExteriorEnum exterior) {
         super.setType(exterior);
-
-        markDirty();
+        this.tardis.markDirty();
     }
 
     @Override
     public void setVariant(VariantEnum variant) {
         super.setVariant(variant);
 
-        markDirty();
-    }
-
-    private void sync() {
-        dirty = false;
-        ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
-    }
-
-    public boolean isDirty() {
-        return dirty;
-    }
-    public void markDirty() {
-        dirty = true;
+        this.tardis.markDirty();
     }
 
     @Override
     public void startTick(MinecraftServer server) {
-        if (isDirty()) this.sync();
     }
 
     @Override

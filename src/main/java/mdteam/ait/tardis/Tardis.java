@@ -29,6 +29,8 @@ public class Tardis {
     private final TardisExterior exterior;
     private final TardisConsole console;
     private TardisHandlersManager handlers;
+    @Exclude
+    private boolean dirty = false;
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, VariantEnum variant, ConsoleEnum consoleType) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), (tardis) -> new TardisConsole(tardis, consoleType, consoleType.getControlTypesList()), false);
@@ -111,19 +113,23 @@ public class Tardis {
 
     }
 
+    public boolean isDirty() {
+        return dirty;
+    }
+    public void markDirty() {
+        dirty = true;
+    }
+
     /**
      * Called at the START of a servers tick, ONLY to be used for syncing data to avoid comodification errors
      * @param server
      */
     public void startTick(MinecraftServer server) {
-        if (!(this instanceof ServerTardis)) return;
-
-        System.out.println(this.handlers.getOvergrownHandler().getTicks());
-
-        // safe casts trust
-        ((ServerTardisExterior) this.exterior).startTick(server);
-        ((ServerTardisTravel) this.travel).startTick(server);
-        ((ServerTardisDesktop) this.desktop).startTick(server);
-        ((ServerTardisConsole) this.console).startTick(server);
+        if(this instanceof ServerTardis) {
+            if(this.isDirty()) {
+                ((ServerTardis) this).sync();
+                this.dirty = false;
+            }
+        }
     }
 }

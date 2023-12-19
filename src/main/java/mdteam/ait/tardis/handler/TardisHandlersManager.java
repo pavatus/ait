@@ -15,7 +15,6 @@ import java.util.UUID;
 public class TardisHandlersManager extends TardisLink {
     @Exclude
     private List<TardisLink> tickables = new ArrayList<>();
-
     // Yup
     private final DoorHandler door;
     private final PropertiesHolder properties;

@@ -33,7 +33,7 @@ public class ToggleAlarmCommand {
 
         PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED));
 
-        tardis.getHandlers().getProperties().markDirty();
+        tardis.markDirty();
 
         source.sendMessage(Text.literal("Alarms set to: " + PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)), true);
 

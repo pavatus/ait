@@ -11,7 +11,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
 public class ServerTardisDesktop extends TardisDesktop implements TardisTickable {
-    private boolean dirty = false;
 
     public ServerTardisDesktop(Tardis tardis, TardisDesktopSchema schema) {
         super(tardis, schema);
@@ -21,32 +20,17 @@ public class ServerTardisDesktop extends TardisDesktop implements TardisTickable
     public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
         super.setInteriorDoorPos(pos);
 
-        markDirty();
+        this.tardis.markDirty();
     }
 
     @Override
     public void setConsolePos(AbsoluteBlockPos.Directed pos) {
         super.setConsolePos(pos);
 
-        markDirty();
+        this.tardis.markDirty();
     }
-
-    private void sync() {
-        dirty = false;
-        ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
-    }
-
-    public boolean isDirty() {
-        return dirty;
-    }
-    public void markDirty() {
-        dirty = true;
-    }
-
     @Override
-    public void startTick(MinecraftServer server) {
-        if (isDirty()) this.sync();
-    }
+    public void startTick(MinecraftServer server) {}
 
     @Override
     public void tick(MinecraftServer server) {}

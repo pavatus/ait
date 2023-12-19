@@ -76,12 +76,9 @@ public class DoorBlockEntity extends BlockEntity {
             return;
         }
         DoorHandler.useDoor(this.getTardis(), (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
+        // fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
         if (sneaking)
             return;
-        AbsoluteBlockPos exteriorPos = this.getTardis().getTravel().getPosition();
-        // this.sync();
-        if (!(getTardis().getExterior() instanceof ServerTardisExterior)) return;
-        ((ServerTardisExterior) getTardis().getExterior()).markDirty();
     }
 
     public float getLeftDoorRotation() {
