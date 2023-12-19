@@ -36,6 +36,15 @@ loom {
 			runDir "build/datagen"
 		}
 	}
+
+	splitEnvironmentSourceSets()
+
+	mods {
+		"modid" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
 }
 
 // Add the generated resources to the main source set
@@ -113,7 +122,7 @@ java {
 	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 	// if it is present.
 	// If you remove this line, sources will not be generated.
-	//withSourcesJar()
+	withSourcesJar()
 }
 
 jar {
