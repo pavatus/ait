@@ -1,7 +1,8 @@
 package mdteam.ait.client.sounds;
 
-import mdteam.ait.tardis.handler.alarm.ClientAlarmHandler;
-import mdteam.ait.tardis.handler.hum.ClientHumHandler;
+import mdteam.ait.client.sounds.alarm.ClientAlarmHandler;
+import mdteam.ait.client.sounds.flight.ClientFlightHandler;
+import mdteam.ait.client.sounds.hum.ClientHumHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -13,6 +14,7 @@ import net.minecraft.client.MinecraftClient;
 public class ClientSoundManager {
     private static ClientHumHandler hum;
     private static ClientAlarmHandler alarm;
+    private static ClientFlightHandler flight;
 
     public static ClientHumHandler getHum() {
         if (hum == null) {
@@ -28,6 +30,14 @@ public class ClientSoundManager {
 
         return alarm;
     }
+    public static ClientFlightHandler getFlight() {
+        if (flight == null) {
+            flight = ClientFlightHandler.create();
+        }
+
+        return flight;
+    }
+
 
     public static void tick(MinecraftClient client) {
         if (getAlarm() != null)
@@ -35,5 +45,8 @@ public class ClientSoundManager {
 
         if (getHum() != null)
             getHum().tick(client);
+
+        if (getFlight() != null)
+            getFlight().tick(client);
     }
 }

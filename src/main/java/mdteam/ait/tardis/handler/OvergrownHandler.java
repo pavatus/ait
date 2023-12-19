@@ -14,7 +14,7 @@ import java.util.UUID;
 public class OvergrownHandler extends TardisLink {
     public static final String IS_OVERGROWN = "overgrown";
     public static final String OVERGROWN_TICKS = "overgrown_ticks";
-    public static final int MAXIMUM_TICKS = 400;
+    public static final int MAXIMUM_TICKS = 2000;
     public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
     private static Random random;
 

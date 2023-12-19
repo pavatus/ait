@@ -1,4 +1,4 @@
-package mdteam.ait.tardis.handler.alarm;
+package mdteam.ait.client.sounds.alarm;
 
 import mdteam.ait.client.sounds.LoopingSound;
 import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;

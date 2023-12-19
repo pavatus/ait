@@ -7,15 +7,11 @@ import com.mojang.brigadier.context.CommandContext;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.handler.hum.ServerHumHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
 
 import static mdteam.ait.core.commands.TeleportInteriorCommand.TARDIS_SUGGESTION;
 import static net.minecraft.server.command.CommandManager.argument;

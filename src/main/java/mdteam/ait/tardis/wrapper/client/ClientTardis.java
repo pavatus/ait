@@ -3,13 +3,11 @@ package mdteam.ait.tardis.wrapper.client;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
-import mdteam.ait.tardis.handler.hum.ClientHumHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
-import net.minecraft.client.MinecraftClient;
 
 import java.util.UUID;
 

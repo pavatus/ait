@@ -96,7 +96,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         if (this.getAge(state) >= this.getMaxAge()) {
             // Create a new tardis
             ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), ExteriorEnum.CAPSULE, VariantEnum.DEFAULT, ConsoleEnum.BOREALIS, AITDesktops.get(new Identifier(AITMod.MOD_ID, "default_cave")), false);
-            created.getHandlers().getOvergrownHandler().setOvergrown(true); //fixme created.getEnvironmentHandler().setCoralCovered(true);
+            // created.getHandlers().getOvergrownHandler().setOvergrown(true); //fixme created.getEnvironmentHandler().setCoralCovered(true);
 
             LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world);
             lightning.setPos(pos.getX(),pos.getY(),pos.getZ());

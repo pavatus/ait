@@ -1,9 +1,7 @@
 package mdteam.ait.tardis.handler;
 
 import mdteam.ait.tardis.Exclude;
-import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTickable;
-import mdteam.ait.tardis.handler.hum.ServerHumHandler;
 import mdteam.ait.tardis.handler.loyalty.LoyaltyHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import net.minecraft.server.MinecraftServer;
