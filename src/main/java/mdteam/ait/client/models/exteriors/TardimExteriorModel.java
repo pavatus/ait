@@ -1,6 +1,7 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.entities.FallingTardisEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -56,6 +57,15 @@ public class TardimExteriorModel extends ExteriorModel {
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
+        matrices.pop();
+    }
+
+    @Override
+    public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        matrices.push();
+        matrices.translate(0, -1.5f, 0);
+
+        super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();
     }
 }

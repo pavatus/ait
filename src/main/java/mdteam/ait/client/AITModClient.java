@@ -6,11 +6,13 @@ import mdteam.ait.client.renderers.consoles.ConsoleRenderer;
 import mdteam.ait.client.renderers.coral.CoralRenderer;
 import mdteam.ait.client.renderers.doors.DoorRenderer;
 import mdteam.ait.client.renderers.entities.ControlEntityRenderer;
+import mdteam.ait.client.renderers.entities.FallingTardisRenderer;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
 import mdteam.ait.client.screens.MonitorScreen;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.AITItems;
+import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -184,6 +186,7 @@ public class AITModClient implements ClientModInitializer {
 
     public void entityRenderRegister() {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
+        EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
     }
 
     private boolean keyHeldDown = false;

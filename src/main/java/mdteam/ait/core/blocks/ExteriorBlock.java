@@ -4,12 +4,16 @@ import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
+import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -21,6 +25,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
@@ -58,6 +63,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         return AITItems.TARDIS_ITEM.getDefaultStack();
     }
+
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -167,5 +173,30 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
 
             ((ExteriorBlockEntity) entity).onBroken();
         }
+    }
+
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        if (canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY() && findTardis(world,pos) != null && findTardis(world,pos).getTravel().getState() == TardisTravel.State.LANDED) {
+            FallingTardisEntity falling = FallingTardisEntity.spawnFromBlock(world, pos, state);
+            this.configureFallingTardis(falling, world, pos);
+        }
+    }
+
+    private Tardis findTardis(ServerWorld world, BlockPos pos) {
+        if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
+            return exterior.tardis();
+        }
+        return null;
+    }
+
+    public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingTardisEntity falling) {
+        falling.tardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, falling.tardis().getTravel().getPosition().getDirection()));
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+
+        if (!(blockEntity instanceof ExteriorBlockEntity))
+            return;
+    }
+
+    protected void configureFallingTardis(FallingTardisEntity entity, ServerWorld world, BlockPos pos) {
     }
 }
