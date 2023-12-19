@@ -58,8 +58,6 @@ public class AITModClient implements ClientModInitializer {
 
     private static KeyBinding keyBinding;
 
-    private static ClientHumHandler clientHum;
-    private static ClientAlarmHandler clientAlarm;
     private final Identifier PORTAL_EFFECT_SHADER = new Identifier(AITMod.MOD_ID, "shaders/core/portal_effect.json");
     public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
     public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
@@ -91,21 +89,6 @@ public class AITModClient implements ClientModInitializer {
                 });
 
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
-    }
-
-    public static ClientHumHandler getClientHum() {
-        if (clientHum == null) {
-            clientHum = ClientHumHandler.create();
-        }
-
-        return clientHum;
-    }
-    public static ClientAlarmHandler getClientAlarm() {
-        if (clientAlarm == null) {
-            clientAlarm = ClientAlarmHandler.create();
-        }
-
-        return clientAlarm;
     }
 
 

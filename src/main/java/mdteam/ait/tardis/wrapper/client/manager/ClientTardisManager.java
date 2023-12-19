@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.AITModClient;
+import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.SerialDimension;
@@ -62,10 +63,7 @@ public class ClientTardisManager extends TardisManager {
                     tardis.tick(client);
                 }
 
-                if (AITModClient.getClientHum() != null)
-                    AITModClient.getClientHum().tick(client);
-                if (AITModClient.getClientAlarm() != null)
-                    AITModClient.getClientAlarm().tick(client);
+                ClientSoundManager.tick(client);
             });
 
             ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());
