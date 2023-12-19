@@ -32,6 +32,7 @@ public class ServerTardisExterior extends TardisExterior implements TardisTickab
     }
 
     private void sync() {
+        dirty = false;
         ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
     }
 

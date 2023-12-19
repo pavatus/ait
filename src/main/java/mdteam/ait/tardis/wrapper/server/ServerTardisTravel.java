@@ -69,6 +69,7 @@ public class ServerTardisTravel extends TardisTravel implements TardisTickable {
     }
 
     public void sync() {
+        dirty = false;
         ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
     }
 

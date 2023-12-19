@@ -32,6 +32,7 @@ public class ServerTardisConsole extends TardisConsole implements TardisTickable
     }
 
     private void sync() {
+        dirty = false;
         ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
     }
 
