@@ -27,6 +27,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -45,10 +46,14 @@ import org.jetbrains.annotations.Nullable;
 public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.01, 16.0, 32.0, 16.0);
-    public static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 15.99, 32.0, 16.0);
-    public static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 15.99);
-    public static final VoxelShape WEST_SHAPE = Block.createCuboidShape(0.01, 0.0, 0.0, 16.0, 32.0, 16.0);
+    public static final VoxelShape NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 32.0, 16.0),
+            Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
+    public static final VoxelShape EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 14.0, 32.0, 16.0),
+            Block.createCuboidShape(0, 0, 0, 19.5,1, 16));
+    public static final VoxelShape SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 14.0),
+            Block.createCuboidShape(0, 0, 0, 16,1, 19.5));
+    public static final VoxelShape WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(2.0, 0.0, 0.0, 16.0, 32.0, 16.0),
+            Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
 
     public ExteriorBlock(Settings settings) {
         super(settings.nonOpaque());
@@ -88,13 +93,13 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
 
     @Override
     public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
+        /*BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null)
             return getNormalShape(state, world, pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
         if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
-            return getNormalShape(state, world, pos);
+            return getNormalShape(state, world, pos);*/
 
         return VoxelShapes.empty();
     }
@@ -156,8 +161,9 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
             return;
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof ExteriorBlockEntity exterior)
+        if (blockEntity instanceof ExteriorBlockEntity exterior) {
             exterior.onEntityCollision(entity);
+        }
     }
 
     @Nullable

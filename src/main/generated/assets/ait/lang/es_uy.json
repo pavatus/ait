@@ -1,8 +1,10 @@
 {
   "block.ait.console": "Console",
+  "block.ait.coral_plant": "TARDIS Coral",
   "block.ait.door_block": "Door",
   "block.ait.exterior_block": "Exterior",
   "block.ait.radio": "Radio",
+  "death.attack.tardis_squash": "%1$s got squashed by a TARDIS!",
   "item.ait.classic_key": "Classic Key",
   "item.ait.classic_key_upgrade_smithing_template": "Smithing Template",
   "item.ait.coral": "Coral Sonic Screwdriver",

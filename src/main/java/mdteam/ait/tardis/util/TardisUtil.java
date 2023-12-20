@@ -49,7 +49,6 @@ import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
-
     private static final Random RANDOM = new Random();
     private static MinecraftServer SERVER; //@TODO fixme this does not work on multiplayer.
     private static ServerWorld TARDIS_DIMENSION;
@@ -248,7 +247,7 @@ public class TardisUtil {
     }
 
     public static BlockPos offsetExteriorDoorPosition(TardisTravel travel) {
-        return TardisUtil.offsetDoorPosition(travel.getPosition());
+        return TardisUtil.offsetExteriorDoorPosition(travel.getPosition());
     }
 
     public static BlockPos offsetDoorPosition(AbsoluteBlockPos.Directed pos) {
@@ -262,6 +261,16 @@ public class TardisUtil {
         };
     }
 
+    public static BlockPos offsetExteriorDoorPosition(AbsoluteBlockPos.Directed pos) {
+        return switch (pos.getDirection()) {
+            case DOWN, UP ->
+                    throw new IllegalArgumentException("Cannot adjust door position with direction: " + pos.getDirection());
+            case NORTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.0125);
+            case SOUTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() - 0.0125);
+            case EAST -> new BlockPos.Mutable(pos.getX() + 0.0125, pos.getY(), pos.getZ() + 0.5);
+            case WEST -> new BlockPos.Mutable(pos.getX() - 0.0125, pos.getY(), pos.getZ() + 0.5);
+        };
+    }
     public static void teleportOutside(Tardis tardis, ServerPlayerEntity player) {
         TardisUtil.teleportWithDoorOffset(player, tardis.getDoor().getExteriorPos());
     }
