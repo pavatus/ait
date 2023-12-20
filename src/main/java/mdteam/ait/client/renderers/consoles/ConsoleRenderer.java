@@ -69,10 +69,10 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         AbsoluteBlockPos.Directed abpd = entity.getTardis().getTravel().getDestination();
         AbsoluteBlockPos.Directed abpp = entity.getTardis().getTravel().getPosition();
         String positionPosText = " " + abpp.getX() + ", " + abpp.getY() + ", " + abpp.getZ();
-        String positionDimensionText = " " + convertWorldValueToModified(abpp.getWorld().getRegistryKey().getValue().getPath());
+        String positionDimensionText = " " + convertWorldValueToModified(abpp.getDimension().getValue());
         String positionDirectionText = " " + abpp.getDirection().toString().toUpperCase();
         String destinationPosText = " " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
-        String destinationDimensionText = " " + convertWorldValueToModified(abpd.getWorld().getRegistryKey().getValue().getPath());
+        String destinationDimensionText = " " + convertWorldValueToModified(abpd.getDimension().getValue());
         String destinationDirectionText = " " + abpd.getDirection().toString().toUpperCase();
         matrices.translate(60, 0, 0);
         this.textRenderer.drawWithOutline(Text.of("  Position").asOrderedText(), (1 - (float) "  Position".length() / 0.5f), 0, maxLight,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, light);
