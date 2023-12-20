@@ -8,6 +8,7 @@ import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisManager;
@@ -16,7 +17,6 @@ import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -39,6 +39,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -126,19 +127,20 @@ public class TardisUtil {
         );
     }
 
-    public static void changeExteriorWithScreen(UUID uuid, int exterior, int variant, boolean variantchange) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(uuid);
-        buf.writeInt(exterior);
-        buf.writeBoolean(variantchange);
-        buf.writeInt(variant);
-        ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);
-    }
+    public static void forceLoadTardisChunk(Tardis tardis) {
+        if (!(tardis.getTravel().getPosition().getWorld() instanceof ServerWorld)) return;
 
-    public static void snapToOpenDoors(UUID uuid) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(uuid);
-        ClientPlayNetworking.send(SNAP, buf);
+        ForcedChunkUtil.keepChunkLoaded((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getPosition());
+    }
+    public static void stopForceTardisChunk(Tardis tardis) {
+        if (!(tardis.getTravel().getPosition().getWorld() instanceof ServerWorld)) return;
+
+        ForcedChunkUtil.stopForceLoading((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getPosition());
+    }
+    public static boolean isTardisChunkForced(Tardis tardis) {
+        if (!(tardis.getTravel().getPosition().getWorld() instanceof ServerWorld)) return false;
+
+        return ForcedChunkUtil.isChunkForced((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getPosition());
     }
 
     public static MinecraftServer getServer() {
