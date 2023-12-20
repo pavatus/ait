@@ -143,22 +143,6 @@ public class TardisUtil {
         return ForcedChunkUtil.isChunkForced((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getPosition());
     }
 
-
-    public static void changeExteriorWithScreen(UUID uuid, int exterior, int variant, boolean variantchange) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(uuid);
-        buf.writeInt(exterior);
-        buf.writeBoolean(variantchange);
-        buf.writeInt(variant);
-        ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);
-    }
-
-    public static void snapToOpenDoors(UUID uuid) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(uuid);
-        ClientPlayNetworking.send(SNAP, buf);
-    }
-
     public static MinecraftServer getServer() {
         //MinecraftServer server = TARDIS_DIMENSION.getServer();
         return SERVER;

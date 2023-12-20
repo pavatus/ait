@@ -124,8 +124,6 @@ public class TardisTravel extends TardisLink {
         ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
         destWorld.getChunk(this.getDestination());
 
-        TardisUtil.forceLoadTardisChunk(tardis());
-
         this.getDestination().getWorld().playSound(null, this.getDestination(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
         //TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.MAT, SoundCategory.BLOCKS, 10f, 1f);
         if (this.getTardis() != null)
@@ -329,7 +327,8 @@ public class TardisTravel extends TardisLink {
         if (DoorHandler.isClient()) return;
         DoorHandler.lockTardis(PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), (ServerWorld) this.position.getWorld(), null, false);
 
-
+        TardisUtil.forceLoadTardisChunk(tardis());
+        // getPosition().getWorld().getChunkManager().getWorldChunk(getPosition().getX(), getPosition().getZ(), false);
     }
 
     public void forceLand() {

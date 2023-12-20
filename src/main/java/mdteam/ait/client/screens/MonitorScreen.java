@@ -6,6 +6,7 @@ import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
+import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.gui.DrawContext;
@@ -111,7 +112,7 @@ public class MonitorScreen extends TardisScreen {
                     this.getCurrentModel().ordinal() : tardis().getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(),
                     this.getCurrentVariant() != tardis().getExterior().getVariant());*/
             if (this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant() != tardis().getExterior().getVariant()) {
-                TardisUtil.changeExteriorWithScreen(this.tardisId,
+                ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
                         this.getCurrentModel().ordinal(), this.getCurrentVariant().ordinal(),
                         this.getCurrentVariant() != tardis().getExterior().getVariant());
             }
