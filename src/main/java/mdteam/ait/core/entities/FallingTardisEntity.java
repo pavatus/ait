@@ -165,6 +165,12 @@ public class FallingTardisEntity extends Entity {
 
             this.move(MovementType.SELF, this.getVelocity());
             if (!this.getWorld().isClient) {
+                if (PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
+                    stopFalling();
+                    return;
+                }
+
+
                 BlockPos blockPos = this.getBlockPos();
                 boolean bl = this.block.getBlock() instanceof ConcretePowderBlock;
                 boolean bl2 = bl && this.getWorld().getFluidState(blockPos).isIn(FluidTags.WATER);
@@ -246,6 +252,69 @@ public class FallingTardisEntity extends Entity {
             }
 
             this.setVelocity(this.getVelocity().multiply(0.98));
+        }
+    }
+
+    public void stopFalling() {
+        Block block = this.block.getBlock();
+        BlockPos blockPos = this.getBlockPos();
+        boolean bl = this.block.getBlock() instanceof ConcretePowderBlock;
+        boolean bl2 = bl && this.getWorld().getFluidState(blockPos).isIn(FluidTags.WATER);
+        double d = this.getVelocity().lengthSquared();
+        BlockState blockState = this.getWorld().getBlockState(blockPos);
+        this.setVelocity(this.getVelocity().multiply(0.7, -0.5, 0.7));
+        if (!blockState.isOf(Blocks.MOVING_PISTON)) {
+            if (!this.destroyedOnLanding) {
+                boolean bl3 = blockState.canReplace(new AutomaticItemPlacementContext(this.getWorld(), blockPos, Direction.DOWN, ItemStack.EMPTY, Direction.UP));
+                boolean bl4 = FallingBlock.canFallThrough(this.getWorld().getBlockState(blockPos.down())) && (!bl || !bl2);
+                boolean bl5 = this.block.canPlaceAt(this.getWorld(), blockPos) && !bl4;
+
+                if (this.block.contains(Properties.WATERLOGGED) && this.getWorld().getFluidState(blockPos).getFluid() == Fluids.WATER) {
+                    this.block = (BlockState)this.block.with(Properties.WATERLOGGED, true);
+                }
+
+                if (this.getWorld().setBlockState(blockPos, this.block, 3)) {
+                    ((ServerWorld)this.getWorld()).getChunkManager().threadedAnvilChunkStorage.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, this.getWorld().getBlockState(blockPos)));
+                    this.discard();
+                    if (block instanceof ExteriorBlock) {
+                        ((ExteriorBlock)block).onLanding(this.getWorld(), blockPos, this.block, blockState, this);
+                    }
+
+                    if (this.blockEntityData != null && this.block.hasBlockEntity()) {
+                        BlockEntity blockEntity = this.getWorld().getBlockEntity(blockPos);
+                        if (blockEntity != null) {
+                            NbtCompound nbtCompound = blockEntity.createNbt();
+                            Iterator var13 = this.blockEntityData.getKeys().iterator();
+
+                            while(var13.hasNext()) {
+                                String string = (String)var13.next();
+                                nbtCompound.put(string, this.blockEntityData.get(string).copy());
+                            }
+
+                            try {
+                                blockEntity.readNbt(nbtCompound);
+                            } catch (Exception var15) {
+                                LOGGER.error("Failed to load block entity from falling block", var15);
+                            }
+
+                            blockEntity.markDirty();
+                        }
+                    }
+                } else if (this.dropItem && this.getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
+                    this.discard();
+                    this.onDestroyedOnLanding(block, blockPos);
+                    this.dropItem(block);
+                }
+            } else {
+                this.discard();
+                if (this.dropItem && this.getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
+                    this.onDestroyedOnLanding(block, blockPos);
+                    this.dropItem(block);
+                }
+            }
+        } else {
+            this.discard();
+            this.onDestroyedOnLanding(block, blockPos);
         }
     }
 
@@ -373,7 +442,7 @@ public class FallingTardisEntity extends Entity {
     }
 
     static {
-        BLOCK_POS = DataTracker.registerData(FallingBlockEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
-        TARDIS_ID = DataTracker.registerData(FallingBlockEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+        BLOCK_POS = DataTracker.registerData(FallingTardisEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
+        TARDIS_ID = DataTracker.registerData(FallingTardisEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     }
 }

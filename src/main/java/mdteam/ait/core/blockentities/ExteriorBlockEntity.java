@@ -90,7 +90,8 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
             AITMod.LOGGER.error("this.tardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
         super.writeNbt(nbt);
-        nbt.putString("tardis", this.tardisId.toString());
+        if (tardisId != null)
+            nbt.putString("tardis", this.tardisId.toString());
         nbt.putFloat("alpha", this.getAlpha());
     }
 
