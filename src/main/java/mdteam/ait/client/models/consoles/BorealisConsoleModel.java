@@ -15,8 +15,8 @@ import mdteam.ait.tardis.TardisTravel;
 import org.joml.Vector3f;
 
 public class BorealisConsoleModel extends ConsoleModel {
-    public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/borealis_console_autumn.png"));
-    public static final Identifier CONSOLE_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/borealis_console_autumn_emission.png");
+    public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/borealis_console.png"));
+    public static final Identifier CONSOLE_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/borealis_console_emission.png");
 
     public ModelPart base_console;
 
