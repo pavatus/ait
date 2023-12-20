@@ -21,7 +21,7 @@ public class ServerTardis extends Tardis {
     @Override
     public void setDesktop(TardisDesktop desktop) {
         super.setDesktop(desktop);
-        this.sync();
+        this.markDirty();
     }
 
     public void sync() {

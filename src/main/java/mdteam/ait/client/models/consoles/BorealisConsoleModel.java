@@ -1,6 +1,5 @@
 package mdteam.ait.client.models.consoles;
 
-
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.console.borealis.BorealisAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
@@ -17,7 +16,6 @@ import org.joml.Vector3f;
 public class BorealisConsoleModel extends ConsoleModel {
     public static final Identifier CONSOLE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/borealis_console.png"));
     public static final Identifier CONSOLE_TEXTURE_EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/borealis_console_emission.png");
-
     public ModelPart base_console;
 
     public BorealisConsoleModel(ModelPart root) {
@@ -658,7 +656,6 @@ public class BorealisConsoleModel extends ConsoleModel {
         southControls.getChild("land_type").pivotY = isUpOrDown ? landTypeY : landTypeY + 1;
         matrices.pop();
         matrices.push();
-        //matrices.translate(0.5f, -0.75f, 0.5f);
         matrices.translate(0.5f, -0.75f, -0.5f);
         matrices.scale(0.5f, 0.5f, 0.5f);
         super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);

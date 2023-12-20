@@ -116,7 +116,7 @@ public class Tardis {
 
     /**
      * Called at the START of a servers tick, ONLY to be used for syncing data to avoid comodification errors
-     * @param server
+     * @param server the current minecraft server
      */
     public void startTick(MinecraftServer server) {
         if(this instanceof ServerTardis) {
