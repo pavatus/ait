@@ -6,9 +6,12 @@ import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
@@ -33,9 +36,12 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
     // Thanks craig for help w animation code @TODO more craig thank yous
     public void animateTile(ExteriorBlockEntity exterior) {
-        if (exterior.ANIMATION_STATE.isRunning()) {
-            // updateAnimation(exterior.ANIMATION_STATE, exterior.getAnimation(), MinecraftClient.getInstance().player.age);
-        }
+        this.getPart().traverse().forEach(ModelPart::resetTransform);
+        if (exterior.tardis() == null)
+            return;
+        DoorHandler.DoorStateEnum state = exterior.tardis().getDoor().getDoorState();
+        //System.out.println(state);
+        this.updateAnimation(exterior.DOOR_STATE, getAnimationForDoorState(state), exterior.animationTimer);
     }
 
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
@@ -64,4 +70,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         String addedEmission = originalPathNoPng + "_emission.png";
         return new Identifier(AITMod.MOD_ID, addedEmission);
     }
+
+    public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
 }

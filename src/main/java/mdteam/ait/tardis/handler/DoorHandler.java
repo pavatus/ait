@@ -1,17 +1,34 @@
 package mdteam.ait.tardis.handler;
 
+import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.item.InteriorSelectItem;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.TardisUtil;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -20,6 +37,7 @@ import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 
 public class DoorHandler extends TardisLink {
     private boolean locked, left, right;
+    private DoorStateEnum doorState = DoorStateEnum.CLOSED;
 
     public DoorHandler(UUID tardis) {
         super(tardis);
@@ -28,26 +46,29 @@ public class DoorHandler extends TardisLink {
     // Remember to markDirty for these setters!!
     public void setLeftRot(boolean var) {
         this.left = var;
+        if(this.left) this.setDoorState(DoorStateEnum.FIRST);
 
         tardis().markDirty();
     }
 
     public void setRightRot(boolean var) {
         this.right = var;
+        if(this.right) this.setDoorState(DoorStateEnum.SECOND);
 
         tardis().markDirty();
     }
 
     public boolean isRightOpen() {
-        return this.right;
+        return this.doorState == DoorStateEnum.SECOND || doorState == DoorStateEnum.BOTH|| this.right;
     }
 
     public boolean isLeftOpen() {
-        return this.left;
+        return this.doorState == DoorStateEnum.FIRST || doorState == DoorStateEnum.BOTH || this.left;
     }
 
     public void setLocked(boolean var) {
         this.locked = var;
+        if(this.locked) this.setDoorState(DoorStateEnum.LOCKED);
 
         tardis().markDirty();
     }
@@ -60,7 +81,7 @@ public class DoorHandler extends TardisLink {
     }
 
     public boolean locked() {
-        return this.locked;
+        return this.doorState == DoorStateEnum.LOCKED || this.locked;
     }
 
     public boolean isDoubleDoor() {
@@ -69,7 +90,7 @@ public class DoorHandler extends TardisLink {
 
     public boolean isOpen() {
         if (isDoubleDoor()) {
-            return this.right || this.left;
+            return this.isRightOpen() || this.isLeftOpen();
         }
 
         return this.isLeftOpen();
@@ -92,12 +113,22 @@ public class DoorHandler extends TardisLink {
 
         if (isDoubleDoor()) {
             setRightRot(true);
+            this.setDoorState(DoorStateEnum.BOTH);
         }
     }
 
     public void closeDoors() {
         setLeftRot(false);
         setRightRot(false);
+        this.setDoorState(DoorStateEnum.CLOSED);
+    }
+
+    public void setDoorState(DoorStateEnum doorState) {
+        this.doorState = doorState;
+    }
+
+    public DoorStateEnum getDoorState() {
+        return doorState;
     }
 
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
@@ -155,24 +186,23 @@ public class DoorHandler extends TardisLink {
             if (door.isBothOpen()) {
                 world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorCloseSound(), SoundCategory.BLOCKS, 0.6F, 1F);
                 world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorCloseSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-                door.closeDoors();
+                door.setDoorState(DoorStateEnum.CLOSED);
             } else {
                 world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
                 world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
 
-                if (door.isLeftOpen() && player.isSneaking()) {
-                    door.closeDoors();
+                if (door.isOpen() && player.isSneaking()) {
+                    door.setDoorState(DoorStateEnum.CLOSED);
                 } else if (door.isBothClosed() && player.isSneaking()) {
-                    door.openDoors();
+                    door.setDoorState(DoorStateEnum.BOTH);
                 } else {
-                    door.setRightRot(door.isLeftOpen());
-                    door.setLeftRot(true);
+                    door.setDoorState(door.getDoorState().next());
                 }
             }
         } else {
             world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
             world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-            door.setLeftRot(!door.isLeftOpen());
+            door.setDoorState(door.getDoorState() == DoorStateEnum.FIRST ? DoorStateEnum.CLOSED : DoorStateEnum.FIRST);
         }
 
         tardis.markDirty();
@@ -195,8 +225,7 @@ public class DoorHandler extends TardisLink {
         if (door == null)
             return false; // could have a case where the door is null but the thing above works fine meaning this false is wrong fixme
 
-        door.setLeftRot(false);
-        door.setRightRot(false);
+        door.setDoorState(DoorStateEnum.CLOSED);
 
         if (!forced) {
             PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, locked);
@@ -212,5 +241,40 @@ public class DoorHandler extends TardisLink {
         tardis.markDirty();
 
         return true;
+    }
+
+    public enum DoorStateEnum {
+        CLOSED {
+            @Override
+            public DoorStateEnum next() {
+                return FIRST;
+            }
+        },
+        FIRST {
+            @Override
+            public DoorStateEnum next() {
+                return SECOND;
+            }
+        },
+        SECOND {
+            @Override
+            public DoorStateEnum next() {
+                return CLOSED;
+            }
+        },
+        BOTH {
+            @Override
+            public DoorStateEnum next() {
+                return CLOSED;
+            }
+        },
+        LOCKED {
+            @Override
+            public DoorStateEnum next() {
+                return CLOSED;
+            }
+        };
+
+        public abstract DoorStateEnum next();
     }
 }

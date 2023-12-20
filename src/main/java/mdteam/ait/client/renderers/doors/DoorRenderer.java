@@ -45,6 +45,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         Identifier texture = model.getVariousTextures(tardisExterior.getType(), tardisExterior.getVariant());
         if (model != null) {
+            model.animateTile(entity);
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
             if (model.getVariousEmission(texture, tardisExterior.getType()) != null)
                 if (tardisExterior.getType().hasEmission())

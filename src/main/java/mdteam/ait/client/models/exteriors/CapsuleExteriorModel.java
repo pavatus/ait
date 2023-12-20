@@ -1,10 +1,13 @@
 package mdteam.ait.client.models.exteriors;
 
+import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class CapsuleExteriorModel extends ExteriorModel {
@@ -67,8 +70,8 @@ public class CapsuleExteriorModel extends ExteriorModel {
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
-        this.body.getChild("doors").getChild("left_door").yaw = exterior.getLeftDoorRotation();
-        this.body.getChild("doors").getChild("right_door").yaw = -exterior.getRightDoorRotation();
+        /*this.body.getChild("doors").getChild("left_door").yaw = exterior.getLeftDoor();
+        this.body.getChild("doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
@@ -82,6 +85,16 @@ public class CapsuleExteriorModel extends ExteriorModel {
         super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 
         matrices.pop();
+    }
+
+    @Override
+    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+        return switch (state) {
+            case CLOSED, LOCKED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
+            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
+            case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
+            case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
+        };
     }
 
     @Override

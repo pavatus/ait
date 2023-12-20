@@ -5,9 +5,12 @@ import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
@@ -39,6 +42,14 @@ public abstract class DoorModel extends SinglePartEntityModel {
 
     }
 
+    public void animateTile(DoorBlockEntity interiorDoor) {
+        this.getPart().traverse().forEach(ModelPart::resetTransform);
+        if (interiorDoor.getTardis() == null)
+            return;
+        DoorHandler.DoorStateEnum state = interiorDoor.getTardis().getDoor().getDoorState();
+        this.updateAnimation(interiorDoor.DOOR_STATE, getAnimationForDoorState(state), interiorDoor.animationTimer);
+    }
+
     public Identifier getVariousTextures(ExteriorEnum exterior, VariantEnum variant) {
         /*new Identifier(AITMod.MOD_ID, TEXTURE_PATH + exterior.toString().toLowerCase() + "/" + exterior.toString().toLowerCase() + ".png");
         new Identifier(AITMod.MOD_ID, TEXTURE_PATH + exterior.toString().toLowerCase() + "/" + exterior.toString().toLowerCase() + "_emission" + ".png");*/
@@ -50,4 +61,6 @@ public abstract class DoorModel extends SinglePartEntityModel {
         String addedEmission = originalPathNoPng + "_emission.png";
         return new Identifier(AITMod.MOD_ID, addedEmission);
     }
+
+    public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
 }

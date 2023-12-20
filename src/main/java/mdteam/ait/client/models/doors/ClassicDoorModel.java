@@ -1,9 +1,12 @@
 package mdteam.ait.client.models.doors;
 
+import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
@@ -49,14 +52,24 @@ public class ClassicDoorModel extends DoorModel {
 	}
 
 	@Override
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+		return switch (state) {
+			case CLOSED, LOCKED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
+			case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
+			case SECOND -> DoorAnimations.INTERIOR_SECOND_OPEN_ANIMATION;
+			case BOTH -> DoorAnimations.INTERIOR_BOTH_OPEN_ANIMATION;
+		};
+	}
+
+	@Override
 	public ModelPart getPart() {
 		return classic;
 	}
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		this.classic.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
-		this.classic.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();
+		/*this.classic.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
+		this.classic.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();*/
 
 		matrices.push();
 		matrices.scale(0.68F, 0.68f, 0.68f);

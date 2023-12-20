@@ -1,10 +1,13 @@
 package mdteam.ait.client.models.exteriors;
 
+import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
 // Made with Blockbench 4.9.2
@@ -85,16 +88,27 @@ public class ClassicExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+		if(exterior.tardis() == null) return;
 		matrices.push();
 		matrices.scale(0.685F, 0.685f, 0.685f);
 		matrices.translate(0, -1.5f, 0);
 
-		this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoorRotation();
-		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoorRotation();
+		/*this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
+		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
 		matrices.pop();
+	}
+
+	@Override
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+		return switch (state) {
+			case CLOSED, LOCKED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
+			case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
+			case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
+			case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
+		};
 	}
 
 	@Override

@@ -224,8 +224,9 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             spawnControls();
         }
 
-        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
             this.markRemoved();
+        }
 
         // idk
         if (world.isClient()) {

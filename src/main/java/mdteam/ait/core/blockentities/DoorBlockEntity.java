@@ -2,6 +2,7 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.blocks.DoorBlock;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
@@ -14,6 +15,7 @@ import mdteam.ait.tardis.wrapper.server.ServerTardisExterior;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -42,6 +44,8 @@ import static mdteam.ait.tardis.util.TardisUtil.isClient;
 public class DoorBlockEntity extends BlockEntity {
 
     private UUID tardisId;
+    public AnimationState DOOR_STATE = new AnimationState();
+    public int animationTimer = 0;
 
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -56,6 +60,12 @@ public class DoorBlockEntity extends BlockEntity {
                 this.getDesktop().setInteriorDoorPos(new AbsoluteBlockPos.Directed(pos, TardisUtil.getTardisDimension(), this.getFacing()));
                 this.getDesktop().updateDoor();
             }*/
+        }
+    }
+
+    public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T door) {
+        if(world.isClient()) {
+            ((DoorBlockEntity) door).checkAnimations();
         }
     }
 
@@ -81,17 +91,6 @@ public class DoorBlockEntity extends BlockEntity {
         if (sneaking)
             return;
     }
-
-    public float getLeftDoorRotation() {
-        if (this.getTardis() == null) return 5;
-        return this.getTardis().getDoor().isLeftOpen() ? 1.2f : 0;
-    }
-
-    public float getRightDoorRotation() {
-        if (this.getTardis() == null) return 5;
-        return this.getTardis().getDoor().isRightOpen() ? 1.2f : 0;
-    }
-
     public Direction getFacing() {
         return this.getCachedState().get(HorizontalDirectionalBlock.FACING);
     }
@@ -122,10 +121,16 @@ public class DoorBlockEntity extends BlockEntity {
     public void onEntityCollision(Entity entity) {
         if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
             return;
-        if (this.getTardis() != null && this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
+        if (this.getTardis() != null && this.getTardis().getDoor().isOpen()) {
             if (!this.getTardis().getLockedTardis() && !PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
                 TardisUtil.teleportOutside(this.getTardis(), player);
         }
+    }
+
+    public void checkAnimations() {
+        // DO NOT RUN THIS ON SERVER!!
+        animationTimer++;
+        DOOR_STATE.startIfNotRunning(animationTimer);
     }
 
     public Tardis getTardis() {

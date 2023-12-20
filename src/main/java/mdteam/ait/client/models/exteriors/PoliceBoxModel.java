@@ -1,11 +1,15 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
@@ -92,8 +96,8 @@ public class PoliceBoxModel extends ExteriorModel {
         matrices.scale(0.685F, 0.685f, 0.685f);
         matrices.translate(0, -1.5f, 0);
 
-        this.TARDIS.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoorRotation();
-        this.TARDIS.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoorRotation();
+        /*this.TARDIS.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
+        this.TARDIS.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
@@ -108,5 +112,15 @@ public class PoliceBoxModel extends ExteriorModel {
 
         super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();
+    }
+
+    @Override
+    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+        return switch (state) {
+            case CLOSED, LOCKED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
+            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
+            case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
+            case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
+        };
     }
 }

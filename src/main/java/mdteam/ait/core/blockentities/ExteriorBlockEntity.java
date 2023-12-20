@@ -15,6 +15,7 @@ import mdteam.ait.tardis.wrapper.server.ServerTardisExterior;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,11 +43,9 @@ import static mdteam.ait.tardis.TardisTravel.State.MAT;
 import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
-public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandler and refactor to use uuids instead, this is incredibly inefficient and the main cause of lag.
+public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicker<ExteriorBlockEntity> { // fixme copy tardishandler and refactor to use uuids instead, this is incredibly inefficient and the main cause of lag.
     private UUID tardisId;
-    public final AnimationState ANIMATION_STATE = new AnimationState();
-
-    // todo duzo do this stuff idk how you did the console and exterior animations - Loqor
+    public int animationTimer = 0;
     public final AnimationState DOOR_STATE = new AnimationState();
     private ExteriorAnimation animation;
 
@@ -72,26 +71,11 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
             }
             return;
         }
+
         DoorHandler.useDoor(this.tardis(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
         // fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
         if (sneaking)
             return;
-    }
-
-    public float getLeftDoorRotation() {
-
-        if (this.tardis() == null) return 5;
-
-
-        // todo idk how this is gonna be anymore, maybe just return a boolean instead?
-        return this.tardis().getDoor().isLeftOpen() ? 1.2f : 0;
-    }
-
-    public float getRightDoorRotation() {
-
-        if (this.tardis() == null) return 5;
-
-        return this.tardis().getDoor().isRightOpen() ? 1.2f : 0;
     }
 
     @Nullable
@@ -124,7 +108,7 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
         if (!(entity instanceof ServerPlayerEntity player))
             return;
 
-        if (this.tardis() != null && (this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0)) {
+        if (this.tardis() != null && this.tardis().getDoor().isOpen()) {
             if (!this.tardis().getLockedTardis())
                 TardisUtil.teleportInside(this.tardis(), player);
         }
@@ -155,9 +139,14 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
         this.tardisId = found.getUuid();
     }
 
-    public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T exterior) {
-        if (((ExteriorBlockEntity) exterior).animation != null)
-            ((ExteriorBlockEntity) exterior).getAnimation().tick();
+    @Override
+    public void tick(World world, BlockPos pos, BlockState blockState, ExteriorBlockEntity blockEntity) {
+        if (this.animation != null)
+            this.getAnimation().tick();
+
+        if(world.isClient()) {
+            this.checkAnimations();
+        }
 
         // Should be when tardis is set to landed / position is changed instead. fixme
         if (!world.isClient() && (blockState.getBlock() instanceof ExteriorBlock)) {
@@ -165,9 +154,9 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
             ((ExteriorBlock) blockState.getBlock()).tryFall(blockState, (ServerWorld) world, pos);
         }
 
-        if (!world.isClient() && ((ExteriorBlockEntity) exterior).tardis() != null && !PropertiesHandler.getBool(((ExteriorBlockEntity) exterior).tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && ((ExteriorBlockEntity) exterior).tardis().getTravel().getState() == MAT && ((ExteriorBlockEntity) exterior).getAlpha() >= 0.9f) {
-            for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(exterior.getPos()).expand(0, 1, 0), EntityPredicates.EXCEPT_SPECTATOR)) {
-                TardisUtil.teleportInside(((ExteriorBlockEntity) exterior).tardis(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
+        if (!world.isClient() && this.tardis() != null && !PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && this.tardis().getTravel().getState() == MAT && this.getAlpha() >= 0.9f) {
+            for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(this.getPos()).expand(0, 1, 0), EntityPredicates.EXCEPT_SPECTATOR)) {
+                TardisUtil.teleportInside(this.tardis(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
             }
         }
     }
@@ -186,6 +175,12 @@ public class ExteriorBlockEntity extends BlockEntity { // fixme copy tardishandl
                 this.animation.tellClientsToSetup(this.tardis().getTravel().getState());
             }
         }
+    }
+
+    public void checkAnimations() {
+        // DO NOT RUN THIS ON SERVER!!
+        animationTimer++;
+        DOOR_STATE.startIfNotRunning(animationTimer);
     }
 
     public ExteriorAnimation getAnimation() {

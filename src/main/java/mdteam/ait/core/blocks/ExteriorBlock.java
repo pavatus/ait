@@ -3,6 +3,7 @@ package mdteam.ait.core.blocks;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.FallingTardisEntity;
@@ -38,6 +39,7 @@ import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
@@ -169,10 +171,13 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
         return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
     }
 
-    @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return type == AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE ? ExteriorBlockEntity::tick : null;
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull World world, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+        return (world1, blockPos, blockState, ticker) -> {
+            if (ticker instanceof ExteriorBlockEntity exterior) {
+                exterior.tick(world, blockPos, blockState, exterior);
+            }
+        };
     }
 
     @Override
