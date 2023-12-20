@@ -18,6 +18,7 @@ public class AITSounds implements SoundRegistryContainer {
     public static final SoundEvent FAIL_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/fail_land"));
     public static final SoundEvent EMERG_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/emergency_land"));
     public static final SoundEvent FLIGHT_LOOP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/flight_loop"));
+    public static final SoundEvent LAND_THUD = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/land_thud"));
 
     public static final SoundEvent EIGHT_DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/eighth_demat"));
     public static final SoundEvent EIGHT_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/eighth_mat"));

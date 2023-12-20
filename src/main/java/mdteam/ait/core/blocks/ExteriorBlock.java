@@ -2,6 +2,7 @@ package mdteam.ait.core.blocks;
 
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITItems;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.FallingTardisEntity;
@@ -22,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.ActionResult;
@@ -212,6 +214,8 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
 
     public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingTardisEntity falling) {
         falling.tardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, falling.tardis().getTravel().getPosition().getDirection()));
+
+        world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
         PropertiesHandler.set(falling.tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, false);
         PropertiesHandler.set(falling.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, false);

@@ -69,7 +69,7 @@
       "ait:tardis/hop_takeoff"
     ]
   },
-  "tardis/hop_mat": {
+  "tardis/hop_land": {
     "sounds": [
       "ait:tardis/hop_land"
     ]
@@ -82,6 +82,11 @@
   "tardis/hums/toyota_hum": {
     "sounds": [
       "ait:tardis/hums/toyota_hum"
+    ]
+  },
+  "tardis/land_thud": {
+    "sounds": [
+      "ait:tardis/land_thud"
     ]
   },
   "tardis/mat": {
