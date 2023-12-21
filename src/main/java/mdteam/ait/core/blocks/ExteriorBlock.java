@@ -11,6 +11,7 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -247,6 +248,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
         falling.tardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, falling.tardis().getTravel().getPosition().getDirection()));
 
         world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+        TardisUtil.getTardisDimension().playSound(null, falling.tardis().getDesktop().getConsolePos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
         PropertiesHandler.set(falling.tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, false);
         PropertiesHandler.set(falling.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, false);
