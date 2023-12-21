@@ -1,34 +1,17 @@
 package mdteam.ait.tardis.handler;
 
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.item.InteriorSelectItem;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.util.TardisUtil;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -38,6 +21,7 @@ import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 public class DoorHandler extends TardisLink {
     private boolean locked, left, right;
     private DoorStateEnum doorState = DoorStateEnum.CLOSED;
+    public DoorStateEnum tempExteriorState; // this is the previous state before it was changed, used for checking when the door has been changed so the animation can start. Set on server, used on client
 
     public DoorHandler(UUID tardis) {
         super(tardis);
@@ -123,13 +107,26 @@ public class DoorHandler extends TardisLink {
         this.setDoorState(DoorStateEnum.CLOSED);
     }
 
-    public void setDoorState(DoorStateEnum doorState) {
-        this.doorState = doorState;
+    public void setDoorState(DoorStateEnum var) {
+        if (var != doorState)
+            tempExteriorState = this.doorState;
+
+        this.doorState = var;
+        tardis().markDirty();
+    }
+
+    /**
+     * Called when the exterior gets unloaded as that'll stop the animation meaning we need to make sure to restart it when it gets reloaded.
+     */
+    public void clearExteriorAnimationState() {
+        tempExteriorState = null;
+        tardis().markDirty();
     }
 
     public DoorStateEnum getDoorState() {
         return doorState;
     }
+    public DoorStateEnum getAnimationExteriorState() {return tempExteriorState;}
 
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
         if (isClient()) {

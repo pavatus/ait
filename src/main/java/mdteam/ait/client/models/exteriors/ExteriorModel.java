@@ -8,6 +8,7 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.DoorHandler;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -40,8 +41,23 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         if (exterior.tardis() == null)
             return;
         DoorHandler.DoorStateEnum state = exterior.tardis().getDoor().getDoorState();
-        //System.out.println(state);
-        this.updateAnimation(exterior.DOOR_STATE, getAnimationForDoorState(state), exterior.animationTimer);
+        // checkAnimationTimer(exterior);
+        updateAnimation(exterior.DOOR_STATE, getAnimationForDoorState(state), exterior.animationTimer);
+    }
+
+    private static float getAnimationLengthInTicks(Animation anim) {
+        return anim.lengthInSeconds() * 20;
+    }
+
+    private void checkAnimationTimer(ExteriorBlockEntity exterior) {
+        DoorHandler.DoorStateEnum state = exterior.tardis().getDoor().getDoorState();
+        Animation anim = getAnimationForDoorState(state);
+
+
+        int max = (int) getAnimationLengthInTicks(anim);
+        if (exterior.animationTimer > max) {
+            exterior.animationTimer = max;
+        }
     }
 
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
@@ -51,7 +67,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        root.render(matrices,vertexConsumer,light,overlay,red,green,blue,alpha);
+        root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 
     @Override

@@ -46,13 +46,22 @@ import org.jetbrains.annotations.Nullable;
 public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final VoxelShape NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 32.0, 16.0),
+    public static final VoxelShape LEDGE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
-    public static final VoxelShape EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 14.0, 32.0, 16.0),
+    public static final VoxelShape LEDGE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 14.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, 0, 19.5,1, 16));
-    public static final VoxelShape SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 14.0),
+    public static final VoxelShape LEDGE_SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 14.0),
             Block.createCuboidShape(0, 0, 0, 16,1, 19.5));
-    public static final VoxelShape WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(2.0, 0.0, 0.0, 16.0, 32.0, 16.0),
+    public static final VoxelShape LEDGE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(2.0, 0.0, 0.0, 16.0, 32.0, 16.0),
+            Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
+
+    public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 32.0, 16.0),
+            Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
+    public static final VoxelShape CUBE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 14.0, 32.0, 16.0),
+            Block.createCuboidShape(0, 0, 0, 19.5,1, 16));
+    public static final VoxelShape CUBE_SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 14.0),
+            Block.createCuboidShape(0, 0, 0, 16,1, 19.5));
+    public static final VoxelShape CUBE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(2.0, 0.0, 0.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
 
     public ExteriorBlock(Settings settings) {
@@ -110,21 +119,32 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null)
-            return getNormalShape(state, world, pos);
+            return getLedgeShape(state, world, pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
         if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
-            return getNormalShape(state, world, pos);
+            return getLedgeShape(state, world, pos);
 
         return VoxelShapes.empty();
     }
 
     public VoxelShape getNormalShape(BlockState state, BlockView world, BlockPos pos) {
         return switch (state.get(FACING)) {
-            case NORTH -> NORTH_SHAPE;
-            case EAST -> EAST_SHAPE;
-            case SOUTH -> SOUTH_SHAPE;
-            case WEST -> WEST_SHAPE;
+            case NORTH -> CUBE_NORTH_SHAPE;
+            case EAST -> CUBE_EAST_SHAPE;
+            case SOUTH -> CUBE_SOUTH_SHAPE;
+            case WEST -> CUBE_WEST_SHAPE;
+            default ->
+                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
+        };
+    }
+
+    public VoxelShape getLedgeShape(BlockState state, BlockView world, BlockPos pos) {
+        return switch (state.get(FACING)) {
+            case NORTH -> LEDGE_NORTH_SHAPE;
+            case EAST -> LEDGE_EAST_SHAPE;
+            case SOUTH -> LEDGE_SOUTH_SHAPE;
+            case WEST -> LEDGE_WEST_SHAPE;
             default ->
                     throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
         };

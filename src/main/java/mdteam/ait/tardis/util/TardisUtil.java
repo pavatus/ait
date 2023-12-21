@@ -110,7 +110,6 @@ public class TardisUtil {
                                     tardis.getDoor().closeDoors();
                                 } else if (tardis.getDoor().isBothClosed()) {
                                     tardis.getDoor().openDoors();
-                                    tardis.markDirty();
                                 } else {
                                     tardis.getDoor().setRightRot(tardis.getDoor().isLeftOpen());
                                     tardis.getDoor().setLeftRot(true);

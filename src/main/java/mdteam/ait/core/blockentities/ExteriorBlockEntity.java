@@ -11,7 +11,6 @@ import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.ServerTardisExterior;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -181,7 +180,14 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
     public void checkAnimations() {
         // DO NOT RUN THIS ON SERVER!!
         animationTimer++;
-        DOOR_STATE.startIfNotRunning(animationTimer);
+//        if (!DOOR_STATE.isRunning()) {
+//            DOOR_STATE.startIfNotRunning(animationTimer);
+//        }
+
+        if (tardis().getHandlers().getDoor().getAnimationExteriorState() == null || !(tardis().getHandlers().getDoor().getAnimationExteriorState().equals(tardis().getDoor().getDoorState()))) {
+            DOOR_STATE.start(animationTimer);
+            tardis().getHandlers().getDoor().tempExteriorState = tardis().getDoor().getDoorState();
+        }
     }
 
     public ExteriorAnimation getAnimation() {
