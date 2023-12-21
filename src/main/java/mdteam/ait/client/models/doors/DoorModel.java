@@ -47,7 +47,7 @@ public abstract class DoorModel extends SinglePartEntityModel {
         if (interiorDoor.getTardis() == null)
             return;
         DoorHandler.DoorStateEnum state = interiorDoor.getTardis().getDoor().getDoorState();
-        this.updateAnimation(interiorDoor.DOOR_STATE, getAnimationForDoorState(state), interiorDoor.animationTimer);
+        updateAnimation(interiorDoor.DOOR_STATE, getAnimationForDoorState(state), interiorDoor.animationTimer);
     }
 
     public Identifier getVariousTextures(ExteriorEnum exterior, VariantEnum variant) {

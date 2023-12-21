@@ -22,6 +22,7 @@ public class DoorHandler extends TardisLink {
     private boolean locked, left, right;
     private DoorStateEnum doorState = DoorStateEnum.CLOSED;
     public DoorStateEnum tempExteriorState; // this is the previous state before it was changed, used for checking when the door has been changed so the animation can start. Set on server, used on client
+    public DoorStateEnum tempInteriorState;
 
     public DoorHandler(UUID tardis) {
         super(tardis);
@@ -43,11 +44,11 @@ public class DoorHandler extends TardisLink {
     }
 
     public boolean isRightOpen() {
-        return this.doorState == DoorStateEnum.SECOND || doorState == DoorStateEnum.BOTH|| this.right;
+        return this.doorState == DoorStateEnum.SECOND /*|| doorState == DoorStateEnum.BOTH*/|| this.right;
     }
 
     public boolean isLeftOpen() {
-        return this.doorState == DoorStateEnum.FIRST || doorState == DoorStateEnum.BOTH || this.left;
+        return this.doorState == DoorStateEnum.FIRST /*|| doorState == DoorStateEnum.BOTH*/ || this.left;
     }
 
     public void setLocked(boolean var) {
@@ -108,8 +109,10 @@ public class DoorHandler extends TardisLink {
     }
 
     public void setDoorState(DoorStateEnum var) {
-        if (var != doorState)
+        if (var != doorState) {
             tempExteriorState = this.doorState;
+            tempInteriorState = this.doorState;
+        }
 
         this.doorState = var;
         tardis().markDirty();
@@ -123,10 +126,21 @@ public class DoorHandler extends TardisLink {
         tardis().markDirty();
     }
 
+    /**
+     * Called when the interior door gets unloaded as that'll stop the animation meaning we need to make sure to restart it when it gets reloaded.
+     */
+    public void clearInteriorAnimationState() {
+        tempInteriorState = null;
+        tardis().markDirty();
+    }
+
     public DoorStateEnum getDoorState() {
         return doorState;
     }
     public DoorStateEnum getAnimationExteriorState() {return tempExteriorState;}
+
+    // fixme / needs testing, because we can have multiple interior doors im concerned about syncing issues and them overwriting eachother. Someone test
+    public DoorStateEnum getAnimationInteriorState() {return tempInteriorState;}
 
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
         if (isClient()) {
@@ -179,19 +193,26 @@ public class DoorHandler extends TardisLink {
 
         // fixme this is loqors code so there might be a better way
         // PLEASE FIXME ALL THIS CODE IS SO JANK I CANT
+
+        System.out.println(door.right);
+        System.out.println(door.isRightOpen());
+        System.out.println(door.left);
+        System.out.println(door.isLeftOpen());
+        System.out.println(door.isBothOpen());
+
         if (tardis.getExterior().getType().isDoubleDoor()) {
             if (door.isBothOpen()) {
                 world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorCloseSound(), SoundCategory.BLOCKS, 0.6F, 1F);
                 world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorCloseSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-                door.setDoorState(DoorStateEnum.CLOSED);
+                door.closeDoors();
             } else {
                 world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
                 world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
 
                 if (door.isOpen() && player.isSneaking()) {
-                    door.setDoorState(DoorStateEnum.CLOSED);
+                    door.closeDoors();
                 } else if (door.isBothClosed() && player.isSneaking()) {
-                    door.setDoorState(DoorStateEnum.BOTH);
+                    door.openDoors();
                 } else {
                     door.setDoorState(door.getDoorState().next());
                 }
@@ -246,32 +267,38 @@ public class DoorHandler extends TardisLink {
             public DoorStateEnum next() {
                 return FIRST;
             }
+
         },
         FIRST {
             @Override
             public DoorStateEnum next() {
                 return SECOND;
             }
+
         },
         SECOND {
             @Override
             public DoorStateEnum next() {
                 return CLOSED;
             }
+
         },
         BOTH {
             @Override
             public DoorStateEnum next() {
                 return CLOSED;
             }
+
         },
         LOCKED {
             @Override
             public DoorStateEnum next() {
                 return CLOSED;
             }
+
         };
 
         public abstract DoorStateEnum next();
+
     }
 }
