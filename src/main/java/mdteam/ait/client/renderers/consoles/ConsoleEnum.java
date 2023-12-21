@@ -93,7 +93,8 @@ public enum ConsoleEnum {
                 new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.325f, 0.125f), new Vector3f(-0.5507812462747097f, 0.5499999932944775f, 0.3234375026077032f)), //12
                 new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.421875f, 0.6750001907348633f, 0.25f)), //13
                 new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.074999996f, 0.074999996f), new Vector3f(-0.5468749962747097f, 0.6749999076128006f, -0.17421874962747097f)), //2
-                //@TODO new ControlTypes(new FastReturnControl(), EntityDimensions.changing(NaN), new Vector3f(NaN)),
+                new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.075f, 0.075f), new Vector3f(-0.4000000134110451f, 0.674999987706542f, -0.37500001303851604f)), //idk
+                // @TODO new ControlTypes(new HADSControl(), EntityDimensions.changing(NaN), new Vector3f(NaN)),
                 new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.8750000037252903f, 0.5249999780207872f, 0.15156249701976776f)), //14
                 new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.6593750026077032f, 0.5499999783933163f, -0.3812500014901161f)), //15
         };

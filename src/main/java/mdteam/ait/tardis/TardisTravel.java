@@ -44,22 +44,33 @@ public class TardisTravel extends TardisLink {
     private static final double FORCE_LAND_TIMER = 15;
     private static final double FORCE_FLIGHT_TIMER = 10;
     private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
+    private AbsoluteBlockPos.Directed lastPosition;
     private static final int CHECK_LIMIT = AIT_CONFIG.SEARCH_HEIGHT(); // todo move into a config
 
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
         super(tardis.getUuid());
         this.position = pos;
+        if(this.lastPosition == null) this.lastPosition = pos;
     }
 
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
         super(tardis.getUuid());
         this.position = pos;
+        if(this.lastPosition == null) this.lastPosition = pos;
         this.destination = dest;
         this.state = state;
     }
 
     public void setPosition(AbsoluteBlockPos.Directed pos) {
         this.position = pos;
+    }
+
+    public void setLastPosition(AbsoluteBlockPos.Directed position) {
+        this.lastPosition = position;
+    }
+
+    public AbsoluteBlockPos.Directed getLastPosition() {
+        return lastPosition;
     }
 
     public AbsoluteBlockPos.Directed getPosition() {
@@ -312,6 +323,7 @@ public class TardisTravel extends TardisLink {
     }
 
     public void toFlight() {
+        this.setLastPosition(this.getPosition());
         this.setState(TardisTravel.State.FLIGHT);
         this.deleteExterior();
         this.checkShouldRemat();
