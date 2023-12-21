@@ -244,15 +244,17 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
         return null;
     }
 
-    public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingTardisEntity falling) {
-        falling.tardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, falling.tardis().getTravel().getPosition().getDirection()));
+    public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingTardisEntity fallingTardisEntity) {
+        if(fallingTardisEntity.tardis() == null) return;
+        fallingTardisEntity.tardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, fallingTardisEntity.tardis().getTravel().getPosition().getDirection()));
 
         world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
-        TardisUtil.getTardisDimension().playSound(null, falling.tardis().getDesktop().getConsolePos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+        if(fallingTardisEntity.tardis().getDesktop().getConsolePos() != null)
+            TardisUtil.getTardisDimension().playSound(null, fallingTardisEntity.tardis().getDesktop().getConsolePos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
-        PropertiesHandler.set(falling.tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, false);
-        PropertiesHandler.set(falling.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, false);
-        falling.tardis().markDirty();
+        PropertiesHandler.set(fallingTardisEntity.tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, false);
+        PropertiesHandler.set(fallingTardisEntity.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, false);
+        fallingTardisEntity.tardis().markDirty();
     }
 
     protected void configureFallingTardis(FallingTardisEntity entity, ServerWorld world, BlockPos pos) {

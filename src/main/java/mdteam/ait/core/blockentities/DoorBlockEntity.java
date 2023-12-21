@@ -128,6 +128,7 @@ public class DoorBlockEntity extends BlockEntity {
 
     public void checkAnimations() {
         // DO NOT RUN THIS ON SERVER!!
+        if(getTardis() == null) return;
         animationTimer++;
 
         if (getTardis().getHandlers().getDoor().getAnimationInteriorState() == null || !(getTardis().getHandlers().getDoor().getAnimationInteriorState().equals(getTardis().getDoor().getDoorState()))) {

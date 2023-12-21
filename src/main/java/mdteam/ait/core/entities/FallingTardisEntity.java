@@ -172,6 +172,7 @@ public class FallingTardisEntity extends Entity {
 
 
                 BlockPos blockPos = this.getBlockPos();
+                if(blockPos == null) return;
                 boolean bl = this.block.getBlock() instanceof ConcretePowderBlock;
                 boolean bl2 = bl && this.getWorld().getFluidState(blockPos).isIn(FluidTags.WATER);
                 double d = this.getVelocity().lengthSquared();
@@ -207,8 +208,8 @@ public class FallingTardisEntity extends Entity {
                                 if (this.getWorld().setBlockState(blockPos, this.block, 3)) {
                                     ((ServerWorld)this.getWorld()).getChunkManager().threadedAnvilChunkStorage.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, this.getWorld().getBlockState(blockPos)));
                                     this.discard();
-                                    if (block instanceof ExteriorBlock) {
-                                        ((ExteriorBlock)block).onLanding(this.getWorld(), blockPos, this.block, blockState, this);
+                                    if (block instanceof ExteriorBlock exteriorBlock) {
+                                        exteriorBlock.onLanding(this.getWorld(), blockPos, this.block, blockState, this);
                                     }
 
                                     if (this.blockEntityData != null && this.block.hasBlockEntity()) {
