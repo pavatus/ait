@@ -90,7 +90,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.AMETHYST_SHARD),
                             FabricRecipeProvider.conditionsFromItem(Items.AMETHYST_SHARD))
             );
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.REMOTE_ITEM, 1)
+            /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.REMOTE_ITEM, 1)
                     .pattern(" R ")
                     .pattern("ICI")
                     .pattern("IPI")
@@ -106,7 +106,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                             FabricRecipeProvider.conditionsFromItem(Items.COPPER_INGOT))
                     .criterion(FabricRecipeProvider.hasItem(Items.REPEATER),
                             FabricRecipeProvider.conditionsFromItem(Items.REPEATER))
-            );
+            );*/
             generateSmithingRecipes(provider);
             return provider;
         })));

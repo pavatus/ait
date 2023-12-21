@@ -42,7 +42,6 @@ import java.util.UUID;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class DoorBlockEntity extends BlockEntity {
-
     private UUID tardisId;
     public AnimationState DOOR_STATE = new AnimationState();
     public int animationTimer = 0;
