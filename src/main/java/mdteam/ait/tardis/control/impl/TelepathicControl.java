@@ -5,6 +5,7 @@ import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -30,14 +31,16 @@ public class TelepathicControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        if (player.getMainHandStack().getItem() instanceof KeyItem) {
+        if(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) &&
+                !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
+            if (player.getMainHandStack().getItem() instanceof KeyItem) {
             /*ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
             List<PlayerEntity> playerList = TardisUtil.findPlayerByTardisKey(world, tardis);
             if (!tag.contains("tardis") || playerList == null) {
                 return false;
             }*/
-            AITMod.openScreen(player, 1, tardis.getUuid());
+                AITMod.openScreen(player, 1, tardis.getUuid());
             /*if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
                 AITMod.openScreen(player, 1, tardis.getUuid());
             } else {
@@ -45,7 +48,8 @@ public class TelepathicControl extends Control {
                     world.playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
             }*/
-            return true;
+                return true;
+            }
         }
 
         BlockPos destinationPos = tardis.getTravel().getDestination();

@@ -16,6 +16,7 @@ import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -34,6 +35,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.text.Text;
@@ -57,6 +59,8 @@ public class TardisUtil {
     private static ServerWorld TARDIS_DIMENSION;
     public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
     public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");
+
+    public static final Identifier FIND_PLAYER = new Identifier(AITMod.MOD_ID, "find_player");
 
     public static void init() {
         ServerWorldEvents.UNLOAD.register((server, world) -> {
@@ -124,6 +128,28 @@ public class TardisUtil {
                         tardis.markDirty();
                     }
                     player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
+                }
+        );
+        ServerPlayNetworking.registerGlobalReceiver(FIND_PLAYER,
+                (server, currentPlayer, handler, buf, responseSender) -> {
+                    UUID tardisId = buf.readUuid();
+                    UUID playerUuid = buf.readUuid();
+                    Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisId);
+                    ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(playerUuid);
+                    if(tardis.getDesktop().getConsolePos() == null) return;
+                    if(serverPlayer == null) {
+                        TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
+                        return;
+                    }
+                    tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+                            serverPlayer.getBlockX(),
+                                    serverPlayer.getBlockY(),
+                                    serverPlayer.getBlockZ(),
+                                    serverPlayer.getWorld(),
+                                    serverPlayer.getMovementDirection()),
+                            PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND));
+                    TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
+                    tardis.markDirty();
                 }
         );
     }

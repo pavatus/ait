@@ -6,8 +6,7 @@ import net.minecraft.network.PacketByteBuf;
 
 import java.util.UUID;
 
-import static mdteam.ait.tardis.util.TardisUtil.CHANGE_EXTERIOR;
-import static mdteam.ait.tardis.util.TardisUtil.SNAP;
+import static mdteam.ait.tardis.util.TardisUtil.*;
 
 public class ClientTardisUtil {
     public static void changeExteriorWithScreen(UUID uuid, int exterior, int variant, boolean variantchange) {
@@ -25,4 +24,10 @@ public class ClientTardisUtil {
         ClientPlayNetworking.send(SNAP, buf);
     }
 
+    public static void setDestinationFromScreen(UUID tardisId, UUID playerUuid) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(tardisId);
+        buf.writeUuid(playerUuid);
+        ClientPlayNetworking.send(FIND_PLAYER, buf);
+    }
 }

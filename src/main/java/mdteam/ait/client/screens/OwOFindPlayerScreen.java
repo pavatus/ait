@@ -11,16 +11,21 @@ import io.wispforest.owo.ui.core.*;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
+import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.naming.Context;
 import java.util.ArrayList;
@@ -64,12 +69,12 @@ public class OwOFindPlayerScreen extends BaseOwoScreen<FlowLayout> {
         //Component panel = Components.texture(TEXTURE, 0, 133, 20, 40);
         if (MinecraftClient.getInstance().player == null) return;
         List<PlayerListEntry> list = this.collectPlayerEntries();
+        Component button = Components.button(this.getPlayerName(list), buttonComponent -> this.onPress(this.getPlayerUuid(list))).zIndex(-250);
         ScrollContainer<Component> scrollContainer = Containers.verticalScroll(
                 Sizing.content(), Sizing.fill(100), Components.list(
                         list, (layout) -> {
                             Containers.horizontalFlow(Sizing.fill(100), Sizing.content());}, (s) -> Containers.stack(Sizing.content(),
-                                        Sizing.content()).child(Components.button(this.getPlayerName(list),
-                                        buttonComponent -> System.out.println(this.getPlayerName(list).toString())))/*.child(Components.label(this.getPlayerName(list.get(0))))*/.alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER).padding(Insets.of(10)).surface(Surface.TOOLTIP), false).alignment(HorizontalAlignment.LEFT, VerticalAlignment.TOP));
+                                        Sizing.content()).child(button).child(Components.label(this.getPlayerName(list))).alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER).padding(Insets.of(10)).surface(Surface.TOOLTIP), false).alignment(HorizontalAlignment.LEFT, VerticalAlignment.TOP));
         Component left = Components.button(Text.literal("<"), buttonComponent -> System.out.println(this.tardisid)).sizing(Sizing.fixed(15))
                 .positioning(Positioning.absolute(20, 20));
         Component right = Components.button(Text.literal(">"), buttonComponent -> System.out.println(this.tardisid)).sizing(Sizing.fixed(15))
@@ -78,6 +83,14 @@ public class OwOFindPlayerScreen extends BaseOwoScreen<FlowLayout> {
         /*container.child(left);
         container.child(right);*/
         rootComponent.child(container.surface(Surface.DARK_PANEL));
+    }
+
+    public void onPress(UUID uuid) {
+        if (tardis() != null) {
+            if (this.tardis().getTravel() != null) {
+                ClientTardisUtil.setDestinationFromScreen(this.tardis().getUuid(), uuid);
+            }
+        }
     }
 
     private List<PlayerListEntry> collectPlayerEntries() {
@@ -94,5 +107,16 @@ public class OwOFindPlayerScreen extends BaseOwoScreen<FlowLayout> {
             }
         }
         return Text.empty();
+    }
+
+    @Nullable
+    public UUID getPlayerUuid(List<PlayerListEntry> listOfEntries) {
+        if(listOfEntries.isEmpty()) return null;
+        for(PlayerListEntry entry : listOfEntries) {
+            if (entry != null) {
+                return entry.getProfile().getId();
+            }
+        }
+        return null;
     }
 }
