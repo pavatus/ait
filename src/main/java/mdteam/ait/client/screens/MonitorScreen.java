@@ -211,6 +211,7 @@ public class MonitorScreen extends TardisScreen {
         int j = ((this.width - this.backgroundWidth) / 2);
         if (tardis() == null) return;
         AbsoluteBlockPos.Directed abpd = tardis().getTravel().getDestination();
+        if(abpd.getDimension() == null) return;
         String destinationText = "> " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
         String dimensionText = "> " + convertWorldValueToModified(abpd.getDimension().getValue());
         String directionText = "> " + abpd.getDirection().toString().toUpperCase();
