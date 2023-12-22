@@ -26,6 +26,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -256,6 +257,16 @@ public class TardisTravel extends TardisLink {
 
             return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
         }
+
+        // is long line
+        setDestination(new AbsoluteBlockPos.Directed(
+                getDestination().getX(),
+                MathHelper.clamp(getDestination().getY(), world.getBottomY(), world.getTopY() - 1),
+                getDestination().getZ(),
+                getDestination().getWorld(),
+                getDestination().getDirection()),
+                false
+        );
 
         BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
 
