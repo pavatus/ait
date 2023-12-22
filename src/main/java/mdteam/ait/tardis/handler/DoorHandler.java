@@ -53,7 +53,8 @@ public class DoorHandler extends TardisLink {
 
     public void setLocked(boolean var) {
         this.locked = var;
-        if(this.locked) this.setDoorState(DoorStateEnum.LOCKED);
+        // should probs be in the method below
+        if (var) setDoorState(DoorStateEnum.CLOSED);
 
         tardis().markDirty();
     }
@@ -61,12 +62,12 @@ public class DoorHandler extends TardisLink {
     public void setLockedAndDoors(boolean var) {
         this.setLocked(var);
 
-        this.setLeftRot(false);
-        this.setRightRot(false);
+        this.setLeftRot(var);
+        this.setRightRot(var);
     }
 
     public boolean locked() {
-        return this.doorState == DoorStateEnum.LOCKED || this.locked;
+        return this.locked;
     }
 
     public boolean isDoubleDoor() {
@@ -194,12 +195,6 @@ public class DoorHandler extends TardisLink {
         // fixme this is loqors code so there might be a better way
         // PLEASE FIXME ALL THIS CODE IS SO JANK I CANT
 
-        System.out.println(door.right);
-        System.out.println(door.isRightOpen());
-        System.out.println(door.left);
-        System.out.println(door.isLeftOpen());
-        System.out.println(door.isBothOpen());
-
         if (tardis.getExterior().getType().isDoubleDoor()) {
             if (door.isBothOpen()) {
                 world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorCloseSound(), SoundCategory.BLOCKS, 0.6F, 1F);
@@ -289,15 +284,7 @@ public class DoorHandler extends TardisLink {
                 return CLOSED;
             }
 
-        },
-        LOCKED {
-            @Override
-            public DoorStateEnum next() {
-                return CLOSED;
-            }
-
         };
-
         public abstract DoorStateEnum next();
 
     }

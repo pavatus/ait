@@ -44,7 +44,7 @@ public class TardimDoorModel extends DoorModel {
     @Override
     public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
         return switch (state) {
-            case CLOSED, LOCKED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
+            case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
             case SECOND -> DoorAnimations.INTERIOR_SECOND_OPEN_ANIMATION;
             case BOTH -> DoorAnimations.INTERIOR_BOTH_OPEN_ANIMATION;
