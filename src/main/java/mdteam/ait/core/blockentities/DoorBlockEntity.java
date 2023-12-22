@@ -115,6 +115,8 @@ public class DoorBlockEntity extends BlockEntity {
         if (nbt.contains("tardis")) {
             this.setTardis(UUID.fromString(nbt.getString("tardis")));
         }
+        if(this.getTardis() != null)
+            this.getTardis().markDirty();
     }
 
     public void onEntityCollision(Entity entity) {
