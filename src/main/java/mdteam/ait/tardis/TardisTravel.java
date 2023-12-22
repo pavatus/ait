@@ -1,6 +1,7 @@
 package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -128,6 +129,9 @@ public class TardisTravel extends TardisLink {
 
         // PropertiesHandler.setAutoPilot(this.getTardis().getProperties(), false);
 
+        // fixme where does this go?
+        TardisEvents.MAT.invoker().onMat(getTardis());
+
         DoorHandler.lockTardis(true, this.getTardis(), (ServerWorld) TardisUtil.getTardisDimension(), null, true);
 
         this.setState(State.MAT);
@@ -184,6 +188,9 @@ public class TardisTravel extends TardisLink {
             TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to takeoff!")); // fixme translatable
             return;
         }
+
+        // fixme where does this go?
+        TardisEvents.DEMAT.invoker().onDemat(getTardis());
 
         this.setState(State.DEMAT);
 
@@ -338,8 +345,11 @@ public class TardisTravel extends TardisLink {
             this.runAnimations(blockEntity);
         if (DoorHandler.isClient()) return;
         DoorHandler.lockTardis(PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), (ServerWorld) this.position.getWorld(), null, false);
-
         TardisUtil.forceLoadTardisChunk(tardis());
+
+        // fixme where does this go?
+        TardisEvents.LANDED.invoker().onLanded(getTardis());
+
         // getPosition().getWorld().getChunkManager().getWorldChunk(getPosition().getX(), getPosition().getZ(), false);
     }
 
