@@ -1,8 +1,6 @@
 package mdteam.ait.core.blocks;
 
-import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -43,14 +41,11 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient())
-            return ActionResult.SUCCESS;
-
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof ConsoleBlockEntity consoleBlockEntity)
-            consoleBlockEntity.useOn((ServerWorld) world, player.isSneaking(), player);
+            consoleBlockEntity.useOn(world, player.isSneaking(), player);
 
-        return ActionResult.CONSUME;
+        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -65,7 +60,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
-            consoleBlockEntity.markDirty();
+            consoleBlockEntity.markNeedsControl();
         }
         super.onPlaced(world, pos, state, placer, itemStack);
     }

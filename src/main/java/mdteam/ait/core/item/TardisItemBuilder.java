@@ -72,7 +72,7 @@ public class TardisItemBuilder extends Item {
 
             //System.out.println(this.exterior);
 
-            ServerTardisManager.getInstance().create(pos, this.exterior, DEFAULT_VARIANT, DEFAULT_CONSOLE, AITDesktops.get(this.desktop), false);
+            ServerTardisManager.getInstance().create(pos, this.exterior, DEFAULT_VARIANT, AITDesktops.get(this.desktop), false);
             context.getStack().decrement(1);
         }
 

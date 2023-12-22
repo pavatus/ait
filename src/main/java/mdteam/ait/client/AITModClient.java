@@ -15,6 +15,7 @@ import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.AITItems;
+import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
@@ -79,6 +80,19 @@ public class AITModClient implements ClientModInitializer {
                     if (screen == null) return;
                     MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
                 });
+
+
+        ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
+            if (block instanceof ExteriorBlockEntity exterior) {
+                if (exterior.tardis() == null || exterior.tardis().getDoor() == null) return;
+
+                exterior.tardis().getDoor().clearExteriorAnimationState();
+            } else if (block instanceof DoorBlockEntity door) {
+                if (door.getTardis() == null || door.getTardis().getDoor() == null) return;
+
+                door.getTardis().getDoor().clearInteriorAnimationState();
+            }
+        });
 
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
     }
@@ -221,14 +235,6 @@ public class AITModClient implements ClientModInitializer {
                 } else {
                     keyHeldDown = false;
                 }
-            }
-        });
-
-        ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((block, world) -> {
-            if (block instanceof ExteriorBlockEntity exterior) {
-                if (exterior.tardis() == null || exterior.tardis().getDoor() == null) return;
-
-                exterior.tardis().getDoor().clearExteriorAnimationState();
             }
         });
     }
