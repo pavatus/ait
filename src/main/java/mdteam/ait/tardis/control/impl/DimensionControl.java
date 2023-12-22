@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.tardis.control.Control;
+import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -35,7 +36,7 @@ public class DimensionControl extends Control {
             next = ((current - 1) < 0) ? dims.size() - 1 : current - 1;
         }
 
-        travel.setDestination(new AbsoluteBlockPos.Directed(dest, dims.get(next), dest.getDirection()), false);
+        travel.setDestination(new AbsoluteBlockPos.Directed(PosType.Y.add(dest, 0), dims.get(next), dest.getDirection()), false); // postype.y.add means it clamps the y coord fixme doesnt work for nether as u can go above the bedrock but dont hardcode it like you did loqor :(
 
         messagePlayer(player, (ServerWorld) travel.getDestination().getWorld());
 

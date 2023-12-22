@@ -326,6 +326,13 @@ public class FallingTardisEntity extends Entity {
 
     }
 
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+
+        stopFalling(); // temporary fix for void kill - thanks SpartanGamezFTB
+    }
+
     public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         if (!this.hurtEntities) {
             return false;
