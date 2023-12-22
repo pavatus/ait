@@ -13,8 +13,10 @@ import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -26,13 +28,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class OwOMonitorScreen extends BaseOwoScreen<FlowLayout> {
+public class OwOFindPlayerScreen extends BaseOwoScreen<FlowLayout> {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
     private final UUID tardisid;
-    private ExteriorEnum currentModel;
-    private VariantEnum currentVariant;
 
-    public OwOMonitorScreen(UUID tardisid) {
+    public OwOFindPlayerScreen(UUID tardisid) {
         this.tardisid = tardisid;
         this.updateTardis();
     }
@@ -44,22 +44,6 @@ public class OwOMonitorScreen extends BaseOwoScreen<FlowLayout> {
     protected Tardis updateTardis() {
         ClientTardisManager.getInstance().ask(this.tardisid);
         return tardis();
-    }
-
-    public ExteriorEnum getCurrentModel() {
-        return currentModel == null ? tardis().getExterior().getType() : currentModel;
-    }
-
-    public void setCurrentModel(ExteriorEnum currentModel) {
-        this.currentModel = currentModel;
-    }
-
-    public VariantEnum getCurrentVariant() {
-        return currentVariant == null ? tardis().getExterior().getVariant() : currentVariant;
-    }
-
-    public void setCurrentVariant(VariantEnum currentVariant) {
-        this.currentVariant = currentVariant;
     }
 
     @Override
@@ -77,33 +61,38 @@ public class OwOMonitorScreen extends BaseOwoScreen<FlowLayout> {
                 .horizontalAlignment(HorizontalAlignment.CENTER)
                 .verticalAlignment(VerticalAlignment.CENTER);
         FlowLayout container = Containers.horizontalFlow(Sizing.fixed(236), Sizing.fixed(133));
-        Component panel = Components.texture(TEXTURE, 0, 133, 20, 40);
-        List<Component> listing = new ArrayList<>();
-        for(int i = 0; i < 5; i++) {
-            listing.add(panel.id("panel_" + i));
-        }
+        //Component panel = Components.texture(TEXTURE, 0, 133, 20, 40);
+        if (MinecraftClient.getInstance().player == null) return;
+        List<PlayerListEntry> list = this.collectPlayerEntries();
         ScrollContainer<Component> scrollContainer = Containers.verticalScroll(
-                Sizing.content(), Sizing.fill(98), Components.list(
-                listing, (layout) -> {
-            Containers.horizontalFlow(Sizing.fill(100), Sizing.content());
-            }, (s) -> Containers.stack(Sizing.content(),
-                                        Sizing.content())
-                        .child(Components.label(Text.literal("huh?"))).child(Components.button(Text.empty(),
-                                        buttonComponent ->
-                                System.out.println("hello :)"))).padding(Insets.of(10))
-                                .surface(Surface.TOOLTIP)
-                                .alignment(HorizontalAlignment.CENTER,VerticalAlignment.TOP)
-                        /*.verticalAlignment(VerticalAlignment.TOP)
-                        .horizontalAlignment(HorizontalAlignment.LEFT)*/, false));
+                Sizing.content(), Sizing.fill(100), Components.list(
+                        list, (layout) -> {
+                            Containers.horizontalFlow(Sizing.fill(100), Sizing.content());}, (s) -> Containers.stack(Sizing.content(),
+                                        Sizing.content()).child(Components.button(this.getPlayerName(list),
+                                        buttonComponent -> System.out.println(this.getPlayerName(list).toString())))/*.child(Components.label(this.getPlayerName(list.get(0))))*/.alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER).padding(Insets.of(10)).surface(Surface.TOOLTIP), false).alignment(HorizontalAlignment.LEFT, VerticalAlignment.TOP));
         Component left = Components.button(Text.literal("<"), buttonComponent -> System.out.println(this.tardisid)).sizing(Sizing.fixed(15))
                 .positioning(Positioning.absolute(20, 20));
         Component right = Components.button(Text.literal(">"), buttonComponent -> System.out.println(this.tardisid)).sizing(Sizing.fixed(15))
                 .positioning(Positioning.absolute(25, 20));
-
-        container.child(left);
-        container.child(right);
-
-        container.child(scrollContainer.surface(Surface.PANEL_INSET).positioning(Positioning.absolute((container.horizontalSizing().get().value / 2) - 100, 0)));
+        container.child(scrollContainer.surface(Surface.PANEL_INSET)/*.positioning(Positioning.absolute((container.horizontalSizing().get().value / 2) - 100, 0))*/);
+        /*container.child(left);
+        container.child(right);*/
         rootComponent.child(container.surface(Surface.DARK_PANEL));
+    }
+
+    private List<PlayerListEntry> collectPlayerEntries() {
+        return MinecraftClient.getInstance().getNetworkHandler().getListedPlayerListEntries().stream().toList();
+    }
+
+    public Text getPlayerName(List<PlayerListEntry> listOfEntries) {
+        if(listOfEntries.isEmpty()) return Text.empty();
+        for(PlayerListEntry entry : listOfEntries) {
+            if (entry.getDisplayName() != null) {
+                return entry.getDisplayName().copy();
+            } else {
+                return Text.literal(entry.getProfile().getName());
+            }
+        }
+        return Text.empty();
     }
 }

@@ -8,6 +8,7 @@ import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
@@ -23,6 +24,8 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.registry.RegistryKey;
@@ -458,5 +461,22 @@ public class TardisUtil {
         Vec3i size = tardis.getDesktop().getSchema().findTemplate().get().getSize();
 
         return corners.getFirst().add(size.getX(), size.getY() / 2, size.getZ());
+    }
+
+    @Nullable
+    public static List<PlayerEntity> findPlayerByTardisKey(ServerWorld world, Tardis tardis) {
+        List<PlayerEntity> newList = new ArrayList<>();
+        for(PlayerEntity player : world.getServer().getPlayerManager().getPlayerList()) {
+            if(KeyItem.isKeyInInventory(player)) {
+                ItemStack key = KeyItem.getFirstKeyStackInInventory(player);
+                if(key == null) return null;
+                NbtCompound tag = key.getOrCreateNbt();
+                if (!tag.contains("tardis")) return null;
+                if (UUID.fromString(tag.getString("tardis")) == tardis.getUuid()) {
+                    newList.add(player);
+                }
+            }
+        }
+        return newList;
     }
 }

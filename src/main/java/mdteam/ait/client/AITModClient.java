@@ -8,41 +8,34 @@ import mdteam.ait.client.renderers.doors.DoorRenderer;
 import mdteam.ait.client.renderers.entities.ControlEntityRenderer;
 import mdteam.ait.client.renderers.entities.FallingTardisRenderer;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
+import mdteam.ait.client.screens.FindPlayerScreen;
 import mdteam.ait.client.screens.MonitorScreen;
+import mdteam.ait.client.screens.OwOFindPlayerScreen;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
-import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.*;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
-import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.impl.client.event.lifecycle.ClientLifecycleEventsImpl;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -108,6 +101,7 @@ public class AITModClient implements ClientModInitializer {
         return switch (id) {
             default -> null;
             case 0 -> new MonitorScreen(tardis); // todo new OwoMonitorScreen(tardis); god rest ye merry gentlemen
+            case 1 -> new OwOFindPlayerScreen(tardis);
         };
     }
 
