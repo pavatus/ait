@@ -21,7 +21,7 @@ public class FastReturnControl extends Control {
 
         TardisTravel travel = tardis.getTravel();
 
-        boolean bl = travel.getDestination() == travel.getLastPosition();
+        boolean bl = travel.getDestination() == travel.getLastPosition(); // fixme move this to be saved in the PropertiesHandler instead as TardisTravel is too bloated rn and will be getting a rewrite
 
         if(travel.getLastPosition() != null) {
             travel.setDestination(bl ? travel.getPosition() : travel.getLastPosition(),

@@ -75,6 +75,7 @@ public abstract class ExteriorAnimation {
     }
 
     public void tellClientsToSetup(TardisTravel.State state) {
+        if (exterior.getWorld() == null) return; // happens when tardis spawns above world limit, so thats nice
         if (exterior.getWorld().isClient()) return;
 
         for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
