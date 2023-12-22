@@ -68,6 +68,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         matrices.scale(0.00325f, 0.00325f, 0.00325f);
         AbsoluteBlockPos.Directed abpd = entity.getTardis().getTravel().getDestination();
         AbsoluteBlockPos.Directed abpp = entity.getTardis().getTravel().getPosition();
+        if(abpd.getDimension() == null || abpp.getDimension() == null) return;
         String positionPosText = " " + abpp.getX() + ", " + abpp.getY() + ", " + abpp.getZ();
         String positionDimensionText = " " + convertWorldValueToModified(abpp.getDimension().getValue());
         String positionDirectionText = " " + abpp.getDirection().toString().toUpperCase();
