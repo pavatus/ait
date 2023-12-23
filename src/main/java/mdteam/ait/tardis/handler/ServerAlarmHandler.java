@@ -44,7 +44,7 @@ public class ServerAlarmHandler extends TardisLink {
 
         if (soundCounter >= CLOISTER_LENGTH_TICKS) {
             soundCounter = 0;
-            getExteriorPos().getWorld().playSound(null, getExteriorPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.25f, 1f);
+            getExteriorPos().getWorld().playSound(null, getExteriorPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
         }
     }
 }

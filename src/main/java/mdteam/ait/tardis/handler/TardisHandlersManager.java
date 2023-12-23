@@ -33,6 +33,14 @@ public class TardisHandlersManager extends TardisLink {
         this.hum = new ServerHumHandler(tardisId);
         alarms = new ServerAlarmHandler(tardisId);
 
+        generateTickables();
+    }
+
+    private void generateTickables() {
+        if (tickables == null) tickables = new ArrayList<>();
+
+        tickables.clear();
+
         addTickable(door);
         addTickable(properties);
         addTickable(waypoints);
@@ -51,6 +59,8 @@ public class TardisHandlersManager extends TardisLink {
      * @param server
      */
     public void tick(MinecraftServer server) {
+        if (tickables == null) generateTickables();
+
         for (TardisTickable ticker : tickables) {
             ticker.tick(server);
         }
@@ -61,6 +71,8 @@ public class TardisHandlersManager extends TardisLink {
      * @param server
      */
     public void startTick(MinecraftServer server) {
+        if (tickables == null) generateTickables();
+
         for (TardisTickable ticker:  tickables) {
             ticker.startTick(server);
         }
