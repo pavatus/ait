@@ -13,6 +13,9 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CommandBlock;
 import net.minecraft.block.entity.BlockEntity;
@@ -22,10 +25,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +47,6 @@ import java.util.UUID;
 
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
-// todo sync ConsoleEnum via packets instead of read/write nbt + markDirty as thats finicky + it wont sync properly, ill do it tomorrow when im hungover : )
 public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
     public final AnimationState ANIM_FLIGHT = new AnimationState();
     public int animationTimer = 0;
@@ -50,8 +55,21 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     private UUID tardisId;
     private ConsoleEnum type;
 
+    public static final Identifier SYNC = new Identifier(AITMod.MOD_ID, "sync_console_type");
+
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
+
+        ClientPlayNetworking.registerGlobalReceiver(SYNC, (client, handler, buf, responseSender) -> {
+            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+
+           int ordinal = buf.readInt();
+           ConsoleEnum type = ConsoleEnum.values()[ordinal];
+           BlockPos consolePos = buf.readBlockPos();
+           if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) {
+                console.setType(type);
+           }
+        });
 
         Tardis found = TardisUtil.findTardisByPosition(pos);
         if (found != null)
@@ -108,6 +126,20 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         // ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
         getTardis().markDirty();
         markDirty();
+        syncType();
+    }
+
+    private void syncType() {
+        if (!hasWorld() || world.isClient()) return;
+
+        PacketByteBuf buf = PacketByteBufs.create();
+
+        buf.writeInt(getEnum().ordinal());
+        buf.writeBlockPos(getPos());
+
+        for (PlayerEntity player : world.getPlayers()) {
+            ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC, buf); // safe cast as we know its server
+        }
     }
 
     public void setTardis(Tardis tardis) {
@@ -147,8 +179,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     private void setType(ConsoleEnum var) {
         type = var;
 
-        if (!hasWorld()) return;
-        markDirty();
+        syncType();
     }
 
     /**
