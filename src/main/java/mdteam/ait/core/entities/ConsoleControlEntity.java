@@ -137,6 +137,11 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     @Override
     public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
+        if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
+            controlEditorHandler(player);
+            return ActionResult.SUCCESS;
+        }
+
         if (hand == Hand.MAIN_HAND)
             this.run(player, player.getWorld());
 
@@ -146,10 +151,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
     @Override
     public boolean damage(DamageSource source, float amount) {
         if (source.getAttacker() instanceof PlayerEntity player) {
-            if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) {
+            if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
                 controlEditorHandler(player);
-            }
-            this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld());
+            } else
+                this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld());
         }
 
         return super.damage(source, source.getAttacker() instanceof PlayerEntity ? 0 : amount);
@@ -260,21 +265,21 @@ public class ConsoleControlEntity extends BaseControlEntity {
     }
 
     public void controlEditorHandler(PlayerEntity player) {
-        float increment = 0.025f;
-        if (player.getOffHandStack().getItem() == Items.EMERALD_BLOCK) {
+        float increment = 0.0125f;
+        if (player.getMainHandStack().getItem() == Items.EMERALD_BLOCK) {
             this.setPosition(this.getPos().add(player.isSneaking() ? -increment : increment, 0, 0));
         }
-        if (player.getOffHandStack().getItem() == Items.DIAMOND_BLOCK) {
+        if (player.getMainHandStack().getItem() == Items.DIAMOND_BLOCK) {
             this.setPosition(this.getPos().add(0, player.isSneaking() ? -increment : increment, 0));
         }
-        if (player.getOffHandStack().getItem() == Items.REDSTONE_BLOCK) {
+        if (player.getMainHandStack().getItem() == Items.REDSTONE_BLOCK) {
             this.setPosition(this.getPos().add(0, 0, player.isSneaking() ? -increment : increment));
         }
-        if (player.getOffHandStack().getItem() == Items.COD) {
+        if (player.getMainHandStack().getItem() == Items.COD) {
             this.setScaleAndCalculate(player.isSneaking() ? this.getDataTracker().get(WIDTH) - increment : this.getDataTracker().get(WIDTH) + increment,
                     this.getDataTracker().get(HEIGHT));
         }
-        if (player.getOffHandStack().getItem() == Items.COOKED_COD) {
+        if (player.getMainHandStack().getItem() == Items.COOKED_COD) {
             this.setScaleAndCalculate(this.getDataTracker().get(WIDTH),
                     player.isSneaking() ? this.getDataTracker().get(HEIGHT) - increment : this.getDataTracker().get(HEIGHT) + increment);
         }

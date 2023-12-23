@@ -2,6 +2,7 @@ package mdteam.ait.client.renderers.consoles;
 
 import mdteam.ait.client.models.consoles.BorealisConsoleModel;
 import mdteam.ait.client.models.consoles.ConsoleModel;
+import mdteam.ait.client.models.consoles.HartnellConsoleModel;
 import mdteam.ait.client.models.consoles.TempConsoleModel;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.control.ControlTypes;
@@ -17,6 +18,7 @@ import net.minecraft.entity.EntityDimensions;
 import org.joml.Vector3f;
 import mdteam.ait.tardis.TardisTravel;
 
+// fixmefuck you everythigsucks and im not going to fix it im just ngoing to complain about it
 public enum ConsoleEnum {
     TEMP() {
         @Override
@@ -87,6 +89,45 @@ public enum ConsoleEnum {
                 new ControlTypes(new ZControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.12499999813735485f, 0.6499999798834324f, -0.5250000040978193f)), //6
                 new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.15f, 0.15f), new Vector3f(-1.862645149230957E-9f, 0.5249999780207872f, -0.6984375026077032f)), //7
                 new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(0.23500000406056643f, 0.48499997798353434f, -0.8034375039860606f)), //8
+                new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(-0.23500000312924385f, 0.4899999788030982f, -0.8050000118091702f)), //9
+                new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.8000000212341547f, 0.5249999780207872f, 0.14999999664723873f)), //10
+                new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(0.4850000077858567f, 0.6449999799951911f, -0.28500001039355993f)), //11
+                new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.325f, 0.125f), new Vector3f(-0.5507812462747097f, 0.5499999932944775f, 0.3234375026077032f)), //12
+                new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.421875f, 0.6750001907348633f, 0.25f)), //13
+                new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.074999996f, 0.074999996f), new Vector3f(-0.5468749962747097f, 0.6749999076128006f, -0.17421874962747097f)), //2
+                new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.075f, 0.075f), new Vector3f(-0.4000000134110451f, 0.674999987706542f, -0.37500001303851604f)), //idk
+                // @TODO new ControlTypes(new HADSControl(), EntityDimensions.changing(NaN), new Vector3f(NaN)),
+                new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.8750000037252903f, 0.5249999780207872f, 0.15156249701976776f)), //14
+                new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.6593750026077032f, 0.5499999783933163f, -0.3812500014901161f)), //15
+        };
+
+        @Override
+        public ControlTypes[] getControlTypesList() {
+            return CONTROL_TYPES;
+        }
+    },
+    HARTNELL() {
+        @Override
+        public ConsoleModel createModel() {
+            return new HartnellConsoleModel(HartnellConsoleModel.getTexturedModelData().createModel());
+        }
+
+        @Override
+        public Class<? extends ConsoleModel> getModelClass() {
+            return HartnellConsoleModel.class;
+        }
+
+        // todo position all these correctly bc i cba tbh @Loqor do it
+        private static final ControlTypes[] CONTROL_TYPES = new ControlTypes[]{
+                new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.275f, 0.275f), new Vector3f(0.625f, 0.5250015258789062f, 0.34999999962747097f)), //0
+                new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.099999994f, 0.099999994f), new Vector3f(-0.04062499199062586f, 0.5249999053776264f, 0.9757812730967999f)), //1
+                new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.12499998f, 0.099999994f), new Vector3f(-0.3718749936670065f, 0.5249999053776264f, 0.9757812675088644f)), //2
+                new ControlTypes(new DoorControl(), EntityDimensions.changing(0.062499996f, 0.062499974f), new Vector3f(-0.5750000085681677f, 0.5249999053776264f, 0.6609374983236194f)), //3
+                new ControlTypes(new XControl(), EntityDimensions.changing(0.074999996f, 0.062499996f), new Vector3f(0.18906249850988388f, 0.5f, 0.953125f)), //4
+                new ControlTypes(new YControl(), EntityDimensions.changing(0.074999996f, 0.062499996f), new Vector3f(0.28750000428408384f, 0.5000000931322575f, 0.9515625219792128f)), //5
+                new ControlTypes(new ZControl(), EntityDimensions.changing(0.074999996f, 0.062499996f), new Vector3f(0.3750000074505806f, 0.4625000925734639f, 0.9515625219792128f)), //6
+                new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.074999996f, 0.062499996f), new Vector3f(0.10000000149011612f, 0.5250000938773155f, 0.950781274586916f)), //7
+                new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.074999996f, 0.062499996f), new Vector3f(0.2500000037252903f, 0.6375000955536962f, 0.6632812703028321f)), //8
                 new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(-0.23500000312924385f, 0.4899999788030982f, -0.8050000118091702f)), //9
                 new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.8000000212341547f, 0.5249999780207872f, 0.14999999664723873f)), //10
                 new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(0.4850000077858567f, 0.6449999799951911f, -0.28500001039355993f)), //11
