@@ -1,6 +1,8 @@
 package mdteam.ait.client.models.consoles;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.TardisEvents;
+import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.TardisTravel;
 import net.minecraft.client.model.*;
@@ -794,7 +796,10 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
-		return EMPTY_ANIM;
+		return switch (state) {
+			default -> HartnellAnimations.ROTOR;
+			case LANDED -> EMPTY_ANIM;
+		};
 	}
 
 	@Override
