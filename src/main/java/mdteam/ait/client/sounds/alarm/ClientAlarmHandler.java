@@ -3,6 +3,7 @@ package mdteam.ait.client.sounds.alarm;
 import mdteam.ait.client.sounds.LoopingSound;
 import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
 import mdteam.ait.client.sounds.PositionedLoopingSound;
+import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
@@ -70,6 +71,8 @@ public class ClientAlarmHandler extends SoundHandler {
 
         if (isPlayerInATardis() && isEnabled()) {
             this.startIfNotPlaying(getInteriorCloister());
+
+            ClientShakeUtil.shake(0.5);
         } else {
             this.stopSounds();
         }

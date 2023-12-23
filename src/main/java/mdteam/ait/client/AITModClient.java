@@ -1,7 +1,6 @@
 package mdteam.ait.client;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.renderers.AITRadioRenderer;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.consoles.ConsoleRenderer;
@@ -10,10 +9,9 @@ import mdteam.ait.client.renderers.doors.DoorRenderer;
 import mdteam.ait.client.renderers.entities.ControlEntityRenderer;
 import mdteam.ait.client.renderers.entities.FallingTardisRenderer;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
-import mdteam.ait.client.screens.FindPlayerScreen;
 import mdteam.ait.client.screens.MonitorScreen;
 import mdteam.ait.client.screens.OwOFindPlayerScreen;
-import mdteam.ait.client.sounds.ClientSoundManager;
+import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITDimensions;
@@ -34,7 +32,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
