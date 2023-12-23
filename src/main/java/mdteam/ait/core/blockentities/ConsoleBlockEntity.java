@@ -1,11 +1,12 @@
 package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.ILinkable;
+import mdteam.ait.api.ICantBreak;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITEntityTypes;
+import mdteam.ait.core.blocks.ConsoleBlock;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.tardis.control.ControlTypes;
@@ -13,26 +14,31 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.CommandBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
-import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
 
 import java.util.ArrayList;
@@ -42,12 +48,16 @@ import java.util.UUID;
 
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
-public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
+public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker<ConsoleBlockEntity>, ICantBreak {
     public final AnimationState ANIM_FLIGHT = new AnimationState();
     public int animationTimer = 0;
     public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
-    private boolean markedDirty = true;
+    private boolean needsControls = true;
+    private boolean needsSync = true;
     private UUID tardisId;
+    private ConsoleEnum type;
+
+    public static final Identifier SYNC = new Identifier(AITMod.MOD_ID, "sync_console_type");
 
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
@@ -62,6 +72,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (this.getTardis() == null) {
             AITMod.LOGGER.error("this.getTardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
+        if (type != null) nbt.putInt("type", type.ordinal());
         super.writeNbt(nbt);
         nbt.putString("tardis", this.tardisId.toString());
     }
@@ -72,7 +83,9 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (nbt.contains("tardis")) {
             this.setTardis(UUID.fromString(nbt.getString("tardis")));
         }
+        if (nbt.contains("type")) setType(ConsoleEnum.values()[nbt.getInt("type")]);
         spawnControls();
+        markNeedsSyncing();
     }
 
     @Nullable
@@ -83,7 +96,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
     public Tardis getTardis() {
         if (this.tardisId == null) {
-            AITMod.LOGGER.warn("Door at " + this.getPos() + " is finding TARDIS!");
+            AITMod.LOGGER.warn("Console at " + this.getPos() + " is finding TARDIS!");
             this.findTardis();
         }
 
@@ -101,12 +114,30 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     public void sync() {
         if (isClient()) return;
 
-        ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
+        // ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
+        getTardis().markDirty();
+        markDirty();
+        syncType();
+
+        needsSync = false;
+    }
+
+    private void syncType() {
+        if (!hasWorld() || world.isClient()) return;
+
+        PacketByteBuf buf = PacketByteBufs.create();
+
+        buf.writeInt(getEnum().ordinal());
+        buf.writeBlockPos(getPos());
+
+        for (PlayerEntity player : world.getPlayers()) {
+            ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC, buf); // safe cast as we know its server
+        }
     }
 
     public void setTardis(Tardis tardis) {
         if (tardis == null) {
-            AITMod.LOGGER.error("Tardis was null in DoorBlockEntity at " + this.getPos());
+            AITMod.LOGGER.error("Tardis was null in ConsoleBlockEntity at " + this.getPos());
             return;
         }
 
@@ -132,17 +163,45 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         return this.getTardis().getDesktop();
     }
 
-    public ConsoleEnum getConsole() {
-        return this.getTardis().getConsole().getType();
+    public ConsoleEnum getEnum() {
+        if (type == null) setType(ConsoleEnum.BOREALIS);
+
+        return type;
     }
 
-    public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
+    public void setType(ConsoleEnum var) {
+        type = var;
 
+        syncType();
+    }
+
+    /**
+     * Sets the new {@link ConsoleEnum} and refreshes the console entities
+     */
+    private void changeConsole(ConsoleEnum var) {
+        setType(var);
+
+        if (!world.isClient() && world == TardisUtil.getTardisDimension())
+            redoControls();
+    }
+
+    private void redoControls() {
+        killControls();
+        markNeedsControl();
+    }
+
+    public static ConsoleEnum nextConsole(ConsoleEnum current) {
+        return ConsoleEnum.values()[(current.ordinal() + 1 > ConsoleEnum.values().length - 1) ? 0 : current.ordinal() + 1];
+    }
+
+    public void useOn(World world, boolean sneaking, PlayerEntity player) {
         if (player == null)
             return;
 
-        if (world != TardisUtil.getTardisDimension())
-            return;
+//        if (world != TardisUtil.getTardisDimension())
+//            return;
+
+        if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) changeConsole(nextConsole(getEnum()));
     }
 
     public void setDesktop(TardisDesktop desktop) {
@@ -179,12 +238,11 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     public void killControls() {
         controlEntities.forEach(Entity::discard);
         controlEntities.clear();
-        this.sync();
+        sync();
         //System.out.println("KillControls(): I'm getting run :) somewhere..");
     }
 
     public void spawnControls() {
-
         BlockPos current = getPos();
 
         if (!(getWorld() instanceof ServerWorld server))
@@ -193,7 +251,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             return;
 
         killControls();
-        ConsoleEnum consoleType = this.getConsole();
+        ConsoleEnum consoleType = getEnum();
         ControlTypes[] controls = consoleType.getControlTypesList();
         Arrays.stream(controls).toList().forEach(control -> {
 
@@ -201,8 +259,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
             Vector3f position = current.toCenterPos().toVector3f().add(control.getOffset().x(), control.getOffset().y(), control.getOffset().z());
             controlEntity.setPosition(position.x(), position.y(), position.z());
-            controlEntity.setYaw(0);
-            controlEntity.setPitch(0);
+            controlEntity.setYaw(0.0f);
+            controlEntity.setPitch(0.0f);
 
             controlEntity.setControlData(consoleType, control, this.getPos());
 
@@ -210,19 +268,23 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             this.controlEntities.add(controlEntity);
         });
 
-        this.markedDirty = false;
+        this.needsControls = false;
         //System.out.println("SpawnControls(): I'm getting run :) somewhere..");
     }
 
-    public void markDirty() {
-        this.markedDirty = true;
+    public void markNeedsControl() {
+        this.needsControls = true;
+    }
+    public void markNeedsSyncing() {
+        this.needsSync = true;
     }
 
     @Override
     public void tick(World world, BlockPos pos, BlockState state, ConsoleBlockEntity blockEntity) {
-        if (this.markedDirty) {
+        if (this.needsControls) {
             spawnControls();
         }
+        if (needsSync) sync();
 
         if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
             this.markRemoved();
@@ -234,4 +296,9 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         }
     }
 
+    @Override
+    public void onTryBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
+        markNeedsSyncing(); // As theres a gap between the breaking of the block and when it gets resynced to client, so we need to wait a bit
+        // fixme im lying and that doesnt fix the issue, the blockentity on client is null when tried to sync.
+    }
 }

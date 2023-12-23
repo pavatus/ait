@@ -636,15 +636,19 @@ public class BorealisConsoleModel extends ConsoleModel {
     public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         if (console.getTardis() == null) return;
         matrices.push();
+        // fixme id do it but i genuinely dont want to bc i cba
+
         ModelPart southEastControls = this.base_console.getChild("SOUTH_EAST").getChild("southeastcontrolpanel");
         ModelPart northControls = this.base_console.getChild("NORTH").getChild("northcontrolpanel");
         ModelPart southControls = this.base_console.getChild("SOUTH").getChild("southcontrolpanel");
+
         boolean isInFlight = console.getTardis().getTravel().getState() == TardisTravel.State.DEMAT || console.getTardis().getTravel().getState() == TardisTravel.State.FLIGHT;
         boolean isHandbrakeActive = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE);
         boolean leftDoor = console.getTardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.FIRST;
         boolean rightDoor = console.getTardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.SECOND;
         boolean locked = console.getTardis().getDoor().locked();
         boolean isUpOrDown = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND);
+
         int increment = console.getTardis().getTravel().getPosManager().increment;
         float throttleZ = southEastControls.getChild("throttle").pivotZ;
         float doorZ = northControls.getChild("door_control").pivotZ;
@@ -659,10 +663,14 @@ public class BorealisConsoleModel extends ConsoleModel {
         southControls.getChild("XYZmod").pivotZ = increment == 10 ? incrementModZ + 1 : increment == 100 ? incrementModZ + 2 : increment == 1000 ? incrementModZ + 3 : incrementModZ;
         southControls.getChild("land_type").pivotY = isUpOrDown ? landTypeY : landTypeY + 1;
         matrices.pop();
+
         matrices.push();
+
         matrices.translate(0.5f, -0.75f, -0.5f);
         matrices.scale(0.5f, 0.5f, 0.5f);
+
         super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
         matrices.pop();
     }
 

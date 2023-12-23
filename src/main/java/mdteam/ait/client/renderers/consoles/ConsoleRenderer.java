@@ -17,8 +17,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.RotationAxis;
-import mdteam.ait.tardis.TardisConsole;
-import org.joml.Matrix4f;
 
 import java.util.Map;
 
@@ -48,14 +46,13 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         if (entity.getTardis() == null)
             return;
 
-        TardisConsole tardisConsole = entity.getTardis().getConsole();
-        Class<? extends ConsoleModel> modelClass = tardisConsole.getType().getModelClass();
+        Class<? extends ConsoleModel> modelClass = entity.getEnum().getModelClass();
 
         if (console != null && console.getClass() != modelClass)
             console = null;
 
         if (console == null)
-            this.console = entity.getTardis().getConsole().getType().createModel();
+            this.console = entity.getEnum().createModel();
 
         BlockState blockState = entity.getCachedState();
         //float f = blockState.get(ConsoleBlock.FACING).asRotation();

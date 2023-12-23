@@ -21,21 +21,19 @@ public class Tardis {
     private final UUID uuid;
     private TardisDesktop desktop;
     private final TardisExterior exterior;
-    private final TardisConsole console;
     private TardisHandlersManager handlers;
     @Exclude
     private boolean dirty = false;
 
-    public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, VariantEnum variant, ConsoleEnum consoleType) {
-        this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), (tardis) -> new TardisConsole(tardis, consoleType, consoleType.getControlTypesList()), false);
+    public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, VariantEnum variant) {
+        this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), false);
     }
 
-    protected Tardis(UUID uuid, Function<Tardis, TardisTravel> travel, Function<Tardis, TardisDesktop> desktop, Function<Tardis, TardisExterior> exterior, Function<Tardis, TardisConsole> console, boolean locked) {
+    protected Tardis(UUID uuid, Function<Tardis, TardisTravel> travel, Function<Tardis, TardisDesktop> desktop, Function<Tardis, TardisExterior> exterior, boolean locked) {
         this.uuid = uuid;
         this.travel = travel.apply(this);
         this.desktop = desktop.apply(this);
         this.exterior = exterior.apply(this);
-        this.console = console.apply(this);
         this.handlers = new TardisHandlersManager(uuid);
     }
 
@@ -53,10 +51,6 @@ public class Tardis {
 
     public TardisExterior getExterior() {
         return exterior;
-    }
-
-    public TardisConsole getConsole() {
-        return console;
     }
 
     public DoorHandler getDoor() {

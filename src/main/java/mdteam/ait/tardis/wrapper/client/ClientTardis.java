@@ -13,7 +13,7 @@ import java.util.UUID;
 
 // Things saved here will likely get overwritten.
 public class ClientTardis extends Tardis {
-    public ClientTardis(UUID uuid, AbsoluteBlockPos.Client pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, VariantEnum variantType, ConsoleEnum consoleType, boolean locked) {
-        super(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), tardis -> new ClientTardisExterior(tardis, exteriorType, variantType), tardis -> new ClientTardisConsole(tardis, consoleType, consoleType.getControlTypesList()), locked);
+    public ClientTardis(UUID uuid, AbsoluteBlockPos.Client pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, VariantEnum variantType, boolean locked) {
+        super(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), tardis -> new ClientTardisExterior(tardis, exteriorType, variantType), locked);
     }
 }

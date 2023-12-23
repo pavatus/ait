@@ -99,10 +99,10 @@ public class ServerTardisManager extends TardisManager {
         });
     }
 
-    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, VariantEnum variantType, ConsoleEnum consoleType, TardisDesktopSchema schema, boolean locked) {
+    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, VariantEnum variantType, TardisDesktopSchema schema, boolean locked) {
         UUID uuid = UUID.randomUUID();
 
-        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, consoleType, locked);
+        ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked);
         //this.saveTardis(tardis);
         this.lookup.put(uuid, tardis);
 
