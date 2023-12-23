@@ -41,13 +41,13 @@ public class TardisHandlersManager extends TardisLink {
 
         tickables.clear();
 
-        addTickable(door);
-        addTickable(properties);
-        addTickable(waypoints);
-        addTickable(loyalties);
-        addTickable(overgrown);
-        addTickable(hum);
-        addTickable(alarms);
+        addTickable(getDoor());
+        addTickable(getProperties());
+        addTickable(getWaypoints());
+        addTickable(getLoyalties());
+        addTickable(getOvergrownHandler());
+        addTickable(getHum());
+        addTickable(getAlarms());
     }
 
     protected void addTickable(TardisLink var) {
@@ -62,6 +62,10 @@ public class TardisHandlersManager extends TardisLink {
         if (tickables == null) generateTickables();
 
         for (TardisTickable ticker : tickables) {
+            if (ticker == null) {
+                generateTickables();
+                return;
+            } // RAHHH I DONT CARE ABOUT PERFORMACNE, REGERNEATE IT ALLLL
             ticker.tick(server);
         }
     }
@@ -74,6 +78,10 @@ public class TardisHandlersManager extends TardisLink {
         if (tickables == null) generateTickables();
 
         for (TardisTickable ticker:  tickables) {
+            if (ticker == null) {
+                generateTickables();
+                return;
+            }
             ticker.startTick(server);
         }
     }
