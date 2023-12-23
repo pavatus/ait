@@ -5,6 +5,7 @@ import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
+import mdteam.ait.api.ICantBreak;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
@@ -60,11 +61,15 @@ public class AITMod implements ModInitializer {
 
         PlayerBlockBreakEvents.BEFORE.register(((world, player, pos, state, blockEntity) -> {
             if (!world.isClient()) {
-                if (world.getRegistryKey().getRegistry() == AITDimensions.TARDIS_DIM_WORLD.getRegistry()) {
-                    return !(world.getBlockEntity(pos) instanceof ConsoleBlockEntity) && !(world.getBlockEntity(pos) instanceof ExteriorBlockEntity);
+                if (blockEntity instanceof ICantBreak temp) {
+                    temp.onTryBreak(world, player, pos, state, blockEntity);
+                    return false;
+                } else if (state.getBlock() instanceof ICantBreak temp) {
+                    temp.onTryBreak(world, player, pos, state, blockEntity);
+                    return false;
                 }
             }
-            return !(state.getBlock() instanceof ConsoleBlock || state.getBlock() instanceof ExteriorBlock);
+            return true;
         }));
 
         TardisUtil.init();
