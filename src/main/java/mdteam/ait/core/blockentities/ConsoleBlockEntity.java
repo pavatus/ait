@@ -62,17 +62,6 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
 
-        ClientPlayNetworking.registerGlobalReceiver(SYNC, (client, handler, buf, responseSender) -> {
-            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
-
-            int ordinal = buf.readInt();
-            ConsoleEnum type = ConsoleEnum.values()[ordinal];
-            BlockPos consolePos = buf.readBlockPos();
-            if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) {
-                console.setType(type);
-            }
-        });
-
         Tardis found = TardisUtil.findTardisByPosition(pos);
         if (found != null)
             this.setTardis(found);
@@ -94,9 +83,9 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (nbt.contains("tardis")) {
             this.setTardis(UUID.fromString(nbt.getString("tardis")));
         }
-        System.out.println(nbt.getInt("type"));
         if (nbt.contains("type")) setType(ConsoleEnum.values()[nbt.getInt("type")]);
         spawnControls();
+        markNeedsSyncing();
     }
 
     @Nullable
@@ -180,7 +169,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         return type;
     }
 
-    private void setType(ConsoleEnum var) {
+    public void setType(ConsoleEnum var) {
         type = var;
 
         syncType();
