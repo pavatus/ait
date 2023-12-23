@@ -2,6 +2,7 @@ package mdteam.ait.client.sounds.alarm;
 
 import mdteam.ait.client.sounds.LoopingSound;
 import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
+import mdteam.ait.client.sounds.PositionedLoopingSound;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
@@ -11,6 +12,7 @@ import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +21,14 @@ import java.util.List;
 // Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
 // todo create a ServerAlarmHandler if necessary eg in future when we do more of the stuff on the trello to do with alarms.
 public class ClientAlarmHandler extends SoundHandler {
-    public static LoopingSound CLOISTER;
+    public static LoopingSound CLOISTER_INTERIOR;
+
     protected ClientAlarmHandler() {}
 
-    public LoopingSound getCloister() {
-        if (CLOISTER == null) CLOISTER = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 5f);
+    public LoopingSound getInteriorCloister() {
+        if (CLOISTER_INTERIOR == null) CLOISTER_INTERIOR = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 10f);
 
-        return CLOISTER;
+        return CLOISTER_INTERIOR;
     }
     public static ClientAlarmHandler create() {
         if (MinecraftClient.getInstance().player == null) return null;
@@ -36,11 +39,11 @@ public class ClientAlarmHandler extends SoundHandler {
     }
 
     private void generate() {
-        if (CLOISTER == null) CLOISTER = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT);
+        if (CLOISTER_INTERIOR == null) CLOISTER_INTERIOR = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 10f);
 
         this.sounds = new ArrayList<>();
         this.sounds.addAll(List.of(
-                CLOISTER
+                CLOISTER_INTERIOR
         ));
     }
 
@@ -66,7 +69,7 @@ public class ClientAlarmHandler extends SoundHandler {
         if (this.sounds == null) this.generate();
 
         if (isPlayerInATardis() && isEnabled()) {
-            this.startIfNotPlaying(this.getCloister());
+            this.startIfNotPlaying(getInteriorCloister());
         } else {
             this.stopSounds();
         }

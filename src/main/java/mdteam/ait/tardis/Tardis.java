@@ -82,7 +82,7 @@ public class Tardis {
      * @param server the server being ticked
      */
     public void tick(MinecraftServer server) {
-        this.getHandlers().getOvergrownHandler().tick(server);
+        this.getHandlers().tick(server);
     }
 
     /**

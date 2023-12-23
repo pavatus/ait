@@ -20,6 +20,7 @@ public class TardisHandlersManager extends TardisLink {
     private final LoyaltyHandler loyalties;
     private final OvergrownHandler overgrown;
     private ServerHumHandler hum = null;
+    private ServerAlarmHandler alarms;
 
     public TardisHandlersManager(UUID tardisId) {
         super(tardisId);
@@ -30,6 +31,7 @@ public class TardisHandlersManager extends TardisLink {
         this.loyalties = new LoyaltyHandler(tardisId);
         this.overgrown = new OvergrownHandler(tardisId);
         this.hum = new ServerHumHandler(tardisId);
+        alarms = new ServerAlarmHandler(tardisId);
 
         addTickable(door);
         addTickable(properties);
@@ -37,6 +39,7 @@ public class TardisHandlersManager extends TardisLink {
         addTickable(loyalties);
         addTickable(overgrown);
         addTickable(hum);
+        addTickable(alarms);
     }
 
     protected void addTickable(TardisLink var) {
@@ -86,5 +89,9 @@ public class TardisHandlersManager extends TardisLink {
         }
 
         return this.hum;
+    }
+
+    public ServerAlarmHandler getAlarms() {
+        return alarms;
     }
 }
