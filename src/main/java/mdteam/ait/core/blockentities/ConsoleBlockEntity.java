@@ -73,8 +73,6 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             this.setTardis(UUID.fromString(nbt.getString("tardis")));
         }
         spawnControls();
-        if(this.getTardis() != null)
-            this.getTardis().markDirty();
     }
 
     @Nullable
