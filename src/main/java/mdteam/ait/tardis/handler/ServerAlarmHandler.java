@@ -1,11 +1,12 @@
 package mdteam.ait.tardis.handler;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.TardisUtil;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Identifier;
 
 import java.util.UUID;
 
@@ -23,17 +24,21 @@ public class ServerAlarmHandler extends TardisLink {
         PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
         tardis().markDirty();
     }
+
     public void disable() {
         PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, false);
         tardis().markDirty();
     }
+
     public boolean isEnabled() {
         return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
     }
+
     public void toggle() {
         if (isEnabled()) disable();
         else enable();
     }
+
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
