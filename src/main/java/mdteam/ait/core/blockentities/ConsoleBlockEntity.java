@@ -145,7 +145,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
         PacketByteBuf buf = PacketByteBufs.create();
 
-        buf.writeString(variant.id().toString());
+        buf.writeString(getVariant().id().toString());
         buf.writeBlockPos(getPos());
 
         for (PlayerEntity player : world.getPlayers()) {
