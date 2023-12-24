@@ -6,6 +6,7 @@ import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.TempConsoleModel;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.variant.ConsoleVariantSchema;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -54,6 +55,8 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         if (console == null)
             this.console = entity.getEnum().createModel();
 
+        ConsoleVariantSchema variant = entity.getVariant();
+
         BlockState blockState = entity.getCachedState();
         //float f = blockState.get(ConsoleBlock.FACING).asRotation();
         int maxLight = 0xFFFFFF;
@@ -90,8 +93,8 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         if (console != null) {
             console.animateTile(entity);
-            console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(console.getTexture())), light, overlay, 1, 1, 1, 1);
-            console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(console.getEmission())), maxLight, overlay, 1, 1, 1, 1);
+            console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
+            console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(variant.emission())), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }

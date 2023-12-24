@@ -4,21 +4,20 @@ import mdteam.ait.AITMod;
 import mdteam.ait.api.ICantBreak;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.AITConsoleVariants;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITEntityTypes;
-import mdteam.ait.core.blocks.ConsoleBlock;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.variant.ConsoleVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.CommandBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
@@ -41,10 +40,7 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisTravel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
@@ -56,8 +52,10 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     private boolean needsSync = true;
     private UUID tardisId;
     private ConsoleEnum type;
+    private ConsoleVariantSchema variant;
 
-    public static final Identifier SYNC = new Identifier(AITMod.MOD_ID, "sync_console_type");
+    public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
+    public static final Identifier SYNC_VARIANT = new Identifier(AITMod.MOD_ID, "sync_console_variant");
 
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
@@ -72,7 +70,10 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (this.getTardis() == null) {
             AITMod.LOGGER.error("this.getTardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
+
         if (type != null) nbt.putInt("type", type.ordinal());
+        if (variant != null) nbt.putString("variant", variant.id().toString());
+
         super.writeNbt(nbt);
         nbt.putString("tardis", this.tardisId.toString());
     }
@@ -83,7 +84,10 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (nbt.contains("tardis")) {
             this.setTardis(UUID.fromString(nbt.getString("tardis")));
         }
+
         if (nbt.contains("type")) setType(ConsoleEnum.values()[nbt.getInt("type")]);
+        if (nbt.contains("variant")) setVariant(Identifier.tryParse(nbt.getString("variant")));
+
         spawnControls();
         markNeedsSyncing();
     }
@@ -131,7 +135,20 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         buf.writeBlockPos(getPos());
 
         for (PlayerEntity player : world.getPlayers()) {
-            ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC, buf); // safe cast as we know its server
+            ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_TYPE, buf); // safe cast as we know its server
+        }
+    }
+
+    private void syncVariant() {
+        if (!hasWorld() || world.isClient()) return;
+
+        PacketByteBuf buf = PacketByteBufs.create();
+
+        buf.writeString(variant.id().toString());
+        buf.writeBlockPos(getPos());
+
+        for (PlayerEntity player : world.getPlayers()) {
+            ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_VARIANT, buf); // safe cast as we know its server
         }
     }
 
@@ -175,11 +192,39 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         syncType();
     }
 
+    public ConsoleVariantSchema getVariant() {
+        if (variant == null) {
+            // oh no : (
+            // lets just pick any
+            setVariant(AITConsoleVariants.withParent(getEnum()).stream().findAny().get());
+        }
+
+        return variant;
+    }
+    public void setVariant(ConsoleVariantSchema var) {
+        variant = var;
+
+        if (variant.parent() != type) {
+            AITMod.LOGGER.warn("Variant was set and it doesnt match this consoles type!");
+            AITMod.LOGGER.warn(variant + " | " + type);
+        }
+
+        syncVariant();
+    }
+    public void setVariant(Identifier id) {
+        setVariant(AITConsoleVariants.get(id));
+    }
+
     /**
      * Sets the new {@link ConsoleEnum} and refreshes the console entities
      */
     private void changeConsole(ConsoleEnum var) {
+        changeConsole(var, AITConsoleVariants.withParent(var).stream().findAny().get());
+    }
+
+    private void changeConsole(ConsoleEnum var, ConsoleVariantSchema variant) {
         setType(var);
+        setVariant(variant);
 
         if (!world.isClient() && world == TardisUtil.getTardisDimension())
             redoControls();
@@ -193,6 +238,10 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     public static ConsoleEnum nextConsole(ConsoleEnum current) {
         return ConsoleEnum.values()[(current.ordinal() + 1 > ConsoleEnum.values().length - 1) ? 0 : current.ordinal() + 1];
     }
+    public static ConsoleVariantSchema nextVariant(ConsoleVariantSchema current) {
+        List<ConsoleVariantSchema> list = AITConsoleVariants.withParent(current.parent()).stream().toList();
+        return list.get((list.indexOf(current) + 1 > list.size() - 1) ? 0 : list.indexOf(current) + 1);
+    }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
         if (player == null)
@@ -202,6 +251,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 //            return;
 
         if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) changeConsole(nextConsole(getEnum()));
+        if (player.getMainHandStack().getItem() == Items.REPEATING_COMMAND_BLOCK) setVariant(nextVariant(getVariant()));
     }
 
     public void setDesktop(TardisDesktop desktop) {
