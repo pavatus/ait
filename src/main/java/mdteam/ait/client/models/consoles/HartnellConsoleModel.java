@@ -32,17 +32,17 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		ModelPartData base = bone.addChild("base", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData bone19 = base.addChild("bone19", ModelPartBuilder.create().uv(56, 34).cuboid(-0.4F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+		ModelPartData bone19 = base.addChild("bone19", ModelPartBuilder.create().uv(56, 34).cuboid(-0.475F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData bone3 = bone19.addChild("bone3", ModelPartBuilder.create().uv(56, 34).cuboid(-0.4F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone3 = bone19.addChild("bone3", ModelPartBuilder.create().uv(56, 34).cuboid(-0.475F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-		ModelPartData bone4 = bone3.addChild("bone4", ModelPartBuilder.create().uv(56, 34).cuboid(-0.4F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone4 = bone3.addChild("bone4", ModelPartBuilder.create().uv(56, 34).cuboid(-0.475F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-		ModelPartData bone5 = bone4.addChild("bone5", ModelPartBuilder.create().uv(56, 34).cuboid(-0.4F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone5 = bone4.addChild("bone5", ModelPartBuilder.create().uv(56, 34).cuboid(-0.475F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-		ModelPartData bone6 = bone5.addChild("bone6", ModelPartBuilder.create().uv(56, 34).cuboid(-0.4F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone6 = bone5.addChild("bone6", ModelPartBuilder.create().uv(56, 34).cuboid(-0.475F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-		ModelPartData bone7 = bone6.addChild("bone7", ModelPartBuilder.create().uv(56, 34).cuboid(-0.4F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone7 = bone6.addChild("bone7", ModelPartBuilder.create().uv(56, 34).cuboid(-0.475F, -1.0F, -5.5F, 10.0F, 1.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
 		ModelPartData bone8 = base.addChild("bone8", ModelPartBuilder.create().uv(67, 47).cuboid(6.25F, -16.0F, -0.5F, 4.0F, 14.0F, 1.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 1.75F, 0.0F, 0.0F, -0.5236F, 0.0F));
 
@@ -92,17 +92,17 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		ModelPartData cube_r12 = bone18.addChild("cube_r12", ModelPartBuilder.create().uv(0, 42).cuboid(-0.0282F, -4.6997F, -5.0F, 0.0F, 5.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(9.0F, -2.0F, 0.0F, 0.0F, 0.0F, -0.7418F));
 
-		ModelPartData rim = bone.addChild("rim", ModelPartBuilder.create().uv(0, 42).cuboid(17.25F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 1.4F, 0.0F));
+		ModelPartData rim = bone.addChild("rim", ModelPartBuilder.create().uv(0, 42).cuboid(17.185F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 1.4F, 0.0F));
 
-		ModelPartData bone27 = rim.addChild("bone27", ModelPartBuilder.create().uv(0, 42).cuboid(17.25F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone27 = rim.addChild("bone27", ModelPartBuilder.create().uv(0, 42).cuboid(17.185F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-		ModelPartData bone28 = bone27.addChild("bone28", ModelPartBuilder.create().uv(0, 42).cuboid(17.25F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone28 = bone27.addChild("bone28", ModelPartBuilder.create().uv(0, 42).cuboid(17.185F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-		ModelPartData bone29 = bone28.addChild("bone29", ModelPartBuilder.create().uv(0, 42).cuboid(17.25F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone29 = bone28.addChild("bone29", ModelPartBuilder.create().uv(0, 42).cuboid(17.185F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-		ModelPartData bone30 = bone29.addChild("bone30", ModelPartBuilder.create().uv(0, 42).cuboid(17.25F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone30 = bone29.addChild("bone30", ModelPartBuilder.create().uv(0, 42).cuboid(17.185F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-		ModelPartData bone31 = bone30.addChild("bone31", ModelPartBuilder.create().uv(0, 42).cuboid(17.25F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone31 = bone30.addChild("bone31", ModelPartBuilder.create().uv(0, 42).cuboid(17.185F, -17.0F, -10.5F, 1.0F, 2.0F, 21.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
 		ModelPartData bottom = bone.addChild("bottom", ModelPartBuilder.create().uv(0, 21).cuboid(5.25F, -16.0F, -10.0F, 12.0F, 0.0F, 20.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 2.0F, 0.0F));
 
