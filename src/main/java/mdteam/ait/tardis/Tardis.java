@@ -2,6 +2,7 @@ package mdteam.ait.tardis;
 
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.tardis.handler.TardisHandlersManager;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.util.TardisChunkUtil;
@@ -84,11 +85,17 @@ public class Tardis {
      */
     public void tick(MinecraftServer server) {
         this.getHandlers().tick(server);
+
         // im sure this is great for your server performace
         if (TardisChunkUtil.shouldExteriorChunkBeForced(this) && !TardisChunkUtil.isExteriorChunkForced(this)) {
             TardisChunkUtil.forceLoadExteriorChunk(this);
         } else if (!TardisChunkUtil.shouldExteriorChunkBeForced(this) && TardisChunkUtil.isExteriorChunkForced(this)) {
             TardisChunkUtil.stopForceExteriorChunk(this);
+        }
+
+        // autoland stuff
+        if (getTravel().getState() == TardisTravel.State.FLIGHT && PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.AUTO_LAND)) {
+            getTravel().materialise();
         }
     }
 
