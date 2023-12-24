@@ -53,6 +53,7 @@ public class AITMod implements ModInitializer {
     public void onInitialize() {
         AITDesktops.init();
         AITConsoleVariants.init();
+        AITExteriorVariants.init();
 
         FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);

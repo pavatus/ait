@@ -1,4 +1,4 @@
-package mdteam.ait.tardis.variant;
+package mdteam.ait.tardis.variant.console;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;

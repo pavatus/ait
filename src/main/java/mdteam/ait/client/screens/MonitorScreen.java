@@ -5,10 +5,11 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.client.util.ClientTardisUtil;
-import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.core.AITExteriorVariants;
+import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.render.DiffuseLighting;
@@ -30,7 +31,7 @@ public class MonitorScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     private ExteriorEnum currentModel;
-    private VariantEnum currentVariant;
+    private ExteriorVariantSchema currentVariant;
     private float scrollPosition;
     private boolean scrollbarClicked;
     private int visibleTopRow;
@@ -64,13 +65,19 @@ public class MonitorScreen extends TardisScreen {
 
     public void setCurrentModel(ExteriorEnum currentModel) {
         this.currentModel = currentModel;
+
+        if (this.currentVariant.parent() != currentModel) {
+            currentVariant = null;
+        }
     }
 
-    public VariantEnum getCurrentVariant() {
-        return currentVariant == null ? tardis().getExterior().getVariant() : currentVariant;
+    public ExteriorVariantSchema getCurrentVariant() {
+        if (currentVariant == null) setCurrentVariant(TardisItemBuilder.findRandomVariant(getCurrentModel()));
+
+        return currentVariant;
     }
 
-    public void setCurrentVariant(VariantEnum currentVariant) {
+    public void setCurrentVariant(ExteriorVariantSchema currentVariant) {
         this.currentVariant = currentVariant;
     }
 
@@ -113,7 +120,7 @@ public class MonitorScreen extends TardisScreen {
                     this.getCurrentVariant() != tardis().getExterior().getVariant());*/
             if (this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant() != tardis().getExterior().getVariant()) {
                 ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
-                        this.getCurrentModel().ordinal(), this.getCurrentVariant().ordinal(),
+                        this.getCurrentModel().ordinal(), this.getCurrentVariant().id().toString(),
                         this.getCurrentVariant() != tardis().getExterior().getVariant());
             }
         }
@@ -127,11 +134,20 @@ public class MonitorScreen extends TardisScreen {
     }
 
     public void whichDirectionVariant(boolean direction) {
-        VariantEnum[] values = VariantEnum.values();
-        int currentIndex = this.getCurrentVariant() == null ? 0 : this.getCurrentVariant().ordinal();
-        int newIndex = (currentIndex + (direction ? 1 : -1) + values.length) % values.length;
-        this.setCurrentVariant(values[newIndex]);
+        if (direction) setCurrentVariant(nextVariant());
+        else setCurrentVariant(previousVariant());
     }
+
+    public ExteriorVariantSchema nextVariant() {
+        List<ExteriorVariantSchema> list = AITExteriorVariants.withParent(getCurrentVariant().parent()).stream().toList();
+        return list.get((list.indexOf(currentVariant) + 1 > list.size() - 1) ? 0 : list.indexOf(currentVariant) + 1);
+    }
+
+    public ExteriorVariantSchema previousVariant() {
+        List<ExteriorVariantSchema> list = AITExteriorVariants.withParent(currentVariant.parent()).stream().toList();
+        return list.get((list.indexOf(currentVariant) - 1 > -1) ? list.indexOf(currentVariant) - 1 : list.size() - 1);
+    }
+
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -195,7 +211,7 @@ public class MonitorScreen extends TardisScreen {
             //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
             stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(mouseX));
             DiffuseLighting.disableGuiDepthLighting();
-            model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(model.getVariousTextures(this.getCurrentModel(), this.getCurrentVariant()))), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+            model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
             DiffuseLighting.enableGuiDepthLighting();
             stack.pop();
         }

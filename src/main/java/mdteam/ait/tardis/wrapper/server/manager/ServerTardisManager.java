@@ -4,9 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.SerialDimension;
@@ -14,6 +12,7 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -99,7 +98,7 @@ public class ServerTardisManager extends TardisManager {
         });
     }
 
-    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, VariantEnum variantType, TardisDesktopSchema schema, boolean locked) {
+    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
         UUID uuid = UUID.randomUUID();
 
         ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked);

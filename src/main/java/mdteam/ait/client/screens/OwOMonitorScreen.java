@@ -2,35 +2,28 @@ package mdteam.ait.client.screens;
 
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.Components;
-import io.wispforest.owo.ui.component.DiscreteSliderComponent;
-import io.wispforest.owo.ui.component.SlimSliderComponent;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.container.ScrollContainer;
 import io.wispforest.owo.ui.core.*;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
-import javax.naming.Context;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class OwOMonitorScreen extends BaseOwoScreen<FlowLayout> {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
     private final UUID tardisid;
     private ExteriorEnum currentModel;
-    private VariantEnum currentVariant;
+    private ExteriorVariantSchema currentVariant;
 
     public OwOMonitorScreen(UUID tardisid) {
         this.tardisid = tardisid;
@@ -54,11 +47,11 @@ public class OwOMonitorScreen extends BaseOwoScreen<FlowLayout> {
         this.currentModel = currentModel;
     }
 
-    public VariantEnum getCurrentVariant() {
+    public ExteriorVariantSchema getCurrentVariant() {
         return currentVariant == null ? tardis().getExterior().getVariant() : currentVariant;
     }
 
-    public void setCurrentVariant(VariantEnum currentVariant) {
+    public void setCurrentVariant(ExteriorVariantSchema currentVariant) {
         this.currentVariant = currentVariant;
     }
 

@@ -2,11 +2,9 @@ package mdteam.ait.client.renderers.doors;
 
 import mdteam.ait.client.models.doors.DoorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
-import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -43,13 +41,12 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         matrices.translate(0.5, 0, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-        Identifier texture = model.getVariousTextures(tardisExterior.getType(), tardisExterior.getVariant());
+        Identifier texture = tardisExterior.getVariant().texture();
         if (model != null) {
             model.animateTile(entity);
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
-            if (model.getVariousEmission(texture, tardisExterior.getType()) != null)
-                if (tardisExterior.getType().hasEmission())
-                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(model.getVariousEmission(texture, tardisExterior.getType()), false)), maxLight, overlay, 1, 1, 1, 1);
+            if (tardisExterior.getVariant().emission() != null)
+                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(tardisExterior.getVariant().emission(), false)), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }

@@ -2,35 +2,15 @@ package mdteam.ait.client.screens;
 
 import com.google.common.collect.Lists;
 import mdteam.ait.AITMod;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.client.renderers.AITRenderLayers;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.VariantEnum;
-import mdteam.ait.client.util.ClientTardisUtil;
-import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.scoreboard.Team;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-
-import static mdteam.ait.client.renderers.exteriors.ExteriorEnum.*;
-import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 
 public class FindPlayerScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");

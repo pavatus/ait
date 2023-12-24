@@ -3,8 +3,8 @@ package mdteam.ait.tardis.util;
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.AITDimensions;
+import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -21,13 +21,11 @@ import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -44,7 +42,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -81,14 +78,14 @@ public class TardisUtil {
                     UUID uuid = buf.readUuid();
                     int exteriorValue = buf.readInt();
                     boolean variantChange = buf.readBoolean();
-                    int variantValue = buf.readInt();
+                    String variantValue = buf.readString();
 
                     ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(ExteriorEnum.values()[exteriorValue]);
                     WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
                     if (variantChange) {
-                        ServerTardisManager.getInstance().getTardis(uuid).getExterior().setVariant(VariantEnum.values()[variantValue]);
+                        ServerTardisManager.getInstance().getTardis(uuid).getExterior().setVariant(AITExteriorVariants.get(Identifier.tryParse(variantValue)));
                         WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                         .getTravel().getPosition().getWorld().getRegistryKey()),
                                 ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());

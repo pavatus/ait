@@ -27,11 +27,6 @@ public enum ExteriorEnum {
         }
 
         @Override
-        public boolean hasEmission() {
-            return false;
-        }
-
-        @Override
         @Environment(value = EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new CapsuleExteriorModel(CapsuleExteriorModel.getTexturedModelData().createModel());
@@ -75,11 +70,6 @@ public enum ExteriorEnum {
         }
 
         @Override
-        public boolean hasEmission() {
-            return true;
-        }
-
-        @Override
         @Environment(value = EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new PoliceBoxModel(PoliceBoxModel.getTexturedModelData().createModel());
@@ -113,11 +103,6 @@ public enum ExteriorEnum {
         }
 
         @Override
-        public boolean hasEmission() {
-            return true;
-        }
-
-        @Override
         @Environment(value = EnvType.CLIENT)
         public ExteriorModel createModel() {
             return new ClassicExteriorModel(ClassicExteriorModel.getTexturedModelData().createModel());
@@ -147,11 +132,6 @@ public enum ExteriorEnum {
 
         @Override
         public boolean isDoubleDoor() {
-            return true;
-        }
-
-        @Override
-        public boolean hasEmission() {
             return true;
         }
 
@@ -201,11 +181,6 @@ public enum ExteriorEnum {
         }
 
         @Override
-        public boolean hasEmission() {
-            return true;
-        }
-
-        @Override
         public Class<? extends ExteriorModel> getModelClass() {
             return BoothExteriorModel.class;
         }
@@ -236,8 +211,6 @@ public enum ExteriorEnum {
     public abstract DoorModel createDoorModel();
 
     public abstract boolean isDoubleDoor();
-
-    public abstract boolean hasEmission();
 
     public abstract Class<? extends ExteriorModel> getModelClass();
 
