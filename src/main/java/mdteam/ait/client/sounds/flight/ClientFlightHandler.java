@@ -3,6 +3,7 @@ package mdteam.ait.client.sounds.flight;
 import mdteam.ait.client.sounds.LoopingSound;
 import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
 import mdteam.ait.client.sounds.PositionedLoopingSound;
+import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
@@ -71,8 +72,9 @@ public class ClientFlightHandler extends SoundHandler {
                 // ensures it plays at the right place
                 ((PositionedLoopingSound) getFlightLoop()).setPosition(tardis().getDesktop().getConsolePos());
             }
-
             this.startIfNotPlaying(this.getFlightLoop());
+
+            ClientShakeUtil.shake(0.25f);
         } else {
             this.stopSounds();
         }

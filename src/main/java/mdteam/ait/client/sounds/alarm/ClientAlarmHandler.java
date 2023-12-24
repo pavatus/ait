@@ -72,7 +72,7 @@ public class ClientAlarmHandler extends SoundHandler {
         if (isPlayerInATardis() && isEnabled()) {
             this.startIfNotPlaying(getInteriorCloister());
 
-            ClientShakeUtil.shake(0.5);
+            ClientShakeUtil.shake(0.15f);
         } else {
             this.stopSounds();
         }
