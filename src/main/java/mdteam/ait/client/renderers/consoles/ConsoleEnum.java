@@ -117,27 +117,30 @@ public enum ConsoleEnum {
             return HartnellConsoleModel.class;
         }
 
-        // todo position all these correctly bc i cba tbh @Loqor do it
         private static final ControlTypes[] CONTROL_TYPES = new ControlTypes[]{
-                new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.275f, 0.275f), new Vector3f(0.625f, 0.5250015258789062f, 0.34999999962747097f)), //0
-                new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.099999994f, 0.099999994f), new Vector3f(-0.04062499199062586f, 0.5249999053776264f, 0.9757812730967999f)), //1
-                new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.12499998f, 0.099999994f), new Vector3f(-0.3718749936670065f, 0.5249999053776264f, 0.9757812675088644f)), //2
-                new ControlTypes(new DoorControl(), EntityDimensions.changing(0.062499996f, 0.062499974f), new Vector3f(-0.5750000085681677f, 0.5249999053776264f, 0.6609374983236194f)), //3
-                new ControlTypes(new XControl(), EntityDimensions.changing(0.074999996f, 0.062499996f), new Vector3f(0.18906249850988388f, 0.5f, 0.953125f)), //4
-                new ControlTypes(new YControl(), EntityDimensions.changing(0.074999996f, 0.062499996f), new Vector3f(0.28750000428408384f, 0.5000000931322575f, 0.9515625219792128f)), //5
-                new ControlTypes(new ZControl(), EntityDimensions.changing(0.074999996f, 0.062499996f), new Vector3f(0.3750000074505806f, 0.4625000925734639f, 0.9515625219792128f)), //6
-                new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.074999996f, 0.062499996f), new Vector3f(0.10000000149011612f, 0.5250000938773155f, 0.950781274586916f)), //7
-                new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.074999996f, 0.062499996f), new Vector3f(0.2500000037252903f, 0.6375000955536962f, 0.6632812703028321f)), //8
-                new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(-0.23500000312924385f, 0.4899999788030982f, -0.8050000118091702f)), //9
-                new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.8000000212341547f, 0.5249999780207872f, 0.14999999664723873f)), //10
-                new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(0.4850000077858567f, 0.6449999799951911f, -0.28500001039355993f)), //11
-                new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.325f, 0.125f), new Vector3f(-0.5507812462747097f, 0.5499999932944775f, 0.3234375026077032f)), //12
-                new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.421875f, 0.6750001907348633f, 0.25f)), //13
-                new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.074999996f, 0.074999996f), new Vector3f(-0.5468749962747097f, 0.6749999076128006f, -0.17421874962747097f)), //2
-                new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.075f, 0.075f), new Vector3f(-0.4000000134110451f, 0.674999987706542f, -0.37500001303851604f)), //idk
+                new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.12499998f, 0.099999994f), new Vector3f(-0.37109375f, 0.4999998565763235f, 0.9755859375f)), // 0
+                new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.125f, 0.099999994f), new Vector3f(-0.041015625f, 0.4999998565763235f, 0.9755859375f)), //1
+                new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.125f, 0.1f), new Vector3f(-0.19687499664723873f, 0.47500018775463104f, 0.9875000109896064f)), // 2
+                new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.075f, 0.075f), new Vector3f(0.24960938468575478f, 0.6249999515712261f, 0.6625000154599547f)), // 3
+
+                // @TODO duzo if you see this, im actually done with classic & monsterwaill constantly arguing over the most tiny details of any thing we decide to do. im frankly pissed off, and i refuse to continue arguing about it. so, if they ask to change anything, you can decide if its acceptable or not, im finished.
+                new ControlTypes(new DoorControl(), EntityDimensions.changing(0.125f, 0.11249998f), new Vector3f(0.8007812704890966f, 0.5249998569488525f, 0.46113280951976776f)), // 4
+                // fixme for some reason the DoorControl() position ^ is so heavily contested and it has caused a lot of anguish for no reason.
+
+                new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.074999996f, 0.0875f), new Vector3f(0.5749999955296516f, 0.5875000962987542f, 0.3263671901077032f)), // 5
+                new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.20000002f, 0.1125f), new Vector3f(0.7125000013038516f, 0.5375015260651708f, -0.1628906326368451f)), // 6
+                new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.17500004f, 0.15f), new Vector3f(-7.812418043613434E-4f, 0.4874999513849616f, -0.7267578281462193f)), // 7
+                new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.20000002f, 0.099999994f), new Vector3f(-0.34687500167638063f, 0.46500000916421413f, -0.9546875022351742f)), // 8
+                new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.125f, 0.0875f), new Vector3f(-0.6753906365483999f, 0.4875000948086381f, -0.8363281516358256f)), // 9
+                new ControlTypes(new XControl(), EntityDimensions.changing(0.074999996f, 0.099999994f), new Vector3f(-0.5355468858033419f, 0.5875000013038516f, -0.3718750197440386f)), // 10
+                new ControlTypes(new YControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.6503906389698386f, 0.5500000007450581f, -0.43632814567536116f)), // 11
+                new ControlTypes(new ZControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7750000171363354f, 0.5125000961124897f, -0.5113281467929482f)), // 12
+                new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.112500004f, 0.0875f), new Vector3f(-0.6375000132247806f, 0.5625000465661287f, -0.2744140764698386f)), // 13
+                new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-1.1007812544703484f, 0.4750000946223736f, 0.150390625f)), // 14
+                new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7218750026077032f, 0.5749999508261681f, 0.10117187909781933f)), // 15
+                new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.099999994f, 0.099999994f), new Vector3f(-0.9156250208616257f, 0.482499978505075f, 0.43984376080334187f)), // 16
+                new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.125f, 0.099999994f), new Vector3f(-0.5648437682539225f, 0.5124999517574906f, 0.7066406412050128f)), // 17
                 // @TODO new ControlTypes(new HADSControl(), EntityDimensions.changing(NaN), new Vector3f(NaN)),
-                new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.8750000037252903f, 0.5249999780207872f, 0.15156249701976776f)), //14
-                new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.6593750026077032f, 0.5499999783933163f, -0.3812500014901161f)), //15
         };
 
         @Override
