@@ -63,7 +63,7 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
                 return;
             }
             if (Objects.equals(this.tardis().getUuid().toString(), tag.getString("tardis"))) {
-                DoorHandler.toggleLock(this.tardis(), world, (ServerPlayerEntity) player);
+                DoorHandler.toggleLock(this.tardis(), (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);

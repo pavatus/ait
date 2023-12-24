@@ -6,7 +6,6 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
-import mdteam.ait.core.util.AITConfigModel;
 import mdteam.ait.tardis.control.impl.pos.PosManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.TardisLink;
@@ -17,7 +16,6 @@ import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -133,7 +131,7 @@ public class TardisTravel extends TardisLink {
         // fixme where does this go?
         TardisEvents.MAT.invoker().onMat(getTardis());
 
-        DoorHandler.lockTardis(true, this.getTardis(), (ServerWorld) TardisUtil.getTardisDimension(), null, true);
+        DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
         this.setState(State.MAT);
 
@@ -177,7 +175,7 @@ public class TardisTravel extends TardisLink {
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
-        DoorHandler.lockTardis(true, this.getTardis(), (ServerWorld) TardisUtil.getTardisDimension(), null, true);
+        DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
         if (PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
             // fail to take off when handbrake is on
@@ -353,7 +351,7 @@ public class TardisTravel extends TardisLink {
         if (blockEntity != null)
             this.runAnimations(blockEntity);
         if (DoorHandler.isClient()) return;
-        DoorHandler.lockTardis(PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), (ServerWorld) this.position.getWorld(), null, false);
+        DoorHandler.lockTardis(PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), null, false);
 
         // fixme where does this go?
         TardisEvents.LANDED.invoker().onLanded(getTardis());

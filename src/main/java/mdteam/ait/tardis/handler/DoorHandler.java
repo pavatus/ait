@@ -223,11 +223,11 @@ public class DoorHandler extends TardisLink {
         return true;
     }
 
-    public static boolean toggleLock(Tardis tardis, ServerWorld world, @Nullable ServerPlayerEntity player) {
-        return lockTardis(!tardis.getLockedTardis(), tardis, world, player, false);
+    public static boolean toggleLock(Tardis tardis, @Nullable ServerPlayerEntity player) {
+        return lockTardis(!tardis.getLockedTardis(), tardis, player, false);
     }
 
-    public static boolean lockTardis(boolean locked, Tardis tardis, ServerWorld world, @Nullable ServerPlayerEntity player, boolean forced) {
+    public static boolean lockTardis(boolean locked, Tardis tardis, @Nullable ServerPlayerEntity player, boolean forced) {
         if (!forced) {
             if (tardis.getTravel().getState() != LANDED) return false;
         }
@@ -248,8 +248,8 @@ public class DoorHandler extends TardisLink {
         if (player != null)
             player.sendMessage(Text.literal(lockedState), true);
 
-        world.playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
-        world.playSound(null, door.getDoorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+        door.getExteriorPos().getWorld().playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+        door.getDoorPos().getWorld().playSound(null, door.getDoorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
 
         tardis.markDirty();
 

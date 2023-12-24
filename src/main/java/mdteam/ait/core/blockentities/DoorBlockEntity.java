@@ -2,16 +2,13 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.blocks.DoorBlock;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
-import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.ServerTardisExterior;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -33,7 +30,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
-import mdteam.ait.tardis.TardisManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -78,7 +74,7 @@ public class DoorBlockEntity extends BlockEntity {
                 return;
             }
             if (Objects.equals(this.getTardis().getUuid().toString(), tag.getString("tardis"))) {
-                DoorHandler.toggleLock(this.getTardis(), (ServerWorld) world, (ServerPlayerEntity) player);
+                DoorHandler.toggleLock(this.getTardis(), (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);

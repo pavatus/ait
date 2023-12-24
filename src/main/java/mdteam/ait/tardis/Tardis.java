@@ -6,7 +6,6 @@ import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.util.TardisChunkUtil;
-import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.*;
 import net.minecraft.client.MinecraftClient;
@@ -59,6 +58,7 @@ public class Tardis {
         return this.getHandlers().getDoor();
     }
 
+    // dont use this
     public void setLockedTardis(boolean bool) {
         this.getDoor().setLocked(bool);
     }
@@ -96,6 +96,10 @@ public class Tardis {
         // autoland stuff
         if (getTravel().getState() == TardisTravel.State.FLIGHT && PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.AUTO_LAND)) {
             getTravel().materialise();
+        }
+
+        if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING) && !getHandlers().getDoor().locked()) {
+            DoorHandler.lockTardis(true, this, null, true);
         }
     }
 
