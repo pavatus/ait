@@ -1,4 +1,4 @@
-package mdteam.ait.tardis.variant;
+package mdteam.ait.tardis.variant.console;
 
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import net.minecraft.util.Identifier;
@@ -7,7 +7,7 @@ public abstract class ConsoleVariantSchema {
     private final ConsoleEnum parent;
     private final Identifier id;
 
-    public ConsoleVariantSchema(ConsoleEnum parent, Identifier id) {
+    protected ConsoleVariantSchema(ConsoleEnum parent, Identifier id) {
         this.parent = parent;
         this.id = id;
     }

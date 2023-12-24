@@ -1,10 +1,7 @@
 package mdteam.ait.core;
 
-import com.ibm.icu.impl.CollectionSet;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.tardis.TardisDesktopSchema;
-import mdteam.ait.tardis.desktops.*;
-import mdteam.ait.tardis.variant.*;
+import mdteam.ait.tardis.variant.console.*;
 import net.minecraft.util.Identifier;
 
 import java.util.*;

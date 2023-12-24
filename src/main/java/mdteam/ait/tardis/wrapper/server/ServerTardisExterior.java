@@ -1,9 +1,8 @@
 package mdteam.ait.tardis.wrapper.server;
 
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.tardis.TardisTickable;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisExterior;
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +11,7 @@ import net.minecraft.server.world.ServerWorld;
 
 public class ServerTardisExterior extends TardisExterior implements TardisTickable {
 
-    public ServerTardisExterior(Tardis tardis, ExteriorEnum exterior, VariantEnum variant) {
+    public ServerTardisExterior(Tardis tardis, ExteriorEnum exterior, ExteriorVariantSchema variant) {
         super(tardis, exterior, variant);
     }
 
@@ -23,7 +22,7 @@ public class ServerTardisExterior extends TardisExterior implements TardisTickab
     }
 
     @Override
-    public void setVariant(VariantEnum variant) {
+    public void setVariant(ExteriorVariantSchema variant) {
         super.setVariant(variant);
 
         this.tardis.markDirty();

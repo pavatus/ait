@@ -3,11 +3,12 @@ package mdteam.ait.core.item;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.VariantEnum;
 import mdteam.ait.core.AITDesktops;
+import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -23,7 +24,6 @@ public class TardisItemBuilder extends Item {
 
     public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "office"); //new Identifier(AITMod.MOD_ID, "war");
     public static final ExteriorEnum DEFAULT_EXTERIOR = ExteriorEnum.CAPSULE;
-    public static final VariantEnum DEFAULT_VARIANT = VariantEnum.DEFAULT;
     public static final ConsoleEnum DEFAULT_CONSOLE = ConsoleEnum.BOREALIS;
 
     private final ExteriorEnum exterior;
@@ -42,6 +42,10 @@ public class TardisItemBuilder extends Item {
 
     public TardisItemBuilder(Settings settings) {
         this(settings, DEFAULT_EXTERIOR);
+    }
+
+    public static ExteriorVariantSchema findRandomVariant(ExteriorEnum exterior) { // fixme its not very random icl
+        return AITExteriorVariants.withParent(exterior).stream().findFirst().get();
     }
 
     @Override
@@ -72,7 +76,7 @@ public class TardisItemBuilder extends Item {
 
             //System.out.println(this.exterior);
 
-            ServerTardisManager.getInstance().create(pos, this.exterior, DEFAULT_VARIANT, AITDesktops.get(this.desktop), false);
+            ServerTardisManager.getInstance().create(pos, this.exterior, findRandomVariant(exterior) , AITDesktops.get(this.desktop), false);
             context.getStack().decrement(1);
         }
 

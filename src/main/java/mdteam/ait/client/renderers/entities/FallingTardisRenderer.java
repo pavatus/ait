@@ -52,7 +52,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 
         getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light,1,1,1,1,1);
 
-        if (tardisExterior.getType().hasEmission())
+        if (tardisExterior.getVariant().emission() != null)
             getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), light,1,1,1,1,1);
 
         matrices.pop();
@@ -70,12 +70,12 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
     public Identifier getTexture(FallingTardisEntity entity) {
         if (entity.tardis() == null) return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE; // random texture just so i dont crash
 
-        return model.getVariousTextures(entity.tardis().getExterior().getType(), entity.tardis().getExterior().getVariant());
+        return entity.tardis().getExterior().getVariant().texture();
     }
 
     public Identifier getEmission(FallingTardisEntity entity) {
         if (entity.tardis() == null) return getTexture(entity);
 
-        return model.getVariousEmission(getTexture(entity), entity.tardis().getExterior().getType());
+        return entity.tardis().getExterior().getVariant().emission();
     }
 }
