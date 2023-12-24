@@ -1,12 +1,14 @@
 package mdteam.ait.tardis.variant.exterior;
 
 import com.google.gson.*;
+import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.InvalidIdentifierException;
 
 import java.lang.reflect.Type;
 
@@ -33,10 +35,15 @@ public abstract class ExteriorVariantSchema {
 
         @Override
         public ExteriorVariantSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            if (json.getAsJsonPrimitive().getAsString().equalsIgnoreCase("minecraft:DEFAULT"))
-                return AITExteriorVariants.iterator().stream().findFirst().get(); // this should fix the crash classic gets when opening the pre-rewrite set world
+            Identifier id;
 
-            return AITExteriorVariants.get(new Identifier(json.getAsJsonPrimitive().getAsString()));
+            try {
+                id = new Identifier(json.getAsJsonPrimitive().getAsString());
+            } catch (InvalidIdentifierException e) {
+                id = new Identifier(AITMod.MOD_ID, "capsule_default");
+            }
+
+            return AITExteriorVariants.get(id);
         }
 
         @Override
