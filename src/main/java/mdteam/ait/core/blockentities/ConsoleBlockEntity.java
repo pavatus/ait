@@ -120,8 +120,9 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
         // ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
         getTardis().markDirty();
-        markDirty();
+        // markDirty();
         syncType();
+        syncVariant();
 
         needsSync = false;
     }

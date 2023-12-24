@@ -90,6 +90,12 @@ public class AITMod implements ModInitializer {
             ToggleAlarmCommand.register(dispatcher);
             IsRiftChunkCommand.register(dispatcher); // should probably have a tp to rift chunk instead but i cba
         }));
+
+        ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {
+            if (blockEntity instanceof ConsoleBlockEntity console) {
+                console.sync();
+            }
+        }));
     }
 
     public void entityAttributeRegister() {
