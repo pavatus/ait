@@ -20,6 +20,7 @@ public class AITConsoleVariants {
 
         // Hartnell variants
         register(new HartnellVariant());
+        register(new WoodenHartnellVariant());
 
         // "temp" variants
         register(new TempVariant());
