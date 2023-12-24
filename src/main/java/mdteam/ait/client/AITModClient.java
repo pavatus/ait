@@ -11,7 +11,6 @@ import mdteam.ait.client.renderers.entities.FallingTardisRenderer;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
 import mdteam.ait.client.screens.MonitorScreen;
 import mdteam.ait.client.screens.OwOFindPlayerScreen;
-import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITDimensions;
@@ -98,13 +97,21 @@ public class AITModClient implements ClientModInitializer {
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
             if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
 
             int ordinal = buf.readInt();
             ConsoleEnum type = ConsoleEnum.values()[ordinal];
             BlockPos consolePos = buf.readBlockPos();
             if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setType(type);
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_VARIANT, (client, handler, buf, responseSender) -> {
+            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+
+            Identifier id = Identifier.tryParse(buf.readString());
+            BlockPos consolePos = buf.readBlockPos();
+            if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setVariant(id);
         });
 
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.

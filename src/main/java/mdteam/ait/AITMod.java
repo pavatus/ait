@@ -52,6 +52,8 @@ public class AITMod implements ModInitializer {
     @Override
     public void onInitialize() {
         AITDesktops.init();
+        AITConsoleVariants.init();
+
         FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
