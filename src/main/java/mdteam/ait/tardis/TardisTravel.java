@@ -195,8 +195,6 @@ public class TardisTravel extends TardisLink {
 
         this.setState(State.DEMAT);
 
-        TardisUtil.stopForceTardisChunk(tardis());
-
         world.playSound(null, this.getPosition(), this.getSoundForCurrentState(), SoundCategory.BLOCKS);
         //TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.DEMAT, SoundCategory.BLOCKS, 10f, 1f);
         if (this.getTardis() != null)
@@ -356,7 +354,6 @@ public class TardisTravel extends TardisLink {
             this.runAnimations(blockEntity);
         if (DoorHandler.isClient()) return;
         DoorHandler.lockTardis(PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), (ServerWorld) this.position.getWorld(), null, false);
-        TardisUtil.forceLoadTardisChunk(tardis());
 
         // fixme where does this go?
         TardisEvents.LANDED.invoker().onLanded(getTardis());

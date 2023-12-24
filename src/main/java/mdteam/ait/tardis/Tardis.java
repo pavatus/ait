@@ -4,6 +4,8 @@ import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.tardis.handler.TardisHandlersManager;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.util.TardisChunkUtil;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.*;
 import net.minecraft.client.MinecraftClient;
@@ -82,6 +84,12 @@ public class Tardis {
      */
     public void tick(MinecraftServer server) {
         this.getHandlers().tick(server);
+        // im sure this is great for your server performace
+        if (TardisChunkUtil.shouldExteriorChunkBeForced(this) && !TardisChunkUtil.isExteriorChunkForced(this)) {
+            TardisChunkUtil.forceLoadExteriorChunk(this);
+        } else if (!TardisChunkUtil.shouldExteriorChunkBeForced(this) && TardisChunkUtil.isExteriorChunkForced(this)) {
+            TardisChunkUtil.stopForceExteriorChunk(this);
+        }
     }
 
     /**

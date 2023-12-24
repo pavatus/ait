@@ -151,22 +151,6 @@ public class TardisUtil {
         );
     }
 
-    public static void forceLoadTardisChunk(Tardis tardis) {
-        if (!(tardis.getTravel().getPosition().getWorld() instanceof ServerWorld)) return;
-
-        ForcedChunkUtil.keepChunkLoaded((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getPosition());
-    }
-    public static void stopForceTardisChunk(Tardis tardis) {
-        if (!(tardis.getTravel().getPosition().getWorld() instanceof ServerWorld)) return;
-
-        ForcedChunkUtil.stopForceLoading((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getPosition());
-    }
-    public static boolean isTardisChunkForced(Tardis tardis) {
-        if (!(tardis.getTravel().getPosition().getWorld() instanceof ServerWorld)) return false;
-
-        return ForcedChunkUtil.isChunkForced((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getPosition());
-    }
-
     public static MinecraftServer getServer() {
         //MinecraftServer server = TARDIS_DIMENSION.getServer();
         return SERVER;
