@@ -33,6 +33,9 @@ public abstract class ExteriorVariantSchema {
 
         @Override
         public ExteriorVariantSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            if (json.getAsJsonPrimitive().getAsString().equalsIgnoreCase("minecraft:DEFAULT"))
+                return AITExteriorVariants.iterator().stream().findFirst().get(); // this should fix the crash classic gets when opening the pre-rewrite set world
+
             return AITExteriorVariants.get(new Identifier(json.getAsJsonPrimitive().getAsString()));
         }
 
