@@ -40,7 +40,7 @@ public class SetLockedCommand {
 
         if (tardis == null || source == null) return 0;
 
-        DoorHandler.lockTardis(locked, tardis, (ServerWorld) tardis.getDoor().getExteriorPos().getWorld(), source, true);
+        DoorHandler.lockTardis(locked, tardis, source, true);
 
         return Command.SINGLE_SUCCESS;
     }

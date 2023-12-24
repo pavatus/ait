@@ -120,7 +120,7 @@ public class TardisUtil {
                                 }
                             }
                         } else {
-                            DoorHandler.toggleLock(tardis, server.getWorld(player.getWorld().getRegistryKey()), player);
+                            DoorHandler.toggleLock(tardis, player);
                         }
                         tardis.markDirty();
                     }
