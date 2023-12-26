@@ -798,7 +798,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 	public Animation getAnimationForState(TardisTravel.State state) {
 		return switch (state) {
 			default -> HartnellAnimations.ROTOR;
-			case LANDED -> EMPTY_ANIM;
+			case LANDED -> HartnellAnimations.HARTNEL_IDLE_ANIMATION;
 		};
 	}
 

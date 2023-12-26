@@ -75,8 +75,6 @@ public class ClientFlightHandler extends SoundHandler {
             }
             this.startIfNotPlaying(this.getFlightLoop());
 
-            if (ClientTardisUtil.distanceFromConsole() < 5)
-                ClientShakeUtil.shake(1f - (float) (ClientTardisUtil.distanceFromConsole() / 5f));
         } else {
             this.stopSounds();
         }

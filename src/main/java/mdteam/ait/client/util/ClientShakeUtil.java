@@ -1,40 +1,44 @@
 package mdteam.ait.client.util;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.math.MathHelper;
 
 public class ClientShakeUtil {
+    private static final float SHAKE_CLAMP = 45.0f; // Adjust this value to set the maximum shake angle
+    private static final float SHAKE_INTENSITY = 0.5f; // Adjust this value to control the intensity of the shake
+
     public static void shake(float scale) {
-        if (MinecraftClient.getInstance().player == null) return;
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null) return;
 
-        MinecraftClient.getInstance().player.setPitch(getShakeX(scale));
-        MinecraftClient.getInstance().player.setYaw(getShakeY(scale));
+        float targetPitch = getShakeX(client.player.getPitch(), scale);
+        float targetYaw = getShakeY(client.player.getYaw(), scale);
+
+        client.player.setPitch(lerp(client.player.getPitch(), targetPitch, SHAKE_INTENSITY));
+        client.player.setYaw(lerp(client.player.getYaw(), targetYaw, SHAKE_INTENSITY));
     }
 
-    /**
-     * gets the current yaw and adds an amount of a random from 0 to 1 multiplied by the scale
-     * @param scale the intensity of the shake
-     * @return the new yaw
-     */
-    private static float getShakeY(float scale) {
-        if (MinecraftClient.getInstance().player == null) return 0;
+    private static float getShakeY(float baseYaw, float scale) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null) return baseYaw;
 
-        var temp = (MinecraftClient.getInstance().player.getRandom().nextFloat() * scale);
+        float temp = (client.player.getRandom().nextFloat() * scale);
+        float shakeYaw = baseYaw + (client.player.getRandom().nextBoolean() ? temp : -temp);
 
-        // this is a long line but i have a vendetta against creating variable for some reason
-        return MinecraftClient.getInstance().player.getYaw() + (MinecraftClient.getInstance().player.getRandom().nextBoolean() ? temp : -temp);
+        return MathHelper.clamp(shakeYaw, baseYaw - SHAKE_CLAMP, baseYaw + SHAKE_CLAMP);
     }
 
-    /**
-     * gets the current pitch and adds an amount of a random from 0 to 1 multiplied by the scale
-     * @param scale the intensity of the shake
-     * @return the new pitch
-     */
-    private static float getShakeX(float scale) {
-        if (MinecraftClient.getInstance().player == null) return 0;
+    private static float getShakeX(float basePitch, float scale) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null) return basePitch;
 
-        var temp = (MinecraftClient.getInstance().player.getRandom().nextFloat() * scale);
+        float temp = (client.player.getRandom().nextFloat() * (scale / 2));
+        float shakePitch = basePitch + (client.player.getRandom().nextBoolean() ? temp : -temp);
 
-        // yeah
-        return MinecraftClient.getInstance().player.getPitch() + (MinecraftClient.getInstance().player.getRandom().nextBoolean() ? temp : -temp);
+        return MathHelper.clamp(shakePitch, basePitch - SHAKE_CLAMP, basePitch + SHAKE_CLAMP);
+    }
+
+    private static float lerp(float a, float b, float t) {
+        return a + (b - a) * t;
     }
 }

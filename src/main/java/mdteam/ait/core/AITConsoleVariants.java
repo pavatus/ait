@@ -21,8 +21,12 @@ public class AITConsoleVariants {
         // Hartnell variants
         register(new HartnellVariant());
         register(new WoodenHartnellVariant());
+        register(new KeltHartnellVariant());
 
-        // "temp" variants
+        // Coral variants
+        register(new CoralVariant());
+
+        // "Temp" variants
         register(new TempVariant());
     }
 

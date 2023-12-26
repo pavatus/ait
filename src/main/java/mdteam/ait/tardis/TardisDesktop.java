@@ -1,6 +1,8 @@
 package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.renderers.consoles.ConsoleEnum;
+import mdteam.ait.core.AITConsoleVariants;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -16,9 +18,9 @@ public class TardisDesktop {
     protected final Tardis tardis;
     private TardisDesktopSchema schema;
     private AbsoluteBlockPos.Directed doorPos;
-
     private AbsoluteBlockPos.Directed consolePos;
-
+    private ConsoleEnum consoleType;
+    private AITConsoleVariants consoleVariants;
     private final Corners corners;
 
     public TardisDesktop(Tardis tardis, TardisDesktopSchema schema) {

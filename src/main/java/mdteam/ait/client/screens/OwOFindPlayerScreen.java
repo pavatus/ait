@@ -19,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class OwOFindPlayerScreen extends BaseOwoScreen<FlowLayout> {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
@@ -56,12 +58,14 @@ public class OwOFindPlayerScreen extends BaseOwoScreen<FlowLayout> {
         //Component panel = Components.texture(TEXTURE, 0, 133, 20, 40);
         if (MinecraftClient.getInstance().player == null) return;
         List<PlayerListEntry> list = this.collectPlayerEntries();
-        Component button = Components.button(this.getPlayerName(list), buttonComponent -> this.onPress(this.getPlayerUuid(list))).zIndex(-250);
+        Component button = Components.button(this.getPlayerName(list.iterator().next()), buttonComponent -> this.onPress(this.getPlayerUuid(list))).zIndex(-250);
+        Component label = Components.label(this.getPlayerName(list.iterator().next()));
         ScrollContainer<Component> scrollContainer = Containers.verticalScroll(
                 Sizing.content(), Sizing.fill(100), Components.list(
                         list, (layout) -> {
-                            Containers.horizontalFlow(Sizing.fill(100), Sizing.content());}, (s) -> Containers.stack(Sizing.content(),
-                                        Sizing.content()).child(button).child(Components.label(this.getPlayerName(list))).alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER).padding(Insets.of(10)).surface(Surface.TOOLTIP), false).alignment(HorizontalAlignment.LEFT, VerticalAlignment.TOP));
+                            Containers.verticalFlow(Sizing.fill(100), Sizing.content());
+                            }, (s) -> Containers.stack(Sizing.content(),
+                                Sizing.content()).child(button).child(label).alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER).padding(Insets.of(10)).surface(Surface.TOOLTIP), false).alignment(HorizontalAlignment.LEFT, VerticalAlignment.TOP));
         Component left = Components.button(Text.literal("<"), buttonComponent -> System.out.println(this.tardisid)).sizing(Sizing.fixed(15))
                 .positioning(Positioning.absolute(20, 20));
         Component right = Components.button(Text.literal(">"), buttonComponent -> System.out.println(this.tardisid)).sizing(Sizing.fixed(15))
@@ -71,6 +75,7 @@ public class OwOFindPlayerScreen extends BaseOwoScreen<FlowLayout> {
         container.child(right);*/
         rootComponent.child(container.surface(Surface.DARK_PANEL));
     }
+
 
     public void onPress(UUID uuid) {
         if (tardis() != null) {
@@ -84,16 +89,12 @@ public class OwOFindPlayerScreen extends BaseOwoScreen<FlowLayout> {
         return MinecraftClient.getInstance().getNetworkHandler().getListedPlayerListEntries().stream().toList();
     }
 
-    public Text getPlayerName(List<PlayerListEntry> listOfEntries) {
-        if(listOfEntries.isEmpty()) return Text.empty();
-        for(PlayerListEntry entry : listOfEntries) {
-            if (entry.getDisplayName() != null) {
-                return entry.getDisplayName().copy();
-            } else {
-                return Text.literal(entry.getProfile().getName());
-            }
+    public Text getPlayerName(PlayerListEntry entry) {
+        if (entry.getDisplayName() != null) {
+            return entry.getDisplayName().copy();
+        } else {
+            return Text.literal(entry.getProfile().getName());
         }
-        return Text.empty();
     }
 
     @Nullable

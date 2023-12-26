@@ -1,6 +1,8 @@
 package mdteam.ait.tardis;
 
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.client.util.ClientShakeUtil;
+import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.tardis.handler.TardisHandlersManager;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -116,7 +118,11 @@ public class Tardis {
      * @param client the remote being ticked
      */
     public void tick(MinecraftClient client) { // fixme should likely be in ClientTardis instead, same with  other server-only things should be in ServerTardis
-
+        if(this.getTravel() != null)
+            if(this.getTravel().getState() != TardisTravel.State.LANDED) {
+                if (ClientTardisUtil.distanceFromConsole() < 20)
+                    ClientShakeUtil.shake(1f - (float) (ClientTardisUtil.distanceFromConsole() / 20f));
+            }
     }
 
     public boolean isDirty() {
