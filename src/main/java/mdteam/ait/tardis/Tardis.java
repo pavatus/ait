@@ -14,6 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -72,12 +73,26 @@ public class Tardis {
     public TardisTravel getTravel() {
         return travel;
     }
+
     public TardisHandlersManager getHandlers() {
         if (handlers == null) {
             handlers = new TardisHandlersManager(getUuid());
         }
 
         return handlers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() == null) return false;
+        Tardis tardis = (Tardis) o;
+        return uuid.equals(tardis.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
     }
 
     /**
@@ -115,33 +130,31 @@ public class Tardis {
 
     /**
      * Called at the end of a clients tick, ONLY FOR CLIENT STUFF!!
+     *
      * @param client the remote being ticked
      */
     public void tick(MinecraftClient client) { // fixme should likely be in ClientTardis instead, same with  other server-only things should be in ServerTardis
-        if(this.getTravel() != null)
-            if(this.getTravel().getState() != TardisTravel.State.LANDED) {
-                if (ClientTardisUtil.distanceFromConsole() < 20)
-                    ClientShakeUtil.shake(1f - (float) (ClientTardisUtil.distanceFromConsole() / 20f));
-            }
+        // referencing client stuff where it COULD be server causes problems
+        if (ClientShakeUtil.shouldShake(this)) ClientShakeUtil.shakeFromConsole();
     }
 
     public boolean isDirty() {
         return dirty;
     }
+
     public void markDirty() {
         dirty = true;
     }
 
     /**
      * Called at the START of a servers tick, ONLY to be used for syncing data to avoid comodification errors
+     *
      * @param server the current minecraft server
      */
     public void startTick(MinecraftServer server) {
-        if(this instanceof ServerTardis) {
-            if(this.isDirty()) {
-                ((ServerTardis) this).sync();
-                this.dirty = false;
-            }
+        if (this instanceof ServerTardis && isDirty()) {
+            ((ServerTardis) this).sync();
+            dirty = false;
         }
     }
 }
