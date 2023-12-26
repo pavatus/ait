@@ -360,6 +360,7 @@ public class TardisUtil {
             if (player.getServerWorld() != getTardisDimension()) continue;
 
             found = findTardisByInterior(player.getBlockPos());
+            if(found == null) continue;
             if (found.getUuid().equals(tardis.getUuid())) list.add(player);
         }
 

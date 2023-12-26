@@ -55,7 +55,6 @@ public class OwOFindPlayerScreen extends BaseOwoScreen<FlowLayout> {
                 .horizontalAlignment(HorizontalAlignment.CENTER)
                 .verticalAlignment(VerticalAlignment.CENTER);
         FlowLayout container = Containers.horizontalFlow(Sizing.fixed(236), Sizing.fixed(133));
-        //Component panel = Components.texture(TEXTURE, 0, 133, 20, 40);
         if (MinecraftClient.getInstance().player == null) return;
         List<PlayerListEntry> list = this.collectPlayerEntries();
         Component button = Components.button(this.getPlayerName(list.iterator().next()), buttonComponent -> this.onPress(this.getPlayerUuid(list))).zIndex(-250);
