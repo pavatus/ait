@@ -26,7 +26,6 @@ public class Tardis {
     private TardisDesktop desktop;
     private final TardisExterior exterior;
     private TardisHandlersManager handlers;
-    @Exclude
     private boolean dirty = false;
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, ExteriorVariantSchema variant) {

@@ -201,6 +201,7 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
     }
 
     public ExteriorEnum getExteriorType() {
+        if(this.tardis() == null) return ExteriorEnum.CAPSULE;
         return this.tardis().getExterior().getType();
     }
 
