@@ -247,7 +247,10 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     }
     public static ConsoleVariantSchema nextVariant(ConsoleVariantSchema current) {
         List<ConsoleVariantSchema> list = AITConsoleVariants.withParent(current.parent()).stream().toList();
-        return list.get((list.indexOf(current) + 1 > list.size() - 1) ? 0 : list.indexOf(current) + 1);
+
+        int idx = list.indexOf(current);
+        if (idx < 0 || idx+1 == list.size()) return list.get(0);
+        return list.get(idx + 1);
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
