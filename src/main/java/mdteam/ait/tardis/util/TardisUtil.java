@@ -6,6 +6,7 @@ import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
@@ -286,6 +287,8 @@ public class TardisUtil {
 
     public static void teleportInside(Tardis tardis, ServerPlayerEntity player) {
         TardisUtil.teleportWithDoorOffset(player, tardis.getDoor().getDoorPos());
+        TardisDesktop tardisDesktop = tardis.getDesktop();
+        ((ConsoleBlockEntity) tardisDesktop.getConsolePos().getBlockEntity()).sync(); // maybe force sync when a player enters the tardis
     }
 
     private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
