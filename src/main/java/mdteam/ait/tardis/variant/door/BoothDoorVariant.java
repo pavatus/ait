@@ -8,7 +8,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
 public class BoothDoorVariant extends DoorSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door_booth");
+    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/booth");
 
     public BoothDoorVariant() {
         super(REFERENCE);

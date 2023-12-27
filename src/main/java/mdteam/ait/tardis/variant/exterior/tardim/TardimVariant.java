@@ -5,9 +5,12 @@ import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.TardimExteriorModel;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.tardis.exterior.PoliceBoxExterior;
+import mdteam.ait.tardis.exterior.TardimExterior;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.door.TardimDoorVariant;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -19,7 +22,7 @@ public abstract class TardimVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/tardim/tardim_";
 
     protected TardimVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-        super(ExteriorEnum.TARDIM, new Identifier(modId, "tardim_" + name));
+        super(AITExteriors.get(TardimExterior.REFERENCE), new Identifier(modId, "exterior/tardim/" + name));
 
         this.name = name;
     }

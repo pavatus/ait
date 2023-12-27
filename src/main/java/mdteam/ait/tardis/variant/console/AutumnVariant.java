@@ -9,7 +9,7 @@ public class AutumnVariant extends ConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/borealis_console_autumn_emission.png"));
 
     public AutumnVariant() {
-        super(ConsoleEnum.BOREALIS, new Identifier(AITMod.MOD_ID, "autumn"));
+        super(ConsoleEnum.BOREALIS, new Identifier(AITMod.MOD_ID, "console/autumn"));
     }
 
     @Override

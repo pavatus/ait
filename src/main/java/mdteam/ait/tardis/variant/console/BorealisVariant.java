@@ -9,7 +9,7 @@ public class BorealisVariant extends ConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/borealis_console_emission.png"));
 
     public BorealisVariant() {
-        super(ConsoleEnum.BOREALIS, new Identifier(AITMod.MOD_ID, "borealis"));
+        super(ConsoleEnum.BOREALIS, new Identifier(AITMod.MOD_ID, "console/borealis"));
     }
 
     @Override

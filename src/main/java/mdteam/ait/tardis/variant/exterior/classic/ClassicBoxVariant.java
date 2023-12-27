@@ -5,9 +5,12 @@ import mdteam.ait.client.animation.ClassicAnimation;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.models.exteriors.ClassicExteriorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.tardis.exterior.ClassicExterior;
+import mdteam.ait.tardis.exterior.PoliceBoxExterior;
 import mdteam.ait.tardis.variant.door.ClassicDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -19,7 +22,7 @@ public abstract class ClassicBoxVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/classic/classic_";
 
     protected ClassicBoxVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-        super(ExteriorEnum.CLASSIC, new Identifier(modId, "classic_" + name));
+        super(AITExteriors.get(ClassicExterior.REFERENCE), new Identifier(modId, "exterior/classic/" + name));
 
         this.name = name;
     }

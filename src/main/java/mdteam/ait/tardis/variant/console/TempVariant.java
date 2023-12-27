@@ -9,7 +9,7 @@ public class TempVariant extends ConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/console_emission.png"));
 
     public TempVariant() {
-        super(ConsoleEnum.TEMP, new Identifier(AITMod.MOD_ID, "temp"));
+        super(ConsoleEnum.TEMP, new Identifier(AITMod.MOD_ID, "console/temp"));
     }
 
     @Override

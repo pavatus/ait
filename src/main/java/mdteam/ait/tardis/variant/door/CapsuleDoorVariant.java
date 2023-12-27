@@ -8,7 +8,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
 public class CapsuleDoorVariant extends DoorSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door_capsule");
+    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/capsule");
 
     public CapsuleDoorVariant() {
         super(REFERENCE);

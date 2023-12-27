@@ -7,7 +7,7 @@ import mdteam.ait.client.models.doors.TardimDoorModel;
 import net.minecraft.util.Identifier;
 
 public class PoliceBoxDoorVariant extends DoorSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door_police_box");
+    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/police_box");
 
     public PoliceBoxDoorVariant() {
         super(REFERENCE);
