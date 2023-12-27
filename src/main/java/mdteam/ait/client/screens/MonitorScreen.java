@@ -75,7 +75,12 @@ public class MonitorScreen extends TardisScreen {
     }
 
     public ExteriorVariantSchema getCurrentVariant() {
-        if (currentVariant == null) setCurrentVariant(TardisItemBuilder.findRandomVariant(getCurrentModel()));
+        if (currentVariant == null)
+            if(tardis().getExterior().getType() != getCurrentModel()) {
+                setCurrentVariant(TardisItemBuilder.findRandomVariant(getCurrentModel()));
+            } else {
+                setCurrentVariant(tardis().getExterior().getVariant());
+            }
 
         return currentVariant;
     }
@@ -144,7 +149,7 @@ public class MonitorScreen extends TardisScreen {
         List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
 
         int idx = list.indexOf(getCurrentModel());
-        if (idx <= 0) return list.get(list.size());
+        if (idx <= 0) return list.get(list.size() - 1);
         return list.get(idx - 1);
     }
 

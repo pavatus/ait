@@ -60,21 +60,8 @@ public class DesktopGenerator {
         }
         for (ItemEntity entity : level.getEntitiesByType(EntityType.ITEM/*TardisUtil.getPlayerInsideInterior(interiorCorners)*/, /*interiorCorners.getBox()*/EntityPredicates.EXCEPT_SPECTATOR)) {
             if (TardisUtil.inBox(interiorCorners.getBox(), entity.getBlockPos())) {
-                //System.out.println(entity);
                 entity.kill();
             }
         }
-        /*for (ItemFrameEntity entity : level.getEntitiesByType(EntityType.ITEM_FRAME*//*TardisUtil.getPlayerInsideInterior(interiorCorners)*//*, *//*interiorCorners.getBox()*//*EntityPredicates.EXCEPT_SPECTATOR)) {
-            if (TardisUtil.inBox(interiorCorners.getBox(), entity.getBlockPos())) {
-                System.out.println(entity);
-                entity.kill();
-            }
-        }
-        for (GlowItemFrameEntity entity : level.getEntitiesByType(EntityType.GLOW_ITEM_FRAME*//*TardisUtil.getPlayerInsideInterior(interiorCorners)*//*, *//*interiorCorners.getBox()*//*EntityPredicates.EXCEPT_SPECTATOR)) {
-            if (TardisUtil.inBox(interiorCorners.getBox(), entity.getBlockPos())) {
-                System.out.println(entity);
-                entity.kill();
-            }
-        }*/
     }
 }

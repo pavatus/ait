@@ -131,7 +131,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
     }
 
     public VoxelShape getNormalShape(BlockState state, BlockView world, BlockPos pos) {
-        if ( world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.tardis().getExterior().getVariant().bounding(state.get(FACING)) != null)
+        if ( world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.tardis() != null && exterior.tardis().getExterior().getVariant().bounding(state.get(FACING)) != null)
             return exterior.tardis().getExterior().getVariant().bounding(state.get(FACING));
 
         return switch (state.get(FACING)) {
@@ -146,7 +146,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
     public VoxelShape getLedgeShape(BlockState state, BlockView world, BlockPos pos) {
         // fixme these wont have ledges probably
-        if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.tardis().getExterior().getVariant().bounding(state.get(FACING)) != null)
+        if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.tardis() != null && exterior.tardis().getExterior().getVariant().bounding(state.get(FACING)) != null)
             return exterior.tardis().getExterior().getVariant().bounding(state.get(FACING));
 
         return switch (state.get(FACING)) {

@@ -109,27 +109,31 @@ public class TardisTravel extends TardisLink {
     }
 
     public void materialise() {
-        if (this.getDestination() == null)
-            return;
-
         if (this.getDestination().getWorld().isClient())
             return;
 
-        if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND))) {
-            // Not safe to land here!
-            this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
+        PropertiesHandler.setAutoPilot(this.getTardis().getHandlers().getProperties(), false);
 
-            if (TardisUtil.isInteriorEmpty(tardis()))
-                TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
+        ServerWorld world = (ServerWorld) this.getDestination().getWorld();
+        world.getChunk(this.getDestination());
 
-            TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!")); // fixme translatable
+        // Check if the Tardis is already present at this location before materializing it there
+        AbsoluteBlockPos.Directed currentPosition = this.tardis().getTravel().getPosition();
+        if (!currentPosition.equals(this.getDestination())) {
+            if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND))) {
+                // Not safe to land here!
+                this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
+
+                if (TardisUtil.isInteriorEmpty(tardis()))
+                    TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
+
+                TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!")); // fixme translatable
+                return;
+            }
+        } else {
+            // If the Tardis is already present at this location, do not proceed with any further operations
             return;
         }
-
-        // PropertiesHandler.setAutoPilot(this.getTardis().getProperties(), false);
-
-        // fixme where does this go?
-        TardisEvents.MAT.invoker().onMat(getTardis());
 
         DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
@@ -161,7 +165,10 @@ public class TardisTravel extends TardisLink {
         animTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                travel.forceLand(blockEntity);
+                if (travel.getState() != State.DEMAT)
+                    return;
+
+                travel.toFlight();
             }
         }, (long) getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
     }

@@ -40,8 +40,8 @@ public class DimensionControl extends Control {
         // FIXME we should make it so that once the ender dragon is defeated, the end is unlocked; also make that a config option as well for the server. - Loqor
 
         /*if (dest.getWorld().getRegistryKey() != World.END) {*/
-            messagePlayer(player, (ServerWorld) travel.getDestination().getWorld());
-            travel.setDestination(new AbsoluteBlockPos.Directed(PosType.Y.add(dest, 0), dims.get(next), dest.getDirection()), false); // postype.y.add means it clamps the y coord fixme doesnt work for nether as u can go above the bedrock but dont hardcode it like you did loqor :(
+        travel.setDestination(new AbsoluteBlockPos.Directed(PosType.Y.add(dest, 0), dims.get(next), dest.getDirection()), false); // postype.y.add means it clamps the y coord fixme doesnt work for nether as u can go above the bedrock but dont hardcode it like you did loqor :(
+        messagePlayer(player, (ServerWorld) travel.getDestination().getWorld());
         /*} else {
             if(dest.getWorld().getServer().getWorld(dest.getWorld().getRegistryKey()).getAliveEnderDragons().isEmpty()) {
                 messagePlayer(player, (ServerWorld) travel.getDestination().getWorld());

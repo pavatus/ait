@@ -26,14 +26,10 @@ public class ClassicAnimation extends ExteriorAnimation {
 
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.MAT) {
-            if (this.timeLeft < this.startTime) {
-                // System.out.println(alpha + alphaChangeAmount);
-                this.setAlpha(1f - ((float) this.timeLeft / (this.startTime))); // fixme takes too long
-            } else
-                this.setAlpha(0f);
-
+            // Maybe this will fix the class animation taking too long
+            this.alpha = ((float) this.timeLeft / (this.startTime) - 1) * -1;
             this.timeLeft--;
-
+            this.setAlpha(this.alpha);
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.LANDED/* && alpha != 1f*/) {
             this.setAlpha(1f);
@@ -50,6 +46,9 @@ public class ClassicAnimation extends ExteriorAnimation {
         this.startTime = sound.startTime();
 
         if (state == TardisTravel.State.DEMAT) {
+            this.timeLeft = 390;
+            this.maxTime = 390;
+            this.startTime = 390;
             this.alpha = 1f;
         } else if (state == TardisTravel.State.MAT) {
             this.alpha = 0f;
