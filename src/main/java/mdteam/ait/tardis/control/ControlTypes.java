@@ -15,7 +15,7 @@ import org.joml.Vector3f;
 /**
  * Holds a control which will be ran when interacted with, an {@linkplain Vector3f offset} from the centre of the {@link ConsoleBlock} and a {@linkplain EntityDimensions scale} for the entity
  * <br><br>
- * A list of these is gotten by {@link ConsoleEnum} and used in {@link ConsoleControlEntity} to hold its information
+ * A list of these is gotten by {@link ConsoleEnum#getControlTypesList()} and used in {@link ConsoleControlEntity} to hold its information
  * @see ConsoleControlEntity
  * @author loqor
  */
