@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.control.impl;
 
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -8,6 +9,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import net.minecraft.sound.SoundEvent;
 
 public class ThrottleControl extends Control {
     public ThrottleControl() {
@@ -26,5 +28,10 @@ public class ThrottleControl extends Control {
         }
 
         return true;
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.DEMAT_LEVER_PULL;
     }
 }

@@ -162,7 +162,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     public boolean run(PlayerEntity player, World world) {
         if (this.consoleBlockPos != null)
-            this.getWorld().playSound(null, this.consoleBlockPos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 0.7f, 1f);
+            this.getWorld().playSound(null, this.getBlockPos(), this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
 
         if (!world.isClient()) {
             if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM) {
