@@ -125,11 +125,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
         // ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
         getTardis().markDirty();
-        // markDirty();
         syncType();
         syncVariant();
-        updateBlockEntity();
-        markDirty();
 
         needsSync = false;
     }
@@ -198,8 +195,6 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         type = var;
 
         syncType();
-        updateBlockEntity();
-        markDirty();
     }
 
     public ConsoleVariantSchema getVariant() {
@@ -220,8 +215,6 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         }
 
         syncVariant();
-        updateBlockEntity();
-        markDirty();
     }
     public void setVariant(Identifier id) {
         setVariant(AITConsoleVariants.get(id));
@@ -358,15 +351,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         }
     }
 
-    public void updateBlockEntity() {
-        if(world != null) world.updateNeighbors(pos, world.getBlockState(pos).getBlock());
-        world.updateListeners(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-        markDirty();
-    }
-
     @Override
     public void onTryBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
-        updateBlockEntity();
         markNeedsSyncing(); // As theres a gap between the breaking of the block and when it gets resynced to client, so we need to wait a bit
         // fixme im lying and that doesnt fix the issue, the blockentity on client is null when tried to sync.
     }
