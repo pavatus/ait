@@ -5,6 +5,8 @@ import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
 public class AutoPilotControl extends Control {
@@ -24,5 +26,10 @@ public class AutoPilotControl extends Control {
     public void messagePlayer(ServerPlayerEntity player, boolean autopilot) {
         // fixme translatable
         player.sendMessage(Text.literal("Auto Pilot: " + (autopilot ? "ACTIVE" : "INACTIVE")), true);
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return SoundEvents.BLOCK_LEVER_CLICK;
     }
 }

@@ -16,6 +16,8 @@ import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxPrimeVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxYetiVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxDefinitiveVariant;
 import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadDefaultVariant;
+import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadFireVariant;
+import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadSoulVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimFireVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimSoulVariant;
@@ -58,7 +60,11 @@ public class AITExteriorVariants {
 
         // funny
         register(new RedCoobVariant());
+
+        //Easter Head
         register(new EasterHeadDefaultVariant());
+        register(new EasterHeadSoulVariant());
+        register(new EasterHeadFireVariant());
     }
 
     public static void register(ExteriorVariantSchema variant) {
