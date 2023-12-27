@@ -4,10 +4,14 @@ import com.google.common.collect.Lists;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.item.TardisItemBuilder;
+import mdteam.ait.tardis.exterior.BoothExterior;
+import mdteam.ait.tardis.exterior.ClassicExterior;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.exterior.PoliceBoxExterior;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.client.gui.DrawContext;
@@ -24,13 +28,12 @@ import net.minecraft.util.math.RotationAxis;
 import java.util.List;
 import java.util.UUID;
 
-import static mdteam.ait.client.renderers.exteriors.ExteriorEnum.*;
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 
 public class MonitorScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
-    private ExteriorEnum currentModel;
+    private ExteriorSchema currentModel;
     private ExteriorVariantSchema currentVariant;
     private float scrollPosition;
     private boolean scrollbarClicked;
@@ -59,11 +62,11 @@ public class MonitorScreen extends TardisScreen {
         this.createButtons();
     }
 
-    public ExteriorEnum getCurrentModel() {
+    public ExteriorSchema getCurrentModel() {
         return currentModel == null ? tardis().getExterior().getType() : currentModel;
     }
 
-    public void setCurrentModel(ExteriorEnum currentModel) {
+    public void setCurrentModel(ExteriorSchema currentModel) {
         this.currentModel = currentModel;
 
         if (this.currentVariant.parent() != currentModel) {
@@ -120,18 +123,25 @@ public class MonitorScreen extends TardisScreen {
                     this.getCurrentVariant() != tardis().getExterior().getVariant());*/
             if (this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant() != tardis().getExterior().getVariant()) {
                 ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
-                        this.getCurrentModel().ordinal(), this.getCurrentVariant().id().toString(),
+                        this.getCurrentModel().id().toString(), this.getCurrentVariant().id().toString(),
                         this.getCurrentVariant() != tardis().getExterior().getVariant());
             }
         }
     }
 
     public void whichDirectionExterior(boolean direction) {
-        ExteriorEnum[] values = ExteriorEnum.values();
-        int currentIndex = this.getCurrentModel() == null ? 0 : this.getCurrentModel().ordinal();
-        int newIndex = (currentIndex + (direction ? 1 : -1) + values.length) % values.length;
-        this.setCurrentModel(values[newIndex]);
+        if (direction) setCurrentModel(nextExterior());
+        else setCurrentModel(previousExterior());
     }
+    public ExteriorSchema nextExterior() {
+        List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
+        return list.get((list.indexOf(currentModel) + 1 > list.size() - 1) ? 0 : list.indexOf(currentModel) + 1);
+    }
+    public ExteriorSchema previousExterior() {
+        List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
+        return list.get((list.indexOf(currentModel) - 1 > -1) ? list.indexOf(currentModel) - 1 : list.size() - 1);
+    }
+
 
     public void whichDirectionVariant(boolean direction) {
         if (direction) setCurrentVariant(nextVariant());
@@ -200,13 +210,13 @@ public class MonitorScreen extends TardisScreen {
         // testing @todo
         if (tardis() != null) {
             if (this.getCurrentModel() == null || this.getCurrentVariant() == null) return;
-            ExteriorModel model = this.getCurrentModel().createModel();
+            ExteriorModel model = this.getCurrentVariant().model();
             MatrixStack stack = context.getMatrices();
             // fixme is bad
             stack.push();
-            stack.translate(x, this.getCurrentModel() == POLICE_BOX || this.getCurrentModel() == CLASSIC ? y + 8 : y, 100f);
-            if (this.getCurrentModel() == POLICE_BOX || this.getCurrentModel() == CLASSIC) stack.scale(-10, 10, 10);
-            else if (this.getCurrentModel() == BOOTH) stack.scale(-scale, scale, scale);
+            stack.translate(x, this.getCurrentModel() == AITExteriors.get(PoliceBoxExterior.REFERENCE) || this.getCurrentModel() == AITExteriors.get(ClassicExterior.REFERENCE) ? y + 8 : y, 100f);
+            if (this.getCurrentModel() == AITExteriors.get(PoliceBoxExterior.REFERENCE) || this.getCurrentModel() == AITExteriors.get(ClassicExterior.REFERENCE)) stack.scale(-10, 10, 10);
+            else if (this.getCurrentModel() == AITExteriors.get(BoothExterior.REFERENCE)) stack.scale(-scale, scale, scale);
             else stack.scale(-scale, scale, scale);
             //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
             stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(mouseX));

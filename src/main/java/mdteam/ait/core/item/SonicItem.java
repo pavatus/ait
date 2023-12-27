@@ -1,29 +1,26 @@
 package mdteam.ait.core.item;
 
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITDesktops;
-import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -38,8 +35,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
-
-import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 
 public class SonicItem extends Item {
 
@@ -92,9 +87,8 @@ public class SonicItem extends Item {
                         return;
                     }
 
-                    ExteriorEnum[] values = ExteriorEnum.values();
-                    int nextIndex = (exteriorBlock.tardis().getExterior().getType().ordinal() + 1) % values.length;
-                    exteriorBlock.tardis().getExterior().setType(values[nextIndex]);
+                    List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
+                    exteriorBlock.tardis().getExterior().setType(list.get((list.indexOf(exteriorBlock.tardis().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.tardis().getExterior().getType()) + 1));
                     //System.out.println(exteriorBlock.getTardis().getExterior().getType());
 
                     exteriorBlock.tardis().markDirty();

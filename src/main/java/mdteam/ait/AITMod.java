@@ -51,7 +51,9 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        AITExteriors.init();
         AITDesktops.init();
+        AITDoors.init();
         AITConsoleVariants.init();
         AITExteriorVariants.init();
 

@@ -1,6 +1,6 @@
 package mdteam.ait.core;
 
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.variant.exterior.RedCoobVariant;
 import mdteam.ait.tardis.variant.exterior.booth.BoothDefaultVariant;
@@ -70,10 +70,12 @@ public class AITExteriorVariants {
     public static Collection<ExteriorVariantSchema> iterator() {
         return map.values();
     }
-    public static Collection<ExteriorVariantSchema> withParent(ExteriorEnum parent) {
+    public static Collection<ExteriorVariantSchema> withParent(ExteriorSchema parent) {
         List<ExteriorVariantSchema> list = new ArrayList<>();
 
         for (ExteriorVariantSchema schema : iterator()) {
+            AITExteriors.iterator().stream().forEach((schema1 -> System.out.println(schema1)));
+
             if (schema.parent().equals(parent)) list.add(schema);
         }
 

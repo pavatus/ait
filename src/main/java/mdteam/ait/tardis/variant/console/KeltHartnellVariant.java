@@ -9,7 +9,7 @@ public class KeltHartnellVariant extends ConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/hartnell_console_emission.png"));
 
     public KeltHartnellVariant() {
-        super(ConsoleEnum.HARTNELL, new Identifier(AITMod.MOD_ID, "hartnell_kelt"));
+        super(ConsoleEnum.HARTNELL, new Identifier(AITMod.MOD_ID, "console/hartnell_kelt"));
     }
 
     @Override

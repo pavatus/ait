@@ -35,7 +35,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 
         if (tardisExterior == null) return;
 
-        Class<? extends ExteriorModel> modelClass = tardisExterior.getType().getModelClass();
+        Class<? extends ExteriorModel> modelClass = tardisExterior.getVariant().model().getClass();
 
         if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.
             model = null;
@@ -60,7 +60,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 
     private ExteriorModel getModel(FallingTardisEntity entity) {
         if (model == null && entity.tardis() != null) {
-            model = entity.tardis().getExterior().getType().createModel();
+            model = entity.tardis().getExterior().getVariant().model();
         }
 
         return model;

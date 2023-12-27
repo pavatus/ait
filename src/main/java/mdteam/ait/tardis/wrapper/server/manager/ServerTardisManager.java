@@ -2,7 +2,7 @@ package mdteam.ait.tardis.wrapper.server.manager;
 
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.SerialDimension;
@@ -157,7 +157,7 @@ public class ServerTardisManager extends TardisManager {
         this.subscribers.replace(tardisUUID, new UUID[]{});
     }
 
-    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
+    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorSchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
         UUID uuid = UUID.randomUUID();
 
         ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked);

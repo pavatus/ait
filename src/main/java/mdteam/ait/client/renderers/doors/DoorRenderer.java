@@ -26,13 +26,13 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             return;
 
         TardisExterior tardisExterior = entity.getTardis().getExterior();
-        Class<? extends DoorModel> modelClass = tardisExterior.getType().getDoorClass();
+        Class<? extends DoorModel> modelClass = tardisExterior.getVariant().door().model().getClass();
 
         if (model != null && !(model.getClass().isInstance(modelClass)))
             model = null;
 
         if (model == null)
-            this.model = tardisExterior.getType().createDoorModel();
+            this.model = tardisExterior.getVariant().door().model();
 
         BlockState blockState = entity.getCachedState();
         float f = blockState.get(ExteriorBlock.FACING).asRotation();

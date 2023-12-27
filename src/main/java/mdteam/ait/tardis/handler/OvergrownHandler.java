@@ -1,11 +1,10 @@
 package mdteam.ait.tardis.handler;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 
 import java.util.Random;
@@ -48,7 +47,7 @@ public class OvergrownHandler extends TardisLink {
     }
 
     public Identifier getOvergrownTexture() {
-        ExteriorEnum exterior = this.tardis().getExterior().getType();
+        ExteriorSchema exterior = this.tardis().getExterior().getType();
 
         return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + exterior.toString().toLowerCase() + "/" + exterior.toString().toLowerCase() + "_" + "overgrown" + ".png");
     }

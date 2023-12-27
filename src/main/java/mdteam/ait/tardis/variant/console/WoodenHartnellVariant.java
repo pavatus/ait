@@ -9,7 +9,7 @@ public class WoodenHartnellVariant extends ConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/hartnell_console_emission.png"));
 
     public WoodenHartnellVariant() {
-        super(ConsoleEnum.HARTNELL, new Identifier(AITMod.MOD_ID, "hartnell_wooden"));
+        super(ConsoleEnum.HARTNELL, new Identifier(AITMod.MOD_ID, "console/hartnell_wooden"));
     }
 
     @Override

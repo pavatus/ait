@@ -1,7 +1,5 @@
 package mdteam.ait.client.models.doors;
 
-import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.ModelPart;
@@ -45,12 +43,6 @@ public abstract class DoorModel extends SinglePartEntityModel {
             return;
         DoorHandler.DoorStateEnum state = interiorDoor.getTardis().getDoor().getDoorState();
         updateAnimation(interiorDoor.DOOR_STATE, getAnimationForDoorState(state), interiorDoor.animationTimer);
-    }
-
-    public Identifier getVariousEmission(Identifier id, ExteriorEnum exterior) {
-        String originalPathNoPng = id.getPath().substring(0, id.getPath().length() - 4);
-        String addedEmission = originalPathNoPng + "_emission.png";
-        return new Identifier(AITMod.MOD_ID, addedEmission);
     }
 
     public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);

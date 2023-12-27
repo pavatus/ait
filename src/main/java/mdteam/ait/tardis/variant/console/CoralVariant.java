@@ -9,7 +9,7 @@ public class CoralVariant extends ConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral_console_emission.png"));
 
     public CoralVariant() {
-        super(ConsoleEnum.CORAL, new Identifier(AITMod.MOD_ID, "coral"));
+        super(ConsoleEnum.CORAL, new Identifier(AITMod.MOD_ID, "console/coral"));
     }
 
     @Override
