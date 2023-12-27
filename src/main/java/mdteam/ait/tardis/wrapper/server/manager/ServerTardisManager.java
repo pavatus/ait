@@ -1,7 +1,5 @@
 package mdteam.ait.tardis.wrapper.server.manager;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
@@ -19,6 +17,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
@@ -38,14 +37,16 @@ public class ServerTardisManager extends TardisManager {
     public static final Identifier SEND = new Identifier("ait", "send_tardis");
     public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
     private static final ServerTardisManager instance = new ServerTardisManager();
-    private final Multimap<UUID, ServerPlayerEntity> subscribers = ArrayListMultimap.create(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
+    // Changed from MultiMap to HashMap to fix some concurrent issues, maybe
+    private final HashMap<UUID, UUID[]> subscribers = new HashMap<>(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
 
     public ServerTardisManager() {
         ServerPlayNetworking.registerGlobalReceiver(
                 ClientTardisManager.ASK, (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
                     this.sendTardis(player, uuid);
-                    this.subscribers.put(uuid, player);
+                    addSubscriberToTardis(player, uuid);
+
                 }
         );
 
@@ -61,7 +62,7 @@ public class ServerTardisManager extends TardisManager {
                     if (uuid == null)
                         return;
                     this.sendTardis(player, uuid);
-                    this.subscribers.put(uuid, player);
+                    addSubscriberToTardis(player, uuid);
                     this.subscribeEveryone(getTardis(uuid));
                 }
         );
@@ -96,6 +97,62 @@ public class ServerTardisManager extends TardisManager {
                 tardis.startTick(server);
             }
         });
+    }
+
+    /**
+     * Adds a subscriber to the Tardis
+     * @param serverPlayerEntity PLAYER
+     * @param tardisUUID TARDIS UUID
+     */
+    private void addSubscriberToTardis(ServerPlayerEntity serverPlayerEntity, UUID tardisUUID) {
+        UUID[] old_uuids;
+        if (this.subscribers.containsKey(tardisUUID)) {
+            old_uuids = new UUID[]{};
+        } else {
+            old_uuids = this.subscribers.get(tardisUUID).clone();
+        }
+        if (Arrays.stream(old_uuids).anyMatch((uuid) -> uuid == serverPlayerEntity.getUuid())) return; // If the player is already in the list ignore this
+        UUID[] uuids = new UUID[old_uuids.length + 1];
+        System.arraycopy(old_uuids, 0, uuids, 0, uuids.length);
+        uuids[old_uuids.length] = serverPlayerEntity.getUuid();
+        this.subscribers.replace(tardisUUID, uuids);
+
+    }
+
+    /**
+     * Removes a subscriber from the TARDIS
+     * @param serverPlayerEntity
+     * @param tardisUUID
+     */
+    private void removeSubscriberToTardis(ServerPlayerEntity serverPlayerEntity, UUID tardisUUID) {
+        UUID[] old_uuids;
+        if (this.subscribers.containsKey(tardisUUID)) {
+            old_uuids = new UUID[]{};
+        } else {
+            old_uuids = this.subscribers.get(tardisUUID).clone();
+        }
+        if (Arrays.stream(old_uuids).noneMatch((uuid) -> uuid == serverPlayerEntity.getUuid())) return; // If the player is not in the list ignore this
+        if (Arrays.stream(old_uuids).toList().isEmpty()) {
+            // Odd race condition but I guess I'll pass it anyway
+            this.subscribers.replace(tardisUUID, old_uuids);
+            return;
+        }
+        UUID[] uuids;
+        if (old_uuids.length - 1 == 0) {
+            uuids = new UUID[]{};
+        }
+        else {
+            uuids = Arrays.stream(old_uuids).filter((uuid -> uuid != serverPlayerEntity.getUuid())).toArray(UUID[]::new);
+        }
+        this.subscribers.replace(tardisUUID, uuids);
+    }
+
+    /**
+     * Removes all subscribers from the TARDIS
+     * @param tardisUUID
+     */
+    private void removeAllSubscribersFromTardis(UUID tardisUUID) {
+        this.subscribers.replace(tardisUUID, new UUID[]{});
     }
 
     public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorEnum exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
@@ -168,22 +225,26 @@ public class ServerTardisManager extends TardisManager {
     }
 
     // fixme this shit broken bro something about being edited while iterating through it
+
     public void sendToSubscribers(Tardis tardis) {
         if (tardis == null) return;
 
         if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
+        MinecraftServer mc = TardisUtil.getServer();
 
-        for (ServerPlayerEntity player : this.subscribers.get(tardis.getUuid())) {
+        for (UUID uuid : this.subscribers.get(tardis.getUuid())) {
+            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(uuid);
             this.sendTardis(player, tardis);
         }
     }
 
     // fixme i think its easier if all clients just get updated about the tardises
+    // @TODO not send everything to everyone
     public void subscribeEveryone(Tardis tardis) {
         for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
             if (this.subscribers.containsKey(player.getUuid())) continue;
 
-            this.subscribers.put(tardis.getUuid(), player);
+            addSubscriberToTardis(player, tardis.getUuid());
         }
     }
 
