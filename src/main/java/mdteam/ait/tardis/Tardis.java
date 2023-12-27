@@ -7,6 +7,7 @@ import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.util.TardisChunkUtil;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.*;
 import net.minecraft.client.MinecraftClient;
@@ -133,7 +134,12 @@ public class Tardis {
      */
     public void tick(MinecraftClient client) { // fixme should likely be in ClientTardis instead, same with  other server-only things should be in ServerTardis
         // referencing client stuff where it COULD be server causes problems
-        if (ClientShakeUtil.shouldShake(this)) ClientShakeUtil.shakeFromConsole();
+        if(client.player != null &&
+                TardisUtil.inBox(this.getDesktop().getCorners().getBox(), client.player.getBlockPos()) &&
+                this.getTravel() != null && this.getTravel().getState() != TardisTravel.State.LANDED) {
+            /*if (ClientShakeUtil.shouldShake(this)) */
+            ClientShakeUtil.shakeFromConsole();
+        }
     }
 
     public boolean isDirty() {

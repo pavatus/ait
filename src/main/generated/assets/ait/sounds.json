@@ -6,7 +6,7 @@
   },
   "controls/handbrake_lever_pull": {
     "sounds": [
-      "ait:controls/handbrake_pull"
+      "ait:controls/handbrake_lever_pull"
     ]
   },
   "controls/knock": {

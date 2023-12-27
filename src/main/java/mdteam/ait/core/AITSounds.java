@@ -25,7 +25,7 @@ public class AITSounds implements SoundRegistryContainer {
 
     // Controls
     public static final SoundEvent DEMAT_LEVER_PULL = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/demat_lever_pull"));
-    public static final SoundEvent HANDBRAKE_LEVER_PULL = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/handbrake_pull"));
+    public static final SoundEvent HANDBRAKE_LEVER_PULL = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/handbrake_lever_pull"));
     public static final SoundEvent KNOCK = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/knock"));
     public static final SoundEvent SNAP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/snap"));
 
