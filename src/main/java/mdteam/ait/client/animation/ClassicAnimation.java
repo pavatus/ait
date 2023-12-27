@@ -28,6 +28,7 @@ public class ClassicAnimation extends ExteriorAnimation {
         } else if (state == TardisTravel.State.MAT) {
             // Maybe this will fix the class animation taking too long
             this.alpha = 1f - ((float) (this.startTime - this.timeLeft) / (this.startTime));
+            this.timeLeft--;
             this.setAlpha(this.alpha);
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.LANDED/* && alpha != 1f*/) {
