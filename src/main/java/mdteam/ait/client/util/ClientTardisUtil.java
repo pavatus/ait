@@ -15,10 +15,10 @@ import java.util.UUID;
 import static mdteam.ait.tardis.util.TardisUtil.*;
 
 public class ClientTardisUtil {
-    public static void changeExteriorWithScreen(UUID uuid, int exterior, String variant, boolean variantchange) {
+    public static void changeExteriorWithScreen(UUID uuid, String exterior, String variant, boolean variantchange) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(uuid);
-        buf.writeInt(exterior);
+        buf.writeString(exterior);
         buf.writeBoolean(variantchange);
         buf.writeString(variant);
         ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);

@@ -1,6 +1,7 @@
 package mdteam.ait.tardis;
 
 import mdteam.ait.client.util.ClientShakeUtil;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.handler.TardisHandlersManager;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -26,7 +27,7 @@ public class Tardis {
     private TardisHandlersManager handlers;
     private boolean dirty = false;
 
-    public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, ExteriorVariantSchema variant) {
+    public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorSchema exteriorType, ExteriorVariantSchema variant) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), false);
     }
 

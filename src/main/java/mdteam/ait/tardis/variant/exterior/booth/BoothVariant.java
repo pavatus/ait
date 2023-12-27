@@ -6,11 +6,9 @@ import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.models.exteriors.BoothExteriorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.AITExteriors;
-import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.exterior.BoothExterior;
-import mdteam.ait.tardis.exterior.PoliceBoxExterior;
 import mdteam.ait.tardis.variant.door.BoothDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -22,7 +20,7 @@ public abstract class BoothVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/booth/booth_";
 
     protected BoothVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-        super(AITExteriors.get(BoothExterior.REFERENCE), new Identifier(modId, "exterior/booth/" + name));
+        super(BoothExterior.REFERENCE, new Identifier(modId, "exterior/booth/" + name));
 
         this.name = name;
     }

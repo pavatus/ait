@@ -1,11 +1,12 @@
 package mdteam.ait.core.item;
 
-import mdteam.ait.tardis.ExteriorEnum;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -86,9 +87,8 @@ public class SonicItem extends Item {
                         return;
                     }
 
-                    ExteriorEnum[] values = ExteriorEnum.values();
-                    int nextIndex = (exteriorBlock.tardis().getExterior().getType().ordinal() + 1) % values.length;
-                    exteriorBlock.tardis().getExterior().setType(values[nextIndex]);
+                    List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
+                    exteriorBlock.tardis().getExterior().setType(list.get((list.indexOf(exteriorBlock.tardis().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.tardis().getExterior().getType()) + 1));
                     //System.out.println(exteriorBlock.getTardis().getExterior().getType());
 
                     exteriorBlock.tardis().markDirty();

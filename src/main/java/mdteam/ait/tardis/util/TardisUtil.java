@@ -2,7 +2,7 @@ package mdteam.ait.tardis.util;
 
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
-import mdteam.ait.tardis.ExteriorEnum;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.AITSounds;
@@ -75,11 +75,11 @@ public class TardisUtil {
         ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
                 (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
-                    int exteriorValue = buf.readInt();
+                    Identifier exteriorValue = Identifier.tryParse(buf.readString());
                     boolean variantChange = buf.readBoolean();
                     String variantValue = buf.readString();
 
-                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(ExteriorEnum.values()[exteriorValue]);
+                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(AITExteriors.get(exteriorValue));
                     WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());

@@ -1,6 +1,6 @@
 package mdteam.ait.core;
 
-import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.exterior.*;
 import mdteam.ait.tardis.variant.door.*;
 import net.minecraft.util.Identifier;
 
@@ -15,7 +15,12 @@ public class AITExteriors {
      * Exteriors are registered here:
      */
     public static void init() {
-
+        register(new ClassicExterior());
+        register(new CapsuleExterior());
+        register(new PoliceBoxExterior());
+        register(new TardimExterior());
+        register(new CubeExterior());
+        register(new BoothExterior());
     }
 
     public static void register(ExteriorSchema schema) {

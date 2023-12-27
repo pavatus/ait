@@ -6,6 +6,6 @@ import net.minecraft.util.Identifier;
 public class CubeExterior extends ExteriorSchema {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/cube");
     public CubeExterior() {
-        super(REFERENCE);
+        super(REFERENCE, "cube");
     }
 }

@@ -1,6 +1,6 @@
 package mdteam.ait.tardis.wrapper.server;
 
-import mdteam.ait.tardis.ExteriorEnum;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class ServerTardis extends Tardis {
 
-    public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorEnum exteriorType, ExteriorVariantSchema variantType, boolean locked) {
+    public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorSchema exteriorType, ExteriorVariantSchema variantType, boolean locked) {
         super(uuid, tardis -> new ServerTardisTravel(tardis, pos), tardis -> new ServerTardisDesktop(tardis, schema), tardis -> new ServerTardisExterior(tardis, exteriorType, variantType), locked);
     }
 

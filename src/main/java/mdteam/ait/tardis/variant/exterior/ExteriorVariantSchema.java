@@ -4,8 +4,8 @@ import com.google.gson.*;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.AITExteriorVariants;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
@@ -15,15 +15,15 @@ import net.minecraft.util.InvalidIdentifierException;
 import java.lang.reflect.Type;
 
 public abstract class ExteriorVariantSchema {
-    private final ExteriorSchema parent;
+    private final Identifier parent;
     private final Identifier id;
 
-    protected ExteriorVariantSchema(ExteriorSchema parent, Identifier id) {
+    protected ExteriorVariantSchema(Identifier parent, Identifier id) {
         this.parent = parent;
         this.id = id;
     }
 
-    public ExteriorSchema parent() { return parent; }
+    public ExteriorSchema parent() { return AITExteriors.get(this.parent); }
     public Identifier id() { return id; }
 
     public abstract Identifier texture();

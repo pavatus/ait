@@ -1,12 +1,13 @@
 package mdteam.ait.core.blocks;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.tardis.ExteriorEnum;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.blockentities.CoralBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
+import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
@@ -91,7 +92,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
         if (this.getAge(state) >= this.getMaxAge()) {
             // Create a new tardis
-            ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), ExteriorEnum.CAPSULE, AITExteriorVariants.get(new Identifier(AITMod.MOD_ID, "capsule_default")), AITDesktops.get(new Identifier(AITMod.MOD_ID, "default_cave")), false);
+            ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), AITExteriors.get(CapsuleExterior.REFERENCE), AITExteriorVariants.get(new Identifier(AITMod.MOD_ID, "capsule_default")), AITDesktops.get(new Identifier(AITMod.MOD_ID, "default_cave")), false);
             // created.getHandlers().getOvergrownHandler().setOvergrown(true); //fixme created.getEnvironmentHandler().setCoralCovered(true);
 
             LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world);

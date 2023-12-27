@@ -1,7 +1,5 @@
 package mdteam.ait.client.models.exteriors;
 
-import mdteam.ait.AITMod;
-import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
@@ -66,12 +64,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     @Override
     public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 
-    }
-
-    public Identifier getVariousEmission(Identifier id, ExteriorEnum exterior) {
-        String originalPathNoPng = id.getPath().substring(0, id.getPath().length() - 4);
-        String addedEmission = originalPathNoPng + "_emission.png";
-        return new Identifier(AITMod.MOD_ID, addedEmission);
     }
 
     public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);

@@ -2,11 +2,13 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.tardis.ExteriorEnum;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.exterior.CapsuleExterior;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.block.entity.BlockEntity;
@@ -23,28 +25,28 @@ import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 public class TardisItemBuilder extends Item {
 
     public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "office"); //new Identifier(AITMod.MOD_ID, "war");
-    public static final ExteriorEnum DEFAULT_EXTERIOR = ExteriorEnum.CAPSULE;
+    public static final Identifier DEFAULT_EXTERIOR = CapsuleExterior.REFERENCE;
     public static final ConsoleEnum DEFAULT_CONSOLE = ConsoleEnum.BOREALIS;
 
-    private final ExteriorEnum exterior;
+    private final ExteriorSchema exterior;
     private final Identifier desktop;
 
-    public TardisItemBuilder(Settings settings, ExteriorEnum exterior, Identifier desktopId) {
+    public TardisItemBuilder(Settings settings, ExteriorSchema exterior, Identifier desktopId) {
         super(settings);
 
         this.exterior = exterior;
         this.desktop = desktopId;
     }
 
-    public TardisItemBuilder(Settings settings, ExteriorEnum exterior) {
+    public TardisItemBuilder(Settings settings, ExteriorSchema exterior) {
         this(settings, exterior, DEFAULT_INTERIOR);
     }
 
     public TardisItemBuilder(Settings settings) {
-        this(settings, DEFAULT_EXTERIOR);
+        this(settings, AITExteriors.get(DEFAULT_EXTERIOR));
     }
 
-    public static ExteriorVariantSchema findRandomVariant(ExteriorEnum exterior) { // fixme its not very random icl
+    public static ExteriorVariantSchema findRandomVariant(ExteriorSchema exterior) { // fixme its not very random icl
         return AITExteriorVariants.withParent(exterior).stream().findFirst().get();
     }
 

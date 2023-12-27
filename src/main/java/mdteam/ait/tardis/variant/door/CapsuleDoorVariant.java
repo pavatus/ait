@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.variant.door;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.models.doors.CapsuleDoorModel;
 import mdteam.ait.client.models.doors.ClassicDoorModel;
 import mdteam.ait.client.models.doors.DoorModel;
 import net.minecraft.sound.SoundEvent;
@@ -21,7 +22,7 @@ public class CapsuleDoorVariant extends DoorSchema {
 
     @Override
     public DoorModel model() {
-        return new ClassicDoorModel(ClassicDoorModel.getTexturedModelData().createModel());
+        return new CapsuleDoorModel(CapsuleDoorModel.getTexturedModelData().createModel());
     }
     @Override
     public SoundEvent openSound() {

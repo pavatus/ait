@@ -6,7 +6,6 @@ import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.PoliceBoxModel;
 import mdteam.ait.core.AITExteriors;
-import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.exterior.PoliceBoxExterior;
@@ -21,7 +20,7 @@ public abstract class PoliceBoxVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/police_box/police_box_";
 
     protected PoliceBoxVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-        super(AITExteriors.get(PoliceBoxExterior.REFERENCE), new Identifier(modId, "exterior/police_box/" + name));
+        super(PoliceBoxExterior.REFERENCE, new Identifier(modId, "exterior/police_box/" + name));
 
         this.name = name;
     }

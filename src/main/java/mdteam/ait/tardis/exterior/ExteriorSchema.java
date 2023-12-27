@@ -15,13 +15,21 @@ import java.lang.reflect.Type;
 
 public abstract class ExteriorSchema {
     private final Identifier id;
+    private final String name;
 
-    protected ExteriorSchema(Identifier id) {
+    protected ExteriorSchema(Identifier id, String name) {
         this.id = id;
+        this.name = name;
     }
 
     public Identifier id() {
         return this.id;
+    }
+    public String name() { return this.name; }
+
+    @Override
+    public String toString() {
+        return this.name();
     }
 
     public MatSound getSound(TardisTravel.State state) {
