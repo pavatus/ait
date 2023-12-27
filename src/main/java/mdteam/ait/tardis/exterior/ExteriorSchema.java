@@ -22,6 +22,16 @@ public abstract class ExteriorSchema {
         this.name = name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() == null) return false;
+
+        ExteriorSchema that = (ExteriorSchema) o;
+
+        return id.equals(that.id);
+    }
+
     public Identifier id() {
         return this.id;
     }

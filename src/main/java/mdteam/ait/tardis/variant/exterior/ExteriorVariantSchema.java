@@ -8,6 +8,7 @@ import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
@@ -22,6 +23,17 @@ public abstract class ExteriorVariantSchema {
         this.parent = parent;
         this.id = id;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() == null) return false;
+
+        ExteriorVariantSchema that = (ExteriorVariantSchema) o;
+
+        return id.equals(that.id);
+    }
+
 
     public ExteriorSchema parent() { return AITExteriors.get(this.parent); }
     public Identifier id() { return id; }
