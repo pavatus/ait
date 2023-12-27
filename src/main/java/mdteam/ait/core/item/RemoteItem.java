@@ -41,19 +41,17 @@ public class RemoteItem extends Item {
         PlayerEntity player = context.getPlayer();
         ItemStack itemStack = context.getStack();
 
-        if (world.isClient() || player == null)
-            return ActionResult.PASS;
+        if (world.isClient() || player == null) return ActionResult.PASS;
 
         NbtCompound nbt = itemStack.getOrCreateNbt();
 
         // Link to exteriors tardis if it exists and player is crouching
         if (player.isSneaking()) {
-            if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock) {
-                if (consoleBlock.getTardis() == null)
-                    return ActionResult.FAIL;
-
+            if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock && consoleBlock.getTardis() != null) {
                 nbt.putString("tardis", consoleBlock.getTardis().getUuid().toString());
-                return ActionResult.SUCCESS;
+                return ActionResult.SUCCESS; // Return early if the Tardis is successfully linked to the clicked block
+            } else {
+                return ActionResult.FAIL; // If no valid Tardis instance found, do not proceed with any further operations
             }
         }
 
@@ -65,32 +63,37 @@ public class RemoteItem extends Item {
         //System.out.println(ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis")));
 
         if (tardis != null) {
-            if (world != TardisUtil.getTardisDimension()) {
-                world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
+            // Check if the Tardis is already present at this location before moving it there
+            AbsoluteBlockPos.Directed currentPosition = tardis.getTravel().getPosition();
+            if (!currentPosition.equals(pos)) {
+                if (world != TardisUtil.getTardisDimension()) {
+                    world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
-                TardisTravel travel = tardis.getTravel();
+                    TardisTravel travel = tardis.getTravel();
 
-                BlockPos temp = pos.up();
+                    BlockPos temp = pos.up();
 
-                if (world.getBlockState(pos).isReplaceable()) temp = pos;
+                    if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
-                travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection().getOpposite()), true);
-                // travel.toggleHandbrake();
+                    travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection().getOpposite()), true);
+                    // travel.toggleHandbrake();
 
-                //FIXME: this is not how you do it! (cope)
-                if (travel.getState() == LANDED) {
-                    PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
-                    travel.dematerialise(true);
+                    //FIXME: this is not how you do it! (cope)
+                    if (travel.getState() == LANDED) {
+                        PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
+                        travel.dematerialise(true);
+                    }
+                    if (travel.getState() == FLIGHT) {
+                        travel.materialise();
+                    }
+                } else {
+                    world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                    player.sendMessage(Text.literal("Cannot translocate exterior to interior dimension"), true);
+                    return ActionResult.PASS;
                 }
-                if (travel.getState() == FLIGHT) {
-                    travel.materialise();
-                }
-
-                return ActionResult.SUCCESS;
             } else {
-                world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-                player.sendMessage(Text.literal("Cannot translocate exterior to interior dimension"), true);
-                return ActionResult.PASS;
+                // If the Tardis is already present at this location, do not proceed with any further operations
+                return ActionResult.FAIL;
             }
         }
 
