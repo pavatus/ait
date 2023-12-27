@@ -14,5 +14,5 @@ public interface ICantBreak {
     /**
      * Called when the block was attempted to be broken
      */
-    void onTryBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity);
+    void onTryBreak(World world, BlockPos pos, BlockState state);
 }

@@ -24,7 +24,8 @@ public class ClientPlayerInteractionManagerMixin {
         World world = this.client.world;
         assert world != null;
         Block block = world.getBlockState(pos).getBlock();
-        if (block instanceof ICantBreak) {
+        if (block instanceof ICantBreak cantBreak) {
+            cantBreak.onTryBreak(world, pos, world.getBlockState(pos));
             cir.setReturnValue(false);
             cir.cancel();
         }

@@ -64,19 +64,6 @@ public class AITMod implements ModInitializer {
         FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
         AIT_ITEM_GROUP.initialize();
 
-        PlayerBlockBreakEvents.BEFORE.register(((world, player, pos, state, blockEntity) -> {
-            if (!world.isClient()) {
-                if (blockEntity instanceof ICantBreak temp) {
-                    temp.onTryBreak(world, player, pos, state, blockEntity);
-                    return false;
-                } else if (state.getBlock() instanceof ICantBreak temp) {
-                    temp.onTryBreak(world, player, pos, state, blockEntity);
-                    return false;
-                }
-            }
-            return true;
-        }));
-
         TardisUtil.init();
         TardisManager.getInstance();
         TardisManager.init();

@@ -277,7 +277,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
     }
 
     @Override
-    public void onTryBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
+    public void onTryBreak(World world, BlockPos pos, BlockState state) {
 
     }
 }

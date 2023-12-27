@@ -2,7 +2,7 @@ package mdteam.ait.core;
 
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
-import mdteam.ait.tardis.variant.exterior.RedCoobVariant;
+import mdteam.ait.tardis.variant.exterior.cube.RedCoobVariant;
 import mdteam.ait.tardis.variant.exterior.booth.BoothDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.booth.BoothFireVariant;
 import mdteam.ait.tardis.variant.exterior.booth.BoothSoulVariant;

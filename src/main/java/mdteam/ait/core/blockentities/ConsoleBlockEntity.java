@@ -44,7 +44,7 @@ import java.util.*;
 
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
-public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker<ConsoleBlockEntity>, ICantBreak {
+public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
     public final AnimationState ANIM_FLIGHT = new AnimationState();
     public int animationTimer = 0;
     public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
@@ -357,9 +357,4 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         }
     }
 
-    @Override
-    public void onTryBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
-        markNeedsSyncing(); // As theres a gap between the breaking of the block and when it gets resynced to client, so we need to wait a bit
-        // fixme im lying and that doesnt fix the issue, the blockentity on client is null when tried to sync.
-    }
 }

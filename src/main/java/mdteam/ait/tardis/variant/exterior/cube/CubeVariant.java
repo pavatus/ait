@@ -1,25 +1,27 @@
-package mdteam.ait.tardis.variant.exterior;
+package mdteam.ait.tardis.variant.exterior.cube;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.models.exteriors.CoobExteriorModel;
+import mdteam.ait.client.models.exteriors.EasterHeadModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.AITDoors;
-import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.tardis.exterior.CubeExterior;
-import mdteam.ait.tardis.variant.door.CapsuleDoorVariant;
+import mdteam.ait.tardis.exterior.EasterHeadExterior;
+import mdteam.ait.tardis.variant.door.ClassicDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
+import mdteam.ait.tardis.variant.door.EasterHeadDoorVariant;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
-public class RedCoobVariant extends ExteriorVariantSchema {
-    protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/cube";
-
+public abstract class CubeVariant extends ExteriorVariantSchema {
+    private final String name;
+    protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/cube/";
     public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 16.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
     public static final VoxelShape CUBE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 14.0, 16.0, 16.0),
@@ -29,14 +31,33 @@ public class RedCoobVariant extends ExteriorVariantSchema {
     public static final VoxelShape CUBE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(2.0, 0.0, 0.0, 16.0, 16.0, 16.0),
             Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
 
-    public RedCoobVariant() {
-        super(CubeExterior.REFERENCE, new Identifier(AITMod.MOD_ID, "cube_red"));
+    protected CubeVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
+        super(EasterHeadExterior.REFERENCE, new Identifier(modId, "exterior/cube/" + name));
+
+        this.name = name;
+    }
+    protected CubeVariant(String name) {
+        this(name, AITMod.MOD_ID);
     }
 
+    @Override
+    public ExteriorModel model() {
+        return new CoobExteriorModel(CoobExteriorModel.getTexturedModelData().createModel());
+    }
+
+    @Override
+    public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
+        return new PulsatingAnimation(exterior);
+    }
+
+    @Override
+    public DoorSchema door() {
+        return AITDoors.get(ClassicDoorVariant.REFERENCE);
+    }
 
     @Override
     public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + ".png");
+        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
     }
 
     @Override
@@ -54,20 +75,5 @@ public class RedCoobVariant extends ExteriorVariantSchema {
             default ->
                     throw new RuntimeException("Invalid facing direction in " + this + ", // duzo put a funny coment here : )");
         };
-    }
-
-    @Override
-    public ExteriorModel model() {
-        return new CoobExteriorModel(CoobExteriorModel.getTexturedModelData().createModel());
-    }
-
-    @Override
-    public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
-        return new PulsatingAnimation(exterior);
-    }
-
-    @Override
-    public DoorSchema door() {
-        return AITDoors.get(CapsuleDoorVariant.REFERENCE);
     }
 }

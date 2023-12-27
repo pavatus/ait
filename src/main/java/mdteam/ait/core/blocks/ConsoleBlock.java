@@ -1,5 +1,6 @@
 package mdteam.ait.core.blocks;
 
+import mdteam.ait.api.ICantBreak;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -23,7 +24,7 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
+public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, ICantBreak {
 
     public ConsoleBlock(Settings settings) {
         super(settings);
@@ -66,6 +67,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
         super.onPlaced(world, pos, state, placer, itemStack);
     }
 
+    // This will literally never happen
     @Override
     public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
         super.onBroken(world, pos, state);
@@ -73,5 +75,10 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
         if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity console) {
             console.onBroken();
         }
+    }
+
+    @Override
+    public void onTryBreak(World world, BlockPos pos, BlockState state) {
+
     }
 }
