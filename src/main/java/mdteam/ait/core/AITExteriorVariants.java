@@ -8,11 +8,13 @@ import mdteam.ait.tardis.variant.exterior.booth.BoothFireVariant;
 import mdteam.ait.tardis.variant.exterior.booth.BoothSoulVariant;
 import mdteam.ait.tardis.variant.exterior.box.PoliceBoxDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.box.PoliceBoxFireVariant;
+import mdteam.ait.tardis.variant.exterior.box.PoliceBoxFuturisticVariant;
 import mdteam.ait.tardis.variant.exterior.box.PoliceBoxSoulVariant;
 import mdteam.ait.tardis.variant.exterior.capsule.CapsuleDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.capsule.CapsuleFireVariant;
 import mdteam.ait.tardis.variant.exterior.capsule.CapsuleSoulVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxPrimeVariant;
+import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxPtoredVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxYetiVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxDefinitiveVariant;
 import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadDefaultVariant;
@@ -42,11 +44,13 @@ public class AITExteriorVariants {
         register(new PoliceBoxDefaultVariant());
         register(new PoliceBoxSoulVariant());
         register(new PoliceBoxFireVariant());
+        register(new PoliceBoxFuturisticVariant());
 
         // Classic Box
         register(new ClassicBoxPrimeVariant());
         register(new ClassicBoxYetiVariant());
         register(new ClassicBoxDefinitiveVariant());
+        register(new ClassicBoxPtoredVariant());
 
         // Capsule
         register(new CapsuleDefaultVariant());
@@ -61,7 +65,7 @@ public class AITExteriorVariants {
         // funny
         register(new RedCoobVariant());
 
-        //Easter Head
+        // Easter Head
         register(new EasterHeadDefaultVariant());
         register(new EasterHeadSoulVariant());
         register(new EasterHeadFireVariant());
