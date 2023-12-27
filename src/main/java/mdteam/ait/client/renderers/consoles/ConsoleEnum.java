@@ -49,6 +49,7 @@ public enum ConsoleEnum {
                     new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.175f, 0.175f), new Vector3f(-0.5750000085681677f, 0.4749999772757292f, -0.5750000234693289f)), //1
                     new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.175f, 0.175f), new Vector3f(-0.8000000156462193f, 0.4749999772757292f, -0.20000000298023224f)), //2
                     new ControlTypes(new DoorControl(), EntityDimensions.changing(0.175f, 0.175f), new Vector3f(0.0f, 0.4749999772757292f, 0.7750000078231096f)), //3
+                    new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.175f, 0.175f), new Vector3f(0.0f, 0.9749999772757292f, 0.7750000078231096f)),
                     new ControlTypes(new XControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.12500001676380634f, 0.6499999798834324f, -0.5250000078231096f)), //4
                     new ControlTypes(new YControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.0f, 0.6499999798834324f, -0.5249999929219484f)), //5
                     new ControlTypes(new ZControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.12499999813735485f, 0.6499999798834324f, -0.5250000040978193f)), //6
@@ -94,6 +95,7 @@ public enum ConsoleEnum {
                 new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.175f, 0.175f), new Vector3f(-0.5750000085681677f, 0.4749999772757292f, -0.5750000234693289f)), //1
                 new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.175f, 0.175f), new Vector3f(-0.8000000156462193f, 0.4749999772757292f, -0.20000000298023224f)), //2
                 new ControlTypes(new DoorControl(), EntityDimensions.changing(0.175f, 0.175f), new Vector3f(0.0f, 0.4749999772757292f, 0.7750000078231096f)), //3
+                new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.175f, 0.175f), new Vector3f(0.0f, 0.9749999772757292f, 0.7750000078231096f)),
                 new ControlTypes(new XControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.12500001676380634f, 0.6499999798834324f, -0.5250000078231096f)), //4
                 new ControlTypes(new YControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.0f, 0.6499999798834324f, -0.5249999929219484f)), //5
                 new ControlTypes(new ZControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.12499999813735485f, 0.6499999798834324f, -0.5250000040978193f)), //6
@@ -133,6 +135,7 @@ public enum ConsoleEnum {
                 new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.125f, 0.1f), new Vector3f(-0.19687499664723873f, 0.47500018775463104f, 0.9875000109896064f)), // 2
                 new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.075f, 0.075f), new Vector3f(0.24960938468575478f, 0.6249999515712261f, 0.6625000154599547f)), // 3
                 new ControlTypes(new DoorControl(), EntityDimensions.changing(0.1125f, 0.07499997f), new Vector3f(0.7843749998137355f, 0.5249998569488525f, -0.5015625143423676f)), // 4
+                new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.1125f, 0.07499997f), new Vector3f(0.6601562481373549f, 0.5249997079372406f, -0.7000000029802322f)), // 4.5?
                 new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.1f, 0.0875f), new Vector3f(0.10312499292194843f, 0.4875000938773155f, 0.9656250094994903f)), // 5
                 new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.20000002f, 0.1125f), new Vector3f(0.7125000013038516f, 0.5375015260651708f, -0.1628906326368451f)), // 6
                 new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.17500004f, 0.15f), new Vector3f(-7.812418043613434E-4f, 0.4874999513849616f, -0.7267578281462193f)), // 7
@@ -171,6 +174,7 @@ public enum ConsoleEnum {
                 new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.125f, 0.1f), new Vector3f(-0.19687499664723873f, 0.47500018775463104f, 0.9875000109896064f)), // 2
                 new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.075f, 0.075f), new Vector3f(0.24960938468575478f, 0.6249999515712261f, 0.6625000154599547f)), // 3
                 new ControlTypes(new DoorControl(), EntityDimensions.changing(0.1125f, 0.07499997f), new Vector3f(0.7843749998137355f, 0.5249998569488525f, -0.5015625143423676f)), // 4
+                new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.1125f, 0.07499997f), new Vector3f(0.6601562481373549f, 0.5249997079372406f, -0.7000000029802322f)), // 4.5?
                 new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.1f, 0.0875f), new Vector3f(0.10312499292194843f, 0.4875000938773155f, 0.9656250094994903f)), // 5
                 new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.20000002f, 0.1125f), new Vector3f(0.7125000013038516f, 0.5375015260651708f, -0.1628906326368451f)), // 6
                 new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.17500004f, 0.15f), new Vector3f(-7.812418043613434E-4f, 0.4874999513849616f, -0.7267578281462193f)), // 7
