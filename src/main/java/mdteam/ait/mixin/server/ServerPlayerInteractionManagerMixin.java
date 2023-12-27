@@ -1,5 +1,6 @@
 package mdteam.ait.mixin.server;
 
+import mdteam.ait.api.ICantBreak;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import net.minecraft.block.Block;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
@@ -19,7 +20,7 @@ public class ServerPlayerInteractionManagerMixin {
     @Inject(method = "tryBreakBlock", at = @At(value = "HEAD"), cancellable = true)
     public void tryBreakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         Block block = this.world.getBlockState(pos).getBlock();
-        if (block instanceof ExteriorBlock) {
+        if (block instanceof ICantBreak) {
             cir.setReturnValue(false);
             cir.cancel();
         }

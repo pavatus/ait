@@ -1,5 +1,6 @@
 package mdteam.ait.mixin.client;
 
+import mdteam.ait.api.ICantBreak;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
@@ -23,7 +24,7 @@ public class ClientPlayerInteractionManagerMixin {
         World world = this.client.world;
         assert world != null;
         Block block = world.getBlockState(pos).getBlock();
-        if (block instanceof ExteriorBlock) {
+        if (block instanceof ICantBreak) {
             cir.setReturnValue(false);
             cir.cancel();
         }
