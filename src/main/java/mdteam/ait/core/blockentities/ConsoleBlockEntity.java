@@ -118,6 +118,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
     private void findTardis() {
         this.setTardis(TardisUtil.findTardisByInterior(pos));
+        markDirty();
     }
 
     public void sync() {

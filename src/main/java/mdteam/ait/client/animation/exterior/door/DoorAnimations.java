@@ -254,4 +254,25 @@ public class DoorAnimations {
                             new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 80f, 0f),
                                     Transformation.Interpolations.LINEAR))).build();
 
+    public static final Animation K2BOOTH_EXTERIOR_OPEN_ANIMATION = Animation.Builder.create(0.5f)
+            .addBoneAnimation("door",
+                    new Transformation(Transformation.Targets.ROTATE,
+                            new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.LINEAR),
+                            new Keyframe(0.16766666f, AnimationHelper.createRotationalVector(0f, -5f, 0f),
+                                    Transformation.Interpolations.LINEAR),
+                            new Keyframe(0.3433333f, AnimationHelper.createRotationalVector(0f, -77.85f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(0.5f, AnimationHelper.createRotationalVector(0f, -90f, 0f),
+                                    Transformation.Interpolations.CUBIC))).build();
+    public static final Animation K2BOOTH_EXTERIOR_CLOSE_ANIMATION = Animation.Builder.create(0.5f)
+            .addBoneAnimation("door",
+                    new Transformation(Transformation.Targets.ROTATE,
+                            new Keyframe(0f, AnimationHelper.createRotationalVector(0f, -90f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(0.3433333f, AnimationHelper.createRotationalVector(0f, -5f, 0f),
+                                    Transformation.Interpolations.LINEAR),
+                            new Keyframe(0.5f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.LINEAR))).build();
+
 }

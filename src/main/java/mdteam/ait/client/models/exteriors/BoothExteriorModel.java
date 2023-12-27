@@ -76,9 +76,9 @@ public class BoothExteriorModel extends ExteriorModel {
     @Override
     public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
         return switch (state) {
-            case CLOSED -> DoorAnimations.EXTERIOR_FIRST_CLOSE_ANIMATION;
-            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
-            default -> Animation.Builder.create(0).build();
+            case CLOSED -> DoorAnimations.K2BOOTH_EXTERIOR_CLOSE_ANIMATION;
+            case FIRST -> DoorAnimations.K2BOOTH_EXTERIOR_OPEN_ANIMATION;
+            case SECOND, BOTH -> Animation.Builder.create(0).build();
         };
     }
 
