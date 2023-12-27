@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITConsoleVariants;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
+import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -11,10 +12,16 @@ import mdteam.ait.tardis.util.Corners;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.ItemFrameEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TardisDesktop {
 
@@ -96,10 +103,12 @@ public class TardisDesktop {
     public void changeInterior(TardisDesktopSchema schema) {
         this.schema = schema;
         DesktopGenerator generator = new DesktopGenerator(this.schema);
+        List<BlockPos> allBlocks = getBlockPosListFromCorners();
+        forceLoadChunks(allBlocks);
 
         DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
         clearExistingEntities();
-
+        unforceLoadChunks(allBlocks);
         BlockPos doorPos = generator.place((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
         this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
         this.updateDoor();
@@ -114,5 +123,41 @@ public class TardisDesktop {
                 entity.kill();  // Kill any normal entities at that position.
             }
         }
+    }
+
+    private void forceLoadChunks(List<BlockPos> blockPosList) {
+        World world = TardisUtil.getTardisDimension();
+        if (world == null) return;
+        MinecraftServer server = world.getServer();
+        if (server == null) return;
+        for (BlockPos blockPos: blockPosList) {
+            ForcedChunkUtil.keepChunkLoaded((ServerWorld) world, blockPos);
+        }
+
+    }
+
+    private void unforceLoadChunks(List<BlockPos> blockPosList) {
+        World world = TardisUtil.getTardisDimension();
+        if (world == null) return;
+        MinecraftServer server = world.getServer();
+        if (server == null) return;
+        for (BlockPos blockPos: blockPosList) {
+            ForcedChunkUtil.stopForceLoading((ServerWorld) world, blockPos);
+        }
+    }
+
+    private List<BlockPos> getBlockPosListFromCorners() {
+        List<BlockPos> blockPosList = new ArrayList<>();
+        Box box = this.corners.getBox();
+
+        for (int x = (int) box.minX; x < (int) box.maxX; x++) {
+            for (int y = (int) box.minY; y < (int) box.maxY; y++) {
+                for (int z = (int) box.minZ; z < (int) box.maxZ; z++) {
+                    BlockPos blockPos = new BlockPos(x, y, z);
+                    blockPosList.add(blockPos);
+                }
+            }
+        }
+        return blockPosList;
     }
 }
