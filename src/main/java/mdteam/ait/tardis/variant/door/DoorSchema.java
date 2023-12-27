@@ -21,6 +21,16 @@ public abstract class DoorSchema {
         this.id = id;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() == null) return false;
+
+        DoorSchema that = (DoorSchema) o;
+
+        return id.equals(that.id);
+    }
+
     public Identifier id() { return id; }
     public abstract boolean isDouble();
     public abstract DoorModel model(); // fixme will have the same texture as the exterior, WILL cause problems if we want to use different textures on the door.

@@ -21,6 +21,16 @@ public abstract class ConsoleVariantSchema {
         this.id = id;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() == null) return false;
+
+        ConsoleVariantSchema that = (ConsoleVariantSchema) o;
+
+        return id.equals(that.id);
+    }
+
     public ConsoleEnum parent() { return parent; }
     public Identifier id() { return id; }
 
