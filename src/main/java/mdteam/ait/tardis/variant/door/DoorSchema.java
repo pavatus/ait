@@ -14,6 +14,18 @@ import net.minecraft.util.InvalidIdentifierException;
 import java.lang.reflect.Type;
 
 // todo add @Environment(value = EnvType.CLIENT) to client-only stuff if stuff starts crashing
+
+/**
+ * This class provides information about a door for an exterior
+ * <br><br>
+ * It's information should be final and set once during creation.
+ * <br><br>
+ * It should be registered in {@link AITDoors} and only obtained from there.
+ * <br><br>
+ * This should be referenced by a {@link ExteriorVariantSchema} to be used
+ * @see AITDoors
+ * @author duzo
+ */
 public abstract class DoorSchema {
     private final Identifier id;
 

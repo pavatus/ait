@@ -2,6 +2,7 @@ package mdteam.ait.client.renderers.consoles;
 
 import mdteam.ait.client.models.consoles.*;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.control.impl.*;
 import mdteam.ait.tardis.control.impl.pos.IncrementControl;
@@ -9,13 +10,25 @@ import mdteam.ait.tardis.control.impl.pos.XControl;
 import mdteam.ait.tardis.control.impl.pos.YControl;
 import mdteam.ait.tardis.control.impl.pos.ZControl;
 import mdteam.ait.core.sounds.MatSound;
+import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityDimensions;
 import org.joml.Vector3f;
 import mdteam.ait.tardis.TardisTravel;
 
-// fixmefuck you everythigsucks and im not going to fix it im just ngoing to complain about it
+// fixme fuck you everythigsucks and im not going to fix it im just ngoing to complain about it
+// todo replace with something similar to ExteriorSchema
+
+/**
+ * This is a list of enums which hold a model for rendering and a list of {@link ControlTypes} for creation in the {@link ConsoleBlockEntity}
+ * <br><br>
+ * It does not need to be registered
+ * <br><br>
+ * If an enum has no registered {@link ConsoleVariantSchema}s then it will crash(?)
+ * @see ConsoleBlockEntity
+ * @author loqor
+ */
 public enum ConsoleEnum {
     TEMP() {
         @Override

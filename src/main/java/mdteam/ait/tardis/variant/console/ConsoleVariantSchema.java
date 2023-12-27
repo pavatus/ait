@@ -12,6 +12,18 @@ import net.minecraft.util.InvalidIdentifierException;
 
 import java.lang.reflect.Type;
 
+/**
+ * This class is for variants of a {@link ConsoleEnum} which have the same model but a different texture and can be changed in game to the players desires
+ * <br><br>
+ * It's information should be final and set once on its creation during registration
+ * <br><br>
+ * It should be registered in {@link AITConsoleVariants} otherwise it wont show up in-game
+ * <br><br>
+ * It should only be gotten from {@link AITConsoleVariants#get(Identifier)} using its {@link #id} and only created once
+ * <br><br>
+ * @see AITConsoleVariants
+ * @author duzo
+ */
 public abstract class ConsoleVariantSchema {
     private final ConsoleEnum parent;
     private final Identifier id;

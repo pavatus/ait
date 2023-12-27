@@ -15,6 +15,17 @@ import net.minecraft.util.InvalidIdentifierException;
 
 import java.lang.reflect.Type;
 
+/**
+ * A variant for a {@link ExteriorSchema} which provides a model, texture, emission, {@link ExteriorAnimation} and {@link DoorSchema}
+ * <br><br>
+ * This should be registered in {@link AITExteriorVariants}
+ * <br><br>
+ * This should <b>ONLY</b> be created once in registry, you should grab the class via {@link AITExteriorVariants#get(Identifier)}, the identifier being this variants id variable.
+ * <br><br>
+ * It is recommended for implementations of this class to have a static "REFERENCE" {@link Identifier} variable which other things can use to get this from the {@link AITExteriorVariants}
+ * @see AITExteriorVariants
+ * @author duzo
+ */
 public abstract class ExteriorVariantSchema {
     private final Identifier parent;
     private final Identifier id;
