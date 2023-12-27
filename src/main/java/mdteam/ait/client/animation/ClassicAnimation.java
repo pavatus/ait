@@ -10,8 +10,6 @@ public class ClassicAnimation extends ExteriorAnimation {
         super(exterior);
     }
 
-    private int jankTimeFix = 0;
-
     @Override
     public void tick() {
         if (exterior.tardis() == null)
@@ -29,8 +27,7 @@ public class ClassicAnimation extends ExteriorAnimation {
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.MAT) {
             // Maybe this will fix the class animation taking too long
-            this.alpha = ((float) this.jankTimeFix / (this.maxTime));
-            this.jankTimeFix++;
+            this.alpha = ((float) this.timeLeft / (this.startTime) - 1) * -1;
             this.timeLeft--;
             this.setAlpha(this.alpha);
             runAlphaChecks(state);
@@ -47,7 +44,6 @@ public class ClassicAnimation extends ExteriorAnimation {
         this.timeLeft = sound.timeLeft();
         this.maxTime = sound.maxTime();
         this.startTime = sound.startTime();
-        this.jankTimeFix = 0;
 
         if (state == TardisTravel.State.DEMAT) {
             this.alpha = 1f;
