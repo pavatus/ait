@@ -96,6 +96,13 @@ public class AITMod implements ModInitializer {
                 console.sync();
             }
         }));
+
+        TardisEvents.LANDED.register((tardis -> {
+            // stuff for resetting the ExteriorAnimation
+            if (tardis.getTravel().getPosition().getWorld().getBlockEntity(tardis.getTravel().getExteriorPos()) instanceof ExteriorBlockEntity entity) {
+                entity.getAnimation().setupAnimation(tardis.getTravel().getState());
+            };
+        }));
     }
 
     public void entityAttributeRegister() {
