@@ -38,7 +38,7 @@ public class ServerTardisManager extends TardisManager {
     public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
     private static final ServerTardisManager instance = new ServerTardisManager();
     // Changed from MultiMap to HashMap to fix some concurrent issues, maybe
-    private final HashMap<UUID, UUID[]> subscribers = new HashMap<>(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
+    private final Map<UUID, List<UUID>> subscribers = new HashMap<>(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
 
     public ServerTardisManager() {
         ServerPlayNetworking.registerGlobalReceiver(
@@ -105,19 +105,13 @@ public class ServerTardisManager extends TardisManager {
      * @param tardisUUID TARDIS UUID
      */
     private void addSubscriberToTardis(ServerPlayerEntity serverPlayerEntity, UUID tardisUUID) {
-        UUID[] oldUuids;
-        if (!this.subscribers.containsKey(tardisUUID)) {
-            oldUuids = new UUID[]{};
+        if (this.subscribers.containsKey(tardisUUID)) {
+            this.subscribers.get(tardisUUID).add(serverPlayerEntity.getUuid());
         } else {
-            oldUuids = this.subscribers.get(tardisUUID).clone();
+            List<UUID> subscriber_list = new ArrayList<>();
+            subscriber_list.add(serverPlayerEntity.getUuid());
+            this.subscribers.put(tardisUUID, subscriber_list);
         }
-        if (Arrays.stream(oldUuids).anyMatch((uuid) -> uuid == serverPlayerEntity.getUuid())) return; // If the player is already in the list ignore this
-        UUID[] uuids = new UUID[oldUuids.length + 1];
-        if(oldUuids.length != 0) {
-            System.arraycopy(oldUuids, 0, uuids, 0, uuids.length);
-        }
-        uuids[oldUuids.length] = serverPlayerEntity.getUuid();
-        this.subscribers.replace(tardisUUID, uuids);
 
     }
 
@@ -127,26 +121,26 @@ public class ServerTardisManager extends TardisManager {
      * @param tardisUUID the UUID of the TARDIS
      */
     private void removeSubscriberToTardis(ServerPlayerEntity serverPlayerEntity, UUID tardisUUID) {
-        UUID[] oldUuids;
-        if (!this.subscribers.containsKey(tardisUUID)) {
-            oldUuids = new UUID[]{};
+        if (!this.subscribers.containsKey(tardisUUID)) return; // If the Tardis does not have any subscribers ignore this
+
+        List<UUID> old_uuids = this.subscribers.get(tardisUUID);
+        int i_to_remove = -1;
+
+        for (int i = 0; i < old_uuids.size(); i++) {
+            if (old_uuids.get(i).equals(serverPlayerEntity.getUuid())) {
+                i_to_remove = i;
+                break;
+            }
+        }
+
+        if (i_to_remove == -1) return; // If the player is not in the list ignore this
+
+        old_uuids.remove(i_to_remove);
+        if (old_uuids.isEmpty()) {
+            this.subscribers.remove(tardisUUID);
         } else {
-            oldUuids = this.subscribers.get(tardisUUID).clone();
+            this.subscribers.put(tardisUUID, old_uuids); // update the subscriber list in case any other subscriber was added or removed during this operation
         }
-        if (Arrays.stream(oldUuids).noneMatch((uuid) -> uuid == serverPlayerEntity.getUuid())) return; // If the player is not in the list ignore this
-        if (Arrays.stream(oldUuids).toList().isEmpty()) {
-            // Odd race condition but I guess I'll pass it anyway
-            this.subscribers.replace(tardisUUID, oldUuids);
-            return;
-        }
-        UUID[] uuids;
-        if (oldUuids.length - 1 == 0) {
-            uuids = new UUID[]{};
-        }
-        else {
-            uuids = Arrays.stream(oldUuids).filter((uuid -> uuid != serverPlayerEntity.getUuid())).toArray(UUID[]::new);
-        }
-        this.subscribers.replace(tardisUUID, uuids);
     }
 
     /**
@@ -154,7 +148,7 @@ public class ServerTardisManager extends TardisManager {
      * @param tardisUUID the TARDIS UUID
      */
     private void removeAllSubscribersFromTardis(UUID tardisUUID) {
-        this.subscribers.replace(tardisUUID, new UUID[]{});
+        this.subscribers.replace(tardisUUID, new ArrayList<>());
     }
 
     public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorSchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
