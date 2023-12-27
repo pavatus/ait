@@ -10,8 +10,13 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
 
 import java.lang.reflect.Type;
 
@@ -48,6 +53,12 @@ public abstract class ExteriorVariantSchema {
 
     public ExteriorSchema parent() { return AITExteriors.get(this.parent); }
     public Identifier id() { return id; }
+
+    /**
+     * The bounding box for this exterior, will be used in {@link mdteam.ait.core.blocks.ExteriorBlock#getNormalShape(BlockState, BlockView, BlockPos)}
+     * @return
+     */
+    public VoxelShape bounding(Direction dir) { return null; }
 
     public abstract Identifier texture();
     public abstract Identifier emission();
