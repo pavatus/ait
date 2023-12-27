@@ -124,7 +124,14 @@ public class SonicItem extends Item {
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
                     Identifier nextInteriorId = InteriorSelectItem.getNextInterior(exteriorBlock.tardis().getDesktop().getSchema().id().getPath());
-                    exteriorBlock.tardis().getDesktop().changeInterior(AITDesktops.get(nextInteriorId));
+                    exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
+                    player.sendMessage(Text.literal(nextInteriorId.toString()), true);
+                } else if (player.isSneaking() && world == TardisUtil.getTardisDimension()) {
+                    TardisTravel.State state = tardis.getTravel().getState();
+                    if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
+                        return;
+                    Identifier nextInteriorId = InteriorSelectItem.getNextInterior(tardis.getDesktop().getSchema().id().getPath());
+                    tardis.getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
                     player.sendMessage(Text.literal(nextInteriorId.toString()), true);
                 } else if (world.getRegistryKey() == World.OVERWORLD && !world.isClient()) {
                     player.sendMessage(Text.literal(TardisUtil.isRiftChunk(

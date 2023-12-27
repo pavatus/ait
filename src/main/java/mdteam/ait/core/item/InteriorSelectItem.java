@@ -51,7 +51,7 @@ public class InteriorSelectItem extends Item {
                     return ActionResult.PASS;
 
                 Identifier nextInteriorId = getNextInteriorId(exteriorBlock.tardis().getDesktop().getSchema().id());
-                exteriorBlock.tardis().getDesktop().changeInterior(AITDesktops.get(nextInteriorId));
+                exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
                 player.sendMessage(Text.literal(nextInteriorId.toString()));
             }
             if (entity instanceof DoorBlockEntity doorBlock) {
@@ -61,7 +61,7 @@ public class InteriorSelectItem extends Item {
                     return ActionResult.PASS;
 
                 Identifier nextInteriorId = getNextInteriorId(doorBlock.getTardis().getDesktop().getSchema().id());
-                doorBlock.getTardis().getDesktop().changeInterior(AITDesktops.get(nextInteriorId));
+                doorBlock.getTardis().getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
                 player.sendMessage(Text.literal(nextInteriorId.toString()));
             }
             if (entity instanceof ConsoleBlockEntity consoleBlock) {
