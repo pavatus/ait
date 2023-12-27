@@ -2,6 +2,7 @@ package mdteam.ait.core;
 
 import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.tardis.variant.exterior.RedCoobVariant;
 import mdteam.ait.tardis.variant.exterior.booth.BoothDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.booth.BoothFireVariant;
 import mdteam.ait.tardis.variant.exterior.booth.BoothSoulVariant;
@@ -53,6 +54,9 @@ public class AITExteriorVariants {
         register(new BoothDefaultVariant());
         register(new BoothFireVariant());
         register(new BoothSoulVariant());
+
+        // funny
+        register(new RedCoobVariant());
     }
 
     public static void register(ExteriorVariantSchema variant) {

@@ -20,7 +20,7 @@ public class ClientShakeUtil {
     }
 
     /**
-     * Shakes based off the distance of the gpu
+     * Shakes based off the distance of the gpu fixme how high was i when i wrong "distance of the gpu"
      */
     public static void shakeFromConsole() {
         shake(1f - (float) (ClientTardisUtil.distanceFromConsole() / MAX_DISTANCE));
