@@ -19,6 +19,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
 
 import java.util.ArrayList;
@@ -106,10 +107,6 @@ public class TardisDesktop {
         DesktopGenerator generator = new DesktopGenerator(this.schema);
         List<BlockPos> allBlocks = getBlockPosListFromCorners();
         forceLoadChunks(allBlocks);
-        for (BlockPos blockPos : allBlocks) {
-            WorldChunk worldChunk = TardisUtil.getTardisDimension().getWorldChunk(blockPos);
-            worldChunk.clear();
-        }
         DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
         clearExistingEntities();
         unforceLoadChunks(allBlocks);
