@@ -95,6 +95,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
         spawnControls();
         markNeedsSyncing();
+        markDirty();
     }
 
     @Nullable
