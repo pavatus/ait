@@ -1,14 +1,21 @@
 package mdteam.ait.client.models.exteriors;
 
+import mdteam.ait.AITMod;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
 
 public class CoobExteriorModel extends ExteriorModel {
 
-    private final ModelPart root;
+    public ModelPart tardis;
     public CoobExteriorModel(ModelPart root) {
-        this.root = root.getChild("root");
+        super(RenderLayer::getEntityCutoutNoCull);
+        this.tardis = root.getChild("root");
     }
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
@@ -18,12 +25,23 @@ public class CoobExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
-        return null;
+    public ModelPart getPart() {
+        return tardis;
     }
 
     @Override
-    public ModelPart getPart() {
-        return null;
+    public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        matrices.push();
+
+        matrices.translate(0,-1.5f,0);
+
+        super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+        matrices.pop();
+    }
+
+    @Override
+    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+        return Animation.Builder.create(0).build();
     }
 }

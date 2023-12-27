@@ -135,11 +135,17 @@ public class MonitorScreen extends TardisScreen {
     }
     public ExteriorSchema nextExterior() {
         List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
-        return list.get((list.indexOf(currentModel) + 1 > list.size() - 1) ? 0 : list.indexOf(currentModel) + 1);
+
+        int idx = list.indexOf(getCurrentModel());
+        if (idx < 0 || idx+1 == list.size()) return list.get(0);
+        return list.get(idx + 1);
     }
     public ExteriorSchema previousExterior() {
         List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
-        return list.get((list.indexOf(currentModel) - 1 > -1) ? list.indexOf(currentModel) - 1 : list.size() - 1);
+
+        int idx = list.indexOf(getCurrentModel());
+        if (idx <= 0) return list.get(list.size());
+        return list.get(idx - 1);
     }
 
 
@@ -150,12 +156,18 @@ public class MonitorScreen extends TardisScreen {
 
     public ExteriorVariantSchema nextVariant() {
         List<ExteriorVariantSchema> list = AITExteriorVariants.withParent(getCurrentVariant().parent()).stream().toList();
-        return list.get((list.indexOf(currentVariant) + 1 > list.size() - 1) ? 0 : list.indexOf(currentVariant) + 1);
+
+        int idx = list.indexOf(getCurrentVariant());
+        if (idx < 0 || idx+1 == list.size()) return list.get(0);
+        return list.get(idx + 1);
     }
 
     public ExteriorVariantSchema previousVariant() {
-        List<ExteriorVariantSchema> list = AITExteriorVariants.withParent(currentVariant.parent()).stream().toList();
-        return list.get((list.indexOf(currentVariant) - 1 > -1) ? list.indexOf(currentVariant) - 1 : list.size() - 1);
+        List<ExteriorVariantSchema> list = AITExteriorVariants.withParent(getCurrentVariant().parent()).stream().toList();
+
+        int idx = list.indexOf(getCurrentVariant());
+        if (idx <= 0) return list.get(list.size());
+        return list.get(idx - 1);
     }
 
 
