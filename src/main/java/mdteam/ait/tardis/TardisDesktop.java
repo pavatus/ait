@@ -11,6 +11,7 @@ import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.Corners;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -121,6 +122,9 @@ public class TardisDesktop {
             TardisUtil.getTardisDimension().removeBlockEntity(pos);  // Remove any existing block entity at that position.
             Box box = this.corners.getBox();
             for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemFrameEntity.class, box, (entity) -> true)) {
+                entity.kill();  // Kill any normal entities at that position.
+            }
+            for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemEntity.class, box, (entity) -> true)) {
                 entity.kill();  // Kill any normal entities at that position.
             }
         }
