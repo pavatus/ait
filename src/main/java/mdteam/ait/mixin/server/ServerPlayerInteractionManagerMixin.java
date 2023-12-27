@@ -20,7 +20,8 @@ public class ServerPlayerInteractionManagerMixin {
     @Inject(method = "tryBreakBlock", at = @At(value = "HEAD"), cancellable = true)
     public void tryBreakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         Block block = this.world.getBlockState(pos).getBlock();
-        if (block instanceof ICantBreak) {
+        if (block instanceof ICantBreak cantBreak) {
+            cantBreak.onTryBreak(this.world, pos, this.world.getBlockState(pos));
             cir.setReturnValue(false);
             cir.cancel();
         }
