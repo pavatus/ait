@@ -1,5 +1,6 @@
 package mdteam.ait.core.blocks;
 
+import mdteam.ait.api.ICantBreak;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
@@ -44,7 +45,7 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
+public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final VoxelShape LEDGE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 32.0, 16.0),
@@ -268,5 +269,8 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider {
         }
     }
 
+    @Override
+    public void onTryBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
 
+    }
 }

@@ -15,6 +15,7 @@ import mdteam.ait.tardis.variant.exterior.capsule.CapsuleSoulVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxPrimeVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxYetiVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxDefinitiveVariant;
+import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimFireVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimSoulVariant;
@@ -57,6 +58,7 @@ public class AITExteriorVariants {
 
         // funny
         register(new RedCoobVariant());
+        register(new EasterHeadDefaultVariant());
     }
 
     public static void register(ExteriorVariantSchema variant) {
@@ -74,7 +76,7 @@ public class AITExteriorVariants {
         List<ExteriorVariantSchema> list = new ArrayList<>();
 
         for (ExteriorVariantSchema schema : iterator()) {
-            AITExteriors.iterator().stream().forEach((schema1 -> System.out.println(schema1)));
+            //AITExteriors.iterator().forEach((System.out::println));
 
             if (schema.parent().equals(parent)) list.add(schema);
         }

@@ -22,6 +22,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
+import java.util.Random;
+
 public class TardisItemBuilder extends Item {
 
     public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "office"); //new Identifier(AITMod.MOD_ID, "war");
@@ -47,7 +49,9 @@ public class TardisItemBuilder extends Item {
     }
 
     public static ExteriorVariantSchema findRandomVariant(ExteriorSchema exterior) { // fixme its not very random icl
-        return AITExteriorVariants.withParent(exterior).stream().findFirst().get();
+        Random rnd = new Random();
+        int randomized = rnd.nextInt(Math.abs(AITExteriorVariants.withParent(exterior).size()));
+        return (ExteriorVariantSchema) AITExteriorVariants.withParent(exterior).toArray()[randomized];
     }
 
     @Override

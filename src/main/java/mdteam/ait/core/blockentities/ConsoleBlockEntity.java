@@ -195,6 +195,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         type = var;
 
         syncType();
+        markDirty();
     }
 
     public ConsoleVariantSchema getVariant() {
@@ -215,6 +216,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         }
 
         syncVariant();
+        markDirty();
     }
     public void setVariant(Identifier id) {
         setVariant(AITConsoleVariants.get(id));
@@ -339,7 +341,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (this.needsControls) {
             spawnControls();
         }
-        if (needsSync) sync();
+        if (needsSync)
+            sync();
 
         if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
             this.markRemoved();

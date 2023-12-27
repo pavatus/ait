@@ -9,7 +9,7 @@ public class AITDoors {
     private static final Map<Identifier, DoorSchema> map = new HashMap<>();
 
     /**
-     * Door STUCK are registered here:
+     * Doors (STUCK) for different exteriors are registered here:
      */
     public static void init() {
         register(new TardimDoorVariant());
@@ -17,6 +17,7 @@ public class AITDoors {
         register(new BoothDoorVariant());
         register(new CapsuleDoorVariant());
         register(new PoliceBoxDoorVariant());
+        register(new EasterHeadDoorVariant());
     }
 
     public static void register(DoorSchema door) {

@@ -21,6 +21,7 @@ public class AITExteriors {
         register(new TardimExterior());
         register(new CubeExterior());
         register(new BoothExterior());
+        register(new EasterHeadExterior());
     }
 
     public static void register(ExteriorSchema schema) {
