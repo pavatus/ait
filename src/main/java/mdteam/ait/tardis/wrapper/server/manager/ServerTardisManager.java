@@ -105,51 +105,53 @@ public class ServerTardisManager extends TardisManager {
      * @param tardisUUID TARDIS UUID
      */
     private void addSubscriberToTardis(ServerPlayerEntity serverPlayerEntity, UUID tardisUUID) {
-        UUID[] old_uuids;
-        if (this.subscribers.containsKey(tardisUUID)) {
-            old_uuids = new UUID[]{};
+        UUID[] oldUuids;
+        if (!this.subscribers.containsKey(tardisUUID)) {
+            oldUuids = new UUID[]{};
         } else {
-            old_uuids = this.subscribers.get(tardisUUID).clone();
+            oldUuids = this.subscribers.get(tardisUUID).clone();
         }
-        if (Arrays.stream(old_uuids).anyMatch((uuid) -> uuid == serverPlayerEntity.getUuid())) return; // If the player is already in the list ignore this
-        UUID[] uuids = new UUID[old_uuids.length + 1];
-        System.arraycopy(old_uuids, 0, uuids, 0, uuids.length);
-        uuids[old_uuids.length] = serverPlayerEntity.getUuid();
+        if (Arrays.stream(oldUuids).anyMatch((uuid) -> uuid == serverPlayerEntity.getUuid())) return; // If the player is already in the list ignore this
+        UUID[] uuids = new UUID[oldUuids.length + 1];
+        if(oldUuids.length != 0) {
+            System.arraycopy(oldUuids, 0, uuids, 0, uuids.length);
+        }
+        uuids[oldUuids.length] = serverPlayerEntity.getUuid();
         this.subscribers.replace(tardisUUID, uuids);
 
     }
 
     /**
      * Removes a subscriber from the TARDIS
-     * @param serverPlayerEntity
-     * @param tardisUUID
+     * @param serverPlayerEntity the player to remove from the subscribers list
+     * @param tardisUUID the UUID of the TARDIS
      */
     private void removeSubscriberToTardis(ServerPlayerEntity serverPlayerEntity, UUID tardisUUID) {
-        UUID[] old_uuids;
-        if (this.subscribers.containsKey(tardisUUID)) {
-            old_uuids = new UUID[]{};
+        UUID[] oldUuids;
+        if (!this.subscribers.containsKey(tardisUUID)) {
+            oldUuids = new UUID[]{};
         } else {
-            old_uuids = this.subscribers.get(tardisUUID).clone();
+            oldUuids = this.subscribers.get(tardisUUID).clone();
         }
-        if (Arrays.stream(old_uuids).noneMatch((uuid) -> uuid == serverPlayerEntity.getUuid())) return; // If the player is not in the list ignore this
-        if (Arrays.stream(old_uuids).toList().isEmpty()) {
+        if (Arrays.stream(oldUuids).noneMatch((uuid) -> uuid == serverPlayerEntity.getUuid())) return; // If the player is not in the list ignore this
+        if (Arrays.stream(oldUuids).toList().isEmpty()) {
             // Odd race condition but I guess I'll pass it anyway
-            this.subscribers.replace(tardisUUID, old_uuids);
+            this.subscribers.replace(tardisUUID, oldUuids);
             return;
         }
         UUID[] uuids;
-        if (old_uuids.length - 1 == 0) {
+        if (oldUuids.length - 1 == 0) {
             uuids = new UUID[]{};
         }
         else {
-            uuids = Arrays.stream(old_uuids).filter((uuid -> uuid != serverPlayerEntity.getUuid())).toArray(UUID[]::new);
+            uuids = Arrays.stream(oldUuids).filter((uuid -> uuid != serverPlayerEntity.getUuid())).toArray(UUID[]::new);
         }
         this.subscribers.replace(tardisUUID, uuids);
     }
 
     /**
      * Removes all subscribers from the TARDIS
-     * @param tardisUUID
+     * @param tardisUUID the TARDIS UUID
      */
     private void removeAllSubscribersFromTardis(UUID tardisUUID) {
         this.subscribers.replace(tardisUUID, new UUID[]{});
@@ -232,9 +234,11 @@ public class ServerTardisManager extends TardisManager {
         if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
         MinecraftServer mc = TardisUtil.getServer();
 
-        for (UUID uuid : this.subscribers.get(tardis.getUuid())) {
-            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(uuid);
-            this.sendTardis(player, tardis);
+        if(!this.subscribers.isEmpty()) {
+            for (UUID uuid : this.subscribers.get(tardis.getUuid())) {
+                ServerPlayerEntity player = mc.getPlayerManager().getPlayer(uuid);
+                this.sendTardis(player, tardis);
+            }
         }
     }
 
