@@ -120,7 +120,7 @@ public class TardisDesktop {
             BlockPos pos = doorPos.add(direction.getVector()); // Get the position of each adjacent block in the interior.
             TardisUtil.getTardisDimension().removeBlockEntity(pos);  // Remove any existing block entity at that position.
             Box box = this.corners.getBox();
-            for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(Entity.class, box, (entity) -> true)) {
+            for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemFrameEntity.class, box, (entity) -> true)) {
                 entity.kill();  // Kill any normal entities at that position.
             }
         }
