@@ -2,7 +2,7 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -165,10 +165,10 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
 
     // es caca
     public void verifyAnimation() {
-        if (this.animation != null || this.tardis() == null || this.tardis().getExterior() == null || this.getExteriorType() == null)
+        if (this.animation != null || this.tardis() == null || this.tardis().getExterior() == null)
             return;
 
-        this.animation = this.getExteriorType().createAnimation(this);
+        this.animation = this.tardis().getExterior().getVariant().animation(this);
         AITMod.LOGGER.warn("Created new ANIMATION for " + this);
         this.animation.setupAnimation(this.tardis().getTravel().getState());
 

@@ -1,11 +1,10 @@
 package mdteam.ait.tardis.handler;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 
 import java.util.Random;

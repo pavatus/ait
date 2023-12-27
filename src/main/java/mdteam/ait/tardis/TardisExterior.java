@@ -1,11 +1,8 @@
 package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
 import mdteam.ait.core.item.TardisItemBuilder;
-import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 
 public class TardisExterior {
 

@@ -1,7 +1,7 @@
 package mdteam.ait.tardis.variant.exterior;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.ExteriorEnum;
 import net.minecraft.util.Identifier;
 
 public class RedCoobVariant extends ExteriorVariantSchema {

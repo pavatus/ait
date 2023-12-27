@@ -1,7 +1,7 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.tardis.handler.DoorHandler;

@@ -2,7 +2,7 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;

@@ -2,7 +2,7 @@ package mdteam.ait.tardis.wrapper.server.manager;
 
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.SerialDimension;

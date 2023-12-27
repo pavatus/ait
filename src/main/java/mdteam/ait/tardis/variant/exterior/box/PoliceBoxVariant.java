@@ -1,7 +1,15 @@
 package mdteam.ait.tardis.variant.exterior.box;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.client.animation.ExteriorAnimation;
+import mdteam.ait.client.animation.PulsatingAnimation;
+import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.client.models.exteriors.PoliceBoxModel;
+import mdteam.ait.tardis.ExteriorEnum;
+import mdteam.ait.core.AITDoors;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.tardis.variant.door.DoorSchema;
+import mdteam.ait.tardis.variant.door.PoliceBoxDoorVariant;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
 
@@ -17,6 +25,20 @@ public abstract class PoliceBoxVariant extends ExteriorVariantSchema {
     }
     protected PoliceBoxVariant(String name) {
         this(name, AITMod.MOD_ID);
+    }
+
+    @Override
+    public ExteriorModel model() {
+        return new PoliceBoxModel(PoliceBoxModel.getTexturedModelData().createModel());
+    }
+    @Override
+    public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
+        return new PulsatingAnimation(exterior);
+    }
+
+    @Override
+    public DoorSchema door() {
+        return AITDoors.get(PoliceBoxDoorVariant.REFERENCE);
     }
 
     @Override

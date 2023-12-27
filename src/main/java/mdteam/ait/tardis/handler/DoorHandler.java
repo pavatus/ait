@@ -71,7 +71,7 @@ public class DoorHandler extends TardisLink {
     }
 
     public boolean isDoubleDoor() {
-        return tardis().getExterior().getType().isDoubleDoor();
+        return tardis().getExterior().getVariant().door().isDouble();
     }
 
     public boolean isOpen() {
@@ -195,14 +195,14 @@ public class DoorHandler extends TardisLink {
         // fixme this is loqors code so there might be a better way
         // PLEASE FIXME ALL THIS CODE IS SO JANK I CANT
 
-        if (tardis.getExterior().getType().isDoubleDoor()) {
+        if (tardis.getExterior().getVariant().door().isDouble()) {
             if (door.isBothOpen()) {
-                world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorCloseSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-                world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorCloseSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+                world.playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().closeSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+                world.playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().closeSound(), SoundCategory.BLOCKS, 0.6F, 1F);
                 door.closeDoors();
             } else {
-                world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-                world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+                world.playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+                world.playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
 
                 if (door.isOpen() && player.isSneaking()) {
                     door.closeDoors();
@@ -213,8 +213,8 @@ public class DoorHandler extends TardisLink {
                 }
             }
         } else {
-            world.playSound(null, door.getExteriorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-            world.playSound(null, door.getDoorPos(), tardis.getExterior().getType().getDoorOpenSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+            world.playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+            world.playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
             door.setDoorState(door.getDoorState() == DoorStateEnum.FIRST ? DoorStateEnum.CLOSED : DoorStateEnum.FIRST);
         }
 

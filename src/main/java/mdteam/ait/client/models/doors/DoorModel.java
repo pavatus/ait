@@ -1,7 +1,7 @@
 package mdteam.ait.client.models.doors;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.ModelPart;

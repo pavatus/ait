@@ -1,6 +1,6 @@
 package mdteam.ait.core;
 
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.variant.exterior.RedCoobVariant;
 import mdteam.ait.tardis.variant.exterior.booth.BoothDefaultVariant;

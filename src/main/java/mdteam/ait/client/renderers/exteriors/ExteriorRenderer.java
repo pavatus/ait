@@ -34,13 +34,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         if (tardisExterior == null) return;
 
-        Class<? extends ExteriorModel> modelClass = tardisExterior.getType().getModelClass();
+        Class<? extends ExteriorModel> modelClass = tardisExterior.getVariant().model().getClass();
 
         if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.
             model = null;
 
         if (model == null)
-            this.model = tardisExterior.getType().createModel();
+            this.model = tardisExterior.getVariant().model();
 
         BlockState blockState = entity.getCachedState();
         float f = blockState.get(ExteriorBlock.FACING).asRotation();

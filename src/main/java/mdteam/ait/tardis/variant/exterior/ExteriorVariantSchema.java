@@ -2,11 +2,12 @@ package mdteam.ait.tardis.variant.exterior;
 
 import com.google.gson.*;
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.core.AITDesktops;
+import mdteam.ait.client.animation.ExteriorAnimation;
+import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.AITExteriorVariants;
-import mdteam.ait.tardis.TardisDesktopSchema;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.tardis.variant.door.DoorSchema;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
@@ -26,6 +27,9 @@ public abstract class ExteriorVariantSchema {
 
     public abstract Identifier texture();
     public abstract Identifier emission();
+    public abstract ExteriorModel model();
+    public abstract ExteriorAnimation animation(ExteriorBlockEntity exterior);
+    public abstract DoorSchema door();
 
     public static Object serializer() {
         return new Serializer();

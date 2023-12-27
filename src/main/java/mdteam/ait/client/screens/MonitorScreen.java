@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.item.TardisItemBuilder;
@@ -24,7 +24,7 @@ import net.minecraft.util.math.RotationAxis;
 import java.util.List;
 import java.util.UUID;
 
-import static mdteam.ait.client.renderers.exteriors.ExteriorEnum.*;
+import static mdteam.ait.tardis.ExteriorEnum.*;
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 
 public class MonitorScreen extends TardisScreen {
@@ -200,7 +200,7 @@ public class MonitorScreen extends TardisScreen {
         // testing @todo
         if (tardis() != null) {
             if (this.getCurrentModel() == null || this.getCurrentVariant() == null) return;
-            ExteriorModel model = this.getCurrentModel().createModel();
+            ExteriorModel model = this.getCurrentVariant().model();
             MatrixStack stack = context.getMatrices();
             // fixme is bad
             stack.push();

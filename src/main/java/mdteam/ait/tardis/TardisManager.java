@@ -8,6 +8,7 @@ import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.core.events.BlockEntityPreLoadEvent;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.Corners;
+import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -38,6 +39,7 @@ public abstract class TardisManager {
                     }
                 }).registerTypeAdapter(TardisDesktopSchema.class, TardisDesktopSchema.serializer())
                 .registerTypeAdapter(ExteriorVariantSchema.class, ExteriorVariantSchema.serializer())
+                .registerTypeAdapter(DoorSchema.class, DoorSchema.serializer())
                 .registerTypeAdapter(Corners.class, Corners.serializer());
         builder = this.init(builder);
         this.gson = builder.create();

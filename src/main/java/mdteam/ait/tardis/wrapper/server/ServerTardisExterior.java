@@ -1,6 +1,6 @@
 package mdteam.ait.tardis.wrapper.server;
 
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.tardis.TardisTickable;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.Tardis;

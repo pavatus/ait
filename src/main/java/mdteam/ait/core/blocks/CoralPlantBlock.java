@@ -1,7 +1,7 @@
 package mdteam.ait.core.blocks;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.tardis.ExteriorEnum;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.AITExteriorVariants;
