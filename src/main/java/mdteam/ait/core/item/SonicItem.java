@@ -1,11 +1,12 @@
 package mdteam.ait.core.item;
 
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -19,8 +20,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
@@ -34,8 +35,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
-
-import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 
 public class SonicItem extends Item {
 
@@ -51,11 +50,15 @@ public class SonicItem extends Item {
         ItemStack stack = new ItemStack(this);
         NbtCompound nbt = stack.getOrCreateNbt();
         nbt.putInt(MODE_KEY, 0);
-        nbt.putBoolean(INACTIVE, false);
         return stack;
     }
 
     public enum Mode implements StringIdentifiable {
+        INACTIVE(Formatting.GRAY) {
+            @Override
+            public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+            }
+        },
         INTERACTION(Formatting.GREEN) {
             @Override
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
@@ -69,12 +72,13 @@ public class SonicItem extends Item {
                 world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             }
         },
-        SCANNING(Formatting.RED) {
+        OVERLOAD(Formatting.RED) {
             @Override
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 // fixme temporary replacement for exterior changing
 
                 BlockEntity entity = world.getBlockEntity(pos);
+                Block block = world.getBlockState(pos).getBlock();
 
                 if (entity instanceof ExteriorBlockEntity exteriorBlock) {
                     TardisTravel.State state = exteriorBlock.tardis().getTravel().getState();
@@ -83,31 +87,50 @@ public class SonicItem extends Item {
                         return;
                     }
 
-                    ExteriorEnum[] values = ExteriorEnum.values();
-                    int nextIndex = (exteriorBlock.tardis().getExterior().getType().ordinal() + 1) % values.length;
-                    exteriorBlock.tardis().getExterior().setType(values[nextIndex]);
+                    List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
+                    exteriorBlock.tardis().getExterior().setType(list.get((list.indexOf(exteriorBlock.tardis().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.tardis().getExterior().getType()) + 1));
                     //System.out.println(exteriorBlock.getTardis().getExterior().getType());
 
-                    exteriorBlock.sync();
+                    exteriorBlock.tardis().markDirty();
+                }
+
+                // fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor
+                /*if(player.isSneaking() && block instanceof DispenserBlock dispenser) {
+                    world.setBlockState(pos, world.getBlockState(pos).with(Properties.TRIGGERED, true), Block.NO_REDRAW);
+                    //world.emitGameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
+                }*/
+
+                if(block instanceof TntBlock tnt) {
+                    TntBlock.primeTnt(world, pos);
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
             }
         },
-        OVERLOAD(Formatting.AQUA) {
+        SCANNING(Formatting.AQUA) {
             @Override
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 // fixme temporary replacement for interior changing
 
                 BlockEntity entity = world.getBlockEntity(pos);
-
                 if (entity instanceof ExteriorBlockEntity exteriorBlock) {
                     TardisTravel.State state = exteriorBlock.tardis().getTravel().getState();
-
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
-
                     Identifier nextInteriorId = InteriorSelectItem.getNextInterior(exteriorBlock.tardis().getDesktop().getSchema().id().getPath());
-                    exteriorBlock.tardis().getDesktop().changeInterior(AITDesktops.get(nextInteriorId));
+                    exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
                     player.sendMessage(Text.literal(nextInteriorId.toString()), true);
+                } else if (player.isSneaking() && world == TardisUtil.getTardisDimension()) {
+                    TardisTravel.State state = tardis.getTravel().getState();
+                    if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
+                        return;
+                    Identifier nextInteriorId = InteriorSelectItem.getNextInterior(tardis.getDesktop().getSchema().id().getPath());
+                    tardis.getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
+                    player.sendMessage(Text.literal(nextInteriorId.toString()), true);
+                } else if (world.getRegistryKey() == World.OVERWORLD && !world.isClient()) {
+                    player.sendMessage(Text.literal(TardisUtil.isRiftChunk(
+                                    (ServerWorld) world, pos) ? "RIFT FOUND" : "RIFT NOT FOUND")
+                            .formatted(Formatting.AQUA).formatted(Formatting.BOLD));
                 }
             }
         },
@@ -127,11 +150,12 @@ public class SonicItem extends Item {
 
                 if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
-                PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HANDBRAKE, false);
-                PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.AUTO_LAND, true);
+                PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
+                PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, true);
 
                 travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()), true);
-                if (travel.getState() == LANDED) travel.dematerialise(true);
+                // fixme leave this alone for now, im getting rid of the stattenheim remotes recipe and making it creative only and removing the sonic's ability to actually make it come to you. - Loqor
+                //if (travel.getState() == LANDED) travel.dematerialise(true);
 
                 player.sendMessage(Text.literal("Handbrake disengaged, destination set to current position"), true);
             }
@@ -228,9 +252,16 @@ public class SonicItem extends Item {
 
         if (world.isClient()) return TypedActionResult.pass(itemStack);
 
-        if (user.isSneaking())
+        if (user.isSneaking()) {
             cycleMode(itemStack);
-        else playSonicSounds(user);
+        } else {
+            playSonicSounds(user);
+
+            // @TODO idk we should make the sonic be usable not just on blocks, especially for scanning about looking for rifts - Loqor
+
+            /*Mode mode = intToMode(nbt.getInt(MODE_KEY));
+            mode.run(null, world, user.getBlockPos(), user, itemStack);*/
+        }
 
         return TypedActionResult.pass(itemStack);
     }

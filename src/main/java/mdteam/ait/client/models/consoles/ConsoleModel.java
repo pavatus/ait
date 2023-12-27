@@ -13,6 +13,7 @@ import mdteam.ait.tardis.TardisTravel;
 
 import java.util.function.Function;
 
+@SuppressWarnings("rawtypes")
 public abstract class ConsoleModel extends SinglePartEntityModel {
     public static int MAX_TICK_COUNT = 2 * 20;
 

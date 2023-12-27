@@ -1,19 +1,19 @@
 package mdteam.ait.tardis.control.impl;
 
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 public class HandBrakeControl extends Control {
     public HandBrakeControl() {
@@ -22,9 +22,11 @@ public class HandBrakeControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.HANDBRAKE, !PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HANDBRAKE));
+        PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
 
-        messagePlayer(player, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HANDBRAKE));
+        tardis.markDirty();
+
+        messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
 
         if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
             // randomise and force land @todo something better ive got no ideas at 1am loqor
@@ -36,10 +38,19 @@ public class HandBrakeControl extends Control {
             RandomiserControl.randomiseDestination(tardis, 10); //10
             TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
             tardis.getTravel().getDestination().getWorld().getChunk(tardis.getTravel().getDestination());
-            tardis.getTravel().getDestination().getWorld().createExplosion(
+                    PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
+                    PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
+
+                    // fixme everything below this line to the markdirty() is a WIP, what i want this to do is set the destination to the height of the current dimension,
+                    // fixme so that when you crash land, you crash land out of the sky towards this position like in the show; for now, what i want it to do is fall onto the crashed position,
+                    // fixme and explode once it touches the ground in the CRASHED state. - Loqor
+                    tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(tardis.getTravel().getDestination().getX(), tardis.getTravel().getDestination().getWorld().getRegistryKey().equals(World.NETHER) ? 128 : 256, tardis.getTravel().getDestination().getZ(), tardis.getTravel().getDestination().getWorld(), tardis.getTravel().getDestination().getDirection()), true);
+                    /*tardis.getTravel().getDestination().getWorld().createExplosion(
                     null, tardis.getTravel().getDestination().getX(),
                     tardis.getTravel().getDestination().getY(),
-                    tardis.getTravel().getDestination().getZ(), 4f, true, World.ExplosionSourceType.MOB);
+                    tardis.getTravel().getDestination().getZ(), 4f, true, World.ExplosionSourceType.MOB);*/
+
+                    tardis.markDirty();
             tardis.getTravel().materialise();
             // fixme }
         }
@@ -52,5 +63,10 @@ public class HandBrakeControl extends Control {
         String s = var ? "ON" : "OFF";
 
         player.sendMessage(Text.literal("Handbrake: " + s), true);
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.HANDBRAKE_LEVER_PULL;
     }
 }

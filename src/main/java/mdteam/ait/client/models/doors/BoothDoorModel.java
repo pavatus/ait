@@ -1,10 +1,13 @@
 package mdteam.ait.client.models.doors;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
@@ -53,9 +56,19 @@ public class BoothDoorModel extends DoorModel {
     }
 
     @Override
+    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+        return switch (state) {
+            case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
+            case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
+            case SECOND -> DoorAnimations.INTERIOR_SECOND_OPEN_ANIMATION;
+            case BOTH -> DoorAnimations.INTERIOR_BOTH_OPEN_ANIMATION;
+        };
+    }
+
+    @Override
     public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         matrices.push();
-        this.booth.getChild("door").yaw = door.getLeftDoorRotation() == 0 ? 0 : -1.575f;
+        /*this.booth.getChild("door").yaw = door.getLeftDoorRotation() == 0 ? 0 : -1.575f;*/
         matrices.scale(0.95f, 0.95f, 0.95f);
         matrices.translate(0, -1.5f, 0);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));

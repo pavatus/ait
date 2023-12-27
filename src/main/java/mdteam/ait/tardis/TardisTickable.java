@@ -1,5 +1,6 @@
 package mdteam.ait.tardis;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
@@ -12,4 +13,6 @@ public interface TardisTickable { // todo, actually use this class where its nee
     void tick(MinecraftServer server);
 
     void tick(ServerWorld world);
+    void tick(MinecraftClient client);
+    void startTick(MinecraftServer server);
 }

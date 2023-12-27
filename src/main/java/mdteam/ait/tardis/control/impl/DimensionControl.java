@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.tardis.control.Control;
+import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -14,6 +15,7 @@ import mdteam.ait.tardis.TardisTravel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DimensionControl extends Control {
     public DimensionControl() {
@@ -35,9 +37,20 @@ public class DimensionControl extends Control {
             next = ((current - 1) < 0) ? dims.size() - 1 : current - 1;
         }
 
-        travel.setDestination(new AbsoluteBlockPos.Directed(dest, dims.get(next), dest.getDirection()), false);
+        // FIXME we should make it so that once the ender dragon is defeated, the end is unlocked; also make that a config option as well for the server. - Loqor
 
+        /*if (dest.getWorld().getRegistryKey() != World.END) {*/
+        travel.setDestination(new AbsoluteBlockPos.Directed(PosType.Y.add(dest, 0), dims.get(next), dest.getDirection()), false); // postype.y.add means it clamps the y coord fixme doesnt work for nether as u can go above the bedrock but dont hardcode it like you did loqor :(
         messagePlayer(player, (ServerWorld) travel.getDestination().getWorld());
+        /*} else {
+            if(dest.getWorld().getServer().getWorld(dest.getWorld().getRegistryKey()).getAliveEnderDragons().isEmpty()) {
+                messagePlayer(player, (ServerWorld) travel.getDestination().getWorld());
+                travel.setDestination(new AbsoluteBlockPos.Directed(PosType.Y.add(dest, 0), dims.get(next), dest.getDirection()), false);
+            } else {
+                player.sendMessage(Text.literal("The End is forbidden."), true); // fixme translatable is preferred
+                travel.setDestination(new AbsoluteBlockPos.Directed(PosType.Y.add(dest, 0), world.getServer().getWorld(World.OVERWORLD), dest.getDirection()), false);
+            }
+        }*/
 
         return true;
     }
@@ -95,7 +108,7 @@ public class DimensionControl extends Control {
         // fixme this is easiest/stupidest way to do this without letting them get to the tardis dim :p - Loqor
         allDims.forEach(dim -> {
             if (dim.getRegistryKey() != TardisUtil.getTardisDimension().getRegistryKey())
-                dims.add(dim);
+                    dims.add(dim);
         });
 
         return dims;

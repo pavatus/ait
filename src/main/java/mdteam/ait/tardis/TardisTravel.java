@@ -1,12 +1,14 @@
 package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.control.impl.pos.PosManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
+import mdteam.ait.tardis.handler.TardisLink;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -14,8 +16,6 @@ import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -24,6 +24,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +34,9 @@ import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class TardisTravel {
+import static mdteam.ait.AITMod.AIT_CONFIG;
+
+public class TardisTravel extends TardisLink {
 
     private State state = State.LANDED;
     private AbsoluteBlockPos.Directed position;
@@ -41,25 +44,33 @@ public class TardisTravel {
     private static final double FORCE_LAND_TIMER = 15;
     private static final double FORCE_FLIGHT_TIMER = 10;
     private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
-    private static final int CHECK_LIMIT = 32; // todo move into a config
-
-    @Exclude
-    protected Tardis tardis;
+    private AbsoluteBlockPos.Directed lastPosition;
+    private static final int CHECK_LIMIT = AIT_CONFIG.SEARCH_HEIGHT(); // todo move into a config
 
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-        this.tardis = tardis;
+        super(tardis.getUuid());
         this.position = pos;
+        if(this.lastPosition == null) this.lastPosition = pos;
     }
 
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
-        this.tardis = tardis;
+        super(tardis.getUuid());
         this.position = pos;
+        if(this.lastPosition == null) this.lastPosition = pos;
         this.destination = dest;
         this.state = state;
     }
 
     public void setPosition(AbsoluteBlockPos.Directed pos) {
         this.position = pos;
+    }
+
+    public void setLastPosition(AbsoluteBlockPos.Directed position) {
+        this.lastPosition = position;
+    }
+
+    public AbsoluteBlockPos.Directed getLastPosition() {
+        return lastPosition;
     }
 
     public AbsoluteBlockPos.Directed getPosition() {
@@ -77,57 +88,23 @@ public class TardisTravel {
     }
 
     public Tardis getTardis() {
-        if (this.tardis == null && this.getPosition() != null) {
+        if (this.tardisId == null && this.getPosition() != null) {
             Tardis found = TardisUtil.findTardisByPosition(this.getPosition());
             if (found != null)
-                this.tardis = found;
+                this.tardisId = found.getUuid();
         }
 
-        return this.tardis;
+        return this.tardis();
     }
 
-    public boolean __subCheckForPos(BlockPos.Mutable mutable, int i) {
-        BlockState state = this.getDestination().getWorld().getBlockState(mutable.setY(i));
-        if (state.isReplaceable() && !this.getDestination().getWorld().getBlockState(mutable.down()).isReplaceable()) {
-            AbsoluteBlockPos.Directed abpd = new AbsoluteBlockPos.Directed(mutable.setY(i),
-                    this.getDestination().getWorld(), this.getDestination().getDirection());
-            this.setDestination(abpd, false);
-            return true;
-        }
-        return false;
-    }
+    // todo use me in places where similar things are used
+    public void travelTo(AbsoluteBlockPos.Directed pos) {
+        this.setDestination(pos, true);
 
-    //Yeah I know, I'm so cool :) - Loqor
-    @Deprecated
-    public void checkPositionAndMaterialise(boolean landType) {
-
-        if (this.getDestination() == null)
-            return;
-
-        if (this.getDestination().getWorld().isClient())
-            return;
-
-        BlockPos.Mutable mutable = new BlockPos.Mutable(this.getDestination().getX(), this.getDestination().getY(), this.getDestination().getZ());
-        if (landType) {
-            for (int i = this.getDestination().getY(); i > this.getDestination().getWorld().getBottomY(); i--) {
-                if (__subCheckForPos(mutable, i)) {
-                    materialise();
-                    return;
-                }
-            }
-        } else {
-            for (int i = this.getDestination().getY(); i < this.getDestination().getWorld().getBottomY(); i++) {
-                if (__subCheckForPos(mutable, i)) {
-                    materialise();
-                    return;
-                }
-            }
-        }
-        if (this.getTardis() != null) {
-            PlayerEntity player = TardisUtil.getPlayerInsideInterior(this.getTardis());
-            if (player != null) {
-                player.sendMessage(Text.literal("Position not viable for translocation: " + mutable.getX() + " | " + mutable.getY() + " | " + mutable.getZ()), true);
-            }
+        if (this.getState() == State.LANDED) {
+            this.dematerialise(true);
+        } else if (this.getState() == State.FLIGHT) {
+            this.materialise();
         }
     }
 
@@ -138,11 +115,11 @@ public class TardisTravel {
         if (this.getDestination().getWorld().isClient())
             return;
 
-        if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN))) {
+        if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND))) {
             // Not safe to land here!
             this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
-            if (TardisUtil.isInteriorEmpty(tardis))
+            if (TardisUtil.isInteriorEmpty(tardis()))
                 TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
             TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!")); // fixme translatable
@@ -151,7 +128,10 @@ public class TardisTravel {
 
         // PropertiesHandler.setAutoPilot(this.getTardis().getProperties(), false);
 
-        DoorHandler.lockTardis(true, this.getTardis(), (ServerWorld) TardisUtil.getTardisDimension(), null, true);
+        // fixme where does this go?
+        TardisEvents.MAT.invoker().onMat(getTardis());
+
+        DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
         this.setState(State.MAT);
 
@@ -190,23 +170,26 @@ public class TardisTravel {
         if (this.getPosition().getWorld().isClient())
             return;
 
-        PropertiesHandler.setAutoPilot(this.getTardis().getProperties(), withRemat);
+        PropertiesHandler.setAutoPilot(this.getTardis().getHandlers().getProperties(), withRemat);
 
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
-        DoorHandler.lockTardis(true, this.getTardis(), (ServerWorld) TardisUtil.getTardisDimension(), null, true);
+        DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
-        if (PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.HANDBRAKE)) {
+        if (PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
             // fail to take off when handbrake is on
             this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
-            if (TardisUtil.isInteriorEmpty(tardis))
+            if (TardisUtil.isInteriorEmpty(tardis()))
                 TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
 
             TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to takeoff!")); // fixme translatable
             return;
         }
+
+        // fixme where does this go?
+        TardisEvents.DEMAT.invoker().onDemat(getTardis());
 
         this.setState(State.DEMAT);
 
@@ -253,10 +236,10 @@ public class TardisTravel {
      * Checks whether the destination is valid otherwise searches for a new one
      *
      * @param limit     how many times the search can happen (should stop hanging)
-     * @param downwards whether to search downwards or upwards
+     * @param fullCheck whether to search downwards or upwards
      * @return whether its safe to land
      */
-    private boolean checkDestination(int limit, boolean downwards) {
+    private boolean checkDestination(int limit, boolean fullCheck) {
         if (TardisUtil.isClient()) return true;
 
         ServerWorld world = (ServerWorld) this.getDestination().getWorld(); // this cast is fine, we know its server
@@ -268,26 +251,50 @@ public class TardisTravel {
 
             setDestinationToTardisInterior(target.tardis(), true, 256); // how many times should this be
 
-            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN)); // limit at a small number cus it might get too laggy
+            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
         }
+
+        // is long line
+        setDestination(new AbsoluteBlockPos.Directed(
+                getDestination().getX(),
+                MathHelper.clamp(getDestination().getY(), world.getBottomY(), world.getTopY() - 1),
+                getDestination().getZ(),
+                getDestination().getWorld(),
+                getDestination().getDirection()),
+                false
+        );
 
         BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
 
-        for (int i = 0; i < limit; i++) {
-            if (world.getBlockState(temp).isReplaceable() && world.getBlockState(temp.up()).isReplaceable() && !world.getBlockState(temp.down()).isReplaceable()) { // check two blocks cus tardis is two blocks tall yk and check for groud
-                this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
-                return true;
+        if (fullCheck) {
+            for (int i = 0; i < limit; i++) {
+                if (world.getBlockState(temp).isReplaceable() && world.getBlockState(temp.up()).isReplaceable() && !world.getBlockState(temp.down()).isReplaceable()) { // check two blocks cus tardis is two blocks tall yk and check for groud
+                    this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
+                    return true;
+                }
+
+                temp = temp.down().mutableCopy();
             }
 
-            if (downwards) temp = temp.down().mutableCopy();
-            else temp = temp.up().mutableCopy();
+            temp = this.getDestination().mutableCopy();
+
+            for (int i = 0; i < limit; i++) {
+                if (world.getBlockState(temp).isReplaceable() && world.getBlockState(temp.up()).isReplaceable() && !world.getBlockState(temp.down()).isReplaceable()) { // check two blocks cus tardis is two blocks tall yk and check for groud
+                    this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
+                    return true;
+                }
+
+                temp = temp.up().mutableCopy();
+            }
         }
 
-        return false;
+        temp = this.getDestination().mutableCopy();
+
+        return (world.getBlockState(temp).isReplaceable()) && (world.getBlockState(temp.up()).isReplaceable());
     }
 
     public boolean checkDestination() {
-        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(this.getTardis().getProperties(), PropertiesHandler.SEARCH_DOWN));
+        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
     }
 
     private boolean isDestinationTardisExterior() {
@@ -330,6 +337,7 @@ public class TardisTravel {
     }
 
     public void toFlight() {
+        this.setLastPosition(this.getPosition());
         this.setState(TardisTravel.State.FLIGHT);
         this.deleteExterior();
         this.checkShouldRemat();
@@ -343,7 +351,12 @@ public class TardisTravel {
         if (blockEntity != null)
             this.runAnimations(blockEntity);
         if (DoorHandler.isClient()) return;
-        DoorHandler.lockTardis(PropertiesHandler.get(this.getTardis().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), (ServerWorld) this.position.getWorld(), null, false);
+        DoorHandler.lockTardis(PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), null, false);
+
+        // fixme where does this go?
+        TardisEvents.LANDED.invoker().onLanded(getTardis());
+
+        // getPosition().getWorld().getChunkManager().getWorldChunk(getPosition().getX(), getPosition().getZ(), false);
     }
 
     public void forceLand() {
@@ -371,7 +384,7 @@ public class TardisTravel {
         this.destination = pos;
 
         if (withChecks)
-            this.checkDestination(CHECK_LIMIT, PropertiesHandler.get(this.getTardis().getProperties(), PropertiesHandler.SEARCH_DOWN));
+            this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
     }
 
     public AbsoluteBlockPos.Directed getDestination() {
@@ -417,7 +430,7 @@ public class TardisTravel {
     }
 
     public void checkShouldRemat() {
-        if (!PropertiesHandler.willAutoPilot(this.getTardis().getProperties()))
+        if (!PropertiesHandler.willAutoPilot(this.getTardis().getHandlers().getProperties()))
             return;
 
         this.materialise();

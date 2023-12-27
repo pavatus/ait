@@ -4,10 +4,16 @@ import com.google.common.collect.Lists;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.VariantEnum;
-import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.core.AITExteriors;
+import mdteam.ait.client.util.ClientTardisUtil;
+import mdteam.ait.core.AITExteriorVariants;
+import mdteam.ait.core.item.TardisItemBuilder;
+import mdteam.ait.tardis.exterior.BoothExterior;
+import mdteam.ait.tardis.exterior.ClassicExterior;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.exterior.PoliceBoxExterior;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.render.DiffuseLighting;
@@ -22,14 +28,13 @@ import net.minecraft.util.math.RotationAxis;
 import java.util.List;
 import java.util.UUID;
 
-import static mdteam.ait.client.renderers.exteriors.ExteriorEnum.*;
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 
 public class MonitorScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
-    private ExteriorEnum currentModel;
-    private VariantEnum currentVariant;
+    private ExteriorSchema currentModel;
+    private ExteriorVariantSchema currentVariant;
     private float scrollPosition;
     private boolean scrollbarClicked;
     private int visibleTopRow;
@@ -57,19 +62,30 @@ public class MonitorScreen extends TardisScreen {
         this.createButtons();
     }
 
-    public ExteriorEnum getCurrentModel() {
+    public ExteriorSchema getCurrentModel() {
         return currentModel == null ? tardis().getExterior().getType() : currentModel;
     }
 
-    public void setCurrentModel(ExteriorEnum currentModel) {
+    public void setCurrentModel(ExteriorSchema currentModel) {
         this.currentModel = currentModel;
+
+        if (this.currentVariant.parent() != currentModel) {
+            currentVariant = null;
+        }
     }
 
-    public VariantEnum getCurrentVariant() {
-        return currentVariant == null ? tardis().getExterior().getVariant() : currentVariant;
+    public ExteriorVariantSchema getCurrentVariant() {
+        if (currentVariant == null)
+            if(tardis().getExterior().getType() != getCurrentModel()) {
+                setCurrentVariant(TardisItemBuilder.findRandomVariant(getCurrentModel()));
+            } else {
+                setCurrentVariant(tardis().getExterior().getVariant());
+            }
+
+        return currentVariant;
     }
 
-    public void setCurrentVariant(VariantEnum currentVariant) {
+    public void setCurrentVariant(ExteriorVariantSchema currentVariant) {
         this.currentVariant = currentVariant;
     }
 
@@ -111,26 +127,54 @@ public class MonitorScreen extends TardisScreen {
                     this.getCurrentModel().ordinal() : tardis().getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(),
                     this.getCurrentVariant() != tardis().getExterior().getVariant());*/
             if (this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant() != tardis().getExterior().getVariant()) {
-                TardisUtil.changeExteriorWithScreen(this.tardisId,
-                        this.getCurrentModel().ordinal(), this.getCurrentVariant().ordinal(),
+                ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
+                        this.getCurrentModel().id().toString(), this.getCurrentVariant().id().toString(),
                         this.getCurrentVariant() != tardis().getExterior().getVariant());
             }
         }
     }
 
     public void whichDirectionExterior(boolean direction) {
-        ExteriorEnum[] values = ExteriorEnum.values();
-        int currentIndex = this.getCurrentModel() == null ? 0 : this.getCurrentModel().ordinal();
-        int newIndex = (currentIndex + (direction ? 1 : -1) + values.length) % values.length;
-        this.setCurrentModel(values[newIndex]);
+        if (direction) setCurrentModel(nextExterior());
+        else setCurrentModel(previousExterior());
+    }
+    public ExteriorSchema nextExterior() {
+        List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
+
+        int idx = list.indexOf(getCurrentModel());
+        if (idx < 0 || idx+1 == list.size()) return list.get(0);
+        return list.get(idx + 1);
+    }
+    public ExteriorSchema previousExterior() {
+        List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
+
+        int idx = list.indexOf(getCurrentModel());
+        if (idx <= 0) return list.get(list.size() - 1);
+        return list.get(idx - 1);
     }
 
+
     public void whichDirectionVariant(boolean direction) {
-        VariantEnum[] values = VariantEnum.values();
-        int currentIndex = this.getCurrentVariant() == null ? 0 : this.getCurrentVariant().ordinal();
-        int newIndex = (currentIndex + (direction ? 1 : -1) + values.length) % values.length;
-        this.setCurrentVariant(values[newIndex]);
+        if (direction) setCurrentVariant(nextVariant());
+        else setCurrentVariant(previousVariant());
     }
+
+    public ExteriorVariantSchema nextVariant() {
+        List<ExteriorVariantSchema> list = AITExteriorVariants.withParent(getCurrentVariant().parent()).stream().toList();
+
+        int idx = list.indexOf(getCurrentVariant());
+        if (idx < 0 || idx+1 == list.size()) return list.get(0);
+        return list.get(idx + 1);
+    }
+
+    public ExteriorVariantSchema previousVariant() {
+        List<ExteriorVariantSchema> list = AITExteriorVariants.withParent(getCurrentVariant().parent()).stream().toList();
+
+        int idx = list.indexOf(getCurrentVariant());
+        if (idx <= 0) return list.get(list.size() - 1);
+        return list.get(idx - 1);
+    }
+
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -183,18 +227,18 @@ public class MonitorScreen extends TardisScreen {
         // testing @todo
         if (tardis() != null) {
             if (this.getCurrentModel() == null || this.getCurrentVariant() == null) return;
-            ExteriorModel model = this.getCurrentModel().createModel();
+            ExteriorModel model = this.getCurrentVariant().model();
             MatrixStack stack = context.getMatrices();
             // fixme is bad
             stack.push();
-            stack.translate(x, this.getCurrentModel() != SHELTER ? this.getCurrentModel() == POLICE_BOX ? y + 8 : y : y + 23, 100f);
-            if (this.getCurrentModel() == POLICE_BOX) stack.scale(-10, 10, 10);
-            else if (this.getCurrentModel() == BOOTH) stack.scale(-scale, scale, scale);
+            stack.translate(x, this.getCurrentModel() == AITExteriors.get(PoliceBoxExterior.REFERENCE) || this.getCurrentModel() == AITExteriors.get(ClassicExterior.REFERENCE) ? y + 8 : y, 100f);
+            if (this.getCurrentModel() == AITExteriors.get(PoliceBoxExterior.REFERENCE) || this.getCurrentModel() == AITExteriors.get(ClassicExterior.REFERENCE)) stack.scale(-10, 10, 10);
+            else if (this.getCurrentModel() == AITExteriors.get(BoothExterior.REFERENCE)) stack.scale(-scale, scale, scale);
             else stack.scale(-scale, scale, scale);
             //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
             stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(mouseX));
             DiffuseLighting.disableGuiDepthLighting();
-            model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(model.getVariousTextures(this.getCurrentModel(), this.getCurrentVariant()))), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+            model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
             DiffuseLighting.enableGuiDepthLighting();
             stack.pop();
         }
@@ -210,6 +254,7 @@ public class MonitorScreen extends TardisScreen {
         int j = ((this.width - this.backgroundWidth) / 2);
         if (tardis() == null) return;
         AbsoluteBlockPos.Directed abpd = tardis().getTravel().getDestination();
+        if(abpd.getDimension() == null) return;
         String destinationText = "> " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
         String dimensionText = "> " + convertWorldValueToModified(abpd.getDimension().getValue());
         String directionText = "> " + abpd.getDirection().toString().toUpperCase();

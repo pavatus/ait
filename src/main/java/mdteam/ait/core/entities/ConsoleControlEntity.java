@@ -3,13 +3,8 @@ package mdteam.ait.core.entities;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.control.ControlTypes;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -18,7 +13,6 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
@@ -31,8 +25,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -41,7 +33,6 @@ import org.joml.Vector3f;
 import mdteam.ait.tardis.Tardis;
 
 import java.util.List;
-import java.util.Objects;
 
 public class ConsoleControlEntity extends BaseControlEntity {
 
@@ -146,6 +137,11 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     @Override
     public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
+        if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
+            controlEditorHandler(player);
+            return ActionResult.SUCCESS;
+        }
+
         if (hand == Hand.MAIN_HAND)
             this.run(player, player.getWorld());
 
@@ -155,10 +151,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
     @Override
     public boolean damage(DamageSource source, float amount) {
         if (source.getAttacker() instanceof PlayerEntity player) {
-            if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) {
+            if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
                 controlEditorHandler(player);
-            }
-            this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld());
+            } else
+                this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld());
         }
 
         return super.damage(source, source.getAttacker() instanceof PlayerEntity ? 0 : amount);
@@ -166,7 +162,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     public boolean run(PlayerEntity player, World world) {
         if (this.consoleBlockPos != null)
-            this.getWorld().playSound(null, this.consoleBlockPos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 0.7f, 1f);
+            this.getWorld().playSound(null, this.getBlockPos(), this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
 
         if (!world.isClient()) {
             if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM) {
@@ -174,6 +170,8 @@ public class ConsoleControlEntity extends BaseControlEntity {
             }/* else if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) {
                 controlEditorHandler(player);
             }*/
+
+            if (this.getTardis() == null) return false; // AAAAAAAAAAA
 
             return this.control.runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server
         }
@@ -245,7 +243,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
             if (this.control == null) {
                 if (this.consoleBlockPos != null) {
                     if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
-                        console.markDirty();
+                        console.markNeedsControl();
                     }
                 }
                 discard();
@@ -267,21 +265,21 @@ public class ConsoleControlEntity extends BaseControlEntity {
     }
 
     public void controlEditorHandler(PlayerEntity player) {
-        float increment = 0.025f;
-        if (player.getOffHandStack().getItem() == Items.EMERALD_BLOCK) {
+        float increment = 0.0125f;
+        if (player.getMainHandStack().getItem() == Items.EMERALD_BLOCK) {
             this.setPosition(this.getPos().add(player.isSneaking() ? -increment : increment, 0, 0));
         }
-        if (player.getOffHandStack().getItem() == Items.DIAMOND_BLOCK) {
+        if (player.getMainHandStack().getItem() == Items.DIAMOND_BLOCK) {
             this.setPosition(this.getPos().add(0, player.isSneaking() ? -increment : increment, 0));
         }
-        if (player.getOffHandStack().getItem() == Items.REDSTONE_BLOCK) {
+        if (player.getMainHandStack().getItem() == Items.REDSTONE_BLOCK) {
             this.setPosition(this.getPos().add(0, 0, player.isSneaking() ? -increment : increment));
         }
-        if (player.getOffHandStack().getItem() == Items.COD) {
+        if (player.getMainHandStack().getItem() == Items.COD) {
             this.setScaleAndCalculate(player.isSneaking() ? this.getDataTracker().get(WIDTH) - increment : this.getDataTracker().get(WIDTH) + increment,
                     this.getDataTracker().get(HEIGHT));
         }
-        if (player.getOffHandStack().getItem() == Items.COOKED_COD) {
+        if (player.getMainHandStack().getItem() == Items.COOKED_COD) {
             this.setScaleAndCalculate(this.getDataTracker().get(WIDTH),
                     player.isSneaking() ? this.getDataTracker().get(HEIGHT) - increment : this.getDataTracker().get(HEIGHT) + increment);
         }

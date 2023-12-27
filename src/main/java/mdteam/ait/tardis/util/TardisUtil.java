@@ -2,26 +2,29 @@ package mdteam.ait.tardis.util;
 
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.VariantEnum;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITDimensions;
+import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.item.KeyItem;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
+import mdteam.ait.tardis.TardisManager;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.PosType;
-import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -29,25 +32,31 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
-
     private static final Random RANDOM = new Random();
     private static MinecraftServer SERVER; //@TODO fixme this does not work on multiplayer.
     private static ServerWorld TARDIS_DIMENSION;
     public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
     public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");
+
+    public static final Identifier FIND_PLAYER = new Identifier(AITMod.MOD_ID, "find_player");
 
     public static void init() {
         ServerWorldEvents.UNLOAD.register((server, world) -> {
@@ -66,20 +75,21 @@ public class TardisUtil {
         ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
                 (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
-                    int exteriorValue = buf.readInt();
+                    Identifier exteriorValue = Identifier.tryParse(buf.readString());
                     boolean variantChange = buf.readBoolean();
-                    int variantValue = buf.readInt();
+                    String variantValue = buf.readString();
 
-                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(ExteriorEnum.values()[exteriorValue]);
+                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(AITExteriors.get(exteriorValue));
                     WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
                     if (variantChange) {
-                        ServerTardisManager.getInstance().getTardis(uuid).getExterior().setVariant(VariantEnum.values()[variantValue]);
+                        ServerTardisManager.getInstance().getTardis(uuid).getExterior().setVariant(AITExteriorVariants.get(Identifier.tryParse(variantValue)));
                         WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                         .getTravel().getPosition().getWorld().getRegistryKey()),
                                 ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
                     }
+                    ServerTardisManager.getInstance().getTardis(uuid).markDirty();
 
                     /*ExteriorEnum[] values = ExteriorEnum.values();
                     int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
@@ -97,31 +107,48 @@ public class TardisUtil {
                             TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
                     if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
                         if (!player.isSneaking()) {
-                            DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
-                                    player);
+                            if(!tardis.getDoor().locked()) {
+                            /*DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
+                                    player);*/
+                                if (tardis.getDoor().isLeftOpen()) {
+                                    tardis.getDoor().closeDoors();
+                                } else if (tardis.getDoor().isBothClosed()) {
+                                    tardis.getDoor().openDoors();
+                                } else {
+                                    tardis.getDoor().setRightRot(tardis.getDoor().isLeftOpen());
+                                    tardis.getDoor().setLeftRot(true);
+                                }
+                            }
                         } else {
-                            DoorHandler.toggleLock(tardis, server.getWorld(player.getWorld().getRegistryKey()), player);
+                            DoorHandler.toggleLock(tardis, player);
                         }
-                        tardis.getDoor().sync();
+                        tardis.markDirty();
                     }
                     player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
                 }
         );
-    }
-
-    public static void changeExteriorWithScreen(UUID uuid, int exterior, int variant, boolean variantchange) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(uuid);
-        buf.writeInt(exterior);
-        buf.writeBoolean(variantchange);
-        buf.writeInt(variant);
-        ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);
-    }
-
-    public static void snapToOpenDoors(UUID uuid) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(uuid);
-        ClientPlayNetworking.send(SNAP, buf);
+        ServerPlayNetworking.registerGlobalReceiver(FIND_PLAYER,
+                (server, currentPlayer, handler, buf, responseSender) -> {
+                    UUID tardisId = buf.readUuid();
+                    UUID playerUuid = buf.readUuid();
+                    Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisId);
+                    ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(playerUuid);
+                    if(tardis.getDesktop().getConsolePos() == null) return;
+                    if(serverPlayer == null) {
+                        TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
+                        return;
+                    }
+                    tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+                            serverPlayer.getBlockX(),
+                                    serverPlayer.getBlockY(),
+                                    serverPlayer.getBlockZ(),
+                                    serverPlayer.getWorld(),
+                                    serverPlayer.getMovementDirection()),
+                            PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND));
+                    TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
+                    tardis.markDirty();
+                }
+        );
     }
 
     public static MinecraftServer getServer() {
@@ -147,6 +174,12 @@ public class TardisUtil {
             }
         }*/
         return TARDIS_DIMENSION;
+    }
+
+    public static boolean isRiftChunk(ServerWorld world,BlockPos pos) {
+        ChunkPos chunkPos = new ChunkPos(pos);
+        boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, world.getSeed(), 987234910L).nextInt(8) == 0; // for now itll be the same as slime chunks (fuck you classic) but if needed change that big number beginning with 9 to a slightly different number and wowow its entirely different
+        return bl;
     }
 
     public static AbsoluteBlockPos.Directed createFromPlayer(PlayerEntity player) {
@@ -223,7 +256,7 @@ public class TardisUtil {
     }
 
     public static BlockPos offsetExteriorDoorPosition(TardisTravel travel) {
-        return TardisUtil.offsetDoorPosition(travel.getPosition());
+        return TardisUtil.offsetExteriorDoorPosition(travel.getPosition());
     }
 
     public static BlockPos offsetDoorPosition(AbsoluteBlockPos.Directed pos) {
@@ -237,6 +270,16 @@ public class TardisUtil {
         };
     }
 
+    public static BlockPos offsetExteriorDoorPosition(AbsoluteBlockPos.Directed pos) {
+        return switch (pos.getDirection()) {
+            case DOWN, UP ->
+                    throw new IllegalArgumentException("Cannot adjust door position with direction: " + pos.getDirection());
+            case NORTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.0125);
+            case SOUTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() - 0.0125);
+            case EAST -> new BlockPos.Mutable(pos.getX() + 0.0125, pos.getY(), pos.getZ() + 0.5);
+            case WEST -> new BlockPos.Mutable(pos.getX() - 0.0125, pos.getY(), pos.getZ() + 0.5);
+        };
+    }
     public static void teleportOutside(Tardis tardis, ServerPlayerEntity player) {
         TardisUtil.teleportWithDoorOffset(player, tardis.getDoor().getExteriorPos());
     }
@@ -310,7 +353,18 @@ public class TardisUtil {
     }
 
     public static List<PlayerEntity> getPlayersInInterior(Tardis tardis) {
-        return getPlayersInInterior(tardis.getDesktop().getCorners());
+        Tardis found;
+        List<PlayerEntity> list = new ArrayList<>();
+
+        for (ServerPlayerEntity player : getServer().getPlayerManager().getPlayerList()) {
+            if (player.getServerWorld() != getTardisDimension()) continue;
+
+            found = findTardisByInterior(player.getBlockPos());
+            if(found == null) continue; // fixme "Cannot invoke "..getUuid()" because "found" is null ????
+            if (found.getUuid().equals(tardis.getUuid())) list.add(player);
+        }
+
+        return list;
     }
 
     public static List<PlayerEntity> getPlayersInInterior(Corners corners) {
@@ -415,5 +469,22 @@ public class TardisUtil {
         Vec3i size = tardis.getDesktop().getSchema().findTemplate().get().getSize();
 
         return corners.getFirst().add(size.getX(), size.getY() / 2, size.getZ());
+    }
+
+    @Nullable
+    public static List<PlayerEntity> findPlayerByTardisKey(ServerWorld world, Tardis tardis) {
+        List<PlayerEntity> newList = new ArrayList<>();
+        for(PlayerEntity player : world.getServer().getPlayerManager().getPlayerList()) {
+            if(KeyItem.isKeyInInventory(player)) {
+                ItemStack key = KeyItem.getFirstKeyStackInInventory(player);
+                if(key == null) return null;
+                NbtCompound tag = key.getOrCreateNbt();
+                if (!tag.contains("tardis")) return null;
+                if (UUID.fromString(tag.getString("tardis")) == tardis.getUuid()) {
+                    newList.add(player);
+                }
+            }
+        }
+        return newList;
     }
 }

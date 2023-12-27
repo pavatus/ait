@@ -1,10 +1,13 @@
 package mdteam.ait.client.models.doors;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
@@ -58,8 +61,8 @@ public class PoliceBoxDoorModel extends DoorModel {
 
     @Override
     public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        this.TARDIS.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
-        this.TARDIS.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();
+        /*this.TARDIS.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
+        this.TARDIS.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();*/
 
         matrices.push();
         matrices.scale(0.68F, 0.68f, 0.68f);
@@ -68,6 +71,16 @@ public class PoliceBoxDoorModel extends DoorModel {
 
         super.renderWithAnimations(doorEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
+    }
+
+    @Override
+    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+        return switch (state) {
+            case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
+            case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
+            case SECOND -> DoorAnimations.INTERIOR_SECOND_OPEN_ANIMATION;
+            case BOTH -> DoorAnimations.INTERIOR_BOTH_OPEN_ANIMATION;
+        };
     }
 
     @Override

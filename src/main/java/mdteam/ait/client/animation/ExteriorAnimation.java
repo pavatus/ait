@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier;
 import org.joml.Math;
 import mdteam.ait.tardis.TardisTravel;
 
-public abstract class ExteriorAnimation { // hay una problema: no hay animacion excepto MAT
+public abstract class ExteriorAnimation {
 
     protected float alpha = 1;
     protected ExteriorBlockEntity exterior;
@@ -75,6 +75,7 @@ public abstract class ExteriorAnimation { // hay una problema: no hay animacion 
     }
 
     public void tellClientsToSetup(TardisTravel.State state) {
+        if (exterior.getWorld() == null) return; // happens when tardis spawns above world limit, so thats nice
         if (exterior.getWorld().isClient()) return;
 
         for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {

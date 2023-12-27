@@ -1,9 +1,13 @@
 package mdteam.ait.client.models.exteriors;
 
+import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
 // Made with Blockbench 4.9.1
@@ -51,11 +55,30 @@ public class TardimExteriorModel extends ExteriorModel {
         // matrices.scale(0.6F,0.6f,0.6f);
         matrices.translate(0, -1.5f, 0);
 
-        this.tardis.getChild("left_door").yaw = exterior.getLeftDoorRotation() == 0 ? 0 : -1.575f;
-        this.tardis.getChild("right_door").yaw = exterior.getRightDoorRotation() == 0 ? 0 : 1.575f;
+        /*this.tardis.getChild("left_door").yaw = exterior.getRightDoor() ? 0 : -1.575f;
+        this.tardis.getChild("right_door").yaw = exterior.getLeftDoor() ? 0 : 1.575f;*/
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
+        matrices.pop();
+    }
+
+    @Override
+    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+        return switch (state) {
+            case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
+            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
+            case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
+            case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
+        };
+    }
+
+    @Override
+    public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        matrices.push();
+        matrices.translate(0, -1.5f, 0);
+
+        super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();
     }
 }

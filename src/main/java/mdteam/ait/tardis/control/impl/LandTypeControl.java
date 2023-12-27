@@ -2,8 +2,6 @@ package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
@@ -16,17 +14,17 @@ public class LandTypeControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        PropertiesHandler.set(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN, !PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN));
+        PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
 
-        messagePlayer(player, PropertiesHandler.get(tardis.getProperties(), PropertiesHandler.SEARCH_DOWN));
+        messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
 
         return false;
     }
 
     public void messagePlayer(ServerPlayerEntity player, boolean var) {
         // fixme translatable
-        String s = var ? "DOWN" : "UP";
+        String s = var ? "ON" : "OFF";
 
-        player.sendMessage(Text.literal("Searching: " + s), true);
+        player.sendMessage(Text.literal("Ground Searching: " + s), true);
     }
 }

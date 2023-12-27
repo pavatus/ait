@@ -2,10 +2,16 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.client.renderers.exteriors.ExteriorEnum;
-import mdteam.ait.client.renderers.exteriors.VariantEnum;
+import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITDesktops;
+import mdteam.ait.core.AITExteriorVariants;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.exterior.CapsuleExterior;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
@@ -16,29 +22,36 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
+import java.util.Random;
+
 public class TardisItemBuilder extends Item {
 
     public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "office"); //new Identifier(AITMod.MOD_ID, "war");
-    public static final ExteriorEnum DEFAULT_EXTERIOR = ExteriorEnum.CAPSULE;
-    public static final VariantEnum DEFAULT_VARIANT = VariantEnum.DEFAULT;
+    public static final Identifier DEFAULT_EXTERIOR = CapsuleExterior.REFERENCE;
     public static final ConsoleEnum DEFAULT_CONSOLE = ConsoleEnum.BOREALIS;
 
-    private final ExteriorEnum exterior;
+    private final ExteriorSchema exterior;
     private final Identifier desktop;
 
-    public TardisItemBuilder(Settings settings, ExteriorEnum exterior, Identifier desktopId) {
+    public TardisItemBuilder(Settings settings, ExteriorSchema exterior, Identifier desktopId) {
         super(settings);
 
         this.exterior = exterior;
         this.desktop = desktopId;
     }
 
-    public TardisItemBuilder(Settings settings, ExteriorEnum exterior) {
+    public TardisItemBuilder(Settings settings, ExteriorSchema exterior) {
         this(settings, exterior, DEFAULT_INTERIOR);
     }
 
     public TardisItemBuilder(Settings settings) {
-        this(settings, DEFAULT_EXTERIOR);
+        this(settings, AITExteriors.get(DEFAULT_EXTERIOR));
+    }
+
+    public static ExteriorVariantSchema findRandomVariant(ExteriorSchema exterior) { // fixme its not very random icl
+        Random rnd = new Random();
+        int randomized = rnd.nextInt(Math.abs(AITExteriorVariants.withParent(exterior).size()));
+        return (ExteriorVariantSchema) AITExteriorVariants.withParent(exterior).toArray()[randomized];
     }
 
     @Override
@@ -52,9 +65,24 @@ public class TardisItemBuilder extends Item {
         AbsoluteBlockPos.Directed pos = new AbsoluteBlockPos.Directed(context.getBlockPos().up(), world, Direction.NORTH);
 
         if (context.getHand() == Hand.MAIN_HAND) {
-            System.out.println(this.exterior);
+            BlockEntity entity = world.getBlockEntity(context.getBlockPos());
 
-            ServerTardisManager.getInstance().create(pos, this.exterior, DEFAULT_VARIANT, DEFAULT_CONSOLE, AITDesktops.get(this.desktop), false);
+            if (entity instanceof ConsoleBlockEntity consoleBlock) {
+                TardisTravel.State state = consoleBlock.getTardis().getTravel().getState();
+
+                if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
+                    return ActionResult.PASS;
+                }
+
+                consoleBlock.killControls();
+                world.removeBlock(context.getBlockPos(), false);
+                world.removeBlockEntity(context.getBlockPos());
+                return ActionResult.SUCCESS;
+            }
+
+            //System.out.println(this.exterior);
+
+            ServerTardisManager.getInstance().create(pos, this.exterior, findRandomVariant(exterior) , AITDesktops.get(this.desktop), false);
             context.getStack().decrement(1);
         }
 

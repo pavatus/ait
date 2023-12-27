@@ -1,8 +1,12 @@
 package mdteam.ait.tardis.wrapper.server;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.tardis.TardisTickable;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
@@ -12,7 +16,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
 //TODO: istg duzo :))))
-public class ServerTardisTravel extends TardisTravel {
+public class ServerTardisTravel extends TardisTravel implements TardisTickable {
 
     public ServerTardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
         super(tardis, pos);
@@ -21,19 +25,19 @@ public class ServerTardisTravel extends TardisTravel {
     @Override
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
         super.setDestination(pos, withChecks);
-        this.sync();
+        this.tardis().markDirty();
     }
 
     @Override
     public void setPosition(AbsoluteBlockPos.Directed pos) {
         super.setPosition(pos);
-        this.sync();
+        this.tardis().markDirty();
     }
 
     @Override
     public void setState(State state) {
         super.setState(state);
-        this.sync();
+        this.tardis().markDirty();
     }
 
     public static double getSoundEventLengthInSeconds(SoundEvent sound) {
@@ -54,16 +58,24 @@ public class ServerTardisTravel extends TardisTravel {
     @Override
     public void dematerialise(boolean withRemat) {
         super.dematerialise(withRemat);
-        this.sync();
+        this.tardis().markDirty();
     }
 
     @Override
     public void materialise() {
         super.materialise();
-        this.sync();
+        this.tardis().markDirty();
     }
 
-    public void sync() {
-        ServerTardisManager.getInstance().sendToSubscribers(this.tardis);
-    }
+    @Override
+    public void startTick(MinecraftServer server) {}
+
+    @Override
+    public void tick(MinecraftServer server) {}
+
+    @Override
+    public void tick(ServerWorld world) {}
+
+    @Override
+    public void tick(MinecraftClient client) {}
 }

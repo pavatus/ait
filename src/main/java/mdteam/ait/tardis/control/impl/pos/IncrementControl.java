@@ -17,6 +17,9 @@ public class IncrementControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         TardisTravel travel = tardis.getTravel();
+
+        tardis.markDirty();
+
         PosManager postmanPat = travel.getPosManager(); // lol posmanager shortens to posman and postman pat sounds similar fixme if ur boring
 
         if (!player.isSneaking()) {

@@ -3,7 +3,7 @@ package mdteam.ait.core.blockentities;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
-import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -12,6 +12,7 @@ import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -29,7 +30,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
-import mdteam.ait.tardis.TardisManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -38,8 +38,9 @@ import java.util.UUID;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class DoorBlockEntity extends BlockEntity {
-
     private UUID tardisId;
+    public AnimationState DOOR_STATE = new AnimationState();
+    public int animationTimer = 0;
 
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -57,6 +58,12 @@ public class DoorBlockEntity extends BlockEntity {
         }
     }
 
+    public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T door) {
+        if(world.isClient()) {
+            ((DoorBlockEntity) door).checkAnimations();
+        }
+    }
+
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
         if (player == null)
             return;
@@ -67,7 +74,7 @@ public class DoorBlockEntity extends BlockEntity {
                 return;
             }
             if (Objects.equals(this.getTardis().getUuid().toString(), tag.getString("tardis"))) {
-                DoorHandler.toggleLock(this.getTardis(), (ServerWorld) world, (ServerPlayerEntity) player);
+                DoorHandler.toggleLock(this.getTardis(), (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
@@ -75,28 +82,10 @@ public class DoorBlockEntity extends BlockEntity {
             return;
         }
         DoorHandler.useDoor(this.getTardis(), (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
+        // fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
         if (sneaking)
             return;
-        AbsoluteBlockPos exteriorPos = this.getTardis().getTravel().getPosition();
-        ExteriorBlockEntity exterior = TardisUtil.getExterior(this.getTardis());
-        if (exterior != null) {
-            exteriorPos.getChunk();
-            if (!world.isClient())
-                exterior.sync();
-        }
-        this.sync();
     }
-
-    public float getLeftDoorRotation() {
-        if (this.getTardis() == null) return 5;
-        return this.getTardis().getDoor().isLeftOpen() ? 1.2f : 0;
-    }
-
-    public float getRightDoorRotation() {
-        if (this.getTardis() == null) return 5;
-        return this.getTardis().getDoor().isRightOpen() ? 1.2f : 0;
-    }
-
     public Direction getFacing() {
         return this.getCachedState().get(HorizontalDirectionalBlock.FACING);
     }
@@ -122,14 +111,27 @@ public class DoorBlockEntity extends BlockEntity {
         if (nbt.contains("tardis")) {
             this.setTardis(UUID.fromString(nbt.getString("tardis")));
         }
+        if(this.getTardis() != null)
+            this.getTardis().markDirty();
     }
 
     public void onEntityCollision(Entity entity) {
         if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
             return;
-        if (this.getTardis() != null && this.getLeftDoorRotation() > 0 || this.getRightDoorRotation() > 0) {
-            if (!this.getTardis().getLockedTardis())
+        if (this.getTardis() != null && this.getTardis().getDoor().isOpen()) {
+            if (!this.getTardis().getLockedTardis() && !PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
                 TardisUtil.teleportOutside(this.getTardis(), player);
+        }
+    }
+
+    public void checkAnimations() {
+        // DO NOT RUN THIS ON SERVER!!
+        if(getTardis() == null) return;
+        animationTimer++;
+
+        if (getTardis().getHandlers().getDoor().getAnimationInteriorState() == null || !(getTardis().getHandlers().getDoor().getAnimationInteriorState().equals(getTardis().getDoor().getDoorState()))) {
+            DOOR_STATE.start(animationTimer);
+            getTardis().getHandlers().getDoor().tempInteriorState = getTardis().getDoor().getDoorState();
         }
     }
 

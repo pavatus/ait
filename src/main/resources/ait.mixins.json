@@ -4,8 +4,10 @@
   "package": "mdteam.ait.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "server.ServerPlayerInteractionManagerMixin"
   ],
   "client": [
+    "client.ClientPlayerInteractionManagerMixin",
     "client.DefaultLogoMixin",
     "client.TitleScreenMixin",
     "client.rendering.PlayerPoseRendererMixin"

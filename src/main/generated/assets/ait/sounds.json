@@ -6,12 +6,27 @@
   },
   "controls/handbrake_lever_pull": {
     "sounds": [
-      "ait:controls/handbrake_pull"
+      "ait:controls/handbrake_lever_pull"
+    ]
+  },
+  "controls/knock": {
+    "sounds": [
+      "ait:controls/knock"
+    ]
+  },
+  "controls/snap": {
+    "sounds": [
+      "ait:controls/snap"
     ]
   },
   "secret_music": {
     "sounds": [
       "ait:secret_music"
+    ]
+  },
+  "tardis/cloister": {
+    "sounds": [
+      "ait:tardis/cloister"
     ]
   },
   "tardis/demat": {
@@ -44,14 +59,34 @@
       "ait:tardis/fail_takeoff"
     ]
   },
+  "tardis/flight_loop": {
+    "sounds": [
+      "ait:tardis/flight_loop"
+    ]
+  },
   "tardis/hop_demat": {
     "sounds": [
       "ait:tardis/hop_takeoff"
     ]
   },
-  "tardis/hop_mat": {
+  "tardis/hop_land": {
     "sounds": [
       "ait:tardis/hop_land"
+    ]
+  },
+  "tardis/hums/coral_hum": {
+    "sounds": [
+      "ait:tardis/hums/coral_hum"
+    ]
+  },
+  "tardis/hums/toyota_hum": {
+    "sounds": [
+      "ait:tardis/hums/toyota_hum"
+    ]
+  },
+  "tardis/land_thud": {
+    "sounds": [
+      "ait:tardis/land_thud"
     ]
   },
   "tardis/mat": {

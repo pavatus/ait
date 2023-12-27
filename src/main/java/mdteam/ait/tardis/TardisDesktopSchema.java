@@ -2,6 +2,7 @@ package mdteam.ait.tardis;
 
 import com.google.gson.*;
 import mdteam.ait.core.AITDesktops;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureTemplate;
@@ -16,6 +17,16 @@ public abstract class TardisDesktopSchema {
 
     public TardisDesktopSchema(Identifier id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() == null) return false;
+
+        TardisDesktopSchema that = (TardisDesktopSchema) o;
+
+        return id.equals(that.id);
     }
 
     public Identifier id() {

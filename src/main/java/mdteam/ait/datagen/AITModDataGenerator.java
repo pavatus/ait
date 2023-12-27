@@ -2,6 +2,7 @@ package mdteam.ait.datagen;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.AITDamageTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.datagen.datagen_providers.*;
@@ -89,7 +90,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.AMETHYST_SHARD),
                             FabricRecipeProvider.conditionsFromItem(Items.AMETHYST_SHARD))
             );
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.REMOTE_ITEM, 1)
+            /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.REMOTE_ITEM, 1)
                     .pattern(" R ")
                     .pattern("ICI")
                     .pattern("IPI")
@@ -105,7 +106,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                             FabricRecipeProvider.conditionsFromItem(Items.COPPER_INGOT))
                     .criterion(FabricRecipeProvider.hasItem(Items.REPEATER),
                             FabricRecipeProvider.conditionsFromItem(Items.REPEATER))
-            );
+            );*/
             generateSmithingRecipes(provider);
             return provider;
         })));
@@ -166,10 +167,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addSound("tardis/demat", AITSounds.DEMAT);
             provider.addSound("tardis/mat", AITSounds.MAT);
             provider.addSound("tardis/hop_demat", AITSounds.HOP_DEMAT);
-            provider.addSound("tardis/hop_mat", AITSounds.HOP_MAT);
+            provider.addSound("tardis/hop_land", AITSounds.HOP_MAT);
+            provider.addSound("tardis/land_thud", AITSounds.LAND_THUD);
             provider.addSound("tardis/fail_takeoff", AITSounds.FAIL_DEMAT);
             provider.addSound("tardis/fail_land", AITSounds.FAIL_MAT);
             provider.addSound("tardis/emergency_mat", AITSounds.EMERG_MAT);
+            provider.addSound("tardis/flight_loop", AITSounds.FLIGHT_LOOP);
             provider.addSound("tardis/eighth_demat", AITSounds.EIGHT_DEMAT);
             provider.addSound("tardis/eighth_mat", AITSounds.EIGHT_MAT);
 
@@ -178,6 +181,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addSound("controls/handbrake_lever_pull", AITSounds.HANDBRAKE_LEVER_PULL);
             provider.addSound("controls/knock", AITSounds.KNOCK);
             provider.addSound("controls/snap", AITSounds.SNAP);
+
+            // Hums
+            provider.addSound("tardis/hums/toyota_hum", AITSounds.TOYOTA_HUM);
+            provider.addSound("tardis/hums/coral_hum", AITSounds.CORAL_HUM);
+            // Other
+            provider.addSound("tardis/cloister", AITSounds.CLOISTER);
 
             return provider;
         })));
@@ -194,6 +203,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE);
             aitModelProvider.registerDirectionalBlock(AITBlocks.EXTERIOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
+            aitModelProvider.registerDirectionalBlock(AITBlocks.CORAL_PLANT);
 
             //falloutModelProvider.registerSimpleBlock(AITBlocks.DEEPSLATE_URANIUM_ORE);
             return aitModelProvider;
@@ -239,12 +249,15 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
         aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
         aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
+        aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
         aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
+        aitLanguageProvider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
+        aitLanguageProvider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
 
         return aitLanguageProvider;
     }
@@ -270,12 +283,15 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
         aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
         aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
+        aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
         aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
+        aitLanguageProvider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
+        aitLanguageProvider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
 
         return aitLanguageProvider;
     }
@@ -301,12 +317,15 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
         aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
         aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
+        aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
         aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
+        aitLanguageProvider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
+        aitLanguageProvider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
 
         return aitLanguageProvider;
     }
