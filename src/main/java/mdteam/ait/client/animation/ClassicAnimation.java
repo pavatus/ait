@@ -46,6 +46,9 @@ public class ClassicAnimation extends ExteriorAnimation {
         this.startTime = sound.startTime();
 
         if (state == TardisTravel.State.DEMAT) {
+            this.timeLeft = 390;
+            this.maxTime = 390;
+            this.startTime = 390;
             this.alpha = 1f;
         } else if (state == TardisTravel.State.MAT) {
             this.alpha = 0f;
