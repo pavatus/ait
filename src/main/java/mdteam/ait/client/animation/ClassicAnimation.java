@@ -26,14 +26,10 @@ public class ClassicAnimation extends ExteriorAnimation {
 
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.MAT) {
-            if (this.timeLeft < this.startTime) {
-                // System.out.println(alpha + alphaChangeAmount);
-                this.setAlpha(1f - ((float) this.timeLeft / (this.startTime))); // fixme takes too long
-            } else
-                this.setAlpha(0f);
-
-            this.timeLeft--;
-
+            // Maybe this will fix the class animation taking too long
+            float t = (float) ((this.timeLeft - this.maxTime) / (double) this.startTime);
+            float alpha = (float) (1f / (1f + Math.pow(Math.E, -t)));
+            this.setAlpha((float) (alpha * 2f));
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.LANDED/* && alpha != 1f*/) {
             this.setAlpha(1f);
