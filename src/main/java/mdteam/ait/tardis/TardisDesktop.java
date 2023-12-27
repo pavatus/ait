@@ -9,6 +9,7 @@ import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.Corners;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -119,14 +120,18 @@ public class TardisDesktop {
     private void clearExistingEntities() {
         for (Direction direction : Direction.values()) {
             BlockPos pos = doorPos.add(direction.getVector()); // Get the position of each adjacent block in the interior.
+            BlockEntity blockEntity = TardisUtil.getTardisDimension().getBlockEntity(pos);
+            if (blockEntity instanceof DoorBlockEntity) {
+                continue;
+            }
             TardisUtil.getTardisDimension().removeBlockEntity(pos);  // Remove any existing block entity at that position.
-            Box box = this.corners.getBox();
-            for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemFrameEntity.class, box, (entity) -> true)) {
-                entity.kill();  // Kill any normal entities at that position.
-            }
-            for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemEntity.class, box, (entity) -> true)) {
-                entity.kill();  // Kill any normal entities at that position.
-            }
+        }
+        Box box = this.corners.getBox();
+        for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemFrameEntity.class, box, (entity) -> true)) {
+            entity.kill();  // Kill any normal entities at that position.
+        }
+        for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemEntity.class, box, (entity) -> true)) {
+            entity.kill();  // Kill any normal entities at that position.
         }
     }
 
