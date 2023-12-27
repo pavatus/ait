@@ -8,8 +8,12 @@ import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.Corners;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 
 public class TardisDesktop {
@@ -105,6 +109,10 @@ public class TardisDesktop {
         for (Direction direction : Direction.values()) {
             BlockPos pos = doorPos.add(direction.getVector()); // Get the position of each adjacent block in the interior.
             TardisUtil.getTardisDimension().removeBlockEntity(pos);  // Remove any existing block entity at that position.
+            Box box = this.corners.getBox();
+            for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(Entity.class, box, (entity) -> true)) {
+                entity.kill();  // Kill any normal entities at that position.
+            }
         }
     }
 }
