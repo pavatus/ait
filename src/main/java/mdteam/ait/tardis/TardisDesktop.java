@@ -94,15 +94,17 @@ public class TardisDesktop {
         DesktopGenerator generator = new DesktopGenerator(this.schema);
 
         DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
+        clearExistingEntities();
 
         BlockPos doorPos = generator.place((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
-        /*for (ItemEntity entity : TardisUtil.getTardisDimension().getEntitiesByType(EntityType.ITEM*//*TardisUtil.getPlayerInsideInterior(interiorCorners)*//*, *//*interiorCorners.getBox()*//*EntityPredicates.EXCEPT_SPECTATOR)) {
-            if (TardisUtil.inBox(this.corners.getBox(), entity.getBlockPos())) {
-                System.out.println(entity);
-                entity.kill();
-            }
-        }*/
         this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
         this.updateDoor();
+    }
+
+    private void clearExistingEntities() {
+        for (Direction direction : Direction.values()) {
+            BlockPos pos = doorPos.add(direction.getVector()); // Get the position of each adjacent block in the interior.
+            TardisUtil.getTardisDimension().removeBlockEntity(pos);  // Remove any existing block entity at that position.
+        }
     }
 }
