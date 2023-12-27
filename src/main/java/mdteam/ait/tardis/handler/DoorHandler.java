@@ -228,6 +228,8 @@ public class DoorHandler extends TardisLink {
     }
 
     public static boolean lockTardis(boolean locked, Tardis tardis, @Nullable ServerPlayerEntity player, boolean forced) {
+        if (tardis.getLockedTardis() == locked) return true;
+
         if (!forced) {
             if (tardis.getTravel().getState() != LANDED) return false;
         }
