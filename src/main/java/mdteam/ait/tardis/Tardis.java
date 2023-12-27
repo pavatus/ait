@@ -114,8 +114,13 @@ public class Tardis {
             getTravel().materialise();
         }
 
-        if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING) && !getHandlers().getDoor().locked()) {
+        // fixme nuh uh i dont like it when it locks on land it makes me sadge, instead lock if it was locked - Loqor
+
+        /*if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING) && !getHandlers().getDoor().locked()) {
             DoorHandler.lockTardis(true, this, null, true);
+        }*/
+        if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
+            DoorHandler.lockTardis(getHandlers().getDoor().locked(), this, null, true);
         }
     }
 

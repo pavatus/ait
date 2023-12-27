@@ -89,6 +89,7 @@ public class TardisUtil {
                                         .getTravel().getPosition().getWorld().getRegistryKey()),
                                 ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
                     }
+                    ServerTardisManager.getInstance().getTardis(uuid).markDirty();
 
                     /*ExteriorEnum[] values = ExteriorEnum.values();
                     int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
