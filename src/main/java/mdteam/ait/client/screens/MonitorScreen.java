@@ -158,7 +158,7 @@ public class MonitorScreen extends TardisScreen {
         List<ExteriorVariantSchema> list = AITExteriorVariants.withParent(getCurrentVariant().parent()).stream().toList();
 
         int idx = list.indexOf(getCurrentVariant());
-        if (idx < 0 || idx+1 == list.size() - 1) return list.get(0);
+        if (idx < 0 || idx+1 == list.size()) return list.get(0);
         return list.get(idx + 1);
     }
 
