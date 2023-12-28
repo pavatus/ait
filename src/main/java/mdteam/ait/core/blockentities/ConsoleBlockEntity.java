@@ -15,6 +15,7 @@ import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -56,6 +57,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
     public static final Identifier SYNC_VARIANT = new Identifier(AITMod.MOD_ID, "sync_console_variant");
+    public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "client_ask_console");
 
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
@@ -120,6 +122,13 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     private void findTardis() {
         this.setTardis(TardisUtil.findTardisByInterior(pos));
         markDirty();
+    }
+
+    public void ask() {
+        if (!getWorld().isClient()) return;
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeBlockPos(this.getPos());
+        ClientPlayNetworking.send(ASK, buf);
     }
 
     public void sync() {
@@ -215,6 +224,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (!(variant.parent().id().equals(type))) {
             AITMod.LOGGER.warn("Variant was set and it doesnt match this consoles type!");
             AITMod.LOGGER.warn(variant + " | " + type);
+
+            if (hasWorld() && getWorld().isClient()) ask();
         }
 
         syncVariant();

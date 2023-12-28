@@ -95,6 +95,8 @@ public class AITModClient implements ClientModInitializer {
                 if (door.getTardis() == null || door.getTardis().getDoor() == null) return;
 
                 door.getTardis().getDoor().clearInteriorAnimationState();
+            } else if (block instanceof ConsoleBlockEntity console) {
+                console.ask();
             }
         });
 
