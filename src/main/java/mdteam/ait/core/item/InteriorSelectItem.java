@@ -1,13 +1,10 @@
 package mdteam.ait.core.item;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.tardis.TardisDesktop;
-import mdteam.ait.tardis.TardisDesktopSchema;
+import mdteam.ait.registry.DesktopRegistry;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -18,8 +15,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import mdteam.ait.tardis.TardisTravel;
-
-import java.util.Iterator;
 
 
 /**
@@ -51,7 +46,7 @@ public class InteriorSelectItem extends Item {
                     return ActionResult.PASS;
 
                 Identifier nextInteriorId = getNextInteriorId(exteriorBlock.tardis().getDesktop().getSchema().id());
-                exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
+                exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.REGISTRY.get(nextInteriorId));
                 player.sendMessage(Text.literal(nextInteriorId.toString()));
             }
             if (entity instanceof DoorBlockEntity doorBlock) {
@@ -61,7 +56,7 @@ public class InteriorSelectItem extends Item {
                     return ActionResult.PASS;
 
                 Identifier nextInteriorId = getNextInteriorId(doorBlock.getTardis().getDesktop().getSchema().id());
-                doorBlock.getTardis().getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
+                doorBlock.getTardis().getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.REGISTRY.get(nextInteriorId));
                 player.sendMessage(Text.literal(nextInteriorId.toString()));
             }
             if (entity instanceof ConsoleBlockEntity consoleBlock) {

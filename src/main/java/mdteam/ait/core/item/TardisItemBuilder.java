@@ -3,9 +3,9 @@ package mdteam.ait.core.item;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITExteriors;
-import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -26,7 +26,7 @@ import java.util.Random;
 
 public class TardisItemBuilder extends Item {
 
-    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "office"); //new Identifier(AITMod.MOD_ID, "war");
+    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "cave"); //new Identifier(AITMod.MOD_ID, "war");
     public static final Identifier DEFAULT_EXTERIOR = CapsuleExterior.REFERENCE;
     public static final ConsoleEnum DEFAULT_CONSOLE = ConsoleEnum.BOREALIS;
 
@@ -82,7 +82,7 @@ public class TardisItemBuilder extends Item {
 
             //System.out.println(this.exterior);
 
-            ServerTardisManager.getInstance().create(pos, this.exterior, findRandomVariant(exterior) , AITDesktops.get(this.desktop), false);
+            ServerTardisManager.getInstance().create(pos, this.exterior, findRandomVariant(exterior) , DesktopRegistry.REGISTRY.get(this.desktop), false);
             context.getStack().decrement(1);
         }
 

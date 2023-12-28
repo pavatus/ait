@@ -1,9 +1,9 @@
 package mdteam.ait.core.item;
 
 import mdteam.ait.core.AITExteriors;
-import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -118,14 +118,14 @@ public class SonicItem extends Item {
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
                     Identifier nextInteriorId = InteriorSelectItem.getNextInterior(exteriorBlock.tardis().getDesktop().getSchema().id().getPath());
-                    exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
+                    exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.REGISTRY.get(nextInteriorId));
                     player.sendMessage(Text.literal(nextInteriorId.toString()), true);
                 } else if (player.isSneaking() && world == TardisUtil.getTardisDimension()) {
                     TardisTravel.State state = tardis.getTravel().getState();
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
                     Identifier nextInteriorId = InteriorSelectItem.getNextInterior(tardis.getDesktop().getSchema().id().getPath());
-                    tardis.getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
+                    tardis.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.REGISTRY.get(nextInteriorId));
                     player.sendMessage(Text.literal(nextInteriorId.toString()), true);
                 } else if (world.getRegistryKey() == World.OVERWORLD && !world.isClient()) {
                     player.sendMessage(Text.literal(TardisUtil.isRiftChunk(
