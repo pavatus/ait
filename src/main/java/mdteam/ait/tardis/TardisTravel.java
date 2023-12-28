@@ -422,13 +422,15 @@ public class TardisTravel extends TardisLink {
 
     public void placeExterior() {
         this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState());
-
         ExteriorBlockEntity exterior = new ExteriorBlockEntity(
                 this.position, this.position.getBlockState()
         );
-
         exterior.setTardis(this.getTardis());
         this.position.addBlockEntity(exterior);
+        boolean increaseCostOfTravelFromDimensionalTravel = lastPosition.getWorld().equals(this.position.getWorld());
+        double distance = Math.sqrt(this.position.getSquaredDistance(lastPosition.toCenterPos()));
+        double fuel_cost = (distance / 100) * (increaseCostOfTravelFromDimensionalTravel ? 3 : 1);
+        this.getTardis().removeFuel(fuel_cost);
     }
 
     public void deleteExterior() {
