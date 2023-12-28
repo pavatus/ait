@@ -36,6 +36,7 @@ public class RefuelerControl extends Control {
             if (tardis.isRefueling()) tardis.setRefueling(false); // we shouldnt be refueling if we're not in a rift
             return true;
         }
+        tardis.markDirty();
         return false;
     }
 

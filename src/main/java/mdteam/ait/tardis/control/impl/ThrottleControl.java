@@ -27,6 +27,8 @@ public class ThrottleControl extends Control {
         TardisTravel travel = tardis.getTravel();
 
         if (travel.getState() == TardisTravel.State.LANDED) {
+            // fixme move all these things about out of fuel etc into the demat method, look at what we do for when the handbrake is on
+
             if (tardis.getFuel() <= 0) {
                 player.sendMessage(Text.literal("The TARDIS is out of fuel and can not dematerialize"));
                 return false;
