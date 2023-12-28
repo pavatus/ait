@@ -193,7 +193,7 @@ public class FallingTardisEntity extends Entity {
                             this.dropItem(block);
                         }
 
-                        this.discard();
+                        this.stopFalling();
                     }
                 } else {
                     BlockState blockState = this.getWorld().getBlockState(blockPos);
@@ -236,19 +236,19 @@ public class FallingTardisEntity extends Entity {
                                         }
                                     }
                                 } else if (this.dropItem && this.getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                                    this.discard();
+                                    this.stopFalling();
                                     this.onDestroyedOnLanding(block, blockPos);
                                     this.dropItem(block);
                                 }
                             } else {
-                                this.discard();
+                                this.stopFalling();
                                 if (this.dropItem && this.getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
                                     this.onDestroyedOnLanding(block, blockPos);
                                     this.dropItem(block);
                                 }
                             }
                         } else {
-                            this.discard();
+                            this.stopFalling();
                             this.onDestroyedOnLanding(block, blockPos);
                         }
                     }
@@ -260,6 +260,14 @@ public class FallingTardisEntity extends Entity {
     }
 
     public void stopFalling() {
+        this.stopFalling(true);
+    }
+
+    public void stopFalling(boolean antigravs) {
+        if (antigravs) {
+            PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
+            tardis().markDirty();
+        }
         Block block = this.block.getBlock();
         BlockPos blockPos = this.getBlockPos();
         boolean bl = this.block.getBlock() instanceof ConcretePowderBlock;
