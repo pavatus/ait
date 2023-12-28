@@ -48,6 +48,7 @@ public abstract class ChunkMixin implements RiftChunk {
         WorldChunk worldChunk = (WorldChunk) chunk;
         ChunkPos chunkPos = worldChunk.getPos();
         ServerWorld world = (ServerWorld) worldChunk.getWorld();
+        if (world == null) return false;
         return ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, world.getSeed(), 987234910L).nextInt(8) == 0;
     }
 
