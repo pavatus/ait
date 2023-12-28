@@ -164,7 +164,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     public boolean run(PlayerEntity player, World world) {
         Random random = new Random();
-        int chance_int = random.nextInt(1, 1000);
+        int chance_int = random.nextInt(1, 10_000);
         if (chance_int == 72) {
             // play sound
             this.getWorld().playSound(null, this.getBlockPos(), AITSounds.EVEN_MORE_SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
