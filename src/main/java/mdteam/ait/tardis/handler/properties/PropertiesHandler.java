@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.handler.properties;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.tardis.handler.FuelHandler;
 
 import java.util.HashMap;
 
@@ -94,6 +95,8 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(ALARM_ENABLED, false);
         map.put(IS_FALLING, false);
         map.put(ANTIGRAVS_ENABLED, false);
+        map.put(FuelHandler.FUEL_COUNT, 1000d);
+        map.put(FuelHandler.REFUELING, true); // This is permanently true for now and has no penalty until @Loqor does the control stuff
 
         return map;
     }

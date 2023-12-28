@@ -1,0 +1,76 @@
+package mdteam.ait.tardis.handler;
+
+import mdteam.ait.core.interfaces.RiftChunk;
+import mdteam.ait.core.managers.DeltaTimeManager;
+import mdteam.ait.tardis.Exclude;
+import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import net.minecraft.server.MinecraftServer;
+
+import java.util.UUID;
+
+public class FuelHandler extends TardisLink {
+    @Exclude
+    public static final double MAX_FUEL = 5000;
+    public static final String FUEL_COUNT = "fuel_count";
+    public static final String REFUELING = "refueling";
+
+    public FuelHandler(UUID tardisId) {
+        super(tardisId);
+    }
+
+    public double getFuel() {
+        return (double) PropertiesHandler.get(tardis().getHandlers().getProperties(), FUEL_COUNT);
+    }
+
+    public void setFuelCount(double fuel) {
+        PropertiesHandler.set(tardis().getHandlers().getProperties(), FUEL_COUNT, fuel);
+        tardis().markDirty();
+    }
+
+    public void addFuel(double fuel) {
+        this.setFuelCount(this.getFuel() + fuel);
+    }
+
+    public void removeFuel(double fuel) {
+        if (this.getFuel() - fuel < 0) {
+            this.setFuelCount(0);
+            return;
+        }
+        this.setFuelCount(getFuel() - fuel);
+    }
+
+    public void setRefueling(boolean isRefueling) {
+        PropertiesHandler.setBool(tardis().getHandlers().getProperties(), REFUELING, isRefueling);
+        tardis().markDirty();
+    }
+
+    // is always true for now
+    public boolean isRefueling() {
+        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), REFUELING);
+    }
+
+    @Override
+    public void tick(MinecraftServer server) {
+        super.tick(server);
+
+        // creativious i moved yur code here
+        RiftChunk riftChunk = (RiftChunk) this.tardis().getTravel().getExteriorPos().getChunk();
+        if (riftChunk.isRiftChunk() && tardis().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && riftChunk.getArtronLevels() > 0 && this.getFuel() < FuelHandler.MAX_FUEL  && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-refueldelay"))) {
+            riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
+            addFuel(5);
+            DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-refueldelay", 250L);
+        }
+        if ((tardis().getTravel().getState() == TardisTravel.State.DEMAT || tardis().getTravel().getState() == TardisTravel.State.MAT) && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay")) {
+            DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay", 500L);
+            removeFuel(3);
+        }
+        if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay")) {
+            DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay", 500L);
+            removeFuel(1);
+        }
+        if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT && this.getFuel() == 0) {
+            tardis().getTravel().materialise(); // hehe force land if you don't have enough fuel
+        }
+    }
+}

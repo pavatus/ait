@@ -6,6 +6,7 @@ import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.FuelHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -817,7 +818,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 		// matrices.scale(0.5f, 0.5f, 0.5f);
 		//System.out.println("Fuel: " + console.getTardis().getFuel() + " || clamped fuel: " + (((console.getTardis().getFuel() / 5000) * 2) - 1));
 		this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("m_meter_2").getChild("bone110").yaw =
-				(float) (((console.getTardis().getFuel() / Tardis.MAX_FUEL) * 2) - 1);
+				(float) (((console.getTardis().getFuel() / FuelHandler.MAX_FUEL) * 2) - 1);
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}

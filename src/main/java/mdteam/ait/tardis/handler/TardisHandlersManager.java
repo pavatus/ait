@@ -22,6 +22,7 @@ public class TardisHandlersManager extends TardisLink {
     private ServerHumHandler hum = null;
     private ServerAlarmHandler alarms;
     private final InteriorChangingHandler interior;
+    private final FuelHandler fuel;
 
     public TardisHandlersManager(UUID tardisId) {
         super(tardisId);
@@ -34,6 +35,7 @@ public class TardisHandlersManager extends TardisLink {
         this.hum = new ServerHumHandler(tardisId);
         alarms = new ServerAlarmHandler(tardisId);
         interior = new InteriorChangingHandler(tardisId);
+        this.fuel = new FuelHandler(tardisId);
 
         generateTickables();
     }
@@ -51,6 +53,7 @@ public class TardisHandlersManager extends TardisLink {
         addTickable(getHum());
         addTickable(getAlarms());
         addTickable(getInteriorChanger());
+        addTickable(getFuel());
     }
 
     protected void addTickable(TardisLink var) {
@@ -118,4 +121,8 @@ public class TardisHandlersManager extends TardisLink {
         return alarms;
     }
     public InteriorChangingHandler getInteriorChanger() {return interior;}
+
+    public FuelHandler getFuel() {
+        return fuel;
+    }
 }

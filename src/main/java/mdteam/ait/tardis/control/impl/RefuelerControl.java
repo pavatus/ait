@@ -33,6 +33,7 @@ public class RefuelerControl extends Control {
             if (tardis.getDesktop().getConsolePos() != null && !tardis.isRefueling()) {
                 world.playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_NOTE_BLOCK_IMITATE_WITHER_SKELETON.value(), SoundCategory.BLOCKS, 10, 1);
             }
+            if (tardis.isRefueling()) tardis.setRefueling(false); // we shouldnt be refueling if we're not in a rift
             return true;
         }
         return false;

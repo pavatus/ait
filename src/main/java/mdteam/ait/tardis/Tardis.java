@@ -4,6 +4,7 @@ import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.handler.FuelHandler;
 import mdteam.ait.tardis.handler.TardisHandlersManager;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -29,12 +30,6 @@ public class Tardis {
     private final TardisExterior exterior;
     private TardisHandlersManager handlers;
     private boolean dirty = false;
-
-    @Exclude
-    public static final double MAX_FUEL = 5000;
-
-    private double fuel_count = 0.00;
-    private boolean refueling = true; // This is permanently true for now and has no penalty until @Loqor does the control stuff
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorSchema exteriorType, ExteriorVariantSchema variant) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), false);
@@ -103,37 +98,29 @@ public class Tardis {
         return uuid.equals(tardis.uuid);
     }
 
-    public double getFuel() {
-        return this.fuel_count;
-    }
-
-    public void setFuelCount(double fuel) {
-        this.fuel_count = fuel;
-    }
-
-    public void addFuel(double fuel) {
-        this.fuel_count += fuel;
-    }
-
-    public void removeFuel(double fuel) {
-        if (this.fuel_count - fuel < 0) {
-            this.fuel_count = 0;
-        } else {
-            this.fuel_count -= fuel;
-        }
-    }
-
-    public void setRefueling(boolean isRefueling) {
-        this.refueling = isRefueling;
-    }
-
-    public boolean isRefueling() {
-        return this.refueling;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(uuid);
+    }
+
+    // fuel - because getHandlers() blah blah is annoying me
+    public void addFuel(double fuel) {
+        this.getHandlers().getFuel().addFuel(fuel);
+    }
+    public void removeFuel(double fuel) {
+        this.getHandlers().getFuel().removeFuel(fuel);
+    }
+    public double getFuel() {
+        return this.getHandlers().getFuel().getFuel();
+    }
+    public void setFuelCount(int i) {
+        this.getHandlers().getFuel().setFuelCount(i);
+    }
+    public boolean isRefueling() {
+        return this.getHandlers().getFuel().isRefueling();
+    }
+    public void setRefueling(boolean b) {
+        this.getHandlers().getFuel().setRefueling(b);
     }
 
     /**
@@ -142,23 +129,6 @@ public class Tardis {
      * @param server the server being ticked
      */
     public void tick(MinecraftServer server) {
-        RiftChunk riftChunk = (RiftChunk) this.getTravel().getExteriorPos().getChunk();
-        if (riftChunk.isRiftChunk() && getTravel().getState() == TardisTravel.State.LANDED && refueling && riftChunk.getArtronLevels() > 0 && fuel_count < MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getUuid().toString() + "-refueldelay"))) {
-            riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
-            addFuel(5);
-            DeltaTimeManager.createDelay("tardis-" + getUuid().toString() + "-refueldelay", 250L);
-        }
-        if ((getTravel().getState() == TardisTravel.State.DEMAT || getTravel().getState() == TardisTravel.State.MAT) && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getUuid().toString() + "-fueldraindelay")) {
-            DeltaTimeManager.createDelay("tardis-" + getUuid().toString() + "-fueldraindelay", 500L);
-            removeFuel(3);
-        }
-        if (getTravel().getState() == TardisTravel.State.FLIGHT && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getUuid().toString() + "-fueldraindelay")) {
-            DeltaTimeManager.createDelay("tardis-" + getUuid().toString() + "-fueldraindelay", 500L);
-            removeFuel(1);
-        }
-        if (getTravel().getState() == TardisTravel.State.FLIGHT && fuel_count == 0) {
-            getTravel().materialise(); // hehe force land if you don't have enough fuel
-        }
         this.getHandlers().tick(server);
 
         // im sure this is great for your server performace

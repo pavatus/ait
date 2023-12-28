@@ -155,7 +155,7 @@ public class ServerTardisManager extends TardisManager {
         UUID uuid = UUID.randomUUID();
 
         ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked);
-        tardis.setFuelCount(1000); // Default fuel count is 100
+        // tardis.setFuelCount(1000); // Default fuel count is 100 - cant be set here causes issues. set in PropertiesHandler instead
         //this.saveTardis(tardis);
         this.lookup.put(uuid, tardis);
 
