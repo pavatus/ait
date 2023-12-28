@@ -1,8 +1,6 @@
 package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.core.AITConsoleVariants;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
@@ -11,18 +9,14 @@ import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.Corners;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.WorldChunk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +28,6 @@ public class TardisDesktop {
     private TardisDesktopSchema schema;
     private AbsoluteBlockPos.Directed doorPos;
     private AbsoluteBlockPos.Directed consolePos;
-    private ConsoleEnum consoleType;
-    private AITConsoleVariants consoleVariants;
     private final Corners corners;
 
     public TardisDesktop(Tardis tardis, TardisDesktopSchema schema) {

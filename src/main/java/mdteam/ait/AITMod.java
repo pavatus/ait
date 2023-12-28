@@ -17,6 +17,7 @@ import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
+import mdteam.ait.registry.*;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
@@ -51,11 +52,11 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        AITExteriors.init();
-        AITDesktops.init();
-        AITDoors.init();
-        AITConsoleVariants.init();
-        AITExteriorVariants.init();
+        DoorRegistry.init();
+        ConsoleVariantRegistry.init();
+        DesktopRegistry.init();
+        ExteriorRegistry.init();
+        ExteriorVariantRegistry.init();
 
         FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);

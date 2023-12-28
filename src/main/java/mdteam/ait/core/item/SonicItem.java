@@ -2,6 +2,8 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.DesktopRegistry;
+import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -85,7 +87,7 @@ public class SonicItem extends Item {
                         return;
                     }
 
-                    List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
+                    List<ExteriorSchema> list = ExteriorRegistry.REGISTRY.stream().toList();
                     exteriorBlock.tardis().getExterior().setType(list.get((list.indexOf(exteriorBlock.tardis().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.tardis().getExterior().getType()) + 1));
                     //System.out.println(exteriorBlock.getTardis().getExterior().getType());
 
@@ -116,14 +118,14 @@ public class SonicItem extends Item {
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
                     Identifier nextInteriorId = InteriorSelectItem.getNextInterior(exteriorBlock.tardis().getDesktop().getSchema().id().getPath());
-                    exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
+                    exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.REGISTRY.get(nextInteriorId));
                     player.sendMessage(Text.literal(nextInteriorId.toString()), true);
                 } else if (player.isSneaking() && world == TardisUtil.getTardisDimension()) {
                     TardisTravel.State state = tardis.getTravel().getState();
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
                     Identifier nextInteriorId = InteriorSelectItem.getNextInterior(tardis.getDesktop().getSchema().id().getPath());
-                    tardis.getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
+                    tardis.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.REGISTRY.get(nextInteriorId));
                     player.sendMessage(Text.literal(nextInteriorId.toString()), true);
                 } else if (world.getRegistryKey() == World.OVERWORLD && !world.isClient()) {
                     player.sendMessage(Text.literal(TardisUtil.isRiftChunk(

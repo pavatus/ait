@@ -1,14 +1,13 @@
 package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.api.ICantBreak;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.AITConsoleVariants;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.ConsoleControlEntity;
+import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -204,7 +203,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (variant == null) {
             // oh no : (
             // lets just pick any
-            setVariant(AITConsoleVariants.withParent(getEnum()).stream().findAny().get());
+            setVariant(ConsoleVariantRegistry.withParent(getEnum()).stream().findAny().get());
         }
 
         return variant;
@@ -221,14 +220,14 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         markDirty();
     }
     public void setVariant(Identifier id) {
-        setVariant(AITConsoleVariants.get(id));
+        setVariant(ConsoleVariantRegistry.REGISTRY.get(id));
     }
 
     /**
      * Sets the new {@link ConsoleEnum} and refreshes the console entities
      */
     private void changeConsole(ConsoleEnum var) {
-        changeConsole(var, AITConsoleVariants.withParent(var).stream().findAny().get());
+        changeConsole(var, ConsoleVariantRegistry.withParent(var).stream().findAny().get());
     }
 
     private void changeConsole(ConsoleEnum var, ConsoleVariantSchema variant) {
@@ -248,7 +247,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         return ConsoleEnum.values()[(current.ordinal() + 1 > ConsoleEnum.values().length - 1) ? 0 : current.ordinal() + 1];
     }
     public static ConsoleVariantSchema nextVariant(ConsoleVariantSchema current) {
-        List<ConsoleVariantSchema> list = AITConsoleVariants.withParent(current.parent()).stream().toList();
+        List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParent(current.parent()).stream().toList();
 
         int idx = list.indexOf(current);
         if (idx < 0 || idx+1 == list.size()) return list.get(0);

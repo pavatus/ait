@@ -3,7 +3,6 @@ package mdteam.ait.tardis.variant.door;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.doors.ClassicDoorModel;
 import mdteam.ait.client.models.doors.DoorModel;
-import mdteam.ait.core.AITDoors;
 import net.minecraft.util.Identifier;
 
 public class ClassicDoorVariant extends DoorSchema {
