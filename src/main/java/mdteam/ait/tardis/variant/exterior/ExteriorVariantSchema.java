@@ -4,9 +4,9 @@ import com.google.gson.*;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import net.minecraft.block.BlockState;
@@ -22,12 +22,12 @@ import java.lang.reflect.Type;
 /**
  * A variant for a {@link ExteriorSchema} which provides a model, texture, emission, {@link ExteriorAnimation} and {@link DoorSchema}
  * <br><br>
- * This should be registered in {@link AITExteriorVariants}
+ * This should be registered in {@link ExteriorVariantRegistry#REGISTRY}
  * <br><br>
- * This should <b>ONLY</b> be created once in registry, you should grab the class via {@link AITExteriorVariants#get(Identifier)}, the identifier being this variants id variable.
+ * This should <b>ONLY</b> be created once in registry, you should grab the class via {@link ExteriorVariantRegistry#REGISTRY#get(Identifier)}, the identifier being this variants id variable.
  * <br><br>
- * It is recommended for implementations of this class to have a static "REFERENCE" {@link Identifier} variable which other things can use to get this from the {@link AITExteriorVariants}
- * @see AITExteriorVariants
+ * It is recommended for implementations of this class to have a static "REFERENCE" {@link Identifier} variable which other things can use to get this from the {@link ExteriorVariantRegistry#REGISTRY}
+ * @see ExteriorVariantRegistry#REGISTRY
  * @author duzo
  */
 public abstract class ExteriorVariantSchema {
@@ -81,7 +81,7 @@ public abstract class ExteriorVariantSchema {
                 id = new Identifier(AITMod.MOD_ID, "capsule_default");
             }
 
-            return AITExteriorVariants.get(id);
+            return ExteriorVariantRegistry.REGISTRY.get(id);
         }
 
         @Override

@@ -2,10 +2,10 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -50,8 +50,8 @@ public class TardisItemBuilder extends Item {
 
     public static ExteriorVariantSchema findRandomVariant(ExteriorSchema exterior) { // fixme its not very random icl
         Random rnd = new Random();
-        int randomized = rnd.nextInt(Math.abs(AITExteriorVariants.withParent(exterior).size()));
-        return (ExteriorVariantSchema) AITExteriorVariants.withParent(exterior).toArray()[randomized];
+        int randomized = rnd.nextInt(Math.abs(ExteriorVariantRegistry.withParent(exterior).size()));
+        return (ExteriorVariantSchema) ExteriorVariantRegistry.withParent(exterior).toArray()[randomized];
     }
 
     @Override

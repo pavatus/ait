@@ -3,13 +3,13 @@ package mdteam.ait.tardis.util;
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITDimensions;
-import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisManager;
@@ -85,7 +85,7 @@ public class TardisUtil {
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
                     if (variantChange) {
-                        ServerTardisManager.getInstance().getTardis(uuid).getExterior().setVariant(AITExteriorVariants.get(Identifier.tryParse(variantValue)));
+                        ServerTardisManager.getInstance().getTardis(uuid).getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(Identifier.tryParse(variantValue)));
                         WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                         .getTravel().getPosition().getWorld().getRegistryKey()),
                                 ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());

@@ -5,9 +5,9 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.client.util.ClientTardisUtil;
-import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.BoothExterior;
 import mdteam.ait.tardis.exterior.ClassicExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -160,7 +160,7 @@ public class MonitorScreen extends TardisScreen {
     }
 
     public ExteriorVariantSchema nextVariant() {
-        List<ExteriorVariantSchema> list = AITExteriorVariants.withParent(getCurrentVariant().parent()).stream().toList();
+        List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(getCurrentVariant().parent()).stream().toList();
 
         int idx = list.indexOf(getCurrentVariant());
         if (idx < 0 || idx+1 == list.size()) return list.get(0);
@@ -168,7 +168,7 @@ public class MonitorScreen extends TardisScreen {
     }
 
     public ExteriorVariantSchema previousVariant() {
-        List<ExteriorVariantSchema> list = AITExteriorVariants.withParent(getCurrentVariant().parent()).stream().toList();
+        List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(getCurrentVariant().parent()).stream().toList();
 
         int idx = list.indexOf(getCurrentVariant());
         if (idx <= 0) return list.get(list.size() - 1);
