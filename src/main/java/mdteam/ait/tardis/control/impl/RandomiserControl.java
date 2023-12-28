@@ -21,14 +21,14 @@ public class RandomiserControl extends Control {
         TardisTravel travel = tardis.getTravel();
 
         randomiseDestination(tardis, 10);
-        tardis.removeFuel(100);
+        tardis.removeFuel(25);
 
         messagePlayer(player, travel);
 
         return true;
     }
 
-    // fixme this is LAGGYYY
+    // fixme this is LAGGYYY @TODO
     public static AbsoluteBlockPos.Directed randomiseDestination(Tardis tardis, int limit) {
         TardisTravel travel = tardis.getTravel();
         int increment = travel.getPosManager().increment;
