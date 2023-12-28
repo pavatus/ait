@@ -64,6 +64,11 @@ public class RemoteItem extends Item {
 
         if (tardis != null) {
             if (tardis.getFuel() <= 0) {
+                player.sendMessage(Text.literal("The TARDIS is out of fuel and can not demat"));
+                return ActionResult.FAIL;
+            }
+            if (tardis.isRefueling()) {
+                player.sendMessage(Text.literal("The TARDIS is refueling and is unable to demat"));
                 return ActionResult.FAIL;
             }
             // Check if the Tardis is already present at this location before moving it there

@@ -10,6 +10,7 @@ import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
 
 public class ThrottleControl extends Control {
     public ThrottleControl() {
@@ -23,6 +24,11 @@ public class ThrottleControl extends Control {
 
         if (travel.getState() == TardisTravel.State.LANDED) {
             if (tardis.getFuel() <= 0) {
+                player.sendMessage(Text.literal("The TARDIS is out of fuel and can not dematerialize"));
+                return false;
+            }
+            if (tardis.isRefueling()) {
+                player.sendMessage(Text.literal("The TARDIS can not dematerialize when refueling"));
                 return false;
             }
             travel.dematerialise(PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));
