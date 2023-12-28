@@ -92,6 +92,7 @@ public class InteriorSelectItem extends Item {
         //System.out.println("OOGLY BOOGLY BITCH" + identifier);
         return switch (identifier) {
             default -> new Identifier(AITMod.MOD_ID, "default_cave");
+            case "default_cave" -> new Identifier(AITMod.MOD_ID, "cave");
             case "cave" -> new Identifier(AITMod.MOD_ID, "dev");
             case "dev" -> new Identifier(AITMod.MOD_ID, "office");
             case "office" -> new Identifier(AITMod.MOD_ID, "regal");
@@ -103,8 +104,8 @@ public class InteriorSelectItem extends Item {
             case "type_40" -> new Identifier(AITMod.MOD_ID, "victorian");
             case "victorian" -> new Identifier(AITMod.MOD_ID, "war");
             case "war" -> new Identifier(AITMod.MOD_ID, "coral");
-            case "coral" -> new Identifier(AITMod.MOD_ID, "copper");
-            case "copper" -> new Identifier(AITMod.MOD_ID, "toyota");
+            case "coral" -> new Identifier(AITMod.MOD_ID, "toyota"); //new Identifier(AITMod.MOD_ID, "copper");
+            //case "copper" -> new Identifier(AITMod.MOD_ID, "toyota");
             case "toyota" -> new Identifier(AITMod.MOD_ID, "crystalline");
         };
     }
