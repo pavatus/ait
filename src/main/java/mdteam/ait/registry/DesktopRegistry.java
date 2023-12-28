@@ -26,6 +26,9 @@ public class DesktopRegistry {
     public static TardisDesktopSchema TYPE_40;
     public static TardisDesktopSchema VICTORIAN;
     public static TardisDesktopSchema WAR;
+    public static TardisDesktopSchema CRYSTALLINE;
+    public static TardisDesktopSchema CORAL;
+    public static TardisDesktopSchema TOYOTA;
 
     public static void init() {
         BOTANIST = register(new BotanistDesktop());
@@ -39,5 +42,8 @@ public class DesktopRegistry {
         VICTORIAN = register(new VictorianDesktop());
         WAR = register(new WarDesktop());
         PRISTINE = register(new PristineDesktop());
+        CRYSTALLINE = register(new CrystallineDesktop());
+        CORAL = register(new CoralDesktop());
+        TOYOTA = register(new ToyotaDesktop());
     }
 }
