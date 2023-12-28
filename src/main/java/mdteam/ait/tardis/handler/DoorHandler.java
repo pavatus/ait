@@ -161,7 +161,7 @@ public class DoorHandler extends TardisLink {
 
                 if (pos != null)
                     world.playSound(null, pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 1f, 1f);
-                world.playSound(null, tardis.getDoor().getDoorPos(), SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
+                tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
 
                 return false;
             }
@@ -169,7 +169,7 @@ public class DoorHandler extends TardisLink {
             if (pos != null) // fixme will play sound twice on interior door
                 world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
 
-            world.playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
+            tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
 
             return false;
         }
@@ -180,7 +180,7 @@ public class DoorHandler extends TardisLink {
             if (player != null) {
                 player.sendMessage(Text.literal("\uD83D\uDD12"), true);
                 world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
-                world.playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
+                tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
             }
             return false;
         }
@@ -197,12 +197,12 @@ public class DoorHandler extends TardisLink {
 
         if (tardis.getExterior().getVariant().door().isDouble()) {
             if (door.isBothOpen()) {
-                world.playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().closeSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-                world.playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().closeSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+                tardis.getDoor().getExteriorPos().getWorld().playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().closeSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+                tardis.getDoor().getDoorPos().getWorld().playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().closeSound(), SoundCategory.BLOCKS, 0.6F, 1F);
                 door.closeDoors();
             } else {
-                world.playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-                world.playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+                tardis.getDoor().getExteriorPos().getWorld().playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+                tardis.getDoor().getDoorPos().getWorld().playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
 
                 if (door.isOpen() && player.isSneaking()) {
                     door.closeDoors();
@@ -213,8 +213,8 @@ public class DoorHandler extends TardisLink {
                 }
             }
         } else {
-            world.playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-            world.playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+            tardis.getDoor().getExteriorPos().getWorld().playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+            tardis.getDoor().getDoorPos().getWorld().playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
             door.setDoorState(door.getDoorState() == DoorStateEnum.FIRST ? DoorStateEnum.CLOSED : DoorStateEnum.FIRST);
         }
 
