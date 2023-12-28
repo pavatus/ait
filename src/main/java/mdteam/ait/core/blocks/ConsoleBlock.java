@@ -1,6 +1,9 @@
 package mdteam.ait.core.blocks;
 
 import mdteam.ait.api.ICantBreak;
+import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.AITDimensions;
+import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -9,9 +12,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -61,6 +66,13 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
+            // dont place yo
+            world.breakBlock(pos, true);
+            world.spawnEntity(new ItemEntity(world, pos.getX(),pos.getY(),pos.getZ(),new ItemStack(AITBlocks.CONSOLE)));
+            return;
+        }
+
         if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
             consoleBlockEntity.markNeedsControl();
         }
