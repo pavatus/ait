@@ -63,6 +63,9 @@ public class RemoteItem extends Item {
         //System.out.println(ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis")));
 
         if (tardis != null) {
+            if (tardis.getFuel() <= 0) {
+                return ActionResult.FAIL;
+            }
             // Check if the Tardis is already present at this location before moving it there
             AbsoluteBlockPos.Directed currentPosition = tardis.getTravel().getPosition();
             if (!currentPosition.equals(pos)) {
