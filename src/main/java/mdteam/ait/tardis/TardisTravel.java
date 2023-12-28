@@ -130,10 +130,11 @@ public class TardisTravel extends TardisLink {
                 TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!")); // fixme translatable
                 return;
             }
-        } else {
+        } /*else {
             // If the Tardis is already present at this location, do not proceed with any further operations
             return;
-        }
+        } */
+        // we cant do that ^ bc the position does not get changed when we enter flight
 
         DoorHandler.lockTardis(true, this.getTardis(), null, true);
 

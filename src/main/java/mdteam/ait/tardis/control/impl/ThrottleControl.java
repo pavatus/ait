@@ -42,6 +42,8 @@ public class ThrottleControl extends Control {
             travel.materialise();
         }
 
+        System.out.println(travel.getState());
+
         return true;
     }
 
