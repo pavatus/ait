@@ -2,6 +2,9 @@ package mdteam.ait.core.managers;
 
 import com.google.common.io.Files;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.authlib.minecraft.client.ObjectMapper;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -59,7 +62,17 @@ public class RiftChunkManager {
         MinecraftServer server = TardisUtil.getServer();
         String save_path = server.getSavePath(WorldSavePath.ROOT) + "ait/";
         try {
-            saveRawBytesToFile(convertMapToBytes(riftChunkArtronLevels), save_path + "chunkArtronLevels.bytes");
+            JsonObject riftChunkData = new JsonObject();
+            JsonObject riftChunkArtronLevelsJsonObject = new JsonObject();
+            for (Long lll : riftChunkArtronLevels.keySet()) {
+                int artron_level = riftChunkArtronLevels.get(lll);
+                riftChunkArtronLevelsJsonObject.addProperty(lll.toString(), artron_level);
+            }
+            riftChunkData.add("rift_chunk_artron_levels", riftChunkArtronLevelsJsonObject);
+            FileWriter riftChunkDataFile = new FileWriter(save_path + "riftChunkData.json");
+            riftChunkDataFile.write(riftChunkData.getAsString());
+            riftChunkDataFile.close();
+
         } catch (Exception e) {
             // ignore cuz I'm baller like that
         }
@@ -70,49 +83,21 @@ public class RiftChunkManager {
     public static void loadRiftChunkData() {
         MinecraftServer server = TardisUtil.getServer();
         String save_path = server.getSavePath(WorldSavePath.ROOT) + "ait/";
+        JsonParser jsonParser = new JsonParser();
         try {
-            byte[] artronLevelBytes = loadRawBytesFromFile(save_path + "chunkArtronLevels.bytes");
-            riftChunkArtronLevels = convertBytesToMap(artronLevelBytes);
-            if (riftChunkArtronLevels == null) {
-                riftChunkArtronLevels = new HashMap<>();
+            FileReader fileReader = new FileReader(save_path + "riftChunkData.json");
+            Object object = jsonParser.parse(fileReader);
+            JsonObject riftChunkData = (JsonObject)object;
+            JsonObject riftChunkArtronLevelsJsonObject = (JsonObject) riftChunkData.get("rift_chunk_artron_levels");
+            Map<String, JsonElement> map = riftChunkArtronLevelsJsonObject.asMap();
+            for (String string : map.keySet()) {
+                Long lll = Long.parseLong(string);
+                JsonElement jsonElement = map.get(string);
+                Integer artron = jsonElement.getAsInt();
+                riftChunkArtronLevels.put(lll, artron);
             }
         } catch (Exception e) {
             // ignore cuz I'm baller like that
         }
-    }
-
-    private static void saveRawBytesToFile(byte[] bytes, String filepath) {
-        try {
-            OutputStream out = new FileOutputStream(filepath, false);
-            Socket sock = new Socket();
-            InputStream in = sock.getInputStream();
-            int bytes_read;
-            while ((bytes_read = in.read(bytes)) != -1) {
-                out.write(bytes, 0, bytes_read);
-            }
-            out.close();
-        } catch(Exception e) {
-            // ignore
-        }
-    }
-
-    private static byte[] loadRawBytesFromFile(String filepath) {
-        File file = new File(filepath);
-        byte[] bytes;
-        try {
-            bytes = Files.toByteArray(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return bytes;
-
-    }
-
-    private static byte[] convertMapToBytes(Map<?, ?> map) throws IOException {
-        return SerializationUtils.serialize((Serializable) map);
-    }
-
-    private static Map<Long, Integer> convertBytesToMap(byte[] bytes) throws IOException {
-        return SerializationUtils.deserialize(bytes);
     }
 }
