@@ -2,8 +2,10 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.registry.DesktopRegistry;
+import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -24,32 +26,36 @@ import java.util.Random;
 
 public class TardisItemBuilder extends Item {
 
-    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "office"); //new Identifier(AITMod.MOD_ID, "war");
+    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "cave"); //new Identifier(AITMod.MOD_ID, "war");
     public static final Identifier DEFAULT_EXTERIOR = CapsuleExterior.REFERENCE;
     public static final ConsoleEnum DEFAULT_CONSOLE = ConsoleEnum.BOREALIS;
 
-    private final ExteriorSchema exterior;
+    private final Identifier exterior;
     private final Identifier desktop;
 
-    public TardisItemBuilder(Settings settings, ExteriorSchema exterior, Identifier desktopId) {
+    public TardisItemBuilder(Settings settings, Identifier exterior, Identifier desktopId) {
         super(settings);
 
         this.exterior = exterior;
         this.desktop = desktopId;
     }
 
-    public TardisItemBuilder(Settings settings, ExteriorSchema exterior) {
+    public TardisItemBuilder(Settings settings, Identifier exterior) {
         this(settings, exterior, DEFAULT_INTERIOR);
     }
 
     public TardisItemBuilder(Settings settings) {
-        this(settings, AITExteriors.get(DEFAULT_EXTERIOR));
+        this(settings, DEFAULT_EXTERIOR);
     }
 
     public static ExteriorVariantSchema findRandomVariant(ExteriorSchema exterior) { // fixme its not very random icl
         Random rnd = new Random();
-        int randomized = rnd.nextInt(Math.abs(AITExteriorVariants.withParent(exterior).size()));
-        return (ExteriorVariantSchema) AITExteriorVariants.withParent(exterior).toArray()[randomized];
+        if (ExteriorVariantRegistry.withParent(exterior).size() == 0) {
+            AITMod.LOGGER.error("Variants for " + exterior + " are empty! Panicking!!!!");
+            return ExteriorVariantRegistry.BOX_DEFAULT;
+        }
+        int randomized = rnd.nextInt(Math.abs(ExteriorVariantRegistry.withParent(exterior).size()));
+        return (ExteriorVariantSchema) ExteriorVariantRegistry.withParent(exterior).toArray()[randomized];
     }
 
     @Override
@@ -80,7 +86,7 @@ public class TardisItemBuilder extends Item {
 
             //System.out.println(this.exterior);
 
-            ServerTardisManager.getInstance().create(pos, this.exterior, findRandomVariant(exterior) , AITDesktops.get(this.desktop), false);
+            ServerTardisManager.getInstance().create(pos, ExteriorRegistry.REGISTRY.get(this.exterior), findRandomVariant(ExteriorRegistry.REGISTRY.get(this.exterior)) , DesktopRegistry.REGISTRY.get(this.desktop), false);
             context.getStack().decrement(1);
         }
 

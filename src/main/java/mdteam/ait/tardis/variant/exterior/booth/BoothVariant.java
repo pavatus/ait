@@ -5,8 +5,8 @@ import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.models.exteriors.BoothExteriorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.BoothExterior;
 import mdteam.ait.tardis.variant.door.BoothDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
@@ -40,7 +40,7 @@ public abstract class BoothVariant extends ExteriorVariantSchema {
 
     @Override
     public DoorSchema door() {
-        return AITDoors.get(BoothDoorVariant.REFERENCE);
+        return DoorRegistry.REGISTRY.get(BoothDoorVariant.REFERENCE);
     }
 
     @Override

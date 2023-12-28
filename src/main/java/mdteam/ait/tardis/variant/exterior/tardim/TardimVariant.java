@@ -5,8 +5,8 @@ import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.TardimExteriorModel;
-import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.TardimExterior;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.door.TardimDoorVariant;
@@ -39,7 +39,7 @@ public abstract class TardimVariant extends ExteriorVariantSchema {
 
     @Override
     public DoorSchema door() {
-        return AITDoors.get(TardimDoorVariant.REFERENCE);
+        return DoorRegistry.REGISTRY.get(TardimDoorVariant.REFERENCE);
     }
 
     @Override

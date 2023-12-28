@@ -3,13 +3,14 @@ package mdteam.ait.tardis.util;
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITDimensions;
-import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.interfaces.RiftChunk;
+import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisManager;
@@ -17,6 +18,7 @@ import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -79,12 +81,12 @@ public class TardisUtil {
                     boolean variantChange = buf.readBoolean();
                     String variantValue = buf.readString();
 
-                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(AITExteriors.get(exteriorValue));
+                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(ExteriorRegistry.REGISTRY.get(exteriorValue));
                     WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
                     if (variantChange) {
-                        ServerTardisManager.getInstance().getTardis(uuid).getExterior().setVariant(AITExteriorVariants.get(Identifier.tryParse(variantValue)));
+                        ServerTardisManager.getInstance().getTardis(uuid).getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(Identifier.tryParse(variantValue)));
                         WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
                                         .getTravel().getPosition().getWorld().getRegistryKey()),
                                 ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
