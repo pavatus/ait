@@ -1,5 +1,6 @@
 package mdteam.ait.client.animation;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
@@ -38,7 +39,11 @@ public class ClassicAnimation extends ExteriorAnimation {
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
-        if (exterior.tardis() == null) return;
+        if (exterior.tardis() == null) {
+            AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
+            alpha = 0f; // just make me vanish.
+            return;
+        }
         MatSound sound = exterior.tardis().getExterior().getType().getSound(state);
 
         this.timeLeft = sound.timeLeft();
