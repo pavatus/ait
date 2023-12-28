@@ -10,7 +10,7 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
-import mdteam.ait.mixin.interfaces.RiftChunk;
+import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisManager;
@@ -41,7 +41,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
-import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 

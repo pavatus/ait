@@ -1,6 +1,4 @@
-package mdteam.ait.mixin.interfaces;
-
-import java.util.Random;
+package mdteam.ait.core.interfaces;
 
 public interface RiftChunk {
     Integer getArtronLevels();
