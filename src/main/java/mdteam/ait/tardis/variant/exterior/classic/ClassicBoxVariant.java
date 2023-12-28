@@ -5,8 +5,8 @@ import mdteam.ait.client.animation.ClassicAnimation;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.models.exteriors.ClassicExteriorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.ClassicExterior;
 import mdteam.ait.tardis.variant.door.ClassicDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
@@ -39,7 +39,7 @@ public abstract class ClassicBoxVariant extends ExteriorVariantSchema {
 
     @Override
     public DoorSchema door() {
-        return AITDoors.get(ClassicDoorVariant.REFERENCE);
+        return DoorRegistry.REGISTRY.get(ClassicDoorVariant.REFERENCE);
     }
 
 

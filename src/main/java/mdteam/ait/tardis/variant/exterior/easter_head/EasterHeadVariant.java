@@ -5,14 +5,11 @@ import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.models.exteriors.EasterHeadModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.client.models.exteriors.TardimExteriorModel;
-import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.EasterHeadExterior;
-import mdteam.ait.tardis.exterior.TardimExterior;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.door.EasterHeadDoorVariant;
-import mdteam.ait.tardis.variant.door.TardimDoorVariant;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
 
@@ -42,7 +39,7 @@ public abstract class EasterHeadVariant extends ExteriorVariantSchema {
 
     @Override
     public DoorSchema door() {
-        return AITDoors.get(EasterHeadDoorVariant.REFERENCE);
+        return DoorRegistry.REGISTRY.get(EasterHeadDoorVariant.REFERENCE);
     }
 
     @Override

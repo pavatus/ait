@@ -2,7 +2,7 @@ package mdteam.ait.tardis.variant.door;
 
 import com.google.gson.*;
 import mdteam.ait.client.models.doors.DoorModel;
-import mdteam.ait.core.AITDoors;
+import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -18,10 +18,10 @@ import java.lang.reflect.Type;
  * <br><br>
  * It's information should be final and set once during creation.
  * <br><br>
- * It should be registered in {@link AITDoors} and only obtained from there.
+ * It should be registered in {@link DoorRegistry#REGISTRY} and only obtained from there.
  * <br><br>
  * This should be referenced by a {@link ExteriorVariantSchema} to be used
- * @see AITDoors
+ * @see DoorRegistry#REGISTRY
  * @author duzo
  */
 public abstract class DoorSchema {
@@ -70,7 +70,7 @@ public abstract class DoorSchema {
                 id = CapsuleDoorVariant.REFERENCE;
             }
 
-            return AITDoors.get(id);
+            return DoorRegistry.REGISTRY.get(id);
         }
 
         @Override

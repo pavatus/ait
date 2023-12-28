@@ -5,8 +5,8 @@ import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.PoliceBoxModel;
-import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.PoliceBoxExterior;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.door.PoliceBoxDoorVariant;
@@ -38,7 +38,7 @@ public abstract class PoliceBoxVariant extends ExteriorVariantSchema {
 
     @Override
     public DoorSchema door() {
-        return AITDoors.get(PoliceBoxDoorVariant.REFERENCE);
+        return DoorRegistry.REGISTRY.get(PoliceBoxDoorVariant.REFERENCE);
     }
 
     @Override

@@ -5,8 +5,8 @@ import mdteam.ait.client.animation.ClassicAnimation;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.models.exteriors.CapsuleExteriorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.variant.door.CapsuleDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
@@ -39,7 +39,7 @@ public abstract class CapsuleVariant extends ExteriorVariantSchema {
 
     @Override
     public DoorSchema door() {
-        return AITDoors.get(CapsuleDoorVariant.REFERENCE);
+        return DoorRegistry.REGISTRY.get(CapsuleDoorVariant.REFERENCE);
     }
 
 
