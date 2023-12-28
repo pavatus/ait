@@ -3,12 +3,14 @@ package mdteam.ait.registry;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.exterior.*;
 import mdteam.ait.tardis.variant.door.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.util.Identifier;
-
+@Environment(EnvType.CLIENT)
 public class DoorRegistry {
     public static final SimpleRegistry<DoorSchema> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<DoorSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "door"))).buildAndRegister();
     public static DoorSchema register(DoorSchema schema) {

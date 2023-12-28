@@ -21,6 +21,9 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.registry.ConsoleRegistry;
+import mdteam.ait.registry.ConsoleVariantRegistry;
+import mdteam.ait.registry.DoorRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -66,6 +69,9 @@ public class AITModClient implements ClientModInitializer {
         entityRenderRegister();
         sonicModelPredicate();
         setKeyBinding();
+        DoorRegistry.init();
+        ConsoleVariantRegistry.init();
+        ExteriorVariantRegistry.init();
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {

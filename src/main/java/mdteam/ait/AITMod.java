@@ -56,12 +56,9 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        DoorRegistry.init();
         ConsoleRegistry.init();
-        ConsoleVariantRegistry.init();
         DesktopRegistry.init();
         ExteriorRegistry.init();
-        ExteriorVariantRegistry.init();
 
         FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);

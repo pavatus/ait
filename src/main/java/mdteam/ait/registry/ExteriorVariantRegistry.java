@@ -24,6 +24,8 @@ import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadSoulVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimFireVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimSoulVariant;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -35,6 +37,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 public class ExteriorVariantRegistry {
     public static final SimpleRegistry<ExteriorVariantSchema> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<ExteriorVariantSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "exterior_variant"))).buildAndRegister();
     public static ExteriorVariantSchema register(ExteriorVariantSchema schema) {

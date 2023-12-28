@@ -6,6 +6,7 @@ import mdteam.ait.client.models.doors.TardimDoorModel;
 import mdteam.ait.core.AITBlocks;
 import net.minecraft.util.Identifier;
 
+
 public class TardimDoorVariant extends DoorSchema {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/tardim");
 
