@@ -20,20 +20,22 @@ public class AITDesktops {
         //Necessary
         AITDesktops.register(new DefaultCaveDesktop());
         AITDesktops.register(new CaveDesktop());
-        AITDesktops.register(new RegalDesktop());
-
-        //In Order (without the necessities)
-        AITDesktops.register(new BotanistDesktop());
-        AITDesktops.register(new CopperDesktop());
         AITDesktops.register(new DevDesktop());
         AITDesktops.register(new OfficeDesktop());
-        AITDesktops.register(new PristineDesktop());
+
+        //In Order (without the necessities)
         AITDesktops.register(new RegalDesktop());
+        AITDesktops.register(new BotanistDesktop());
+        AITDesktops.register(new PristineDesktop());
+
+        // Canon Desktops (zzzzz)
+        AITDesktops.register(new Type40Desktop());
         AITDesktops.register(new VictorianDesktop());
         AITDesktops.register(new WarDesktop());
-
-        //Secret
-        AITDesktops.register(new Type40Desktop());
+        AITDesktops.register(new CoralDesktop());
+        AITDesktops.register(new CopperDesktop());
+        AITDesktops.register(new ToyotaDesktop());
+        AITDesktops.register(new CrystallineDesktop());
     }
 
     public static void register(TardisDesktopSchema interior) {

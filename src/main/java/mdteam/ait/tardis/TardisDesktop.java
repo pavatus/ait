@@ -113,7 +113,7 @@ public class TardisDesktop {
         clearExistingEntities();
         unforceLoadChunks(allBlocks);
         BlockPos doorPos = generator.place((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
-        this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
+        if(doorPos != null) this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
         this.updateDoor();
     }
 

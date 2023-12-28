@@ -26,6 +26,9 @@ public class DesktopGenerator {
     }
 
     public BlockPos place(ServerWorld level, Corners corners) {
+        
+        if(this.schema == null) return null;
+
         Optional<StructureTemplate> optional = this.schema.findTemplate();
 
         if (optional.isPresent()) {

@@ -54,6 +54,7 @@ public class InteriorChangingHandler extends TardisLink {
         setTicks(0);
         setGenerating(true);
         tardis().getHandlers().getAlarms().enable();
+        tardis().getDesktop().setConsolePos(null);
     }
 
     private void onCompletion() {
