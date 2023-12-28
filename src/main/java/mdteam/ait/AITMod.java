@@ -15,6 +15,7 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.commands.*;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
+import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.registry.*;
@@ -69,6 +70,7 @@ public class AITMod implements ModInitializer {
         TardisUtil.init();
         TardisManager.getInstance();
         TardisManager.init();
+        RiftChunkManager.init();
 
         entityAttributeRegister();
 
@@ -79,7 +81,7 @@ public class AITMod implements ModInitializer {
             SetHumCommand.register(dispatcher);
             ToggleHumCommand.register(dispatcher);
             ToggleAlarmCommand.register(dispatcher);
-            IsRiftChunkCommand.register(dispatcher); // should probably have a tp to rift chunk instead but i cba
+            RiftChunkCommand.register(dispatcher);
         }));
 
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {

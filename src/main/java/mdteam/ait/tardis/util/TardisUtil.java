@@ -181,6 +181,13 @@ public class TardisUtil {
     public static boolean isRiftChunk(ServerWorld world,BlockPos pos) {
         return ((RiftChunk)world.getChunk(pos)).isRiftChunk();
     }
+    public static int getArtronLevelsOfChunk(ServerWorld world, BlockPos pos) {
+        return ((RiftChunk)world.getChunk(pos)).getArtronLevels();
+    }
+
+    public static void setArtronLevelsOfChunk(ServerWorld world, BlockPos pos, Integer artron) {
+        ((RiftChunk)world.getChunk(pos)).setArtronLevels(artron);
+    }
 
     public static AbsoluteBlockPos.Directed createFromPlayer(PlayerEntity player) {
         return new AbsoluteBlockPos.Directed(player.getBlockPos(), player.getWorld(), player.getMovementDirection());
