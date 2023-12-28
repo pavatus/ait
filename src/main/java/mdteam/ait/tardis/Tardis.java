@@ -28,6 +28,8 @@ public class Tardis {
     private TardisHandlersManager handlers;
     private boolean dirty = false;
 
+    private double fuel_count = 0.00;
+
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorSchema exteriorType, ExteriorVariantSchema variant) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), false);
     }
@@ -73,6 +75,11 @@ public class Tardis {
         return travel;
     }
 
+    /**
+     * Retrieves the TardisHandlersManager instance associated with the given UUID.
+     *
+     * @return TardisHandlersManager instance or null if it doesn't exist
+     */
     public TardisHandlersManager getHandlers() {
         if (handlers == null) {
             handlers = new TardisHandlersManager(getUuid());
@@ -81,12 +88,29 @@ public class Tardis {
         return handlers;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() == null) return false;
         Tardis tardis = (Tardis) o;
         return uuid.equals(tardis.uuid);
+    }
+
+    public void setFuelCount(double fuel) {
+        this.fuel_count = fuel;
+    }
+
+    public void addFuel(double fuel) {
+        this.fuel_count += fuel;
+    }
+
+    public void removeFuel(double fuel) {
+        if (this.fuel_count - fuel < 0) {
+            this.fuel_count = 0;
+        } else {
+            this.fuel_count -= fuel;
+        }
     }
 
     @Override

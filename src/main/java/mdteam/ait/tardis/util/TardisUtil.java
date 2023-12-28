@@ -10,6 +10,7 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
+import mdteam.ait.mixin.interfaces.RiftChunk;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisManager;
@@ -178,9 +179,7 @@ public class TardisUtil {
     }
 
     public static boolean isRiftChunk(ServerWorld world,BlockPos pos) {
-        ChunkPos chunkPos = new ChunkPos(pos);
-        boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, world.getSeed(), 987234910L).nextInt(8) == 0; // for now itll be the same as slime chunks (fuck you classic) but if needed change that big number beginning with 9 to a slightly different number and wowow its entirely different
-        return bl;
+        return ((RiftChunk)world.getChunk(pos)).isRiftChunk();
     }
 
     public static AbsoluteBlockPos.Directed createFromPlayer(PlayerEntity player) {
