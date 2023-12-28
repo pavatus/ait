@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.DesktopRegistry;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -45,7 +46,7 @@ public class InteriorSelectItem extends Item {
                     return ActionResult.PASS;
 
                 Identifier nextInteriorId = getNextInteriorId(exteriorBlock.tardis().getDesktop().getSchema().id());
-                exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
+                exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.REGISTRY.get(nextInteriorId));
                 player.sendMessage(Text.literal(nextInteriorId.toString()));
             }
             if (entity instanceof DoorBlockEntity doorBlock) {
@@ -55,7 +56,7 @@ public class InteriorSelectItem extends Item {
                     return ActionResult.PASS;
 
                 Identifier nextInteriorId = getNextInteriorId(doorBlock.getTardis().getDesktop().getSchema().id());
-                doorBlock.getTardis().getHandlers().getInteriorChanger().queueInteriorChange(AITDesktops.get(nextInteriorId));
+                doorBlock.getTardis().getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.REGISTRY.get(nextInteriorId));
                 player.sendMessage(Text.literal(nextInteriorId.toString()));
             }
             if (entity instanceof ConsoleBlockEntity consoleBlock) {

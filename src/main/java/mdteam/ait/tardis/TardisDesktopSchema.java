@@ -1,6 +1,7 @@
 package mdteam.ait.tardis;
 
 import com.google.gson.*;
+import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureTemplate;
@@ -51,7 +52,7 @@ public abstract class TardisDesktopSchema {
 
         @Override
         public TardisDesktopSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return AITDesktops.get(new Identifier(json.getAsJsonPrimitive().getAsString()));
+            return DesktopRegistry.REGISTRY.get(new Identifier(json.getAsJsonPrimitive().getAsString()));
         }
 
         @Override
