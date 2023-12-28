@@ -4,9 +4,6 @@ import com.google.gson.*;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITConsoleVariants;
-import mdteam.ait.core.AITExteriors;
-import mdteam.ait.tardis.exterior.CapsuleExterior;
-import mdteam.ait.tardis.exterior.ExteriorSchema;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 

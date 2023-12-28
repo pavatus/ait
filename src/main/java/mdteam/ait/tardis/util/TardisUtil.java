@@ -2,7 +2,6 @@ package mdteam.ait.tardis.util;
 
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
-import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.AITSounds;

@@ -1,8 +1,6 @@
 package mdteam.ait.tardis;
 
 import com.google.gson.*;
-import mdteam.ait.core.AITDesktops;
-import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureTemplate;

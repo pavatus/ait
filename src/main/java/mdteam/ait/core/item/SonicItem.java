@@ -1,7 +1,5 @@
 package mdteam.ait.core.item;
 
-import mdteam.ait.core.AITExteriors;
-import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.Tardis;

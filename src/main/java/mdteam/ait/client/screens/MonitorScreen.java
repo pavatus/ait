@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
-import mdteam.ait.core.AITExteriors;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.item.TardisItemBuilder;

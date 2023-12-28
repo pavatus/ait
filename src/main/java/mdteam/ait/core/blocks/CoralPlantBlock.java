@@ -1,9 +1,7 @@
 package mdteam.ait.core.blocks;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITBlocks;
-import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.blockentities.CoralBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;

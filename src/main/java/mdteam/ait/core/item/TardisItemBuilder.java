@@ -2,8 +2,6 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.core.AITExteriors;
-import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.TardisTravel;

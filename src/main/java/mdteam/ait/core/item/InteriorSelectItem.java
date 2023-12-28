@@ -1,13 +1,9 @@
 package mdteam.ait.core.item;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.core.AITDesktops;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.tardis.TardisDesktop;
-import mdteam.ait.tardis.TardisDesktopSchema;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -18,8 +14,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import mdteam.ait.tardis.TardisTravel;
-
-import java.util.Iterator;
 
 
 /**

@@ -2,7 +2,6 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
-import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.exterior.CapsuleExterior;

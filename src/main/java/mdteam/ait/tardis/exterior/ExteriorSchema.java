@@ -1,14 +1,9 @@
 package mdteam.ait.tardis.exterior;
 
 import com.google.gson.*;
-import mdteam.ait.core.AITDoors;
-import mdteam.ait.core.AITExteriorVariants;
-import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.variant.door.CapsuleDoorVariant;
-import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
