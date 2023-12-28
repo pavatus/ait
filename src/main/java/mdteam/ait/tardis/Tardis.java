@@ -142,17 +142,18 @@ public class Tardis {
      * @param server the server being ticked
      */
     public void tick(MinecraftServer server) {
+        refueling = true;
         RiftChunk riftChunk = (RiftChunk) this.getTravel().getExteriorPos().getChunk();
-        if (riftChunk.isRiftChunk() && getTravel().getState() == TardisTravel.State.LANDED && refueling && riftChunk.getArtronLevels() > 0 && fuel_count < max_fuel && (DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getUuid().toString() + "-refueldelay"))) {
+        if (riftChunk.isRiftChunk() && getTravel().getState() == TardisTravel.State.LANDED && refueling && riftChunk.getArtronLevels() > 0 && fuel_count < max_fuel && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getUuid().toString() + "-refueldelay"))) {
             riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
             addFuel(5);
             DeltaTimeManager.createDelay("tardis-" + getUuid().toString() + "-refueldelay", 250L);
         }
-        if ((getTravel().getState() == TardisTravel.State.DEMAT || getTravel().getState() == TardisTravel.State.MAT) && DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getUuid().toString() + "-fueldraindelay")) {
+        if ((getTravel().getState() == TardisTravel.State.DEMAT || getTravel().getState() == TardisTravel.State.MAT) && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getUuid().toString() + "-fueldraindelay")) {
             DeltaTimeManager.createDelay("tardis-" + getUuid().toString() + "-fueldraindelay", 500L);
             removeFuel(3);
         }
-        if (getTravel().getState() == TardisTravel.State.FLIGHT && DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getUuid().toString() + "-fueldraindelay")) {
+        if (getTravel().getState() == TardisTravel.State.FLIGHT && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getUuid().toString() + "-fueldraindelay")) {
             DeltaTimeManager.createDelay("tardis-" + getUuid().toString() + "-fueldraindelay", 500L);
             removeFuel(1);
         }

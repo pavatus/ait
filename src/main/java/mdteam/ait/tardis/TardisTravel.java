@@ -174,6 +174,9 @@ public class TardisTravel extends TardisLink {
     }
 
     public void dematerialise(boolean withRemat) {
+        if (getTardis().getFuel() <= 0) {
+            return; // no flying for you if you have no fuel :)
+        }
         if (this.getPosition().getWorld().isClient())
             return;
 
