@@ -8,6 +8,7 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.wrapper.client.ClientTardis;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
@@ -170,6 +171,8 @@ public class FallingTardisEntity extends Entity {
                     return;
                 }
 
+                tardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(), this.getMovementDirection()));
+
 
                 BlockPos blockPos = this.getBlockPos();
                 if(blockPos == null) return;
@@ -185,7 +188,7 @@ public class FallingTardisEntity extends Entity {
                 }
 
                 if (!this.isOnGround() && !bl2) {
-                    if (!this.getWorld().isClient && (/*this.timeFalling > 100 &&*/ (blockPos.getY() <= this.getWorld().getBottomY() || blockPos.getY() > this.getWorld().getTopY()) || this.timeFalling > 600)) {
+                    if (!this.getWorld().isClient && (/*this.timeFalling > 100 &&*/ (blockPos.getY() <= this.getWorld().getBottomY() || blockPos.getY() > this.getWorld().getTopY()) /*|| this.timeFalling > 600*/)) {
                         if (this.dropItem && this.getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
                             this.dropItem(block);
                         }
