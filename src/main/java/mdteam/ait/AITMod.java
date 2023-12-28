@@ -22,6 +22,7 @@ import mdteam.ait.registry.*;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -33,6 +34,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import mdteam.ait.tardis.TardisManager;
@@ -85,8 +88,9 @@ public class AITMod implements ModInitializer {
         }));
 
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {
+            // fixme this doesnt seem to run??
             if (blockEntity instanceof ConsoleBlockEntity console) {
-                console.sync();
+                console.markNeedsSyncing();
             }
         }));
 
@@ -95,6 +99,14 @@ public class AITMod implements ModInitializer {
             if (tardis.getTravel().getPosition().getWorld().getBlockEntity(tardis.getTravel().getExteriorPos()) instanceof ExteriorBlockEntity entity) {
                 entity.getAnimation().setupAnimation(tardis.getTravel().getState());
             };
+        }));
+
+        ServerPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.ASK, ((server, player, handler, buf, responseSender) -> {
+            if (player.getServerWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+
+            BlockPos consolePos = buf.readBlockPos();
+            // fixme the gotten block entity is always null, shit.
+            if (player.getServerWorld().getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.markNeedsSyncing();
         }));
     }
 
