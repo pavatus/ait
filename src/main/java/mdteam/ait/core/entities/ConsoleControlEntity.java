@@ -3,6 +3,7 @@ package mdteam.ait.core.entities;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.control.ControlTypes;
@@ -181,9 +182,16 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
             if (this.getTardis() == null) return false; // AAAAAAAAAAA
 
+            if (DeltaTimeManager.isStillWaitingOnDelay(getDelayId(this.getTardis()))) return false;
+
+            DeltaTimeManager.createDelay(getDelayId(this.getTardis()), 500L);
             return this.control.runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server
         }
         return false;
+    }
+
+    private static String getDelayId(Tardis tardis) {
+        return "tardis-" + tardis.getUuid() + "-control";
     }
 
     // clearly loqor has trust issues with running this so i do too so im overwriting it to do what he did fixme pls
