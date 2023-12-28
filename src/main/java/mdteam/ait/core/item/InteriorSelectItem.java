@@ -96,17 +96,21 @@ public class InteriorSelectItem extends Item {
     public static Identifier getNextInterior(String identifier) {
         //System.out.println("OOGLY BOOGLY BITCH" + identifier);
         return switch (identifier) {
-            default -> new Identifier(AITMod.MOD_ID, "cave");
-            case "cave" -> new Identifier(AITMod.MOD_ID, "botanist");
-            case "botanist" -> new Identifier(AITMod.MOD_ID, "copperweb");
-            case "copperweb" -> new Identifier(AITMod.MOD_ID, "dev");
+            default -> new Identifier(AITMod.MOD_ID, "default_cave");
+            case "cave" -> new Identifier(AITMod.MOD_ID, "dev");
             case "dev" -> new Identifier(AITMod.MOD_ID, "office");
-            case "office" -> new Identifier(AITMod.MOD_ID, "pristine");
-            case "pristine" -> new Identifier(AITMod.MOD_ID, "regal");
-            case "regal" -> new Identifier(AITMod.MOD_ID, "type_40");
+            case "office" -> new Identifier(AITMod.MOD_ID, "regal");
+
+            case "regal" -> new Identifier(AITMod.MOD_ID, "botanist");
+            case "botanist" -> new Identifier(AITMod.MOD_ID, "pristine");
+            case "pristine" -> new Identifier(AITMod.MOD_ID, "type_40");
+
             case "type_40" -> new Identifier(AITMod.MOD_ID, "victorian");
             case "victorian" -> new Identifier(AITMod.MOD_ID, "war");
-            case "war" -> new Identifier(AITMod.MOD_ID, "default_cave");
+            case "war" -> new Identifier(AITMod.MOD_ID, "coral");
+            case "coral" -> new Identifier(AITMod.MOD_ID, "copper");
+            case "copper" -> new Identifier(AITMod.MOD_ID, "toyota");
+            case "toyota" -> new Identifier(AITMod.MOD_ID, "crystalline");
         };
     }
 

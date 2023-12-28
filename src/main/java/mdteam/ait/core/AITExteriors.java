@@ -15,13 +15,13 @@ public class AITExteriors {
      * Exteriors are registered here:
      */
     public static void init() {
-        register(new ClassicExterior());
         register(new CapsuleExterior());
-        register(new PoliceBoxExterior());
         register(new TardimExterior());
-        register(new CubeExterior());
         register(new BoothExterior());
+        register(new ClassicExterior());
+        register(new PoliceBoxExterior());
         register(new EasterHeadExterior());
+        //register(new CubeExterior());
     }
 
     public static void register(ExteriorSchema schema) {

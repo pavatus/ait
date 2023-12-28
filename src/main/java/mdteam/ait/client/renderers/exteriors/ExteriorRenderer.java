@@ -7,6 +7,8 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -14,6 +16,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import mdteam.ait.tardis.TardisExterior;
@@ -21,14 +24,15 @@ import mdteam.ait.tardis.TardisExterior;
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
     private ExteriorModel model;
 
-    public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {
-    }
+    public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {}
 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (entity.tardis() == null) {
             return;
         }
+
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
         TardisExterior tardisExterior = entity.tardis().getExterior();
 
@@ -45,6 +49,12 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         BlockState blockState = entity.getCachedState();
         float f = blockState.get(ExteriorBlock.FACING).asRotation();
         int maxLight = 0xFFFFFF;
+        /*matrices.push();
+        matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(180f));
+        matrices.translate(0, -2.72f, -0.32);
+        matrices.scale(0.0125f, 0.0125f, 0.0125f);
+        textRenderer.drawWithOutline(Text.of("POLICE -=- BOX").asOrderedText(), -"POLICE -=- BOX".length() * 5.625f, 0, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, light);
+        matrices.pop();*/
         matrices.push();
         matrices.translate(0.5, 0, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
