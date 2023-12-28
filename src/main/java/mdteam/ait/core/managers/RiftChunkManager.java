@@ -9,9 +9,11 @@ import com.mojang.authlib.minecraft.client.ObjectMapper;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.WorldEvents;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.*;
@@ -25,8 +27,11 @@ public class RiftChunkManager {
     private static final RiftChunkManager INSTANCE = new RiftChunkManager();
 
     public RiftChunkManager() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> loadRiftChunkData());
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> saveRiftChunkData());
+        ServerLifecycleEvents.SERVER_STARTED.register((server) -> loadRiftChunkData());
+        ServerLifecycleEvents.SERVER_STOPPING.register(((server) -> {
+            saveRiftChunkData();
+            riftChunkArtronLevels = new HashMap<>();
+        }));
     }
 
     public static void init() {
@@ -69,8 +74,9 @@ public class RiftChunkManager {
                 riftChunkArtronLevelsJsonObject.addProperty(lll.toString(), artron_level);
             }
             riftChunkData.add("rift_chunk_artron_levels", riftChunkArtronLevelsJsonObject);
-            FileWriter riftChunkDataFile = new FileWriter(save_path + "riftChunkData.json");
-            riftChunkDataFile.write(riftChunkData.getAsString());
+            FileWriter riftChunkDataFile = new FileWriter(save_path + "riftChunkData.rift");
+            System.out.println(riftChunkData.toString());
+            riftChunkDataFile.write(riftChunkData.toString());
             riftChunkDataFile.close();
 
         } catch (Exception e) {
@@ -85,7 +91,7 @@ public class RiftChunkManager {
         String save_path = server.getSavePath(WorldSavePath.ROOT) + "ait/";
         JsonParser jsonParser = new JsonParser();
         try {
-            FileReader fileReader = new FileReader(save_path + "riftChunkData.json");
+            FileReader fileReader = new FileReader(save_path + "riftChunkData.rift");
             Object object = jsonParser.parse(fileReader);
             JsonObject riftChunkData = (JsonObject)object;
             JsonObject riftChunkArtronLevelsJsonObject = (JsonObject) riftChunkData.get("rift_chunk_artron_levels");
