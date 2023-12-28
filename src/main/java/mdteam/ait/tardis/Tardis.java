@@ -31,7 +31,7 @@ public class Tardis {
     private boolean dirty = false;
 
     @Exclude
-    private static final double max_fuel = 5000;
+    public static final double MAX_FUEL = 5000;
 
     private double fuel_count = 0.00;
     private boolean refueling = true; // This is permanently true for now and has no penalty until @Loqor does the control stuff
@@ -142,9 +142,8 @@ public class Tardis {
      * @param server the server being ticked
      */
     public void tick(MinecraftServer server) {
-        refueling = true;
         RiftChunk riftChunk = (RiftChunk) this.getTravel().getExteriorPos().getChunk();
-        if (riftChunk.isRiftChunk() && getTravel().getState() == TardisTravel.State.LANDED && refueling && riftChunk.getArtronLevels() > 0 && fuel_count < max_fuel && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getUuid().toString() + "-refueldelay"))) {
+        if (riftChunk.isRiftChunk() && getTravel().getState() == TardisTravel.State.LANDED && refueling && riftChunk.getArtronLevels() > 0 && fuel_count < MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getUuid().toString() + "-refueldelay"))) {
             riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
             addFuel(5);
             DeltaTimeManager.createDelay("tardis-" + getUuid().toString() + "-refueldelay", 250L);
@@ -158,7 +157,7 @@ public class Tardis {
             removeFuel(1);
         }
         if (getTravel().getState() == TardisTravel.State.FLIGHT && fuel_count == 0) {
-            getTravel().forceLand(); // hehe force land if you don't have enough fuel
+            getTravel().materialise(); // hehe force land if you don't have enough fuel
         }
         this.getHandlers().tick(server);
 
