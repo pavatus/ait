@@ -54,6 +54,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     private UUID tardisId;
     private Identifier type;
     private ConsoleVariantSchema variant;
+    private boolean needsReloading = true; // this is to ensure we get properly synced when reloaded yup
 
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
     public static final Identifier SYNC_VARIANT = new Identifier(AITMod.MOD_ID, "sync_console_variant");
@@ -363,7 +364,10 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         }
         if (needsSync)
             sync();
-
+        if (needsReloading) {
+            markNeedsSyncing();
+            needsReloading = false;
+        }
         if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
             this.markRemoved();
         }
