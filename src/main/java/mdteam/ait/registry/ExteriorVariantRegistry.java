@@ -71,7 +71,7 @@ public class ExteriorVariantRegistry {
     public static ExteriorVariantSchema BOOTH_DEFAULT;
     public static ExteriorVariantSchema BOOTH_FIRE;
     public static ExteriorVariantSchema BOOTH_SOUL;
-    public static ExteriorVariantSchema COOB;
+    public static ExteriorVariantSchema COOB; // dont use : (
     public static ExteriorVariantSchema HEAD_DEFAULT;
     public static ExteriorVariantSchema HEAD_SOUL;
     public static ExteriorVariantSchema HEAD_FIRE;
@@ -106,7 +106,7 @@ public class ExteriorVariantRegistry {
         BOOTH_SOUL = register(new BoothSoulVariant());
 
         // funny
-        COOB = register(new RedCoobVariant());
+        // COOB = register(new RedCoobVariant()); // fixme CUBE HAS BEEN REMOVED, REPEAT, CUBE HAS BEEN REMOVED. DO NOT PANIC!!
 
         // Easter Head
         HEAD_DEFAULT = register(new EasterHeadDefaultVariant());

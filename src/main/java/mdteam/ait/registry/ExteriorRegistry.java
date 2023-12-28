@@ -21,7 +21,7 @@ public class ExteriorRegistry {
     public static ExteriorSchema CAPSULE;
     public static ExteriorSchema POLICE_BOX;
     public static ExteriorSchema TARDIM;
-    public static ExteriorSchema CUBE;
+    public static ExteriorSchema CUBE; // dont use
     public static ExteriorSchema BOOTH;
     public static ExteriorSchema EASTER_HEAD;
 
@@ -30,7 +30,7 @@ public class ExteriorRegistry {
         CAPSULE = register(new CapsuleExterior());
         POLICE_BOX = register(new PoliceBoxExterior());
         TARDIM = register(new TardimExterior());
-        CUBE = register(new CubeExterior());
+        // CUBE = register(new CubeExterior()); // fixme how could i do this, remove the cube instead of fixing a bug : (
         BOOTH = register(new BoothExterior());
         EASTER_HEAD = register(new EasterHeadExterior());
     }
