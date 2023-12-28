@@ -4,12 +4,14 @@ import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import net.minecraft.world.biome.BiomeKeys;
 
 public class RandomiserControl extends Control {
     public RandomiserControl() {
@@ -40,17 +42,17 @@ public class RandomiserControl extends Control {
         BlockPos pos;
         int x, z;
 
-//        for (int i = 0; i <= limit; i++) {
-        x = current.getX() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
-        z = current.getZ() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
-        pos = new BlockPos(x, current.getY(), z);
+        for (int i = 0; i <= limit; i++) {
+            x = current.getX() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
+            z = current.getZ() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
+            pos = new BlockPos(x, current.getY(), z);
 
-        travel.setDestination(new AbsoluteBlockPos.Directed(pos, dest.getWorld(), dest.getDirection()), false);
+            travel.setDestination(new AbsoluteBlockPos.Directed(pos, dest.getWorld(), dest.getDirection()), false);
+            if (world.getBiome(travel.getDestination()).isIn(BiomeTags.IS_OCEAN)) continue;
+            if (travel.checkDestination()) return travel.getDestination();
+        }
 
-        if (travel.checkDestination()) return travel.getDestination();
-//        }
-
-        return travel.getDestination();
+        return travel.getPosition();
     }
 
     private void messagePlayer(ServerPlayerEntity player, TardisTravel travel) {
