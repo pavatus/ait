@@ -21,6 +21,7 @@ public class RandomiserControl extends Control {
         TardisTravel travel = tardis.getTravel();
 
         randomiseDestination(tardis, 10);
+        tardis.removeFuel(100);
 
         messagePlayer(player, travel);
 
