@@ -50,6 +50,10 @@ public class TardisItemBuilder extends Item {
 
     public static ExteriorVariantSchema findRandomVariant(ExteriorSchema exterior) { // fixme its not very random icl
         Random rnd = new Random();
+        if (ExteriorVariantRegistry.withParent(exterior).size() == 0) {
+            AITMod.LOGGER.error("Variants for " + exterior + " are empty! Panicking!!!!");
+            return ExteriorVariantRegistry.BOX_DEFAULT;
+        }
         int randomized = rnd.nextInt(Math.abs(ExteriorVariantRegistry.withParent(exterior).size()));
         return (ExteriorVariantSchema) ExteriorVariantRegistry.withParent(exterior).toArray()[randomized];
     }
