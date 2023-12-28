@@ -1,24 +1,16 @@
 package mdteam.ait.client.renderers.consoles;
 
-import com.google.common.collect.ImmutableMap;
-import mdteam.ait.client.models.consoles.BorealisConsoleModel;
 import mdteam.ait.client.models.consoles.ConsoleModel;
-import mdteam.ait.client.models.consoles.TempConsoleModel;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.math.RotationAxis;
-
-import java.util.Map;
 
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
     private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
@@ -29,13 +21,13 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         if (entity.getTardis() == null)
             return;
 
-        Class<? extends ConsoleModel> modelClass = entity.getEnum().getModelClass();
+        Class<? extends ConsoleModel> modelClass = entity.getVariant().model().getClass();
 
         if (console != null && console.getClass() != modelClass)
             console = null;
 
         if (console == null)
-            this.console = entity.getEnum().createModel();
+            this.console = entity.getVariant().model();
 
         ConsoleVariantSchema variant = entity.getVariant();
         // BlockState blockState = entity.getCachedState();

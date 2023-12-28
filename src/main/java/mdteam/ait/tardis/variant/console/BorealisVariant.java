@@ -1,7 +1,9 @@
 package mdteam.ait.tardis.variant.console;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
+import mdteam.ait.client.models.consoles.BorealisConsoleModel;
+import mdteam.ait.client.models.consoles.ConsoleModel;
+import mdteam.ait.tardis.console.BorealisConsole;
 import net.minecraft.util.Identifier;
 
 public class BorealisVariant extends ConsoleVariantSchema {
@@ -9,7 +11,7 @@ public class BorealisVariant extends ConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/borealis_console_emission.png"));
 
     public BorealisVariant() {
-        super(ConsoleEnum.BOREALIS, new Identifier(AITMod.MOD_ID, "console/borealis"));
+        super(BorealisConsole.REFERENCE, new Identifier(AITMod.MOD_ID, "console/borealis"));
     }
 
     @Override
@@ -20,5 +22,10 @@ public class BorealisVariant extends ConsoleVariantSchema {
     @Override
     public Identifier emission() {
         return EMISSION;
+    }
+
+    @Override
+    public ConsoleModel model() {
+        return new BorealisConsoleModel(BorealisConsoleModel.getTexturedModelData().createModel());
     }
 }

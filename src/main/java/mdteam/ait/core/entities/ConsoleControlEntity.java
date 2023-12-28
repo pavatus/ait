@@ -1,8 +1,8 @@
 package mdteam.ait.core.entities;
 
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.control.ControlTypes;
 import net.minecraft.entity.EntityDimensions;
@@ -200,7 +200,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
             return super.getName();
     }
 
-    public void setControlData(ConsoleEnum consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
+    public void setControlData(ConsoleSchema consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
         this.consoleBlockPos = consoleBlockPosition;
         this.control = type.getControl();
         // System.out.println(type);

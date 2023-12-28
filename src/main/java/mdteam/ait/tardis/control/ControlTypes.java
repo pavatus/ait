@@ -1,12 +1,9 @@
 package mdteam.ait.tardis.control;
 
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.blocks.ConsoleBlock;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.control.Control;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
+import mdteam.ait.tardis.console.ConsoleSchema;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -15,7 +12,7 @@ import org.joml.Vector3f;
 /**
  * Holds a control which will be ran when interacted with, an {@linkplain Vector3f offset} from the centre of the {@link ConsoleBlock} and a {@linkplain EntityDimensions scale} for the entity
  * <br><br>
- * A list of these is gotten by {@link ConsoleEnum#getControlTypesList()} and used in {@link ConsoleControlEntity} to hold its information
+ * A list of these is gotten by {@link ConsoleSchema#getControlTypes()} and used in {@link ConsoleControlEntity} to hold its information
  * @see ConsoleControlEntity
  * @author loqor
  */
