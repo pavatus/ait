@@ -171,7 +171,7 @@ public class FallingTardisEntity extends Entity {
                     return;
                 }
 
-                tardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(), this.getMovementDirection()));
+                tardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(), this.tardis().getTravel().getPosition().getDirection()));
 
 
                 BlockPos blockPos = this.getBlockPos();
