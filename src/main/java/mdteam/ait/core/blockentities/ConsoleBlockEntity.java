@@ -1,13 +1,14 @@
 package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.ConsoleControlEntity;
+import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
+import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -50,7 +51,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     private boolean needsControls = true;
     private boolean needsSync = true;
     private UUID tardisId;
-    private ConsoleEnum type;
+    private Identifier type;
     private ConsoleVariantSchema variant;
 
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
@@ -71,7 +72,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         }
 
         if (type != null)
-            nbt.putInt("type", type.ordinal());
+            nbt.putString("type", type.toString());
         if (variant != null)
             nbt.putString("variant", variant.id().toString());
 
@@ -87,7 +88,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         }
 
         if (nbt.contains("type"))
-            setType(ConsoleEnum.values()[nbt.getInt("type")]);
+            setType(ConsoleRegistry.REGISTRY.get(Identifier.tryParse(nbt.getString("type"))));
         if (nbt.contains("variant")) {
             setVariant(Identifier.tryParse(nbt.getString("variant")));
         }
@@ -137,7 +138,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
         PacketByteBuf buf = PacketByteBufs.create();
 
-        buf.writeInt(getEnum().ordinal());
+        buf.writeString(getConsoleSchema().id().toString());
         buf.writeBlockPos(getPos());
 
         for (PlayerEntity player : world.getPlayers()) {
@@ -186,14 +187,14 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         return this.getTardis().getDesktop();
     }
 
-    public ConsoleEnum getEnum() {
-        if (type == null) setType(ConsoleEnum.BOREALIS);
+    public ConsoleSchema getConsoleSchema() {
+        if (type == null) setType(ConsoleRegistry.BOREALIS);
 
-        return type;
+        return ConsoleRegistry.REGISTRY.get(type);
     }
 
-    public void setType(ConsoleEnum var) {
-        type = var;
+    public void setType(ConsoleSchema var) {
+        type = var.id();
 
         syncType();
         markDirty();
@@ -203,7 +204,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (variant == null) {
             // oh no : (
             // lets just pick any
-            setVariant(ConsoleVariantRegistry.withParent(getEnum()).stream().findAny().get());
+            setVariant(ConsoleVariantRegistry.withParent(getConsoleSchema()).stream().findAny().get());
         }
 
         return variant;
@@ -211,7 +212,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     public void setVariant(ConsoleVariantSchema var) {
         variant = var;
 
-        if (variant.parent() != type) {
+        if (!(variant.parent().id().equals(type))) {
             AITMod.LOGGER.warn("Variant was set and it doesnt match this consoles type!");
             AITMod.LOGGER.warn(variant + " | " + type);
         }
@@ -224,13 +225,13 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     }
 
     /**
-     * Sets the new {@link ConsoleEnum} and refreshes the console entities
+     * Sets the new {@link ConsoleSchema} and refreshes the console entities
      */
-    private void changeConsole(ConsoleEnum var) {
+    private void changeConsole(ConsoleSchema var) {
         changeConsole(var, ConsoleVariantRegistry.withParent(var).stream().findAny().get());
     }
 
-    private void changeConsole(ConsoleEnum var, ConsoleVariantSchema variant) {
+    private void changeConsole(ConsoleSchema var, ConsoleVariantSchema variant) {
         setType(var);
         setVariant(variant);
 
@@ -243,8 +244,12 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         markNeedsControl();
     }
 
-    public static ConsoleEnum nextConsole(ConsoleEnum current) {
-        return ConsoleEnum.values()[(current.ordinal() + 1 > ConsoleEnum.values().length - 1) ? 0 : current.ordinal() + 1];
+    public static ConsoleSchema nextConsole(ConsoleSchema current) {
+        List<ConsoleSchema> list = ConsoleRegistry.REGISTRY.stream().toList();
+
+        int idx = list.indexOf(current);
+        if (idx < 0 || idx+1 == list.size()) return list.get(0);
+        return list.get(idx + 1);
     }
     public static ConsoleVariantSchema nextVariant(ConsoleVariantSchema current) {
         List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParent(current.parent()).stream().toList();
@@ -261,7 +266,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 //        if (world != TardisUtil.getTardisDimension())
 //            return;
 
-        if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) changeConsole(nextConsole(getEnum()));
+        if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) changeConsole(nextConsole(getConsoleSchema()));
         if (player.getMainHandStack().getItem() == Items.REPEATING_COMMAND_BLOCK) setVariant(nextVariant(getVariant()));
     }
 
@@ -312,8 +317,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             return;
 
         killControls();
-        ConsoleEnum consoleType = getEnum();
-        ControlTypes[] controls = consoleType.getControlTypesList();
+        ConsoleSchema consoleType = getConsoleSchema();
+        ControlTypes[] controls = consoleType.getControlTypes();
         Arrays.stream(controls).toList().forEach(control -> {
 
             ConsoleControlEntity controlEntity = new ConsoleControlEntity(AITEntityTypes.CONTROL_ENTITY_TYPE, getWorld());

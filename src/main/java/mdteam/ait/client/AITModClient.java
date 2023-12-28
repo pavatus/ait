@@ -2,7 +2,6 @@ package mdteam.ait.client;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.AITRadioRenderer;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.client.renderers.consoles.ConsoleRenderer;
 import mdteam.ait.client.renderers.coral.CoralRenderer;
 import mdteam.ait.client.renderers.doors.DoorRenderer;
@@ -21,6 +20,8 @@ import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
+import mdteam.ait.registry.ConsoleRegistry;
+import mdteam.ait.tardis.console.ConsoleSchema;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -100,8 +101,8 @@ public class AITModClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
             if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
 
-            int ordinal = buf.readInt();
-            ConsoleEnum type = ConsoleEnum.values()[ordinal];
+            String id = buf.readString();
+            ConsoleSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
             BlockPos consolePos = buf.readBlockPos();
             if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setType(type);
         });

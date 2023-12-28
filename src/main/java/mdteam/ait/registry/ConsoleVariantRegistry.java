@@ -1,8 +1,7 @@
 package mdteam.ait.registry;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.tardis.exterior.*;
+import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.variant.console.*;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
@@ -21,7 +20,7 @@ public class ConsoleVariantRegistry {
         return Registry.register(REGISTRY, schema.id(), schema);
     }
 
-    public static Collection<ConsoleVariantSchema> withParent(ConsoleEnum parent) {
+    public static Collection<ConsoleVariantSchema> withParent(ConsoleSchema parent) {
         List<ConsoleVariantSchema> list = new ArrayList<>();
 
         for (Iterator<ConsoleVariantSchema> it = REGISTRY.iterator(); it.hasNext(); ) {

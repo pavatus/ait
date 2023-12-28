@@ -1,7 +1,6 @@
 package mdteam.ait.core.item;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
@@ -28,7 +27,6 @@ public class TardisItemBuilder extends Item {
 
     public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "cave"); //new Identifier(AITMod.MOD_ID, "war");
     public static final Identifier DEFAULT_EXTERIOR = CapsuleExterior.REFERENCE;
-    public static final ConsoleEnum DEFAULT_CONSOLE = ConsoleEnum.BOREALIS;
 
     private final Identifier exterior;
     private final Identifier desktop;

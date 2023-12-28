@@ -53,6 +53,7 @@ public class AITMod implements ModInitializer {
     @Override
     public void onInitialize() {
         DoorRegistry.init();
+        ConsoleRegistry.init();
         ConsoleVariantRegistry.init();
         DesktopRegistry.init();
         ExteriorRegistry.init();

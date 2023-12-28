@@ -2,15 +2,17 @@ package mdteam.ait.tardis.variant.console;
 
 import com.google.gson.*;
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
+import mdteam.ait.client.models.consoles.ConsoleModel;
+import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
+import mdteam.ait.tardis.console.ConsoleSchema;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
 import java.lang.reflect.Type;
 
 /**
- * This class is for variants of a {@link ConsoleEnum} which have the same model but a different texture and can be changed in game to the players desires
+ * This class is for variants of a {@link ConsoleSchema} and can be changed in game to the players desires
  * <br><br>
  * It's information should be final and set once on its creation during registration
  * <br><br>
@@ -22,10 +24,10 @@ import java.lang.reflect.Type;
  * @author duzo
  */
 public abstract class ConsoleVariantSchema {
-    private final ConsoleEnum parent;
+    private final Identifier parent;
     private final Identifier id;
 
-    protected ConsoleVariantSchema(ConsoleEnum parent, Identifier id) {
+    protected ConsoleVariantSchema(Identifier parent, Identifier id) {
         this.parent = parent;
         this.id = id;
     }
@@ -40,11 +42,12 @@ public abstract class ConsoleVariantSchema {
         return id.equals(that.id);
     }
 
-    public ConsoleEnum parent() { return parent; }
+    public ConsoleSchema parent() { return ConsoleRegistry.REGISTRY.get(this.parent); }
     public Identifier id() { return id; }
 
     public abstract Identifier texture();
     public abstract Identifier emission();
+    public abstract ConsoleModel model();
 
     public static Object serializer() {
         return new Serializer();

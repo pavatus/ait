@@ -1,7 +1,9 @@
 package mdteam.ait.tardis.variant.console;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.renderers.consoles.ConsoleEnum;
+import mdteam.ait.client.models.consoles.ConsoleModel;
+import mdteam.ait.client.models.consoles.HartnellConsoleModel;
+import mdteam.ait.tardis.console.HartnellConsole;
 import net.minecraft.util.Identifier;
 
 public class WoodenHartnellVariant extends ConsoleVariantSchema {
@@ -9,7 +11,7 @@ public class WoodenHartnellVariant extends ConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/hartnell_console_emission.png"));
 
     public WoodenHartnellVariant() {
-        super(ConsoleEnum.HARTNELL, new Identifier(AITMod.MOD_ID, "console/hartnell_wooden"));
+        super(HartnellConsole.REFERENCE, new Identifier(AITMod.MOD_ID, "console/hartnell_wooden"));
     }
 
     @Override
@@ -20,5 +22,9 @@ public class WoodenHartnellVariant extends ConsoleVariantSchema {
     @Override
     public Identifier emission() {
         return EMISSION;
+    }
+    @Override
+    public ConsoleModel model() {
+        return new HartnellConsoleModel(HartnellConsoleModel.getTexturedModelData().createModel());
     }
 }

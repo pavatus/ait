@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.core.events.BlockEntityPreLoadEvent;
+import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.Corners;
@@ -19,6 +20,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 
+import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -43,6 +45,7 @@ public abstract class TardisManager {
                 .registerTypeAdapter(ExteriorVariantSchema.class, ExteriorVariantSchema.serializer())
                 .registerTypeAdapter(DoorSchema.class, DoorSchema.serializer())
                 .registerTypeAdapter(ExteriorSchema.class, ExteriorSchema.serializer())
+                .registerTypeAdapter(ConsoleSchema.class, ConsoleSchema.serializer())
                 .registerTypeAdapter(ConsoleVariantSchema.class, ConsoleVariantSchema.serializer())
                 .registerTypeAdapter(Corners.class, Corners.serializer());
         builder = this.init(builder);
