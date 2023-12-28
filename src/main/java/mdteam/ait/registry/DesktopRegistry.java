@@ -10,7 +10,7 @@ import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.util.Identifier;
 
 public class DesktopRegistry {
-    public static final SimpleRegistry<TardisDesktopSchema> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<TardisDesktopSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "desktops"))).buildAndRegister();
+    public static final SimpleRegistry<TardisDesktopSchema> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<TardisDesktopSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "desktop"))).buildAndRegister();
     public static TardisDesktopSchema register(TardisDesktopSchema schema) {
         return Registry.register(REGISTRY, schema.id(), schema);
     }
