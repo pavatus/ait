@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 
 public class AITSounds implements SoundRegistryContainer {
     public static final SoundEvent SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "secret_music"));
+    public static final SoundEvent EVEN_MORE_SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "even_more_secret_music"));
 
     // TARDIS
     public static final SoundEvent DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/demat"));
@@ -34,6 +35,7 @@ public class AITSounds implements SoundRegistryContainer {
     public static final SoundEvent CORAL_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/coral_hum"));
 
     public static final SoundEvent CLOISTER = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/cloister"));
+
 
     // FIXME: move somwehre else + these values suck
     public static final MatSound DEMAT_ANIM = new MatSound(DEMAT, 240, 240, 240, 0.2f, 0.4f); // fixme especially this one it flickers bad

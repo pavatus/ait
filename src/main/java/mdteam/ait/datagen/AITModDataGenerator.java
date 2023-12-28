@@ -162,6 +162,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             AITSoundProvider provider = new AITSoundProvider(output);
 
             provider.addSound("secret_music", AITSounds.SECRET_MUSIC);
+            provider.addSound("even_more_secret_music", AITSounds.EVEN_MORE_SECRET_MUSIC);
 
             // TARDIS
             provider.addSound("tardis/demat", AITSounds.DEMAT);

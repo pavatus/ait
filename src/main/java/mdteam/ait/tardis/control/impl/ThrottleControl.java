@@ -9,8 +9,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
+
+import java.util.Random;
 
 public class ThrottleControl extends Control {
     public ThrottleControl() {

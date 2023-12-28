@@ -1,6 +1,7 @@
 package mdteam.ait.core.entities;
 
 import mdteam.ait.core.AITItems;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.control.Control;
@@ -33,6 +34,7 @@ import org.joml.Vector3f;
 import mdteam.ait.tardis.Tardis;
 
 import java.util.List;
+import java.util.Random;
 
 public class ConsoleControlEntity extends BaseControlEntity {
 
@@ -161,6 +163,12 @@ public class ConsoleControlEntity extends BaseControlEntity {
     }
 
     public boolean run(PlayerEntity player, World world) {
+        Random random = new Random();
+        int chance_int = random.nextInt(1, 1000);
+        if (chance_int == 72) {
+            // play sound
+            this.getWorld().playSound(null, this.getBlockPos(), AITSounds.EVEN_MORE_SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
+        }
         if (this.consoleBlockPos != null)
             this.getWorld().playSound(null, this.getBlockPos(), this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
 
