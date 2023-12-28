@@ -2,9 +2,9 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
-import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -203,7 +203,7 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
     }
 
     public ExteriorSchema getExteriorType() {
-        if(this.tardis() == null) return AITExteriors.get(CapsuleExterior.REFERENCE);
+        if(this.tardis() == null) return ExteriorRegistry.REGISTRY.get(CapsuleExterior.REFERENCE);
         return this.tardis().getExterior().getType();
     }
 

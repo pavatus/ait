@@ -5,10 +5,9 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.AITExteriorVariants;
-import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
-import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;
@@ -51,7 +50,7 @@ public abstract class ExteriorVariantSchema {
     }
 
 
-    public ExteriorSchema parent() { return AITExteriors.get(this.parent); }
+    public ExteriorSchema parent() { return ExteriorRegistry.REGISTRY.get(this.parent); }
     public Identifier id() { return id; }
 
     /**

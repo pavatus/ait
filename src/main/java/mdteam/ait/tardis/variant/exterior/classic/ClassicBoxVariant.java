@@ -5,7 +5,6 @@ import mdteam.ait.client.animation.ClassicAnimation;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.models.exteriors.ClassicExteriorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.exterior.ClassicExterior;

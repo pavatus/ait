@@ -5,7 +5,6 @@ import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.TardimExteriorModel;
-import mdteam.ait.core.AITExteriors;
 import mdteam.ait.core.AITDoors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.exterior.TardimExterior;

@@ -4,10 +4,10 @@ import com.google.common.collect.Lists;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
-import mdteam.ait.core.AITExteriors;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITExteriorVariants;
 import mdteam.ait.core.item.TardisItemBuilder;
+import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.exterior.BoothExterior;
 import mdteam.ait.tardis.exterior.ClassicExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -139,14 +139,14 @@ public class MonitorScreen extends TardisScreen {
         else setCurrentModel(previousExterior());
     }
     public ExteriorSchema nextExterior() {
-        List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
+        List<ExteriorSchema> list = ExteriorRegistry.REGISTRY.stream().toList();
 
         int idx = list.indexOf(getCurrentModel());
         if (idx < 0 || idx+1 == list.size()) return list.get(0);
         return list.get(idx + 1);
     }
     public ExteriorSchema previousExterior() {
-        List<ExteriorSchema> list = AITExteriors.iterator().stream().toList();
+        List<ExteriorSchema> list = ExteriorRegistry.REGISTRY.stream().toList();
 
         int idx = list.indexOf(getCurrentModel());
         if (idx <= 0) return list.get(list.size() - 1);
@@ -231,9 +231,9 @@ public class MonitorScreen extends TardisScreen {
             MatrixStack stack = context.getMatrices();
             // fixme is bad
             stack.push();
-            stack.translate(x, this.getCurrentModel() == AITExteriors.get(PoliceBoxExterior.REFERENCE) || this.getCurrentModel() == AITExteriors.get(ClassicExterior.REFERENCE) ? y + 8 : y, 100f);
-            if (this.getCurrentModel() == AITExteriors.get(PoliceBoxExterior.REFERENCE) || this.getCurrentModel() == AITExteriors.get(ClassicExterior.REFERENCE)) stack.scale(-10, 10, 10);
-            else if (this.getCurrentModel() == AITExteriors.get(BoothExterior.REFERENCE)) stack.scale(-scale, scale, scale);
+            stack.translate(x, this.getCurrentModel() == ExteriorRegistry.REGISTRY.get(PoliceBoxExterior.REFERENCE) || this.getCurrentModel() == ExteriorRegistry.REGISTRY.get(ClassicExterior.REFERENCE) ? y + 8 : y, 100f);
+            if (this.getCurrentModel() == ExteriorRegistry.REGISTRY.get(PoliceBoxExterior.REFERENCE) || this.getCurrentModel() == ExteriorRegistry.REGISTRY.get(ClassicExterior.REFERENCE)) stack.scale(-10, 10, 10);
+            else if (this.getCurrentModel() == ExteriorRegistry.REGISTRY.get(BoothExterior.REFERENCE)) stack.scale(-scale, scale, scale);
             else stack.scale(-scale, scale, scale);
             //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
             stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(mouseX));

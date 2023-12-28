@@ -18,6 +18,7 @@ import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.registry.DesktopRegistry;
+import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
@@ -52,11 +53,11 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        AITExteriors.init();
         AITDoors.init();
         AITConsoleVariants.init();
         AITExteriorVariants.init();
         DesktopRegistry.init();
+        ExteriorRegistry.init();
 
         FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
