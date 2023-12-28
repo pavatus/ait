@@ -17,6 +17,7 @@ import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
+import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
@@ -55,7 +56,7 @@ public class AITMod implements ModInitializer {
     @Override
     public void onInitialize() {
         AITDoors.init();
-        AITConsoleVariants.init();
+        ConsoleVariantRegistry.init();
         DesktopRegistry.init();
         ExteriorRegistry.init();
         ExteriorVariantRegistry.init();

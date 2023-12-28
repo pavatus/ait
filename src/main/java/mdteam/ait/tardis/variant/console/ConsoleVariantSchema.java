@@ -3,7 +3,7 @@ package mdteam.ait.tardis.variant.console;
 import com.google.gson.*;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleEnum;
-import mdteam.ait.core.AITConsoleVariants;
+import mdteam.ait.registry.ConsoleVariantRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
@@ -14,11 +14,11 @@ import java.lang.reflect.Type;
  * <br><br>
  * It's information should be final and set once on its creation during registration
  * <br><br>
- * It should be registered in {@link AITConsoleVariants} otherwise it wont show up in-game
+ * It should be registered in {@link ConsoleVariantRegistry#REGISTRY} otherwise it wont show up in-game
  * <br><br>
- * It should only be gotten from {@link AITConsoleVariants#get(Identifier)} using its {@link #id} and only created once
+ * It should only be gotten from {@link ConsoleVariantRegistry#REGISTRY#get(Identifier)} using its {@link #id} and only created once
  * <br><br>
- * @see AITConsoleVariants
+ * @see ConsoleVariantRegistry#REGISTRY
  * @author duzo
  */
 public abstract class ConsoleVariantSchema {
@@ -62,7 +62,7 @@ public abstract class ConsoleVariantSchema {
                 id = new Identifier(AITMod.MOD_ID, "console/borealis");
             }
 
-            return AITConsoleVariants.get(id);
+            return ConsoleVariantRegistry.REGISTRY.get(id);
         }
 
         @Override
