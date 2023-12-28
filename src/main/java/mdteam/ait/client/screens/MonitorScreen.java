@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
+import static mdteam.ait.tardis.handler.FuelHandler.MAX_FUEL;
 
 public class MonitorScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
@@ -258,9 +259,12 @@ public class MonitorScreen extends TardisScreen {
         String destinationText = "> " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
         String dimensionText = "> " + convertWorldValueToModified(abpd.getDimension().getValue());
         String directionText = "> " + abpd.getDirection().toString().toUpperCase();
+        String fuelText = "> " + Math.round((tardis().getFuel() / MAX_FUEL) * 100);
         context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 67), (height / 2 + 38), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(dimensionText), (width / 2 - 19), (height / 2 + 48), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 67), (height / 2 + 48), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal("Fuel:"), (width / 2 - 102), (height / 2 + 28), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(fuelText + "%"), (width / 2 - 108), (height / 2 + 38), 0xFFFFFF, true);
     }
 
     @Override
