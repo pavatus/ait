@@ -185,7 +185,7 @@ public class FallingTardisEntity extends Entity {
                 }
 
                 if (!this.isOnGround() && !bl2) {
-                    if (!this.getWorld().isClient && (this.timeFalling > 100 && (blockPos.getY() <= this.getWorld().getBottomY() || blockPos.getY() > this.getWorld().getTopY()) || this.timeFalling > 600)) {
+                    if (!this.getWorld().isClient && (/*this.timeFalling > 100 &&*/ (blockPos.getY() <= this.getWorld().getBottomY() || blockPos.getY() > this.getWorld().getTopY()) || this.timeFalling > 600)) {
                         if (this.dropItem && this.getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
                             this.dropItem(block);
                         }
