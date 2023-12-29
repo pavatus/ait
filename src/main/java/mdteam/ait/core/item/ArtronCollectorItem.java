@@ -2,6 +2,10 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.interfaces.RiftChunk;
+import mdteam.ait.core.managers.DeltaTimeManager;
+import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.FuelHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,21 +16,25 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 import static mdteam.ait.tardis.handler.FuelHandler.MAX_FUEL;
 
 public class ArtronCollectorItem extends Item {
 
     public static final String AU_LEVEL = "au_level";
+    public static final String UUID_KEY = "uuid";
 
     public ArtronCollectorItem(Settings settings) {
         super(settings);
@@ -43,23 +51,44 @@ public class ArtronCollectorItem extends Item {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if(world.isClient()) return;
-        if(entity instanceof PlayerEntity player) {
-            if(selected) {
-                NbtCompound nbt = stack.getOrCreateNbt();
-                if(TardisUtil.isRiftChunk((ServerWorld) world, player.getBlockPos())) {
-                    if (nbt.contains(AU_LEVEL)) {
-                        if(nbt.getDouble(AU_LEVEL) >= MAX_FUEL)
-                            nbt.putDouble(AU_LEVEL, nbt.getDouble(AU_LEVEL) + TardisUtil.getArtronLevelsOfChunk((ServerWorld) world, player.getBlockPos()));
-                        else
-                            nbt.putDouble(AU_LEVEL, MAX_FUEL);
-                    } else {
-                        nbt.putDouble(AU_LEVEL, TardisUtil.getArtronLevelsOfChunk((ServerWorld) world, player.getBlockPos()));
-                    }
-                    TardisUtil.setArtronLevelsOfChunk((ServerWorld) world, player.getBlockPos(), 0);
-                }
-            }
+        if (!(entity instanceof ServerPlayerEntity) || !selected) return;
+
+        // todo, slowly drain over time.
+        RiftChunk riftChunk = (RiftChunk) world.getChunk(entity.getBlockPos());
+        if (riftChunk.isRiftChunk() && riftChunk.getArtronLevels() >= 5 && getFuel(stack) < FuelHandler.MAX_FUEL  && (!DeltaTimeManager.isStillWaitingOnDelay(getDelayId(stack)))) {
+            riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 5); // we shouldn't need to check how much it has because we can't even get here if don't have atleast five artron in the chunk
+            addFuel(stack, 5);
+            DeltaTimeManager.createDelay(getDelayId(stack), 250L);
         }
+
         super.inventoryTick(stack, world, entity, slot, selected);
+    }
+
+    public static String getDelayId(ItemStack stack) {
+        return "collector-" + getUuid(stack) + "-delay";
+    }
+
+    public static UUID getUuid(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        if (nbt.contains(UUID_KEY)) return nbt.getUuid(UUID_KEY);
+        nbt.putUuid(UUID_KEY, UUID.randomUUID());
+        return nbt.getUuid(UUID_KEY);
+    }
+
+    public static double getFuel(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        if (nbt.contains(AU_LEVEL)) return nbt.getDouble(AU_LEVEL);
+        nbt.putDouble(AU_LEVEL, 0);
+        return 0d;
+    }
+    public static void addFuel(ItemStack stack, double fuel) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        nbt.putDouble(AU_LEVEL, getFuel(stack) + fuel);
+
+        if (getFuel(stack) > MAX_FUEL) nbt.putDouble(AU_LEVEL, MAX_FUEL);
     }
 
     @Override
@@ -96,13 +125,8 @@ public class ArtronCollectorItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if (!Screen.hasShiftDown()) {
-            tooltip.add(Text.literal("Hold shift for more info").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
-            return;
-        }
-
         NbtCompound tag = stack.getOrCreateNbt();
-        String text = tag.contains(AU_LEVEL) ? "" + tag.getDouble(AU_LEVEL) : "0.0au";
+        String text = tag.contains(AU_LEVEL) ? "" + tag.getDouble(AU_LEVEL) : "0.0";
         tooltip.add(Text.literal(text + "au / 5000.0au").formatted(Formatting.BLUE));
     }
 }
