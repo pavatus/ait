@@ -434,7 +434,7 @@ public class TardisTravel extends TardisLink {
         this.position.addBlockEntity(exterior);
         boolean increaseCostOfTravelFromDimensionalTravel = lastPosition.getWorld().equals(this.position.getWorld());
         double distance = Math.sqrt(this.position.getSquaredDistance(lastPosition.toCenterPos()));
-        double fuel_cost = (distance / 100) * (increaseCostOfTravelFromDimensionalTravel ? 3 : 1);
+        double fuel_cost = (distance / 100) * (increaseCostOfTravelFromDimensionalTravel ? 10 : 1);
         this.getTardis().removeFuel(fuel_cost);
     }
 

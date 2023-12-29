@@ -112,7 +112,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.REPEATER),
                             FabricRecipeProvider.conditionsFromItem(Items.REPEATER))
             );*/
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITItems.ARTRON_COLLECTOR, 1)
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.ARTRON_COLLECTOR, 1)
                     .pattern("CCC")
                     .pattern("IRI")
                     .pattern("CCC")
@@ -125,6 +125,21 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                             FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
                     .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK),
                             FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK))
+            );
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RIFT_SCANNER, 1)
+                    .pattern(" A ")
+                    .pattern("IDI")
+                    .pattern("QRQ")
+                    .input('A', Items.AMETHYST_SHARD)
+                    .input('I', Items.IRON_INGOT)
+                    .input('D', Items.DIAMOND)
+                    .input('R', Items.REDSTONE_BLOCK)
+                    .input('Q', Items.QUARTZ)
+                    .criterion(FabricRecipeProvider.hasItem(Items.AMETHYST_SHARD), FabricRecipeProvider.conditionsFromItem(Items.AMETHYST_SHARD))
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(FabricRecipeProvider.hasItem(Items.DIAMOND), FabricRecipeProvider.conditionsFromItem(Items.DIAMOND))
+                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK))
+                    .criterion(FabricRecipeProvider.hasItem(Items.QUARTZ), FabricRecipeProvider.conditionsFromItem(Items.QUARTZ))
             );
             generateSmithingRecipes(provider);
             return provider;
@@ -269,6 +284,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
         aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
         aitLanguageProvider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector");
+        aitLanguageProvider.addTranslation(AITItems.RIFT_SCANNER, "Rift Scanner");
         aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
@@ -304,6 +320,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
         aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
         aitLanguageProvider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector");
+        aitLanguageProvider.addTranslation(AITItems.RIFT_SCANNER, "Scanner de Rift");
         aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
@@ -339,6 +356,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
         aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
         aitLanguageProvider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector");
+        aitLanguageProvider.addTranslation(AITItems.RIFT_SCANNER, "escáner de Rift");
         aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");

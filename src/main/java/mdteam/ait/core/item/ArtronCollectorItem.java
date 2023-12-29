@@ -4,11 +4,8 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
-import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.FuelHandler;
-import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,11 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -29,12 +24,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-import static mdteam.ait.tardis.handler.FuelHandler.MAX_FUEL;
+import static mdteam.ait.tardis.handler.FuelHandler.TARDIS_MAX_FUEL;
 
 public class ArtronCollectorItem extends Item {
 
     public static final String AU_LEVEL = "au_level";
     public static final String UUID_KEY = "uuid";
+    public static final Integer COLLECTOR_MAX_FUEL = 1500;
 
     public ArtronCollectorItem(Settings settings) {
         super(settings);
@@ -54,17 +50,17 @@ public class ArtronCollectorItem extends Item {
         if (!(entity instanceof ServerPlayerEntity) || !selected) return;
 
         RiftChunk riftChunk = (RiftChunk) world.getChunk(entity.getBlockPos());
-        if (riftChunk.isRiftChunk() && riftChunk.getArtronLevels() >= 5 && getFuel(stack) < FuelHandler.MAX_FUEL  && (!DeltaTimeManager.isStillWaitingOnDelay(getDelayId(stack)))) {
-            riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 5); // we shouldn't need to check how much it has because we can't even get here if don't have atleast five artron in the chunk
-            addFuel(stack, 5);
-            DeltaTimeManager.createDelay(getDelayId(stack), 250L);
+        if (riftChunk.isRiftChunk() && riftChunk.getArtronLevels() > 0  && getFuel(stack) < COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelayId(stack)))) {
+            riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast five artron in the chunk
+            addFuel(stack, 2);
+            DeltaTimeManager.createDelay(getDelayId(stack), 500L);
         }
 
         super.inventoryTick(stack, world, entity, slot, selected);
     }
 
     public static String getDelayId(ItemStack stack) {
-        return "collector-" + getUuid(stack) + "-delay";
+        return "collector-" + getUuid(stack) + "-collectdelay";
     }
 
     public static UUID getUuid(ItemStack stack) {
@@ -87,7 +83,7 @@ public class ArtronCollectorItem extends Item {
 
         nbt.putDouble(AU_LEVEL, getFuel(stack) + fuel);
 
-        if (getFuel(stack) > MAX_FUEL) nbt.putDouble(AU_LEVEL, MAX_FUEL);
+        if (getFuel(stack) > COLLECTOR_MAX_FUEL) nbt.putDouble(AU_LEVEL, COLLECTOR_MAX_FUEL);
     }
 
     @Override
@@ -126,6 +122,6 @@ public class ArtronCollectorItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         NbtCompound tag = stack.getOrCreateNbt();
         String text = tag.contains(AU_LEVEL) ? "" + tag.getDouble(AU_LEVEL) : "0.0";
-        tooltip.add(Text.literal(text + "au / 5000.0au").formatted(Formatting.BLUE));
+        tooltip.add(Text.literal(text + "au / 1500.0au").formatted(Formatting.BLUE));
     }
 }
