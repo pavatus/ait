@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.network.PacketByteBuf;
@@ -23,13 +24,20 @@ public class InteriorSelectScreen extends TardisScreen {
     int bgHeight = 166;
     int bgWidth = 256;
     int left, top;
+    private final Screen parent;
 
     private TardisDesktopSchema selectedDesktop;
 
     // loqor DONT rewrite with owo lib : (
-    public InteriorSelectScreen(UUID tardis) {
+    public InteriorSelectScreen(UUID tardis, Screen parent) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".interior"), tardis);
+        this.parent = parent;
         updateTardis();
+    }
+
+    @Override
+    public boolean shouldPause() {
+        return false;
     }
 
     @Override
@@ -80,6 +88,17 @@ public class InteriorSelectScreen extends TardisScreen {
                         this.textRenderer
                 )
         );
+        this.addButton(
+                new PressableTextWidget(
+                        (int) (left + (bgWidth * 0.25f)) - (textRenderer.getWidth("apply") / 2),
+                        (int) (top + (bgHeight * 0.5f)),
+                        this.textRenderer.getWidth("back"),
+                        10,
+                        Text.literal("back"),
+                        button -> backToExteriorChangeScreen(),
+                        this.textRenderer
+                )
+        );
     }
 
     private <T extends ClickableWidget> void addButton(T button) {
@@ -97,6 +116,12 @@ public class InteriorSelectScreen extends TardisScreen {
         MinecraftClient.getInstance().setScreen(null);
     }
 
+    public void backToExteriorChangeScreen() {
+        MinecraftClient.getInstance().setScreen(this.parent);
+    }
+
+
+    //@TODO make it use the current interior as the starting point - Loqor
     private static TardisDesktopSchema nextDesktop(TardisDesktopSchema current) {
         List<TardisDesktopSchema> list = DesktopRegistry.REGISTRY.stream().toList();
 

@@ -14,6 +14,7 @@ import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.exterior.PoliceBoxExterior;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.render.DiffuseLighting;
@@ -116,6 +117,10 @@ public class MonitorScreen extends TardisScreen {
                 this.textRenderer.getWidth(">"), 10, Text.literal(">").formatted(Formatting.LIGHT_PURPLE), button -> {
             whichDirectionVariant(true);
         }, this.textRenderer));
+        this.addButton(new PressableTextWidget((width / 2 - 76), (height / 2 - 14),
+                this.textRenderer.getWidth("Change Interior"), 10, Text.literal("Change Interior").formatted(Formatting.AQUA), button -> {
+            toInteriorChangeScreen();
+        }, this.textRenderer));
         this.buttons.forEach(buttons -> {
             // buttons.visible = false;
             buttons.active = true;
@@ -133,6 +138,10 @@ public class MonitorScreen extends TardisScreen {
                         this.getCurrentVariant() != tardis().getExterior().getVariant());
             }
         }
+    }
+
+    public void toInteriorChangeScreen() {
+        MinecraftClient.getInstance().setScreenAndRender(new InteriorSelectScreen(this.tardisId, this));
     }
 
     public void whichDirectionExterior(boolean direction) {
