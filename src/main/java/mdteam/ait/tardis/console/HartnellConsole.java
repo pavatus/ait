@@ -33,7 +33,7 @@ public class HartnellConsole extends ConsoleSchema {
             new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7218750026077032f, 0.5749999508261681f, 0.10117187909781933f)), // 15
             new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.099999994f, 0.099999994f), new Vector3f(-0.9156250208616257f, 0.482499978505075f, 0.43984376080334187f)), // 16
             new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.1125f, 0.08749999f), new Vector3f(0.30000001285225153f, 0.4874998088926077f, -1.042968776077032f)), // 17
-            // @TODO new ControlTypes(new HADSControl(), EntityDimensions.changing(NaN), new Vector3f(NaN)),
+            new ControlTypes(new HADSControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(0.516015631146729f, 0.5750001845881343f, 0.40332030411809683f)),
     };
 
     public HartnellConsole() {

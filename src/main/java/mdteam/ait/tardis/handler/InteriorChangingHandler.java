@@ -60,6 +60,7 @@ public class InteriorChangingHandler extends TardisLink {
     private void onCompletion() {
         setGenerating(false);
         tardis().getHandlers().getAlarms().disable();
+        tardis().removeFuel(20);
         DoorHandler.lockTardis(PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis(), null, false);
     }
 

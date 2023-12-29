@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 
 public class AutoPilotControl extends Control {
     public AutoPilotControl() {
-        super("auto_pilot");
+        super("protocol_116");
     }
 
     @Override
@@ -26,7 +26,7 @@ public class AutoPilotControl extends Control {
 
     public void messagePlayer(ServerPlayerEntity player, boolean autopilot) {
         // fixme translatable
-        player.sendMessage(Text.literal("Auto Pilot: " + (autopilot ? "ACTIVE" : "INACTIVE")), true);
+        player.sendMessage(Text.literal("Protocol 116: " + (autopilot ? "ACTIVE" : "INACTIVE")), true);
     }
 
     @Override

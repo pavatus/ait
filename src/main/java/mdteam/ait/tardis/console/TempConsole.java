@@ -31,6 +31,7 @@ public class TempConsole extends ConsoleSchema {
             // new ControlTypes(new AutoPilotControl(),   EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.5507812462747097f, 0.5499999932944775f, 0.3234375026077032f)), //12
             new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.8750000037252903f, 0.5249999780207872f, 0.15156249701976776f)), //13
             new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.6593750026077032f, 0.5499999783933163f, -0.3812500014901161f)), //14
+            new ControlTypes(new HADSControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(0.516015631146729f, 0.5750001845881343f, 0.40332030411809683f)),
     };
 
     public TempConsole() {

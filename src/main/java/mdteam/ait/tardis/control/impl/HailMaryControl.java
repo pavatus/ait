@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 
 public class HailMaryControl extends Control {
     public HailMaryControl() {
-        super("hail_mary");
+        super("protocol_813");
     }
 
     @Override
@@ -23,6 +23,6 @@ public class HailMaryControl extends Control {
 
     public void messagePlayer(ServerPlayerEntity player, boolean autopilot) {
         // fixme translatable
-        player.sendMessage(Text.literal("Hail Mary Protocol: " + (autopilot ? "ACTIVE" : "INACTIVE")), true);
+        player.sendMessage(Text.literal("Protocol 813: " + (autopilot ? "ACTIVE" : "INACTIVE")), true);
     }
 }

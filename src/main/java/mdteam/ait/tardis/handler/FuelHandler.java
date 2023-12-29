@@ -28,8 +28,12 @@ public class FuelHandler extends TardisLink {
         tardis().markDirty();
     }
 
-    public void addFuel(double fuel) {
-        this.setFuelCount(this.getFuel() + fuel);
+    public double addFuel(double fuel) {
+        double currentFuel = this.getFuel();
+        this.setFuelCount(this.getFuel() <= MAX_FUEL ? this.getFuel() + fuel : MAX_FUEL);
+        if(this.getFuel() == MAX_FUEL)
+            return fuel - (MAX_FUEL - currentFuel);
+        return 0;
     }
 
     public void removeFuel(double fuel) {

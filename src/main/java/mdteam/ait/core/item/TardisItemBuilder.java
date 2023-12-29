@@ -25,7 +25,7 @@ import java.util.Random;
 
 public class TardisItemBuilder extends Item {
 
-    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "cave"); //new Identifier(AITMod.MOD_ID, "war");
+    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "coral"); //new Identifier(AITMod.MOD_ID, "war");
     public static final Identifier DEFAULT_EXTERIOR = CapsuleExterior.REFERENCE;
 
     private final Identifier exterior;

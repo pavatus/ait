@@ -42,6 +42,8 @@ public abstract class ConsoleSchema {
         return this.name();
     }
 
+    //@TODO protocol abstraction with numbered letters
+
     public abstract ControlTypes[] getControlTypes(); // fixme this kinda sucks idk
 
     public static Object serializer() {

@@ -104,8 +104,8 @@ public class Tardis {
     }
 
     // fuel - because getHandlers() blah blah is annoying me
-    public void addFuel(double fuel) {
-        this.getHandlers().getFuel().addFuel(fuel);
+    public double addFuel(double fuel) {
+        return this.getHandlers().getFuel().addFuel(fuel);
     }
     public void removeFuel(double fuel) {
         this.getHandlers().getFuel().removeFuel(fuel);
@@ -121,6 +121,10 @@ public class Tardis {
     }
     public void setRefueling(boolean b) {
         this.getHandlers().getFuel().setRefueling(b);
+    }
+
+    public void setIsInDanger(boolean danger) {
+        this.getHandlers().getHADS().setIsInDanger(danger);
     }
 
     /**
@@ -194,5 +198,9 @@ public class Tardis {
             ((ServerTardis) this).sync();
             dirty = false;
         }
+    }
+
+    public boolean isInDanger() {
+        return this.getHandlers().getHADS().isInDanger();
     }
 }

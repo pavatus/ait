@@ -22,7 +22,13 @@ public class HandBrakeControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+
+        if(tardis.isInDanger())
+            return false;
+
         PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
+        if(tardis.isRefueling())
+            tardis.setRefueling(false);
 
         tardis.markDirty();
 
