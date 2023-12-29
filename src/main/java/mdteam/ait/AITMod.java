@@ -19,6 +19,7 @@ import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.registry.*;
+import mdteam.ait.tardis.advancement.TardisCriterions;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
@@ -71,6 +72,7 @@ public class AITMod implements ModInitializer {
         TardisManager.getInstance();
         TardisManager.init();
         RiftChunkManager.init();
+        TardisCriterions.init();
 
         entityAttributeRegister();
 
@@ -96,6 +98,18 @@ public class AITMod implements ModInitializer {
             if (tardis.getTravel().getPosition().getWorld().getBlockEntity(tardis.getTravel().getExteriorPos()) instanceof ExteriorBlockEntity entity) {
                 entity.getAnimation().setupAnimation(tardis.getTravel().getState());
             };
+        }));
+
+        TardisEvents.DEMAT.register((tardis -> {
+            for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+                TardisCriterions.TAKEOFF.trigger((ServerPlayerEntity) player);
+            }
+        }));
+
+        TardisEvents.CRASH.register((tardis -> {
+            for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+                TardisCriterions.CRASH.trigger((ServerPlayerEntity) player);
+            }
         }));
 
         ServerPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.ASK, ((server, player, handler, buf, responseSender) -> {
