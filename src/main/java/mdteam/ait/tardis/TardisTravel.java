@@ -9,6 +9,7 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.control.impl.pos.PosManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.TardisLink;
+import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;

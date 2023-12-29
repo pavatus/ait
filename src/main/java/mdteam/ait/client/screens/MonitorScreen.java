@@ -250,7 +250,7 @@ public class MonitorScreen extends TardisScreen {
         super.renderBackground(context);
     }
 
-    protected void drawDestinationText(DrawContext context) {
+    protected void drawInformationText(DrawContext context) {
         int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
         int j = ((this.width - this.backgroundWidth) / 2);
         if (tardis() == null) return;
@@ -277,7 +277,7 @@ public class MonitorScreen extends TardisScreen {
         System.out.println((mouseX + this.backgroundWidth / 2) +  " min: " + (j + 10) + ", max: " + (j + 50) + ": is this clamped right = " + xClamping);*/
         // todo manually adjusting all these values are annoying me
         this.drawTardisExterior(context, (width / 2 - 91), (height / 2 - 19), 15f, 176);
-        this.drawDestinationText(context);
+        this.drawInformationText(context);
         super.render(context, mouseX, mouseY, delta);
     }
 }

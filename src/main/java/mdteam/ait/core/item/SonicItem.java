@@ -1,5 +1,6 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DesktopRegistry;
@@ -21,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -117,16 +119,16 @@ public class SonicItem extends Item {
                     TardisTravel.State state = exteriorBlock.tardis().getTravel().getState();
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
-                    Identifier nextInteriorId = InteriorSelectItem.getNextInterior(exteriorBlock.tardis().getDesktop().getSchema().id().getPath());
-                    exteriorBlock.tardis().getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.REGISTRY.get(nextInteriorId));
-                    player.sendMessage(Text.literal(nextInteriorId.toString()), true);
+                    if (!tardis.getHandlers().getInteriorChanger().isGenerating())
+                        AITMod.openScreen((ServerPlayerEntity) player, 2, tardis.getUuid());
+
                 } else if (player.isSneaking() && world == TardisUtil.getTardisDimension()) {
                     TardisTravel.State state = tardis.getTravel().getState();
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
-                    Identifier nextInteriorId = InteriorSelectItem.getNextInterior(tardis.getDesktop().getSchema().id().getPath());
-                    tardis.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.REGISTRY.get(nextInteriorId));
-                    player.sendMessage(Text.literal(nextInteriorId.toString()), true);
+                    if (!tardis.getHandlers().getInteriorChanger().isGenerating())
+                        AITMod.openScreen((ServerPlayerEntity) player, 2, tardis.getUuid());
+
                 } else if (world.getRegistryKey() == World.OVERWORLD && !world.isClient()) {
                     player.sendMessage(Text.literal(TardisUtil.isRiftChunk(
                                     (ServerWorld) world, pos) ? "RIFT FOUND" : "RIFT NOT FOUND")

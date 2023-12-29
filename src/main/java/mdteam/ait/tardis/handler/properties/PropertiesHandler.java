@@ -1,9 +1,17 @@
 package mdteam.ait.tardis.handler.properties;
 
+import com.google.gson.internal.LinkedTreeMap;
 import mdteam.ait.AITMod;
+import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
+import mdteam.ait.registry.DesktopRegistry;
+import mdteam.ait.tardis.TardisDesktopSchema;
+import mdteam.ait.tardis.desktops.CaveDesktop;
 import mdteam.ait.tardis.handler.FuelHandler;
+import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
 
 public class PropertiesHandler { // todo move more things over to properties
     public static final String AUTO_LAND = "auto_land";
@@ -47,6 +55,40 @@ public class PropertiesHandler { // todo move more things over to properties
         return holder.getData().get(key);
     }
 
+    public static TardisDesktopSchema getDesktop(PropertiesHolder holder, String key) {
+        if (!holder.getData().containsKey(key)) {
+            AITMod.LOGGER.error(key + " did not have a schema! Resetting to default..");
+            setDesktop(holder,key, DesktopRegistry.REGISTRY.get(new Identifier(AITMod.MOD_ID, "cave")));
+        }
+
+        return DesktopRegistry.REGISTRY.get(getIdentifier(holder,key));
+    }
+    public static void setDesktop(PropertiesHolder holder, String key, TardisDesktopSchema val) {
+        setIdentifier(holder, key, val.id());
+    }
+
+    public static Identifier getIdentifier(PropertiesHolder holder, String key) {
+        if (!holder.getData().containsKey(key)) {
+            AITMod.LOGGER.error(key + " did not have an identifier! Have fun w that null lol");
+            return null;
+        }
+
+        // because gson saves it weird
+        if (holder.getData().get(key) instanceof LinkedTreeMap map)
+            return Identifier.of((String) map.get("namespace"), (String) map.get("path"));
+
+        return (Identifier) holder.getData().get(key);
+    }
+    // why do i keep rewriting the same method???
+    public static void setIdentifier(PropertiesHolder holder, String key, Identifier val) {
+        if (holder.getData().containsKey(key)) {
+            holder.getData().replace(key, val);
+            return;
+        }
+
+        holder.getData().put(key, val);
+    }
+
     public static boolean getBool(PropertiesHolder holder, String key) {
         if (!holder.getData().containsKey(key)) return false;
 
@@ -75,6 +117,29 @@ public class PropertiesHandler { // todo move more things over to properties
         }
 
         return (int) holder.getData().get(key);
+    }
+
+    public static PropertiesHolder getSubProperties(PropertiesHolder holder, String key) {
+        if (!holder.getData().containsKey(key)) {
+            AITMod.LOGGER.error(key + " is not a properties holder!! im being kind, heres an empty properties instead of a null crash. to loqor - this wont b saved prolly");
+            return new PropertiesHolder(holder.tardis().getUuid());
+        }
+
+        return (PropertiesHolder) holder.getData().get(key);
+    }
+    public static void setSubProperties(PropertiesHolder holder, String key, PropertiesHolder val) {
+        if (holder.getData().containsKey(key)) {
+            holder.getData().replace(key, val);
+            return;
+        }
+        holder.getData().put(key, val);
+    }
+
+    public static void setSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema, boolean val) {
+        setBool(holder, schema.id().getPath(), val);
+    }
+    public static boolean isSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema) {
+        return getBool(holder, schema.id().getPath());
     }
 
     public static void setAutoPilot(PropertiesHolder handler, boolean val) {

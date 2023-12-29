@@ -9,4 +9,9 @@ public class DevDesktop extends TardisDesktopSchema {
     public DevDesktop() {
         super(new Identifier(AITMod.MOD_ID, "dev"));
     }
+
+    @Override
+    public boolean freebie() {
+        return false;
+    }
 }

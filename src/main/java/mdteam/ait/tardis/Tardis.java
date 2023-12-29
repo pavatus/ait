@@ -3,6 +3,7 @@ package mdteam.ait.tardis;
 import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
+import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.handler.FuelHandler;
 import mdteam.ait.tardis.handler.TardisHandlersManager;
@@ -17,6 +18,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
@@ -125,6 +127,22 @@ public class Tardis {
 
     public void setIsInDanger(boolean danger) {
         this.getHandlers().getHADS().setIsInDanger(danger);
+    }
+
+    // unlock destop stuff
+    // kill me.
+    public boolean isDesktopUnlocked(TardisDesktopSchema schema) {
+        return PropertiesHandler.isSchemaUnlocked(getHandlers().getProperties(), schema);
+    }
+    public void unlockDesktop(TardisDesktopSchema schema) {
+        PropertiesHandler.setSchemaUnlocked(getHandlers().getProperties(), schema, true);
+        this.markDirty();
+    }
+    private void unlockAllFreebies() {
+        for (Iterator<TardisDesktopSchema> it = DesktopRegistry.REGISTRY.stream().iterator(); it.hasNext(); ) {
+            TardisDesktopSchema schema = it.next();
+            if (schema.freebie()) unlockDesktop(schema);
+        }
     }
 
     /**

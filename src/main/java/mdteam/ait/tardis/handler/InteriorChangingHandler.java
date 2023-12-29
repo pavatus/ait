@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.handler;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -7,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 import java.util.Random;
 import java.util.UUID;
@@ -16,14 +18,17 @@ public class InteriorChangingHandler extends TardisLink {
     public static final String IS_REGENERATING = "is_regenerating";
     public static final String GENERATING_TICKS = "generating_ticks";
     public static final String QUEUED_INTERIOR = "queued_interior";
+    public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
     private static Random random;
 
+    // loqor DONT rewrite with owo lib : (
     public InteriorChangingHandler(UUID tardisId) {
         super(tardisId);
     }
 
     private void setGenerating(boolean var) {
         PropertiesHandler.set(tardis().getHandlers().getProperties(), IS_REGENERATING, var);
+        tardis().markDirty();
     }
     public boolean isGenerating() {
         return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), IS_REGENERATING);
@@ -31,6 +36,7 @@ public class InteriorChangingHandler extends TardisLink {
 
     private void setTicks(int var) {
         PropertiesHandler.set(tardis().getHandlers().getProperties(), GENERATING_TICKS, var);
+        tardis().markDirty();
     }
     private void addTick() {
         setTicks(getTicks() + 1);
@@ -43,10 +49,11 @@ public class InteriorChangingHandler extends TardisLink {
     }
 
     private void setQueuedInterior(TardisDesktopSchema schema) {
-        PropertiesHandler.set(tardis().getHandlers().getProperties(), QUEUED_INTERIOR, schema);
+        PropertiesHandler.setDesktop(tardis().getHandlers().getProperties(), QUEUED_INTERIOR, schema);
+        tardis().markDirty();
     }
     public TardisDesktopSchema getQueuedInterior() {
-        return (TardisDesktopSchema) PropertiesHandler.get(tardis().getHandlers().getProperties(), QUEUED_INTERIOR);
+        return PropertiesHandler.getDesktop(tardis().getHandlers().getProperties(), QUEUED_INTERIOR);
     }
 
     public void queueInteriorChange(TardisDesktopSchema schema) {
@@ -55,6 +62,7 @@ public class InteriorChangingHandler extends TardisLink {
         setGenerating(true);
         tardis().getHandlers().getAlarms().enable();
         tardis().getDesktop().setConsolePos(null);
+        tardis().markDirty();
     }
 
     private void onCompletion() {

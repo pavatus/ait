@@ -2,6 +2,9 @@ package mdteam.ait.tardis;
 
 import com.google.gson.*;
 import mdteam.ait.registry.DesktopRegistry;
+import mdteam.ait.tardis.control.impl.DimensionControl;
+import mdteam.ait.tardis.desktops.textures.DesktopPreviewTexture;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureTemplate;
@@ -13,9 +16,14 @@ import java.util.Optional;
 public abstract class TardisDesktopSchema {
 
     private final Identifier id;
+    private final DesktopPreviewTexture preview;
 
-    public TardisDesktopSchema(Identifier id) {
+    public TardisDesktopSchema(Identifier id, DesktopPreviewTexture texture) {
         this.id = id;
+        this.preview = texture;
+    }
+    public TardisDesktopSchema(Identifier id) {
+        this(id, new DesktopPreviewTexture(id));
     }
 
     @Override
@@ -31,6 +39,14 @@ public abstract class TardisDesktopSchema {
     public Identifier id() {
         return id;
     }
+    public String name() { return DimensionControl.convertWorldValueToModified(id().getPath());} // temp ish
+    public DesktopPreviewTexture previewTexture() { return this.preview; }
+
+    /**
+     * Decides whether this desktop should be auto-unlocked on creation.
+     * aka - freebee, freeby
+     */
+    public boolean freebie() { return true; }
 
     public Optional<StructureTemplate> findTemplate() {
         return ((ServerWorld) TardisUtil.getTardisDimension()).getStructureTemplateManager().getTemplate(this.getStructureLocation());

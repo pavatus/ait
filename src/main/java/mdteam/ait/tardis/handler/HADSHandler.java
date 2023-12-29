@@ -48,21 +48,22 @@ public class HADSHandler extends TardisLink {
                 setIsInDanger(true);
                 break;
             }
+            setIsInDanger(false);
         }
         dematerialiseWhenInDanger();
     }
 
     public void dematerialiseWhenInDanger() {
+        // fixme is bug pls fix - idea enqueue a remat ( NEEDS_MAT var ? )
         if(isInDanger()) {
             if(tardis().getTravel().getState() == TardisTravel.State.LANDED) {
                 tardis().getTravel().dematerialise(false);
             }
             tardis().getHandlers().getAlarms().enable();
-        } else {
+        } else if (tardis().getHandlers().getAlarms().isEnabled()){
             if(tardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
                 tardis().getTravel().materialise();
-            }
-            tardis().getHandlers().getAlarms().disable();
+            } else if (tardis().getTravel().getState() == TardisTravel.State.MAT) tardis().getHandlers().getAlarms().disable();
         }
     }
 

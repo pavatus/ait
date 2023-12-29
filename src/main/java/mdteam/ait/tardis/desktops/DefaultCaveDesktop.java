@@ -9,4 +9,9 @@ public class DefaultCaveDesktop extends TardisDesktopSchema {
     public DefaultCaveDesktop() {
         super(new Identifier(AITMod.MOD_ID, "default_cave"));
     }
+
+    @Override
+    public boolean freebie() {
+        return false;
+    }
 }

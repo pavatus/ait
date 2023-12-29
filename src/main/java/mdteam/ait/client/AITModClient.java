@@ -8,6 +8,7 @@ import mdteam.ait.client.renderers.doors.DoorRenderer;
 import mdteam.ait.client.renderers.entities.ControlEntityRenderer;
 import mdteam.ait.client.renderers.entities.FallingTardisRenderer;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
+import mdteam.ait.client.screens.InteriorSelectScreen;
 import mdteam.ait.client.screens.MonitorScreen;
 import mdteam.ait.client.screens.OwOFindPlayerScreen;
 import mdteam.ait.client.util.ClientTardisUtil;
@@ -145,6 +146,7 @@ public class AITModClient implements ClientModInitializer {
             default -> null;
             case 0 -> new MonitorScreen(tardis); // todo new OwoMonitorScreen(tardis); god rest ye merry gentlemen
             case 1 -> new OwOFindPlayerScreen(tardis);
+            case 2 -> new InteriorSelectScreen(tardis);
         };
     }
 

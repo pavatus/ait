@@ -19,8 +19,12 @@ import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.registry.*;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.advancement.TardisCriterions;
+import mdteam.ait.tardis.handler.InteriorChangingHandler;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -97,7 +101,8 @@ public class AITMod implements ModInitializer {
             // stuff for resetting the ExteriorAnimation
             if (tardis.getTravel().getPosition().getWorld().getBlockEntity(tardis.getTravel().getExteriorPos()) instanceof ExteriorBlockEntity entity) {
                 entity.getAnimation().setupAnimation(tardis.getTravel().getState());
-            };
+            }
+            ;
         }));
 
         TardisEvents.DEMAT.register((tardis -> {
@@ -117,7 +122,17 @@ public class AITMod implements ModInitializer {
 
             BlockPos consolePos = buf.readBlockPos();
             // fixme the gotten block entity is always null, shit.
-            if (player.getServerWorld().getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.markNeedsSyncing();
+            if (player.getServerWorld().getBlockEntity(consolePos) instanceof ConsoleBlockEntity console)
+                console.markNeedsSyncing();
+        }));
+
+        ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ((server, player, handler, buf, responseSender) -> {
+            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+            TardisDesktopSchema desktop = DesktopRegistry.REGISTRY.get(buf.readIdentifier());
+
+            if (tardis == null || desktop == null) return;
+
+            tardis.getHandlers().getInteriorChanger().queueInteriorChange(desktop);
         }));
     }
 
