@@ -119,6 +119,7 @@ public class SonicItem extends Item {
                     TardisTravel.State state = exteriorBlock.tardis().getTravel().getState();
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
+                    tardis.markDirty();
                     if (!tardis.getHandlers().getInteriorChanger().isGenerating())
                         AITMod.openScreen((ServerPlayerEntity) player, 2, tardis.getUuid());
 

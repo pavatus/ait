@@ -10,6 +10,7 @@ import mdteam.ait.tardis.handler.FuelHandler;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -136,10 +137,10 @@ public class PropertiesHandler { // todo move more things over to properties
     }
 
     public static void setSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema, boolean val) {
-        setBool(holder, schema.id().getPath(), val);
+        setBool(holder, schema.id().getPath() + "_unlocked", val);
     }
     public static boolean isSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema) {
-        return getBool(holder, schema.id().getPath());
+        return getBool(holder, schema.id().getPath() + "_unlocked");
     }
 
     public static void setAutoPilot(PropertiesHolder handler, boolean val) {
@@ -148,6 +149,13 @@ public class PropertiesHandler { // todo move more things over to properties
 
     public static boolean willAutoPilot(PropertiesHolder holder) {
         return getBool(holder, AUTO_LAND);
+    }
+    private static void unlockAllFreebies(HashMap<String, Object> map) {
+        for (Iterator<TardisDesktopSchema> it = DesktopRegistry.REGISTRY.stream().iterator(); it.hasNext(); ) {
+            TardisDesktopSchema schema = it.next();
+
+            map.put(schema.id().getPath() + "_unlocked", schema.freebie());
+        }
     }
 
     public static HashMap<String, Object> createDefaultProperties() {
@@ -166,6 +174,7 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(HADS_ENABLED, false);
         map.put(FuelHandler.FUEL_COUNT, 1000d);
         map.put(FuelHandler.REFUELING, false);
+        unlockAllFreebies(map);
 
         return map;
     }

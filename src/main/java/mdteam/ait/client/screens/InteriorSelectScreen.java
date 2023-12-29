@@ -3,6 +3,7 @@ package mdteam.ait.client.screens;
 import mdteam.ait.AITMod;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.TardisDesktopSchema;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -26,8 +27,7 @@ public class InteriorSelectScreen extends TardisScreen {
 
     private TardisDesktopSchema selectedDesktop;
 
-    // i want to do what tr did but i dont want to copy them so im making it a boring arrows and text
-    // ( by what tr did i mean the cool images )
+    // loqor DONT rewrite with owo lib : (
     public InteriorSelectScreen(UUID tardis) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".interior"), tardis);
         updateTardis();
@@ -122,8 +122,21 @@ public class InteriorSelectScreen extends TardisScreen {
         this.selectedDesktop = previousDesktop(this.selectedDesktop);
     }
 
+    private boolean isCurrentUnlocked() {
+        return tardis().isDesktopUnlocked(this.selectedDesktop);
+    }
+    private void nextIfLocked() {
+        // System.out.println(tardis().getHandlers().getProperties().getData());
+
+        if (!isCurrentUnlocked()) return; // no issue
+
+        nextDesktop();
+    }
+
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        nextIfLocked(); // bad spammy ait code fits right in
+
         this.drawBackground(context); // the grey backdrop
         this.renderDesktop(context);
         super.render(context, mouseX, mouseY, delta);
