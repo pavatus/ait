@@ -64,6 +64,11 @@ public class RiftScannerItem extends Item {
         return super.use(world, user, hand);
     }
 
+    /**
+     * Searches for a target block with artron levels > 0 within a range.
+     * @param world The world object.
+     * @param currentBlockPos The current block position.
+     */
     private void createNewTarget(World world, BlockPos currentBlockPos) {
         Chunk chunk = world.getChunk(currentBlockPos);
         RiftChunk riftChunk = (RiftChunk) chunk;
