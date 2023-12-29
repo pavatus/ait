@@ -41,6 +41,7 @@ public class RiftScannerItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        if(world.isClient()) return TypedActionResult.pass(user.getStackInHand(hand));
         if (user.isSneaking()) {
             // reset target
             if (DeltaTimeManager.isStillWaitingOnDelay("riftscanner-" + uuid.toString() + "-checkingdelay")) {

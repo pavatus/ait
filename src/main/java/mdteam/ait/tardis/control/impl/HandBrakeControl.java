@@ -44,6 +44,9 @@ public class HandBrakeControl extends Control {
             tardis.getTravel().getPosManager().increment = 1000; //1000
             RandomiserControl.randomiseDestination(tardis, 10); //10
             TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
+            TardisUtil.getTardisDimension().createExplosion(null, tardis.getDesktop().getConsolePos().getX(),
+                    tardis.getDesktop().getConsolePos().getY(),tardis.getDesktop().getConsolePos().getZ(), 3,
+                    World.ExplosionSourceType.NONE);
             tardis.getTravel().getDestination().getWorld().getChunk(tardis.getTravel().getDestination());
                     PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
                     PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
