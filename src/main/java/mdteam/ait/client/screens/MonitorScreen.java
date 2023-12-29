@@ -117,7 +117,7 @@ public class MonitorScreen extends TardisScreen {
                 this.textRenderer.getWidth(">"), 10, Text.literal(">").formatted(Formatting.LIGHT_PURPLE), button -> {
             whichDirectionVariant(true);
         }, this.textRenderer));
-        this.addButton(new PressableTextWidget((width / 2 - 76), (height / 2 - 14),
+        this.addButton(new PressableTextWidget((width / 2 + 12), (height / 2 + 38),
                 this.textRenderer.getWidth("Change Interior"), 10, Text.literal("Change Interior").formatted(Formatting.AQUA), button -> {
             toInteriorChangeScreen();
         }, this.textRenderer));
@@ -263,7 +263,8 @@ public class MonitorScreen extends TardisScreen {
         int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
         int j = ((this.width - this.backgroundWidth) / 2);
         if (tardis() == null) return;
-        AbsoluteBlockPos.Directed abpd = tardis().getTravel().getDestination();
+        AbsoluteBlockPos.Directed abpd = tardis().getTravel().getPosition();
+        if(abpd == null) return;
         if(abpd.getDimension() == null) return;
         String destinationText = "> " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
         String dimensionText = "> " + convertWorldValueToModified(abpd.getDimension().getValue());

@@ -105,6 +105,11 @@ public class TardisUtil {
                 (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
                     Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
+
+                    if(tardis.getHandlers().getOvergrownHandler().isOvergrown()) return;
+
+                    player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
+
                     BlockPos pos = player.getWorld().getRegistryKey() ==
                             TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
                     if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
@@ -126,7 +131,6 @@ public class TardisUtil {
                         }
                         tardis.markDirty();
                     }
-                    player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
                 }
         );
         ServerPlayNetworking.registerGlobalReceiver(FIND_PLAYER,

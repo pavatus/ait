@@ -7,6 +7,12 @@ import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.predicate.entity.DamageSourcePredicate;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
@@ -14,7 +20,11 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionBehavior;
 
 public class HandBrakeControl extends Control {
     public HandBrakeControl() {
@@ -44,9 +54,7 @@ public class HandBrakeControl extends Control {
             tardis.getTravel().getPosManager().increment = 1000; //1000
             RandomiserControl.randomiseDestination(tardis, 10); //10
             TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
-            TardisUtil.getTardisDimension().createExplosion(null, tardis.getDesktop().getConsolePos().getX(),
-                    tardis.getDesktop().getConsolePos().getY(),tardis.getDesktop().getConsolePos().getZ(), 3,
-                    World.ExplosionSourceType.NONE);
+            TardisUtil.getTardisDimension().createExplosion(null, null, null, tardis.getDesktop().getConsolePos().toCenterPos(), 3f, false, World.ExplosionSourceType.TNT);
             tardis.getTravel().getDestination().getWorld().getChunk(tardis.getTravel().getDestination());
                     PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
                     PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
@@ -61,6 +69,7 @@ public class HandBrakeControl extends Control {
                     tardis.getTravel().getDestination().getZ(), 4f, true, World.ExplosionSourceType.MOB);*/
 
                     tardis.markDirty();
+                    tardis.removeFuel(80);
             tardis.getTravel().materialise();
             TardisEvents.CRASH.invoker().onCrash(tardis);
             // fixme }
