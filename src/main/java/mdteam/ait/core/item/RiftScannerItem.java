@@ -24,6 +24,7 @@ public class RiftScannerItem extends Item {
     BlockPos targetBlock = null;
     UUID uuid = UUID.randomUUID();
 
+
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof PlayerEntity) {
@@ -38,6 +39,7 @@ public class RiftScannerItem extends Item {
         }
         super.inventoryTick(stack, world, entity, slot, selected);
     }
+
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
