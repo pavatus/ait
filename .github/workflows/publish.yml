@@ -50,5 +50,5 @@ jobs:
           github-generate-changelog: true
           version-type: beta
 
-          loaders: forge
+          loaders: fabric
           java: "${{env.JAVA_VERSION}}"
