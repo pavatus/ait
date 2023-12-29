@@ -380,6 +380,8 @@ public class TardisTravel extends TardisLink {
         level.getChunk(this.getPosition());
         BlockEntity entity = level.getBlockEntity(this.getPosition());
         if (entity instanceof ExteriorBlockEntity exterior) {
+            if (exterior.getAnimation() == null) return;
+
             exterior.getAnimation().setupAnimation(this.state);
             exterior.getAnimation().tellClientsToSetup(this.state);
         }
@@ -432,6 +434,8 @@ public class TardisTravel extends TardisLink {
         );
         exterior.setTardis(this.getTardis());
         this.position.addBlockEntity(exterior);
+
+        // jeeeez
         boolean increaseCostOfTravelFromDimensionalTravel = lastPosition.getWorld().equals(this.position.getWorld());
         double distance = Math.sqrt(this.position.getSquaredDistance(lastPosition.toCenterPos()));
         double fuel_cost = (distance / 100) * (increaseCostOfTravelFromDimensionalTravel ? 10 : 1);

@@ -138,12 +138,6 @@ public class Tardis {
         PropertiesHandler.setSchemaUnlocked(getHandlers().getProperties(), schema, true);
         this.markDirty();
     }
-    private void unlockAllFreebies() {
-        for (Iterator<TardisDesktopSchema> it = DesktopRegistry.REGISTRY.stream().iterator(); it.hasNext(); ) {
-            TardisDesktopSchema schema = it.next();
-            if (schema.freebie()) unlockDesktop(schema);
-        }
-    }
 
     /**
      * Called at the end of a servers tick

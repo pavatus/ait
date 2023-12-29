@@ -159,8 +159,8 @@ public class ServerTardisManager extends TardisManager {
         //this.saveTardis(tardis);
         this.lookup.put(uuid, tardis);
 
-        tardis.getTravel().runAnimations();
         tardis.getTravel().placeExterior();
+        tardis.getTravel().runAnimations();
         return tardis;
     }
 

@@ -119,6 +119,7 @@ public class SonicItem extends Item {
                     TardisTravel.State state = exteriorBlock.tardis().getTravel().getState();
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
+                    tardis.markDirty();
                     if (!tardis.getHandlers().getInteriorChanger().isGenerating())
                         AITMod.openScreen((ServerPlayerEntity) player, 2, tardis.getUuid());
 
@@ -231,11 +232,9 @@ public class SonicItem extends Item {
 
         if (tardis == null) return;
 
-        if (!nbt.contains("tardis")) { // fixme dont think you can relink to new tardis
-            nbt.putString("tardis", tardis.getUuid().toString());
-            nbt.putInt(MODE_KEY, 0);
-            nbt.putBoolean(INACTIVE, true);
-        }
+        nbt.putString("tardis", tardis.getUuid().toString());
+        nbt.putInt(MODE_KEY, 0);
+        nbt.putBoolean(INACTIVE, true);
     }
 
     public static void playSonicSounds(PlayerEntity player) {

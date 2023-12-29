@@ -21,7 +21,6 @@ public class InteriorChangingHandler extends TardisLink {
     public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
     private static Random random;
 
-    // loqor DONT rewrite with owo lib : (
     public InteriorChangingHandler(UUID tardisId) {
         super(tardisId);
     }
