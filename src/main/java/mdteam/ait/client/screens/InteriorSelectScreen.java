@@ -3,7 +3,6 @@ package mdteam.ait.client.screens;
 import mdteam.ait.AITMod;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.TardisDesktopSchema;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -108,6 +107,8 @@ public class InteriorSelectScreen extends TardisScreen {
 
     private void nextDesktop() {
         this.selectedDesktop = nextDesktop(this.selectedDesktop);
+
+        if (!isCurrentUnlocked()) nextDesktop(); // ooo incursion crash
     }
 
     private static TardisDesktopSchema previousDesktop(TardisDesktopSchema current) {
@@ -120,23 +121,16 @@ public class InteriorSelectScreen extends TardisScreen {
 
     private void previousDesktop() {
         this.selectedDesktop = previousDesktop(this.selectedDesktop);
+
+        if (!isCurrentUnlocked()) previousDesktop(); // ooo incursion crash
     }
 
     private boolean isCurrentUnlocked() {
         return tardis().isDesktopUnlocked(this.selectedDesktop);
     }
-    private void nextIfLocked() {
-        // System.out.println(tardis().getHandlers().getProperties().getData());
-
-        if (!isCurrentUnlocked()) return; // no issue
-
-        nextDesktop();
-    }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        nextIfLocked(); // bad spammy ait code fits right in
-
         this.drawBackground(context); // the grey backdrop
         this.renderDesktop(context);
         super.render(context, mouseX, mouseY, delta);

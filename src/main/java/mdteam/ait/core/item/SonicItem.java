@@ -232,11 +232,9 @@ public class SonicItem extends Item {
 
         if (tardis == null) return;
 
-        if (!nbt.contains("tardis")) { // fixme dont think you can relink to new tardis
-            nbt.putString("tardis", tardis.getUuid().toString());
-            nbt.putInt(MODE_KEY, 0);
-            nbt.putBoolean(INACTIVE, true);
-        }
+        nbt.putString("tardis", tardis.getUuid().toString());
+        nbt.putInt(MODE_KEY, 0);
+        nbt.putBoolean(INACTIVE, true);
     }
 
     public static void playSonicSounds(PlayerEntity player) {
