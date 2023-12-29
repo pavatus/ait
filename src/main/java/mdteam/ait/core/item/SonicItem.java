@@ -160,8 +160,6 @@ public class SonicItem extends Item {
                 }
 
                 travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()), true);
-                // fixme leave this alone for now, im getting rid of the stattenheim remotes recipe and making it creative only and removing the sonic's ability to actually make it come to you. - Loqor
-                //if (travel.getState() == LANDED) travel.dematerialise(true);
 
                 player.sendMessage(Text.literal("Handbrake disengaged, destination set to current position"), true);
             }
