@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.control.impl;
 
+import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.Control;
@@ -52,6 +53,7 @@ public class HandBrakeControl extends Control {
 
                     tardis.markDirty();
             tardis.getTravel().materialise();
+            TardisEvents.CRASH.invoker().onCrash(tardis);
             // fixme }
         }
 

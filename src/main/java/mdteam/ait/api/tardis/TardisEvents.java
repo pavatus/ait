@@ -21,6 +21,11 @@ public final class TardisEvents {
             callback.onLanded(tardis);
         }
     });
+    public static final Event<Crash> CRASH = EventFactory.createArrayBacked(Crash.class, callbacks -> (tardis) -> {
+       for (Crash callback : callbacks) {
+           callback.onCrash(tardis);
+       }
+    });
 
     // Interfaces go down here
     // todo add functionality for cancelling things ( start by removing the void i think lol ) ( look at PlayerBlockBreakEvents )
@@ -60,5 +65,13 @@ public final class TardisEvents {
          * @param tardis the landed tardis
          */
         void onLanded(Tardis tardis);
+    }
+
+    /**
+     * Called when a TARDIS starts crashing
+     */
+    @FunctionalInterface
+    public interface Crash {
+        void onCrash(Tardis tardis);
     }
 }

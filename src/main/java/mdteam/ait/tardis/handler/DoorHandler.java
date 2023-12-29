@@ -2,6 +2,7 @@ package mdteam.ait.tardis.handler;
 
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.advancement.TardisCriterions;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
@@ -162,6 +163,8 @@ public class DoorHandler extends TardisLink {
                 if (pos != null)
                     world.playSound(null, pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 1f, 1f);
                 tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
+
+                TardisCriterions.VEGETATION.trigger(player);
 
                 return false;
             }

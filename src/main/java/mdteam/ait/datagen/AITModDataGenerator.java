@@ -29,6 +29,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         generateRecipes(pack);
         generateBlockModels(pack);
         generateSoundData(pack);
+        generateAdvancements(pack);
+    }
+
+    private void generateAdvancements(FabricDataGenerator.Pack pack) {
+        pack.addProvider(AITAchievementProvider::new);
     }
 
     public void generateRecipes(FabricDataGenerator.Pack pack) {

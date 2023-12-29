@@ -7,6 +7,7 @@ import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
+import mdteam.ait.tardis.advancement.TardisCriterions;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -23,6 +24,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
@@ -110,6 +112,11 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
             // GET IT OUTTA HERE!!!
             world.breakBlock(pos, true);
             world.removeBlockEntity(pos);
+            return;
+        }
+
+        if (placer instanceof ServerPlayerEntity player) {
+            TardisCriterions.PLACE_CORAL.trigger(player);
         }
     }
 
