@@ -11,6 +11,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/release'
     steps:
       - name: Check Environment Variables
         run: env
