@@ -128,6 +128,10 @@ public class TardisTravel extends TardisLink {
         return true;
     }*/
 
+    public void crash() {
+
+    }
+
     public void materialise() {
         if (this.getDestination().getWorld().isClient())
             return;
