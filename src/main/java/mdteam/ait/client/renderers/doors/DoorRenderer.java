@@ -64,7 +64,8 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         if (DependencyChecker.hasPortals() && entity.getTardis().getTravel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING) /*&& entity.getTardis().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED*/) {
             BlockPos pos = entity.getTardis().getTravel().getPosition();
             World world = entity.getTardis().getTravel().getPosition().getWorld();
-            World doorWorld = entity.getWorld();
+            if (world != null) {
+                World doorWorld = entity.getWorld();
             BlockPos doorPos = entity.getPos();
             int lightConst = 524296; // 1 / maxLight;
             //light = WorldRenderer.getLightmapCoordinates(entity.getTardis().getHandlers().getExteriorPos().getWorld(), entity.getTardis().getHandlers().getExteriorPos());;
@@ -75,6 +76,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
                     (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j + 6) : j * 2) * lightConst);*/
             light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight() ? (i / 15) + j > 0 ? j + 13 : j : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j)) * lightConst;
             //System.out.println("Sky: " + i + " | Block: " + j + " | light: " + light);
+            }
         }
 
         if (model != null) {
