@@ -106,10 +106,6 @@ public class AITMod implements ModInitializer {
         }));
 
         TardisEvents.DEMAT.register((tardis -> {
-            System.out.println(TardisTravel.isDematerialiseOnCooldown(tardis));
-
-            if (TardisTravel.isDematerialiseOnCooldown(tardis))
-                return true; // cancelled
             if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
                 return true; // cancelled
 
