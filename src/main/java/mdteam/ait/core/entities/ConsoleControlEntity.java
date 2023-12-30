@@ -192,6 +192,13 @@ public class ConsoleControlEntity extends BaseControlEntity {
             if (DeltaTimeManager.isStillWaitingOnDelay(getDelayId(this.getTardis()))) return false;
 
             DeltaTimeManager.createDelay(getDelayId(this.getTardis()), 500L);
+
+            control.runAnimation(getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world);
+
+            if (control.shouldFailOnNoFuel() && this.getTardis(world).getHandlers().getFuel().isOutOfFuel()) {
+                return false;
+            }
+
             return this.control.runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server
         }
         return false;

@@ -106,7 +106,7 @@ public class ClientHumHandler extends SoundHandler {
             return;
         }
 
-        if (isPlayerInATardis() && isEnabled()) {
+        if (isPlayerInATardis() && isEnabled() && !tardis().getHandlers().getFuel().isOutOfFuel()) {
             this.startIfNotPlaying(this.getHum());
         } else {
             this.stopSounds();

@@ -82,7 +82,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         if (model != null) {
             model.animateTile(entity);
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
-            if (tardisExterior.getVariant().emission() != null)
+            if (tardisExterior.getVariant().emission() != null && !entity.getTardis().getHandlers().getFuel().isOutOfFuel())
                 model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(tardisExterior.getVariant().emission(), false)), light, overlay, 1, 1, 1, 1);
         }
         matrices.pop();

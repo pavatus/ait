@@ -4,9 +4,6 @@ import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneInitHandl
 import com.neptunedevelopmentteam.neptunelib.core.itemgroup.NeptuneItemGroup;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import io.wispforest.owo.itemgroup.Icon;
-import io.wispforest.owo.itemgroup.OwoItemGroup;
-import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.compat.immersive.PortalsHandler;
@@ -24,8 +21,10 @@ import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisManager;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.advancement.TardisCriterions;
 import mdteam.ait.tardis.handler.InteriorChangingHandler;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
@@ -37,6 +36,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
@@ -48,7 +48,7 @@ public class AITMod implements ModInitializer {
     public static final String MOD_ID = "ait";
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
 
-    public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
+    public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad(); // if this doesnt exist for you run data gen
 
 //    public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"),
 //            () -> Icon.of(AITItems.TARDIS_ITEM.getDefaultStack())).build();
@@ -104,13 +104,26 @@ public class AITMod implements ModInitializer {
             if (tardis.getTravel().getPosition().getWorld().getBlockEntity(tardis.getTravel().getExteriorPos()) instanceof ExteriorBlockEntity entity) {
                 entity.getAnimation().setupAnimation(tardis.getTravel().getState());
             }
-            ;
         }));
 
         TardisEvents.DEMAT.register((tardis -> {
+            if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
+                return true; // cancelled
+
             for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
                 TardisCriterions.TAKEOFF.trigger((ServerPlayerEntity) player);
             }
+            return false;
+        }));
+
+        TardisEvents.MAT.register((tardis -> {
+            // Check if the Tardis is on cooldown
+            boolean isCooldown = TardisTravel.isMaterialiseOnCooldown(tardis);
+
+            // Check if the destination is already occupied
+            boolean isDestinationOccupied = !tardis.getTravel().getPosition().equals(tardis.getTravel().getDestination()) && !tardis.getTravel().checkDestination();
+
+            return isCooldown || isDestinationOccupied;
         }));
 
         TardisEvents.CRASH.register((tardis -> {
@@ -118,6 +131,12 @@ public class AITMod implements ModInitializer {
                 TardisCriterions.CRASH.trigger((ServerPlayerEntity) player);
             }
         }));
+
+        TardisEvents.OUT_OF_FUEL.register((tardis) -> {
+            if (tardis.getDesktop().getConsolePos() != null) {
+                TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+            }
+        });
 
         ServerPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.ASK, ((server, player, handler, buf, responseSender) -> {
             if (player.getServerWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;

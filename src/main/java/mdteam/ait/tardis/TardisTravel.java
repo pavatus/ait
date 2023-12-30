@@ -6,11 +6,11 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.control.impl.RandomiserControl;
 import mdteam.ait.tardis.control.impl.pos.PosManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.TardisLink;
-import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -18,7 +18,6 @@ import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -128,100 +127,158 @@ public class TardisTravel extends TardisLink {
         }
         return true;
     }*/
-
-    public void crash() {
-        if (this.getState() != TardisTravel.State.FLIGHT) return;
-        // randomise and force land @todo something better ive got no ideas at 1am loqor
-        // fixme tardis.getTravel().setState(TardisTravel.State.CRASH);
-        //@TODO make sure this can't be used like a friggin' carpet bomb - Loqor
-
-        // fixme if (tardis.getTravel().getState() == TardisTravel.State.CRASH) {
-        this.getPosManager().increment = 1000; //1000
-        RandomiserControl.randomiseDestination(this.getTardis(), 10); //10
-        if (this.getTardis().getDesktop().getConsolePos() != null) {
-            TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
-            TardisUtil.getTardisDimension().createExplosion(null, null, null, this.getTardis().getDesktop().getConsolePos().toCenterPos(), 3f, false, World.ExplosionSourceType.TNT);
-        }
-        this.getDestination().getWorld().getChunk(this.getTardis().getTravel().getDestination());
-        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
-        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
-
-        // fixme everything below this line to the markdirty() is a WIP, what i want this to do is set the destination to the height of the current dimension,
-        // fixme so that when you crash land, you crash land out of the sky towards this position like in the show; for now, what i want it to do is fall onto the crashed position,
-        // fixme and explode once it touches the ground in the CRASHED state. - Loqor
-        this.setDestination(new AbsoluteBlockPos.Directed(this.getTardis().getTravel().getDestination().getX(), this.getDestination().getWorld().getTopY() - 1, this.getDestination().getZ(), this.getDestination().getWorld(), this.getDestination().getDirection()), true);
-                /*tardis.getTravel().getDestination().getWorld().createExplosion(
-                null, tardis.getTravel().getDestination().getX(),
-                tardis.getTravel().getDestination().getY(),
-                tardis.getTravel().getDestination().getZ(), 4f, true, World.ExplosionSourceType.MOB);*/
-
-        this.getTardis().markDirty();
-        this.getTardis().removeFuel(80);
-        this.materialise();
-        TardisEvents.CRASH.invoker().onCrash(this.getTardis());
-        // fixme }
+    
+    public static String getMaterialiseDelayId(Tardis tardis) {
+        return tardis.getUuid().toString() + "_materialise_delay";
+    }
+    public static String getDematerialiseDelayId(Tardis tardis) {
+        return tardis.getUuid().toString() + "_dematerialise_delay";
     }
 
-    public void materialise() {
-        if (this.getDestination().getWorld().isClient())
-            return;
+    public static boolean isMaterialiseOnCooldown(Tardis tardis) {
+        return DeltaTimeManager.isStillWaitingOnDelay(getMaterialiseDelayId(tardis));
+    }
+    public static boolean isDematerialiseOnCooldown(Tardis tardis) {
+        return DeltaTimeManager.isStillWaitingOnDelay(getDematerialiseDelayId(tardis));
+    }
 
+    public static void createMaterialiseDelay(Tardis tardis) {
+        DeltaTimeManager.createDelay(getMaterialiseDelayId(tardis), 2000L);
+    }
+    public static void createDematerialiseDelay(Tardis tardis) {
+        DeltaTimeManager.createDelay(getDematerialiseDelayId(tardis), 2000L);
+    }
+
+    /**
+     * Performs a crash for the Tardis.
+     * If the Tardis is not in flight state, the crash will not be executed.
+     */
+    public void crash() {
+        // Check if Tardis is in flight state
+        if (this.getState() != TardisTravel.State.FLIGHT) {
+            return;
+        }
+        // Increment the position manager by 1000
+        this.getPosManager().increment = 1000;
+        // Randomize the Tardis destination
+        RandomiserControl.randomiseDestination(this.getTardis(), 10);
+        // Play explosion sound and create explosion at console position if available
+        if (this.getTardis().getDesktop().getConsolePos() != null) {
+            TardisUtil.getTardisDimension().playSound(
+                    null,
+                    this.getTardis().getDesktop().getConsolePos(),
+                    SoundEvents.ENTITY_GENERIC_EXPLODE,
+                    SoundCategory.BLOCKS,
+                    3f,
+                    1f
+            );
+            TardisUtil.getTardisDimension().createExplosion(
+                    null,
+                    null,
+                    null,
+                    this.getTardis().getDesktop().getConsolePos().toCenterPos(),
+                    3f,
+                    false,
+                    World.ExplosionSourceType.TNT
+            );
+        }
+        // Load the chunk of the Tardis destination
+        this.getDestination().getWorld().getChunk(this.getTardis().getTravel().getDestination());
+        // Enable alarm and disable anti-gravity properties for Tardis
+        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
+        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
+        // Set the destination position at the topmost block of the world at the X and Z coordinates of the destination
+        this.setDestination(
+                new AbsoluteBlockPos.Directed(
+                        this.getTardis().getTravel().getDestination().getX(),
+                        this.getDestination().getWorld().getTopY() - 1,
+                        this.getDestination().getZ(),
+                        this.getDestination().getWorld(),
+                        this.getDestination().getDirection()
+                ),
+                true
+        );
+        // Mark Tardis as dirty
+        this.getTardis().markDirty();
+        // Remove fuel from Tardis
+        this.getTardis().removeFuel(80);
+        // Materialize the Tardis
+        this.materialise();
+        // Invoke the crash event
+        TardisEvents.CRASH.invoker().onCrash(this.getTardis());
+    }
+
+    /**
+     * Materialises the Tardis, bringing it to the specified destination.
+     * This method handles the logic of materialization, including sound effects, locking the Tardis, and setting the Tardis state.
+     */
+    public void materialise() {
+        // Check if running on the client side, and if so, return early
+        if (this.getDestination().getWorld().isClient()) {
+            return;
+        }
+
+        // Disable autopilot
         PropertiesHandler.setAutoPilot(this.getTardis().getHandlers().getProperties(), false);
 
+        // Get the server world of the destination
         ServerWorld world = (ServerWorld) this.getDestination().getWorld();
         world.getChunk(this.getDestination());
 
-        // Check if the Tardis is already present at this location before materializing it there
-        AbsoluteBlockPos.Directed currentPosition = this.tardis().getTravel().getPosition();
-        if (!currentPosition.equals(this.getDestination())) {
-            if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND))) {
-                // Not safe to land here!
-                this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
-
-                if (TardisUtil.isInteriorEmpty(tardis()))
-                    TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
-
-                TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!")); // fixme translatable
-                return;
-            }
-        } /*else {
-            // If the Tardis is already present at this location, do not proceed with any further operations
+        // Check if the Tardis materialization is prevented by event listeners
+        if (TardisEvents.MAT.invoker().onMat(getTardis())) {
+            failToMaterialise();
             return;
-        } */
-        // we cant do that ^ bc the position does not get changed when we enter flight
+        }
 
+        // Check if materialization is on cooldown and return if it is
+        if (TardisTravel.isMaterialiseOnCooldown(getTardis())) {
+            return;
+        }
+
+        // Lock the Tardis doors
         DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
+        // Set the Tardis state to materialize
         this.setState(State.MAT);
 
+        // Get the server world of the destination
         ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
         destWorld.getChunk(this.getDestination());
 
+        // Play materialize sound at the destination
         this.getDestination().getWorld().playSound(null, this.getDestination(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
-        //TardisUtil.getTardisDimension().playSound(null, getInteriorCentre(), AITSounds.MAT, SoundCategory.BLOCKS, 10f, 1f);
-        if (this.getTardis() != null)
-            if (this.getTardis().getDesktop().getConsolePos() != null)
-                TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
 
+        // Play materialize sound at the Tardis console position if it exists
+        if (this.getTardis() != null && this.getTardis().getDesktop().getConsolePos() != null) {
+            TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
+        }
+
+        // Set the destination block to the Tardis exterior block
         ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
         BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, this.getDestination().getDirection());
         destWorld.setBlockState(this.getDestination(), state);
+
+        // Create and add the exterior block entity at the destination
         ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(this.getDestination(), state);
         destWorld.addBlockEntity(blockEntity);
+
+        // Set the position of the Tardis to the destination
         this.setPosition(this.getDestination());
 
+        // Run animations on the block entity
         this.runAnimations(blockEntity);
 
-        // A definite thing just in case the animation isnt run
-
+        // Schedule a timer task to transition to flight state after the materialize sound finishes playing
         Timer animTimer = new Timer();
         TardisTravel travel = this;
 
         animTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (travel.getState() != State.DEMAT)
+                if (travel.getState() != State.DEMAT) {
                     return;
+                }
 
                 travel.toFlight();
             }
@@ -240,21 +297,16 @@ public class TardisTravel extends TardisLink {
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
-        DoorHandler.lockTardis(true, this.getTardis(), null, true);
-
-        if (PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
-            // fail to take off when handbrake is on
-            this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
-
-            if (TardisUtil.isInteriorEmpty(tardis()))
-                TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
-
-            TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to takeoff!")); // fixme translatable
+        // fixme where does this go?
+        if (TardisEvents.DEMAT.invoker().onDemat(getTardis())) {
+            failToTakeoff();
             return;
         }
 
-        // fixme where does this go?
-        TardisEvents.DEMAT.invoker().onDemat(getTardis());
+        if (TardisTravel.isDematerialiseOnCooldown(getTardis()))
+            return; // cancelled
+
+        DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
         this.setState(State.DEMAT);
 
@@ -282,6 +334,38 @@ public class TardisTravel extends TardisLink {
                 travel.toFlight();
             }
         }, (long) getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
+    }
+
+    private void failToMaterialise() {
+        // Play failure sound at the current position
+        this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
+
+        // Play failure sound at the Tardis console position if the interior is not empty
+        if (TardisUtil.isInteriorNotEmpty(tardis())) {
+            TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
+        }
+
+        // Send error message to the pilot
+        TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!"));
+
+        // Create materialization delay and return
+        createMaterialiseDelay(this.getTardis());
+        return;
+    }
+
+    private void failToTakeoff() {
+        // dont do anything if out of fuel, make it sad :(
+        if (getTardis().getHandlers().getFuel().isOutOfFuel()) return;
+
+        // demat will be cancelled
+        this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
+
+        if (TardisUtil.isInteriorNotEmpty(tardis()))
+            TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
+
+        TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to takeoff!")); // fixme translatable
+        createDematerialiseDelay(this.getTardis());
+        return;
     }
 
     @NotNull

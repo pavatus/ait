@@ -63,4 +63,9 @@ public class HandBrakeControl extends Control {
     public SoundEvent getSound() {
         return AITSounds.HANDBRAKE_LEVER_PULL;
     }
+
+    @Override
+    public boolean shouldFailOnNoFuel() {
+        return false;
+    }
 }

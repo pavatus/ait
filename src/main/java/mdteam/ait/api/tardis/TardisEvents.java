@@ -9,13 +9,17 @@ public final class TardisEvents {
 
     public static final Event<Demat> DEMAT = EventFactory.createArrayBacked(Demat.class, callbacks -> (tardis) -> {
         for (Demat callback : callbacks) {
-            callback.onDemat(tardis);
+            return callback.onDemat(tardis);
         }
+
+        return false;
     });
     public static final Event<Mat> MAT = EventFactory.createArrayBacked(Mat.class, callbacks -> (tardis) -> {
         for (Mat callback : callbacks) {
-            callback.onMat(tardis);
+            return callback.onMat(tardis);
         }
+
+        return false;
     });
     public static final Event<Landed> LANDED = EventFactory.createArrayBacked(Landed.class, callbacks -> (tardis) -> {
         for (Landed callback : callbacks) {
@@ -26,6 +30,11 @@ public final class TardisEvents {
        for (Crash callback : callbacks) {
            callback.onCrash(tardis);
        }
+    });
+    public static final Event<NoFuel> OUT_OF_FUEL = EventFactory.createArrayBacked(NoFuel.class, callbacks -> (tardis) -> {
+        for (NoFuel callback : callbacks) {
+            callback.onNoFuel(tardis);
+        }
     });
 
     // door stuff
@@ -57,8 +66,9 @@ public final class TardisEvents {
         /**
          * Called when a TARDIS successfully ( passed all checks ) starts to take off, before anything else is ran.
          * @param tardis the tardis taking off
+         * @return whether the demat should be cancelled ( true cancels it )
          */
-        void onDemat(Tardis tardis);
+        boolean onDemat(Tardis tardis);
     }
 
     /**
@@ -69,8 +79,9 @@ public final class TardisEvents {
         /**
          * Called when a TARDIS successfully ( passed all checks ) starts to land, before anything else is ran.
          * @param tardis the tardis landing
+         * @return whether the mat should be cancelled ( true cancels it )
          */
-        void onMat(Tardis tardis);
+        boolean onMat(Tardis tardis);
     }
 
     /**
@@ -91,6 +102,14 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface Crash {
         void onCrash(Tardis tardis);
+    }
+
+    /**
+     * Called whenever the fuel is set to 0
+     */
+    @FunctionalInterface
+    public interface NoFuel {
+        void onNoFuel(Tardis tardis);
     }
 
     /**

@@ -36,6 +36,9 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
         // System.out.println(getAnimationForState(console.getTardis().getTravel().getState()));
 
         TardisTravel.State state = console.getTardis().getTravel().getState();
+
+        if (console.getTardis().getHandlers().getFuel().isOutOfFuel()) return;
+
         this.updateAnimation(console.ANIM_FLIGHT, getAnimationForState(state), console.animationTimer);
         /*if(console.getControlEntityFromName("direction") != null && console.getControlEntityFromName("direction").getControl() != null) {
             this.updateAnimation(console.getControlEntityFromName("direction")

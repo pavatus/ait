@@ -225,6 +225,34 @@ public class DoorHandler extends TardisLink {
             return false;
         }
 
+        if (tardis.getHandlers().getFuel().isOutOfFuel() && tardis.getLockedTardis()) {
+            // Bro cant escape
+            if (player == null) return false;
+
+            // if holding an axe then break open the door RAHHH
+            ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
+            if (stack.getItem() instanceof AxeItem) {
+                player.swingHand(Hand.MAIN_HAND);
+                stack.setDamage(stack.getDamage() - 1);
+
+                if (pos != null)
+                    world.playSound(null, pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 1f, 1f);
+                tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
+
+                lockTardis(false, tardis, player, true); // forcefully unlock the tardis
+                tardis.getDoor().openDoors();
+
+                return false;
+            }
+
+            if (pos != null) // fixme will play sound twice on interior door
+                world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
+
+            tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 1f);
+
+            return false;
+        }
+
         if (tardis.getLockedTardis()) {
             //if (pos != null)
                 //world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
