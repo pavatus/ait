@@ -20,7 +20,9 @@ import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
@@ -56,7 +58,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     private UUID tardisId;
     private Identifier type;
     private ConsoleVariantSchema variant;
-    private boolean needsReloading = true; // this is to ensure we get properly synced when reloaded yup
+    private boolean needsReloading = true; // this is to ensure we get properly synced when reloaded yup ( does not work for multipalery : (
 
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
     public static final Identifier SYNC_VARIANT = new Identifier(AITMod.MOD_ID, "sync_console_variant");
@@ -158,6 +160,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         getTardis().markDirty();
         syncType();
         syncVariant();
+        getWorld().updateListeners(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), Block.NOTIFY_ALL);
 
         needsSync = false;
     }
