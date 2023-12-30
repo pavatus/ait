@@ -13,6 +13,7 @@ public class AITItems implements ItemRegistryContainer {
     // Functional Items
     public static final Item REMOTE_ITEM = new RemoteItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item ARTRON_COLLECTOR = new ArtronCollectorItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
+    public static final Item RIFT_SCANNER = new RiftScannerItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
     // Keys/Key Templates
     public static final Item IRON_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item GOLD_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SNAP);

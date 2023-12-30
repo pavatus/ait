@@ -17,6 +17,7 @@ import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -108,6 +109,24 @@ public class TardisTravel extends TardisLink {
             this.materialise();
         }
     }
+
+    /*public boolean ifNotInFlightDemat(ServerPlayerEntity player) {
+        if (this.getState() == TardisTravel.State.LANDED) {
+            if (this.getTardis().getFuel() <= 0) {
+                player.sendMessage(Text.literal("The TARDIS is out of fuel and cannot dematerialise"));
+                return false;
+            }
+            if (this.getTardis().isRefueling()) {
+                player.sendMessage(Text.literal("The TARDIS cannot dematerialise when refueling"));
+                return false;
+            }
+            this.dematerialise(PropertiesHandler.willAutoPilot(this.getTardis().getHandlers().getProperties()));
+        } else if (this.getState() == TardisTravel.State.FLIGHT) {
+            this.materialise();
+            return true;
+        }
+        return true;
+    }*/
 
     public void materialise() {
         if (this.getDestination().getWorld().isClient())
@@ -438,7 +457,7 @@ public class TardisTravel extends TardisLink {
         // jeeeez
         boolean increaseCostOfTravelFromDimensionalTravel = lastPosition.getWorld().equals(this.position.getWorld());
         double distance = Math.sqrt(this.position.getSquaredDistance(lastPosition.toCenterPos()));
-        double fuel_cost = (distance / 100) * (increaseCostOfTravelFromDimensionalTravel ? 3 : 1);
+        double fuel_cost = (distance / 100) * (increaseCostOfTravelFromDimensionalTravel ? 10 : 1);
         this.getTardis().removeFuel(fuel_cost);
     }
 

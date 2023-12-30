@@ -11,6 +11,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/release'
     steps:
       - name: Check Environment Variables
         run: env
@@ -50,5 +51,5 @@ jobs:
           github-generate-changelog: true
           version-type: beta
 
-          loaders: forge
+          loaders: fabric
           java: "${{env.JAVA_VERSION}}"

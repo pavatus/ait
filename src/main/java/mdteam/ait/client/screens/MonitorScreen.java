@@ -14,6 +14,7 @@ import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.exterior.PoliceBoxExterior;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.render.DiffuseLighting;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
-import static mdteam.ait.tardis.handler.FuelHandler.MAX_FUEL;
+import static mdteam.ait.tardis.handler.FuelHandler.TARDIS_MAX_FUEL;
 
 public class MonitorScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
@@ -116,6 +117,10 @@ public class MonitorScreen extends TardisScreen {
                 this.textRenderer.getWidth(">"), 10, Text.literal(">").formatted(Formatting.LIGHT_PURPLE), button -> {
             whichDirectionVariant(true);
         }, this.textRenderer));
+        this.addButton(new PressableTextWidget((width / 2 + 12), (height / 2 + 38),
+                this.textRenderer.getWidth("Change Interior"), 10, Text.literal("Change Interior").formatted(Formatting.AQUA), button -> {
+            toInteriorChangeScreen();
+        }, this.textRenderer));
         this.buttons.forEach(buttons -> {
             // buttons.visible = false;
             buttons.active = true;
@@ -133,6 +138,10 @@ public class MonitorScreen extends TardisScreen {
                         this.getCurrentVariant() != tardis().getExterior().getVariant());
             }
         }
+    }
+
+    public void toInteriorChangeScreen() {
+        MinecraftClient.getInstance().setScreenAndRender(new InteriorSelectScreen(this.tardisId, this));
     }
 
     public void whichDirectionExterior(boolean direction) {
@@ -254,12 +263,13 @@ public class MonitorScreen extends TardisScreen {
         int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
         int j = ((this.width - this.backgroundWidth) / 2);
         if (tardis() == null) return;
-        AbsoluteBlockPos.Directed abpd = tardis().getTravel().getDestination();
+        AbsoluteBlockPos.Directed abpd = tardis().getTravel().getPosition();
+        if(abpd == null) return;
         if(abpd.getDimension() == null) return;
         String destinationText = "> " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
         String dimensionText = "> " + convertWorldValueToModified(abpd.getDimension().getValue());
         String directionText = "> " + abpd.getDirection().toString().toUpperCase();
-        String fuelText = "> " + Math.round((tardis().getFuel() / MAX_FUEL) * 100);
+        String fuelText = "> " + Math.round((tardis().getFuel() / TARDIS_MAX_FUEL) * 100);
         context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 67), (height / 2 + 38), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(dimensionText), (width / 2 - 19), (height / 2 + 48), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 67), (height / 2 + 48), 0xFFFFFF, true);

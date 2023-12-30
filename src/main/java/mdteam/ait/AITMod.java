@@ -88,6 +88,7 @@ public class AITMod implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             TeleportInteriorCommand.register(dispatcher);
+            UnlockInteriorsCommand.register(dispatcher);
             SummonTardisCommand.register(dispatcher);
             SetLockedCommand.register(dispatcher);
             SetHumCommand.register(dispatcher);

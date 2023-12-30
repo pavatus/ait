@@ -1,10 +1,8 @@
 package mdteam.ait.client.models.consoles;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.FuelHandler;
 import net.minecraft.client.model.*;
@@ -13,7 +11,6 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 
 // Made with Blockbench 4.9.2
 // Exported for Minecraft version 1.17+ for Yarn
@@ -818,7 +815,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 		// matrices.scale(0.5f, 0.5f, 0.5f);
 		//System.out.println("Fuel: " + console.getTardis().getFuel() + " || clamped fuel: " + (((console.getTardis().getFuel() / 5000) * 2) - 1));
 		this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("m_meter_2").getChild("bone110").yaw =
-				(float) (((console.getTardis().getFuel() / FuelHandler.MAX_FUEL) * 2) - 1);
+				(float) (((console.getTardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}

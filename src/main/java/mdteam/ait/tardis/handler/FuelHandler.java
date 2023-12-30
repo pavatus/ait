@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class FuelHandler extends TardisLink {
     @Exclude
-    public static final double MAX_FUEL = 5000;
+    public static final double TARDIS_MAX_FUEL = 25000;
     public static final String FUEL_COUNT = "fuel_count";
     public static final String REFUELING = "refueling";
 
@@ -30,9 +30,9 @@ public class FuelHandler extends TardisLink {
 
     public double addFuel(double fuel) {
         double currentFuel = this.getFuel();
-        this.setFuelCount(this.getFuel() <= MAX_FUEL ? this.getFuel() + fuel : MAX_FUEL);
-        if(this.getFuel() == MAX_FUEL)
-            return fuel - (MAX_FUEL - currentFuel);
+        this.setFuelCount(this.getFuel() <= TARDIS_MAX_FUEL ? this.getFuel() + fuel : TARDIS_MAX_FUEL);
+        if(this.getFuel() == TARDIS_MAX_FUEL)
+            return fuel - (TARDIS_MAX_FUEL - currentFuel);
         return 0;
     }
 
@@ -58,16 +58,20 @@ public class FuelHandler extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
 
-        // creativious i moved yur code here
+        // creativious i moved your code here
         RiftChunk riftChunk = (RiftChunk) this.tardis().getTravel().getExteriorPos().getChunk();
-        if (riftChunk.isRiftChunk() && tardis().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && riftChunk.getArtronLevels() > 0 && this.getFuel() < FuelHandler.MAX_FUEL  && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-refueldelay"))) {
-            riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
-            addFuel(5);
+        if (tardis().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && riftChunk.getArtronLevels() > 0 && this.getFuel() < FuelHandler.TARDIS_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-refueldelay"))) {
+            if(riftChunk.isRiftChunk()) {
+                riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
+                addFuel(5);
+            } else {
+                addFuel(1);
+            }
             DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-refueldelay", 250L);
         }
         if ((tardis().getTravel().getState() == TardisTravel.State.DEMAT || tardis().getTravel().getState() == TardisTravel.State.MAT) && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay")) {
             DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay", 500L);
-            removeFuel(3);
+            removeFuel(5);
         }
         if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay")) {
             DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay", 500L);
