@@ -101,6 +101,24 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         markDirty();
     }
 
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbt = super.toInitialChunkDataNbt();
+        if (nbt.contains("type"))
+            setType(ConsoleRegistry.REGISTRY.get(Identifier.tryParse(nbt.getString("type"))));
+        if (nbt.contains("variant")) {
+            setVariant(Identifier.tryParse(nbt.getString("variant")));
+        }
+
+        if (type != null)
+            nbt.putString("type", type.toString());
+        if (variant != null)
+            nbt.putString("variant", variant.id().toString());
+        markNeedsSyncing();
+        markDirty();
+        return nbt;
+    }
+
     @Nullable
     @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {

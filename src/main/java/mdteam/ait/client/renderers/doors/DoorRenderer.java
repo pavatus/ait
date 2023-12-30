@@ -21,6 +21,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import mdteam.ait.tardis.TardisExterior;
 import net.minecraft.world.LightType;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -54,16 +56,24 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         // if (entity.getTardis().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED)
         //     light = LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE;
+        int red = 1;
+        int green = 1;
+        int blue = 1;
 
         if (DependencyChecker.hasPortals() && entity.getTardis().getTravel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING) /*&& entity.getTardis().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED*/) {
-            light = WorldRenderer.getLightmapCoordinates(entity.getTardis().getHandlers().getExteriorPos().getWorld(), entity.getTardis().getHandlers().getExteriorPos());;
+            //light = WorldRenderer.getLightmapCoordinates(entity.getTardis().getHandlers().getExteriorPos().getWorld(), entity.getTardis().getHandlers().getExteriorPos());;
+            int i = entity.getTardis().getTravel().getPosition().getWorld().getLightLevel(LightType.SKY, entity.getTardis().getTravel().getExteriorPos());
+            int j = entity.getTardis().getTravel().getPosition().getWorld().getLightLevel(LightType.BLOCK, entity.getTardis().getTravel().getExteriorPos());
+            int k = entity.getWorld().getLightLevel(LightType.BLOCK, entity.getPos());
+            entity.getTardis().getTravel().getPosition().getWorld();
+            light = ((i + j >= 25 ? i + j : i * (entity.getTardis().getTravel().getPosition().getWorld().isNight() ? 1 : 2) + (entity.getTardis().getTravel().getPosition().getWorld().getRegistryKey() == World.NETHER ? j * 2 : j)) * 524296);
         }
 
         if (model != null) {
             model.animateTile(entity);
-            model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
+            model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
             if (tardisExterior.getVariant().emission() != null)
-                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(tardisExterior.getVariant().emission(), false)), maxLight, overlay, 1, 1, 1, 1);
+                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(tardisExterior.getVariant().emission(), false)), light, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }
