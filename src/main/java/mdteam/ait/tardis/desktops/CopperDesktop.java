@@ -8,8 +8,8 @@ import net.minecraft.util.Identifier;
 public class CopperDesktop extends TardisDesktopSchema {
 
     public CopperDesktop() {
-        super(new Identifier(AITMod.MOD_ID, "copperweb"), new DesktopPreviewTexture(
-                DesktopPreviewTexture.pathFromDesktopId(new Identifier(AITMod.MOD_ID, "copperweb_temp")),
+        super(new Identifier(AITMod.MOD_ID, "copper"), new DesktopPreviewTexture(
+                DesktopPreviewTexture.pathFromDesktopId(new Identifier(AITMod.MOD_ID, "copper_temp")),
                 400,
                 400
         ));

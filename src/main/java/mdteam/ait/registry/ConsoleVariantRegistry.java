@@ -26,8 +26,7 @@ public class ConsoleVariantRegistry {
     public static Collection<ConsoleVariantSchema> withParent(ConsoleSchema parent) {
         List<ConsoleVariantSchema> list = new ArrayList<>();
 
-        for (Iterator<ConsoleVariantSchema> it = REGISTRY.iterator(); it.hasNext(); ) {
-            ConsoleVariantSchema schema = it.next();
+        for (ConsoleVariantSchema schema : REGISTRY) {
             if (schema.parent().equals(parent)) list.add(schema);
         }
 
@@ -39,23 +38,24 @@ public class ConsoleVariantRegistry {
     public static ConsoleVariantSchema HARTNELL;
     public static ConsoleVariantSchema HARTNELL_WOOD;
     public static ConsoleVariantSchema HARTNELL_KELT;
-    public static ConsoleVariantSchema CORAL;
-    public static ConsoleVariantSchema TEMP;
+    public static ConsoleVariantSchema CORAL; // @TODO implement the new coral when its made again
+    public static ConsoleVariantSchema TEMP; // @TODO implement the new hudolin when its made again
 
     public static void init() {
+
+        // Hartnell variants
+        HARTNELL = register(new HartnellVariant());
+        HARTNELL_KELT = register(new KeltHartnellVariant());
+        HARTNELL_WOOD = register(new WoodenHartnellVariant()); // fixme this texture is awful - make tright remake it
+
         // Borealis variants
         BOREALIS = register(new BorealisVariant());
         AUTUMN = register(new AutumnVariant());
 
-        // Hartnell variants
-        HARTNELL = register(new HartnellVariant());
-        HARTNELL_WOOD = register(new WoodenHartnellVariant());
-        HARTNELL_KELT = register(new KeltHartnellVariant());
-
         // Coral variants
-        CORAL = register(new CoralVariant());
+        //CORAL = register(new CoralVariant());
 
         // "Temp" variants
-        TEMP = register(new TempVariant());
+        //TEMP = register(new TempVariant());
     }
 }

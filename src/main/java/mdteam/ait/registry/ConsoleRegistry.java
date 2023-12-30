@@ -16,14 +16,14 @@ public class ConsoleRegistry {
     }
 
     public static ConsoleSchema BOREALIS;
-    public static ConsoleSchema CORAL;
+    public static ConsoleSchema CORAL; // @TODO implement the new coral when its made again
     public static ConsoleSchema HARTNELL;
-    public static ConsoleSchema TEMP;
+    public static ConsoleSchema TEMP; // @TODO implement the new hudolin when its made again
 
     public static void init() {
-        BOREALIS = register(new BorealisConsole());
-        CORAL = register(new CoralConsole());
         HARTNELL = register(new HartnellConsole());
-        TEMP = register(new TempConsole());
+        BOREALIS = register(new BorealisConsole());
+        //CORAL = register(new CoralConsole());
+        //TEMP = register(new TempConsole());
     }
 }
