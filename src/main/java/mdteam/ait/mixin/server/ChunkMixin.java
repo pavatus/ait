@@ -2,6 +2,7 @@ package mdteam.ait.mixin.server;
 
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.RiftChunkManager;
+import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.ChunkPos;
@@ -37,6 +38,7 @@ public abstract class ChunkMixin implements RiftChunk {
         Chunk chunk = ((Chunk)(Object)this);
         if (!(chunk instanceof WorldChunk worldChunk)) return false;
         ServerWorld world = (ServerWorld) worldChunk.getWorld();
+        if (TardisUtil.getTardisDimension() == world) return false;
         if (world == null) return false;
         return ChunkRandom.getSlimeRandom(getPos().x, getPos().z, world.getSeed(), 987234910L).nextInt(8) == 0;
     }
