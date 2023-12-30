@@ -18,6 +18,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.block.entity.DecoratedPotBlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 import mdteam.ait.tardis.TardisExterior;
 import net.minecraft.world.LightType;
@@ -61,12 +62,19 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         int blue = 1;
 
         if (DependencyChecker.hasPortals() && entity.getTardis().getTravel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING) /*&& entity.getTardis().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED*/) {
+            BlockPos pos = entity.getTardis().getTravel().getPosition();
+            World world = entity.getTardis().getTravel().getPosition().getWorld();
+            World doorWorld = entity.getWorld();
+            BlockPos doorPos = entity.getPos();
+            int lightConst = 524296; // 1 / maxLight;
             //light = WorldRenderer.getLightmapCoordinates(entity.getTardis().getHandlers().getExteriorPos().getWorld(), entity.getTardis().getHandlers().getExteriorPos());;
-            int i = entity.getTardis().getTravel().getPosition().getWorld().getLightLevel(LightType.SKY, entity.getTardis().getTravel().getExteriorPos());
-            int j = entity.getTardis().getTravel().getPosition().getWorld().getLightLevel(LightType.BLOCK, entity.getTardis().getTravel().getExteriorPos());
-            int k = entity.getWorld().getLightLevel(LightType.BLOCK, entity.getPos());
-            entity.getTardis().getTravel().getPosition().getWorld();
-            light = ((i + j >= 25 ? i + j : i * (entity.getTardis().getTravel().getPosition().getWorld().isNight() ? 1 : 2) + (entity.getTardis().getTravel().getPosition().getWorld().getRegistryKey() == World.NETHER ? j * 2 : j)) * 524296);
+            int i = world.getLightLevel(LightType.SKY, pos);
+            int j = world.getLightLevel(LightType.BLOCK, pos);
+            int k = doorWorld.getLightLevel(LightType.BLOCK, doorPos);
+            /*light = ((i + j >= 15 ? ((i + j) * 2) : i != 0 ? i * (world.isNight() ? 1 : 2) +
+                    (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j + 6) : j * 2) * lightConst);*/
+            light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight() ? (i / 15) + j > 0 ? j + 13 : j : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j)) * lightConst;
+            //System.out.println("Sky: " + i + " | Block: " + j + " | light: " + light);
         }
 
         if (model != null) {
