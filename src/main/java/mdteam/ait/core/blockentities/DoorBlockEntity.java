@@ -2,6 +2,7 @@ package mdteam.ait.core.blockentities;
 
 import com.neptunedevelopmentteam.neptunelib.core.util.NeptuneUtil;
 import mdteam.ait.AITMod;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
@@ -122,8 +123,10 @@ public class DoorBlockEntity extends BlockEntity {
         if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
             return;
         if (this.getTardis() != null && this.getTardis().getDoor().isOpen()) {
-            if (!this.getTardis().getLockedTardis() && !PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
-                TardisUtil.teleportOutside(this.getTardis(), player);
+            if (!this.getTardis().getLockedTardis() && !PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
+                if (!DependencyChecker.hasPortals() || !this.getTardis().getExterior().getType().hasPortals())
+                    TardisUtil.teleportOutside(this.getTardis(), player);
+            }
         }
     }
 

@@ -2,6 +2,8 @@ package mdteam.ait.tardis.util;
 
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
+import mdteam.ait.client.models.doors.DoorModel;
+import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
@@ -118,14 +120,8 @@ public class TardisUtil {
                             if(!tardis.getDoor().locked()) {
                             /*DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
                                     player);*/
-                                if (tardis.getDoor().isLeftOpen()) {
-                                    tardis.getDoor().closeDoors();
-                                } else if (tardis.getDoor().isBothClosed()) {
-                                    tardis.getDoor().openDoors();
-                                } else {
-                                    tardis.getDoor().setRightRot(tardis.getDoor().isLeftOpen());
-                                    tardis.getDoor().setLeftRot(true);
-                                }
+                                if (tardis.getDoor().isOpen()) tardis.getDoor().closeDoors();
+                                else tardis.getDoor().openDoors();
                             }
                         } else {
                             DoorHandler.toggleLock(tardis, player);
@@ -315,6 +311,13 @@ public class TardisUtil {
             WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
             player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
         });
+    }
+
+    public static ExteriorModel getExteriorModel(Tardis tardis) {
+        return tardis.getExterior().getVariant().model();
+    }
+    public static DoorModel getDoorModel(Tardis tardis) {
+        return tardis.getExterior().getVariant().door().model();
     }
 
     public static Tardis findTardisByInterior(BlockPos pos) {

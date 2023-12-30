@@ -1,6 +1,7 @@
 package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.util.ForcedChunkUtil;
@@ -87,6 +88,9 @@ public class TardisDesktop {
     }
 
     public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
+        // before we do this we need to make sure to delete the old portals, but how?! by registering to this event
+        TardisEvents.DOOR_MOVE.invoker().onMove(tardis, pos);
+
         this.doorPos = pos;
     }
 

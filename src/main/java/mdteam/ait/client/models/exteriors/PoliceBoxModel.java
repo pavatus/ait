@@ -2,6 +2,7 @@ package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.tardis.TardisTravel;
@@ -12,6 +13,10 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 public class PoliceBoxModel extends ExteriorModel {
     private final ModelPart TARDIS;
@@ -99,6 +104,11 @@ public class PoliceBoxModel extends ExteriorModel {
         /*this.TARDIS.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
         this.TARDIS.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
+        // hide the doors if we have portals to stop the dupe
+        if (DependencyChecker.hasPortals())
+            this.TARDIS.getChild("Doors").visible = exterior.tardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
+
+
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
         matrices.pop();
@@ -122,5 +132,25 @@ public class PoliceBoxModel extends ExteriorModel {
             case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
             case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
         };
+    }
+    @Override
+    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+        return switch (direction) {
+            case DOWN, UP -> pos;
+            case NORTH -> pos.add(0,0.25,0.48);
+            case SOUTH -> pos.add(0,0.25,-0.48);
+            case WEST -> pos.add(0.48,0.25,0);
+            case EAST -> pos.add(-0.48,0.25,0);
+        };
+    }
+
+    @Override
+    public double portalHeight() {
+        return 2.5d;
+    }
+
+    @Override
+    public double portalWidth() {
+        return 1.5d;
     }
 }

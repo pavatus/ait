@@ -8,4 +8,9 @@ public class ClassicExterior extends ExteriorSchema {
     public ClassicExterior() {
         super(REFERENCE, "classic");
     }
+
+    @Override
+    public boolean hasPortals() {
+        return true;
+    }
 }

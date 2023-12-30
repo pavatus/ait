@@ -75,6 +75,8 @@ public class ServerTardisManager extends TardisManager {
                 } else if (tardis.getTravel().getState() == TardisTravel.State.MAT) {
                     tardis.getTravel().forceLand();
                 }
+
+                tardis.getDoor().closeDoors();
             }
 
             this.reset();

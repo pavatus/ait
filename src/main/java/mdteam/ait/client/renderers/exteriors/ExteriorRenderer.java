@@ -1,43 +1,28 @@
 package mdteam.ait.client.renderers.exteriors;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
-import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
-import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHolder;
-import net.fabricmc.fabric.mixin.object.builder.client.ModelPredicateProviderRegistryAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import mdteam.ait.tardis.TardisExterior;
 
-import static mdteam.ait.core.item.SonicItem.MODE_KEY;
-
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
     private ExteriorModel model;
-
-    private final ItemStack stack = new ItemStack(AITItems.MECHANICAL_SONIC_SCREWDRIVER, 1);
 
     public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {}
 
@@ -70,23 +55,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.scale(0.0125f, 0.0125f, 0.0125f);
         textRenderer.drawWithOutline(Text.of("POLICE -=- BOX").asOrderedText(), -"POLICE -=- BOX".length() * 5.625f, 0, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, light);
         matrices.pop();*/
-
-        // @TODO make this use the sonic to generate the interior the same as before AND NOT HARDCODE THE SONICS
-
-        if(entity.tardis().getHandlers().getInteriorChanger().isGenerating()) {
-            matrices.push();
-            matrices.translate(this.valuesForRotationalTransform(blockState.get(ExteriorBlock.FACING))[0],
-                    this.valuesForRotationalTransform(blockState.get(ExteriorBlock.FACING))[1],
-                    this.valuesForRotationalTransform(blockState.get(ExteriorBlock.FACING))[2]);
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45f));
-            matrices.scale(0.6f, 0.6f, 0.6f);
-            if (entity.getWorld() == null) return;
-            int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
-            //VertexConsumerProvider provider = layer -> vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(new Identifier(AITMod.MOD_ID, "textures/item/sonic_tools/mechanical_tardis.png")));
-            MinecraftClient.getInstance().getItemRenderer().renderItem(null, stack, ModelTransformationMode.GROUND, false, matrices, vertexConsumers, entity.getWorld(), lightAbove, overlay, 0);
-            matrices.pop();
-        }
         matrices.push();
         matrices.translate(0.5, 0, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
@@ -105,14 +73,5 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             }
         }
         matrices.pop();
-    }
-
-    public float[] valuesForRotationalTransform(Direction direction) {
-        return switch(direction) {
-            case EAST -> new float[]{1.32f, 1.32f, 0.435f};
-            case SOUTH -> new float[]{0.56f, 1.32f, 1.32f};
-            case WEST -> new float[]{-0.32f, 1.32f, 0.56f};
-            default -> new float[]{0.435f, 1.32f, -0.32f};
-        };
     }
 }

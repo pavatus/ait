@@ -38,9 +38,16 @@ public class TardisExterior {
             AITMod.LOGGER.error("Force changing exterior variant to a random one to ensure it matches!");
             setVariant(TardisItemBuilder.findRandomVariant(exterior));
         }
+        if (tardis != null) {
+            tardis.getDoor().closeDoors();
+        }
     }
 
     public void setVariant(ExteriorVariantSchema variant) {
+        if (tardis != null) {
+            tardis.getDoor().closeDoors();
+        }
+
         this.variant = variant;
     }
 }

@@ -9,4 +9,9 @@ public class CapsuleExterior extends ExteriorSchema {
     public CapsuleExterior() {
         super(REFERENCE, "capsule");
     }
+
+    @Override
+    public boolean hasPortals() {
+        return false;
+    }
 }

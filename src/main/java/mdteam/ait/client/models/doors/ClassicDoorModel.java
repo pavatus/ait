@@ -8,7 +8,9 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 // Made with Blockbench 4.9.2
 // Exported for Minecraft version 1.17+ for Yarn
@@ -78,5 +80,16 @@ public class ClassicDoorModel extends DoorModel {
 
 		super.renderWithAnimations(doorEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
+	}
+
+	@Override
+	public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+		return switch (direction) {
+			case DOWN, UP -> pos;
+			case NORTH -> pos.add(0,0.29,-0.641);
+			case SOUTH -> pos.add(0,0.29,0.641);
+			case WEST -> pos.add(-0.641,0.29,0);
+			case EAST -> pos.add(0.641,0.29,0);
+		};
 	}
 }

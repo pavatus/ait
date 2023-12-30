@@ -3,6 +3,7 @@ package mdteam.ait.core.blockentities;
 import com.neptunedevelopmentteam.neptunelib.core.util.NeptuneUtil;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blocks.ExteriorBlock;
@@ -116,7 +117,8 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
 
         if (this.tardis() != null && this.tardis().getDoor().isOpen()) {
             if (!this.tardis().getLockedTardis())
-                TardisUtil.teleportInside(this.tardis(), player);
+                if (!DependencyChecker.hasPortals() || !tardis().getExterior().getType().hasPortals())
+                    TardisUtil.teleportInside(this.tardis(), player);
         }
     }
 

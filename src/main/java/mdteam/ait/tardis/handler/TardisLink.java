@@ -50,7 +50,6 @@ public abstract class TardisLink implements TardisTickable {
         Tardis tardis = tardis();
         if (tardis == null || tardis.getDesktop() == null)
             return new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
-        ;
         return tardis.getDesktop().getInteriorDoorPos();
     }
 
