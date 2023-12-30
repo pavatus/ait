@@ -1,5 +1,6 @@
 package mdteam.ait.client;
 
+import mdteam.RiftCompassTarget;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.AITRadioRenderer;
 import mdteam.ait.client.renderers.consoles.ConsoleRenderer;
@@ -41,16 +42,19 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.item.CompassAnglePredicateProvider;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.*;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.UUID;
@@ -155,10 +159,7 @@ public class AITModClient implements ClientModInitializer {
 
     // @TODO creativious this is the model predicate for the rift scanner, all you have to do is make the value being returned go from 0.0f to 0.75f in a circle to simulate a compass-like item.
     public void riftScannerPredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.RIFT_SCANNER, new Identifier("scanner"), (itemStack, clientWorld, livingEntity, integer) -> {
-           if(livingEntity == null) return 0.0f;
-           return RiftScannerItem.ITEM_BAR_STEPS; // ignore temp numbers, make sure its a float of 0.0 to 0.75f.
-        });
+        ModelPredicateProviderRegistry.register(AITItems.RIFT_SCANNER, new Identifier("scanner"),new RiftClampBullshit((world, stack, entity) -> GlobalPos.create(entity.getWorld().getRegistryKey(), BlockPos.fromLong(stack.getOrCreateNbt().getLong("targetBlock")))));
     }
 
 

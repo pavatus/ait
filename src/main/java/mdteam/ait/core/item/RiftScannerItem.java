@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -21,7 +22,7 @@ public class RiftScannerItem extends Item {
         super(settings);
     }
 
-    BlockPos targetBlock = null;
+    public BlockPos targetBlock = null;
     UUID uuid = UUID.randomUUID();
 
 
@@ -40,19 +41,25 @@ public class RiftScannerItem extends Item {
         super.inventoryTick(stack, world, entity, slot, selected);
     }
 
+    @Override
+    public ItemStack getDefaultStack() {
+        ItemStack stack = new ItemStack(this);
+        NbtCompound nbt = stack.getOrCreateNbt();
+        nbt.putLong("targetBlock", 0L);
+        return super.getDefaultStack();
+    }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if(world.isClient()) return TypedActionResult.pass(user.getStackInHand(hand));
         if (user.isSneaking()) {
             // reset target
-            if (DeltaTimeManager.isStillWaitingOnDelay("riftscanner-" + uuid.toString() + "-checkingdelay")) {
-                user.sendMessage(Text.literal("Target has been reset and updated, the device is now pointing towards your new target"));
-                createNewTarget(world, user.getBlockPos());
-                DeltaTimeManager.createDelay("riftscanner-" + uuid.toString() + "-checkingdelay", 60000L);
-            } else {
-                user.sendMessage(Text.literal("You can't check for a target this fast, you must wait 1 minute between checking for a new target"));
-            }
+            // @TODO: Readd limit
+            user.sendMessage(Text.literal("Target has been reset and updated, the device is now pointing towards your new target"));
+            createNewTarget(world, user.getBlockPos());
+            ItemStack stack = user.getStackInHand(hand);
+            NbtCompound nbt = stack.getOrCreateNbt();
+            nbt.putLong("targetBlock", targetBlock.asLong());
 
         } else {
             RiftChunk riftChunk = (RiftChunk) world.getChunk(user.getBlockPos());
