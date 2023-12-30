@@ -10,6 +10,9 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.function.Function;
 
@@ -46,4 +49,6 @@ public abstract class DoorModel extends SinglePartEntityModel {
     }
 
     public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
-}
+    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+        return pos; // just cus some dont have portals
+    }}

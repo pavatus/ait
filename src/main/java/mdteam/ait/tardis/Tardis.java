@@ -165,7 +165,7 @@ public class Tardis {
             DoorHandler.lockTardis(true, this, null, true);
         }*/
         if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
-            DoorHandler.lockTardis(getHandlers().getDoor().locked(), this, null, true);
+            DoorHandler.lockTardis(true, this, null, true);
         }
     }
 

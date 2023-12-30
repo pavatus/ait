@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.handler;
 
+import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.advancement.TardisCriterions;
@@ -114,6 +115,15 @@ public class DoorHandler extends TardisLink {
         if (var != doorState) {
             tempExteriorState = this.doorState;
             tempInteriorState = this.doorState;
+
+            // if the last state ( doorState ) was closed and the new state ( var ) is open, fire the event
+            if (doorState == DoorStateEnum.CLOSED) {
+                TardisEvents.DOOR_OPEN.invoker().onOpen(tardis());
+            }
+            // if the last state was open and the new state is closed, fire the event
+            if (doorState != DoorStateEnum.CLOSED && var == DoorStateEnum.CLOSED) {
+                TardisEvents.DOOR_CLOSE.invoker().onClose(tardis());
+            }
         }
 
         this.doorState = var;

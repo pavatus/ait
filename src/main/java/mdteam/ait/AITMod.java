@@ -7,6 +7,8 @@ import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import mdteam.ait.api.ICantBreak;
 import mdteam.ait.api.tardis.TardisEvents;
+import mdteam.ait.compat.DependencyChecker;
+import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -79,6 +81,10 @@ public class AITMod implements ModInitializer {
         TardisCriterions.init();
 
         entityAttributeRegister();
+
+        // ip support
+        if (DependencyChecker.hasPortals())
+            PortalsHandler.init();
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             TeleportInteriorCommand.register(dispatcher);

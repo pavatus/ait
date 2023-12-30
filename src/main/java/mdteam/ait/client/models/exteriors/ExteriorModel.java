@@ -11,6 +11,10 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Function;
 
@@ -66,5 +70,12 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
     }
 
+
     public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
+    public boolean hasPortals() {return false;}
+    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+        return pos; // just cus some dont have portals
+    }
+    public double portalWidth() {return 1d;}
+    public double portalHeight() {return 2d;}
 }

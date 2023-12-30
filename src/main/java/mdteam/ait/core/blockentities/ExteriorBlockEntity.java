@@ -2,6 +2,7 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.registry.ExteriorRegistry;
@@ -114,7 +115,8 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
 
         if (this.tardis() != null && this.tardis().getDoor().isOpen()) {
             if (!this.tardis().getLockedTardis())
-                TardisUtil.teleportInside(this.tardis(), player);
+                if (!DependencyChecker.hasPortals() || !TardisUtil.getExteriorModel(this.tardis()).hasPortals())
+                    TardisUtil.teleportInside(this.tardis(), player);
         }
     }
 
