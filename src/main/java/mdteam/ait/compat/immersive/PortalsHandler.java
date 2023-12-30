@@ -83,7 +83,7 @@ public class PortalsHandler {
     private static void createPortals(Tardis tardis) {
         if (tardis == null) return;
 
-        if (!getExteriorModel(tardis).hasPortals()) return;
+        if (!tardis.getExterior().getType().hasPortals()) return;
 
         List<Portal> list = new ArrayList<>();
 

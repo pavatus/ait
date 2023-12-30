@@ -51,6 +51,7 @@ public abstract class ExteriorSchema {
         return this.id;
     }
     public String name() { return this.name; }
+    public boolean hasPortals() {return false;}
 
     @Override
     public String toString() {

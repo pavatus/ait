@@ -133,12 +133,6 @@ public class PoliceBoxModel extends ExteriorModel {
             case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
         };
     }
-
-    @Override
-    public boolean hasPortals() {
-        return true;
-    }
-
     @Override
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return switch (direction) {

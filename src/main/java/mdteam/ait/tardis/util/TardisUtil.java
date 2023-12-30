@@ -120,14 +120,8 @@ public class TardisUtil {
                             if(!tardis.getDoor().locked()) {
                             /*DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
                                     player);*/
-                                if (tardis.getDoor().isLeftOpen()) {
-                                    tardis.getDoor().closeDoors();
-                                } else if (tardis.getDoor().isBothClosed()) {
-                                    tardis.getDoor().openDoors();
-                                } else {
-                                    tardis.getDoor().setRightRot(tardis.getDoor().isLeftOpen());
-                                    tardis.getDoor().setLeftRot(true);
-                                }
+                                if (tardis.getDoor().isOpen()) tardis.getDoor().closeDoors();
+                                else tardis.getDoor().openDoors();
                             }
                         } else {
                             DoorHandler.toggleLock(tardis, player);

@@ -8,4 +8,10 @@ public class PoliceBoxExterior extends ExteriorSchema {
     public PoliceBoxExterior() {
         super(REFERENCE, "police_box");
     }
+
+    @Override
+    public boolean hasPortals() {
+        return true;
+    }
 }
+

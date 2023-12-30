@@ -1,6 +1,7 @@
 package mdteam.ait.core.blocks;
 
 import mdteam.ait.api.ICantBreak;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
@@ -122,6 +123,11 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null)
             return getLedgeShape(state, world, pos);
+
+        // todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
+        if (DependencyChecker.hasPortals())
+            if (((ExteriorBlockEntity) blockEntity).tardis().getDoor().isOpen() && ((ExteriorBlockEntity) blockEntity).tardis().getExterior().getType().hasPortals()) // for some reason this check totally murders fps ??
+                return VoxelShapes.empty();
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
         if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)

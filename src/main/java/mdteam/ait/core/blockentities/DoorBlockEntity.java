@@ -122,7 +122,7 @@ public class DoorBlockEntity extends BlockEntity {
             return;
         if (this.getTardis() != null && this.getTardis().getDoor().isOpen()) {
             if (!this.getTardis().getLockedTardis() && !PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
-                if (!DependencyChecker.hasPortals() || !TardisUtil.getExteriorModel(this.getTardis()).hasPortals())
+                if (!DependencyChecker.hasPortals() || !this.getTardis().getExterior().getType().hasPortals())
                     TardisUtil.teleportOutside(this.getTardis(), player);
             }
         }

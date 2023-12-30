@@ -115,7 +115,7 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
 
         if (this.tardis() != null && this.tardis().getDoor().isOpen()) {
             if (!this.tardis().getLockedTardis())
-                if (!DependencyChecker.hasPortals() || !TardisUtil.getExteriorModel(this.tardis()).hasPortals())
+                if (!DependencyChecker.hasPortals() || !tardis().getExterior().getType().hasPortals())
                     TardisUtil.teleportInside(this.tardis(), player);
         }
     }

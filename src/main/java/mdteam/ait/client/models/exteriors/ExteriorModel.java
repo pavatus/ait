@@ -72,7 +72,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
 
     public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
-    public boolean hasPortals() {return false;}
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return pos; // just cus some dont have portals
     }
