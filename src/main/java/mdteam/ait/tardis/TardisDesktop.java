@@ -1,15 +1,14 @@
 package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.api.tardis.TardisEvents;
-import mdteam.ait.compat.DependencyChecker;
-import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.util.ForcedChunkUtil;
-import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
-import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.Corners;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
