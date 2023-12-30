@@ -20,6 +20,7 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
+import mdteam.ait.core.item.RiftScannerItem;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
@@ -69,6 +70,7 @@ public class AITModClient implements ClientModInitializer {
         blockEntityRendererRegister();
         entityRenderRegister();
         sonicModelPredicate();
+        riftScannerPredicate();
         setKeyBinding();
         DoorRegistry.init();
         ConsoleVariantRegistry.init();
@@ -149,6 +151,16 @@ public class AITModClient implements ClientModInitializer {
             case 2 -> new InteriorSelectScreen(tardis, new MonitorScreen(tardis));
         };
     }
+
+
+    // @TODO creativious this is the model predicate for the rift scanner, all you have to do is make the value being returned go from 0.0f to 0.75f in a circle to simulate a compass-like item.
+    public void riftScannerPredicate() {
+        ModelPredicateProviderRegistry.register(AITItems.RIFT_SCANNER, new Identifier("scanner"), (itemStack, clientWorld, livingEntity, integer) -> {
+           if(livingEntity == null) return 0.0f;
+           return RiftScannerItem.ITEM_BAR_STEPS; // ignore temp numbers, make sure its a float of 0.0 to 0.75f.
+        });
+    }
+
 
     public void sonicModelPredicate() { // fixme lord give me strength - amen brother
         ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> {

@@ -815,5 +815,103 @@
 				}
 			]
 		}
+	],
+	"overrides": [
+		{
+			"predicate": {
+				"scanner": 0
+			},
+			"model": "ait:item/rift_scanner/e"
+		},
+		{
+			"predicate": {
+				"scanner": 0.5
+			},
+			"model": "ait:item/rift_scanner/ene"
+		},
+		{
+			"predicate": {
+				"scanner": 0.1
+			},
+			"model": "ait:item/rift_scanner/ese"
+		},
+		{
+			"predicate": {
+				"scanner": 0.15
+			},
+			"model": "ait:item/rift_scanner/n"
+		},
+		{
+			"predicate": {
+				"scanner": 0.2
+			},
+			"model": "ait:item/rift_scanner/ne"
+		},
+		{
+			"predicate": {
+				"scanner": 0.25
+			},
+			"model": "ait:item/rift_scanner/nne"
+		},
+		{
+			"predicate": {
+				"scanner": 0.3
+			},
+			"model": "ait:item/rift_scanner/nnw"
+		},
+		{
+			"predicate": {
+				"scanner": 0.35
+			},
+			"model": "ait:item/rift_scanner/nw"
+		},
+		{
+			"predicate": {
+				"scanner": 0.4
+			},
+			"model": "ait:item/rift_scanner/s"
+		},
+		{
+			"predicate": {
+				"scanner": 0.45
+			},
+			"model": "ait:item/rift_scanner/se"
+		},
+		{
+			"predicate": {
+				"scanner": 0.5
+			},
+			"model": "ait:item/rift_scanner/sse"
+		},
+		{
+			"predicate": {
+				"scanner": 0.55
+			},
+			"model": "ait:item/rift_scanner/ssw"
+		},
+		{
+			"predicate": {
+				"scanner": 0.6
+			},
+			"model": "ait:item/rift_scanner/sw"
+		},
+		{
+			"predicate": {
+				"scanner": 0.65
+			},
+			"model": "ait:item/rift_scanner/w"
+		},
+		{
+			"predicate": {
+				"scanner": 0.7
+			},
+			"model": "ait:item/rift_scanner/wnw"
+		},
+		{
+			"predicate": {
+				"scanner": 0.75
+			},
+			"model": "ait:item/rift_scanner/wsw"
+		}
 	]
 }
