@@ -1,38 +1,15 @@
 package mdteam.ait.core;
 
+import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneBlockEntityInit;
 import mdteam.ait.core.blockentities.*;
-import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.minecraft.block.CoralBlock;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 
-public class AITBlockEntityTypes implements AutoRegistryContainer<BlockEntityType<?>> {
+public class AITBlockEntityTypes implements NeptuneBlockEntityInit {
 
-    public static final BlockEntityType<AITRadioBlockEntity> AIT_RADIO_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
-            AITRadioBlockEntity::new, AITBlocks.RADIO).build();
-
-    public static final BlockEntityType<ConsoleBlockEntity> DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
-            ConsoleBlockEntity::new, AITBlocks.CONSOLE).build();
-
-    public static final BlockEntityType<ExteriorBlockEntity> EXTERIOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
-            ExteriorBlockEntity::new, AITBlocks.EXTERIOR_BLOCK).build();
-
-    public static final BlockEntityType<DoorBlockEntity> DOOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
-            DoorBlockEntity::new, AITBlocks.DOOR_BLOCK).build();
-
-    public static final BlockEntityType<CoralBlockEntity> CORAL_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
-            CoralBlockEntity::new, AITBlocks.CORAL_PLANT).build();
-
-    @Override
-    public Registry<BlockEntityType<?>> getRegistry() {
-        return Registries.BLOCK_ENTITY_TYPE;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Class<BlockEntityType<?>> getTargetFieldType() {
-        return (Class<BlockEntityType<?>>) (Object) BlockEntityType.class;
-    }
+    public static BlockEntityType<ExteriorBlockEntity> EXTERIOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(ExteriorBlockEntity::new, AITBlocks.EXTERIOR_BLOCK).build();
+    public static BlockEntityType<DoorBlockEntity> DOOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(DoorBlockEntity::new, AITBlocks.DOOR_BLOCK).build();
+    public static BlockEntityType<ConsoleBlockEntity> DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(ConsoleBlockEntity::new, AITBlocks.CONSOLE).build();
+    public static BlockEntityType<CoralBlockEntity> CORAL_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(CoralBlockEntity::new, AITBlocks.CORAL_PLANT).build();
+    public static BlockEntityType<AITRadioBlockEntity> AIT_RADIO_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(AITRadioBlockEntity::new, AITBlocks.RADIO).build();
 }

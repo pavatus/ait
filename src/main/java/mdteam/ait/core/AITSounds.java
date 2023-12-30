@@ -1,12 +1,13 @@
 package mdteam.ait.core;
 
+import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneSoundEventInit;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.core.sounds.SoundRegistryContainer;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
-public class AITSounds implements SoundRegistryContainer {
+public class AITSounds implements NeptuneSoundEventInit {
     public static final SoundEvent SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "secret_music"));
     public static final SoundEvent EVEN_MORE_SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "even_more_secret_music"));
 

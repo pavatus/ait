@@ -62,8 +62,8 @@ public class AITMod implements ModInitializer {
 
         NeptuneInitHandler.register(AITItems.class, MOD_ID);
         NeptuneInitHandler.register(AITBlocks.class, MOD_ID);
-        FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
+        NeptuneInitHandler.register(AITSounds.class, MOD_ID);
+        NeptuneInitHandler.register(AITBlockEntityTypes.class, MOD_ID);
         FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
 
 

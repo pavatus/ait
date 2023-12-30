@@ -1,8 +1,9 @@
 package mdteam.ait.core.blockentities;
 
+import com.neptunedevelopmentteam.neptunelib.core.util.NeptuneUtil;
 import mdteam.ait.AITMod;
-import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
@@ -63,7 +64,6 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
-
         Tardis found = TardisUtil.findTardisByPosition(pos);
         if (found != null)
             this.setTardis(found);

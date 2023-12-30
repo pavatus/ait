@@ -96,7 +96,7 @@ public class RadioBlock extends HorizontalDirectionalBlock implements BlockEntit
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AITBlockEntityTypes.AIT_RADIO_BLOCK_ENTITY_TYPE, (world1, pos, state1, be) -> AITRadioBlockEntity.tick(world1, pos, state1, be));
+        return checkType(type, AITBlockEntityTypes.AIT_RADIO_BLOCK_ENTITY_TYPE, AITRadioBlockEntity::tick);
     }
 
     @Nullable
