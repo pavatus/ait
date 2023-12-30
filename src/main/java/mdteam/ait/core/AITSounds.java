@@ -37,6 +37,9 @@ public class AITSounds implements NeptuneSoundEventInit {
 
     public static final SoundEvent CLOISTER = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/cloister"));
 
+    // Tools
+    public static final SoundEvent DING = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tools/goes_ding"));
+
 
     // FIXME: move somwehre else + these values suck
     public static final MatSound DEMAT_ANIM = new MatSound(DEMAT, 240, 240, 240, 0.2f, 0.4f); // fixme especially this one it flickers bad

@@ -1,12 +1,13 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -22,9 +23,9 @@ public class RiftScannerItem extends Item {
         super(settings);
     }
 
-    public BlockPos targetBlock = null;
+    BlockPos targetBlock = null;
     UUID uuid = UUID.randomUUID();
-
+    private BlockPos lastPosition = null;
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
@@ -35,31 +36,28 @@ public class RiftScannerItem extends Item {
                 if (DeltaTimeManager.isStillWaitingOnDelay("riftscanner-" + uuid.toString() + "-checkingdelay")) {
                     DeltaTimeManager.createDelay("riftscanner-" + uuid.toString() + "-checkingdelay", 60000L);
                 }
+                if(world.getChunk(currentBlockPos) instanceof RiftChunk && lastPosition == null || lastPosition != currentBlockPos) {
+                    world.playSound(null, currentBlockPos, AITSounds.DING, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                    lastPosition = currentBlockPos;
+                }
             }
-
         }
         super.inventoryTick(stack, world, entity, slot, selected);
     }
 
-    @Override
-    public ItemStack getDefaultStack() {
-        ItemStack stack = new ItemStack(this);
-        NbtCompound nbt = stack.getOrCreateNbt();
-        nbt.putLong("targetBlock", 0L);
-        return super.getDefaultStack();
-    }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if(world.isClient()) return TypedActionResult.pass(user.getStackInHand(hand));
         if (user.isSneaking()) {
             // reset target
-            // @TODO: Readd limit
-            user.sendMessage(Text.literal("Target has been reset and updated, the device is now pointing towards your new target"));
-            createNewTarget(world, user.getBlockPos());
-            ItemStack stack = user.getStackInHand(hand);
-            NbtCompound nbt = stack.getOrCreateNbt();
-            nbt.putLong("targetBlock", targetBlock.asLong());
+            if (DeltaTimeManager.isStillWaitingOnDelay("riftscanner-" + uuid.toString() + "-checkingdelay")) {
+                user.sendMessage(Text.literal("Target has been reset and updated, the device is now pointing towards your new target"));
+                createNewTarget(world, user.getBlockPos());
+                DeltaTimeManager.createDelay("riftscanner-" + uuid.toString() + "-checkingdelay", 60000L);
+            } else {
+                user.sendMessage(Text.literal("You can't check for a target this fast, you must wait 1 minute between checking for a new target"));
+            }
 
         } else {
             RiftChunk riftChunk = (RiftChunk) world.getChunk(user.getBlockPos());
