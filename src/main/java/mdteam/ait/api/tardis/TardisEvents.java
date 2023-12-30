@@ -31,6 +31,11 @@ public final class TardisEvents {
            callback.onCrash(tardis);
        }
     });
+    public static final Event<NoFuel> OUT_OF_FUEL = EventFactory.createArrayBacked(NoFuel.class, callbacks -> (tardis) -> {
+        for (NoFuel callback : callbacks) {
+            callback.onNoFuel(tardis);
+        }
+    });
 
     // door stuff
     public static final Event<OpenDoor> DOOR_OPEN = EventFactory.createArrayBacked(OpenDoor.class, callbacks -> ((tardis) -> {
@@ -97,6 +102,14 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface Crash {
         void onCrash(Tardis tardis);
+    }
+
+    /**
+     * Called whenever the fuel is set to 0
+     */
+    @FunctionalInterface
+    public interface NoFuel {
+        void onNoFuel(Tardis tardis);
     }
 
     /**

@@ -227,19 +227,7 @@ public class TardisTravel extends TardisLink {
 
         // Check if the Tardis materialization is prevented by event listeners
         if (TardisEvents.MAT.invoker().onMat(getTardis())) {
-            // Play failure sound at the current position
-            this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
-
-            // Play failure sound at the Tardis console position if the interior is not empty
-            if (TardisUtil.isInteriorNotEmpty(tardis())) {
-                TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
-            }
-
-            // Send error message to the pilot
-            TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!"));
-
-            // Create materialization delay and return
-            createMaterialiseDelay(this.getTardis());
+            failToMaterialise();
             return;
         }
 
@@ -309,23 +297,16 @@ public class TardisTravel extends TardisLink {
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
-        DoorHandler.lockTardis(true, this.getTardis(), null, true);
-
         // fixme where does this go?
         if (TardisEvents.DEMAT.invoker().onDemat(getTardis())) {
-            // demat will be cancelled
-            this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
-
-            if (TardisUtil.isInteriorNotEmpty(tardis()))
-                TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
-
-            TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to takeoff!")); // fixme translatable
-            createDematerialiseDelay(this.getTardis());
+            failToTakeoff();
             return;
         }
 
         if (TardisTravel.isDematerialiseOnCooldown(getTardis()))
             return; // cancelled
+
+        DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
         this.setState(State.DEMAT);
 
@@ -353,6 +334,38 @@ public class TardisTravel extends TardisLink {
                 travel.toFlight();
             }
         }, (long) getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
+    }
+
+    private void failToMaterialise() {
+        // Play failure sound at the current position
+        this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
+
+        // Play failure sound at the Tardis console position if the interior is not empty
+        if (TardisUtil.isInteriorNotEmpty(tardis())) {
+            TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
+        }
+
+        // Send error message to the pilot
+        TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!"));
+
+        // Create materialization delay and return
+        createMaterialiseDelay(this.getTardis());
+        return;
+    }
+
+    private void failToTakeoff() {
+        // dont do anything if out of fuel, make it sad :(
+        if (getTardis().getHandlers().getFuel().isOutOfFuel()) return;
+
+        // demat will be cancelled
+        this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
+
+        if (TardisUtil.isInteriorNotEmpty(tardis()))
+            TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
+
+        TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to takeoff!")); // fixme translatable
+        createDematerialiseDelay(this.getTardis());
+        return;
     }
 
     @NotNull

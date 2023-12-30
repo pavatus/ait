@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.handler;
 
+import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.Exclude;
@@ -23,9 +24,19 @@ public class FuelHandler extends TardisLink {
         return (double) PropertiesHandler.get(tardis().getHandlers().getProperties(), FUEL_COUNT);
     }
 
+    public boolean isOutOfFuel() {
+        return getFuel() <= 0;
+    }
+
     public void setFuelCount(double fuel) {
         PropertiesHandler.set(tardis().getHandlers().getProperties(), FUEL_COUNT, fuel);
         tardis().markDirty();
+
+        // fire the event if ran out of fuel
+        // this may get ran multiple times though
+        if (isOutOfFuel() && fuel <= 0) {
+            TardisEvents.OUT_OF_FUEL.invoker().onNoFuel(tardis());
+        }
     }
 
     public double addFuel(double fuel) {
@@ -78,7 +89,7 @@ public class FuelHandler extends TardisLink {
             removeFuel(1);
         }
         if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT && this.getFuel() == 0) {
-            tardis().getTravel().materialise(); // hehe force land if you don't have enough fuel
+            tardis().getTravel().crash(); // hehe force land if you don't have enough fuel
         }
     }
 }

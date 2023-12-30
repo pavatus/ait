@@ -2,6 +2,7 @@ package mdteam.ait.tardis.control;
 
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.client.animation.controls.ControlAnimationState;
+import mdteam.ait.tardis.TardisTravel;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.animation.AnimationHelper;
@@ -12,6 +13,7 @@ import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.HashMap;
 
@@ -64,6 +66,10 @@ public class Control {
 
     public SoundEvent getSound() {
         return SoundEvents.BLOCK_NOTE_BLOCK_BIT.value();
+    }
+    public boolean shouldFailOnNoFuel() {return true;}
+    public void runAnimation(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+        return; // no animation
     }
 
     @Override
