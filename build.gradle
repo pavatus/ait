@@ -21,6 +21,9 @@ repositories {
 		name = "Ladysnake Mods"
 		url = 'https://maven.ladysnake.org/releases'
 	}
+	maven { url 'https://jitpack.io' }
+	maven { url "https://maven.shedaniel.me/" }
+	maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
 loom {
@@ -73,15 +76,17 @@ dependencies {
 
 
 	include "io.wispforest:owo-sentinel:${project.owo_version}"
-
-
-
-
-
-
-
-
-
+  
+	// change to modImplementation to play with ip, modCompileOnlyApi to not
+	modImplementation("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.ip_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	modImplementation("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${project.ip_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	modImplementation("me.shedaniel.cloth:cloth-config-fabric:11.0.99") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 }
 
 processResources {

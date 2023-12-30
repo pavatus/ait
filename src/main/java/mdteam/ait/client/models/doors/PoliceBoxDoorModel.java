@@ -10,7 +10,9 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 public class PoliceBoxDoorModel extends DoorModel {
     private final ModelPart TARDIS;
@@ -88,4 +90,14 @@ public class PoliceBoxDoorModel extends DoorModel {
         return TARDIS;
     }
 
+    @Override
+    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+        return switch (direction) {
+            case DOWN, UP -> pos;
+            case NORTH -> pos.add(0,0.43,-0.69);
+            case SOUTH -> pos.add(0,0.43,0.69);
+            case WEST -> pos.add(-0.69,0.43,0);
+            case EAST -> pos.add(0.69,0.43,0);
+        };
+    }
 }

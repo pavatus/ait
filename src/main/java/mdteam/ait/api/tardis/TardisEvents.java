@@ -1,6 +1,7 @@
 package mdteam.ait.api.tardis;
 
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
@@ -26,6 +27,23 @@ public final class TardisEvents {
            callback.onCrash(tardis);
        }
     });
+
+    // door stuff
+    public static final Event<OpenDoor> DOOR_OPEN = EventFactory.createArrayBacked(OpenDoor.class, callbacks -> ((tardis) -> {
+        for (OpenDoor callback : callbacks) {
+            callback.onOpen(tardis);
+        }
+    }));
+    public static final Event<CloseDoor> DOOR_CLOSE = EventFactory.createArrayBacked(CloseDoor.class, callbacks -> (((tardis) -> {
+        for (CloseDoor callback : callbacks) {
+            callback.onClose(tardis);
+        }
+    })));
+    public static final Event<MoveDoor> DOOR_MOVE = EventFactory.createArrayBacked(MoveDoor.class, callbacks -> (((tardis, prev) -> {
+        for (MoveDoor callback : callbacks) {
+            callback.onMove(tardis, prev);
+        }
+    })));
 
     // Interfaces go down here
     // todo add functionality for cancelling things ( start by removing the void i think lol ) ( look at PlayerBlockBreakEvents )
@@ -73,5 +91,27 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface Crash {
         void onCrash(Tardis tardis);
+    }
+
+    /**
+     * Called when a TARDIS Door opens ( called when its state is set to any of the "open" states, but only if it was closed before )
+     */
+    @FunctionalInterface
+    public interface OpenDoor {
+        void onOpen(Tardis tardis);
+    }
+    /**
+     * Called when a TARDIS Door closes
+     */
+    @FunctionalInterface
+    public interface CloseDoor {
+        void onClose(Tardis tardis);
+    }
+    /**
+     * Called when the interior door position is changed, meaning it was probably moved
+     */
+    @FunctionalInterface
+    public interface MoveDoor {
+        void onMove(Tardis tardis, AbsoluteBlockPos.Directed previous);
     }
 }

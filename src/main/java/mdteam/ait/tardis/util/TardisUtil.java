@@ -2,6 +2,8 @@ package mdteam.ait.tardis.util;
 
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
+import mdteam.ait.client.models.doors.DoorModel;
+import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
@@ -315,6 +317,13 @@ public class TardisUtil {
             WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
             player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
         });
+    }
+
+    public static ExteriorModel getExteriorModel(Tardis tardis) {
+        return tardis.getExterior().getVariant().model();
+    }
+    public static DoorModel getDoorModel(Tardis tardis) {
+        return tardis.getExterior().getVariant().door().model();
     }
 
     public static Tardis findTardisByInterior(BlockPos pos) {

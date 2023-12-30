@@ -2,8 +2,11 @@ package mdteam.ait.client.renderers.exteriors;
 
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.renderers.AITRenderLayers;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import net.minecraft.block.BlockState;
@@ -11,6 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -20,6 +24,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import mdteam.ait.tardis.TardisExterior;
+import net.minecraft.util.math.Vec3d;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
     private ExteriorModel model;
@@ -60,6 +65,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         Identifier texture = entity.tardis().getExterior().getVariant().texture();
+
         if (model != null) {
             model.animateTile(entity);
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
@@ -73,5 +79,19 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             }
         }
         matrices.pop();
+    }
+
+    @Override
+    public boolean rendersOutsideBoundingBox(T blockEntity) {
+        return true;
+    }
+
+    @Override
+    public boolean isInRenderDistance(T blockEntity, Vec3d pos) {
+        if (DependencyChecker.hasPortals() && blockEntity.tardis().getHandlers().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED) {
+            return true;
+        }
+
+        return BlockEntityRenderer.super.isInRenderDistance(blockEntity, pos);
     }
 }

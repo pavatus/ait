@@ -1,6 +1,7 @@
 package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
@@ -120,8 +121,10 @@ public class DoorBlockEntity extends BlockEntity {
         if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
             return;
         if (this.getTardis() != null && this.getTardis().getDoor().isOpen()) {
-            if (!this.getTardis().getLockedTardis() && !PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
-                TardisUtil.teleportOutside(this.getTardis(), player);
+            if (!this.getTardis().getLockedTardis() && !PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
+                if (!DependencyChecker.hasPortals() || !TardisUtil.getExteriorModel(this.getTardis()).hasPortals())
+                    TardisUtil.teleportOutside(this.getTardis(), player);
+            }
         }
     }
 
