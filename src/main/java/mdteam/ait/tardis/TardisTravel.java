@@ -6,6 +6,7 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.tardis.control.impl.RandomiserControl;
 import mdteam.ait.tardis.control.impl.pos.PosManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.TardisLink;
@@ -129,7 +130,36 @@ public class TardisTravel extends TardisLink {
     }*/
 
     public void crash() {
+        if (this.getState() != TardisTravel.State.FLIGHT) return;
+        // randomise and force land @todo something better ive got no ideas at 1am loqor
+        // fixme tardis.getTravel().setState(TardisTravel.State.CRASH);
+        //@TODO make sure this can't be used like a friggin' carpet bomb - Loqor
 
+        // fixme if (tardis.getTravel().getState() == TardisTravel.State.CRASH) {
+        this.getPosManager().increment = 1000; //1000
+        RandomiserControl.randomiseDestination(this.getTardis(), 10); //10
+        if (this.getTardis().getDesktop().getConsolePos() != null) {
+            TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
+            TardisUtil.getTardisDimension().createExplosion(null, null, null, this.getTardis().getDesktop().getConsolePos().toCenterPos(), 3f, false, World.ExplosionSourceType.TNT);
+        }
+        this.getDestination().getWorld().getChunk(this.getTardis().getTravel().getDestination());
+        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
+        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
+
+        // fixme everything below this line to the markdirty() is a WIP, what i want this to do is set the destination to the height of the current dimension,
+        // fixme so that when you crash land, you crash land out of the sky towards this position like in the show; for now, what i want it to do is fall onto the crashed position,
+        // fixme and explode once it touches the ground in the CRASHED state. - Loqor
+        this.setDestination(new AbsoluteBlockPos.Directed(this.getTardis().getTravel().getDestination().getX(), this.getDestination().getWorld().getTopY() - 1, this.getDestination().getZ(), this.getDestination().getWorld(), this.getDestination().getDirection()), true);
+                /*tardis.getTravel().getDestination().getWorld().createExplosion(
+                null, tardis.getTravel().getDestination().getX(),
+                tardis.getTravel().getDestination().getY(),
+                tardis.getTravel().getDestination().getZ(), 4f, true, World.ExplosionSourceType.MOB);*/
+
+        this.getTardis().markDirty();
+        this.getTardis().removeFuel(80);
+        this.materialise();
+        TardisEvents.CRASH.invoker().onCrash(this.getTardis());
+        // fixme }
     }
 
     public void materialise() {

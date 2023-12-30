@@ -46,33 +46,7 @@ public class HandBrakeControl extends Control {
         messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
 
         if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
-            // randomise and force land @todo something better ive got no ideas at 1am loqor
-            // fixme tardis.getTravel().setState(TardisTravel.State.CRASH);
-            //@TODO make sure this can't be used like a friggin' carpet bomb - Loqor
-
-            // fixme if (tardis.getTravel().getState() == TardisTravel.State.CRASH) {
-            tardis.getTravel().getPosManager().increment = 1000; //1000
-            RandomiserControl.randomiseDestination(tardis, 10); //10
-            TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
-            TardisUtil.getTardisDimension().createExplosion(null, null, null, tardis.getDesktop().getConsolePos().toCenterPos(), 3f, false, World.ExplosionSourceType.TNT);
-            tardis.getTravel().getDestination().getWorld().getChunk(tardis.getTravel().getDestination());
-                    PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
-                    PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
-
-                    // fixme everything below this line to the markdirty() is a WIP, what i want this to do is set the destination to the height of the current dimension,
-                    // fixme so that when you crash land, you crash land out of the sky towards this position like in the show; for now, what i want it to do is fall onto the crashed position,
-                    // fixme and explode once it touches the ground in the CRASHED state. - Loqor
-                    tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(tardis.getTravel().getDestination().getX(), tardis.getTravel().getDestination().getWorld().getRegistryKey().equals(World.NETHER) ? 128 : 256, tardis.getTravel().getDestination().getZ(), tardis.getTravel().getDestination().getWorld(), tardis.getTravel().getDestination().getDirection()), true);
-                    /*tardis.getTravel().getDestination().getWorld().createExplosion(
-                    null, tardis.getTravel().getDestination().getX(),
-                    tardis.getTravel().getDestination().getY(),
-                    tardis.getTravel().getDestination().getZ(), 4f, true, World.ExplosionSourceType.MOB);*/
-
-                    tardis.markDirty();
-                    tardis.removeFuel(80);
-            tardis.getTravel().materialise();
-            TardisEvents.CRASH.invoker().onCrash(tardis);
-            // fixme }
+            tardis.getTravel().crash();
         }
 
         return true;

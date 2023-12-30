@@ -68,6 +68,8 @@ public class ClientTardisUtil {
         BlockPos console = tardis.getDesktop().getConsolePos();
         BlockPos pos = player.getBlockPos();
 
+        if (console == null) console = pos;
+
         return Math.sqrt(pos.getSquaredDistance(console));
     }
 }
