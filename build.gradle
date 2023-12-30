@@ -3,7 +3,7 @@ plugins {
 	id 'maven-publish'
 }
 
-version = project.mod_version + "+" + project.minecraft_version + "+FABRIC"
+version = project.mod_version/* + "+" + project.minecraft_version + "+FABRIC"*/
 group = project.maven_group
 
 base {
@@ -76,7 +76,7 @@ dependencies {
 
 
 	include "io.wispforest:owo-sentinel:${project.owo_version}"
-
+  
 	// change to modImplementation to play with ip, modCompileOnlyApi to not
 	modImplementation("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.ip_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
