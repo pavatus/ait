@@ -1,5 +1,7 @@
 package mdteam.ait;
 
+import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneInitHandler;
+import com.neptunedevelopmentteam.neptunelib.core.itemgroup.NeptuneItemGroup;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import io.wispforest.owo.itemgroup.Icon;
@@ -46,8 +48,9 @@ public class AITMod implements ModInitializer {
 
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
 
-    public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"),
-            () -> Icon.of(AITItems.TARDIS_ITEM.getDefaultStack())).build();
+//    public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"),
+//            () -> Icon.of(AITItems.TARDIS_ITEM.getDefaultStack())).build();
+    public static final NeptuneItemGroup AIT_ITEM_GROUP = new NeptuneItemGroup(new Identifier(AITMod.MOD_ID, "item_group"), AITItems.TARDIS_ITEM.getDefaultStack());
     public static final ComponentKey<RadioNBTComponent> RADIONBT =
             ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "radionbt"), RadioNBTComponent.class);
 
@@ -57,12 +60,12 @@ public class AITMod implements ModInitializer {
         DesktopRegistry.init();
         ExteriorRegistry.init();
 
-        FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
+        NeptuneInitHandler.register(AITItems.class, MOD_ID);
+        NeptuneInitHandler.register(AITBlocks.class, MOD_ID);
         FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
-        AIT_ITEM_GROUP.initialize();
+
 
         TardisUtil.init();
         TardisManager.getInstance();
@@ -127,6 +130,8 @@ public class AITMod implements ModInitializer {
 
             tardis.getHandlers().getInteriorChanger().queueInteriorChange(desktop);
         }));
+        AIT_ITEM_GROUP.initialize();
+        System.out.println(AIT_ITEM_GROUP.items);
     }
 
     public void entityAttributeRegister() {

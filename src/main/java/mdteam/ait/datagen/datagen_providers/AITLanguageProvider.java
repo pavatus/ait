@@ -1,5 +1,6 @@
 package mdteam.ait.datagen.datagen_providers;
 
+import com.neptunedevelopmentteam.neptunelib.core.itemgroup.NeptuneItemGroup;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import mdteam.ait.datagen.LanguageType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -53,8 +54,8 @@ public class AITLanguageProvider extends FabricLanguageProvider {
      * @param itemGroup   The item group to add the translation for.
      * @param translation The translation.
      */
-    public void addTranslation(OwoItemGroup itemGroup, String translation) {
-        translations.put(getTranslationKeyForOwoItemGroup(itemGroup), translation);
+    public void addTranslation(NeptuneItemGroup itemGroup, String translation) {
+        translations.put(getTranslationKeyForNeptuneItemGroup(itemGroup), translation);
     }
 
     /**
@@ -84,8 +85,8 @@ public class AITLanguageProvider extends FabricLanguageProvider {
      * @return The translation key for the item group
      */
 
-    private String getTranslationKeyForOwoItemGroup(OwoItemGroup itemGroup) {
-        return "itemGroup." + itemGroup.id().getNamespace() + "." + itemGroup.id().getPath();
+    private String getTranslationKeyForNeptuneItemGroup(NeptuneItemGroup itemGroup) {
+        return itemGroup.getTranslationKey();
     }
 
 }

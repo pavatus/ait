@@ -1,5 +1,8 @@
 package mdteam.ait.core;
 
+import com.neptunedevelopmentteam.neptunelib.core.blocksettings.NeptuneBlockSettings;
+import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneBlockInit;
+import com.neptunedevelopmentteam.neptunelib.core.itemsettings.NeptuneItemSettings;
 import mdteam.ait.AITMod;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
@@ -8,17 +11,14 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 
-public class AITBlocks implements BlockRegistryContainer {
+public class AITBlocks implements NeptuneBlockInit {
 
-    @NoBlockItem
-    public static final Block EXTERIOR_BLOCK = new ExteriorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing().luminance(7));
-    public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque().noCollision().noBlockBreakParticles());
-    public static final Block CONSOLE = new ConsoleBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing());
-    public static final Block CORAL_PLANT = new CoralPlantBlock(FabricBlockSettings.create().ticksRandomly().nonOpaque().noCollision());
-    @NoBlockItem
-    public static final Block RADIO = new RadioBlock(FabricBlockSettings.create().nonOpaque());
-    @Override
-    public BlockItem createBlockItem(Block block, String identifier) {
-        return new BlockItem(block, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-    }
+    public static final Block EXTERIOR_BLOCK = new ExteriorBlock(NeptuneBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing().luminance(7));
+    public static final Block DOOR_BLOCK = new DoorBlock(NeptuneBlockSettings.create().nonOpaque().noCollision().noBlockBreakParticles()
+            .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)));
+    public static final Block CONSOLE = new ConsoleBlock(NeptuneBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
+            .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)));
+    public static final Block CORAL_PLANT = new CoralPlantBlock(NeptuneBlockSettings.create().ticksRandomly().nonOpaque().noCollision()
+            .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)));
+    public static final Block RADIO = new RadioBlock(NeptuneBlockSettings.create().nonOpaque());
 }
