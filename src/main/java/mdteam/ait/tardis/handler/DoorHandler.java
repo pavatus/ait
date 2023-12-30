@@ -1,11 +1,15 @@
 package mdteam.ait.tardis.handler;
 
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.entities.BaseControlEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.advancement.TardisCriterions;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.TardisUtil;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -13,11 +17,14 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3d;
 
 import java.util.UUID;
 
-import static mdteam.ait.tardis.TardisTravel.State.LANDED;
+import static mdteam.ait.tardis.TardisTravel.State.*;
 
 public class DoorHandler extends TardisLink {
     private boolean locked, left, right;
@@ -27,6 +34,36 @@ public class DoorHandler extends TardisLink {
 
     public DoorHandler(UUID tardis) {
         super(tardis);
+    }
+
+    @Override
+    public void tick(MinecraftServer server) {
+        super.tick(server);
+
+        if (shouldSucc()) this.succ();
+    }
+
+    /**
+     * Moves entities in the Tardis interior towards the door.
+     */
+    private void succ() {
+        // Get all entities in the Tardis interior
+        TardisUtil.getEntitiesInInterior(tardis())
+                .stream()
+                .filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
+                .filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
+                .forEach(entity -> {
+                    // Calculate the motion vector away from the door
+                    Vec3d motion = this.getDoorPos().toCenterPos().subtract(entity.getPos()).normalize().multiply(0.1);
+
+                    // Apply the motion to the entity
+                    entity.setVelocity(entity.getVelocity().add(motion));
+                    entity.velocityDirty = true;
+                    entity.velocityModified = true;
+                });
+    }
+    private boolean shouldSucc() {
+        return tardis().getTravel().getState() == FLIGHT && this.isOpen();
     }
 
     // Remember to markDirty for these setters!!
@@ -188,7 +225,7 @@ public class DoorHandler extends TardisLink {
             return false;
         }
 
-        if (tardis.getTravel().getState() != LANDED)
+        if (tardis.getTravel().getState() == DEMAT || tardis.getTravel().getState() == MAT)
             return false;
 
         DoorHandler door = tardis.getDoor();
@@ -234,7 +271,7 @@ public class DoorHandler extends TardisLink {
         if (tardis.getLockedTardis() == locked) return true;
 
         if (!forced) {
-            if (tardis.getTravel().getState() != LANDED) return false;
+            if (tardis.getTravel().getState() == DEMAT || tardis.getTravel().getState() == MAT) return false;
         }
         tardis.setLockedTardis(locked);
 
