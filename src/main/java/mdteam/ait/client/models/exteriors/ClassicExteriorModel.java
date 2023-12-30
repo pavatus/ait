@@ -1,6 +1,7 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
@@ -9,6 +10,8 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 
 // Made with Blockbench 4.9.2
 // Exported for Minecraft version 1.17+ for Yarn
@@ -96,6 +99,9 @@ public class ClassicExteriorModel extends ExteriorModel {
 		/*this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
 		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
+		if (DependencyChecker.hasPortals())
+			this.getPart().getChild("Doors").visible = exterior.tardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
+
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
 		matrices.pop();
@@ -120,5 +126,26 @@ public class ClassicExteriorModel extends ExteriorModel {
 		super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 
 		matrices.pop();
+	}
+
+	@Override
+	public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+		return switch (direction) {
+			case DOWN, UP -> pos;
+			case NORTH -> pos.add(0,0.2,0.48);
+			case SOUTH -> pos.add(0,0.2,-0.48);
+			case WEST -> pos.add(0.48,0.2,0);
+			case EAST -> pos.add(-0.48,0.2,0);
+		};
+	}
+
+	@Override
+	public double portalHeight() {
+		return 2.4d;
+	}
+
+	@Override
+	public double portalWidth() {
+		return 1.2d;
 	}
 }
