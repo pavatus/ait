@@ -67,7 +67,9 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         if (console != null) {
             console.animateTile(entity);
             console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
-            console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(variant.emission())), maxLight, overlay, 1, 1, 1, 1);
+
+            if (!entity.getTardis().getHandlers().getFuel().isOutOfFuel())
+                console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(variant.emission())), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }
