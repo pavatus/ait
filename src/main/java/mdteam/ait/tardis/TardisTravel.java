@@ -6,11 +6,11 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.control.impl.RandomiserControl;
 import mdteam.ait.tardis.control.impl.pos.PosManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.TardisLink;
-import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -18,7 +18,6 @@ import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -128,7 +127,28 @@ public class TardisTravel extends TardisLink {
         }
         return true;
     }*/
+    
+    public static String getMaterialiseDelayId(Tardis tardis) {
+        return tardis.getUuid().toString() + "_materialise_delay";
+    }
+    public static String getDematerialiseDelayId(Tardis tardis) {
+        return tardis.getUuid().toString() + "_dematerialise_delay";
+    }
 
+    public static boolean isMaterialiseOnCooldown(Tardis tardis) {
+        return DeltaTimeManager.isStillWaitingOnDelay(getMaterialiseDelayId(tardis));
+    }
+    public static boolean isDematerialiseOnCooldown(Tardis tardis) {
+        return DeltaTimeManager.isStillWaitingOnDelay(getDematerialiseDelayId(tardis));
+    }
+
+    public static void createMaterialiseDelay(Tardis tardis) {
+        DeltaTimeManager.createDelay(getMaterialiseDelayId(tardis), 2000L);
+    }
+    public static void createDematerialiseDelay(Tardis tardis) {
+        DeltaTimeManager.createDelay(getDematerialiseDelayId(tardis), 2000L);
+    }
+    
     public void crash() {
         if (this.getState() != TardisTravel.State.FLIGHT) return;
         // randomise and force land @todo something better ive got no ideas at 1am loqor
@@ -171,24 +191,19 @@ public class TardisTravel extends TardisLink {
         ServerWorld world = (ServerWorld) this.getDestination().getWorld();
         world.getChunk(this.getDestination());
 
-        // Check if the Tardis is already present at this location before materializing it there
-        AbsoluteBlockPos.Directed currentPosition = this.tardis().getTravel().getPosition();
-        if (!currentPosition.equals(this.getDestination())) {
-            if (!this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND))) {
-                // Not safe to land here!
-                this.getDestination().getWorld().playSound(null, this.getDestination(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
+        createMaterialiseDelay(this.getTardis());
 
-                if (TardisUtil.isInteriorEmpty(tardis()))
-                    TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
+        // fixme where does this go?
+        if (TardisEvents.MAT.invoker().onMat(getTardis())) {
+            // mat will be cancelled
+            this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
-                TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!")); // fixme translatable
-                return;
-            }
-        } /*else {
-            // If the Tardis is already present at this location, do not proceed with any further operations
+            if (TardisUtil.isInteriorNotEmpty(tardis()))
+                TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
+
+            TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!")); // fixme translatable
             return;
-        } */
-        // we cant do that ^ bc the position does not get changed when we enter flight
+        }
 
         DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
@@ -242,19 +257,19 @@ public class TardisTravel extends TardisLink {
 
         DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
-        if (PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
-            // fail to take off when handbrake is on
+        createDematerialiseDelay(this.getTardis());
+
+        // fixme where does this go?
+        if (TardisEvents.DEMAT.invoker().onDemat(getTardis())) {
+            // demat will be cancelled
             this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
-            if (TardisUtil.isInteriorEmpty(tardis()))
+            if (TardisUtil.isInteriorNotEmpty(tardis()))
                 TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
 
             TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to takeoff!")); // fixme translatable
             return;
         }
-
-        // fixme where does this go?
-        TardisEvents.DEMAT.invoker().onDemat(getTardis());
 
         this.setState(State.DEMAT);
 

@@ -20,7 +20,6 @@ import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -403,7 +402,7 @@ public class TardisUtil {
         return list;
     }
 
-    public static boolean isInteriorEmpty(Tardis tardis) {
+    public static boolean isInteriorNotEmpty(Tardis tardis) {
         return TardisUtil.getPlayerInsideInterior(tardis) != null;
     }
 
