@@ -42,6 +42,7 @@ public class DoorHandler extends TardisLink {
         super.tick(server);
 
         if (shouldSucc()) this.succ();
+        if (locked() && isOpen()) closeDoors();
     }
 
     /**
