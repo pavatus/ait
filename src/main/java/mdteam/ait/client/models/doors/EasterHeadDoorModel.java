@@ -16,7 +16,7 @@ public class EasterHeadDoorModel extends DoorModel {
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData bottom = modelPartData.addChild("bottom", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+		ModelPartData bottom = modelPartData.addChild("bottom", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 54.0F, 0.0F));
 
 		ModelPartData cube_r1 = bottom.addChild("cube_r1", ModelPartBuilder.create().uv(0, 0).cuboid(-12.0F, 30.0F, -12.0F, 24.0F, 14.0F, 24.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -3.1416F));
 

@@ -1,6 +1,7 @@
 package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITEntityTypes;
@@ -256,6 +257,20 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         markNeedsControl();
     }
 
+
+
+    // fixme idk bro
+    @Nullable
+    public ConsoleControlEntity getControlEntityFromName(String id) {
+        if(controlEntities == null) return null;
+        for(ConsoleControlEntity consoleControlEntity : controlEntities) {
+            if(consoleControlEntity.getIdentity().equals(id)) {
+                return consoleControlEntity;
+            }
+        }
+        return null;
+    }
+
     public static ConsoleSchema nextConsole(ConsoleSchema current) {
         List<ConsoleSchema> list = ConsoleRegistry.REGISTRY.stream().toList();
 
@@ -299,9 +314,10 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             return;
         TardisTravel.State state = this.getTardis().getTravel().getState();
 
-        if (!ANIM_FLIGHT.isRunning()) {
-            ANIM_FLIGHT.start(animationTimer);
-        }
+        ANIM_FLIGHT.startIfNotRunning(animationTimer);
+        /*for(int i = 0; i < animationStates.size(); i++) {
+            animationStates.get(i).startIfNotRunning(animationTimer);
+        }*/
     }
 
     private void stopAllAnimations() {

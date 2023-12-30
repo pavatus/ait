@@ -88,6 +88,13 @@ public class ConsoleControlEntity extends BaseControlEntity {
         this.dataTracker.set(HEIGHT, height);
     }
 
+
+    // fixme idk i added it i dunno if it'll work it didnt crash when i tried it so
+    public Control getControl() {
+        if(control == null) return null;
+        return control;
+    }
+
     public Vector3f getOffset() {
         return this.dataTracker.get(OFFSET);
     }
