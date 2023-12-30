@@ -2,6 +2,7 @@ package mdteam.ait.tardis.handler;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.TardisDesktopSchema;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -95,6 +96,11 @@ public class InteriorChangingHandler extends TardisLink {
             if (getTicks() > 0) setTicks(0);
             return;
         }
+
+        if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
+            tardis().getTravel().crash();
+        }
+        if (!tardis().getHandlers().getAlarms().isEnabled()) tardis().getHandlers().getAlarms().enable();
 
         if (!isInteriorEmpty()) {
             warnPlayers();

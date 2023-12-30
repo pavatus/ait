@@ -1,14 +1,15 @@
 package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.api.tardis.TardisEvents;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.util.ForcedChunkUtil;
+import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.Corners;
-import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -70,7 +71,20 @@ public class TardisDesktop {
     }
 
     public AbsoluteBlockPos.Directed getConsolePos() {
+        // if (consolePos == null) searchForConsole();
+
         return consolePos;
+    }
+
+    private void searchForConsole() {
+        // here comes the lag dodododo
+        for (BlockPos pos : BlockPos.iterate(getCorners().getFirst(), getCorners().getSecond())) {
+            if (TardisUtil.getTardisDimension().getBlockEntity(pos) instanceof ConsoleBlockEntity found) {
+                // WE FOUND IT!!!
+                this.setConsolePos(new AbsoluteBlockPos.Directed(found.getPos(), found.getWorld(), Direction.NORTH));
+                return;
+            }
+        }
     }
 
     public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
@@ -82,6 +96,8 @@ public class TardisDesktop {
 
     public void setConsolePos(AbsoluteBlockPos.Directed pos) {
         this.consolePos = pos;
+        if (tardis != null)
+            tardis.markDirty();
     }
 
     public Corners getCorners() {

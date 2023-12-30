@@ -27,6 +27,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -394,6 +395,10 @@ public class TardisUtil {
         }
 
         return list;
+    }
+
+    public static List<LivingEntity> getEntitiesInInterior(Tardis tardis) {
+        return getTardisDimension().getEntitiesByClass(LivingEntity.class, new Box(tardis.getDoor().getDoorPos().north(20).east(20).up(20), tardis.getDoor().getDoorPos().south(20).west(20).down(20)), (e) -> true);
     }
 
     public static List<PlayerEntity> getPlayersInInterior(Corners corners) {
