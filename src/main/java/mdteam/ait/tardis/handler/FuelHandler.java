@@ -29,12 +29,14 @@ public class FuelHandler extends TardisLink {
     }
 
     public void setFuelCount(double fuel) {
+        double prev = getFuel();
+
         PropertiesHandler.set(tardis().getHandlers().getProperties(), FUEL_COUNT, fuel);
         tardis().markDirty();
 
         // fire the event if ran out of fuel
-        // this may get ran multiple times though
-        if (isOutOfFuel() && fuel <= 0) {
+        // this may get ran multiple times though for some reason
+        if (isOutOfFuel() && prev != 0) {
             TardisEvents.OUT_OF_FUEL.invoker().onNoFuel(tardis());
         }
     }
@@ -86,7 +88,11 @@ public class FuelHandler extends TardisLink {
         }
         if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay")) {
             DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay", 500L);
-            removeFuel(1);
+            removeFuel(3);
+        }
+        if (tardis().getTravel().getState() == TardisTravel.State.LANDED && !isRefueling() && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay")) {
+            DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay", 500L);
+            removeFuel(0.25);
         }
         if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT && this.getFuel() == 0) {
             tardis().getTravel().crash(); // hehe force land if you don't have enough fuel

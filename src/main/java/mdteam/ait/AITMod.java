@@ -36,6 +36,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
@@ -130,6 +131,12 @@ public class AITMod implements ModInitializer {
                 TardisCriterions.CRASH.trigger((ServerPlayerEntity) player);
             }
         }));
+
+        TardisEvents.OUT_OF_FUEL.register((tardis) -> {
+            if (tardis.getDesktop().getConsolePos() != null) {
+                TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+            }
+        });
 
         ServerPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.ASK, ((server, player, handler, buf, responseSender) -> {
             if (player.getServerWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
