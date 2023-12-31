@@ -5,11 +5,11 @@ import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.desktops.textures.DesktopPreviewTexture;
 import net.minecraft.util.Identifier;
 
-public class CopperDesktop extends TardisDesktopSchema {
+public class NewburyDesktop extends TardisDesktopSchema {
 
-    public CopperDesktop() {
-        super(new Identifier(AITMod.MOD_ID, "copper"), new DesktopPreviewTexture(
-                DesktopPreviewTexture.pathFromDesktopId(new Identifier(AITMod.MOD_ID, "copper")),
+    public NewburyDesktop() {
+        super(new Identifier(AITMod.MOD_ID, "newbury"), new DesktopPreviewTexture(
+                DesktopPreviewTexture.pathFromDesktopId(new Identifier(AITMod.MOD_ID, "newbury")),
                 1024,
                 1024
         ));

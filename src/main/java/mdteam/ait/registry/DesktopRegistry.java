@@ -24,6 +24,7 @@ public class DesktopRegistry {
     public static TardisDesktopSchema PRISTINE;
     public static TardisDesktopSchema REGAL;
     public static TardisDesktopSchema TYPE_40;
+    public static TardisDesktopSchema NEWBURY;
     public static TardisDesktopSchema VICTORIAN;
     public static TardisDesktopSchema WAR;
     public static TardisDesktopSchema CRYSTALLINE;
@@ -39,6 +40,7 @@ public class DesktopRegistry {
         OFFICE = register(new OfficeDesktop());
         REGAL = register(new RegalDesktop());
         TYPE_40 = register(new Type40Desktop());
+        NEWBURY = register(new NewburyDesktop());
         VICTORIAN = register(new VictorianDesktop());
         WAR = register(new WarDesktop());
         PRISTINE = register(new PristineDesktop());
