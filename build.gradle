@@ -62,7 +62,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation "io.wispforest:owo-lib:${project.owo_version}"
+	//modImplementation "io.wispforest:owo-lib:${project.owo_version}"
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_version}"
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_version}"
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-level:${project.cardinal_version}"
@@ -70,7 +70,7 @@ dependencies {
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-block:${project.cardinal_version}"
 	modImplementation "com.github.Neptune-Development-Group:neptunelib:${project.neptunelib_version}" // NeptuneLib is made by Creativious DM him on discord if you have a problem
 
-	annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
+	//annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
 	include "com.github.Neptune-Development-Group:neptunelib:${project.neptunelib_version}" // NeptuneLib is made by Creativious DM him on discord if you have a problem
 	include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_version}"
 	include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_version}"
@@ -79,7 +79,7 @@ dependencies {
 	include "dev.onyxstudios.cardinal-components-api:cardinal-components-block:${project.cardinal_version}"
 
 
-	include "io.wispforest:owo-sentinel:${project.owo_version}"
+	//include "io.wispforest:owo-sentinel:${project.owo_version}"
 
 	// change to modImplementation to play with ip, modCompileOnlyApi to not play with ip
 	/*modImplementation*/modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.ip_version}") {

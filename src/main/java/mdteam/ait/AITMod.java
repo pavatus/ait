@@ -49,9 +49,6 @@ public class AITMod implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
 
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad(); // if this doesnt exist for you run data gen
-
-//    public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"),
-//            () -> Icon.of(AITItems.TARDIS_ITEM.getDefaultStack())).build();
     public static final NeptuneItemGroup AIT_ITEM_GROUP = new NeptuneItemGroup(new Identifier(AITMod.MOD_ID, "item_group"), AITItems.TARDIS_ITEM.getDefaultStack());
     public static final ComponentKey<RadioNBTComponent> RADIONBT =
             ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "radionbt"), RadioNBTComponent.class);
