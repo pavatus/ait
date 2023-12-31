@@ -231,11 +231,12 @@ public class ServerTardisManager extends TardisManager {
         if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
         MinecraftServer mc = TardisUtil.getServer();
 
-        if(!this.subscribers.isEmpty()) {
-            for (UUID uuid : this.subscribers.get(tardis.getUuid())) {
-                ServerPlayerEntity player = mc.getPlayerManager().getPlayer(uuid);
-                this.sendTardis(player, tardis);
-            }
+        Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);
+        List<UUID> tardisSubscribers = subscribersCopy.getOrDefault(tardis.getUuid(), Collections.emptyList());
+
+        for (UUID uuid : tardisSubscribers) {
+            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(uuid);
+            this.sendTardis(player, tardis);
         }
     }
 
