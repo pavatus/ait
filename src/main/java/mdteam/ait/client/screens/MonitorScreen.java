@@ -6,6 +6,8 @@ import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
+import mdteam.ait.client.screens.interior.InteriorSelectScreen;
+import mdteam.ait.client.screens.interior.InteriorSettingsScreen;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.registry.ExteriorRegistry;
@@ -124,9 +126,7 @@ public class MonitorScreen extends TardisScreen {
             whichDirectionVariant(true);
         }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 + 12), (height / 2 + 38),
-                this.textRenderer.getWidth("Change Interior"), 10, Text.literal("Change Interior").formatted(Formatting.AQUA), button -> {
-            toInteriorChangeScreen();
-        }, this.textRenderer));
+                this.textRenderer.getWidth("Desktop Settings"), 10, Text.literal("Desktop Settings").formatted(Formatting.AQUA), button -> toInteriorSettingsScreen(), this.textRenderer));
         this.buttons.forEach(buttons -> {
             // buttons.visible = false;
             buttons.active = true;
@@ -146,8 +146,8 @@ public class MonitorScreen extends TardisScreen {
         }
     }
 
-    public void toInteriorChangeScreen() {
-        MinecraftClient.getInstance().setScreenAndRender(new InteriorSelectScreen(this.tardisId, this));
+    public void toInteriorSettingsScreen() {
+        MinecraftClient.getInstance().setScreenAndRender(new InteriorSettingsScreen(this.tardisId, this));
     }
 
     public void whichDirectionExterior(boolean direction) {

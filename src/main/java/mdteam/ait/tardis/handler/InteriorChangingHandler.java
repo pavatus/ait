@@ -57,18 +57,20 @@ public class InteriorChangingHandler extends TardisLink {
     }
 
     public void queueInteriorChange(TardisDesktopSchema schema) {
+        if (tardis().getHandlers().getFuel().isOutOfFuel()) return;
+
         setQueuedInterior(schema);
         setTicks(0);
         setGenerating(true);
         tardis().getHandlers().getAlarms().enable();
         tardis().getDesktop().setConsolePos(null);
+        tardis().removeFuel(20);
         tardis().markDirty();
     }
 
     private void onCompletion() {
         setGenerating(false);
         tardis().getHandlers().getAlarms().disable();
-        tardis().removeFuel(20);
         DoorHandler.lockTardis(PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis(), null, false);
     }
 
@@ -101,6 +103,12 @@ public class InteriorChangingHandler extends TardisLink {
             tardis().getTravel().crash();
         }
         if (!tardis().getHandlers().getAlarms().isEnabled()) tardis().getHandlers().getAlarms().enable();
+
+        if (tardis().getHandlers().getFuel().isOutOfFuel()) {
+            setGenerating(false);
+            tardis().getHandlers().getAlarms().disable();
+            return;
+        }
 
         if (!isInteriorEmpty()) {
             warnPlayers();

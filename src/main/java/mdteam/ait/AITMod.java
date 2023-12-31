@@ -22,7 +22,9 @@ import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.advancement.TardisCriterions;
 import mdteam.ait.tardis.handler.InteriorChangingHandler;
+import mdteam.ait.tardis.handler.ServerHumHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.sound.HumSound;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
@@ -59,6 +61,7 @@ public class AITMod implements ModInitializer {
         ConsoleRegistry.init();
         DesktopRegistry.init();
         ExteriorRegistry.init();
+        HumsRegistry.init();
 
         // These 3 have client registries which also need registering to.
         ConsoleVariantRegistry.init();
@@ -89,7 +92,7 @@ public class AITMod implements ModInitializer {
             UnlockInteriorsCommand.register(dispatcher);
             SummonTardisCommand.register(dispatcher);
             SetLockedCommand.register(dispatcher);
-            SetHumCommand.register(dispatcher);
+            // SetHumCommand.register(dispatcher);
             ToggleHumCommand.register(dispatcher);
             ToggleAlarmCommand.register(dispatcher);
             RiftChunkCommand.register(dispatcher);
@@ -158,6 +161,16 @@ public class AITMod implements ModInitializer {
 
             tardis.getHandlers().getInteriorChanger().queueInteriorChange(desktop);
         }));
+
+        ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE, ((server, player, handler, buf, responseSender) -> {
+            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+            HumSound hum = HumSound.fromName(buf.readString(), buf.readString());
+
+            if (tardis == null || hum == null) return;
+
+            tardis.getHandlers().getHum().setHum(hum);
+        }));
+
         AIT_ITEM_GROUP.initialize();
         System.out.println(AIT_ITEM_GROUP.items);
     }

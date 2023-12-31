@@ -7,12 +7,15 @@ import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.handler.ServerHumHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.sound.HumSound;
 import mdteam.ait.tardis.util.SoundHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
@@ -47,7 +50,7 @@ public class ClientHumHandler extends SoundHandler {
 
     public LoopingSound getHum() {
         if (this.current == null) {
-            this.current = (LoopingSound) findSoundByEvent(this.tardis().getHandlers().getHum().getHum());
+            this.current = (LoopingSound) findSoundByEvent(this.tardis().getHandlers().getHum().getHum().sound());
         }
 
         return this.current;
@@ -59,6 +62,15 @@ public class ClientHumHandler extends SoundHandler {
         this.current = hum;
 
         this.stopSound(previous);
+    }
+
+    public void setServersHum(HumSound hum) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(this.tardis().getUuid());
+        buf.writeString(hum.id().getNamespace());
+        buf.writeString(hum.name());
+
+        ClientPlayNetworking.send(ServerHumHandler.RECEIVE, buf);
     }
 
     public static ClientHumHandler create() {

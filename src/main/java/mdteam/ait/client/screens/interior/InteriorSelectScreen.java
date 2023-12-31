@@ -1,6 +1,7 @@
-package mdteam.ait.client.screens;
+package mdteam.ait.client.screens.interior;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.screens.TardisScreen;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.UUID;
 import static mdteam.ait.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
 
 public class InteriorSelectScreen extends TardisScreen {
-    private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/interior.png");
+    private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/interior_select.png");
     int bgHeight = 166;
     int bgWidth = 256;
     int left, top;
@@ -30,7 +32,7 @@ public class InteriorSelectScreen extends TardisScreen {
 
     // loqor DONT rewrite with owo lib : (
     public InteriorSelectScreen(UUID tardis, Screen parent) {
-        super(Text.translatable("screen." + AITMod.MOD_ID + ".interior"), tardis);
+        super(Text.translatable("screen." + AITMod.MOD_ID + ".interior_select"), tardis);
         this.parent = parent;
         updateTardis();
     }
@@ -42,7 +44,7 @@ public class InteriorSelectScreen extends TardisScreen {
 
     @Override
     protected void init() {
-        this.selectedDesktop = findFirstSchema();
+        this.selectedDesktop = tardis().getDesktop().getSchema();
         this.top = (this.height - this.bgHeight) / 2; // this means everythings centered and scaling, same for below
         this.left = (this.width - this.bgWidth) / 2;
         this.createButtons();
@@ -57,8 +59,8 @@ public class InteriorSelectScreen extends TardisScreen {
     private void createButtons() {
         this.addButton(
                 new PressableTextWidget(
-                        (int) (left + (bgWidth * 0.1f)),
-                        (int) (top + (bgHeight * 0.3f)),
+                        (int) (left + (bgWidth * 0.3)) - (textRenderer.getWidth("<") / 2),
+                        (int) (top + (bgHeight * 0.85f)),
                         this.textRenderer.getWidth("<"),
                         10,
                         Text.literal("<"),
@@ -68,8 +70,8 @@ public class InteriorSelectScreen extends TardisScreen {
         );
         this.addButton(
                 new PressableTextWidget(
-                        (int) (left + (bgWidth * 0.38f)),
-                        (int) (top + (bgHeight * 0.3f)),
+                        (int) (left + (bgWidth * 0.7f)) - (textRenderer.getWidth(">") / 2),
+                        (int) (top + (bgHeight * 0.85f)),
                         this.textRenderer.getWidth(">"),
                         10,
                         Text.literal(">"),
@@ -79,8 +81,8 @@ public class InteriorSelectScreen extends TardisScreen {
         );
         this.addButton(
                 new PressableTextWidget(
-                        (int) (left + (bgWidth * 0.25f)) - (textRenderer.getWidth("apply") / 2),
-                        (int) (top + (bgHeight * 0.4f)),
+                        (int) (left + (bgWidth * 0.5f)) - (textRenderer.getWidth("apply") / 2),
+                        (int) (top + (bgHeight * 0.91f)),
                         this.textRenderer.getWidth("apply"),
                         10,
                         Text.literal("apply"),
@@ -90,11 +92,11 @@ public class InteriorSelectScreen extends TardisScreen {
         );
         this.addButton(
                 new PressableTextWidget(
-                        (int) (left + (bgWidth * 0.25f)) - (textRenderer.getWidth("apply") / 2),
-                        (int) (top + (bgHeight * 0.5f)),
-                        this.textRenderer.getWidth("back"),
+                        (int) (left + (bgWidth * 0.03f)) - (textRenderer.getWidth("<") / 2),
+                        (int) (top + (bgHeight * 0.03f)),
+                        this.textRenderer.getWidth("<"),
                         10,
-                        Text.literal("back"),
+                        Text.literal("<").formatted(Formatting.RED),
                         button -> backToExteriorChangeScreen(),
                         this.textRenderer
                 )
@@ -168,11 +170,11 @@ public class InteriorSelectScreen extends TardisScreen {
         context.drawCenteredTextWithShadow(
             this.textRenderer,
             this.selectedDesktop.name(),
-            (int) (left + (bgWidth * 0.25f)),
-            (int) (top + (bgHeight * 0.3f)),
+            (int) (left + (bgWidth * 0.5f)),
+            (int) (top + (bgHeight * 0.85f)),
             0xadcaf7
         );
 
-        context.drawTexture(this.selectedDesktop.previewTexture().texture(), left + 119, top + 20,128,128,0,0, this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2,this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2);
+        context.drawTexture(this.selectedDesktop.previewTexture().texture(), left + 63, top + 9,128,128,0,0, this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2,this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2);
     }
 }
