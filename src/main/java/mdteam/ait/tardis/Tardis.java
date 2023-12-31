@@ -115,7 +115,8 @@ public class Tardis {
     public double getFuel() {
         return this.getHandlers().getFuel().getFuel();
     }
-    public void setFuelCount(int i) {
+
+    public void setFuelCount(double i) {
         this.getHandlers().getFuel().setFuelCount(i);
     }
     public boolean isRefueling() {

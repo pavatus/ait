@@ -2,6 +2,7 @@ package mdteam.ait.core.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -9,6 +10,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import mdteam.ait.AITMod;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.handler.FuelHandler;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.UuidArgumentType;
@@ -30,7 +32,7 @@ public class SetFuelCommand {
         dispatcher.register(literal(AITMod.MOD_ID)
                 .then(literal("set_fuel").requires(source -> source.hasPermissionLevel(2))
                         .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-                                .then(argument("amount", IntegerArgumentType.integer(0, 5000))
+                                .then(argument("amount", DoubleArgumentType.doubleArg(0, FuelHandler.TARDIS_MAX_FUEL))
                                         .executes(SetFuelCommand::runCommand)))));
     }
 
@@ -38,9 +40,9 @@ public class SetFuelCommand {
         ServerPlayerEntity source = context.getSource().getPlayer();
         Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
         if (tardis == null || source == null) return 0;
-        int fuelAmount = IntegerArgumentType.getInteger(context, "amount");
+        double fuelAmount = DoubleArgumentType.getDouble(context, "amount");
         tardis.setFuelCount(fuelAmount);
-        source.sendMessage(Text.literal("Set fuel for [" + tardis.getUuid() + "] to: [" + fuelAmount + ".0au]"), true);
+        source.sendMessage(Text.literal("Set fuel for [" + tardis.getUuid() + "] to: [" + fuelAmount + "au]"), true);
         return Command.SINGLE_SUCCESS;
     }
 
