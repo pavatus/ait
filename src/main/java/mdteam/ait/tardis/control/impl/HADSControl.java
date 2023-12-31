@@ -9,19 +9,26 @@ import net.minecraft.text.Text;
 
 public class HADSControl extends Control {
     public HADSControl() {
-        super("protocol_81419");
+        super(/*"protocol_81419"*/"alarms");
     }
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
 
-        PropertiesHandler.setBool(tardis.getHandlers().getProperties(),
+        /*PropertiesHandler.setBool(tardis.getHandlers().getProperties(),
                 PropertiesHandler.HADS_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED));
 
         tardis.markDirty();
 
         player.sendMessage(Text.literal("Protocol 81419: " + (PropertiesHandler.getBool(tardis.getHandlers().getProperties(),
                         PropertiesHandler.HADS_ENABLED) ? "ENABLED" : "DISABLED")), true);
+
+        return true;*/
+        PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED));
+
+        tardis.markDirty();
+
+        player.sendMessage(Text.literal("Alarms: " + (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED) ? "Enabled" : "Disabled")), true);
 
         return true;
     }
