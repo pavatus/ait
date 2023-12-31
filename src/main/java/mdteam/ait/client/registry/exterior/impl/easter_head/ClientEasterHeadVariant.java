@@ -30,6 +30,6 @@ public abstract class ClientEasterHeadVariant extends ClientExteriorVariantSchem
 
     @Override
     public Identifier emission() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_emission" + ".png");
+        return null;
     }
 }
