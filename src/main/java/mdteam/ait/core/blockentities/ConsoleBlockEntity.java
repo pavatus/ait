@@ -289,20 +289,6 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         markNeedsControl();
     }
 
-
-
-    // fixme idk bro
-    @Nullable
-    public ConsoleControlEntity getControlEntityFromName(String id) {
-        if(controlEntities == null) return null;
-        for(ConsoleControlEntity consoleControlEntity : controlEntities) {
-            if(consoleControlEntity.getIdentity().equals(id)) {
-                return consoleControlEntity;
-            }
-        }
-        return null;
-    }
-
     public static ConsoleSchema nextConsole(ConsoleSchema current) {
         List<ConsoleSchema> list = ConsoleRegistry.REGISTRY.stream().toList();
 
@@ -347,20 +333,9 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
         animationTimer++;
 
-        if (this.getTardis() == null)
-            return;
-        TardisTravel.State state = this.getTardis().getTravel().getState();
-
         ANIM_FLIGHT.startIfNotRunning(animationTimer);
-        /*for(int i = 0; i < animationStates.size(); i++) {
-            animationStates.get(i).startIfNotRunning(animationTimer);
-        }*/
     }
 
-    private void stopAllAnimations() {
-        // DO NOT RUN ON SERVER
-        ANIM_FLIGHT.stop();
-    }
 
     public void onBroken() {
         this.killControls();
@@ -370,7 +345,6 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         controlEntities.forEach(Entity::discard);
         controlEntities.clear();
         sync();
-        //System.out.println("KillControls(): I'm getting run :) somewhere..");
     }
 
     public void spawnControls() {
@@ -425,26 +399,9 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             this.markRemoved();
         }
 
-        this.timeInSeconds++;
-        if (this.hasSecondPassed() && this.getTardis() != null && PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(),PropertiesHandler.ALARM_ENABLED)) {
-            this.timeInSeconds = 0;
-            this.spawnSmokeParticle(world, pos);
-        }
-
         // idk
         if (world.isClient()) {
             this.checkAnimations();
-        }
-    }
-
-    public boolean hasSecondPassed() {
-        return this.timeInSeconds >= 20;
-    }
-
-    private void spawnSmokeParticle(World world, BlockPos pos) {
-        if (world instanceof ServerWorld serverWorld) {
-            Vec3d vec3d = Vec3d.ofBottomCenter(pos).add(0.0, 1.2f, 0.0);
-            serverWorld.spawnParticles(ParticleTypes.SMOKE, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 10, NaN, 0.0, 0.0, 1.0F);
         }
     }
 
