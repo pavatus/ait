@@ -273,7 +273,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
             if (this.control == null) {
                 if (this.consoleBlockPos != null) {
                     if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
-                        console.markNeedsControl();
+                        console.markDirty();
                     }
                     discard();
                 }
