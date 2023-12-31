@@ -8,6 +8,7 @@ import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.Portal;
@@ -103,6 +104,9 @@ public class PortalsHandler {
         portal.setDestination(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
 
         portal.getWorld().spawnEntity(portal);
+
+        ((ITardisPortal) portal).setTardis(tardis);
+
         return portal;
     }
     private static Portal createInteriorPortal(Tardis tardis) {
@@ -130,6 +134,9 @@ public class PortalsHandler {
         portal.setDestinationDimension(exteriorPos.getWorld().getRegistryKey());
         portal.setDestination(new Vec3d(exteriorAdjust.getX() + 0.5, exteriorAdjust.getY() + 1, exteriorAdjust.getZ() + 0.5));
         portal.getWorld().spawnEntity(portal);
+
+        ((ITardisPortal) portal).setTardis(tardis);
+
         return portal;
     }
 
