@@ -2,6 +2,8 @@ package mdteam.ait.core.blocks;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.AITDamageTypes;
+import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.CoralBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.registry.DesktopRegistry;
@@ -93,14 +95,26 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         }
 
         if (this.getAge(state) >= this.getMaxAge()) {
-            // Create a new tardis
-            ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), ExteriorRegistry.REGISTRY.get(CapsuleExterior.REFERENCE), ExteriorVariantRegistry.REGISTRY.get(new Identifier(AITMod.MOD_ID, "capsule_default")), DesktopRegistry.CAVE, false);
-            // created.getHandlers().getOvergrownHandler().setOvergrown(true); //fixme created.getEnvironmentHandler().setCoralCovered(true);
-
-            LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world);
-            lightning.setPos(pos.getX(),pos.getY(),pos.getZ());
-            world.spawnEntity(lightning);
+            if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
+                createTardis(world, pos);
+            } else {
+                createConsole(world, pos);
+            }
         }
+    }
+
+    private void createConsole(ServerWorld world, BlockPos pos) {
+        world.setBlockState(pos,AITBlocks.CONSOLE.getDefaultState());
+    }
+
+    private void createTardis(ServerWorld world, BlockPos pos) {
+        // Create a new tardis
+        ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), ExteriorRegistry.REGISTRY.get(CapsuleExterior.REFERENCE), ExteriorVariantRegistry.REGISTRY.get(new Identifier(AITMod.MOD_ID, "capsule_default")), DesktopRegistry.CAVE, false);
+        // created.getHandlers().getOvergrownHandler().setOvergrown(true); //fixme created.getEnvironmentHandler().setCoralCovered(true);
+
+        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world);
+        lightning.setPos(pos.getX(),pos.getY(),pos.getZ());
+        world.spawnEntity(lightning);
     }
 
     @Override
@@ -108,7 +122,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         super.onPlaced(world, pos, state, placer, itemStack);
 
         if (!(world instanceof ServerWorld)) return;
-        if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) || !TardisUtil.isRiftChunk((ServerWorld) world,pos)) {
+        if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) || (!TardisUtil.isRiftChunk((ServerWorld) world,pos) && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
             // GET IT OUTTA HERE!!!
             world.breakBlock(pos, true);
             world.removeBlockEntity(pos);
