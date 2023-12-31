@@ -10,7 +10,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.util.Identifier;
-@Environment(EnvType.CLIENT)
+
 public class DoorRegistry {
     public static final SimpleRegistry<DoorSchema> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<DoorSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "door"))).buildAndRegister();
     public static DoorSchema register(DoorSchema schema) {

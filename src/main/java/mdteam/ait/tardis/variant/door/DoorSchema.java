@@ -4,6 +4,8 @@ import com.google.gson.*;
 import mdteam.ait.client.models.doors.DoorModel;
 import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
@@ -43,6 +45,7 @@ public abstract class DoorSchema {
 
     public Identifier id() { return id; }
     public abstract boolean isDouble();
+    @Environment(EnvType.CLIENT)
     public abstract DoorModel model(); // fixme will have the same texture as the exterior, WILL cause problems if we want to use different textures on the door.
 
     // fixme should this be in a "DoorSounds" type thing, also i dont like these method names.

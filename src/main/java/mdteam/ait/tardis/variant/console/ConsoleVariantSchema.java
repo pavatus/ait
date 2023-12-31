@@ -6,6 +6,8 @@ import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.console.ConsoleSchema;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
@@ -47,6 +49,7 @@ public abstract class ConsoleVariantSchema {
 
     public abstract Identifier texture();
     public abstract Identifier emission();
+    @Environment(EnvType.CLIENT)
     public abstract ConsoleModel model();
 
     public static Object serializer() {

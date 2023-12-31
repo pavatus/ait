@@ -9,6 +9,8 @@ import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
@@ -61,6 +63,7 @@ public abstract class ExteriorVariantSchema {
 
     public abstract Identifier texture();
     public abstract Identifier emission();
+    @Environment(EnvType.CLIENT)
     public abstract ExteriorModel model();
     public abstract ExteriorAnimation animation(ExteriorBlockEntity exterior);
     public abstract DoorSchema door();

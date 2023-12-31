@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
 public class ConsoleVariantRegistry {
     public static final SimpleRegistry<ConsoleVariantSchema> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<ConsoleVariantSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "console_variant"))).buildAndRegister();
     public static ConsoleVariantSchema register(ConsoleVariantSchema schema) {

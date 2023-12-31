@@ -37,7 +37,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
 public class ExteriorVariantRegistry {
     public static final SimpleRegistry<ExteriorVariantSchema> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<ExteriorVariantSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "exterior_variant"))).buildAndRegister();
     public static ExteriorVariantSchema register(ExteriorVariantSchema schema) {
