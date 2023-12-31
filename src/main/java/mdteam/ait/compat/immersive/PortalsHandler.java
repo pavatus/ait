@@ -42,7 +42,7 @@ public class PortalsHandler {
     private static void removePortals(Tardis tardis) {
         if (tardis == null) return;
 
-        // if (tardis.getHandlers().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED) return; // todo move to a seperate method so we can remove without checks
+        if (tardis.getHandlers().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED) return; // todo move to a seperate method so we can remove without checks
 
         List<Portal> list = portals.get(tardis.getUuid());
 
