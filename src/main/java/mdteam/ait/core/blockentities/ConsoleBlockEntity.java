@@ -220,7 +220,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     }
 
     public ConsoleSchema getConsoleSchema() {
-        if (type == null) setType(ConsoleRegistry.BOREALIS);
+        if (type == null) setType(ConsoleRegistry.HARTNELL);
 
         return ConsoleRegistry.REGISTRY.get(type);
     }

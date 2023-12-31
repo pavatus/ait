@@ -4,8 +4,10 @@ import mdteam.ait.AITMod;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.Random;
 import java.util.UUID;
@@ -13,7 +15,7 @@ import java.util.UUID;
 public class OvergrownHandler extends TardisLink {
     public static final String IS_OVERGROWN = "overgrown";
     public static final String OVERGROWN_TICKS = "overgrown_ticks";
-    public static final int MAXIMUM_TICKS = 280;
+    public static final int MAXIMUM_TICKS = 600;
     public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
     private static Random random;
 
@@ -68,6 +70,8 @@ public class OvergrownHandler extends TardisLink {
             this.setTicks(0);
             return;
         }
+
+        if (!this.getExteriorPos().getWorld().getBiome(this.tardis().getTravel().getPosition()).isIn(BiomeTags.IS_FOREST)) return;
 
         if (this.isOvergrown() || this.tardis().getTravel().getState() != TardisTravel.State.LANDED) return;
 
