@@ -8,6 +8,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 
 public class HADSControl extends Control {
+
+    // @TODO fix hads but for now it's changed to the alarm toggle
     public HADSControl() {
         super(/*"protocol_81419"*/"alarms");
     }

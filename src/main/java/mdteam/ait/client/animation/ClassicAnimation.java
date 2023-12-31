@@ -6,6 +6,7 @@ import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
 import net.minecraft.network.packet.s2c.play.EntitySetHeadYawS2CPacket;
 
+@Deprecated
 public class ClassicAnimation extends ExteriorAnimation {
     public ClassicAnimation(ExteriorBlockEntity exterior) {
         super(exterior);

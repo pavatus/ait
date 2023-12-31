@@ -3,6 +3,7 @@ package mdteam.ait.tardis.variant.exterior.capsule;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ClassicAnimation;
 import mdteam.ait.client.animation.ExteriorAnimation;
+import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
@@ -29,7 +30,7 @@ public abstract class CapsuleVariant extends ExteriorVariantSchema {
 
     @Override
     public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
-        return new ClassicAnimation(exterior);
+        return new PulsatingAnimation(exterior);
     }
 
     @Override

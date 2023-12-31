@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,7 +39,7 @@ public class ServerTardisManager extends TardisManager {
     public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
     private static final ServerTardisManager instance = new ServerTardisManager();
     // Changed from MultiMap to HashMap to fix some concurrent issues, maybe
-    private final Map<UUID, List<UUID>> subscribers = new HashMap<>(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
+    private final ConcurrentHashMap<UUID, List<UUID>> subscribers = new ConcurrentHashMap<>(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
 
     public ServerTardisManager() {
         ServerPlayNetworking.registerGlobalReceiver(
@@ -231,11 +232,12 @@ public class ServerTardisManager extends TardisManager {
         if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
         MinecraftServer mc = TardisUtil.getServer();
 
-        if(!this.subscribers.isEmpty()) {
-            for (UUID uuid : this.subscribers.get(tardis.getUuid())) {
-                ServerPlayerEntity player = mc.getPlayerManager().getPlayer(uuid);
-                this.sendTardis(player, tardis);
-            }
+        Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);
+        List<UUID> tardisSubscribers = subscribersCopy.getOrDefault(tardis.getUuid(), Collections.emptyList());
+
+        for (UUID uuid : tardisSubscribers) {
+            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(uuid);
+            this.sendTardis(player, tardis);
         }
     }
 

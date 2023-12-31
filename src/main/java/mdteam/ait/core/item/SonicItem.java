@@ -3,6 +3,8 @@ package mdteam.ait.core.item;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.ConsoleRegistry;
+import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.Tardis;
