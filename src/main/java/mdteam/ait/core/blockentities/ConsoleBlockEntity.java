@@ -168,8 +168,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         getTardis().markDirty();
         syncType();
         syncVariant();
-        getWorld().updateListeners(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), Block.NOTIFY_ALL);
-
+        /*getWorld().updateListeners(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), Block.NOTIFY_ALL);*/
         needsSync = false;
     }
 
