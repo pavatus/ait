@@ -15,9 +15,7 @@ import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.core.util.AITConfig;
-import mdteam.ait.registry.ConsoleRegistry;
-import mdteam.ait.registry.DesktopRegistry;
-import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.*;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisManager;
@@ -61,6 +59,9 @@ public class AITMod implements ModInitializer {
         ConsoleRegistry.init();
         DesktopRegistry.init();
         ExteriorRegistry.init();
+        DoorRegistry.init();
+        ConsoleVariantRegistry.init();
+        ExteriorVariantRegistry.init();
 
         NeptuneInitHandler.register(AITItems.class, MOD_ID);
         NeptuneInitHandler.register(AITBlocks.class, MOD_ID);

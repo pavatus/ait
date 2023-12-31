@@ -76,9 +76,6 @@ public class AITModClient implements ClientModInitializer {
         sonicModelPredicate();
         riftScannerPredicate();
         setKeyBinding();
-        DoorRegistry.init();
-        ConsoleVariantRegistry.init();
-        ExteriorVariantRegistry.init();
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {
