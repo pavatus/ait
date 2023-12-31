@@ -73,6 +73,9 @@ public class AITModClient implements ClientModInitializer {
         setupBlockRendering();
         blockEntityRendererRegister();
         entityRenderRegister();
+        ConsoleVariantRegistry.init();
+        ExteriorVariantRegistry.init();
+        DoorRegistry.init();
         sonicModelPredicate();
         riftScannerPredicate();
         setKeyBinding();
