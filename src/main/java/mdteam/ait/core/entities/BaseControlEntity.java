@@ -70,12 +70,6 @@ public abstract class BaseControlEntity extends MobEntity {
         this.setTardis(TardisUtil.findTardisByInterior(this.getBlockPos()));
     }
 
-    public void sync() {
-        if (isClient()) return;
-
-        ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
-    }
-
     public void setTardis(Tardis tardis) {
         if (tardis == null) {
             AITMod.LOGGER.error("Tardis was null in DoorBlockEntity at " + this.getPos());

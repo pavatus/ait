@@ -64,9 +64,8 @@ public class ServerTardisManager extends TardisManager {
                     }
                     if (uuid == null)
                         return;
-                    this.sendTardis(player, uuid);
                     addSubscriberToTardis(player, uuid);
-                    this.subscribeEveryone(getTardis(uuid));
+                    this.sendTardis(player, uuid);
                 }
         );
 
@@ -250,13 +249,6 @@ public class ServerTardisManager extends TardisManager {
             if (this.subscribers.containsKey(player.getUuid())) continue;
 
             addSubscriberToTardis(player, tardis.getUuid());
-        }
-    }
-
-    // fixme im desperate ok
-    public void subscribeEveryoneToEverything() {
-        for (Tardis tardis : this.lookup.values()) {
-            this.subscribeEveryone(tardis);
         }
     }
 
