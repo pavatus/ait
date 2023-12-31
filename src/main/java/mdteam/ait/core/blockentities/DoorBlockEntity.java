@@ -105,7 +105,7 @@ public class DoorBlockEntity extends BlockEntity {
             AITMod.LOGGER.error("this.getTardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
         super.writeNbt(nbt);
-        if (this.getTardis() == null) // panick
+        if (this.getTardis() != null) // panick
             nbt.putString("tardis", this.getTardis().getUuid().toString());
     }
 
