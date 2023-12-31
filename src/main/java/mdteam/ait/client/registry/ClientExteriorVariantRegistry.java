@@ -19,6 +19,7 @@ import mdteam.ait.client.registry.exterior.impl.classic.ClientClassicBoxYetiVari
 import mdteam.ait.client.registry.exterior.impl.easter_head.ClientEasterHeadDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.easter_head.ClientEasterHeadFireVariant;
 import mdteam.ait.client.registry.exterior.impl.easter_head.ClientEasterHeadSoulVariant;
+import mdteam.ait.client.registry.exterior.impl.growth.ClientGrowthVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimFireVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimSoulVariant;
@@ -69,6 +70,7 @@ public class ClientExteriorVariantRegistry {
     public static ClientExteriorVariantSchema HEAD_DEFAULT;
     public static ClientExteriorVariantSchema HEAD_SOUL;
     public static ClientExteriorVariantSchema HEAD_FIRE;
+    public static ClientExteriorVariantSchema CORAL_GROWTH;
 
     // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
     public static void init() {
@@ -106,5 +108,8 @@ public class ClientExteriorVariantRegistry {
         HEAD_DEFAULT = register(new ClientEasterHeadDefaultVariant());
         HEAD_SOUL = register(new ClientEasterHeadSoulVariant());
         HEAD_FIRE = register(new ClientEasterHeadFireVariant());
+
+        // Coral
+        CORAL_GROWTH = register(new ClientGrowthVariant());
     }
 }

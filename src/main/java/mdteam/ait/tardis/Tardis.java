@@ -4,6 +4,7 @@ import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.registry.DesktopRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.handler.FuelHandler;
 import mdteam.ait.tardis.handler.TardisHandlersManager;
@@ -140,13 +141,21 @@ public class Tardis {
         this.markDirty();
     }
 
+    // for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta
+    // this should stop basic features of the tardis from happening
+    public boolean isGrowth() {
+        return getExterior().getVariant().equals(ExteriorVariantRegistry.CORAL_GROWTH);
+    }
+
     /**
      * Called at the end of a servers tick
      *
      * @param server the server being ticked
      */
     public void tick(MinecraftServer server) {
-        this.getHandlers().tick(server);
+        // most of the logic is in the handlers, so we can just disable them if we're a growth
+        if (!isGrowth())
+            this.getHandlers().tick(server);
 
         // im sure this is great for your server performace
         if (TardisChunkUtil.shouldExteriorChunkBeForced(this) && !TardisChunkUtil.isExteriorChunkForced(this)) {
