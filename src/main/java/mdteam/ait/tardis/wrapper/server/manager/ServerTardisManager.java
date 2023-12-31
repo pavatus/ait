@@ -46,7 +46,7 @@ public class ServerTardisManager extends TardisManager {
         ServerPlayNetworking.registerGlobalReceiver(
                 ClientTardisManager.ASK, (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
-                    assert player != null;
+                    if (player == null) return;
                     this.sendTardis(player, uuid);
                     addSubscriberToTardis(player, uuid);
 
@@ -261,14 +261,17 @@ public class ServerTardisManager extends TardisManager {
     }
 
     private void sendTardis(ServerPlayerEntity player, UUID uuid) {
+        if (player == null) return;
         this.sendTardis(player, this.getTardis(uuid));
     }
 
     private void sendTardis(ServerPlayerEntity player, Tardis tardis) {
+        if (player == null) return;
         this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
     }
 
     private void sendTardis(ServerPlayerEntity player, UUID uuid, String json) {
+        if (player == null) return;
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(uuid);
         data.writeString(json);
