@@ -141,6 +141,20 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK))
                     .criterion(FabricRecipeProvider.hasItem(Items.QUARTZ), FabricRecipeProvider.conditionsFromItem(Items.QUARTZ))
             );
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.CORAL_PLANT, 1)
+                    .pattern("SRS")
+                    .pattern("BCB")
+                    .pattern("ERE")
+                    .input('C', Items.DEAD_BRAIN_CORAL)
+                    .input('R', Items.END_CRYSTAL)
+                    .input('E', Items.ENDER_EYE)
+                    .input('S', Items.BLAZE_ROD)
+                    .input('B', Items.REDSTONE_BLOCK)
+                    .criterion(FabricRecipeProvider.hasItem(Items.DEAD_BRAIN_CORAL), FabricRecipeProvider.conditionsFromItem(Items.DEAD_BRAIN_CORAL))
+                    .criterion(FabricRecipeProvider.hasItem(Items.END_CRYSTAL), FabricRecipeProvider.conditionsFromItem(Items.END_CRYSTAL))
+                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE))
+                    .criterion(FabricRecipeProvider.hasItem(Items.BLAZE_ROD), FabricRecipeProvider.conditionsFromItem(Items.BLAZE_ROD))
+                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK)));
             generateSmithingRecipes(provider);
             return provider;
         })));
