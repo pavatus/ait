@@ -35,17 +35,7 @@ public class PortalsHandler {
         AITMod.LOGGER.info("AIT - Setting up BOTI");
 
         TardisEvents.DOOR_OPEN.register((PortalsHandler::createPortals));
-        TardisEvents.DOOR_CLOSE.register((tardis -> {
-            // delay because of the doors closing animation existing, id set it to the animations length but id rather hardcode it cus i cba
-            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
-            executor.schedule(() -> {
-                // Code to be executed after the delay
-                removePortals(tardis);
-            }, 1, TimeUnit.SECONDS);
-
-            executor.shutdown(); // Don't forget to shut down the executor when you're done
-        }));
+        TardisEvents.DOOR_CLOSE.register((PortalsHandler::removePortals));
         TardisEvents.DOOR_MOVE.register(((tardis, previous) -> removePortals(tardis)));
     }
 
