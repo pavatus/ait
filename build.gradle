@@ -62,7 +62,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	//modImplementation "io.wispforest:owo-lib:${project.owo_version}"
+	modImplementation "io.wispforest:owo-lib:${project.owo_version}"
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_version}"
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_version}"
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-level:${project.cardinal_version}"

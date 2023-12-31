@@ -46,6 +46,7 @@ public class ServerTardisManager extends TardisManager {
         ServerPlayNetworking.registerGlobalReceiver(
                 ClientTardisManager.ASK, (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
+                    assert player != null;
                     this.sendTardis(player, uuid);
                     addSubscriberToTardis(player, uuid);
 
