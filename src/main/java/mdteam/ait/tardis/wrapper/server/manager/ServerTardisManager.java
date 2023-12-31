@@ -243,9 +243,7 @@ public class ServerTardisManager extends TardisManager {
     // fixme i think its easier if all clients just get updated about the tardises
     // @TODO not send everything to everyone
     public void subscribeEveryone(Tardis tardis) {
-        Iterator<ServerPlayerEntity> iterator = TardisUtil.getServer().getPlayerManager().getPlayerList().iterator();
-        while (iterator.hasNext()) {
-            ServerPlayerEntity player = iterator.next();
+        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
             if (this.subscribers.containsKey(player.getUuid())) continue;
 
             addSubscriberToTardis(player, tardis.getUuid());
