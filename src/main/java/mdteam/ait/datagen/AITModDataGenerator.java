@@ -186,6 +186,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
                     .criterion(FabricRecipeProvider.hasItem(Items.END_CRYSTAL), FabricRecipeProvider.conditionsFromItem(Items.END_CRYSTAL))
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT)));
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.DOOR_BLOCK, 1)
+                    .pattern("GCG")
+                    .pattern("CDC")
+                    .pattern("CCC")
+                    .input('D', Items.IRON_DOOR)
+                    .input('G', Items.GLASS_PANE)
+                    .input('C', Items.LIGHT_GRAY_CONCRETE)
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_DOOR), FabricRecipeProvider.conditionsFromItem(Items.IRON_DOOR))
+                    .criterion(FabricRecipeProvider.hasItem(Items.GLASS_PANE), FabricRecipeProvider.conditionsFromItem(Items.GLASS_PANE))
+                    .criterion(FabricRecipeProvider.hasItem(Items.LIGHT_GRAY_CONCRETE), FabricRecipeProvider.conditionsFromItem(Items.LIGHT_GRAY_CONCRETE)));
             generateSmithingRecipes(provider);
             return provider;
         })));
