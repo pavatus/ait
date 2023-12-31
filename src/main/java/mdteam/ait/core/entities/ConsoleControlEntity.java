@@ -275,8 +275,8 @@ public class ConsoleControlEntity extends BaseControlEntity {
                     if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
                         console.markNeedsControl();
                     }
+                    discard();
                 }
-                discard();
             }
         }
         /*PlayerEntity player = MinecraftClient.getInstance().player;
