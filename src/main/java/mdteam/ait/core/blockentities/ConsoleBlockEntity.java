@@ -27,7 +27,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -318,8 +320,13 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 //        if (world != TardisUtil.getTardisDimension())
 //            return;
 
-        if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) changeConsole(nextConsole(getConsoleSchema()));
-        if (player.getMainHandStack().getItem() == Items.REPEATING_COMMAND_BLOCK) setVariant(nextVariant(getVariant()));
+        if (player.getMainHandStack().getItem() == Items.STICK) changeConsole(nextConsole(getConsoleSchema()));
+        if (player.getMainHandStack().getItem() == Items.BONE) setVariant(nextVariant(getVariant()));
+        if (player.getMainHandStack().getItem() == Items.SHEARS && sneaking) {
+            world.breakBlock(pos, true);
+            world.spawnEntity(new ItemEntity(world, pos.getX() - 0.5f, pos.getY(), pos.getZ() - 0.5f, new ItemStack(AITBlocks.CONSOLE)));
+            markRemoved();
+        }
     }
 
     public void setDesktop(TardisDesktop desktop) {

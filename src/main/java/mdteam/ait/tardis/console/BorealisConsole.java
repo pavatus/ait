@@ -13,7 +13,7 @@ import org.joml.Vector3f;
 
 public class BorealisConsole extends ConsoleSchema {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/borealis");
-    private static final ControlTypes[] TYPES = new ControlTypes[]{
+    private static final ControlTypes[] TYPES = new ControlTypes[] {
             new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.275f, 0.275f), new Vector3f(0.625f, 0.5250015258789062f, 0.34999999962747097f)), //0
             new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.175f, 0.175f), new Vector3f(-0.5750000085681677f, 0.4749999772757292f, -0.5750000234693289f)), //1
             new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.175f, 0.175f), new Vector3f(-0.8000000156462193f, 0.4749999772757292f, -0.20000000298023224f)), //2
