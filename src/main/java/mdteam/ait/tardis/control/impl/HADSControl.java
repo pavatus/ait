@@ -24,7 +24,7 @@ public class HADSControl extends Control {
                         PropertiesHandler.HADS_ENABLED) ? "ENABLED" : "DISABLED")), true);
 
         return true;*/
-        PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED));
+        PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED));
 
         tardis.markDirty();
 
