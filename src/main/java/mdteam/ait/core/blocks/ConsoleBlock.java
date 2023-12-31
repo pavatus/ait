@@ -69,7 +69,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
         if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
             // dont place yo
             world.breakBlock(pos, true);
-            world.spawnEntity(new ItemEntity(world, pos.getX(),pos.getY(),pos.getZ(),new ItemStack(AITBlocks.CONSOLE)));
+            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f,pos.getY(),pos.getZ() + 0.5f,new ItemStack(AITBlocks.CONSOLE)));
             return;
         }
 

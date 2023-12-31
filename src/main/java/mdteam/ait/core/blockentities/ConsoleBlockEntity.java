@@ -12,6 +12,7 @@ import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.control.ControlTypes;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
@@ -36,10 +37,12 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -49,6 +52,7 @@ import mdteam.ait.tardis.TardisTravel;
 
 import java.util.*;
 
+import static java.lang.Double.NaN;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
@@ -60,6 +64,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     private UUID tardisId;
     private Identifier type;
     private Identifier variant;
+
+    private int timeInSeconds;
     private boolean needsReloading = true; // this is to ensure we get properly synced when reloaded yup ( does not work for multipalery : (
 
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
@@ -322,9 +328,9 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
         if (player.getMainHandStack().getItem() == Items.STICK) changeConsole(nextConsole(getConsoleSchema()));
         if (player.getMainHandStack().getItem() == Items.BONE) setVariant(nextVariant(getVariant()));
-        if (player.getMainHandStack().getItem() == Items.SHEARS && sneaking) {
+        if (player.getMainHandStack().getItem() == Items.SHEARS) {
             world.breakBlock(pos, true);
-            world.spawnEntity(new ItemEntity(world, pos.getX() - 0.5f, pos.getY(), pos.getZ() - 0.5f, new ItemStack(AITBlocks.CONSOLE)));
+            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, new ItemStack(AITBlocks.CONSOLE)));
             markRemoved();
         }
     }
@@ -420,9 +426,26 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             this.markRemoved();
         }
 
+        this.timeInSeconds++;
+        if (this.hasSecondPassed() && this.getTardis() != null && PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(),PropertiesHandler.ALARM_ENABLED)) {
+            this.timeInSeconds = 0;
+            this.spawnSmokeParticle(world, pos);
+        }
+
         // idk
         if (world.isClient()) {
             this.checkAnimations();
+        }
+    }
+
+    public boolean hasSecondPassed() {
+        return this.timeInSeconds >= 20;
+    }
+
+    private void spawnSmokeParticle(World world, BlockPos pos) {
+        if (world instanceof ServerWorld serverWorld) {
+            Vec3d vec3d = Vec3d.ofBottomCenter(pos).add(0.0, 1.2f, 0.0);
+            serverWorld.spawnParticles(ParticleTypes.SMOKE, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 10, NaN, 0.0, 0.0, 1.0F);
         }
     }
 

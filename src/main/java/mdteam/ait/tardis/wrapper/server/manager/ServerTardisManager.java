@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -233,7 +234,7 @@ public class ServerTardisManager extends TardisManager {
         MinecraftServer mc = TardisUtil.getServer();
 
         Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);
-        List<UUID> tardisSubscribers = subscribersCopy.getOrDefault(tardis.getUuid(), Collections.emptyList());
+        List<UUID> tardisSubscribers = new CopyOnWriteArrayList<>(subscribersCopy.getOrDefault(tardis.getUuid(), Collections.emptyList()));
 
         for (UUID uuid : tardisSubscribers) {
             ServerPlayerEntity player = mc.getPlayerManager().getPlayer(uuid);
