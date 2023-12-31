@@ -57,7 +57,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     private boolean needsSync = true;
     private UUID tardisId;
     private Identifier type;
-    private ConsoleVariantSchema variant;
+    private Identifier variant;
     private boolean needsReloading = true; // this is to ensure we get properly synced when reloaded yup ( does not work for multipalery : (
 
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
@@ -80,7 +80,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (type != null)
             nbt.putString("type", type.toString());
         if (variant != null)
-            nbt.putString("variant", variant.id().toString());
+            nbt.putString("variant", variant.toString());
 
         super.writeNbt(nbt);
         nbt.putString("tardis", this.tardisId.toString());
@@ -94,7 +94,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         }
 
         if (nbt.contains("type"))
-            setType(ConsoleRegistry.REGISTRY.get(Identifier.tryParse(nbt.getString("type"))));
+            setType(Identifier.tryParse(nbt.getString("type")));
         if (nbt.contains("variant")) {
             setVariant(Identifier.tryParse(nbt.getString("variant")));
         }
@@ -116,7 +116,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (type != null)
             nbt.putString("type", type.toString());
         if (variant != null)
-            nbt.putString("variant", variant.id().toString());
+            nbt.putString("variant", variant.toString());
         markNeedsSyncing();
         markDirty();
         return nbt;
@@ -225,12 +225,16 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         return ConsoleRegistry.REGISTRY.get(type);
     }
 
-    public void setType(ConsoleSchema var) {
-        type = var.id();
+    public void setType(Identifier var) {
+        type = var;
 
         syncType();
         markDirty();
     }
+    public void setType(ConsoleSchema schema) {
+        setType(schema.id());
+    }
+
 
     public ConsoleVariantSchema getVariant() {
         if (variant == null) {
@@ -239,12 +243,12 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             setVariant(ConsoleVariantRegistry.withParent(getConsoleSchema()).stream().findAny().get());
         }
 
-        return variant;
+        return ConsoleVariantRegistry.REGISTRY.get(variant);
     }
-    public void setVariant(ConsoleVariantSchema var) {
+    public void setVariant(Identifier var) {
         variant = var;
 
-        if (!(variant.parent().id().equals(type))) {
+        if (!(getVariant().parent().id().equals(type))) {
             AITMod.LOGGER.warn("Variant was set and it doesnt match this consoles type!");
             AITMod.LOGGER.warn(variant + " | " + type);
 
@@ -254,8 +258,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         syncVariant();
         markDirty();
     }
-    public void setVariant(Identifier id) {
-        setVariant(ConsoleVariantRegistry.REGISTRY.get(id));
+    public void setVariant(ConsoleVariantSchema schema) {
+        setVariant(schema.id());
     }
 
     /**

@@ -49,6 +49,4 @@ public abstract class DoorModel extends SinglePartEntityModel {
     }
 
     public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
-    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
-        return pos; // just cus some dont have portals
-    }}
+}

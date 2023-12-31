@@ -3,6 +3,8 @@ package mdteam.ait.client.screens;
 import com.google.common.collect.Lists;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
+import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.item.TardisItemBuilder;
@@ -36,7 +38,7 @@ public class MonitorScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     private ExteriorSchema currentModel;
-    private ExteriorVariantSchema currentVariant;
+    private ClientExteriorVariantSchema currentVariant;
     private float scrollPosition;
     private boolean scrollbarClicked;
     private int visibleTopRow;
@@ -71,12 +73,12 @@ public class MonitorScreen extends TardisScreen {
     public void setCurrentModel(ExteriorSchema currentModel) {
         this.currentModel = currentModel;
 
-        if (this.currentVariant.parent() != currentModel) {
+        if (this.currentVariant.parent().parent() != currentModel) {
             currentVariant = null;
         }
     }
 
-    public ExteriorVariantSchema getCurrentVariant() {
+    public ClientExteriorVariantSchema getCurrentVariant() {
         if (currentVariant == null)
             if(tardis().getExterior().getType() != getCurrentModel()) {
                 setCurrentVariant(TardisItemBuilder.findRandomVariant(getCurrentModel()));
@@ -87,7 +89,11 @@ public class MonitorScreen extends TardisScreen {
         return currentVariant;
     }
 
-    public void setCurrentVariant(ExteriorVariantSchema currentVariant) {
+    public void setCurrentVariant(ExteriorVariantSchema var) {
+        setCurrentVariant(ClientExteriorVariantRegistry.withParent(var));
+    }
+
+    public void setCurrentVariant(ClientExteriorVariantSchema currentVariant) {
         this.currentVariant = currentVariant;
     }
 
@@ -132,10 +138,10 @@ public class MonitorScreen extends TardisScreen {
             /*TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel() != tardis().getExterior().getType() ?
                     this.getCurrentModel().ordinal() : tardis().getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(),
                     this.getCurrentVariant() != tardis().getExterior().getVariant());*/
-            if (this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant() != tardis().getExterior().getVariant()) {
+            if (this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant().parent() != tardis().getExterior().getVariant()) {
                 ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
                         this.getCurrentModel().id().toString(), this.getCurrentVariant().id().toString(),
-                        this.getCurrentVariant() != tardis().getExterior().getVariant());
+                        this.getCurrentVariant().parent() != tardis().getExterior().getVariant());
             }
         }
     }
@@ -170,17 +176,17 @@ public class MonitorScreen extends TardisScreen {
     }
 
     public ExteriorVariantSchema nextVariant() {
-        List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(getCurrentVariant().parent()).stream().toList();
+        List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(getCurrentVariant().parent().parent()).stream().toList();
 
-        int idx = list.indexOf(getCurrentVariant());
+        int idx = list.indexOf(getCurrentVariant().parent());
         if (idx < 0 || idx+1 == list.size()) return list.get(0);
         return list.get(idx + 1);
     }
 
     public ExteriorVariantSchema previousVariant() {
-        List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(getCurrentVariant().parent()).stream().toList();
+        List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(getCurrentVariant().parent().parent()).stream().toList();
 
-        int idx = list.indexOf(getCurrentVariant());
+        int idx = list.indexOf(getCurrentVariant().parent());
         if (idx <= 0) return list.get(list.size() - 1);
         return list.get(idx - 1);
     }

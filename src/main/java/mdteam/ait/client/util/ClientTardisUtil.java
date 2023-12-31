@@ -1,5 +1,9 @@
 package mdteam.ait.client.util;
 
+import mdteam.ait.client.models.doors.DoorModel;
+import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.client.registry.ClientDoorRegistry;
+import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -71,5 +75,12 @@ public class ClientTardisUtil {
         if (console == null) console = pos;
 
         return Math.sqrt(pos.getSquaredDistance(console));
+    }
+
+    public static ExteriorModel getExteriorModel(Tardis tardis) {
+        return ClientExteriorVariantRegistry.withParent(tardis.getExterior().getVariant()).model();
+    }
+    public static DoorModel getDoorModel(Tardis tardis) {
+        return ClientDoorRegistry.withParent(tardis.getExterior().getVariant().door()).model();
     }
 }

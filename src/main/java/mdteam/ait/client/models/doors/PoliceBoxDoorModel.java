@@ -89,15 +89,4 @@ public class PoliceBoxDoorModel extends DoorModel {
     public ModelPart getPart() {
         return TARDIS;
     }
-
-    @Override
-    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
-        return switch (direction) {
-            case DOWN, UP -> pos;
-            case NORTH -> pos.add(0,0.43,-0.69);
-            case SOUTH -> pos.add(0,0.43,0.69);
-            case WEST -> pos.add(-0.69,0.43,0);
-            case EAST -> pos.add(0.69,0.43,0);
-        };
-    }
 }

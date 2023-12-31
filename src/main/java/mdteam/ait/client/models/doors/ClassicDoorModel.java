@@ -81,15 +81,4 @@ public class ClassicDoorModel extends DoorModel {
 		super.renderWithAnimations(doorEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}
-
-	@Override
-	public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
-		return switch (direction) {
-			case DOWN, UP -> pos;
-			case NORTH -> pos.add(0,0.29,-0.641);
-			case SOUTH -> pos.add(0,0.29,0.641);
-			case WEST -> pos.add(-0.641,0.29,0);
-			case EAST -> pos.add(0.641,0.29,0);
-		};
-	}
 }

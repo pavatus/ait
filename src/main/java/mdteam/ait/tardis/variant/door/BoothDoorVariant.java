@@ -20,11 +20,6 @@ public class BoothDoorVariant extends DoorSchema {
     }
 
     @Override
-    public DoorModel model() {
-        return new BoothDoorModel(BoothDoorModel.getTexturedModelData().createModel());
-    }
-
-    @Override
     public SoundEvent openSound() {
         return SoundEvents.BLOCK_IRON_DOOR_OPEN;
     }

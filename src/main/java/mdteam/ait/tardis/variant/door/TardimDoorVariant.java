@@ -18,9 +18,4 @@ public class TardimDoorVariant extends DoorSchema {
     public boolean isDouble() {
         return true;
     }
-
-    @Override
-    public DoorModel model() {
-        return new TardimDoorModel(TardimDoorModel.getTexturedModelData().createModel());
-    }
 }

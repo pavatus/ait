@@ -16,6 +16,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
@@ -61,12 +62,14 @@ public abstract class ExteriorVariantSchema {
      */
     public VoxelShape bounding(Direction dir) { return null; }
 
-    public abstract Identifier texture();
-    public abstract Identifier emission();
-    @Environment(EnvType.CLIENT)
-    public abstract ExteriorModel model();
     public abstract ExteriorAnimation animation(ExteriorBlockEntity exterior);
     public abstract DoorSchema door();
+
+    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+        return pos; // just cus some dont have portals
+    }
+    public double portalWidth() {return 1d;}
+    public double portalHeight() {return 2d;}
 
     public static Object serializer() {
         return new Serializer();

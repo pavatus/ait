@@ -1,0 +1,70 @@
+package mdteam.ait.client.registry.exterior;
+
+import com.google.gson.*;
+import mdteam.ait.AITMod;
+import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.InvalidIdentifierException;
+
+import java.lang.reflect.Type;
+
+@Environment(EnvType.CLIENT)
+public abstract class ClientExteriorVariantSchema {
+    private final Identifier parent;
+    private final Identifier id;
+
+    protected ClientExteriorVariantSchema(Identifier parent, Identifier id) {
+        this.parent = parent;
+        this.id = id;
+    }
+    protected ClientExteriorVariantSchema(Identifier parent) {
+        this.id = parent;
+        this.parent = parent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() == null) return false;
+
+        ClientExteriorVariantSchema that = (ClientExteriorVariantSchema) o;
+
+        return id.equals(that.id);
+    }
+
+    public ExteriorVariantSchema parent() { return ExteriorVariantRegistry.REGISTRY.get(this.parent); }
+    public Identifier id() { return id; }
+    public abstract Identifier texture();
+    public abstract Identifier emission();
+    public abstract ExteriorModel model();
+
+    public static Object serializer() {
+        return new Serializer();
+    }
+
+    private static class Serializer implements JsonSerializer<ClientExteriorVariantSchema>, JsonDeserializer<ClientExteriorVariantSchema> {
+
+        @Override
+        public ClientExteriorVariantSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            Identifier id;
+
+            try {
+                id = new Identifier(json.getAsJsonPrimitive().getAsString());
+            } catch (InvalidIdentifierException e) {
+                id = new Identifier(AITMod.MOD_ID, "capsule_default");
+            }
+
+            return ClientExteriorVariantRegistry.REGISTRY.get(id);
+        }
+
+        @Override
+        public JsonElement serialize(ClientExteriorVariantSchema src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.id().toString());
+        }
+    }
+}

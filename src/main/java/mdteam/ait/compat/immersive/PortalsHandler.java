@@ -2,24 +2,15 @@ package mdteam.ait.compat.immersive;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
-import mdteam.ait.client.models.doors.DoorModel;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.wrapper.server.ServerTardis;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
+import mdteam.ait.tardis.variant.door.DoorSchema;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.Portal;
-import qouteall.imm_ptl.core.portal.PortalLike;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
 import qouteall.q_misc_util.my_util.DQuaternion;
 
@@ -30,9 +21,6 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static mdteam.ait.tardis.util.TardisUtil.getDoorModel;
-import static mdteam.ait.tardis.util.TardisUtil.getExteriorModel;
 
 
 // NEVER EVER ACCESS THIS CLASS OR YO GAME GON CRAAASH
@@ -101,16 +89,16 @@ public class PortalsHandler {
     private static Portal createExteriorPortal(Tardis tardis) {
         AbsoluteBlockPos.Directed doorPos = tardis.getTravel().getDoorPos();
         AbsoluteBlockPos.Directed exteriorPos = tardis.getTravel().getExteriorPos();
-        Vec3d doorAdjust = adjustExteriorPos(getExteriorModel(tardis),doorPos);
-        Vec3d exteriorAdjust = adjustInteriorPos(getDoorModel(tardis),exteriorPos);
+        Vec3d doorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(),doorPos);
+        Vec3d exteriorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(),exteriorPos);
 
         Portal portal = Portal.entityType.create(exteriorPos.getWorld());
 
         portal.setOrientationAndSize(
                 new Vec3d(1, 0, 0), // axisW
                 new Vec3d(0, 1, 0), // axisH
-                getExteriorModel(tardis).portalWidth(), // width
-                getExteriorModel(tardis).portalHeight() // height
+                tardis.getExterior().getVariant().portalWidth(), // width
+                tardis.getExterior().getVariant().portalHeight() // height
         );
 
         DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), exteriorPos.getDirection().asRotation());
@@ -130,16 +118,16 @@ public class PortalsHandler {
     private static Portal createInteriorPortal(Tardis tardis) {
         AbsoluteBlockPos.Directed doorPos = tardis.getTravel().getDoorPos();
         AbsoluteBlockPos.Directed exteriorPos = tardis.getTravel().getExteriorPos();
-        Vec3d doorAdjust = adjustExteriorPos(getExteriorModel(tardis), doorPos);
-        Vec3d exteriorAdjust = adjustInteriorPos(getDoorModel(tardis), exteriorPos);
+        Vec3d doorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), doorPos);
+        Vec3d exteriorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), exteriorPos);
 
         Portal portal = Portal.entityType.create(doorPos.getWorld());
 
         portal.setOrientationAndSize(
                 new Vec3d(1, 0, 0), // axisW
                 new Vec3d(0, 1, 0), // axisH
-                getExteriorModel(tardis).portalWidth(), // width
-                getExteriorModel(tardis).portalHeight() // height
+                tardis.getExterior().getVariant().portalWidth(), // width
+                tardis.getExterior().getVariant().portalHeight() // height
         );
 
         DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), doorPos.getDirection().asRotation());
@@ -155,10 +143,10 @@ public class PortalsHandler {
         return portal;
     }
 
-    private static Vec3d adjustExteriorPos(ExteriorModel exterior, AbsoluteBlockPos.Directed pos) {
+    private static Vec3d adjustExteriorPos(ExteriorVariantSchema exterior, AbsoluteBlockPos.Directed pos) {
         return exterior.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(),pos.getZ()), pos.getDirection());
     }
-    private static Vec3d adjustInteriorPos(DoorModel door, AbsoluteBlockPos.Directed pos) {
+    private static Vec3d adjustInteriorPos(DoorSchema door, AbsoluteBlockPos.Directed pos) {
         return door.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(),pos.getZ()), pos.getDirection());
     }
 }

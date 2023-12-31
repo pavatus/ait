@@ -30,10 +30,4 @@ public class EasterHeadDoorVariant extends DoorSchema {
     public SoundEvent closeSound() {
         return SoundEvents.BLOCK_GRINDSTONE_USE;
     }
-
-    @Override
-    public DoorModel model() {
-        return new EasterHeadDoorModel(EasterHeadDoorModel.getTexturedModelData().createModel());
-    }
-
 }

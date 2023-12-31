@@ -27,12 +27,6 @@ public abstract class BoothVariant extends ExteriorVariantSchema {
         this(name, AITMod.MOD_ID);
     }
 
-
-    @Override
-    public ExteriorModel model() {
-        return new BoothExteriorModel(BoothExteriorModel.getTexturedModelData().createModel());
-    }
-
     @Override
     public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
         return new PulsatingAnimation(exterior);
@@ -41,15 +35,5 @@ public abstract class BoothVariant extends ExteriorVariantSchema {
     @Override
     public DoorSchema door() {
         return DoorRegistry.REGISTRY.get(BoothDoorVariant.REFERENCE);
-    }
-
-    @Override
-    public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
-    }
-
-    @Override
-    public Identifier emission() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_emission" + ".png");
     }
 }

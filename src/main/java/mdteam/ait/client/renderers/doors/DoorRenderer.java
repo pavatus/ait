@@ -1,6 +1,10 @@
 package mdteam.ait.client.renderers.doors;
 
 import mdteam.ait.client.models.doors.DoorModel;
+import mdteam.ait.client.registry.ClientDoorRegistry;
+import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
+import mdteam.ait.client.registry.door.ClientDoorSchema;
+import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
@@ -37,14 +41,15 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         if (entity.getTardis() == null)
             return;
 
-        TardisExterior tardisExterior = entity.getTardis().getExterior();
-        Class<? extends DoorModel> modelClass = tardisExterior.getVariant().door().model().getClass();
+        ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant());
+        ClientDoorSchema variant = ClientDoorRegistry.withParent(exteriorVariant.parent().door());
+        Class<? extends DoorModel> modelClass = variant.model().getClass();
 
         if (model != null && !(model.getClass().isInstance(modelClass)))
             model = null;
 
         if (model == null)
-            this.model = tardisExterior.getVariant().door().model();
+            this.model = variant.model();
 
         BlockState blockState = entity.getCachedState();
         float f = blockState.get(ExteriorBlock.FACING).asRotation();
@@ -53,7 +58,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         matrices.translate(0.5, 0, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-        Identifier texture = tardisExterior.getVariant().texture();
+        Identifier texture = exteriorVariant.texture();
 
         // if (entity.getTardis().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED)
         //     light = LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE;
@@ -82,8 +87,8 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         if (model != null) {
             model.animateTile(entity);
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
-            if (tardisExterior.getVariant().emission() != null && !entity.getTardis().getHandlers().getFuel().isOutOfFuel())
-                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(tardisExterior.getVariant().emission(), false)), light, overlay, 1, 1, 1, 1);
+            if (exteriorVariant.emission() != null && !entity.getTardis().getHandlers().getFuel().isOutOfFuel())
+                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(exteriorVariant.emission(), false)), light, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
     }

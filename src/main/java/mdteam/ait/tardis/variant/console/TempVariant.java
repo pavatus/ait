@@ -14,17 +14,17 @@ public class TempVariant extends ConsoleVariantSchema {
         super(TempConsole.REFERENCE, new Identifier(AITMod.MOD_ID, "console/temp"));
     }
 
-    @Override
-    public Identifier texture() {
-        return TEXTURE;
-    }
-
-    @Override
-    public Identifier emission() {
-        return EMISSION;
-    }
-    @Override
-    public ConsoleModel model() {
-        return new TempConsoleModel(TempConsoleModel.getTexturedModelData().createModel());
-    }
+    // @Override
+    // public Identifier texture() {
+    //     return TEXTURE;
+    // }
+//
+    // @Override
+    // public Identifier emission() {
+    //     return EMISSION;
+    // }
+    // @Override
+    // public ConsoleModel model() {
+        //return new TempConsoleModel(TempConsoleModel.getTexturedModelData().createModel());
+    //}
 }

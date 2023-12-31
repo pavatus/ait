@@ -46,11 +46,7 @@ public abstract class ConsoleVariantSchema {
 
     public ConsoleSchema parent() { return ConsoleRegistry.REGISTRY.get(this.parent); }
     public Identifier id() { return id; }
-
-    public abstract Identifier texture();
-    public abstract Identifier emission();
-    @Environment(EnvType.CLIENT)
-    public abstract ConsoleModel model();
+    public Identifier clientId() { return id().withPath(id().getPath() + "_client"); }
 
     public static Object serializer() {
         return new Serializer();

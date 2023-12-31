@@ -312,13 +312,6 @@ public class TardisUtil {
         });
     }
 
-    public static ExteriorModel getExteriorModel(Tardis tardis) {
-        return tardis.getExterior().getVariant().model();
-    }
-    public static DoorModel getDoorModel(Tardis tardis) {
-        return tardis.getExterior().getVariant().door().model();
-    }
-
     public static Tardis findTardisByInterior(BlockPos pos) {
         for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
             if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos))

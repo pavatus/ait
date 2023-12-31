@@ -3,8 +3,6 @@ package mdteam.ait.tardis.variant.exterior.cube;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
-import mdteam.ait.client.models.exteriors.CoobExteriorModel;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.EasterHeadExterior;
@@ -39,11 +37,6 @@ public abstract class CubeVariant extends ExteriorVariantSchema {
     }
 
     @Override
-    public ExteriorModel model() {
-        return new CoobExteriorModel(CoobExteriorModel.getTexturedModelData().createModel());
-    }
-
-    @Override
     public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
         return new PulsatingAnimation(exterior);
     }
@@ -51,16 +44,6 @@ public abstract class CubeVariant extends ExteriorVariantSchema {
     @Override
     public DoorSchema door() {
         return DoorRegistry.REGISTRY.get(ClassicDoorVariant.REFERENCE);
-    }
-
-    @Override
-    public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
-    }
-
-    @Override
-    public Identifier emission() {
-        return null;
     }
 
     @Override

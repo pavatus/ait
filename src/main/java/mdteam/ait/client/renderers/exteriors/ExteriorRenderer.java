@@ -1,6 +1,8 @@
 package mdteam.ait.client.renderers.exteriors;
 
 import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
+import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
@@ -33,18 +35,18 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         }
 
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-
+        ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.tardis().getExterior().getVariant());
         TardisExterior tardisExterior = entity.tardis().getExterior();
 
         if (tardisExterior == null) return;
 
-        Class<? extends ExteriorModel> modelClass = tardisExterior.getVariant().model().getClass();
+        Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
 
         if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.
             model = null;
 
         if (model == null)
-            this.model = tardisExterior.getVariant().model();
+            this.model = exteriorVariant.model();
 
         BlockState blockState = entity.getCachedState();
         float f = blockState.get(ExteriorBlock.FACING).asRotation();
@@ -59,17 +61,17 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.translate(0.5, 0, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-        Identifier texture = entity.tardis().getExterior().getVariant().texture();
+        Identifier texture = exteriorVariant.texture();
         if (model != null) {
             model.animateTile(entity);
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
             if (entity.tardis().getHandlers().getOvergrownHandler().isOvergrown()) {
                 model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.tardis().getHandlers().getOvergrownHandler().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
             }
-            if (tardisExterior.getVariant().emission() != null && !entity.tardis().getHandlers().getFuel().isOutOfFuel()) {
+            if (exteriorVariant.emission() != null && !entity.tardis().getHandlers().getFuel().isOutOfFuel()) {
                 boolean alarms = PropertiesHandler.getBool(entity.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
 
-                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(entity.tardis().getExterior().getVariant().emission(), false)), maxLight, overlay, 1, alarms ? 0.3f : 1 , alarms ? 0.3f : 1, 1);
+                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(exteriorVariant.emission(), false)), maxLight, overlay, 1, alarms ? 0.3f : 1 , alarms ? 0.3f : 1, 1);
             }
         }
         matrices.pop();

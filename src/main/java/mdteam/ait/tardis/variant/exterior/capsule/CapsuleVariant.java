@@ -3,8 +3,6 @@ package mdteam.ait.tardis.variant.exterior.capsule;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ClassicAnimation;
 import mdteam.ait.client.animation.ExteriorAnimation;
-import mdteam.ait.client.models.exteriors.CapsuleExteriorModel;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
@@ -12,6 +10,8 @@ import mdteam.ait.tardis.variant.door.CapsuleDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class CapsuleVariant extends ExteriorVariantSchema {
@@ -28,11 +28,6 @@ public abstract class CapsuleVariant extends ExteriorVariantSchema {
     }
 
     @Override
-    public ExteriorModel model() {
-        return new CapsuleExteriorModel(CapsuleExteriorModel.getTexturedModelData().createModel());
-    }
-
-    @Override
     public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
         return new ClassicAnimation(exterior);
     }
@@ -42,14 +37,24 @@ public abstract class CapsuleVariant extends ExteriorVariantSchema {
         return DoorRegistry.REGISTRY.get(CapsuleDoorVariant.REFERENCE);
     }
 
-
     @Override
-    public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
+    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+        return switch (direction) {
+            case DOWN, UP -> pos;
+            case NORTH -> pos.add(0,0.1,0.1);
+            case SOUTH -> pos.add(0,0.1,-0.1);
+            case WEST -> pos.add(0.1,0.1,0);
+            case EAST -> pos.add(-0.1,0.1,0);
+        };
     }
 
     @Override
-    public Identifier emission() {
-        return null; // as of rn none of these have emission
+    public double portalHeight() {
+        return 2.1d;
+    }
+
+    @Override
+    public double portalWidth() {
+        return 0.9d;
     }
 }

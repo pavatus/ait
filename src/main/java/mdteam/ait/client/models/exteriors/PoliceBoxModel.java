@@ -133,24 +133,4 @@ public class PoliceBoxModel extends ExteriorModel {
             case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
         };
     }
-    @Override
-    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
-        return switch (direction) {
-            case DOWN, UP -> pos;
-            case NORTH -> pos.add(0,0.25,0.48);
-            case SOUTH -> pos.add(0,0.25,-0.48);
-            case WEST -> pos.add(0.48,0.25,0);
-            case EAST -> pos.add(-0.48,0.25,0);
-        };
-    }
-
-    @Override
-    public double portalHeight() {
-        return 2.5d;
-    }
-
-    @Override
-    public double portalWidth() {
-        return 1.5d;
-    }
 }

@@ -3,8 +3,6 @@ package mdteam.ait.tardis.variant.exterior.tardim;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.animation.PulsatingAnimation;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.client.models.exteriors.TardimExteriorModel;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.TardimExterior;
@@ -28,11 +26,6 @@ public abstract class TardimVariant extends ExteriorVariantSchema {
     }
 
     @Override
-    public ExteriorModel model() {
-        return new TardimExteriorModel(TardimExteriorModel.getTexturedModelData().createModel());
-    }
-
-    @Override
     public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
         return new PulsatingAnimation(exterior);
     }
@@ -42,13 +35,4 @@ public abstract class TardimVariant extends ExteriorVariantSchema {
         return DoorRegistry.REGISTRY.get(TardimDoorVariant.REFERENCE);
     }
 
-    @Override
-    public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
-    }
-
-    @Override
-    public Identifier emission() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_emission" + ".png");
-    }
 }

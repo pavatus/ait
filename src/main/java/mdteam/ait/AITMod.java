@@ -60,6 +60,11 @@ public class AITMod implements ModInitializer {
         DesktopRegistry.init();
         ExteriorRegistry.init();
 
+        // These 3 have client registries which also need registering to.
+        ConsoleVariantRegistry.init();
+        ExteriorVariantRegistry.init();
+        DoorRegistry.init();
+
         NeptuneInitHandler.register(AITItems.class, MOD_ID);
         NeptuneInitHandler.register(AITBlocks.class, MOD_ID);
         NeptuneInitHandler.register(AITSounds.class, MOD_ID);

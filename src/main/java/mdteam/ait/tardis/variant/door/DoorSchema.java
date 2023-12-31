@@ -10,6 +10,8 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 
 import java.lang.reflect.Type;
 
@@ -45,8 +47,6 @@ public abstract class DoorSchema {
 
     public Identifier id() { return id; }
     public abstract boolean isDouble();
-    @Environment(EnvType.CLIENT)
-    public abstract DoorModel model(); // fixme will have the same texture as the exterior, WILL cause problems if we want to use different textures on the door.
 
     // fixme should this be in a "DoorSounds" type thing, also i dont like these method names.
     public SoundEvent openSound() {
@@ -55,6 +55,10 @@ public abstract class DoorSchema {
 
     public SoundEvent closeSound() {
         return SoundEvents.BLOCK_WOODEN_DOOR_OPEN;
+    }
+
+    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+        return pos; // just cus some dont have portals
     }
 
     public static Object serializer() {

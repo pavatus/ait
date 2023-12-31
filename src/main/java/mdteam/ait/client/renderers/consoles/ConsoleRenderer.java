@@ -1,8 +1,9 @@
 package mdteam.ait.client.renderers.consoles;
 
 import mdteam.ait.client.models.consoles.ConsoleModel;
+import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
+import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
@@ -21,15 +22,15 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         if (entity.getTardis() == null)
             return;
 
-        Class<? extends ConsoleModel> modelClass = entity.getVariant().model().getClass();
+        ClientConsoleVariantSchema variant = ClientConsoleVariantRegistry.withParent(entity.getVariant());
+
+        Class<? extends ConsoleModel> modelClass = variant.model().getClass();
 
         if (console != null && console.getClass() != modelClass)
             console = null;
 
         if (console == null)
-            this.console = entity.getVariant().model();
-
-        ConsoleVariantSchema variant = entity.getVariant();
+            this.console = variant.model();
         // BlockState blockState = entity.getCachedState();
         // float f = blockState.get(ConsoleBlock.FACING).asRotation();
         int maxLight = 0xFFFFFF;

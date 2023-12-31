@@ -1,7 +1,9 @@
 package mdteam.ait.client;
 
-import mdteam.RiftCompassTarget;
 import mdteam.ait.AITMod;
+import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
+import mdteam.ait.client.registry.ClientDoorRegistry;
+import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.client.renderers.AITRadioRenderer;
 import mdteam.ait.client.renderers.consoles.ConsoleRenderer;
 import mdteam.ait.client.renderers.coral.CoralRenderer;
@@ -21,12 +23,8 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
-import mdteam.ait.core.item.RiftScannerItem;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.registry.ConsoleRegistry;
-import mdteam.ait.registry.ConsoleVariantRegistry;
-import mdteam.ait.registry.DoorRegistry;
-import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -42,17 +40,14 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.CompassAnglePredicateProvider;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import org.lwjgl.glfw.GLFW;
@@ -73,12 +68,13 @@ public class AITModClient implements ClientModInitializer {
         setupBlockRendering();
         blockEntityRendererRegister();
         entityRenderRegister();
-        ConsoleVariantRegistry.init();
-        ExteriorVariantRegistry.init();
-        DoorRegistry.init();
         sonicModelPredicate();
         riftScannerPredicate();
         setKeyBinding();
+
+        ClientExteriorVariantRegistry.init();
+        ClientConsoleVariantRegistry.init();
+        ClientDoorRegistry.init();
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {

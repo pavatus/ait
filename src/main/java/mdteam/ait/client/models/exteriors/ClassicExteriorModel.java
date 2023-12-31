@@ -127,25 +127,4 @@ public class ClassicExteriorModel extends ExteriorModel {
 
 		matrices.pop();
 	}
-
-	@Override
-	public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
-		return switch (direction) {
-			case DOWN, UP -> pos;
-			case NORTH -> pos.add(0,0.2,0.48);
-			case SOUTH -> pos.add(0,0.2,-0.48);
-			case WEST -> pos.add(0.48,0.2,0);
-			case EAST -> pos.add(-0.48,0.2,0);
-		};
-	}
-
-	@Override
-	public double portalHeight() {
-		return 2.4d;
-	}
-
-	@Override
-	public double portalWidth() {
-		return 1.2d;
-	}
 }

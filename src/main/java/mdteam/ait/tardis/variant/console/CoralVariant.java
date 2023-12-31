@@ -14,17 +14,17 @@ public class CoralVariant extends ConsoleVariantSchema {
         super(CoralConsole.REFERENCE, new Identifier(AITMod.MOD_ID, "console/coral"));
     }
 
-    @Override
-    public Identifier texture() {
-        return TEXTURE;
-    }
-
-    @Override
-    public Identifier emission() {
-        return EMISSION;
-    }
-    @Override
-    public ConsoleModel model() {
-        return new CoralConsoleModel(CoralConsoleModel.getTexturedModelData().createModel());
-    }
+    //@Override
+    //public Identifier texture() {
+    //    return TEXTURE;
+    //}
+//
+    //@Override
+    //public Identifier emission() {
+    //    return EMISSION;
+    //}
+    //@Override
+    //public ConsoleModel model() {
+    //    return new CoralConsoleModel(CoralConsoleModel.getTexturedModelData().createModel());
+    //}
 }
