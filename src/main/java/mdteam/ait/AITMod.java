@@ -173,7 +173,6 @@ public class AITMod implements ModInitializer {
         }));
 
         AIT_ITEM_GROUP.initialize();
-        System.out.println(AIT_ITEM_GROUP.items);
     }
 
     public void entityAttributeRegister() {
