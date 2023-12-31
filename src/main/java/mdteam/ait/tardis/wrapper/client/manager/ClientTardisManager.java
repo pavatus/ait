@@ -6,6 +6,8 @@ import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.AITModClient;
 import mdteam.ait.client.sounds.ClientSoundManager;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.SerialDimension;
@@ -23,16 +25,20 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import mdteam.ait.tardis.wrapper.client.ClientTardis;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 public class ClientTardisManager extends TardisManager {
 
     public static final Identifier ASK = new Identifier("ait", "ask_tardis");
     public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
+    public static final Identifier LET_KNOW_UNLOADED = new Identifier("ait", "let_know_unloaded");
     private static final ClientTardisManager instance = new ClientTardisManager();
+    public final Map<ConsoleBlockEntity, Tardis> consoleToTardis = new HashMap<>();
+    public final Map<ExteriorBlockEntity, Tardis> exteriorToTardis = new HashMap<>();
+    public final Map<DoorBlockEntity, Tardis> interiorDoorToTardis = new HashMap<>();
+    public final List<UUID> loadedTardises = new ArrayList<>();
     private final Multimap<UUID, Consumer<Tardis>> subscribers = ArrayListMultimap.create();
     private final Deque<PacketByteBuf> buffers = new ArrayDeque<>();
 
@@ -122,6 +128,10 @@ public class ClientTardisManager extends TardisManager {
         data.writeUuid(uuid);
 
         ClientPlayNetworking.send(ASK, data);
+    }
+
+    public void letKnowUnloaded(UUID uuid) {
+        ClientPlayNetworking.send(LET_KNOW_UNLOADED, PacketByteBufs.create().writeUuid(uuid));
     }
 
     @Override

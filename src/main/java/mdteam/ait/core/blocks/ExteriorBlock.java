@@ -14,6 +14,7 @@ import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -184,8 +185,15 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
             return ActionResult.SUCCESS;
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity)
+        if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) {
+            if (world.isClient()) {
+                if (ClientTardisManager.getInstance().loadedTardises.contains(exteriorBlockEntity.tardis().getUuid())) {
+                    ClientTardisManager.getInstance().loadedTardises.add(exteriorBlockEntity.tardis().getUuid());
+                }
+                ClientTardisManager.getInstance().ask(pos);
+            }
             exteriorBlockEntity.useOn((ServerWorld) world, player.isSneaking(), player);
+        }
 
         return ActionResult.CONSUME;
     }

@@ -47,9 +47,17 @@ public class ServerTardisManager extends TardisManager {
                 ClientTardisManager.ASK, (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
                     if (player == null) return;
-                    this.sendTardis(player, uuid);
                     addSubscriberToTardis(player, uuid);
+                    this.sendTardis(player, uuid);
 
+                }
+        );
+
+        ServerPlayNetworking.registerGlobalReceiver(
+                ClientTardisManager.LET_KNOW_UNLOADED, (server, player, handler, buf, responseSender) -> {
+                    UUID uuid = buf.readUuid();
+                    if (player == null) return;
+                    removeSubscriberToTardis(player, uuid);
                 }
         );
 
@@ -229,8 +237,8 @@ public class ServerTardisManager extends TardisManager {
 
     public void sendToSubscribers(Tardis tardis) {
         if (tardis == null) return;
-
-        if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
+        if (!this.subscribers.containsKey(tardis.getUuid())) return;
+//        if (!this.subscribers.containsKey(tardis.getUuid())) this.subscribeEveryone(tardis);
         MinecraftServer mc = TardisUtil.getServer();
 
         Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);

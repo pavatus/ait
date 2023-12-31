@@ -192,6 +192,7 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
 //        if (!DOOR_STATE.isRunning()) {
 //            DOOR_STATE.startIfNotRunning(animationTimer);
 //        }
+        if(tardis().getHandlers().getDoor().getAnimationExteriorState() == null) return;;
         if (tardis().getHandlers().getDoor().getAnimationExteriorState() == null || !(tardis().getHandlers().getDoor().getAnimationExteriorState().equals(tardis().getDoor().getDoorState()))) {
             DOOR_STATE.start(animationTimer);
             tardis().getHandlers().getDoor().tempExteriorState = tardis().getDoor().getDoorState();

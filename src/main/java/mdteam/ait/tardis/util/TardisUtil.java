@@ -47,10 +47,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
@@ -342,16 +339,24 @@ public class TardisUtil {
     }
 
     public static Tardis findTardisByPosition(BlockPos pos) {
-        for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
-            if (!tardis.getDoor().getExteriorPos().equals(pos)) continue;
+        Map<UUID, Tardis> matchingTardises = new HashMap<>();
 
-            return tardis;
+        for (Map.Entry<UUID, Tardis> entry : TardisManager.getInstance().getLookup().entrySet()) {
+            Tardis tardis = entry.getValue();
+            if (tardis.getDoor().getExteriorPos().equals(pos)) {
+                matchingTardises.put(entry.getKey(), tardis);
+            }
         }
 
-        if (isClient())
-            ClientTardisManager.getInstance().ask(pos);
-
-        return null;
+        if (matchingTardises.isEmpty()) {
+            if (isClient()) {
+                ClientTardisManager.getInstance().ask(pos);
+            }
+            return null;
+        } else {
+            // Return the first Tardis object in the Map
+            return matchingTardises.values().iterator().next();
+        }
     }
 
     @Nullable
