@@ -5,12 +5,16 @@ import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.FuelHandler;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
+
+import static mdteam.ait.tardis.TardisTravel.State.*;
 
 // Made with Blockbench 4.9.2
 // Exported for Minecraft version 1.17+ for Yarn
@@ -816,6 +820,30 @@ public class HartnellConsoleModel extends ConsoleModel {
 		//System.out.println("Fuel: " + console.getTardis().getFuel() + " || clamped fuel: " + (((console.getTardis().getFuel() / 5000) * 2) - 1));
 		this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("m_meter_2").getChild("bone110").yaw =
 				(float) (((console.getTardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
+		ModelPart throttle = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_1").getChild("bone45");
+		throttle.roll = console.getTardis().getTravel().getState() == FLIGHT || console.getTardis().getTravel().getState() == DEMAT ? throttle.roll : throttle.roll + 1;
+		ModelPart handbrake = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_2").getChild("bone46");
+		handbrake.roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? handbrake.roll : handbrake.roll + 1;
+		ModelPart doorControl = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ctrl_panel_3").getChild("bone123");
+		doorControl.yaw = console.getTardis().getDoor().isOpen() ? doorControl.yaw + 1 : doorControl.yaw;
+		ModelPart doorLock = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ctrl_panel_3").getChild("bone125");
+		doorLock.yaw = console.getTardis().getDoor().locked() ? doorLock.yaw + 1 : doorLock.yaw;
+		ModelPart refueler = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("ctrl_panel_2").getChild("bone106");
+		refueler.yaw = console.getTardis().isRefueling() ? refueler.yaw + 1 : refueler.yaw;
+		ModelPart groundSearch = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("s_knob");
+		groundSearch.pivotZ = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pivotZ - 1.5f : groundSearch.pivotZ;
+		ModelPart hailMary = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("s_lever").getChild("bone61");
+		hailMary.roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAIL_MARY) ? hailMary.roll + 1 : hailMary.roll;
+		ModelPart hadsAlarms = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("s_lever_6").getChild("bone143");
+		hadsAlarms.roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED) ? hadsAlarms.roll + 1 : hadsAlarms.roll;
+		ModelPart increment = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_crank_3").getChild("bone74");
+		increment.yaw = console.getTardis().getTravel().getPosManager().increment >= 10 ? console.getTardis().getTravel().getPosManager().increment >= 100 ? console.getTardis().getTravel().getPosManager().increment >= 1000 ? increment.yaw + 1.5f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
+		ModelPart direction = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("s_crank_1").getChild("bone59");
+		direction.yaw = console.getTardis().getTravel().getDestination().getDirection() != Direction.NORTH ? console.getTardis().getTravel().getDestination().getDirection() != Direction.EAST ? console.getTardis().getTravel().getDestination().getDirection() != Direction.SOUTH ? direction.yaw + 1.5f : direction.yaw + 1f : direction.yaw + 0.5f : direction.yaw;
+		ModelPart antiGrav = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("sl_switch_1").getChild("bone33");
+		antiGrav.pivotX = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? antiGrav.pivotX + 1 : antiGrav.pivotX;
+		ModelPart autoPilot = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("st_switch").getChild("bone26");
+		autoPilot.yaw = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? autoPilot.yaw + 1 : autoPilot.yaw;
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}

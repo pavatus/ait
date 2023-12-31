@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,7 +39,7 @@ public class ServerTardisManager extends TardisManager {
     public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
     private static final ServerTardisManager instance = new ServerTardisManager();
     // Changed from MultiMap to HashMap to fix some concurrent issues, maybe
-    private final Map<UUID, List<UUID>> subscribers = new HashMap<>(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
+    private final ConcurrentHashMap<UUID, List<UUID>> subscribers = new ConcurrentHashMap<>(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
 
     public ServerTardisManager() {
         ServerPlayNetworking.registerGlobalReceiver(
