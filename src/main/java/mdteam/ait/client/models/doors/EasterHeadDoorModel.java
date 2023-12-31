@@ -8,6 +8,8 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import org.joml.Vector3f;
+
 public class EasterHeadDoorModel extends DoorModel {
 	private final ModelPart bottom;
 	public EasterHeadDoorModel(ModelPart root) {
@@ -33,6 +35,9 @@ public class EasterHeadDoorModel extends DoorModel {
 		matrices.push();
 
 		matrices.translate(0,-1.5f,0);
+
+		if (door.getTardis().getDoor().isOpen())
+			this.bottom.translate(new Vector3f(0,-30,0));
 
 		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

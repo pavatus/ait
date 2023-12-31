@@ -41,6 +41,8 @@ public class EasterHeadModel extends ExteriorModel {
 
 		matrices.translate(0,-1.5f,0);
 
+		this.head.getChild("door").pitch = (exterior.tardis().getDoor().isOpen()) ? -45f : 0f;
+
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
 		matrices.pop();

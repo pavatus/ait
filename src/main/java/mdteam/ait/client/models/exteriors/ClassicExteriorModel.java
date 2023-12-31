@@ -99,6 +99,10 @@ public class ClassicExteriorModel extends ExteriorModel {
 		/*this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
 		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
+		DoorHandler door = exterior.tardis().getDoor();
+		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
+		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
+
 		if (DependencyChecker.hasPortals())
 			this.getPart().getChild("Doors").visible = exterior.tardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
 

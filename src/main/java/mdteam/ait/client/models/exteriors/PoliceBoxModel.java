@@ -101,8 +101,10 @@ public class PoliceBoxModel extends ExteriorModel {
         matrices.scale(0.685F, 0.685f, 0.685f);
         matrices.translate(0, -1.5f, 0);
 
-        /*this.TARDIS.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
-        this.TARDIS.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
+        DoorHandler door = exterior.tardis().getDoor();
+
+        this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
+        this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
         // hide the doors if we have portals to stop the dupe
         if (DependencyChecker.hasPortals())

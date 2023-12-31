@@ -114,6 +114,7 @@ public class DoorHandler extends TardisLink {
         return tardis().getExterior().getVariant().door().isDouble();
     }
 
+    // fixme all these open methods are terrible
     public boolean isOpen() {
         if (isDoubleDoor()) {
             return this.isRightOpen() || this.isLeftOpen();

@@ -41,11 +41,11 @@ public abstract class DoorModel extends SinglePartEntityModel {
     }
 
     public void animateTile(DoorBlockEntity interiorDoor) {
-        this.getPart().traverse().forEach(ModelPart::resetTransform);
-        if (interiorDoor.getTardis() == null)
-            return;
-        DoorHandler.DoorStateEnum state = interiorDoor.getTardis().getDoor().getDoorState();
-        updateAnimation(interiorDoor.DOOR_STATE, getAnimationForDoorState(state), interiorDoor.animationTimer);
+        // this.getPart().traverse().forEach(ModelPart::resetTransform);
+        // if (interiorDoor.getTardis() == null)
+        //     return;
+        // DoorHandler.DoorStateEnum state = interiorDoor.getTardis().getDoor().getDoorState();
+        // updateAnimation(interiorDoor.DOOR_STATE, getAnimationForDoorState(state), interiorDoor.animationTimer);
     }
 
     public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);

@@ -78,6 +78,11 @@ public class ClassicDoorModel extends DoorModel {
 		matrices.translate(0, -1.5, 0.35);
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180));
 
+		DoorHandler door = doorEntity.getTardis().getDoor();
+
+		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
+		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
+
 		super.renderWithAnimations(doorEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}

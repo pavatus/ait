@@ -76,6 +76,11 @@ public class CapsuleExteriorModel extends ExteriorModel {
         /*this.body.getChild("doors").getChild("left_door").yaw = exterior.getLeftDoor();
         this.body.getChild("doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
+        DoorHandler handler = exterior.tardis().getDoor();
+
+        this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -5F : 0.0F;
+        this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;
+
         // if (DependencyChecker.hasPortals())
         //     this.getPart().getChild("doors").visible = exterior.tardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
 
