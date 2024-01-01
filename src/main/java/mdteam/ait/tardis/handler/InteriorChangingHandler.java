@@ -58,13 +58,17 @@ public class InteriorChangingHandler extends TardisLink {
 
     public void queueInteriorChange(TardisDesktopSchema schema) {
         if (tardis().getHandlers().getFuel().isOutOfFuel()) return;
-
+        if (tardis().getHandlers().getFuel().getFuel() < 5000) {
+            for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis())) {
+                player.sendMessage(Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED), true);
+            }
+        }
         setQueuedInterior(schema);
         setTicks(0);
         setGenerating(true);
         tardis().getHandlers().getAlarms().enable();
         tardis().getDesktop().setConsolePos(null);
-        tardis().removeFuel(20);
+        tardis().removeFuel(5000);
         tardis().markDirty();
     }
 
@@ -76,7 +80,7 @@ public class InteriorChangingHandler extends TardisLink {
 
     private void warnPlayers() {
         for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis())) {
-            player.sendMessage(Text.literal("Interior reconfiguration started! Please leave the interior.").formatted(Formatting.RED), true);
+            player.sendMessage(Text.translatable("tardis.message.interiorchange.warning").formatted(Formatting.RED), true);
         }
     }
     private boolean isInteriorEmpty() {

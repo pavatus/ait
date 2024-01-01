@@ -396,6 +396,21 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
+        //
+        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
+        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.apply", "Apply");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.back", "> Back");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
+        aitLanguageProvider.addTranslation("screen.ait.interior_settings.coral_hum", "Coral Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interior_settings.toyota_hum", "Toyota Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
+        aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
+        aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
 
 
 
@@ -475,6 +490,21 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Type de Clé: ");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Matériau: ");
         aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "La clé ne s’identifie avec aucun TARDIS");
+        //
+        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
+        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.apply", "Apply");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.back", "> Back");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
+        aitLanguageProvider.addTranslation("screen.ait.interior_settings.coral_hum", "Coral Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interior_settings.toyota_hum", "Toyota Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
+        aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
+        aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
 
 
         return aitLanguageProvider;
@@ -550,6 +580,20 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
+        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
+        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.apply", "Apply");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.back", "> Back");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
+        aitLanguageProvider.addTranslation("screen.ait.interior_settings.coral_hum", "Coral Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interior_settings.toyota_hum", "Toyota Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
+        aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
+        aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
 
         return aitLanguageProvider;
     }
@@ -616,6 +660,21 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Schlüsseltyp: ");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "Schlüssel identifiziert sich mit keiner TARDIS");
+        //
+        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
+        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.apply", "Apply");
+        aitLanguageProvider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.back", "> Back");
+        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
+        aitLanguageProvider.addTranslation("screen.ait.interior_settings.coral_hum", "Coral Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interior_settings.toyota_hum", "Toyota Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
+        aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
+        aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
 
         return aitLanguageProvider;
     }

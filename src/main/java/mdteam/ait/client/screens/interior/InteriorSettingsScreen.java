@@ -40,7 +40,7 @@ public class InteriorSettingsScreen extends TardisScreen {
 
     // loqor DONT rewrite with owo lib : (
     public InteriorSettingsScreen(UUID tardis, Screen parent) {
-        super(Text.translatable("screen." + AITMod.MOD_ID + ".interior_settings"), tardis);
+        super(Text.translatable("screen.ait.interiorsettings.title"), tardis);
         this.parent = parent;
         updateTardis();
     }
@@ -64,8 +64,8 @@ public class InteriorSettingsScreen extends TardisScreen {
     private void createButtons() {
         choicesCount = 0;
 
-        createTextButton(Text.literal("> Back"),(button -> backToExteriorChangeScreen()));
-        createTextButton(Text.literal("> Change Interior"), (button -> toSelectInteriorScreen()));
+        createTextButton(Text.translatable("screen.ait.interiorsettings.back"),(button -> backToExteriorChangeScreen()));
+        createTextButton(Text.translatable("screen.ait.interiorsettings.changeinterior"), (button -> toSelectInteriorScreen()));
 
         this.addButton(
                 new PressableTextWidget(
@@ -89,13 +89,14 @@ public class InteriorSettingsScreen extends TardisScreen {
                         this.textRenderer
                 )
         );
+        Text applyText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(
                 new PressableTextWidget(
-                        (int) (left + (bgWidth * 0.2f)) - (this.textRenderer.getWidth("apply") / 2),
+                        (int) (left + (bgWidth * 0.2f)) - (this.textRenderer.getWidth(applyText) / 2),
                         (int) (top + (bgHeight * 0.7f)),
-                        this.textRenderer.getWidth("apply"),
+                        this.textRenderer.getWidth(applyText),
                         10,
-                        Text.literal("apply"),
+                        applyText,
                         button -> applyHum(),
                         this.textRenderer
                 )
@@ -187,20 +188,21 @@ public class InteriorSettingsScreen extends TardisScreen {
 
     private void renderHums(DrawContext context) {
         if (getHumSound() == null) return;
-
+        Text humsText = Text.translatable("screen.ait.interior.settings.hum");
         context.drawText(
                 this.textRenderer,
-                "HUMS",
-                (int) (left + (bgWidth * 0.2f)) - this.textRenderer.getWidth("HUMS") / 2,
+                humsText,
+                (int) (left + (bgWidth * 0.2f)) - this.textRenderer.getWidth(humsText) / 2,
                 (int) (top + (bgHeight * 0.5f)),
                 0xbad7ff,
                 true
         );
-
+        Text hum = Text.translatable("screen.ait.interior.settings." + this.hum.name());
+        System.out.println(this.hum.name());
         context.drawText(
                 this.textRenderer,
-                this.hum.name(),
-                (int) (left + (bgWidth * 0.2f)) - this.textRenderer.getWidth(this.hum.name()) / 2,
+                hum,
+                (int) (left + (bgWidth * 0.2f)) - this.textRenderer.getWidth(hum) / 2,
                 (int) (top + (bgHeight * 0.6f)),
                 0xadcaf7,
                 true
