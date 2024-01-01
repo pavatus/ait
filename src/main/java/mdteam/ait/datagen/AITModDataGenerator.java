@@ -320,6 +320,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         generate_EN_CA_Language(pack); // en_ca (English Canada)
         generate_EN_GB_Language(pack); // en_gb (English Great Britain)
         generate_EN_NZ_Language(pack); // en_nz (English New Zealand)
+        generate_DE_DE_Language(pack); // de_de (German Germany)
+        generate_DE_AT_Language(pack); // de_at (German Austria)
+        generate_DE_CH_Language(pack); // de_ch (German Switzerland)
+        generate_NDS_DE_Language(pack); // nds_de (Nordic German)
     }
 
     /**
@@ -382,7 +386,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.destination_biome", "Destination Biome: ");
         aitLanguageProvider.addTranslation("tardis.message.control.increment.info", "Increment: ");
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.poscontrol", "Destination: ");
-        //
         aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
         aitLanguageProvider.addTranslation("message.ait.sonic.handbreakdisengaged", "Handbrake disengaged, destination set to current position");
@@ -423,11 +426,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.ARTRON_COLLECTOR, "Collecteur d’Artron ");
         aitLanguageProvider.addTranslation(AITItems.RIFT_SCANNER, "Scanneur de Faille");
         aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Tournevis Sonique Mécanique");
-        aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, " Tournevis Sonique Renaissance");
-        aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, " Tournevis Sonique Coral");
+        aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Tournevis Sonique Renaissance");
+        aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Tournevis Sonique Coral");
         aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
-        aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, " Modèle de forge");
-        aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, " Modèle de forge");
+        aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
+        aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
         aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
         aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterieur");
         aitLanguageProvider.addTranslation(AITBlocks.CORAL_PLANT, "Corail TARDIS");
@@ -549,6 +552,88 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
 
         return aitLanguageProvider;
+    }
+
+    public AITLanguageProvider addGermanTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+        AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
+
+        aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Abenteuer in der Zeit");
+        aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
+        aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Tür");
+        aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Konsole");
+        aitLanguageProvider.addTranslation(AITItems.IRON_KEY, "Eiserner Schlüssel");
+        aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Goldener Schlüssel");
+        aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Schlüssel");
+        aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Klassischer Schlüssel");
+        aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Fernbedienung");
+        aitLanguageProvider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artronsammler");
+        aitLanguageProvider.addTranslation(AITItems.RIFT_SCANNER, "Riss-Scanner");
+        aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanischer Schallschraubenzieher");
+        aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Schallschraubenzieher");
+        aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Korallen Schallschraubenzieher");
+        aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
+        aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
+        aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
+        aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
+        aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Äußere Hülle");
+        aitLanguageProvider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Koralle");
+        aitLanguageProvider.addTranslation("death.attack.tardis_squash", "%1$s wurde von einer TARDIS zerquetscht!");
+        aitLanguageProvider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
+        aitLanguageProvider.addTranslation("message.ait.riftscanner.info2", "Artron noch im Chunk: ");
+        aitLanguageProvider.addTranslation("message.ait.riftscanner.info3", "Dies ist kein Riss-Chunk");
+        aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Shift halten für weitere Informationen");
+        aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.active", "Protokoll 116: AKTIV");
+        aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocol 116: INACTIVE");
+        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning1", "Die TARDIS benötigt Treibstoff und kann sich nicht dematerialisieren");
+        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning2", "Die TARDIS tankt und kann sich nicht dematerialisieren");
+        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning3", "Äußere Hülle kann nicht in die innere Dimension verschoben werden");
+        aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.notardis", "Fernbedienung identifiziert sich mit keiner TARDIS");
+        aitLanguageProvider.addTranslation("tardis.message.control.antigravs.active", "Antigravitation: AKTIVIERT");
+        aitLanguageProvider.addTranslation("tardis.message.control.antigravs.inactive", "Antigravitation: DEAKTIVIERT");
+        aitLanguageProvider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
+        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.destination_nonexistent", "Rückreise: Letzte Position existiert nicht!");
+        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.last_position", "Rückreise: LETZTE POSITION GESETZT");
+        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.current_position", "Rückreise: JETZIGE POSITION GESETZT");
+        aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.active", "Protokoll 813: AKTIV");
+        aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocol 813: INACTIVE");
+        aitLanguageProvider.addTranslation("tardis.message.control.handbreak.on", "Handbremse: AN");
+        aitLanguageProvider.addTranslation("tardis.message.control.handbreak.off", "Handbremse: AUS");
+        aitLanguageProvider.addTranslation("tardis.message.control.landtype.on", "Bodensuche: AN");
+        aitLanguageProvider.addTranslation("tardis.message.control.landtype.off", "Bodensuche: AUS");
+        aitLanguageProvider.addTranslation("tardis.message.control.randomiser.destination", "Zielort: ");
+        aitLanguageProvider.addTranslation("tardis.message.control.refueler.enabled", "Tanken: Aktiviert");
+        aitLanguageProvider.addTranslation("tardis.message.control.refueler.disabled", "Tanken: Deaktiviert");
+        aitLanguageProvider.addTranslation("tardis.message.destination_biome", "Zielbiom: ");
+        aitLanguageProvider.addTranslation("tardis.message.control.increment.info", "Steigerung: ");
+        aitLanguageProvider.addTranslation("tardis.message.control.randomiser.poscontrol", "Zielort: ");
+        aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "RIFT-CHUNK GEFUNDEN");
+        aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "KEIN RIFT-CHUNK GEFUNDEN");
+        aitLanguageProvider.addTranslation("message.ait.sonic.handbreakdisengaged", "Handbremse deaktiviert, Koordinaten auf jetzige Position gesetzt");
+        aitLanguageProvider.addTranslation("message.ait.sonic.mode","Modus: ");
+        aitLanguageProvider.addTranslation("message.ait.sonic.none", "Keiner");
+        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4", "Ziel wurde zurückgesetzt und aktualisiert, das Gerät zeigt nun in Richtung des neuen Ziels");
+        aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade","Upgrade");
+        aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Schlüsseltyp: ");
+        aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
+        aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "Schlüssel identifiziert sich mit keiner TARDIS");
+
+        return aitLanguageProvider;
+    }
+
+    public void generate_DE_AT_Language(FabricDataGenerator.Pack pack) {
+        pack.addProvider(((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.DE_AT))); // de_at (German Austria)
+    }
+
+    public void generate_DE_CH_Language(FabricDataGenerator.Pack pack) {
+        pack.addProvider(((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.DE_CH))); // de_ch (German Switzerland)
+    }
+
+    public void generate_DE_DE_Language(FabricDataGenerator.Pack pack) {
+        pack.addProvider(((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.DE_DE))); // de_de (German Germany)
+    }
+
+    public void generate_NDS_DE_Language(FabricDataGenerator.Pack pack) {
+        pack.addProvider(((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.NDS_DE))); // nds_de (Nordic German)
     }
 
     public void generate_EN_US_Language(FabricDataGenerator.Pack pack) {

@@ -16,6 +16,11 @@ public enum LanguageType {
     EN_CA,
     EN_GB,
     EN_NZ,
+    DE_AT,
+    DE_CH,
+    DE_DE,
+    NDS_DE,
+
 
 
 }
