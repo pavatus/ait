@@ -92,9 +92,10 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 //            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 60, 0));
 //            player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 60, 0));
             Random random = new Random();
-            int x_random = random.nextInt(1, 15);
-            int y_random = random.nextInt(1, 15);
-            int z_random = random.nextInt(1, 15);
+            int x_random = random.nextInt(1, 10);
+            int y_random = random.nextInt(1, 10);
+            int z_random = random.nextInt(1, 10);
+
             boolean is_x_negative = false;
             boolean is_z_negative = false;
             if (random.nextInt(1,3) == 1) {
@@ -103,7 +104,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
             if (random.nextInt(1,3) == 1) {
                 is_z_negative = true;
             }
-            player.addVelocity(0.5f * x_random * (is_x_negative ? -1 : 1), 1.3f * y_random, 0.5f * z_random * (is_z_negative ? -1 : 1));
+            player.addVelocity(0.5f * x_random * (is_x_negative ? -1 : 1), 5f * y_random, 0.5f * z_random * (is_z_negative ? -1 : 1));
         }
         super.onSteppedOn(world, pos, state, entity);
     }
