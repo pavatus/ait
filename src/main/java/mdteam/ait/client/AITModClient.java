@@ -132,11 +132,12 @@ public class AITModClient implements ClientModInitializer {
 
         ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((block, world) -> {
             if (block instanceof ConsoleBlockEntity console) {
+                if (console.getTardis() == null) return;
                 ClientTardisManager.getInstance().consoleToTardis.remove(console);
                 if (!ClientTardisManager.getInstance().consoleToTardis.containsValue(console.getTardis())) {
                     if (ClientTardisManager.getInstance().exteriorToTardis.isEmpty()) {
                         if (ClientTardisManager.getInstance().interiorDoorToTardis.isEmpty()) {
-                            if (console.getTardis() == null) return;
+
                             ClientTardisManager.getInstance().loadedTardises.remove(console.getTardis().getUuid());
                             ClientTardisManager.getInstance().letKnowUnloaded(console.getTardis().getUuid());
                         }
@@ -145,18 +146,19 @@ public class AITModClient implements ClientModInitializer {
             }
             else if (block instanceof ExteriorBlockEntity exterior) {
                 ClientTardisManager.getInstance().exteriorToTardis.remove(exterior);
+                if (exterior.tardis() == null) return;
                 if (!ClientTardisManager.getInstance().exteriorToTardis.containsValue(exterior.tardis())) {
-                    if (exterior.tardis() == null) return;
+
                     ClientTardisManager.getInstance().loadedTardises.remove(exterior.tardis().getUuid());
                     ClientTardisManager.getInstance().letKnowUnloaded(exterior.tardis().getUuid());
                 }
             }
             else if (block instanceof DoorBlockEntity door) {
                 ClientTardisManager.getInstance().interiorDoorToTardis.remove(door);
+                if (door.getTardis() == null) return;
                 if (!ClientTardisManager.getInstance().interiorDoorToTardis.containsValue(door.getTardis())) {
                     if (ClientTardisManager.getInstance().consoleToTardis.isEmpty()) {
                         if (ClientTardisManager.getInstance().exteriorToTardis.isEmpty()) {
-                            if (door.getTardis() == null) return;
                             ClientTardisManager.getInstance().loadedTardises.remove(door.getTardis().getUuid());
                             ClientTardisManager.getInstance().letKnowUnloaded(door.getTardis().getUuid());
                         }

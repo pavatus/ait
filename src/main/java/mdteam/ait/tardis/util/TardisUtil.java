@@ -310,32 +310,66 @@ public class TardisUtil {
     }
 
     public static Tardis findTardisByInterior(BlockPos pos) {
-        for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
-            if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos))
-                return tardis;
+        Map<UUID, Tardis> matchingTardises = new HashMap<>();
+
+        for (Map.Entry<UUID, Tardis> entry : TardisManager.getInstance().getLookup().entrySet()) {
+            Tardis tardis = entry.getValue();
+            if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos)) {
+                matchingTardises.put(entry.getKey(), tardis);
+            }
         }
 
-        return null;
+        if (matchingTardises.isEmpty()) {
+            if (isClient()) {
+                ClientTardisManager.getInstance().ask(pos);
+            }
+            return null;
+        } else {
+            // Return the first Tardis object in the Map
+            return matchingTardises.values().iterator().next();
+        }
     }
 
     public static Tardis findTardisByPosition(AbsoluteBlockPos.Directed pos) {
-        for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
-            if (tardis.getDoor().getExteriorPos() != pos) continue;
+        Map<UUID, Tardis> matchingTardises = new HashMap<>();
 
-            return tardis;
+        for (Map.Entry<UUID, Tardis> entry : TardisManager.getInstance().getLookup().entrySet()) {
+            Tardis tardis = entry.getValue();
+            if (tardis.getDoor().getExteriorPos().equals(pos)) {
+                matchingTardises.put(entry.getKey(), tardis);
+            }
         }
 
-        return null;
+        if (matchingTardises.isEmpty()) {
+            if (isClient()) {
+                ClientTardisManager.getInstance().ask(pos);
+            }
+            return null;
+        } else {
+            // Return the first Tardis object in the Map
+            return matchingTardises.values().iterator().next();
+        }
     }
 
     public static Tardis findTardisByPosition(AbsoluteBlockPos pos) {
-        for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
-            if (!tardis.getDoor().getExteriorPos().equals(pos)) continue;
+        Map<UUID, Tardis> matchingTardises = new HashMap<>();
 
-            return tardis;
+        for (Map.Entry<UUID, Tardis> entry : TardisManager.getInstance().getLookup().entrySet()) {
+            Tardis tardis = entry.getValue();
+            if (tardis.getDoor().getExteriorPos().equals(pos)) {
+                matchingTardises.put(entry.getKey(), tardis);
+            }
         }
 
-        return null;
+        if (matchingTardises.isEmpty()) {
+            if (isClient()) {
+                ClientTardisManager.getInstance().ask(pos);
+            }
+            return null;
+        } else {
+            // Return the first Tardis object in the Map
+            return matchingTardises.values().iterator().next();
+        }
     }
 
     public static Tardis findTardisByPosition(BlockPos pos) {
