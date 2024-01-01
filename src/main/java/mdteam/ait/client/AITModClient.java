@@ -120,6 +120,7 @@ public class AITModClient implements ClientModInitializer {
                     ClientTardisManager.getInstance().loadedTardises.add(door.getTardis().getUuid());
                 }
             } else if (block instanceof ConsoleBlockEntity console) {
+                if (console.getTardis() == null) return;
                 if (!ClientTardisManager.getInstance().consoleToTardis.containsKey(console)) {
                     ClientTardisManager.getInstance().consoleToTardis.put(console, console.getTardis());
                 }

@@ -32,6 +32,8 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Random;
+
 public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, ICantBreak {
 
     public ConsoleBlock(Settings settings) {
@@ -85,15 +87,23 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     @Override
     public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         if (entity instanceof PlayerEntity player) {
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 30, 0));
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 30, 0));
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 30, 0));
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 30, 0));
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 60, 0));
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 30, 0));
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 30, 0));
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 30, 0));
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 15, 0));
+//            player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 30, 0));
+//            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 60, 0));
+//            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 60, 0));
+//            player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 60, 0));
+            Random random = new Random();
+            int x_random = random.nextInt(1, 15);
+            int y_random = random.nextInt(1, 15);
+            int z_random = random.nextInt(1, 15);
+            boolean is_x_negative = false;
+            boolean is_y_negative = false;
+            if (random.nextInt(1,3) == 1) {
+                is_x_negative = true;
+            }
+            if (random.nextInt(1,3) == 1) {
+                is_y_negative = true;
+            }
+            player.addVelocity(0.5f * x_random, 1.3f * y_random, 0.5f * z_random);
         }
         super.onSteppedOn(world, pos, state, entity);
     }
