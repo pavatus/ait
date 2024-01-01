@@ -19,13 +19,18 @@ public class TardisExterior {
     }
 
     public ExteriorSchema getType() {
+        if (exterior == null) {
+            AITMod.LOGGER.error("Exterior Type was null! Changing to a random one.."); // AHH PANIC AGAIN
+            setType(TardisItemBuilder.findRandomExterior());
+        }
+
         return exterior;
     }
 
     public ExteriorVariantSchema getVariant() {
         if (variant == null) {
             AITMod.LOGGER.error("Variant was null! Changing to a random one.."); // AHH PANIC I BROKE VERYTHIGN!??
-            setVariant(TardisItemBuilder.findRandomVariant(exterior));
+            setVariant(TardisItemBuilder.findRandomVariant(getType()));
         }
 
         return variant;
