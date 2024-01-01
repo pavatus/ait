@@ -53,7 +53,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
-        if (exterior.tardis() == null) {
+        if (exterior.tardis() == null || exterior.tardis().getExterior().getType() == null) {
             AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
             alpha = 0f; // just make me vanish.
             return;

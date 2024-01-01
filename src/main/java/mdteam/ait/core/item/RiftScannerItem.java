@@ -29,7 +29,7 @@ public class RiftScannerItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (entity instanceof PlayerEntity) {
+        if (entity instanceof PlayerEntity && selected) {
             PlayerEntity player = (PlayerEntity) entity;
             BlockPos currentBlockPos = player.getBlockPos();
             if (targetBlock != null) {

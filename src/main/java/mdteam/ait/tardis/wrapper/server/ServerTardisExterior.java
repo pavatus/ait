@@ -18,14 +18,14 @@ public class ServerTardisExterior extends TardisExterior implements TardisTickab
     @Override
     public void setType(ExteriorSchema exterior) {
         super.setType(exterior);
-        this.tardis.markDirty();
+        this.tardis().markDirty();
     }
 
     @Override
     public void setVariant(ExteriorVariantSchema variant) {
         super.setVariant(variant);
 
-        this.tardis.markDirty();
+        this.tardis().markDirty();
     }
 
     @Override
