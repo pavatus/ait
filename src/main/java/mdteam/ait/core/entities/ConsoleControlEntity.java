@@ -189,9 +189,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
             if (this.getTardis() == null) return false; // AAAAAAAAAAA
 
-            if (DeltaTimeManager.isStillWaitingOnDelay(getDelayId(this.getTardis()))) return false;
+            // Console Delay
+            //if (DeltaTimeManager.isStillWaitingOnDelay(getDelayId(this.getTardis()))) return false;
 
-            DeltaTimeManager.createDelay(getDelayId(this.getTardis()), 500L);
+            //DeltaTimeManager.createDelay(getDelayId(this.getTardis()), 500L);
 
             control.runAnimation(getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world);
 
