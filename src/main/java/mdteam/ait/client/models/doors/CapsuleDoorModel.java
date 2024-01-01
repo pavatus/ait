@@ -28,7 +28,7 @@ public class CapsuleDoorModel extends DoorModel {
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData body = modelPartData.addChild("body", ModelPartBuilder.create(), ModelTransform.of(0.0F, 3.0F, -10.0F, 0.0F, 3.1416F, 0.0F));
+        ModelPartData body = modelPartData.addChild("body", ModelPartBuilder.create(), ModelTransform.of(0.0F, 3.0F, -15.0F, 0.0F, 3.1416F, 0.0F));
 
         ModelPartData top = body.addChild("top", ModelPartBuilder.create().uv(87, 15).cuboid(-12.0F, -36.1F, -12.0F, 24.0F, 0.0F, 10.0F, new Dilation(0.0F))
                 .uv(15, 40).cuboid(-12.0F, -33.89F, -12.0F, 24.0F, 0.0F, 9.0F, new Dilation(0.0F))
@@ -40,11 +40,13 @@ public class CapsuleDoorModel extends DoorModel {
 
         ModelPartData octagon_r3 = top.addChild("octagon_r3", ModelPartBuilder.create().uv(93, 85).cuboid(-4.9706F, -2.0F, -12.0F, 9.9411F, 2.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -34.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
 
-        ModelPartData middle = body.addChild("middle", ModelPartBuilder.create().uv(146, 0).cuboid(-12.0F, -34.0F, -4.0F, 24.0F, 32.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 21.0F, 0.0F));
+        ModelPartData middle = body.addChild("middle", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 21.0F, 0.0F));
 
         ModelPartData octagon_r4 = middle.addChild("octagon_r4", ModelPartBuilder.create().uv(48, 135).cuboid(-2.2365F, -34.0F, 9.5F, 8.0F, 32.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -3.1416F, -0.7854F, 3.1416F));
 
         ModelPartData octagon_r5 = middle.addChild("octagon_r5", ModelPartBuilder.create().uv(142, 128).cuboid(-5.7635F, -34.0F, 9.5F, 8.0F, 32.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -3.1416F, 0.7854F, 3.1416F));
+
+        ModelPartData back = middle.addChild("back", ModelPartBuilder.create().uv(146, 0).cuboid(-12.0F, -34.0F, -4.0F, 24.0F, 32.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
         ModelPartData bottom = body.addChild("bottom", ModelPartBuilder.create().uv(135, 85).cuboid(-5.0294F, -2.0F, -12.0F, 10.0F, 2.0F, 7.0F, new Dilation(0.001F))
                 .uv(14, 64).cuboid(-12.0F, 0.01F, -12.0F, 24.0F, 0.0F, 10.0F, new Dilation(0.0F))
@@ -58,9 +60,9 @@ public class CapsuleDoorModel extends DoorModel {
 
         ModelPartData doors = body.addChild("doors", ModelPartBuilder.create(), ModelTransform.of(0.0F, -2.0F, -17.0F, 0.0F, 3.1416F, 0.0F));
 
-        ModelPartData right_door = doors.addChild("right_door", ModelPartBuilder.create().uv(161, 95).cuboid(0.4706F, -11.0F, -0.5F, 6.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-6.5F, 0.0F, -8.5F));
+        ModelPartData door_right = doors.addChild("door_right", ModelPartBuilder.create().uv(161, 95).cuboid(0.4706F, -11.0F, -0.5F, 6.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-6.5F, 0.0F, -8.5F));
 
-        ModelPartData left_door = doors.addChild("left_door", ModelPartBuilder.create().uv(162, 162).cuboid(-6.5294F, -11.0F, -0.5F, 6.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(6.5F, 0.0F, -8.5F));
+        ModelPartData door_left = doors.addChild("door_left", ModelPartBuilder.create().uv(161, 162).cuboid(-6.5294F, -11.0F, -0.5F, 6.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(6.5F, 0.0F, -8.5F));
         return TexturedModelData.of(modelData, 256, 256);
     }
 
@@ -97,11 +99,11 @@ public class CapsuleDoorModel extends DoorModel {
 
         DoorHandler handler = door.getTardis().getDoor();
 
-        this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -5F : 0.0F;
-        this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;
+        this.body.getChild("doors").getChild("door_left").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -5F : 0.0F;
+        this.body.getChild("doors").getChild("door_right").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;
 
-        // if (DependencyChecker.hasPortals())
-        //     this.getPart().getChild("middle").visible = false;
+         if (DependencyChecker.hasPortals())
+             this.getPart().getChild("middle").getChild("back").visible = false;
 
         super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

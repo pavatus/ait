@@ -45,7 +45,7 @@ public abstract class CapsuleVariant extends ExteriorVariantSchema {
             case NORTH -> pos.add(0,0.1,0.1);
             case SOUTH -> pos.add(0,0.1,-0.1);
             case WEST -> pos.add(0.1,0.1,0);
-            case EAST -> pos.add(-0.1,0.1,0);
+            case EAST -> pos.add(-0.35,0.1,0);
         };
     }
 
@@ -56,6 +56,6 @@ public abstract class CapsuleVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalWidth() {
-        return 0.9d;
+        return 0.8d;
     }
 }
