@@ -166,6 +166,7 @@ public class FallingTardisEntity extends Entity {
 
             this.move(MovementType.SELF, this.getVelocity());
             if (!this.getWorld().isClient) {
+                if (tardis() == null ) return;
                 if (PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
                     stopFalling();
                     return;

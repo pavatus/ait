@@ -68,7 +68,7 @@ public class RemoteItem extends Item {
                 return ActionResult.FAIL;
             }
             if (tardis.isRefueling()) {
-                player.sendMessage(Text.literal("message.ait.remoteitem.warning2"));
+                player.sendMessage(Text.translatable("message.ait.remoteitem.warning2"));
                 return ActionResult.FAIL;
             }
             // Check if the Tardis is already present at this location before moving it there
