@@ -51,7 +51,7 @@ public class RiftScannerItem extends Item {
         if(world.isClient()) return TypedActionResult.pass(user.getStackInHand(hand));
         if (user.isSneaking()) {
             // reset target
-            user.sendMessage(Text.literal("Target has been reset and updated, the device is now pointing towards your new target"));
+            user.sendMessage(Text.translatable("message.ait.remoteitem.warning4"));
             createNewTarget(world, user.getBlockPos());
 
         } else {
@@ -60,7 +60,7 @@ public class RiftScannerItem extends Item {
                 user.sendMessage(Text.translatable("message.ait.riftscanner.info1"));// Artron Chunk Info:
                 user.sendMessage(Text.translatable("message.ait.riftscanner.info2").append(riftChunk.getArtronLevels() + "au"));
             } else {
-                user.sendMessage(Text.literal("This is not a rift chunk"));
+                user.sendMessage(Text.translatable("message.ait.riftscanner.info3"));
             }
             // do something
         }

@@ -37,8 +37,9 @@ public class RiftChunkCommand {
         ServerPlayerEntity source = context.getSource().getPlayer();
         assert source != null;
         boolean isARiftChunk = TardisUtil.isRiftChunk(source.getServerWorld(), targetBlockPos);
-        Text message = Text.literal("This chunk is " + (isARiftChunk? "a rift chunk" : "not a rift chunk"));
-        source.sendMessage(message);
+        Text is_a_rift_chunk = Text.translatable("command.ait.riftchunk.isariftchunk");
+        Text not_a_rift_chunk = Text.translatable("command.ait.riftchunk.notariftchunk");
+        source.sendMessage((isARiftChunk ? is_a_rift_chunk : not_a_rift_chunk));
 
         return 1;
     }

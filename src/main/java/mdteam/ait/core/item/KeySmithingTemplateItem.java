@@ -27,11 +27,11 @@ public class KeySmithingTemplateItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(Text.literal("Upgrade").formatted(TITLE_FORMATTING));
+        tooltip.add(Text.translatable("message.ait.keysmithing.upgrade").formatted(TITLE_FORMATTING));
         tooltip.add(ScreenTexts.EMPTY);
-        tooltip.add(Text.literal("Key type:").formatted(TITLE_FORMATTING));
+        tooltip.add(Text.translatable("message.ait.keysmithing.key").formatted(TITLE_FORMATTING));
         tooltip.add(ScreenTexts.space().append(Text.literal(this.KEY)).formatted(DESCRIPTION_FORMATTING));
-        tooltip.add(Text.literal("Material:").formatted(TITLE_FORMATTING));
+        tooltip.add(Text.translatable("message.ait.keysmithing.ingredient:").formatted(TITLE_FORMATTING));
         tooltip.add(ScreenTexts.space().append(Text.literal(this.INGREDIENT)).formatted(DESCRIPTION_FORMATTING));
     }
 }

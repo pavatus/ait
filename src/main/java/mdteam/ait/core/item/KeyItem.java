@@ -164,13 +164,13 @@ public class KeyItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (!Screen.hasShiftDown()) {
-            tooltip.add(Text.literal("Hold shift for more info").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
+            tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
             return;
         }
 
         NbtCompound tag = stack.getOrCreateNbt();
         String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
-                : "Key does not identify with any TARDIS";
+                : Text.translatable("tooltip.ait.key.notardis").toString();
 
         tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
     }

@@ -133,9 +133,9 @@ public class SonicItem extends Item {
                         AITMod.openScreen((ServerPlayerEntity) player, 2, tardis.getUuid());
 
                 } else if (world.getRegistryKey() == World.OVERWORLD && !world.isClient()) {
-                    player.sendMessage(Text.literal(TardisUtil.isRiftChunk(
-                                    (ServerWorld) world, pos) ? "RIFT FOUND" : "RIFT NOT FOUND")
-                            .formatted(Formatting.AQUA).formatted(Formatting.BOLD));
+                    Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
+                    Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
+                    player.sendMessage((TardisUtil.isRiftChunk((ServerWorld) world, pos) ? found : notfound));
                 }
             }
         },
@@ -144,7 +144,7 @@ public class SonicItem extends Item {
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (world == TardisUtil.getTardisDimension()) {
                     world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-                    player.sendMessage(Text.literal("Cannot translocate exterior to interior dimension"), true);
+                    player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
                     return;
                 }
 
@@ -163,7 +163,7 @@ public class SonicItem extends Item {
 
                 travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()), true);
 
-                player.sendMessage(Text.literal("Handbrake disengaged, destination set to current position"), true);
+                player.sendMessage(Text.translatable("message.ait.sonic.handbreakdisengaged"), true);
             }
         };
 
@@ -290,16 +290,16 @@ public class SonicItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (!Screen.hasShiftDown()) {
-            tooltip.add(Text.literal("Hold shift for more info").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
+            tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
             return;
         }
 
         NbtCompound tag = stack.getOrCreateNbt();
         String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
-                : "None";
+                : Text.translatable("message.ait.sonic.none").toString();
 
         if (tag.contains("tardis")) { // Adding the sonics mode
-            tooltip.add(Text.literal("Mode:").formatted(Formatting.BLUE));
+            tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
 
             Mode mode = intToMode(tag.getInt(MODE_KEY));
             tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));

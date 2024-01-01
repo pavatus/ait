@@ -382,6 +382,19 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.destination_biome", "Destination Biome: ");
         aitLanguageProvider.addTranslation("tardis.message.control.increment.info", "Increment: ");
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.poscontrol", "Destination: ");
+        //
+        aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
+        aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
+        aitLanguageProvider.addTranslation("message.ait.sonic.handbreakdisengaged", "Handbrake disengaged, destination set to current position");
+        aitLanguageProvider.addTranslation("message.ait.sonic.mode","Mode: ");
+        aitLanguageProvider.addTranslation("message.ait.sonic.none", "None");
+        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4", "Target has been reset and updated, the device is now pointing towards your new target");
+        aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade","Upgrade");
+        aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
+        aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
+        aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
+
+
 
 
         return aitLanguageProvider;
@@ -447,6 +460,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.destination_biome", "Destination Biome: ");
         aitLanguageProvider.addTranslation("tardis.message.control.increment.info", "Increment: ");
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.poscontrol", "Destination: ");
+        aitLanguageProvider.addTranslation("command.ait.riftchunk.isariftchunk", "This chunk is a rift chunk");
+        aitLanguageProvider.addTranslation("command.ait.riftchunk.isnotariftchunk", "This chunk is not a rift chunk");
 
 
         return aitLanguageProvider;
