@@ -1,19 +1,21 @@
 package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.handler.TardisLink;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import net.minecraft.block.entity.BlockEntity;
 
-public class TardisExterior {
+import java.util.Optional;
 
-    @Exclude
-    protected final Tardis tardis;
+public class TardisExterior extends TardisLink {
     private ExteriorSchema exterior;
     private ExteriorVariantSchema variant;
 
     public TardisExterior(Tardis tardis, ExteriorSchema exterior, ExteriorVariantSchema variant) {
-        this.tardis = tardis;
+        super(tardis.getUuid());
         this.exterior = exterior;
         this.variant = variant;
     }
@@ -43,16 +45,26 @@ public class TardisExterior {
             AITMod.LOGGER.error("Force changing exterior variant to a random one to ensure it matches!");
             setVariant(TardisItemBuilder.findRandomVariant(exterior));
         }
-        if (tardis != null) {
-            tardis.getDoor().closeDoors();
+        if (tardis() != null) {
+            tardis().getDoor().closeDoors();
         }
     }
 
     public void setVariant(ExteriorVariantSchema variant) {
-        if (tardis != null) {
-            tardis.getDoor().closeDoors();
+        if (tardis() != null) {
+            tardis().getDoor().closeDoors();
         }
 
         this.variant = variant;
+    }
+
+    public Optional<ExteriorBlockEntity> findExteriorBlock() {
+        if (tardis() == null) return Optional.empty();
+
+        BlockEntity found = this.getExteriorPos().getWorld().getBlockEntity(this.getExteriorPos());
+
+        if (!(found instanceof ExteriorBlockEntity)) return Optional.empty();
+
+        return Optional.of((ExteriorBlockEntity) found);
     }
 }
