@@ -315,6 +315,9 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (player.getMainHandStack().getItem() == Items.BONE) setVariant(nextVariant(getVariant()));
         if (player.getMainHandStack().getItem() == Items.SHEARS) {
             world.breakBlock(pos, true);
+            for (ConsoleControlEntity entity : controlEntities) {
+                entity.discard();
+            }
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, new ItemStack(AITBlocks.CONSOLE)));
             markRemoved();
         }
