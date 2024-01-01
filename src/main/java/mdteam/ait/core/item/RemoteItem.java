@@ -117,7 +117,7 @@ public class RemoteItem extends Item {
 
         NbtCompound tag = stack.getOrCreateNbt();
         String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
-                : Text.translatable("tooltip.ait.remoteitem.notardis").toString();
+                : Text.translatable("tooltip.ait.remoteitem.notardis").getString();
 
         tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
     }

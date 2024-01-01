@@ -296,7 +296,7 @@ public class SonicItem extends Item {
 
         NbtCompound tag = stack.getOrCreateNbt();
         String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
-                : Text.translatable("message.ait.sonic.none").toString();
+                : Text.translatable("message.ait.sonic.none").getString();
 
         if (tag.contains("tardis")) { // Adding the sonics mode
             tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));

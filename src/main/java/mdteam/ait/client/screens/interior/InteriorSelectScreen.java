@@ -32,7 +32,7 @@ public class InteriorSelectScreen extends TardisScreen {
 
     // loqor DONT rewrite with owo lib : (
     public InteriorSelectScreen(UUID tardis, Screen parent) {
-        super(Text.translatable("screen." + AITMod.MOD_ID + ".interior_select"), tardis);
+        super(Text.translatable("screen.ait.interor_select.title"), tardis);
         this.parent = parent;
         updateTardis();
     }
@@ -79,13 +79,14 @@ public class InteriorSelectScreen extends TardisScreen {
                         this.textRenderer
                 )
         );
+        Text apply_text = Text.translatable("screen.ait.monitor.apply");
         this.addButton(
                 new PressableTextWidget(
-                        (int) (left + (bgWidth * 0.5f)) - (textRenderer.getWidth("apply") / 2),
+                        (int) (left + (bgWidth * 0.5f)) - (textRenderer.getWidth(apply_text) / 2),
                         (int) (top + (bgHeight * 0.91f)),
-                        this.textRenderer.getWidth("apply"),
+                        this.textRenderer.getWidth(apply_text),
                         10,
-                        Text.literal("apply"),
+                        apply_text,
                         button -> applyDesktop(),
                         this.textRenderer
                 )

@@ -105,8 +105,9 @@ public class MonitorScreen extends TardisScreen {
         this.buttons.clear();
         // exterior change text button
         // fixme i think we're overloading with packets because the client side of all the code kinda desperately needs a redo / if you spam the button everything slows OR you get kicked
+        Text applyText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(new PressableTextWidget((width / 2 - 103), (height / 2 + 12),
-                this.textRenderer.getWidth("Apply"), 10, Text.literal("Apply"), button -> {
+                this.textRenderer.getWidth(applyText), 10, applyText, button -> {
             sendExteriorPacket();
         }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 - 110), (height / 2 - 24),
@@ -125,8 +126,9 @@ public class MonitorScreen extends TardisScreen {
                 this.textRenderer.getWidth(">"), 10, Text.literal(">").formatted(Formatting.LIGHT_PURPLE), button -> {
             whichDirectionVariant(true);
         }, this.textRenderer));
+        Text desktopSettingsText = Text.translatable("screen.ait.monitor.desktop_settings");
         this.addButton(new PressableTextWidget((width / 2 + 12), (height / 2 + 38),
-                this.textRenderer.getWidth("Desktop Settings"), 10, Text.literal("Desktop Settings").formatted(Formatting.AQUA), button -> toInteriorSettingsScreen(), this.textRenderer));
+                this.textRenderer.getWidth(desktopSettingsText), 10, Text.translatable("screen.ait.monitor..desktop_settings").formatted(Formatting.AQUA), button -> toInteriorSettingsScreen(), this.textRenderer));
         this.buttons.forEach(buttons -> {
             // buttons.visible = false;
             buttons.active = true;
@@ -279,7 +281,7 @@ public class MonitorScreen extends TardisScreen {
         context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 67), (height / 2 + 38), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(dimensionText), (width / 2 - 19), (height / 2 + 48), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 67), (height / 2 + 48), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal("Fuel:"), (width / 2 - 102), (height / 2 + 28), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.fuel"), (width / 2 - 102), (height / 2 + 28), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(fuelText + "%"), (width / 2 - 108), (height / 2 + 38), 0xFFFFFF, true);
     }
 

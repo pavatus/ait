@@ -29,8 +29,9 @@ public class HADSControl extends Control {
         PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED));
 
         tardis.markDirty();
-
-        player.sendMessage(Text.literal("Alarms: " + (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED) ? "Enabled" : "Disabled")), true);
+        Text alarm_enabled = Text.translatable("tardis.message.control.hads.alarm_enabled");
+        Text alarms_disabled = Text.translatable("tardis.message.control.hads.alarms_disabled");
+        player.sendMessage(((PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)) ? alarm_enabled : alarms_disabled), true);
 
         return true;
     }
