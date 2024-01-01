@@ -58,13 +58,14 @@ public class DesktopGenerator {
     }
 
     public static void clearArea(ServerWorld level, Corners interiorCorners) {
+        // @TODO: Just delete the chunks instead of doing this
         for (BlockPos pos : BlockPos.iterate(interiorCorners.getFirst().add(0, -64, 0), interiorCorners.getSecond().add(0, 256, 0))) {
             level.setBlockState(pos, Blocks.AIR.getDefaultState());
         }
-        for (ItemEntity entity : level.getEntitiesByType(EntityType.ITEM/*TardisUtil.getPlayerInsideInterior(interiorCorners)*/, /*interiorCorners.getBox()*/EntityPredicates.EXCEPT_SPECTATOR)) {
-            if (TardisUtil.inBox(interiorCorners.getBox(), entity.getBlockPos())) {
-                entity.kill();
-            }
-        }
+//        for (ItemEntity entity : level.getEntitiesByType(EntityType.ITEM/*TardisUtil.getPlayerInsideInterior(interiorCorners)*/, /*interiorCorners.getBox()*/EntityPredicates.EXCEPT_SPECTATOR)) {
+//            if (TardisUtil.inBox(interiorCorners.getBox(), entity.getBlockPos())) {
+//                entity.kill();
+//            }
+//        }
     }
 }
