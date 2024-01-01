@@ -31,6 +31,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
@@ -69,18 +70,23 @@ public class MonitorScreen extends TardisScreen {
     }
 
     public ExteriorSchema getCurrentModel() {
+        // if (currentModel == ExteriorRegistry.CORAL_GROWTH) nextExterior();
+
         return currentModel == null ? tardis().getExterior().getType() : currentModel;
     }
 
     public void setCurrentModel(ExteriorSchema currentModel) {
         this.currentModel = currentModel;
 
+        if (currentVariant == null) return;
         if (this.currentVariant.parent().parent() != currentModel) {
             currentVariant = null;
         }
     }
 
     public ClientExteriorVariantSchema getCurrentVariant() {
+        if (Objects.equals(currentVariant, ClientExteriorVariantRegistry.CORAL_GROWTH)) whichDirectionExterior(true);
+
         if (currentVariant == null)
             if(tardis().getExterior().getType() != getCurrentModel()) {
                 setCurrentVariant(TardisItemBuilder.findRandomVariant(getCurrentModel()));
@@ -153,6 +159,10 @@ public class MonitorScreen extends TardisScreen {
     public void whichDirectionExterior(boolean direction) {
         if (direction) setCurrentModel(nextExterior());
         else setCurrentModel(previousExterior());
+
+        if (this.currentModel == ExteriorRegistry.CORAL_GROWTH) {
+            whichDirectionExterior(direction);
+        }
     }
     public ExteriorSchema nextExterior() {
         List<ExteriorSchema> list = ExteriorRegistry.REGISTRY.stream().toList();

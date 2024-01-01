@@ -1,6 +1,7 @@
 package mdteam.ait.client.models.coral;
 
 import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -348,11 +349,24 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
     }
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-
     }
+
+    @Override
+    public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        matrices.push();
+        // matrices.translate(0, -1.5, 0);
+
+        coral.getChild("seven").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+        // super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+        matrices.pop();
+    }
+
+
     @Override
     public ModelPart getPart() {
-        return coral.getChild("seven");
+        return coral;
     }
 
     @Override
@@ -361,5 +375,16 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
     @Override
     public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
         return Animation.Builder.create(0).build();
+    }
+
+    public ModelPart getCurrentAge(int age, CoralGrowthExteriorModel coralModel) {
+        return switch (age) {
+            case 1 -> coralModel.coral.getChild("two");
+            case 2 -> coralModel.coral.getChild("three");
+            case 3 -> coralModel.coral.getChild("four");
+            case 4 -> coralModel.coral.getChild("five");
+            case 5, 7, 6 -> coralModel.coral.getChild("six");
+            default -> coralModel.coral.getChild("one");
+        };
     }
 }

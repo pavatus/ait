@@ -1,6 +1,8 @@
 package mdteam.ait.tardis.handler;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.item.TardisItemBuilder;
+import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
@@ -11,6 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -58,6 +61,8 @@ public class InteriorChangingHandler extends TardisLink {
 
     public void queueInteriorChange(TardisDesktopSchema schema) {
         if (tardis().getHandlers().getFuel().isOutOfFuel()) return;
+        if (tardis().isGrowth() && tardis().hasGrowthExterior())
+            tardis().getExterior().setType(TardisItemBuilder.findRandomExterior());
 
         setQueuedInterior(schema);
         setTicks(0);

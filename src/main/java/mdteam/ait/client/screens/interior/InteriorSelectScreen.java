@@ -17,6 +17,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static mdteam.ait.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
@@ -122,8 +123,6 @@ public class InteriorSelectScreen extends TardisScreen {
         MinecraftClient.getInstance().setScreen(this.parent);
     }
 
-
-    //@TODO make it use the current interior as the starting point - Loqor
     private static TardisDesktopSchema nextDesktop(TardisDesktopSchema current) {
         List<TardisDesktopSchema> list = DesktopRegistry.REGISTRY.stream().toList();
 
@@ -167,6 +166,8 @@ public class InteriorSelectScreen extends TardisScreen {
         context.drawTexture(BACKGROUND, left, top, 0, 0, bgWidth, bgHeight);
     }
     private void renderDesktop(DrawContext context) {
+        if (Objects.equals(this.selectedDesktop, DesktopRegistry.DEFAULT_CAVE)) this.nextDesktop();
+
         context.drawCenteredTextWithShadow(
             this.textRenderer,
             this.selectedDesktop.name(),

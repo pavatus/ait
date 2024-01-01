@@ -31,8 +31,7 @@ public abstract class ClientExteriorVariantSchema {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() == null) return false;
-
-        ClientExteriorVariantSchema that = (ClientExteriorVariantSchema) o;
+        if (!(o instanceof ClientExteriorVariantSchema that)) return false;
 
         return id.equals(that.id);
     }

@@ -144,7 +144,13 @@ public class Tardis {
     // for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta
     // this should stop basic features of the tardis from happening
     public boolean isGrowth() {
+        return hasGrowthExterior() || hasGrowthDesktop();
+    }
+    public boolean hasGrowthExterior() {
         return getExterior().getVariant().equals(ExteriorVariantRegistry.CORAL_GROWTH);
+    }
+    public boolean hasGrowthDesktop() {
+        return getDesktop().getSchema().equals(DesktopRegistry.DEFAULT_CAVE);
     }
 
     /**
@@ -154,8 +160,15 @@ public class Tardis {
      */
     public void tick(MinecraftServer server) {
         // most of the logic is in the handlers, so we can just disable them if we're a growth
-        if (!isGrowth())
-            this.getHandlers().tick(server);
+        // if (!isGrowth())
+        //     this.getHandlers().tick(server);
+
+        if (isGrowth() && getDoor().isBothClosed() && !getHandlers().getInteriorChanger().isGenerating())
+            getDoor().openDoors();
+        if (isGrowth() && getDoor().locked() && !getHandlers().getInteriorChanger().isGenerating())
+            getDoor().setLocked(false);
+
+        this.getHandlers().tick(server);
 
         // im sure this is great for your server performace
         if (TardisChunkUtil.shouldExteriorChunkBeForced(this) && !TardisChunkUtil.isExteriorChunkForced(this)) {

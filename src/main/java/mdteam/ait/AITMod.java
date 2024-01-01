@@ -114,7 +114,7 @@ public class AITMod implements ModInitializer {
         }));
 
         TardisEvents.DEMAT.register((tardis -> {
-            if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
+            if (tardis.isGrowth() || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
                 return true; // cancelled
 
             for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {

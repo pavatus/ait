@@ -60,6 +60,8 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
     public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
         if (player == null)
             return;
+        if (this.tardis().isGrowth())
+            return;
 
         if (player.getMainHandStack().getItem() instanceof KeyItem) {
             ItemStack key = player.getMainHandStack();
