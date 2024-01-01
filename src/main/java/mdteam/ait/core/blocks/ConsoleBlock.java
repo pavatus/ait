@@ -12,8 +12,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -77,6 +80,22 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
             consoleBlockEntity.markNeedsControl();
         }
         super.onPlaced(world, pos, state, placer, itemStack);
+    }
+
+    @Override
+    public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
+        if (entity instanceof PlayerEntity player) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 30, 0));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 30, 0));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 30, 0));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 30, 0));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 60, 0));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 30, 0));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 30, 0));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 30, 0));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 15, 0));
+        }
+        super.onSteppedOn(world, pos, state, entity);
     }
 
     // This will literally never happen
