@@ -134,7 +134,7 @@ public class MonitorScreen extends TardisScreen {
         }, this.textRenderer));
         Text desktopSettingsText = Text.translatable("screen.ait.monitor.desktop_settings");
         this.addButton(new PressableTextWidget((width / 2 + 12), (height / 2 + 38),
-                this.textRenderer.getWidth(desktopSettingsText), 10, Text.translatable("screen.ait.monitor..desktop_settings").formatted(Formatting.AQUA), button -> toInteriorSettingsScreen(), this.textRenderer));
+                this.textRenderer.getWidth(desktopSettingsText), 10, Text.translatable("screen.ait.monitor.desktop_settings").formatted(Formatting.AQUA), button -> toInteriorSettingsScreen(), this.textRenderer));
         this.buttons.forEach(buttons -> {
             // buttons.visible = false;
             buttons.active = true;

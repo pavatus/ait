@@ -406,8 +406,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("screen.ait.interiorsettings.back", "> Back");
         aitLanguageProvider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
         aitLanguageProvider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
-        aitLanguageProvider.addTranslation("screen.ait.interior_settings.coral_hum", "Coral Hum");
-        aitLanguageProvider.addTranslation("screen.ait.interior_settings.toyota_hum", "Toyota Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.coral", "Coral");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
         aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
@@ -500,8 +500,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("screen.ait.interiorsettings.back", "> Back");
         aitLanguageProvider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
         aitLanguageProvider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
-        aitLanguageProvider.addTranslation("screen.ait.interior_settings.coral_hum", "Coral Hum");
-        aitLanguageProvider.addTranslation("screen.ait.interior_settings.toyota_hum", "Toyota Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.coral", "Coral");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
         aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
@@ -589,8 +589,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("screen.ait.interiorsettings.back", "> Back");
         aitLanguageProvider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
         aitLanguageProvider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
-        aitLanguageProvider.addTranslation("screen.ait.interior_settings.coral_hum", "Coral Hum");
-        aitLanguageProvider.addTranslation("screen.ait.interior_settings.toyota_hum", "Toyota Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.coral", "Coral");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
         aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
@@ -670,8 +670,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("screen.ait.interiorsettings.back", "> Back");
         aitLanguageProvider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
         aitLanguageProvider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
-        aitLanguageProvider.addTranslation("screen.ait.interior_settings.coral_hum", "Coral Hum");
-        aitLanguageProvider.addTranslation("screen.ait.interior_settings.toyota_hum", "Toyota Hum");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.coral", "Coral");
+        aitLanguageProvider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
         aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
