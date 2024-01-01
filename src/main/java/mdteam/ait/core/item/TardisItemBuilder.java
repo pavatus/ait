@@ -5,6 +5,8 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -59,6 +61,19 @@ public class TardisItemBuilder extends Item {
         Random rnd = new Random();
         int randomized = rnd.nextInt(Math.abs(ExteriorRegistry.REGISTRY.size()));
         return (ExteriorSchema) ExteriorRegistry.REGISTRY.stream().toArray()[randomized];
+    }
+
+    public static TardisDesktopSchema findRandomDesktop() {
+        Random rnd = new Random();
+        int randomized = rnd.nextInt(Math.abs(DesktopRegistry.REGISTRY.size()));
+        return (TardisDesktopSchema) DesktopRegistry.REGISTRY.stream().toArray()[randomized];
+    }
+    public static TardisDesktopSchema findRandomDesktop(Tardis tardis) { // todo this may cause looping crashes
+        TardisDesktopSchema found = findRandomDesktop();
+
+        if (tardis.isDesktopUnlocked(found)) return found;
+
+        return findRandomDesktop(tardis);
     }
 
     @Override
