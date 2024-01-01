@@ -24,6 +24,7 @@ public class ExteriorRegistry {
     public static ExteriorSchema CUBE; // dont use
     public static ExteriorSchema BOOTH;
     public static ExteriorSchema EASTER_HEAD;
+    public static ExteriorSchema CORAL_GROWTH;
 
     public static void init() {
         CLASSIC = register(new ClassicExterior());
@@ -33,5 +34,6 @@ public class ExteriorRegistry {
         // CUBE = register(new CubeExterior()); // fixme how could i do this, remove the cube instead of fixing a bug : (
         BOOTH = register(new BoothExterior());
         EASTER_HEAD = register(new EasterHeadExterior());
+        CORAL_GROWTH = register(new GrowthExterior());
     }
 }

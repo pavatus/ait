@@ -1,6 +1,7 @@
 package mdteam.ait.core.blocks;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.models.coral.CoralGrowthExteriorModel;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITDamageTypes;
 import mdteam.ait.core.AITDimensions;
@@ -11,8 +12,10 @@ import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.advancement.TardisCriterions;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
+import mdteam.ait.tardis.exterior.GrowthExterior;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.variant.exterior.growth.CoralGrowthVariant;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
@@ -109,12 +112,13 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
     private void createTardis(ServerWorld world, BlockPos pos) {
         // Create a new tardis
-        ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), ExteriorRegistry.REGISTRY.get(CapsuleExterior.REFERENCE), ExteriorVariantRegistry.REGISTRY.get(new Identifier(AITMod.MOD_ID, "capsule_default")), DesktopRegistry.CAVE, false);
+        ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), ExteriorRegistry.REGISTRY.get(GrowthExterior.REFERENCE), ExteriorVariantRegistry.REGISTRY.get(CoralGrowthVariant.REFERENCE), DesktopRegistry.DEFAULT_CAVE, false);
+        created.getHandlers().getFuel().setFuelCount(0);
         // created.getHandlers().getOvergrownHandler().setOvergrown(true); //fixme created.getEnvironmentHandler().setCoralCovered(true);
 
-        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world);
-        lightning.setPos(pos.getX(),pos.getY(),pos.getZ());
-        world.spawnEntity(lightning);
+        //LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world);
+        // lightning.setPos(pos.getX(),pos.getY(),pos.getZ());
+        // world.spawnEntity(lightning);
     }
 
     @Override

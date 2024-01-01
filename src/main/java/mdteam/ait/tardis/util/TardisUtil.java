@@ -11,6 +11,7 @@ import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.interfaces.RiftChunk;
+import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
@@ -79,18 +80,23 @@ public class TardisUtil {
                     Identifier exteriorValue = Identifier.tryParse(buf.readString());
                     boolean variantChange = buf.readBoolean();
                     String variantValue = buf.readString();
+                    Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(ExteriorRegistry.REGISTRY.get(exteriorValue));
-                    WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
+                    tardis.getExterior().setType(ExteriorRegistry.REGISTRY.get(exteriorValue));
+                    WorldOps.updateIfOnServer(server.getWorld(tardis
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
-                            ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
+                            tardis.getDoor().getExteriorPos());
                     if (variantChange) {
-                        ServerTardisManager.getInstance().getTardis(uuid).getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(Identifier.tryParse(variantValue)));
-                        WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
+                        tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(Identifier.tryParse(variantValue)));
+                        WorldOps.updateIfOnServer(server.getWorld(tardis
                                         .getTravel().getPosition().getWorld().getRegistryKey()),
-                                ServerTardisManager.getInstance().getTardis(uuid).getDoor().getExteriorPos());
+                                tardis.getDoor().getExteriorPos());
                     }
-                    ServerTardisManager.getInstance().getTardis(uuid).markDirty();
+
+                    if (tardis.isGrowth())
+                        tardis.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(tardis));
+
+                    tardis.markDirty();
 
                     /*ExteriorEnum[] values = ExteriorEnum.values();
                     int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;

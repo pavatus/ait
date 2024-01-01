@@ -21,6 +21,7 @@ import mdteam.ait.tardis.variant.exterior.cube.RedCoobVariant;
 import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadFireVariant;
 import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadSoulVariant;
+import mdteam.ait.tardis.variant.exterior.growth.CoralGrowthVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimFireVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimSoulVariant;
@@ -77,6 +78,7 @@ public class ExteriorVariantRegistry {
     public static ExteriorVariantSchema HEAD_DEFAULT;
     public static ExteriorVariantSchema HEAD_SOUL;
     public static ExteriorVariantSchema HEAD_FIRE;
+    public static ExteriorVariantSchema CORAL_GROWTH;
 
     // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
     public static void init() {
@@ -114,5 +116,8 @@ public class ExteriorVariantRegistry {
         HEAD_DEFAULT = register(new EasterHeadDefaultVariant());
         HEAD_SOUL = register(new EasterHeadSoulVariant());
         HEAD_FIRE = register(new EasterHeadFireVariant());
+
+        // Coral Growth
+        CORAL_GROWTH = register(new CoralGrowthVariant());
     }
 }

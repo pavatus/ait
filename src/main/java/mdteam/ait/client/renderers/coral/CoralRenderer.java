@@ -46,8 +46,7 @@ public class CoralRenderer<T extends CoralBlockEntity> implements BlockEntityRen
             case 2 -> coralModel.coral.getChild("three");
             case 3 -> coralModel.coral.getChild("four");
             case 4 -> coralModel.coral.getChild("five");
-            case 5, 7 -> coralModel.coral.getChild("six");
-            case 6 -> coralModel.coral.getChild("seven");
+            case 5, 7, 6 -> coralModel.coral.getChild("six");
             default -> coralModel.coral.getChild("one");
         };
     }

@@ -65,6 +65,8 @@ public class OvergrownHandler extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
 
+        if (tardis().isGrowth()) return;
+
         if (this.isOvergrown() && (this.tardis().getTravel().getState() == TardisTravel.State.FLIGHT || this.tardis().getTravel().getState() == TardisTravel.State.MAT)) {
             this.setOvergrown(false);
             this.setTicks(0);

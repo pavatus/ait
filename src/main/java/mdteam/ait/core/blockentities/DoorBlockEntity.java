@@ -70,6 +70,8 @@ public class DoorBlockEntity extends BlockEntity {
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
         if (player == null)
             return;
+        if (this.getTardis().isGrowth() && this.getTardis().hasGrowthExterior())
+            return;
         if (player.getMainHandStack().getItem() instanceof KeyItem) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();

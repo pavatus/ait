@@ -10,6 +10,7 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 
+// not to be confused with the exterior, this is only for the coral while its growing
 @SuppressWarnings("rawtypes")
 public class CoralGrowthModel extends SinglePartEntityModel {
 	public final ModelPart coral;
