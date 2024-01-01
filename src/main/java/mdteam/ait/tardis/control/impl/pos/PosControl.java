@@ -37,7 +37,7 @@ public abstract class PosControl extends Control {
 
     private void messagePlayerDestination(ServerPlayerEntity player, TardisTravel travel) {
         AbsoluteBlockPos.Directed dest = travel.getDestination();
-
-        player.sendMessage(Text.literal("Destination: " + dest.getX() + " | " + dest.getY() + " | " + dest.getZ()), true); // fixme translatable is preferred
+        Text text = Text.translatable("tardis.message.control.randomiser.poscontrol").append(Text.literal(" " + dest.getX() + " | " + dest.getY() + " | " + dest.getZ()));
+        player.sendMessage(text, true);
     }
 }

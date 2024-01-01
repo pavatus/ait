@@ -29,14 +29,16 @@ public class FastReturnControl extends Control {
             messagePlayer(player, bl);
             tardis.markDirty();
         } else {
-            player.sendMessage(Text.literal("Fast Return: Last Position Nonexistent!"), true);
+            Text text = Text.translatable("tardis.message.control.fast_return.destination_nonexistent");
+            player.sendMessage(text, true);
         }
 
         return true;
     }
 
     public void messagePlayer(ServerPlayerEntity player, boolean isLastPosition) {
-        // fixme translatable
-        player.sendMessage(Text.literal("Fast Return: " + (!isLastPosition ? "LAST POSITION SET" : "CURRENT POSITION SET")), true);
+        Text last_position = Text.translatable("tardis.message.control.fast_return.last_position");
+        Text current_position = Text.translatable("tardis.message.control.fast_return.current_position");
+        player.sendMessage((isLastPosition ? last_position : current_position), true);
     }
 }

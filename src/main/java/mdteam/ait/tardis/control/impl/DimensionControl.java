@@ -58,7 +58,11 @@ public class DimensionControl extends Control {
     }
 
     private void messagePlayer(ServerPlayerEntity player, ServerWorld world) {
-        player.sendMessage(Text.literal("Dimension: " + convertWorldToReadable(world)), true); // fixme translatable is preferred
+        Text message = Text.translatable("message.ait.tardis.control.dimension.info").append(
+                Text.literal(" " + convertWorldToReadable(world))
+        );
+
+        player.sendMessage(message, true); // fixme translatable is preferred
     }
 
     public static String convertWorldToReadable(World world) {

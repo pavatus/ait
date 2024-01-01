@@ -26,7 +26,9 @@ public class AutoPilotControl extends Control {
 
     public void messagePlayer(ServerPlayerEntity player, boolean autopilot) {
         // fixme translatable
-        player.sendMessage(Text.literal("Protocol 116: " + (autopilot ? "ACTIVE" : "INACTIVE")), true);
+        Text active = Text.translatable("tardis.message.control.protocol_116.active");
+        Text inactive = Text.translatable("tardis.message.control.protocol_116.inactive");
+        player.sendMessage((autopilot? active : inactive), true);
     }
 
     @Override

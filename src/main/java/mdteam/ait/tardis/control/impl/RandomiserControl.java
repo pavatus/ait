@@ -57,7 +57,7 @@ public class RandomiserControl extends Control {
 
     private void messagePlayer(ServerPlayerEntity player, TardisTravel travel) {
         AbsoluteBlockPos.Directed dest = travel.getDestination();
-
-        player.sendMessage(Text.literal("Destination: " + dest.getX() + " | " + dest.getY() + " | " + dest.getZ()), true); // fixme translatable is preferred
+        Text text = Text.translatable("tardis.message.control.randomiser.destination").append(Text.literal(dest.getX() + " | " + dest.getY() + " | " + dest.getZ()));
+        player.sendMessage(text, true);
     }
 }

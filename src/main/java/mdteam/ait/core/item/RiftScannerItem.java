@@ -51,19 +51,14 @@ public class RiftScannerItem extends Item {
         if(world.isClient()) return TypedActionResult.pass(user.getStackInHand(hand));
         if (user.isSneaking()) {
             // reset target
-            if (DeltaTimeManager.isStillWaitingOnDelay("riftscanner-" + uuid.toString() + "-checkingdelay")) {
-                user.sendMessage(Text.literal("Target has been reset and updated, the device is now pointing towards your new target"));
-                createNewTarget(world, user.getBlockPos());
-                DeltaTimeManager.createDelay("riftscanner-" + uuid.toString() + "-checkingdelay", 60000L);
-            } else {
-                user.sendMessage(Text.literal("You can't check for a target this fast, you must wait 1 minute between checking for a new target"));
-            }
+            user.sendMessage(Text.literal("Target has been reset and updated, the device is now pointing towards your new target"));
+            createNewTarget(world, user.getBlockPos());
 
         } else {
             RiftChunk riftChunk = (RiftChunk) world.getChunk(user.getBlockPos());
             if (riftChunk.isRiftChunk()) {
-                user.sendMessage(Text.literal("Artron Chunk Info: "));
-                user.sendMessage(Text.literal("Artron left in chunk: " + riftChunk.getArtronLevels() + "au"));
+                user.sendMessage(Text.translatable("message.ait.riftscanner.info1"));// Artron Chunk Info:
+                user.sendMessage(Text.translatable("message.ait.riftscanner.info2").append(riftChunk.getArtronLevels() + "au"));
             } else {
                 user.sendMessage(Text.literal("This is not a rift chunk"));
             }

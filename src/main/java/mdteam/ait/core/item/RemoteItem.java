@@ -64,11 +64,11 @@ public class RemoteItem extends Item {
 
         if (tardis != null) {
             if (tardis.getFuel() <= 0) {
-                player.sendMessage(Text.literal("The TARDIS is out of fuel and can not demat"));
+                player.sendMessage(Text.translatable("message.ait.remoteitem.warning1"));
                 return ActionResult.FAIL;
             }
             if (tardis.isRefueling()) {
-                player.sendMessage(Text.literal("The TARDIS is refueling and is unable to demat"));
+                player.sendMessage(Text.literal("message.ait.remoteitem.warning2"));
                 return ActionResult.FAIL;
             }
             // Check if the Tardis is already present at this location before moving it there
@@ -96,7 +96,7 @@ public class RemoteItem extends Item {
                     }
                 } else {
                     world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-                    player.sendMessage(Text.literal("Cannot translocate exterior to interior dimension"), true);
+                    player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
                     return ActionResult.PASS;
                 }
             } else {
@@ -111,13 +111,13 @@ public class RemoteItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (!Screen.hasShiftDown()) {
-            tooltip.add(Text.literal("Hold shift for more info").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
+            tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
             return;
         }
 
         NbtCompound tag = stack.getOrCreateNbt();
         String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
-                : "Remote does not identify with any TARDIS";
+                : Text.translatable("tooltip.ait.remoteitem.notardis").toString();
 
         tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
     }

@@ -34,6 +34,7 @@ public class IncrementControl extends Control {
     }
 
     private void messagePlayerIncrement(ServerPlayerEntity player, PosManager manager) {
-        player.sendMessage(Text.literal("Increment: " + manager.increment), true); // fixme translatable is preferred
+        Text text = Text.translatable("tardis.message.control.increment.info").append(Text.literal("" + manager.increment));
+        player.sendMessage(text, true);
     }
 }

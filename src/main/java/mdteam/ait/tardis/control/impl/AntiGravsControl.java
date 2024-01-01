@@ -24,6 +24,8 @@ public class AntiGravsControl extends Control {
 
     public void messagePlayer(ServerPlayerEntity player, boolean autopilot) {
         // fixme translatable
-        player.sendMessage(Text.literal("Antigravs: " + (autopilot ? "ACTIVE" : "INACTIVE")), true);
+        Text active = Text.translatable("tardis.message.control.antigravs.active");
+        Text inactive = Text.translatable("tardis.message.control.antigravs.inactive");
+        player.sendMessage((autopilot ? active : inactive), true);
     }
 }

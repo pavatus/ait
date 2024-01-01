@@ -22,9 +22,9 @@ public class LandTypeControl extends Control {
     }
 
     public void messagePlayer(ServerPlayerEntity player, boolean var) {
-        // fixme translatable
         String s = var ? "ON" : "OFF";
-
-        player.sendMessage(Text.literal("Ground Searching: " + s), true);
+        Text on = Text.translatable("tardis.message.control.landtype.on");
+        Text off = Text.translatable("tardis.message.control.landtype.off");
+        player.sendMessage((var? on : off), true);
     }
 }

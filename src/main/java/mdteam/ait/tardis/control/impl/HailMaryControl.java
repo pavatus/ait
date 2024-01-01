@@ -24,6 +24,8 @@ public class HailMaryControl extends Control {
 
     public void messagePlayer(ServerPlayerEntity player, boolean autopilot) {
         // fixme translatable
-        player.sendMessage(Text.literal("Protocol 813: " + (autopilot ? "ACTIVE" : "INACTIVE")), true);
+        Text active = Text.translatable("tardis.message.control.protocol_813.active");
+        Text inactive = Text.translatable("tardis.message.control.protocol_813.inactive");
+        player.sendMessage((autopilot? active : inactive), true);
     }
 }

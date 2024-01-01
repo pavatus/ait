@@ -59,8 +59,8 @@ public class TelepathicControl extends Control {
         RegistryEntry<Biome> biome = newWorld.getBiome(destinationPos);
 
         String biomeTranslationKey = biome.getKeyOrValue().orThrow().getValue().toShortTranslationKey();
-
-        player.sendMessage(Text.translatable("Destination Biome: " + DimensionControl.capitalizeAndReplaceEach(biomeTranslationKey)), true);
+        Text text = Text.translatable("tardis.message.destination_biome").append(Text.literal(DimensionControl.capitalizeAndReplaceEach(biomeTranslationKey)));
+        player.sendMessage(text, true);
 
         return true;
     }

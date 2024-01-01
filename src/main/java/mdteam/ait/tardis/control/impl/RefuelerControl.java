@@ -23,7 +23,9 @@ public class RefuelerControl extends Control {
         if(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
             //if (TardisUtil.isRiftChunk((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getExteriorPos())) {
                 tardis.setRefueling(!tardis.isRefueling());
-                player.sendMessage(Text.literal("Refueling: " + (tardis.isRefueling() ? "Enabled" : "Disabled")), true);
+                Text enabled = Text.translatable("tardis.message.control.refueler.enabled");
+                Text disabled = Text.translatable("tardis.message.control.refueler.disabled");
+                player.sendMessage((tardis.isRefueling()? enabled : disabled), true);
                 if (tardis.getDesktop().getConsolePos() != null && tardis.isRefueling()) {
                     world.playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_CANDLE_EXTINGUISH, SoundCategory.BLOCKS, 10, 1);
                 }
