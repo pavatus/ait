@@ -10,4 +10,8 @@ public class GrowthExterior extends ExteriorSchema {
         super(REFERENCE, "coral_growth");
     }
 
+    @Override
+    public boolean hasPortals() {
+        return true;
+    }
 }
