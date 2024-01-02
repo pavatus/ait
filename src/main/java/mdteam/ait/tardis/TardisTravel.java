@@ -18,6 +18,10 @@ import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -181,6 +185,23 @@ public class TardisTravel extends TardisLink {
                     false,
                     World.ExplosionSourceType.TNT
             );
+            Random random = new Random();
+            for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.getTardis())) {
+                int x_random = random.nextInt(1, 10);
+                int y_random = random.nextInt(1, 10);
+                int z_random = random.nextInt(1, 10);
+
+                boolean is_x_negative = false;
+                boolean is_z_negative = false;
+                if (random.nextInt(1,3) == 1) {
+                    is_x_negative = true;
+                }
+                if (random.nextInt(1,3) == 1) {
+                    is_z_negative = true;
+                }
+                player.addVelocity(0.5f * x_random * (is_x_negative ? -1 : 1), 0.25f * y_random, 0.5f * z_random * (is_z_negative ? -1 : 1));
+                player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
+            }
         }
         // Load the chunk of the Tardis destination
         this.getDestination().getWorld().getChunk(this.getTardis().getTravel().getDestination());
