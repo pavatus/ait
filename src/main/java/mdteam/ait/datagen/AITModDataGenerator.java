@@ -280,6 +280,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             // Hums
             provider.addSound("tardis/hums/toyota_hum", AITSounds.TOYOTA_HUM);
             provider.addSound("tardis/hums/coral_hum", AITSounds.CORAL_HUM);
+            // Creaks
+            provider.addSound("tardis/creaks/creak_one", AITSounds.CREAK_ONE);
+            provider.addSound("tardis/creaks/creak_two", AITSounds.CREAK_TWO);
+            provider.addSound("tardis/creaks/creak_three", AITSounds.CREAK_THREE);
             // Other
             provider.addSound("tardis/cloister", AITSounds.CLOISTER);
 

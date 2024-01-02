@@ -2,11 +2,14 @@ package mdteam.ait.client.sounds.hum;
 
 import mdteam.ait.client.sounds.LoopingSound;
 import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
+import mdteam.ait.client.sounds.PlayerFollowingSound;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.registry.CreakRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.handler.ServerHumHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.sound.CreakSound;
 import mdteam.ait.tardis.sound.HumSound;
 import mdteam.ait.tardis.util.SoundHandler;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -22,6 +25,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static mdteam.ait.AITMod.AIT_CONFIG;
 
@@ -32,6 +36,7 @@ public class ClientHumHandler extends SoundHandler {
 
     public static LoopingSound TOYOTA_HUM;
     public static LoopingSound CORAL_HUM;
+    private static final Random random = new Random();
 
     protected ClientHumHandler() {
 
@@ -102,6 +107,7 @@ public class ClientHumHandler extends SoundHandler {
 
     public Tardis tardis() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        if (player == null) return null;
         Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos());
         return found;
     }
@@ -109,9 +115,16 @@ public class ClientHumHandler extends SoundHandler {
     public boolean isEnabled() {
         return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.HUM_ENABLED);
     }
+    public void playRandomCreak() {
+        CreakSound chosen = CreakRegistry.getRandomCreak();
+        PlayerFollowingSound following = new PlayerFollowingSound(chosen.sound(), SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME());
+        startIfNotPlaying(following);
+    }
 
     public void tick(MinecraftClient client) {
         if (this.sounds == null) this.generateHums();
+
+        if (client.player == null) return;
 
         if (this.current != null && !isPlayerInATardis()) {
             this.current = null;
@@ -121,7 +134,11 @@ public class ClientHumHandler extends SoundHandler {
         if (isPlayerInATardis() && isEnabled() && tardis().hasPower()) {
             this.startIfNotPlaying(this.getHum());
         } else {
-            this.stopSounds();
+            this.stopSound(this.getHum());
+
+            if (random.nextInt(256) == 32) {
+                this.playRandomCreak();
+            }
         }
     }
 }
