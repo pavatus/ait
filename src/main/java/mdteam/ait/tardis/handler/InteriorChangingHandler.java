@@ -2,6 +2,7 @@ package mdteam.ait.tardis.handler;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.item.TardisItemBuilder;
+import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
@@ -64,11 +65,13 @@ public class InteriorChangingHandler extends TardisLink {
         if (tardis().getHandlers().getFuel().getFuel() < 5000 && !(tardis().isGrowth() && tardis().hasGrowthDesktop())) {
             for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis())) {
                 player.sendMessage(Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED), true);
+                return;
             }
         }
         setQueuedInterior(schema);
         setTicks(0);
         setGenerating(true);
+        DeltaTimeManager.createDelay("interior_change-" + tardis().getUuid().toString(), 100L);
         tardis().getHandlers().getAlarms().enable();
         tardis().getDesktop().setConsolePos(null);
         if (!(tardis().hasGrowthDesktop()))
@@ -78,6 +81,7 @@ public class InteriorChangingHandler extends TardisLink {
 
     private void onCompletion() {
         setGenerating(false);
+        clearedOldInterior = false;
         tardis().getHandlers().getAlarms().disable();
         DoorHandler.lockTardis(PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis(), null, false);
     }
@@ -98,25 +102,29 @@ public class InteriorChangingHandler extends TardisLink {
         return random;
     }
 
+    private boolean clearedOldInterior = false;
+
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
-
-        if (!isGenerating()) {
-            if (getTicks() > 0) setTicks(0);
-            return;
-        }
+        if (TardisUtil.isClient()) return;
+        System.out.println(DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + tardis().getUuid().toString()));
+        if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + tardis().getUuid().toString())) return;
 
         if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
             tardis().getTravel().crash();
         }
-        if (!tardis().getHandlers().getAlarms().isEnabled()) tardis().getHandlers().getAlarms().enable();
+        if (isGenerating()) {
+            if (!tardis().getHandlers().getAlarms().isEnabled()) tardis().getHandlers().getAlarms().enable();
+        }
+
 
         if (!tardis().hasPower()) {
             setGenerating(false);
             tardis().getHandlers().getAlarms().disable();
             return;
         }
+        if (!isGenerating()) return;
 
         if (!isInteriorEmpty()) {
             warnPlayers();
@@ -126,12 +134,15 @@ public class InteriorChangingHandler extends TardisLink {
         if (isInteriorEmpty() && !tardis().getDoor().locked()) {
             DoorHandler.lockTardis(true, tardis(), null, true);
         }
-
-        addTick();
-
-        if (hasReachedMax()) {
+        if (isInteriorEmpty() && !clearedOldInterior) {
+            tardis().getDesktop().clearOldInterior(getQueuedInterior());
+            DeltaTimeManager.createDelay("interior_change-" + tardis().getUuid().toString(), 15000L);
+            clearedOldInterior = true;
+        }
+        if (isInteriorEmpty() && clearedOldInterior) {
             tardis().getDesktop().changeInterior(getQueuedInterior());
             onCompletion();
         }
+
     }
 }
