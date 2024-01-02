@@ -55,6 +55,7 @@ public class ClientHumHandler extends SoundHandler {
 
     public LoopingSound getHum() {
         if (this.current == null) {
+            if (this.tardis() == null) return null;
             this.current = (LoopingSound) findSoundByEvent(this.tardis().getHandlers().getHum().getHum().sound());
         }
 
