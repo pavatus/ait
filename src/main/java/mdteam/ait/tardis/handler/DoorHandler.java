@@ -338,6 +338,8 @@ public class DoorHandler extends TardisLink {
             PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, locked);
         }
 
+        if (tardis.isSiegeMode()) return true;
+
         String lockedState = tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
         if (player != null)
             player.sendMessage(Text.literal(lockedState), true);
