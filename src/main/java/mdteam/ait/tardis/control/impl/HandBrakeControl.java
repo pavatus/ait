@@ -53,8 +53,8 @@ public class HandBrakeControl extends Control {
     }
 
     public void messagePlayer(ServerPlayerEntity player, boolean var) {
-        Text on = Text.translatable("tardis.message.control.handbreak.on");
-        Text off = Text.translatable("tardis.message.control.handbreak.off");
+        Text on = Text.translatable("tardis.message.control.handbrake.on");
+        Text off = Text.translatable("tardis.message.control.handbrake.off");
         player.sendMessage((var? on : off), true);
     }
 

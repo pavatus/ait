@@ -129,7 +129,7 @@ public class InteriorSettingsScreen extends TardisScreen {
         MinecraftClient.getInstance().setScreen(this.parent);
     }
     public void toSelectInteriorScreen() {
-        MinecraftClient.getInstance().setScreen(new InteriorSelectScreen(tardis().getUuid(), this));
+        MinecraftClient.getInstance().setScreen(new OwOInteriorSelectScreen(tardis().getUuid(), this));
     }
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {

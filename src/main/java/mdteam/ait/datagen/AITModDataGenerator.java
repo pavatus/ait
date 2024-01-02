@@ -377,8 +377,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.control.fast_return.current_position", "Fast Return: CURRENT POSITION SET");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.active", "Protocol 813: ACTIVE");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocol 813: INACTIVE");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbreak.on", "Handbreak: ON");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbreak.off", "Handbreak: OFF");
+        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.on", "Handbrake: ON");
+        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.off", "Handbrake: OFF");
         aitLanguageProvider.addTranslation("tardis.message.control.landtype.on", "Ground Searching: ON");
         aitLanguageProvider.addTranslation("tardis.message.control.landtype.off", "Ground Searching: OFF");
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.destination", "Destination: ");
@@ -389,7 +389,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.poscontrol", "Destination: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
-        aitLanguageProvider.addTranslation("message.ait.sonic.handbreakdisengaged", "Handbrake disengaged, destination set to current position");
+        aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged", "Handbrake disengaged, destination set to current position");
         aitLanguageProvider.addTranslation("message.ait.sonic.mode","Mode: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.none", "None");
         aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4", "Target has been reset and updated, the device is now pointing towards your new target");
@@ -469,8 +469,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.control.fast_return.current_position", "Fast Return: POSITION ACTUELLE DÉFINIE");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.active", "Protocole 813: ACTIF");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocole 813: INACTF");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbreak.on", "Frein à main: ON");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbreak.off", "Frein à main: OFF");
+        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.on", "Frein à main: ON");
+        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.off", "Frein à main: OFF");
         aitLanguageProvider.addTranslation("tardis.message.control.landtype.on", "Recherche Surface: ON");
         aitLanguageProvider.addTranslation("tardis.message.control.landtype.off", "Recherche Surface: OFF");
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.destination", "Destination: ");
@@ -483,7 +483,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("command.ait.riftchunk.isnotariftchunk", "Ceci n’est pas un chunk à faille");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "CHUNK À FAILLE TROUVÉ");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "CHUNK À FAILLE NON TROUVÉ");
-        aitLanguageProvider.addTranslation("message.ait.sonic.handbreakdisengaged", "Frein à main desserré, destination définie à la position actuelle");
+        aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged", "Frein à main desserré, destination définie à la position actuelle");
         aitLanguageProvider.addTranslation("message.ait.sonic.mode","Mode: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.none", "Aucun");
         aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4", "La cible a été réinitialisée et mise à jour, l'appareil est maintenant orienté vers votre nouvelle cible");
@@ -561,8 +561,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.control.fast_return.current_position", "Fast Return: CURRENT POSITION SET");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.active", "Protocol 813: ACTIVE");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocol 813: INACTIVE");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbreak.on", "Handbreak: ON");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbreak.off", "Handbreak: OFF");
+        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.on", "handbrake: ON");
+        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.off", "handbrake: OFF");
         aitLanguageProvider.addTranslation("tardis.message.control.landtype.on", "Ground Searching: ON");
         aitLanguageProvider.addTranslation("tardis.message.control.landtype.off", "Ground Searching: OFF");
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.destination", "Destination: ");
@@ -573,7 +573,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.poscontrol", "Destination: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
-        aitLanguageProvider.addTranslation("message.ait.sonic.handbreakdisengaged", "Handbrake disengaged, destination set to current position");
+        aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged", "Handbrake disengaged, destination set to current position");
         aitLanguageProvider.addTranslation("message.ait.sonic.mode","Mode: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.none", "None");
         aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4", "Target has been reset and updated, the device is now pointing towards your new target");
@@ -641,8 +641,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.control.fast_return.current_position", "Rückreise: JETZIGE POSITION GESETZT");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.active", "Protokoll 813: AKTIV");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocol 813: INACTIVE");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbreak.on", "Handbremse: AN");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbreak.off", "Handbremse: AUS");
+        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.on", "Handbremse: AN");
+        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.off", "Handbremse: AUS");
         aitLanguageProvider.addTranslation("tardis.message.control.landtype.on", "Bodensuche: AN");
         aitLanguageProvider.addTranslation("tardis.message.control.landtype.off", "Bodensuche: AUS");
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.destination", "Zielort: ");
@@ -653,7 +653,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.poscontrol", "Zielort: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "RIFT-CHUNK GEFUNDEN");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "KEIN RIFT-CHUNK GEFUNDEN");
-        aitLanguageProvider.addTranslation("message.ait.sonic.handbreakdisengaged", "Handbremse deaktiviert, Koordinaten auf jetzige Position gesetzt");
+        aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged", "Handbremse deaktiviert, Koordinaten auf jetzige Position gesetzt");
         aitLanguageProvider.addTranslation("message.ait.sonic.mode","Modus: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.none", "Keiner");
         aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4", "Ziel wurde zurückgesetzt und aktualisiert, das Gerät zeigt nun in Richtung des neuen Ziels");
