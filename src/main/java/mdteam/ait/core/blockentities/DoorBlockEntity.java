@@ -72,7 +72,7 @@ public class DoorBlockEntity extends BlockEntity {
             return;
         if (this.getTardis().isGrowth() && this.getTardis().hasGrowthExterior())
             return;
-        if (player.getMainHandStack().getItem() instanceof KeyItem) {
+        if (player.getMainHandStack().getItem() instanceof KeyItem && !getTardis().isSiegeMode()) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
             if (!tag.contains("tardis")) {

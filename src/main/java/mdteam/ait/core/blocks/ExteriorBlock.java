@@ -68,6 +68,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
     public static final VoxelShape CUBE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(2.0, 0.0, 0.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
 
+    public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
     public ExteriorBlock(Settings settings) {
         super(settings.nonOpaque());
 
@@ -97,10 +98,18 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null)
             return getNormalShape(state, world, pos);
 
+        if (((ExteriorBlockEntity) blockEntity).tardis().isSiegeMode())
+            return SIEGE_SHAPE;
+
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).tardis().getTravel().getState();
         if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
             return getNormalShape(state, world, pos);
 
+        return VoxelShapes.empty();
+    }
+
+    @Override
+    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
         return VoxelShapes.empty();
     }
 
@@ -124,6 +133,9 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).tardis() == null)
             return getLedgeShape(state, world, pos);
+
+        if (((ExteriorBlockEntity) blockEntity).tardis().isSiegeMode())
+            return SIEGE_SHAPE;
 
         // todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
         if (DependencyChecker.hasPortals())

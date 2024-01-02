@@ -63,7 +63,7 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
         if (this.tardis().isGrowth())
             return;
 
-        if (player.getMainHandStack().getItem() instanceof KeyItem) {
+        if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis().isSiegeMode()) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
             if (!tag.contains("tardis")) {

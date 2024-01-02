@@ -83,7 +83,7 @@ public class KeyItem extends Item {
         return null;
     }
 
-    public Tardis getTardis(ItemStack stack) {
+    public static Tardis getTardis(ItemStack stack) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
         if (!(nbt.contains("tardis"))) return null;
