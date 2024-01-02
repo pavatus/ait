@@ -18,9 +18,6 @@ public class PowerControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         tardis.togglePower();
-        Text enabled = Text.translatable("tardis.message.control.power.enabled");
-        Text disabled = Text.translatable("tardis.message.control.power.disabled");
-        player.sendMessage((tardis.hasPower() ? enabled : disabled), true);
         return false;
     }
 
