@@ -10,8 +10,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 
 // Made with Blockbench 4.9.2
 // Exported for Minecraft version 1.17+ for Yarn
@@ -91,7 +89,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if(exterior.tardis() == null) return;
+		if(exterior.getTardis() == null) return;
 		matrices.push();
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5f, 0);
@@ -99,12 +97,12 @@ public class ClassicExteriorModel extends ExteriorModel {
 		/*this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
 		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
-		DoorHandler door = exterior.tardis().getDoor();
+		DoorHandler door = exterior.getTardis().getDoor();
 		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
 		if (DependencyChecker.hasPortals())
-			this.getPart().getChild("Doors").visible = exterior.tardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
+			this.getPart().getChild("Doors").visible = exterior.getTardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

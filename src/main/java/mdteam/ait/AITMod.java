@@ -97,6 +97,7 @@ public class AITMod implements ModInitializer {
             ToggleHumCommand.register(dispatcher);
             ToggleAlarmCommand.register(dispatcher);
             RiftChunkCommand.register(dispatcher);
+            RealWorldCommand.register(dispatcher);
         }));
 
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {

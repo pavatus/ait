@@ -416,9 +416,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
-
-
-
+        aitLanguageProvider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
 
         return aitLanguageProvider;
     }
@@ -510,6 +508,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
+        aitLanguageProvider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
 
 
         return aitLanguageProvider;
@@ -599,6 +598,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
+        aitLanguageProvider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
 
         return aitLanguageProvider;
     }
@@ -680,6 +680,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
+        aitLanguageProvider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at:");
 
         return aitLanguageProvider;
     }
