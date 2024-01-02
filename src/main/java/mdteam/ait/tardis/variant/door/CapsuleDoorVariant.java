@@ -30,6 +30,7 @@ public class CapsuleDoorVariant extends DoorSchema {
     public SoundEvent closeSound() {
         return SoundEvents.BLOCK_IRON_DOOR_CLOSE;
     }
+
     @Override
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return switch (direction) {
