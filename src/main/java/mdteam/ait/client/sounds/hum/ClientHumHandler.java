@@ -6,6 +6,7 @@ import mdteam.ait.client.sounds.PlayerFollowingSound;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.registry.CreakRegistry;
+import mdteam.ait.registry.HumsRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.handler.ServerHumHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
@@ -34,10 +35,6 @@ import static mdteam.ait.AITMod.AIT_CONFIG;
 // Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
 public class ClientHumHandler extends SoundHandler {
     private LoopingSound current;
-
-    public static LoopingSound TOYOTA_HUM;
-    public static LoopingSound CORAL_HUM;
-    public static LoopingSound ERROR_SOUND;
     private static final Random random = new Random();
 
     protected ClientHumHandler() {
@@ -89,18 +86,23 @@ public class ClientHumHandler extends SoundHandler {
         return handler;
     }
 
-    // todo, add all the sounds from the HumsRegistry here !!
     private void generateHums() {
-        if (TOYOTA_HUM == null) TOYOTA_HUM = new PlayerFollowingLoopingSound(AITSounds.TOYOTA_HUM, SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME());
-        if (CORAL_HUM == null) CORAL_HUM = new PlayerFollowingLoopingSound(AITSounds.CORAL_HUM, SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME());
-        if (ERROR_SOUND == null) ERROR_SOUND = new PlayerFollowingLoopingSound(SoundEvents.ENTITY_CAMEL_DEATH, SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME());
-
         this.sounds = new ArrayList<>();
-        this.sounds.addAll(List.of(
-                TOYOTA_HUM,
-                CORAL_HUM,
-                ERROR_SOUND
-        ));
+        this.sounds.addAll(registryToList());
+    }
+
+    /**
+     * Converts all the {@link HumSound}'s in the {@link HumsRegistry} to {@link LoopingSound} so they are usable
+     * @return A list of {@link LoopingSound} from the {@link HumsRegistry}
+     */
+    private List<LoopingSound> registryToList() {
+        List<LoopingSound> list = new ArrayList<>();
+
+        for (HumSound sound : HumsRegistry.REGISTRY) {
+            list.add(new PlayerFollowingLoopingSound(sound.sound(), SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME()));
+        }
+
+        return list;
     }
 
     public boolean isPlayerInATardis() {
@@ -121,11 +123,6 @@ public class ClientHumHandler extends SoundHandler {
     public boolean isEnabled() {
         return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.HUM_ENABLED);
     }
-    public void playRandomCreak() {
-        CreakSound chosen = CreakRegistry.getRandomCreak();
-        PlayerFollowingSound following = new PlayerFollowingSound(chosen.sound(), SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME());
-        startIfNotPlaying(following);
-    }
 
     public void tick(MinecraftClient client) {
         if (this.sounds == null) this.generateHums();
@@ -140,12 +137,7 @@ public class ClientHumHandler extends SoundHandler {
         if (isPlayerInATardis() && isEnabled() && tardis().hasPower()) {
             this.startIfNotPlaying(this.getHum());
         } else {
-            if (!isPlayerInATardis())
-                this.stopSounds();
-            else
-                if (random.nextInt(256) == 32) {
-                    this.playRandomCreak();
-                }
+            this.stopSounds();
         }
     }
 }
