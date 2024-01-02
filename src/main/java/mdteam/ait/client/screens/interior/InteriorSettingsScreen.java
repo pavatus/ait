@@ -198,7 +198,7 @@ public class InteriorSettingsScreen extends TardisScreen {
                 true
         );
         Text hum = Text.translatable("screen.ait.interior.settings." + this.hum.name());
-        System.out.println(this.hum.name());
+        //System.out.println(this.hum.name());
         context.drawText(
                 this.textRenderer,
                 hum,
