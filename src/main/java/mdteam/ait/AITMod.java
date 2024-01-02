@@ -137,10 +137,13 @@ public class AITMod implements ModInitializer {
         }));
 
         TardisEvents.OUT_OF_FUEL.register((tardis) -> {
+            tardis.disablePower();
+        });
+        TardisEvents.LOSE_POWER.register((tardis -> {
             if (tardis.getDesktop().getConsolePos() != null) {
                 TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
             }
-        });
+        }));
 
         ServerPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.ASK, ((server, player, handler, buf, responseSender) -> {
             if (player.getServerWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;

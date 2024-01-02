@@ -195,7 +195,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
             control.runAnimation(getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world);
 
-            if (control.shouldFailOnNoFuel() && this.getTardis(world).getHandlers().getFuel().isOutOfFuel()) {
+            if (control.shouldFailOnNoPower() && !this.getTardis(world).hasPower()) {
                 return false;
             }
 

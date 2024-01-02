@@ -1,12 +1,10 @@
 package mdteam.ait.tardis;
 
+import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
-import mdteam.ait.core.interfaces.RiftChunk;
-import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
-import mdteam.ait.tardis.handler.FuelHandler;
 import mdteam.ait.tardis.handler.TardisHandlersManager;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -19,7 +17,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
@@ -153,6 +150,27 @@ public class Tardis {
         return getDesktop().getSchema().equals(DesktopRegistry.DEFAULT_CAVE);
     }
 
+    public boolean hasPower() {
+        return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.HAS_POWER);
+    }
+    public void disablePower() {
+        PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.HAS_POWER, false);
+        TardisEvents.LOSE_POWER.invoker().onLosePower(this);
+        this.markDirty();
+    }
+    public void enablePower() {
+        if (getFuel() == 0) return; // cant enable power if no fuel
+
+        PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.HAS_POWER, true);
+        TardisEvents.REGAIN_POWER.invoker().onRegainPower(this);
+        this.markDirty();
+    }
+    public void togglePower() {
+        if (hasPower())
+            disablePower();
+        else
+            enablePower();
+    }
     /**
      * Called at the end of a servers tick
      *

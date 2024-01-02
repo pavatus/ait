@@ -26,6 +26,7 @@ public class PropertiesHandler { // todo move more things over to properties
     public static final String ANTIGRAVS_ENABLED = "antigravs_enabled";
     public static final String HADS_ENABLED = "hads_enabled";
     public static final String IS_IN_ACTIVE_DANGER = "is_in_active_danger";
+    public static final String HAS_POWER = "power";
 
     // Should these methods be in the holder instead?
 
@@ -165,7 +166,7 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(FIND_GROUND, true);
         map.put(PREVIOUSLY_LOCKED, false);
         map.put(HANDBRAKE, true);
-        map.put(HAIL_MARY, true);
+        map.put(HAIL_MARY, false);
         map.put(HUM_ENABLED, true);
         map.put(ALARM_ENABLED, false);
         map.put(IS_FALLING, false);
@@ -174,6 +175,7 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(HADS_ENABLED, false);
         map.put(FuelHandler.FUEL_COUNT, 1000d);
         map.put(FuelHandler.REFUELING, false);
+        map.put(HAS_POWER, true);
         unlockAllFreebies(map);
 
         return map;

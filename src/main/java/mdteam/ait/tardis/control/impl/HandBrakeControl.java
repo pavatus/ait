@@ -64,7 +64,7 @@ public class HandBrakeControl extends Control {
     }
 
     @Override
-    public boolean shouldFailOnNoFuel() {
+    public boolean shouldFailOnNoPower() {
         return false;
     }
 }

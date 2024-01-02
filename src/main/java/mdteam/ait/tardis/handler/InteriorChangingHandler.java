@@ -58,7 +58,7 @@ public class InteriorChangingHandler extends TardisLink {
     }
 
     public void queueInteriorChange(TardisDesktopSchema schema) {
-        if (tardis().getHandlers().getFuel().isOutOfFuel()) return;
+        if (!tardis().hasPower()) return;
         if (tardis().isGrowth() && tardis().hasGrowthExterior())
             tardis().getExterior().setType(TardisItemBuilder.findRandomExterior());
         if (tardis().getHandlers().getFuel().getFuel() < 5000 && !(tardis().isGrowth() && tardis().hasGrowthDesktop())) {
@@ -112,7 +112,7 @@ public class InteriorChangingHandler extends TardisLink {
         }
         if (!tardis().getHandlers().getAlarms().isEnabled()) tardis().getHandlers().getAlarms().enable();
 
-        if (tardis().getHandlers().getFuel().isOutOfFuel()) {
+        if (!tardis().hasPower()) {
             setGenerating(false);
             tardis().getHandlers().getAlarms().disable();
             return;

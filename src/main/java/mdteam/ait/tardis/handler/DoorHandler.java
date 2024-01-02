@@ -226,7 +226,7 @@ public class DoorHandler extends TardisLink {
             return false;
         }
 
-        if (tardis.getHandlers().getFuel().isOutOfFuel() && tardis.getLockedTardis()) {
+        if (!tardis.hasPower() && tardis.getLockedTardis()) {
             // Bro cant escape
             if (player == null) return false;
 

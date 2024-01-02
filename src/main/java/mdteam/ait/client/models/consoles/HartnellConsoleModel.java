@@ -835,7 +835,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 		ModelPart hailMary = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("s_lever").getChild("bone61");
 		hailMary.roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAIL_MARY) ? hailMary.roll + 1 : hailMary.roll;
 		ModelPart hadsAlarms = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("s_lever_6").getChild("bone143");
-		hadsAlarms.roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED) ? hadsAlarms.roll + 1 : hadsAlarms.roll;
+		hadsAlarms.roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ? hadsAlarms.roll + 1 : hadsAlarms.roll;
 		ModelPart increment = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_crank_3").getChild("bone74");
 		increment.yaw = console.getTardis().getTravel().getPosManager().increment >= 10 ? console.getTardis().getTravel().getPosManager().increment >= 100 ? console.getTardis().getTravel().getPosManager().increment >= 1000 ? increment.yaw + 1.5f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
 		ModelPart direction = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("s_crank_1").getChild("bone59");

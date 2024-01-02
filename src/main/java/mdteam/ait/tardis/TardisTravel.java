@@ -286,8 +286,8 @@ public class TardisTravel extends TardisLink {
     }
 
     public void dematerialise(boolean withRemat) {
-        if (getTardis().getFuel() <= 0) {
-            return; // no flying for you if you have no fuel :)
+        if (!getTardis().hasPower()) {
+            return; // no flying for you if you have no powa :)
         }
         if (this.getPosition().getWorld().isClient())
             return;
@@ -355,7 +355,7 @@ public class TardisTravel extends TardisLink {
 
     private void failToTakeoff() {
         // dont do anything if out of fuel, make it sad :(
-        if (getTardis().getHandlers().getFuel().isOutOfFuel()) return;
+        if (!tardis().hasPower()) return;
 
         // demat will be cancelled
         this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed

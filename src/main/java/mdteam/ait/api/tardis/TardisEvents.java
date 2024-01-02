@@ -36,6 +36,16 @@ public final class TardisEvents {
             callback.onNoFuel(tardis);
         }
     });
+    public static final Event<LosePower> LOSE_POWER = EventFactory.createArrayBacked(LosePower.class, callbacks -> (tardis) -> {
+        for (LosePower callback : callbacks) {
+            callback.onLosePower(tardis);
+        }
+    });
+    public static final Event<RegainPower> REGAIN_POWER = EventFactory.createArrayBacked(RegainPower.class, callbacks -> (tardis) -> {
+        for (RegainPower callback : callbacks) {
+            callback.onRegainPower(tardis);
+        }
+    });
 
     // door stuff
     public static final Event<OpenDoor> DOOR_OPEN = EventFactory.createArrayBacked(OpenDoor.class, callbacks -> ((tardis) -> {
@@ -110,6 +120,23 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface NoFuel {
         void onNoFuel(Tardis tardis);
+    }
+
+    @FunctionalInterface
+    public interface LosePower {
+        /**
+         * Called when a tardis' loses power
+         * @param tardis
+         */
+        void onLosePower(Tardis tardis);
+    }
+    @FunctionalInterface
+    public interface RegainPower {
+        /**
+         * Called when a tardis regains power
+         * @param tardis
+         */
+        void onRegainPower(Tardis tardis);
     }
 
     /**

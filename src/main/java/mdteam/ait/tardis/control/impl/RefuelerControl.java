@@ -47,7 +47,7 @@ public class RefuelerControl extends Control {
         return SoundEvents.BLOCK_LEVER_CLICK;
     }
     @Override
-    public boolean shouldFailOnNoFuel() {
+    public boolean shouldFailOnNoPower() {
         return false;
     }
 }

@@ -69,7 +69,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             if (entity.tardis().getHandlers().getOvergrownHandler().isOvergrown()) {
                 model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.tardis().getHandlers().getOvergrownHandler().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
             }
-            if (exteriorVariant.emission() != null && !entity.tardis().getHandlers().getFuel().isOutOfFuel()) {
+            if (exteriorVariant.emission() != null && entity.tardis().hasPower()) {
                 boolean alarms = PropertiesHandler.getBool(entity.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
 
                 model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(exteriorVariant.emission(), false)), maxLight, overlay, 1, alarms ? 0.3f : 1 , alarms ? 0.3f : 1, 1);

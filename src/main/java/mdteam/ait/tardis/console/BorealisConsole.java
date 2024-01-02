@@ -31,7 +31,7 @@ public class BorealisConsole extends ConsoleSchema {
             new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-0.421875f, 0.6750001907348633f, 0.25f)), //13
             new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.074999996f, 0.074999996f), new Vector3f(-0.5468749962747097f, 0.6749999076128006f, -0.17421874962747097f)), //2
             new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.075f, 0.075f), new Vector3f(-0.4000000134110451f, 0.674999987706542f, -0.37500001303851604f)), //idk
-            new ControlTypes(new HADSControl(), EntityDimensions.changing(0.074999996f, 0.099999994f), new Vector3f(0.6406250018626451f, 0.625000286847353f, -0.14765625819563866f)),
+            new ControlTypes(new PowerControl(), EntityDimensions.changing(0.074999996f, 0.099999994f), new Vector3f(0.6406250018626451f, 0.625000286847353f, -0.14765625819563866f)),
             new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.8750000037252903f, 0.5249999780207872f, 0.15156249701976776f)), //14
             new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(0.6593750026077032f, 0.5499999783933163f, -0.3812500014901161f)), //15
     };
