@@ -61,6 +61,8 @@ public class PulsatingAnimation extends ExteriorAnimation {
 
         MatSound sound = exterior.tardis().getExterior().getType().getSound(state);
 
+        this.tellClientsToSetup(state);
+
         timeLeft = sound.timeLeft();
         maxTime = sound.maxTime();
         frequency = sound.frequency();

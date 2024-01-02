@@ -3,6 +3,7 @@ package mdteam.ait.client;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.systems.RenderSystem;
 import mdteam.ait.AITMod;
+import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.ClientDoorRegistry;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
@@ -28,6 +29,8 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.registry.ConsoleRegistry;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.api.ClientModInitializer;
@@ -47,6 +50,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.impl.client.rendering.WorldRenderContextImpl;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.PostEffectProcessor;
@@ -209,6 +213,22 @@ public class AITModClient implements ClientModInitializer {
             BlockPos consolePos = buf.readBlockPos();
             if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setVariant(id);
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(ExteriorAnimation.UPDATE,
+                (client, handler, buf, responseSender) -> {
+                    int p = buf.readInt();
+                    UUID tardisId = buf.readUuid();
+                    ClientTardisManager.getInstance().getTardis(tardisId, (tardis -> {
+                        if (tardis == null) return; // idk how the consumer works tbh, but im sure theo is gonna b happy
+
+                       BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.getExterior().getExteriorPos()); // todo remember to use the right world in future !!
+                       if (!(block instanceof ExteriorBlockEntity exterior)) return;
+
+                       exterior.getAnimation().setupAnimation(TardisTravel.State.values()[p]);
+                    }));
+                    // this.setupAnimation(TardisTravel.State.values()[p]);
+                }
+        );
 
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
     }
