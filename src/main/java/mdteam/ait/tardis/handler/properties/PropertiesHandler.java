@@ -27,6 +27,7 @@ public class PropertiesHandler { // todo move more things over to properties
     public static final String HADS_ENABLED = "hads_enabled";
     public static final String IS_IN_ACTIVE_DANGER = "is_in_active_danger";
     public static final String HAS_POWER = "power";
+    public static final String SIEGE_MODE = "siege_mode";
 
     // Should these methods be in the holder instead?
 
@@ -176,6 +177,7 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(FuelHandler.FUEL_COUNT, 1000d);
         map.put(FuelHandler.REFUELING, false);
         map.put(HAS_POWER, true);
+        map.put(SIEGE_MODE, false);
         unlockAllFreebies(map);
 
         return map;

@@ -154,12 +154,16 @@ public class Tardis {
         return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.HAS_POWER);
     }
     public void disablePower() {
+        if (!hasPower()) return;
+
         PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.HAS_POWER, false);
         TardisEvents.LOSE_POWER.invoker().onLosePower(this);
         this.markDirty();
     }
     public void enablePower() {
         if (getFuel() == 0) return; // cant enable power if no fuel
+        if (isSiegeMode()) setSiegeMode(false);
+        if (hasPower()) return;
 
         PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.HAS_POWER, true);
         TardisEvents.REGAIN_POWER.invoker().onRegainPower(this);
@@ -171,6 +175,17 @@ public class Tardis {
         else
             enablePower();
     }
+
+    public boolean isSiegeMode() {
+        return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
+    }
+    public void setSiegeMode(boolean b) {
+        if (b) disablePower();
+
+        PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE, b);
+        this.markDirty();
+    }
+
     /**
      * Called at the end of a servers tick
      *
@@ -185,6 +200,9 @@ public class Tardis {
             getDoor().openDoors();
         if (isGrowth() && getDoor().locked() && !getHandlers().getInteriorChanger().isGenerating())
             getDoor().setLocked(false);
+
+        if (isSiegeMode() && !getDoor().locked())
+            getDoor().setLocked(true);
 
         this.getHandlers().tick(server);
 

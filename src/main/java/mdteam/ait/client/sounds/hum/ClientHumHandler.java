@@ -20,6 +20,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
@@ -36,6 +37,7 @@ public class ClientHumHandler extends SoundHandler {
 
     public static LoopingSound TOYOTA_HUM;
     public static LoopingSound CORAL_HUM;
+    public static LoopingSound ERROR_SOUND;
     private static final Random random = new Random();
 
     protected ClientHumHandler() {
@@ -87,14 +89,17 @@ public class ClientHumHandler extends SoundHandler {
         return handler;
     }
 
+    // todo, add all the sounds from the HumsRegistry here !!
     private void generateHums() {
         if (TOYOTA_HUM == null) TOYOTA_HUM = new PlayerFollowingLoopingSound(AITSounds.TOYOTA_HUM, SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME());
         if (CORAL_HUM == null) CORAL_HUM = new PlayerFollowingLoopingSound(AITSounds.CORAL_HUM, SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME());
+        if (ERROR_SOUND == null) ERROR_SOUND = new PlayerFollowingLoopingSound(SoundEvents.ENTITY_CAMEL_DEATH, SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME());
 
         this.sounds = new ArrayList<>();
         this.sounds.addAll(List.of(
                 TOYOTA_HUM,
-                CORAL_HUM
+                CORAL_HUM,
+                ERROR_SOUND
         ));
     }
 
@@ -135,11 +140,12 @@ public class ClientHumHandler extends SoundHandler {
         if (isPlayerInATardis() && isEnabled() && tardis().hasPower()) {
             this.startIfNotPlaying(this.getHum());
         } else {
-            this.stopSound(this.getHum());
-
-            if (random.nextInt(256) == 32) {
-                this.playRandomCreak();
-            }
+            if (!isPlayerInATardis())
+                this.stopSounds();
+            else
+                if (random.nextInt(256) == 32) {
+                    this.playRandomCreak();
+                }
         }
     }
 }
