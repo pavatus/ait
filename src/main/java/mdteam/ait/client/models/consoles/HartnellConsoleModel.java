@@ -827,10 +827,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 				(float) (((console.getTardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
 		ModelPart fuelLowWarningLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("sym_lamp2").getChild("bone96");
 		// Low Fuel Light
-		if(console.getTardis().getFuel() <= (FuelHandler.TARDIS_MAX_FUEL / 10)){
-			fuelLowWarningLight.pivotY = fuelLowWarningLight.pivotY;
-		}
-		else{
+		if (!(console.getTardis().getFuel() <= (FuelHandler.TARDIS_MAX_FUEL / 10))) {
 			fuelLowWarningLight.pivotY = fuelLowWarningLight.pivotY + 1;
 		}
 
@@ -943,12 +940,12 @@ public class HartnellConsoleModel extends ConsoleModel {
 		ModelPart hadsAlarms = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("s_lever_6").getChild("bone143");
 		ModelPart hadsAlarmsLightsOne = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("sym_lamp4").getChild("bone145");
 		ModelPart hadsAlarmsLightsTwo = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("sym_lamp5").getChild("bone141");
-		if(PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)){
+		if(PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAS_POWER)){
 			hadsAlarms.roll = hadsAlarms.roll + 1.75f;
 			hadsAlarmsLightsOne.pivotY = hadsAlarmsLightsOne.pivotY;
 			hadsAlarmsLightsTwo.pivotY = hadsAlarmsLightsTwo.pivotY;
 		}
-		else if(!PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)){
+		else if(!PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAS_POWER)){
 			hadsAlarms.roll = hadsAlarms.roll;
 			hadsAlarmsLightsOne.pivotY = hadsAlarmsLightsOne.pivotY + 1;
 			hadsAlarmsLightsTwo.pivotY = hadsAlarmsLightsTwo.pivotY + 1;
