@@ -28,7 +28,7 @@ public class CoralGrowthVariant extends ExteriorVariantSchema {
 
     @Override
     public DoorSchema door() {
-        return DoorRegistry.REGISTRY.get(CapsuleDoorVariant.REFERENCE);
+        return DoorRegistry.REGISTRY.get(CoralGrowthVariant.REFERENCE);
     }
 
     @Override

@@ -23,6 +23,7 @@ public class DoorRegistry {
     public static DoorSchema CAPSULE;
     public static DoorSchema BOX;
     public static DoorSchema HEAD;
+    public static DoorSchema GROWTH;
 
     public static void init() {
         TARDIM = register(new TardimDoorVariant());
@@ -31,5 +32,6 @@ public class DoorRegistry {
         CAPSULE = register(new CapsuleDoorVariant());
         BOX = register(new PoliceBoxDoorVariant());
         HEAD = register(new EasterHeadDoorVariant());
+        GROWTH = register(new CoralGrowthDoorVariant());
     }
 }
