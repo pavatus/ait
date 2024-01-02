@@ -97,6 +97,7 @@ public class AITMod implements ModInitializer {
             SetFuelCommand.register(dispatcher);
             ToggleHumCommand.register(dispatcher);
             ToggleAlarmCommand.register(dispatcher);
+            ToggleSiegeModeCommand.register(dispatcher);
             RiftChunkCommand.register(dispatcher);
         }));
 
