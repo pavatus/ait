@@ -21,7 +21,6 @@ public class DimensionControl extends Control {
     public DimensionControl() {
         super("dimension");
     }
-
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         TardisTravel travel = tardis.getTravel();

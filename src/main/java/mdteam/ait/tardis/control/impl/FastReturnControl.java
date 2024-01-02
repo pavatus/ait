@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.control.impl;
 
+import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.Control;
@@ -12,13 +13,13 @@ import static mdteam.ait.tardis.handler.DoorHandler.toggleLock;
 import static mdteam.ait.tardis.handler.DoorHandler.useDoor;
 
 public class FastReturnControl extends Control {
+
     public FastReturnControl() {
         super("fast_return");
     }
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-
         TardisTravel travel = tardis.getTravel();
 
         boolean bl = travel.getDestination() == travel.getLastPosition(); // fixme move this to be saved in the PropertiesHandler instead as TardisTravel is too bloated rn and will be getting a rewrite
@@ -41,4 +42,5 @@ public class FastReturnControl extends Control {
         Text current_position = Text.translatable("tardis.message.control.fast_return.current_position");
         player.sendMessage((isLastPosition ? last_position : current_position), true);
     }
+
 }
