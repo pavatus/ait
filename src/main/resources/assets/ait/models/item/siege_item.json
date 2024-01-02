@@ -1,5 +1,5 @@
 {
-	"credit": "Made with love <3",
+	"credit": "Made with love",
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "ait:item/siege_item"
@@ -35,11 +35,13 @@
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [22.5, 45, 0],
-			"translation": [0, 6.5, -0.5]
+			"translation": [0, 2.25, -0.5],
+			"scale": [0.5, 0.5, 0.5]
 		},
 		"thirdperson_lefthand": {
 			"rotation": [22.5, 45, 0],
-			"translation": [0, 6.5, -0.5]
+			"translation": [0, 2.25, -0.5],
+			"scale": [0.5, 0.5, 0.5]
 		},
 		"firstperson_righthand": {
 			"rotation": [0, 45, 0],
@@ -54,16 +56,14 @@
 		},
 		"gui": {
 			"rotation": [22.5, 45, 0],
-			"translation": [0, 4.75, 0],
-			"scale": [1.275, 1.275, 1.275]
+			"translation": [0, 3.75, 0]
 		},
 		"head": {
-			"translation": [0, 9, 0],
-			"scale": [2, 2, 2]
+			"translation": [0, 14.75, 0]
 		},
 		"fixed": {
-			"translation": [0, 8, 0],
-			"scale": [2, 2, 2]
+			"translation": [0, 6, 0],
+			"scale": [1.5, 1.5, 1.5]
 		}
 	}
 }
