@@ -93,9 +93,9 @@ public class PortalsHandler {
         );
 
         DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), exteriorPos.getDirection().asRotation());
-        PortalAPI.setPortalOrientationQuaternion(portal, quat);
-
         DQuaternion doorQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), doorPos.getDirection().asRotation());
+
+        PortalAPI.setPortalOrientationQuaternion(portal, quat);
         portal.setOtherSideOrientation(doorQuat);
 
         portal.setOriginPos(new Vec3d(exteriorAdjust.getX() + 0.5, exteriorAdjust.getY() + 1, exteriorAdjust.getZ() + 0.5));
@@ -125,10 +125,11 @@ public class PortalsHandler {
         );
 
         DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), doorPos.getDirection().asRotation());
-        PortalAPI.setPortalOrientationQuaternion(portal, quat);
-
         DQuaternion extQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), exteriorPos.getDirection().asRotation());
+
+        PortalAPI.setPortalOrientationQuaternion(portal, quat);
         portal.setOtherSideOrientation(extQuat);
+
 
         portal.setOriginPos(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
         portal.setDestinationDimension(exteriorPos.getWorld().getRegistryKey());
