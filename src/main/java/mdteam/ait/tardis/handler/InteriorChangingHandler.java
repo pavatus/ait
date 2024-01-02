@@ -61,7 +61,7 @@ public class InteriorChangingHandler extends TardisLink {
         if (tardis().getHandlers().getFuel().isOutOfFuel()) return;
         if (tardis().isGrowth() && tardis().hasGrowthExterior())
             tardis().getExterior().setType(TardisItemBuilder.findRandomExterior());
-        if (tardis().getHandlers().getFuel().getFuel() < 5000 && !(tardis().isGrowth() && tardis().hasGrowthExterior())) {
+        if (tardis().getHandlers().getFuel().getFuel() < 5000 && !(tardis().isGrowth() && tardis().hasGrowthDesktop())) {
             for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis())) {
                 player.sendMessage(Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED), true);
             }
@@ -71,7 +71,7 @@ public class InteriorChangingHandler extends TardisLink {
         setGenerating(true);
         tardis().getHandlers().getAlarms().enable();
         tardis().getDesktop().setConsolePos(null);
-        if (!(tardis().isGrowth() && tardis().hasGrowthExterior()))
+        if (!(tardis().hasGrowthDesktop()))
             tardis().removeFuel(5000);
         tardis().markDirty();
     }
