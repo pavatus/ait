@@ -93,7 +93,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		if(exterior.tardis() == null) return;
 		matrices.push();
-		matrices.scale(0.685F, 0.685f, 0.685f);
+		matrices.scale(0.57F, 0.57F, 0.57F);
 		matrices.translate(0, -1.5f, 0);
 
 		/*this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
@@ -124,7 +124,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 	@Override
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		matrices.push();
-		matrices.scale(0.685F, 0.685f, 0.685f);
+		matrices.scale(0.57F, 0.57F, 0.57F);
 		matrices.translate(0, -1.5f, 0);
 
 		super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);

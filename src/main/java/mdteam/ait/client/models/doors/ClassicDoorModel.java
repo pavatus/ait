@@ -74,7 +74,7 @@ public class ClassicDoorModel extends DoorModel {
 		this.classic.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();*/
 
 		matrices.push();
-		matrices.scale(0.68F, 0.68f, 0.68f);
+		matrices.scale(0.57F, 0.57F, 0.57F);
 		matrices.translate(0, -1.5, 0.35);
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180));
 
