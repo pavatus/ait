@@ -94,7 +94,7 @@ public class FuelHandler extends TardisLink {
             DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay", 500L);
             removeFuel(0.25);
         }
-        if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT && this.getFuel() == 0) {
+        if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT && !this.tardis().hasPower()) {
             tardis().getTravel().crash(); // hehe force land if you don't have enough fuel
         }
     }
