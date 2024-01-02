@@ -163,7 +163,7 @@ public class SonicItem extends Item {
 
                 travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()), true);
 
-                player.sendMessage(Text.translatable("message.ait.sonic.handbreakdisengaged"), true);
+                player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);
             }
         };
 
