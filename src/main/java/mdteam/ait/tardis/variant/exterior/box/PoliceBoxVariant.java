@@ -40,20 +40,20 @@ public abstract class PoliceBoxVariant extends ExteriorVariantSchema {
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return switch (direction) {
             case DOWN, UP -> pos;
-            case NORTH -> pos.add(0,0.25,0.48);
-            case SOUTH -> pos.add(0,0.25,-0.48);
-            case WEST -> pos.add(0.48,0.25,0);
-            case EAST -> pos.add(-0.48,0.25,0);
+            case NORTH -> pos.add(0,0.207,-0.628);
+            case SOUTH -> pos.add(0,0.207,0.628);
+            case WEST -> pos.add(-0.628,0.207,0);
+            case EAST -> pos.add(0.628,0.207,0);
         };
     }
 
     @Override
     public double portalHeight() {
-        return 2.5d;
+        return 2.3d;
     }
 
     @Override
     public double portalWidth() {
-        return 1.5d;
+        return 1.145d;
     }
 }
