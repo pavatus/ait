@@ -3,9 +3,12 @@ package mdteam.ait.client.models.consoles;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.FuelHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -810,7 +813,9 @@ public class HartnellConsoleModel extends ConsoleModel {
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		bone.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 	}
-
+	int xDestination = 0;
+	int yDestination = 0;
+	int zDestination = 0;
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		if (console.getTardis() == null) return;
@@ -820,14 +825,80 @@ public class HartnellConsoleModel extends ConsoleModel {
 		//System.out.println("Fuel: " + console.getTardis().getFuel() + " || clamped fuel: " + (((console.getTardis().getFuel() / 5000) * 2) - 1));
 		this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("m_meter_2").getChild("bone110").yaw =
 				(float) (((console.getTardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
+		ModelPart fuelLowWarningLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("sym_lamp2").getChild("bone96");
+		// Low Fuel Light
+		if(console.getTardis().getFuel() <= (FuelHandler.TARDIS_MAX_FUEL / 10)){
+			fuelLowWarningLight.pivotY = fuelLowWarningLight.pivotY;
+		}
+		else{
+			fuelLowWarningLight.pivotY = fuelLowWarningLight.pivotY + 1;
+		}
+
+		// X Control Movement
+		ModelPart xControl = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_lever_2").getChild("bone70");
+		ModelPart xControlLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("ind_lamp_11").getChild("bone82");
+		AbsoluteBlockPos.Directed destination = console.getTardis().getTravel().getDestination();
+		if (console.getTardis().getTravel().getDestination().getX() != xDestination) {
+			xControl.roll = xControl.roll + 1.575f;
+			xControlLight.pivotY = xControlLight.pivotY + 1;
+
+			//ddd
+
+			xControl.roll = xControl.roll;
+			xControlLight.pivotY = xControlLight.pivotY;
+			//PUT A DELAY HERE LOQOR
+			xDestination = destination.getX();
+		}
+
+		// Y Control Movement
+		ModelPart yControl = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_lever_3").getChild("bone76");
+		ModelPart yControlLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("ind_lamp_12").getChild("bone83");
+		if (console.getTardis().getTravel().getDestination().getY() != yDestination) {
+			yControl.roll = yControl.roll + 1.575f;
+			yControlLight.pivotY = yControlLight.pivotY + 1;
+
+			//ddd
+
+			yControl.roll = yControl.roll;
+			yControlLight.pivotY = yControlLight.pivotY;
+			//PUT A DELAY HERE LOQOR
+			yDestination = destination.getY();
+		}
+
+		// Z Control Movement
+		ModelPart zControl = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_lever_4").getChild("bone77");
+		ModelPart zControlLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("ind_lamp_13").getChild("bone84");
+
+		if (console.getTardis().getTravel().getDestination().getZ() != zDestination) {
+			zControl.roll = zControl.roll + 1.575f;
+			zControlLight.pivotY = zControlLight.pivotY + 1;
+
+			//ddd
+
+			zControl.roll = zControl.roll;
+			zControlLight.pivotY = zControlLight.pivotY;
+			//PUT A DELAY HERE LOQOR
+			zDestination = destination.getZ();
+		}
+
+		// Fast Return Movements
+		ModelPart fastReturn = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("fastreturn").getChild("bone25");
+		AbsoluteBlockPos.Directed lastLocation = console.getTardis().getTravel().getLastPosition();
+		if(console.getTardis().getTravel().getDestination() == lastLocation) {
+			fastReturn.pivotY = fastReturn.pivotY + 0.25f;
+
+			//dddd
+
+			fastReturn.pivotY = fastReturn.pivotY;
+		}
 
 		// Throttle Control Movements
 		ModelPart throttle = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_1").getChild("bone45");
-		throttle.roll = console.getTardis().getTravel().getState() == FLIGHT || console.getTardis().getTravel().getState() == DEMAT ? throttle.roll : throttle.roll + 1;
+		throttle.roll = console.getTardis().getTravel().getState() == FLIGHT || console.getTardis().getTravel().getState() == DEMAT ? throttle.roll  + 1: throttle.roll;
 
 		// Handbrake Control Movements
 		ModelPart handbrake = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_2").getChild("bone46");
-		handbrake.roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? handbrake.roll : handbrake.roll + 1;
+		handbrake.roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? handbrake.roll + 1 : handbrake.roll;
 
 
 		// Door Control Movements
