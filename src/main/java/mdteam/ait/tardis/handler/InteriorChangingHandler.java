@@ -118,6 +118,7 @@ public class InteriorChangingHandler extends TardisLink {
             tardis().getHandlers().getAlarms().disable();
             return;
         }
+        if (!isGenerating()) return;
 
         if (!isInteriorEmpty()) {
             warnPlayers();
@@ -130,7 +131,7 @@ public class InteriorChangingHandler extends TardisLink {
         }
         if (isInteriorEmpty() && !clearedOldInterior) {
             tardis().getDesktop().clearOldInterior(getQueuedInterior());
-            DeltaTimeManager.createDelay("interior_change-" + tardis().getUuid().toString(), 5000L);
+            DeltaTimeManager.createDelay("interior_change-" + tardis().getUuid().toString(), 15000L);
             clearedOldInterior = true;
         }
         if (isInteriorEmpty() && clearedOldInterior) {
