@@ -405,6 +405,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         //
         aitLanguageProvider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
         aitLanguageProvider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
+        aitLanguageProvider.addTranslation("tardis.message.control.siege.enabled", "Siege Mode: Enabled");
+        aitLanguageProvider.addTranslation("tardis.message.control.siege.enabled", "Siége Mode: Disabled");
         aitLanguageProvider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
         aitLanguageProvider.addTranslation("screen.ait.monitor.apply", "Apply");
         aitLanguageProvider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
@@ -479,6 +481,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.control.landtype.on", "Recherche Surface: ON");
         aitLanguageProvider.addTranslation("tardis.message.control.landtype.off", "Recherche Surface: OFF");
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.destination", "Destination: ");
+        aitLanguageProvider.addTranslation("tardis.message.control.siege.enabled", "Siége: Activé");
+        aitLanguageProvider.addTranslation("tardis.message.control.siege.enabled", "Siége: Désactivé");
         aitLanguageProvider.addTranslation("tardis.message.control.refueler.enabled", "Rechargement: Activé");
         aitLanguageProvider.addTranslation("tardis.message.control.refueler.disabled", "Rechargement: Désactivé");
         aitLanguageProvider.addTranslation("tardis.message.destination_biome", "Biome de Destination: ");
