@@ -107,12 +107,9 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
                 is_z_negative = true;
             }
             player.addVelocity(0.15f * x_random * (is_x_negative ? -1 : 1), 0.1f * y_random, 0.15f * z_random * (is_z_negative ? -1 : 1));
-//            world.addParticle(ParticleTypes.ANGRY_VILLAGER, true, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, 0, 0.1f, 0);;
-//            world.addParticle(ParticleTypes.ANGRY_VILLAGER, true, pos.getX() + 1.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, 0, 0.1f, 0);
-//            world.addParticle(ParticleTypes.ANGRY_VILLAGER, true, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 1.5f, 0, 0.1f, 0);
-//            world.addParticle(ParticleTypes.ANGRY_VILLAGER, true, pos.getX() + 1.5f, pos.getY() + 0.5f, pos.getZ() + 1.5f, 0, 0.1f, 0);
-            for (int i = 0; i < 30; i++) {
-                world.addParticle(ParticleTypes.ANGRY_VILLAGER, true, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, random.nextFloat(-5, 5), random.nextFloat(-5, 5), random.nextFloat(-5, 5));
+
+            for (int i = 0; i < 100; i++) {
+                world.addParticle(ParticleTypes.ANGRY_VILLAGER, true, pos.getX() + random.nextFloat(-2, 3), pos.getY() + random.nextFloat(2), pos.getZ() + random.nextFloat(-2, 3), random.nextFloat(-5, 5), random.nextFloat(-5, 5), random.nextFloat(-5, 5));
             }
         }
         super.onSteppedOn(world, pos, state, entity);
