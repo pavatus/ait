@@ -61,6 +61,7 @@ public class AITMod implements ModInitializer {
         DesktopRegistry.init();
         ExteriorRegistry.init();
         HumsRegistry.init();
+        CreakRegistry.init();
 
         // These 3 have client registries which also need registering to.
         ConsoleVariantRegistry.init();
