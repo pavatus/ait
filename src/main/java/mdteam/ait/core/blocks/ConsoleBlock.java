@@ -104,7 +104,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
             if (random.nextInt(1,3) == 1) {
                 is_z_negative = true;
             }
-            player.addVelocity(0.5f * x_random * (is_x_negative ? -1 : 1), 5f * y_random, 0.5f * z_random * (is_z_negative ? -1 : 1));
+            player.addVelocity(0.5f * x_random * (is_x_negative ? -1 : 1), 0.5f * y_random, 0.5f * z_random * (is_z_negative ? -1 : 1));
         }
         super.onSteppedOn(world, pos, state, entity);
     }

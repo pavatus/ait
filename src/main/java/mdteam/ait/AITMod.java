@@ -47,11 +47,13 @@ import java.util.UUID;
 public class AITMod implements ModInitializer {
     public static final String MOD_ID = "ait";
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
+    public static final Boolean DEBUG = true;
 
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad(); // if this doesnt exist for you run data gen
     public static final NeptuneItemGroup AIT_ITEM_GROUP = new NeptuneItemGroup(new Identifier(AITMod.MOD_ID, "item_group"), AITItems.TARDIS_ITEM.getDefaultStack());
     public static final ComponentKey<RadioNBTComponent> RADIONBT =
             ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "radionbt"), RadioNBTComponent.class);
+
 
     @Override
     public void onInitialize() {

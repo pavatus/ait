@@ -118,16 +118,18 @@ public class TardisDesktop {
     }
 
     public void changeInterior(TardisDesktopSchema schema) {
+        long currentTime = System.currentTimeMillis();
         this.schema = schema;
         DesktopGenerator generator = new DesktopGenerator(this.schema);
-        //List<BlockPos> allBlocks = getBlockPosListFromCorners();
-        //forceLoadChunks(allBlocks);
-        DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
-        //clearExistingEntities();
-        //unforceLoadChunks(allBlocks);
         BlockPos doorPos = generator.place((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
         if(doorPos != null) this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
         this.updateDoor();
+        AITMod.LOGGER.warn("Time taken to generate interior: " + (System.currentTimeMillis() - currentTime));
+    }
+
+    public void clearOldInterior(TardisDesktopSchema schema) {
+        this.schema = schema;
+        DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
     }
 
     private void clearExistingEntities() {
