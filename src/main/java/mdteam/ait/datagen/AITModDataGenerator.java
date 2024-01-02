@@ -406,7 +406,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
         aitLanguageProvider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
         aitLanguageProvider.addTranslation("tardis.message.control.siege.enabled", "Siege Mode: Enabled");
-        aitLanguageProvider.addTranslation("tardis.message.control.siege.enabled", "Siége Mode: Disabled");
+        aitLanguageProvider.addTranslation("tardis.message.control.siege.disabled", "Siege Mode: Disabled");
         aitLanguageProvider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
         aitLanguageProvider.addTranslation("screen.ait.monitor.apply", "Apply");
         aitLanguageProvider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");

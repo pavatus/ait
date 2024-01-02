@@ -2,6 +2,7 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.core.AITItems;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.gui.screen.Screen;
@@ -157,6 +158,8 @@ public class SiegeTardisItem extends Item {
     }
 
     public static void pickupTardis(Tardis tardis, ServerPlayerEntity player) {
+        if(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE))
+            return;
         tardis.getTravel().deleteExterior();
         player.getInventory().insertStack(create(tardis));
         player.getInventory().markDirty();
