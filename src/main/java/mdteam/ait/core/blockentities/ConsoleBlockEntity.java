@@ -64,7 +64,6 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     private UUID tardisId;
     private Identifier type;
     private Identifier variant;
-
     private int timeInSeconds;
     private boolean needsReloading = true; // this is to ensure we get properly synced when reloaded yup ( does not work for multipalery : (
 
