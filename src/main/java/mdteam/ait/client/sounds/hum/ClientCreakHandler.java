@@ -88,7 +88,7 @@ public class ClientCreakHandler extends SoundHandler {
 
         if (client.player == null) return;
 
-        if (!isPlayerInATardis() || !tardis().hasPower()) {
+        if (!isPlayerInATardis() || tardis().hasPower()) { // todo should they play even with power? just make them more rare??
             this.stopSounds();
             return;
         }
