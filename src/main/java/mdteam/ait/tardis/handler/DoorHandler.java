@@ -3,6 +3,7 @@ package mdteam.ait.tardis.handler;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.entities.BaseControlEntity;
+import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.advancement.TardisCriterions;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
@@ -215,7 +216,7 @@ public class DoorHandler extends TardisLink {
 
                 TardisCriterions.VEGETATION.trigger(player);
 
-                return false;
+                return true;
             }
 
             if (pos != null) // fixme will play sound twice on interior door
@@ -230,9 +231,20 @@ public class DoorHandler extends TardisLink {
             // Bro cant escape
             if (player == null) return false;
 
-            // if holding an axe then break open the door RAHHH
             ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
+
+            // if holding a key and in siege mode and have an empty interior, disable siege mode !!
+            System.out.println(KeyItem.getTardis(stack));
+            if (stack.getItem() instanceof KeyItem && tardis.isSiegeMode() && KeyItem.getTardis(stack).getUuid().equals(tardis.getUuid()) && !TardisUtil.isInteriorNotEmpty(tardis)) {
+                player.swingHand(Hand.MAIN_HAND);
+                tardis.setSiegeMode(false);
+                lockTardis(false, tardis, player, true);
+            }
+
+            // if holding an axe then break open the door RAHHH
             if (stack.getItem() instanceof AxeItem) {
+                if (tardis.isSiegeMode()) return false;
+
                 player.swingHand(Hand.MAIN_HAND);
                 stack.setDamage(stack.getDamage() - 1);
 
@@ -243,7 +255,7 @@ public class DoorHandler extends TardisLink {
                 lockTardis(false, tardis, player, true); // forcefully unlock the tardis
                 tardis.getDoor().openDoors();
 
-                return false;
+                return true;
             }
 
             if (pos != null) // fixme will play sound twice on interior door

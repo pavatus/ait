@@ -107,11 +107,17 @@ public class InteriorChangingHandler extends TardisLink {
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
+        if (TardisUtil.isClient()) return;
+        System.out.println(DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + tardis().getUuid().toString()));
         if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + tardis().getUuid().toString())) return;
+
         if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
             tardis().getTravel().crash();
         }
-        if (!tardis().getHandlers().getAlarms().isEnabled()) tardis().getHandlers().getAlarms().enable();
+        if (isGenerating()) {
+            if (!tardis().getHandlers().getAlarms().isEnabled()) tardis().getHandlers().getAlarms().enable();
+        }
+
 
         if (!tardis().hasPower()) {
             setGenerating(false);
@@ -122,7 +128,6 @@ public class InteriorChangingHandler extends TardisLink {
 
         if (!isInteriorEmpty()) {
             warnPlayers();
-            DeltaTimeManager.createDelay("interior_change-" + tardis().getUuid().toString(), 100L);
             return;
         }
 

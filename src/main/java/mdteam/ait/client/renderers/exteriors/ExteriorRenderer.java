@@ -1,6 +1,7 @@
 package mdteam.ait.client.renderers.exteriors;
 
 import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.client.models.exteriors.SiegeModeModel;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
@@ -25,6 +26,7 @@ import mdteam.ait.tardis.TardisExterior;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
     private ExteriorModel model;
+    private SiegeModeModel siege;
 
     public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {}
 
@@ -62,6 +64,14 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         Identifier texture = exteriorVariant.texture();
+
+        if (entity.tardis().isSiegeMode()) {
+            if (siege == null) siege = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
+            siege.renderWithAnimations(entity, this.siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), maxLight, overlay, 1, 1, 1, 1);
+            matrices.pop();
+            return;
+        }
+
         if (model != null) {
             model.animateTile(entity);
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
