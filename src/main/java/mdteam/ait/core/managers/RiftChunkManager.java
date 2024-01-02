@@ -75,7 +75,7 @@ public class RiftChunkManager {
             }
             riftChunkData.add("rift_chunk_artron_levels", riftChunkArtronLevelsJsonObject);
             FileWriter riftChunkDataFile = new FileWriter(save_path + "riftChunkData.rift");
-            System.out.println(riftChunkData.toString());
+            //System.out.println(riftChunkData.toString());
             riftChunkDataFile.write(riftChunkData.toString());
             riftChunkDataFile.close();
 
