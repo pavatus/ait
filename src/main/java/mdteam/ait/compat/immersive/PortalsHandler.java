@@ -80,8 +80,8 @@ public class PortalsHandler {
     private static Portal createExteriorPortal(Tardis tardis) {
         AbsoluteBlockPos.Directed doorPos = tardis.getTravel().getDoorPos();
         AbsoluteBlockPos.Directed exteriorPos = tardis.getTravel().getExteriorPos();
-        Vec3d doorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(),doorPos);
-        Vec3d exteriorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(),exteriorPos);
+        Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(),doorPos);
+        Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(),exteriorPos);
 
         Portal portal = Portal.entityType.create(exteriorPos.getWorld());
 
@@ -112,8 +112,8 @@ public class PortalsHandler {
     private static Portal createInteriorPortal(Tardis tardis) {
         AbsoluteBlockPos.Directed doorPos = tardis.getTravel().getDoorPos();
         AbsoluteBlockPos.Directed exteriorPos = tardis.getTravel().getExteriorPos();
-        Vec3d doorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), doorPos);
-        Vec3d exteriorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), exteriorPos);
+        Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
+        Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
 
         Portal portal = Portal.entityType.create(doorPos.getWorld());
 

@@ -72,7 +72,7 @@ public class PoliceBoxDoorModel extends DoorModel {
         this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
         matrices.push();
-        matrices.scale(0.67F, 0.67F, 0.67F);
+        matrices.scale(0.63F, 0.63F, 0.63F);
         matrices.translate(0, -1.5, 0.35);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180));
 
