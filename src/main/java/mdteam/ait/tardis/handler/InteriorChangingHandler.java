@@ -108,9 +108,8 @@ public class InteriorChangingHandler extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
         if (TardisUtil.isClient()) return;
-        System.out.println(DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + tardis().getUuid().toString()));
+        if (!isGenerating()) return;
         if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + tardis().getUuid().toString())) return;
-
         if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
             tardis().getTravel().crash();
         }
@@ -138,6 +137,7 @@ public class InteriorChangingHandler extends TardisLink {
             tardis().getDesktop().clearOldInterior(getQueuedInterior());
             DeltaTimeManager.createDelay("interior_change-" + tardis().getUuid().toString(), 15000L);
             clearedOldInterior = true;
+            return;
         }
         if (isInteriorEmpty() && clearedOldInterior) {
             tardis().getDesktop().changeInterior(getQueuedInterior());
