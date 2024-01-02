@@ -89,7 +89,7 @@ public class ClientTardisManager extends TardisManager {
         Tardis tardis = this.gson.fromJson(json, ClientTardis.class);
 
         ExteriorBlockEntity entity = TardisUtil.findExteriorEntity(tardis);
-        if (entity != null) {
+        if (entity != null && entity.getAnimation() != null) {
             if (!entity.getAnimation().hasAnimationStarted()) // fixme this breaks the demat animation as for some reason the tardis gets spammed with updates on demat ( ? )
                 entity.getAnimation().setupAnimation(tardis.getTravel().getState()); // UNLESS YOU RIGHT CLICK ON THE EXTERIOR??  WHICH FIXES IT?? AND ALSO MAKES THE CONSOLE ANIMATIONS WORK?? WTFF!!!
         }

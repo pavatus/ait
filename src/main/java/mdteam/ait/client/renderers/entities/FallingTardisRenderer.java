@@ -1,6 +1,7 @@
 package mdteam.ait.client.renderers.entities;
 
 import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.client.models.exteriors.SiegeModeModel;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
@@ -52,6 +53,13 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
         if (getModel(entity) == null) return;
+
+        if (entity.tardis().isSiegeMode()) {
+            model = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
+            model.renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), light,1,1,1,1,1);
+            matrices.pop();
+            return;
+        }
 
         getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light,1,1,1,1,1);
 

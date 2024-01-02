@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 public class AITItems implements NeptuneItemInit {
     // TARDIS
     public static final Item TARDIS_ITEM = new TardisItemBuilder(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
+    public static final Item SIEGE_ITEM = new SiegeTardisItem(new NeptuneItemSettings());
     // Functional Items
     public static final Item REMOTE_ITEM = new RemoteItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item ARTRON_COLLECTOR = new ArtronCollectorItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));

@@ -1,8 +1,8 @@
 {
-	"credit": "Made with Blockbench",
+	"credit": "Made with love <3",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "block/siege_mode"
+		"0": "ait:item/siege_item"
 	},
 	"elements": [
 		{

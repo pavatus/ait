@@ -2,6 +2,8 @@ package mdteam.ait.tardis;
 
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -181,8 +183,21 @@ public class Tardis {
     }
     public void setSiegeMode(boolean b) {
         if (b) disablePower();
+        if (!b) this.getHandlers().getAlarms().disable();
+        if (!b && !(this.getHandlers().getExteriorPos().getWorld().getBlockEntity(this.getHandlers().getExteriorPos()) instanceof ExteriorBlockEntity))
+            this.getTravel().placeExterior();
+        if (isSiegeBeingHeld()) return;
 
         PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE, b);
+        this.markDirty();
+    }
+    public boolean isSiegeBeingHeld() {
+        return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD);
+    }
+    public void setSiegeBeingHeld(boolean b) {
+        if (b) this.getHandlers().getAlarms().enable();
+
+        PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD, b);
         this.markDirty();
     }
 
