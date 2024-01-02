@@ -65,4 +65,11 @@ public class Control {
                 "id='" + id + '\'' +
                 '}';
     }
+
+    public long getDelayLength() {
+        return 250L;
+    }
+    public boolean shouldHaveDelay() {
+        return true;
+    }
 }

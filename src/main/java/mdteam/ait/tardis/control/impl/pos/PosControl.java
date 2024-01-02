@@ -40,4 +40,9 @@ public abstract class PosControl extends Control {
         Text text = Text.translatable("tardis.message.control.randomiser.poscontrol").append(Text.literal(" " + dest.getX() + " | " + dest.getY() + " | " + dest.getZ()));
         player.sendMessage(text, true);
     }
+
+    @Override
+    public boolean shouldHaveDelay() {
+        return false;
+    }
 }

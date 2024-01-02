@@ -103,6 +103,16 @@ public class ConsoleControlEntity extends BaseControlEntity {
         this.dataTracker.set(OFFSET, offset);
     }
 
+    public String createDelayId() {
+        return "delay-" + this.getControl().id + "-" + this.getTardis().getUuid();
+    }
+    public void createDelay(long millis) {
+        DeltaTimeManager.createDelay(createDelayId(), millis);
+    }
+    public boolean isOnDelay() {
+        return DeltaTimeManager.isStillWaitingOnDelay(createDelayId());
+    }
+
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
@@ -189,14 +199,19 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
             if (this.getTardis() == null) return false; // AAAAAAAAAAA
 
-            if (DeltaTimeManager.isStillWaitingOnDelay(getDelayId(this.getTardis()))) return false;
+            //blahblah
+            //if (DeltaTimeManager.isStillWaitingOnDelay(getDelayId(this.getTardis()))) return false;
 
-            DeltaTimeManager.createDelay(getDelayId(this.getTardis()), 500L);
+            //DeltaTimeManager.createDelay(getDelayId(this.getTardis()), 500L);
 
             control.runAnimation(getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world);
 
             if (control.shouldFailOnNoPower() && !this.getTardis(world).hasPower()) {
                 return false;
+            }
+            if (this.isOnDelay()) return false;
+            if (this.control.shouldHaveDelay() && !this.isOnDelay()) {
+                this.createDelay(this.control.getDelayLength());
             }
 
             return this.control.runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server

@@ -264,6 +264,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addSound("tardis/emergency_mat", AITSounds.EMERG_MAT);
             provider.addSound("tardis/flight_loop", AITSounds.FLIGHT_LOOP);
             provider.addSound("tardis/console_shutdown", AITSounds.SHUTDOWN);
+            provider.addSound("tardis/console_powerup", AITSounds.POWERUP);
             provider.addSound("tardis/eighth_demat", AITSounds.EIGHT_DEMAT);
             provider.addSound("tardis/eighth_mat", AITSounds.EIGHT_MAT);
 

@@ -136,12 +136,15 @@ public class AITMod implements ModInitializer {
             }
         }));
 
-        TardisEvents.OUT_OF_FUEL.register((tardis) -> {
-            tardis.disablePower();
-        });
+        TardisEvents.OUT_OF_FUEL.register(Tardis::disablePower);
         TardisEvents.LOSE_POWER.register((tardis -> {
             if (tardis.getDesktop().getConsolePos() != null) {
                 TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+            }
+        }));
+        TardisEvents.REGAIN_POWER.register((tardis -> {
+            if (tardis.getDesktop().getConsolePos() != null) {
+                TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
             }
         }));
 

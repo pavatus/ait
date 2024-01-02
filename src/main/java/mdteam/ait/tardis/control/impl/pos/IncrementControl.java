@@ -37,4 +37,8 @@ public class IncrementControl extends Control {
         Text text = Text.translatable("tardis.message.control.increment.info").append(Text.literal("" + manager.increment));
         player.sendMessage(text, true);
     }
+    @Override
+    public boolean shouldHaveDelay() {
+        return false;
+    }
 }

@@ -32,4 +32,9 @@ public class PowerControl extends Control {
     public boolean shouldFailOnNoPower() {
         return false;
     }
+
+    @Override
+    public long getDelayLength() {
+        return 10000L;
+    }
 }
