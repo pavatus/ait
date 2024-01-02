@@ -86,6 +86,25 @@ public class FallingTardisEntity extends Entity {
         this.setFallingBlockPos(this.getBlockPos());
     }
 
+    @Override
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        nbt.putString("TardisId", getTardisId().toString());
+        nbt.put("BlockPos", NbtHelper.fromBlockPos(this.getBlockPos()));
+        return nbt;
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        this.setTardisId(UUID.fromString(nbt.getString("TardisId")));
+        this.setBlockPos(NbtHelper.toBlockPos(nbt.getCompound("BlockPos")));
+    }
+
+    private void setBlockPos(BlockPos blockPos) {
+        this.dataTracker.set(BLOCK_POS, blockPos);
+    }
+
     public static FallingTardisEntity spawnFromBlock(World world, BlockPos pos, BlockState state) {
         FallingTardisEntity fallingBlockEntity = new FallingTardisEntity(world, (double)pos.getX() + 0.5, (double)pos.getY(), (double)pos.getZ() + 0.5, state.contains(Properties.WATERLOGGED) ? (BlockState)state.with(Properties.WATERLOGGED, false) : state);
 

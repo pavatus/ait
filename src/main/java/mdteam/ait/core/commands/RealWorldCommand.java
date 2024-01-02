@@ -29,9 +29,15 @@ public class RealWorldCommand {
         BlockPos spawnBlockPos = BlockPosArgumentType.getBlockPos(context, "spawn-position");
         ServerPlayerEntity source = context.getSource().getPlayer();
         assert source != null;
-        TardisRealEntity.testSpawnFromExteriorBlockEntity(source.getServerWorld(), targetBlockPos, spawnBlockPos);
-        Text textResponse = Text.translatable("command.ait.realworld.response").append(Text.literal(" " + targetBlockPos.getX() + ", " + targetBlockPos.getY() + ", " + targetBlockPos.getZ()));
-        source.sendMessage(textResponse);
+        try {
+            TardisRealEntity.testSpawnFromExteriorBlockEntity(source.getServerWorld(), targetBlockPos, spawnBlockPos);
+            Text textResponse = Text.translatable("command.ait.realworld.response").append(Text.literal(" " + spawnBlockPos.getX() + ", " + spawnBlockPos.getY() + ", " + spawnBlockPos.getZ()));
+            source.sendMessage(textResponse);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+
         return 1;
 
     }
