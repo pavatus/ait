@@ -223,7 +223,7 @@ public class Tardis {
     public void tickSiegeMode() {
         int siegeTime = getTimeInSiegeMode() + 1;
         PropertiesHandler.set(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME, isSiegeMode() ? siegeTime : 0);
-        this.markDirty();
+        // this.markDirty(); // DO NOT UNCOMMENT THAT LAG GOES CRAZYYYY!!!
 
         // todo add more downsides the longer you are in siege mode as it is meant to fail systems and kill you and that
         // for example, this starts to freeze the player (like we see in the episode) after a minute (change the length if too short) and only if its on the ground, to stop people from just slaughtering lol
