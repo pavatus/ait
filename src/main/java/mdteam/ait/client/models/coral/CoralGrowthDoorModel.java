@@ -83,7 +83,6 @@ public class CoralGrowthDoorModel extends DoorModel {
 		if (door.getTardis() == null) return;
 		matrices.push();
 		matrices.translate(0, -1.5f, 0);
-		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
 
 		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
