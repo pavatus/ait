@@ -146,6 +146,12 @@ public class AITMod implements ModInitializer {
             if (tardis.getDesktop().getConsolePos() != null) {
                 TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
             }
+
+            // disabling protocols
+            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, false);
+            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
+            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HAIL_MARY, false);
+            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED, false);
         }));
         TardisEvents.REGAIN_POWER.register((tardis -> {
             if (tardis.getDesktop().getConsolePos() != null) {
