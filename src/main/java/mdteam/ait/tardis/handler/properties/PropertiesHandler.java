@@ -20,6 +20,8 @@ public class PropertiesHandler { // todo move more things over to properties
     public static final String ALARM_ENABLED = "alarm_enabled";
     public static final String FIND_GROUND = "find_ground"; // whether the destination checks will try to find the ground or not
     public static final String PREVIOUSLY_LOCKED = "last_locked";
+    public static final String SIEGE_HELD = "siege_held";
+    public static final String SIEGE_TIME = "siege_ticks";
     public static final String HANDBRAKE = "handbrake";
     public static final String HAIL_MARY = "hail_mary";
     public static final String IS_FALLING = "is_falling";
@@ -28,8 +30,7 @@ public class PropertiesHandler { // todo move more things over to properties
     public static final String IS_IN_ACTIVE_DANGER = "is_in_active_danger";
     public static final String HAS_POWER = "power";
     public static final String SIEGE_MODE = "siege_mode";
-    public static final String SIEGE_HELD = "siege_held";
-    public static final String SIEGE_TIME = "siege_ticks";
+    public static final String IS_IN_REAL_FLIGHT = "is_in_real_flight";
 
     // Should these methods be in the holder instead?
 
@@ -181,6 +182,7 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(HAS_POWER, true);
         map.put(SIEGE_MODE, false);
         map.put(SIEGE_HELD, false);
+        map.put(IS_IN_REAL_FLIGHT, false);
         unlockAllFreebies(map);
 
         return map;
