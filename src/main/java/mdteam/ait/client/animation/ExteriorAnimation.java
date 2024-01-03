@@ -21,17 +21,6 @@ public abstract class ExteriorAnimation {
 
     public ExteriorAnimation(ExteriorBlockEntity exterior) {
         this.exterior = exterior;
-
-        if (!exterior.hasWorld()) return;
-        if (exterior.getWorld().isClient()) {
-            ClientPlayNetworking.registerGlobalReceiver(UPDATE,
-                    (client, handler, buf, responseSender) -> {
-                        int p = buf.readInt();
-                        // System.out.println(TardisTravel.State.values()[p]);
-                        this.setupAnimation(TardisTravel.State.values()[p]);
-                    }
-            );
-        }
     }
 
     // fixme bug that sometimes happens where server doesnt have animation
