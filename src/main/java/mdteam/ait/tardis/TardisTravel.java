@@ -312,6 +312,13 @@ public class TardisTravel extends TardisLink {
         if (this.getPosition().getWorld().isClient())
             return;
 
+        if (PropertiesHandler.willAutoPilot(tardis().getHandlers().getProperties())) {
+            // fufill all the prerequisites
+            DoorHandler.lockTardis(true, tardis(), null, false);
+            PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
+            tardis().setRefueling(false);
+        }
+
         PropertiesHandler.setAutoPilot(this.getTardis().getHandlers().getProperties(), withRemat);
 
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();

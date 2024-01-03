@@ -78,7 +78,7 @@ public class AbsoluteBlockPos extends BlockPos {
         return nbt;
     }
     public static AbsoluteBlockPos fromNbt(NbtCompound nbt) {
-        BlockPos pos = NbtHelper.toBlockPos(nbt);
+        BlockPos pos = NbtHelper.toBlockPos(nbt.getCompound("pos"));
         SerialDimension dimension = new SerialDimension(nbt.getString("dimension"));
         return new AbsoluteBlockPos(pos, dimension);
     }

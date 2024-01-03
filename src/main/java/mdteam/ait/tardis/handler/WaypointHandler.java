@@ -12,9 +12,17 @@ import java.util.UUID;
 
 public class WaypointHandler extends TardisLink {
     private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
+    private boolean hasCartridge;
 
     public WaypointHandler(UUID tardisId) {
         super(tardisId);
+    }
+
+    public boolean hasCartridge() {
+        return this.hasCartridge;
+    }
+    public void markHasCartridge() {
+        this.hasCartridge = true;
     }
 
     // todo summon a new waypoint item at the console if spawnItem is true
@@ -67,7 +75,10 @@ public class WaypointHandler extends TardisLink {
     }
 
     public void spawnItem(Waypoint waypoint) {
+        if (!this.hasCartridge) return;
+
         spawnItem(waypoint, this.tardis().getDesktop().getConsolePos());
+        this.hasCartridge = false;
     }
 
     public static ItemStack createWaypointItem(Waypoint waypoint) {

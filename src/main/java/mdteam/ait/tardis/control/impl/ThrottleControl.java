@@ -41,12 +41,6 @@ public class ThrottleControl extends Control {
 //                player.sendMessage(Text.literal("The TARDIS can not dematerialize when refueling"));
 //                return false;
 //            }
-            if (PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties())) {
-                // fufill all the prerequisites
-                DoorHandler.lockTardis(true, tardis, player, false);
-                PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
-                tardis.setRefueling(false);
-            }
             travel.dematerialise(PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));
         } else if (travel.getState() == TardisTravel.State.FLIGHT) {
             travel.materialise();

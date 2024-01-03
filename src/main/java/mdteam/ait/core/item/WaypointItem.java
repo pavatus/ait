@@ -59,6 +59,7 @@ public class WaypointItem extends Item {
 
         if (getPos(itemStack) == null) setPos(itemStack, console.getTardis().getTravel().getPosition());
 
+        console.getTardis().getHandlers().getWaypoints().markHasCartridge();
         console.getTardis().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)), true);
         player.setStackInHand(hand, ItemStack.EMPTY);
 

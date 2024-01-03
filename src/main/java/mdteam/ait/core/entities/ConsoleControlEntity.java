@@ -1,5 +1,6 @@
 package mdteam.ait.core.entities;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
@@ -206,6 +207,12 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
             control.runAnimation(getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world);
 
+            if (this.getTardis(world) == null) {
+                this.discard();
+                AITMod.LOGGER.warn("Discarding invalid control entity at " + this.getPos());
+                return false;
+            }
+
             if (control.shouldFailOnNoPower() && !this.getTardis(world).hasPower()) {
                 return false;
             }
@@ -288,6 +295,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
             if (this.control == null) {
                 if (this.consoleBlockPos != null) {
                     if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
+                        // todo this wont be good for server performance..
                         console.markDirty();
                     }
                     discard();

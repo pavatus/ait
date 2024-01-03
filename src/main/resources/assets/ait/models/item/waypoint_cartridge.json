@@ -75,7 +75,7 @@
 			"predicate": {
 				"type": 0.5
 			},
-			"model": "ait:item/waypoint/waypoint_cartridge_acrive"
+			"model": "ait:item/waypoint/waypoint_cartridge_active"
 		},
 		{
 			"predicate": {
