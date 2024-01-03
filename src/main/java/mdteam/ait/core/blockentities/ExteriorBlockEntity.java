@@ -11,6 +11,7 @@ import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.*;
@@ -173,6 +174,15 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
         if (!world.isClient() && this.tardis() != null && !PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && this.tardis().getTravel().getState() == MAT && this.getAlpha() >= 0.9f) {
             for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(this.getPos()).expand(0, 1, 0), EntityPredicates.EXCEPT_SPECTATOR)) {
                 TardisUtil.teleportInside(this.tardis(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
+            }
+        }
+
+        if (!world.isClient() && this.tardis() != null && this.tardis().getTravel().getState() == LANDED) {
+            if (!(blockState.get(ExteriorBlock.FACING).equals(this.tardis().getExterior().getExteriorPos().getDirection()))) {
+                // siege mode sometimes causes a desync in the directions, this is a temp jank fix ig
+                this.tardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(this.getPos(), this.getWorld(), blockState.get(ExteriorBlock.FACING)));
+                this.tardis().getDoor().closeDoors(); // bc of ip we just wanna make sure the doors are closed
+                AITMod.LOGGER.info("Fixing exterior direction! " + this.getPos() + " " + this.tardis().getExterior().getExteriorPos().getDirection());
             }
         }
     }
