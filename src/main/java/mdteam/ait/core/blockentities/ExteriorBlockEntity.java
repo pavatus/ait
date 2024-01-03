@@ -80,7 +80,7 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
             return;
         }
 
-        if (sneaking) {
+        if (sneaking && this.tardis().isSiegeMode() && !this.tardis().isSiegeBeingHeld()) {
             SiegeTardisItem.pickupTardis(this.tardis(), (ServerPlayerEntity) player);
             return;
         }
