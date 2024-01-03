@@ -1,6 +1,8 @@
 package mdteam.ait.mixin.client;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.util.AITConfig;
+import mdteam.ait.core.util.AITConfigModel;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.LogoDrawer;
@@ -24,6 +26,8 @@ public class DefaultLogoMixin {
     @Redirect(method = "Lnet/minecraft/client/gui/LogoDrawer;draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 0))
     private void injectedLogo(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
+        if (!AITMod.AIT_CONFIG.CUSTOM_MENU()) return;
+
         int screenWidth = this.client.currentScreen.width;
         int i = screenWidth / 2 - 128;
         instance.drawTexture(AIT_LOGO, i, y, 0.0f, 0.0f, 256, 64, 256, 64);
@@ -33,6 +37,8 @@ public class DefaultLogoMixin {
     @Redirect(method = "Lnet/minecraft/client/gui/LogoDrawer;draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 1))
     private void injectedEdition(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
+        if (!AITMod.AIT_CONFIG.CUSTOM_MENU()) return;
+
         int screenWidth = this.client.currentScreen.width;
         int i = screenWidth / 2 - 128;
         instance.drawTexture(AIT_EDITION, i, y, 0.0f, 0.0f, 256, 44, 256, 64);

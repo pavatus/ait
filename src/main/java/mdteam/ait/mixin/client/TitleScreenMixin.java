@@ -22,10 +22,10 @@ public abstract class TitleScreenMixin extends Screen {
     private static final RotatingCubeMapRenderer NEWPANO = new RotatingCubeMapRenderer(new CubeMapRenderer(new Identifier(AITMod.MOD_ID, "textures/gui/title/background/panorama")));
     private static final Identifier AIT_CONFIG_TEX = new Identifier(AITMod.MOD_ID, "textures/gui/title/config.png");
 
-    //This modifies the panorama in the background, the boolean within this is a placeholder/reminder, so I don't forget :p.
+    //This modifies the panorama in the background
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V", ordinal = 0))
     private void something(RotatingCubeMapRenderer instance, float delta, float alpha) {
-        boolean isConfigEnabled = true;
+        boolean isConfigEnabled = AITMod.AIT_CONFIG.CUSTOM_MENU();
         if (isConfigEnabled) NEWPANO.render(delta, alpha);
         else instance.render(delta, alpha);
     }

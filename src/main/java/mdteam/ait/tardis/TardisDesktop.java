@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -27,7 +28,7 @@ import java.util.List;
 public class TardisDesktop {
 
     @Exclude
-    protected final Tardis tardis;
+    protected final Tardis tardis; // todo this class needs moving to using a TardisLink
     private TardisDesktopSchema schema;
     private AbsoluteBlockPos.Directed doorPos;
     private AbsoluteBlockPos.Directed consolePos;
@@ -130,9 +131,12 @@ public class TardisDesktop {
     public void clearOldInterior(TardisDesktopSchema schema) {
         this.schema = schema;
         DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
+        this.clearExistingEntities();
     }
 
     private void clearExistingEntities() {
+        this.forceLoadInterior();
+
         for (Direction direction : Direction.values()) {
             BlockPos pos = doorPos.add(direction.getVector()); // Get the position of each adjacent block in the interior.
             BlockEntity blockEntity = TardisUtil.getTardisDimension().getBlockEntity(pos);
@@ -142,11 +146,34 @@ public class TardisDesktop {
             TardisUtil.getTardisDimension().removeBlockEntity(pos);  // Remove any existing block entity at that position.
         }
         Box box = this.corners.getBox();
-        for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemFrameEntity.class, box, (entity) -> true)) {
-            entity.kill();  // Kill any normal entities at that position.
+        for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemFrameEntity.class, box, (entity) -> true)) { // todo there seems to be issues with the "box" variable as it is what is causing these things to not work
+            System.out.println(entity);
+            entity.discard();  // Kill any normal entities at that position.
         }
         for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemEntity.class, box, (entity) -> true)) {
-            entity.kill();  // Kill any normal entities at that position.
+            entity.discard();  // Kill any normal entities at that position.
+        }
+        // for (LivingEntity entity : TardisUtil.getEntitiesInInterior(tardis)) {
+        //     entity.discard();
+        // }
+
+        this.stopForceInterior();
+    }
+
+    private void forceLoadInterior() {
+        World world = TardisUtil.getTardisDimension();
+        if (world == null) return;
+
+        for (BlockPos pos : this.iterateOverInterior()) {
+            ForcedChunkUtil.keepChunkLoaded((ServerWorld) world, pos);
+        }
+    }
+    private void stopForceInterior() {
+        World world = TardisUtil.getTardisDimension();
+        if (world == null) return;
+
+        for (BlockPos pos : this.iterateOverInterior()) {
+            ForcedChunkUtil.stopForceLoading((ServerWorld) world, pos);
         }
     }
 
@@ -173,16 +200,8 @@ public class TardisDesktop {
 
     private List<BlockPos> getBlockPosListFromCorners() {
         List<BlockPos> blockPosList = new ArrayList<>();
-        Box box = this.corners.getBox();
-
-        for (int x = (int) box.minX; x < (int) box.maxX; x++) {
-            for (int y = (int) box.minY; y < (int) box.maxY; y++) {
-                for (int z = (int) box.minZ; z < (int) box.maxZ; z++) {
-                    BlockPos blockPos = new BlockPos(x, y, z);
-                    blockPosList.add(blockPos);
-                }
-            }
-        }
+        this.iterateOverInterior().forEach((blockPosList::add));
         return blockPosList;
     }
+    private Iterable<BlockPos> iterateOverInterior() { return BlockPos.iterate(this.corners.getFirst(), this.corners.getSecond()); }
 }
