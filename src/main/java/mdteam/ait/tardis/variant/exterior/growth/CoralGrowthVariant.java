@@ -8,6 +8,7 @@ import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.EasterHeadExterior;
 import mdteam.ait.tardis.exterior.GrowthExterior;
 import mdteam.ait.tardis.variant.door.CapsuleDoorVariant;
+import mdteam.ait.tardis.variant.door.CoralGrowthDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.door.EasterHeadDoorVariant;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -28,7 +29,7 @@ public class CoralGrowthVariant extends ExteriorVariantSchema {
 
     @Override
     public DoorSchema door() {
-        return DoorRegistry.REGISTRY.get(CoralGrowthVariant.REFERENCE);
+        return DoorRegistry.REGISTRY.get(CoralGrowthDoorVariant.REFERENCE);
     }
 
     @Override
