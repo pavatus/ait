@@ -18,6 +18,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -36,6 +37,10 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
+            if (door.getTardis() != null && door.getTardis().isSiegeMode()) return VoxelShapes.empty();
+        }
+
         return switch (state.get(FACING)) {
             case NORTH -> NORTH_SHAPE;
             case EAST -> EAST_SHAPE;

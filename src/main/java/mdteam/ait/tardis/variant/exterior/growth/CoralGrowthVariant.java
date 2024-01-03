@@ -8,6 +8,7 @@ import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.EasterHeadExterior;
 import mdteam.ait.tardis.exterior.GrowthExterior;
 import mdteam.ait.tardis.variant.door.CapsuleDoorVariant;
+import mdteam.ait.tardis.variant.door.CoralGrowthDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.door.EasterHeadDoorVariant;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -28,17 +29,17 @@ public class CoralGrowthVariant extends ExteriorVariantSchema {
 
     @Override
     public DoorSchema door() {
-        return DoorRegistry.REGISTRY.get(CapsuleDoorVariant.REFERENCE);
+        return DoorRegistry.REGISTRY.get(CoralGrowthDoorVariant.REFERENCE);
     }
 
     @Override
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return switch (direction) {
             case DOWN, UP -> pos;
-            case NORTH -> pos.add(0,0.1,0.1);
-            case SOUTH -> pos.add(0,0.1,-0.1);
-            case WEST -> pos.add(0.1,0.1,0);
-            case EAST -> pos.add(-0.1,0.1,0);
+            case NORTH -> pos.add(0,0.1,-0.38);
+            case SOUTH -> pos.add(0,0.1,0.38);
+            case WEST -> pos.add(-0.38,0.1,0);
+            case EAST -> pos.add(0.38,0.1,0);
         };
     }
 

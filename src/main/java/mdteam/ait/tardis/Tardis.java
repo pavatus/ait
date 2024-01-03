@@ -2,9 +2,12 @@ package mdteam.ait.tardis;
 
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.handler.FuelHandler;
 import mdteam.ait.tardis.handler.TardisHandlersManager;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -14,7 +17,11 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.*;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
 import java.util.Objects;
@@ -161,7 +168,8 @@ public class Tardis {
         this.markDirty();
     }
     public void enablePower() {
-        if (getFuel() == 0) return; // cant enable power if no fuel
+        if (getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL)) return; // cant enable power if not enough fuel
+        if (isSiegeBeingHeld()) return; // cant re-enable while being held, this may become OP tho
         if (isSiegeMode()) setSiegeMode(false);
         if (hasPower()) return;
 
@@ -176,14 +184,57 @@ public class Tardis {
             enablePower();
     }
 
+
+    // todo move into a SiegeModeHandler
     public boolean isSiegeMode() {
         return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
     }
     public void setSiegeMode(boolean b) {
+        if (getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL)) return; // The required amount of fuel to enable/disable siege mode
         if (b) disablePower();
+        if (!b) this.getHandlers().getAlarms().disable();
+        if (!b && !(this.getHandlers().getExteriorPos().getWorld().getBlockEntity(this.getHandlers().getExteriorPos()) instanceof ExteriorBlockEntity))
+            this.getTravel().placeExterior();
+        if (isSiegeBeingHeld()) return;
+        if (b) TardisUtil.giveEffectToInteriorPlayers(this, new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
+
+        removeFuel(0.01 * FuelHandler.TARDIS_MAX_FUEL);
 
         PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE, b);
         this.markDirty();
+    }
+    public boolean isSiegeBeingHeld() {
+        return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD);
+    }
+    public void setSiegeBeingHeld(boolean b) {
+        if (b) this.getHandlers().getAlarms().enable();
+
+        PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD, b);
+        this.markDirty();
+    }
+    public int getTimeInSiegeMode() {
+        return PropertiesHandler.getInt(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME);
+    }
+    public void tickSiegeMode() {
+        int siegeTime = getTimeInSiegeMode() + 1;
+        PropertiesHandler.set(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME, isSiegeMode() ? siegeTime : 0);
+        this.markDirty();
+
+        // todo add more downsides the longer you are in siege mode as it is meant to fail systems and kill you and that
+        // for example, this starts to freeze the player (like we see in the episode) after a minute (change the length if too short) and only if its on the ground, to stop people from just slaughtering lol
+        if (getTimeInSiegeMode() > (60 * 20) && !isSiegeBeingHeld()) {
+            for (PlayerEntity player : TardisUtil.getPlayersInInterior(this)) {
+                if (!player.isAlive()) continue;
+                if (player.getFrozenTicks() < player.getMinFreezeDamageTicks()) player.setFrozenTicks(player.getMinFreezeDamageTicks());
+                player.setFrozenTicks(player.getFrozenTicks() + 2);
+            }
+        } else {
+            for (PlayerEntity player : TardisUtil.getPlayersInInterior(this)) {
+                // something tells meee this will cause laggg
+                if (player.getFrozenTicks() > player.getMinFreezeDamageTicks())
+                    player.setFrozenTicks(0);
+            }
+        }
     }
 
     /**
@@ -226,6 +277,8 @@ public class Tardis {
         if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
             DoorHandler.lockTardis(true, this, null, true);
         }
+
+        this.tickSiegeMode();
     }
 
     /**

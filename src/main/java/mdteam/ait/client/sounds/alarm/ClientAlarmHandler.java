@@ -2,10 +2,10 @@ package mdteam.ait.client.sounds.alarm;
 
 import mdteam.ait.client.sounds.LoopingSound;
 import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
-import mdteam.ait.client.sounds.PositionedLoopingSound;
 import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.client.util.ShaderUtils;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.SoundHandler;
@@ -13,7 +13,6 @@ import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,6 @@ import java.util.List;
 // todo create a ServerAlarmHandler if necessary eg in future when we do more of the stuff on the trello to do with alarms.
 public class ClientAlarmHandler extends SoundHandler {
     public static LoopingSound CLOISTER_INTERIOR;
-
     protected ClientAlarmHandler() {}
 
     public LoopingSound getInteriorCloister() {
@@ -39,6 +37,13 @@ public class ClientAlarmHandler extends SoundHandler {
         return handler;
     }
 
+    public void toggleShader(boolean on) {
+        ShaderUtils.enabled = on;
+        if(ShaderUtils.shader != null) {
+            ShaderUtils.shader.setupDimensions(MinecraftClient.getInstance().getWindow().getFramebufferWidth(), MinecraftClient.getInstance().getWindow().getFramebufferHeight());
+        }
+    }
+
     private void generate() {
         if (CLOISTER_INTERIOR == null) CLOISTER_INTERIOR = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 10f);
 
@@ -47,7 +52,6 @@ public class ClientAlarmHandler extends SoundHandler {
                 CLOISTER_INTERIOR
         ));
     }
-
     public boolean isPlayerInATardis() {
         if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return false;
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
@@ -73,8 +77,13 @@ public class ClientAlarmHandler extends SoundHandler {
             this.startIfNotPlaying(getInteriorCloister());
 
             ClientShakeUtil.shake(0.15f);
+            if (client != null && client.getCameraEntity() != null) {
+                toggleShader(true);
+                ShaderUtils.load();
+            }
         } else {
             this.stopSounds();
+            toggleShader(false);
         }
     }
 }

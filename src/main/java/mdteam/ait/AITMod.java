@@ -36,6 +36,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -96,6 +97,7 @@ public class AITMod implements ModInitializer {
             SetFuelCommand.register(dispatcher);
             ToggleHumCommand.register(dispatcher);
             ToggleAlarmCommand.register(dispatcher);
+            ToggleSiegeModeCommand.register(dispatcher);
             RiftChunkCommand.register(dispatcher);
             RealWorldCommand.register(dispatcher);
         }));
@@ -117,6 +119,9 @@ public class AITMod implements ModInitializer {
         TardisEvents.DEMAT.register((tardis -> {
             if (tardis.isGrowth() || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
                 return true; // cancelled
+
+            if (tardis.getDoor().isOpen() || !tardis.getDoor().locked())
+                return true;
 
             for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
                 TardisCriterions.TAKEOFF.trigger((ServerPlayerEntity) player);
@@ -145,6 +150,12 @@ public class AITMod implements ModInitializer {
             if (tardis.getDesktop().getConsolePos() != null) {
                 TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
             }
+
+            // disabling protocols
+            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, false);
+            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
+            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HAIL_MARY, false);
+            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED, false);
         }));
         TardisEvents.REGAIN_POWER.register((tardis -> {
             if (tardis.getDesktop().getConsolePos() != null) {

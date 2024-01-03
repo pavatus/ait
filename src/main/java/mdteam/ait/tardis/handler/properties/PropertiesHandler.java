@@ -23,7 +23,6 @@ public class PropertiesHandler { // todo move more things over to properties
     public static final String HANDBRAKE = "handbrake";
     public static final String HAIL_MARY = "hail_mary";
     public static final String IS_FALLING = "is_falling";
-    public static final String IS_IN_REAL_FLIGHT = "is_in_real_flight";
     public static final String ANTIGRAVS_ENABLED = "antigravs_enabled";
     public static final String HADS_ENABLED = "hads_enabled";
     public static final String IS_IN_ACTIVE_DANGER = "is_in_active_danger";
@@ -179,7 +178,6 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(FuelHandler.REFUELING, false);
         map.put(HAS_POWER, true);
         map.put(SIEGE_MODE, false);
-        map.put(IS_IN_REAL_FLIGHT, false);
         unlockAllFreebies(map);
 
         return map;

@@ -2,6 +2,7 @@ package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.control.Control;
+import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -40,6 +41,12 @@ public class ThrottleControl extends Control {
 //                player.sendMessage(Text.literal("The TARDIS can not dematerialize when refueling"));
 //                return false;
 //            }
+            if (PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties())) {
+                // fufill all the prerequisites
+                DoorHandler.lockTardis(true, tardis, player, false);
+                PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
+                tardis.setRefueling(false);
+            }
             travel.dematerialise(PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));
         } else if (travel.getState() == TardisTravel.State.FLIGHT) {
             travel.materialise();

@@ -37,12 +37,12 @@ public class HADSHandler extends TardisLink {
 
     @Override
     public void tick(MinecraftServer server) {
-        tickingForDanger((ServerWorld) getExteriorPos().getWorld());
+        tickingForDanger(getExteriorPos().getWorld());
     }
 
 
     // @TODO Fix hads idk why its broken. duzo did something to the demat idk what happened lol
-    public void tickingForDanger(ServerWorld world) {
+    public void tickingForDanger(World world) {
         /*System.out.println("hello");*/
         if (getExteriorPos() == null) return;
         List<Entity> listOfEntities = world.getOtherEntities(null,

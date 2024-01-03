@@ -897,6 +897,11 @@ public class HartnellConsoleModel extends ConsoleModel {
 		ModelPart handbrake = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_2").getChild("bone46");
 		handbrake.roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? handbrake.roll + 1 : handbrake.roll;
 
+		// Power Control Movements
+		ModelPart powerControl = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("m_lever_3").getChild("bone142");
+		ModelPart rotor = this.bone.getChild("rotor");
+		powerControl.roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ? powerControl.roll + 1 : powerControl.roll;
+		rotor.pivotY = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ? rotor.pivotY + 5 : rotor.pivotY;
 
 		// Door Control Movements
 		ModelPart doorControl = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ctrl_panel_3").getChild("bone123");
@@ -940,12 +945,12 @@ public class HartnellConsoleModel extends ConsoleModel {
 		ModelPart hadsAlarms = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("s_lever_6").getChild("bone143");
 		ModelPart hadsAlarmsLightsOne = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("sym_lamp4").getChild("bone145");
 		ModelPart hadsAlarmsLightsTwo = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("sym_lamp5").getChild("bone141");
-		if(PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAS_POWER)){
+		if(PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)) {
 			hadsAlarms.roll = hadsAlarms.roll + 1.75f;
 			hadsAlarmsLightsOne.pivotY = hadsAlarmsLightsOne.pivotY;
 			hadsAlarmsLightsTwo.pivotY = hadsAlarmsLightsTwo.pivotY;
 		}
-		else if(!PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAS_POWER)){
+		else if(!PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)){
 			hadsAlarms.roll = hadsAlarms.roll;
 			hadsAlarmsLightsOne.pivotY = hadsAlarmsLightsOne.pivotY + 1;
 			hadsAlarmsLightsTwo.pivotY = hadsAlarmsLightsTwo.pivotY + 1;
@@ -962,6 +967,9 @@ public class HartnellConsoleModel extends ConsoleModel {
 		// Anti Grav Control Movements
 		ModelPart antiGrav = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("sl_switch_1").getChild("bone33");
 		antiGrav.pivotX = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? antiGrav.pivotX  : antiGrav.pivotX + 1;
+
+		ModelPart siegeProtocol = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("sl_switch_5").getChild("bone56");
+		siegeProtocol.pivotX = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE) ? siegeProtocol.pivotX : siegeProtocol.pivotX + 1;
 
 		// Auto Pilot Control Movements
 		ModelPart autoPilot = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("st_switch").getChild("bone26");

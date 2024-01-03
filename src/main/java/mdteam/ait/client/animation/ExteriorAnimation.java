@@ -2,12 +2,18 @@ package mdteam.ait.client.animation;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import org.joml.Math;
 import mdteam.ait.tardis.TardisTravel;
@@ -40,16 +46,16 @@ public abstract class ExteriorAnimation {
             return;
 
         if (alpha <= 0f && state == TardisTravel.State.DEMAT) {
-            exterior.getTardis().getTravel().toFlight();
+            exterior.tardis().getTravel().toFlight();
         }
         if (alpha >= 1f && state == TardisTravel.State.MAT) {
-            exterior.getTardis().getTravel().forceLand(this.exterior);
+            exterior.tardis().getTravel().forceLand(this.exterior);
         }
     }
 
     public float getAlpha() {
         if (this.timeLeft < 0) {
-            this.setupAnimation(exterior.getTardis().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+            this.setupAnimation(exterior.tardis().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
             return 1f;
         }
 
