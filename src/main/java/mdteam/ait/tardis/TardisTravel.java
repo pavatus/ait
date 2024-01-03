@@ -416,9 +416,9 @@ public class TardisTravel extends TardisLink {
         if (isDestinationTardisExterior()) { // fixme this portion of the code just deletes the other tardis' exterior!
             ExteriorBlockEntity target = (ExteriorBlockEntity) world.getBlockEntity(this.getDestination()); // safe
 
-            if (target.tardis() == null) return false;
+            if (target.getTardis() == null) return false;
 
-            setDestinationToTardisInterior(target.tardis(), true, 256); // how many times should this be
+            setDestinationToTardisInterior(target.getTardis(), true, 256); // how many times should this be
 
             return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
         }
