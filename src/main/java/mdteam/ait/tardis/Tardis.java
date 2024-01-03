@@ -7,6 +7,7 @@ import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.handler.FuelHandler;
 import mdteam.ait.tardis.handler.TardisHandlersManager;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -163,7 +164,7 @@ public class Tardis {
         this.markDirty();
     }
     public void enablePower() {
-        if (getFuel() == 0) return; // cant enable power if no fuel
+        if (getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL)) return; // cant enable power if not enough fuel
         if (isSiegeMode()) setSiegeMode(false);
         if (hasPower()) return;
 
@@ -182,11 +183,14 @@ public class Tardis {
         return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
     }
     public void setSiegeMode(boolean b) {
+        if (getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL)) return; // The required amount of fuel to enable/disable siege mode
         if (b) disablePower();
         if (!b) this.getHandlers().getAlarms().disable();
         if (!b && !(this.getHandlers().getExteriorPos().getWorld().getBlockEntity(this.getHandlers().getExteriorPos()) instanceof ExteriorBlockEntity))
             this.getTravel().placeExterior();
         if (isSiegeBeingHeld()) return;
+
+        removeFuel(0.01 * FuelHandler.TARDIS_MAX_FUEL);
 
         PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE, b);
         this.markDirty();
