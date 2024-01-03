@@ -24,6 +24,9 @@ public class AITSounds implements NeptuneSoundEventInit {
     public static final SoundEvent SHUTDOWN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/console_shutdown"));
     public static final SoundEvent POWERUP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/console_powerup"));
 
+    public static final SoundEvent SIEGE_ENABLE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/siege_enable"));
+    public static final SoundEvent SIEGE_DISABLE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/siege_disable"));
+
     public static final SoundEvent EIGHT_DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/eighth_demat"));
     public static final SoundEvent EIGHT_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/eighth_mat"));
 

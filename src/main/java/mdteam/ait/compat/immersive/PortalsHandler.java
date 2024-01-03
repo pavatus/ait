@@ -4,10 +4,14 @@ import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 import qouteall.imm_ptl.core.api.PortalAPI;
@@ -109,6 +113,8 @@ public class PortalsHandler {
 
         return portal;
     }
+
+    // todo allow for multiple interior doors
     private static Portal createInteriorPortal(Tardis tardis) {
         AbsoluteBlockPos.Directed doorPos = tardis.getTravel().getDoorPos();
         AbsoluteBlockPos.Directed exteriorPos = tardis.getTravel().getExteriorPos();

@@ -2,6 +2,7 @@ package mdteam.ait.tardis;
 
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.registry.DesktopRegistry;
@@ -23,6 +24,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -189,6 +191,7 @@ public class Tardis {
     public boolean isSiegeMode() {
         return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
     }
+    // todo this is getting bloateed, merge some if statements together
     public void setSiegeMode(boolean b) {
         if (getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL)) return; // The required amount of fuel to enable/disable siege mode
         if (b) disablePower();
@@ -197,6 +200,8 @@ public class Tardis {
             this.getTravel().placeExterior();
         if (isSiegeBeingHeld()) return;
         if (b) TardisUtil.giveEffectToInteriorPlayers(this, new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
+        if (b) TardisUtil.getTardisDimension().playSound(null, this.getDesktop().getConsolePos(), AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 3f, 1f);
+        if (!b) TardisUtil.getTardisDimension().playSound(null, this.getDesktop().getConsolePos(), AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 3f, 1f);
 
         removeFuel(0.01 * FuelHandler.TARDIS_MAX_FUEL);
 
