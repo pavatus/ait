@@ -78,7 +78,12 @@ a:hover {
 .description-container-right .images {
     
 }
-
+code {
+    background-color: #dbd9d9;
+    border: 1px solid #bbb0c2;
+    border-radius: 2px;
+    padding: 1px 4px;
+}
 .sticker {
     display: inline-block;
     position: relative;
