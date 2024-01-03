@@ -14,6 +14,10 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.RotationCalculator;
+import net.minecraft.util.math.Vec3d;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.Objects;
 
@@ -34,7 +38,6 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
     public void render(TardisRealEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         if (entity.getTardis() == null) return;
-
         TardisExterior tardisExterior = entity.getTardis().getExterior();
         ClientExteriorVariantSchema exteriorVariantSchema = ClientExteriorVariantRegistry.withParent(tardisExterior.getVariant());
 
@@ -44,12 +47,19 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
         if (model != null && !model.getClass().isInstance(modelClass)) model = null;
 
         matrices.push();
-        float f = entity.getBlockState().get(ExteriorBlock.FACING).asRotation();
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotation(f));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotation(180f));
+        Vec3d rotationVector = entity.getRotationVector();
+        float pitch = (float) Math.toRadians(rotationVector.getX());
+        float yawE = (float) Math.toRadians(rotationVector.getY());
+        float roll = (float) Math.toRadians(rotationVector.getZ());
+
+        Quaternionf quaternion = new Quaternionf();
+        quaternion.rotationXYZ(pitch, yawE, roll);
+        matrices.multiply(quaternion);
+        matrices.scale(1.0f, 1.0f, -1.0f);
+        matrices.scale(1.0f, -1.0f, 1.0f);
+
 
         if (getModel(entity) == null) return;
-
         getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light,1,1,1,1,1);
 
         if (exteriorVariantSchema.emission() != null) {
