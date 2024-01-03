@@ -21,6 +21,7 @@ import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.advancement.TardisCriterions;
+import mdteam.ait.tardis.desktops.DatapackDesktop;
 import mdteam.ait.tardis.handler.InteriorChangingHandler;
 import mdteam.ait.tardis.handler.ServerHumHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
@@ -33,8 +34,13 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.fabric.impl.resource.loader.ResourceManagerHelperImpl;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -43,6 +49,7 @@ import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.util.UUID;
 
 public class AITMod implements ModInitializer {
@@ -54,7 +61,6 @@ public class AITMod implements ModInitializer {
     public static final NeptuneItemGroup AIT_ITEM_GROUP = new NeptuneItemGroup(new Identifier(AITMod.MOD_ID, "item_group"), AITItems.TARDIS_ITEM.getDefaultStack());
     public static final ComponentKey<RadioNBTComponent> RADIONBT =
             ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "radionbt"), RadioNBTComponent.class);
-
 
     @Override
     public void onInitialize() {
@@ -173,7 +179,7 @@ public class AITMod implements ModInitializer {
 
         ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ((server, player, handler, buf, responseSender) -> {
             Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-            TardisDesktopSchema desktop = DesktopRegistry.REGISTRY.get(buf.readIdentifier());
+            TardisDesktopSchema desktop = DesktopRegistry.get(buf.readIdentifier());
 
             if (tardis == null || desktop == null) return;
 

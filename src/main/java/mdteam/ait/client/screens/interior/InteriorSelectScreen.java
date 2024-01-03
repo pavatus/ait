@@ -53,9 +53,10 @@ public class InteriorSelectScreen extends TardisScreen {
         super.init();
     }
 
-    private static TardisDesktopSchema findFirstSchema() {
-        return DesktopRegistry.REGISTRY.get(0);
-    }
+    // todo this was unused, but it was nice to have yk
+    // private static TardisDesktopSchema findFirstSchema() {
+    //     return DesktopRegistry.get(0);
+    // }
 
     private void createButtons() {
         this.addButton(
@@ -125,7 +126,7 @@ public class InteriorSelectScreen extends TardisScreen {
     }
 
     private static TardisDesktopSchema nextDesktop(TardisDesktopSchema current) {
-        List<TardisDesktopSchema> list = DesktopRegistry.REGISTRY.stream().toList();
+        List<TardisDesktopSchema> list = DesktopRegistry.toList();
 
         int idx = list.indexOf(current);
         if (idx < 0 || idx + 1 == list.size()) return list.get(0);
@@ -139,7 +140,7 @@ public class InteriorSelectScreen extends TardisScreen {
     }
 
     private static TardisDesktopSchema previousDesktop(TardisDesktopSchema current) {
-        List<TardisDesktopSchema> list = DesktopRegistry.REGISTRY.stream().toList();
+        List<TardisDesktopSchema> list = DesktopRegistry.toList();
 
         int idx = list.indexOf(current);
         if (idx <= 0) return list.get(list.size() - 1);

@@ -63,10 +63,10 @@ public class PropertiesHandler { // todo move more things over to properties
     public static TardisDesktopSchema getDesktop(PropertiesHolder holder, String key) {
         if (!holder.getData().containsKey(key)) {
             AITMod.LOGGER.error(key + " did not have a schema! Resetting to default..");
-            setDesktop(holder,key, DesktopRegistry.REGISTRY.get(new Identifier(AITMod.MOD_ID, "cave")));
+            setDesktop(holder,key, DesktopRegistry.get(new Identifier(AITMod.MOD_ID, "cave")));
         }
 
-        return DesktopRegistry.REGISTRY.get(getIdentifier(holder,key));
+        return DesktopRegistry.get(getIdentifier(holder,key));
     }
     public static void setDesktop(PropertiesHolder holder, String key, TardisDesktopSchema val) {
         setIdentifier(holder, key, val.id());
@@ -155,7 +155,7 @@ public class PropertiesHandler { // todo move more things over to properties
         return getBool(holder, AUTO_LAND);
     }
     private static void unlockAllFreebies(HashMap<String, Object> map) {
-        for (Iterator<TardisDesktopSchema> it = DesktopRegistry.REGISTRY.stream().iterator(); it.hasNext(); ) {
+        for (Iterator<TardisDesktopSchema> it = DesktopRegistry.iterator(); it.hasNext(); ) {
             TardisDesktopSchema schema = it.next();
 
             map.put(schema.id().getPath() + "_unlocked", schema.freebie());

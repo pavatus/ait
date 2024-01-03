@@ -1,9 +1,19 @@
 package mdteam.ait.tardis.desktops.textures;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import net.minecraft.util.Identifier;
 
 public class DesktopPreviewTexture {
+    // public static final Codec<DesktopPreviewTexture> CODEC = RecordCodecBuilder.create(
+    //         instance -> instance.group(
+    //                 Identifier.CODEC.fieldOf("path").forGetter(texture -> texture.path),
+    //                 Codec.INT.fieldOf("width").forGetter(texture -> texture.width),
+    //                 Codec.INT.fieldOf("height").forGetter(texture -> texture.height)
+    //         )
+    // )
+
     private final Identifier path;
     public final int width;
     public final int height;

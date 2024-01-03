@@ -14,7 +14,6 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 public abstract class TardisDesktopSchema {
-
     private final Identifier id;
     private final DesktopPreviewTexture preview;
 
@@ -68,7 +67,7 @@ public abstract class TardisDesktopSchema {
 
         @Override
         public TardisDesktopSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return DesktopRegistry.REGISTRY.get(new Identifier(json.getAsJsonPrimitive().getAsString()));
+            return DesktopRegistry.get(new Identifier(json.getAsJsonPrimitive().getAsString()));
         }
 
         @Override
