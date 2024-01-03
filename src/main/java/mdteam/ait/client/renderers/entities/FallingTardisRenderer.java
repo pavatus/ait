@@ -8,15 +8,11 @@ import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.tardis.TardisExterior;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.FallingBlockEntityRenderer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
@@ -30,19 +26,21 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
     public void render(FallingTardisEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
 
-        if (entity.tardis() == null) {
+        if (entity.getTardis() == null) {
             return;
         }
 
-        TardisExterior tardisExterior = entity.tardis().getExterior();
+        TardisExterior tardisExterior = entity.getTardis().getExterior();
         ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardisExterior.getVariant());
 
         if (tardisExterior == null) return;
 
+        assert exteriorVariant != null;
         Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
 
         if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.
             model = null;
+
 
         matrices.push();
         // matrices.translate(0.5, 0, 0.5);
@@ -68,8 +66,8 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
     }
 
     private ExteriorModel getModel(FallingTardisEntity entity) {
-        if (model == null && entity.tardis() != null) {
-            model = ClientExteriorVariantRegistry.withParent(entity.tardis().getExterior().getVariant()).model();
+        if (model == null && entity.getTardis() != null) {
+            model = ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant()).model();
         }
 
         return model;
@@ -77,14 +75,14 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 
     @Override
     public Identifier getTexture(FallingTardisEntity entity) {
-        if (entity.tardis() == null) return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE; // random texture just so i dont crash
+        if (entity.getTardis() == null) return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE; // random texture just so i dont crash
 
-        return ClientExteriorVariantRegistry.withParent(entity.tardis().getExterior().getVariant()).texture();
+        return ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant()).texture();
     }
 
     public Identifier getEmission(FallingTardisEntity entity) {
-        if (entity.tardis() == null) return getTexture(entity);
+        if (entity.getTardis() == null) return getTexture(entity);
 
-        return ClientExteriorVariantRegistry.withParent(entity.tardis().getExterior().getVariant()).emission();
+        return ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant()).emission();
     }
 }
