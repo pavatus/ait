@@ -45,7 +45,7 @@ public class InteriorSelectScreen extends TardisScreen {
 
     @Override
     protected void init() {
-        this.selectedDesktop = getTardis().getDesktop().getSchema();
+        this.selectedDesktop = tardis().getDesktop().getSchema();
         this.top = (this.height - this.bgHeight) / 2; // this means everythings centered and scaling, same for below
         this.left = (this.width - this.bgWidth) / 2;
         this.createButtons();
@@ -112,7 +112,7 @@ public class InteriorSelectScreen extends TardisScreen {
 
     private void applyDesktop() {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(getTardis().getUuid());
+        buf.writeUuid(tardis().getUuid());
         buf.writeIdentifier(this.selectedDesktop.id());
 
         ClientPlayNetworking.send(CHANGE_DESKTOP, buf);
@@ -153,7 +153,7 @@ public class InteriorSelectScreen extends TardisScreen {
     }
 
     private boolean isCurrentUnlocked() {
-        return getTardis().isDesktopUnlocked(this.selectedDesktop);
+        return tardis().isDesktopUnlocked(this.selectedDesktop);
     }
 
     @Override

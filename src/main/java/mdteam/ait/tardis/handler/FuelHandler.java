@@ -21,7 +21,7 @@ public class FuelHandler extends TardisLink {
     }
 
     public double getFuel() {
-        return (double) PropertiesHandler.get(getLinkedTardis().getHandlers().getProperties(), FUEL_COUNT);
+        return (double) PropertiesHandler.get(tardis().getHandlers().getProperties(), FUEL_COUNT);
     }
 
     public boolean isOutOfFuel() {
@@ -31,13 +31,13 @@ public class FuelHandler extends TardisLink {
     public void setFuelCount(double fuel) {
         double prev = getFuel();
 
-        PropertiesHandler.set(getLinkedTardis().getHandlers().getProperties(), FUEL_COUNT, fuel);
-        getLinkedTardis().markDirty();
+        PropertiesHandler.set(tardis().getHandlers().getProperties(), FUEL_COUNT, fuel);
+        tardis().markDirty();
 
         // fire the event if ran out of fuel
         // this may get ran multiple times though for some reason
         if (isOutOfFuel() && prev != 0) {
-            TardisEvents.OUT_OF_FUEL.invoker().onNoFuel(getLinkedTardis());
+            TardisEvents.OUT_OF_FUEL.invoker().onNoFuel(tardis());
         }
     }
 
@@ -58,13 +58,13 @@ public class FuelHandler extends TardisLink {
     }
 
     public void setRefueling(boolean isRefueling) {
-        PropertiesHandler.setBool(getLinkedTardis().getHandlers().getProperties(), REFUELING, isRefueling);
-        getLinkedTardis().markDirty();
+        PropertiesHandler.setBool(tardis().getHandlers().getProperties(), REFUELING, isRefueling);
+        tardis().markDirty();
     }
 
     // is always true for now
     public boolean isRefueling() {
-        return PropertiesHandler.getBool(getLinkedTardis().getHandlers().getProperties(), REFUELING);
+        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), REFUELING);
     }
 
     @Override
@@ -72,30 +72,30 @@ public class FuelHandler extends TardisLink {
         super.tick(server);
 
         // creativious i moved your code here
-        RiftChunk riftChunk = (RiftChunk) this.getLinkedTardis().getTravel().getExteriorPos().getChunk();
-        if (getLinkedTardis().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && riftChunk.getArtronLevels() > 0 && this.getFuel() < FuelHandler.TARDIS_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getLinkedTardis().getUuid().toString() + "-refueldelay"))) {
+        RiftChunk riftChunk = (RiftChunk) this.tardis().getTravel().getExteriorPos().getChunk();
+        if (tardis().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && riftChunk.getArtronLevels() > 0 && this.getFuel() < FuelHandler.TARDIS_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-refueldelay"))) {
             if(riftChunk.isRiftChunk()) {
                 riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
                 addFuel(5);
             } else {
                 addFuel(1);
             }
-            DeltaTimeManager.createDelay("tardis-" + getLinkedTardis().getUuid().toString() + "-refueldelay", 250L);
+            DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-refueldelay", 250L);
         }
-        if ((getLinkedTardis().getTravel().getState() == TardisTravel.State.DEMAT || getLinkedTardis().getTravel().getState() == TardisTravel.State.MAT) && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getLinkedTardis().getUuid().toString() + "-fueldraindelay")) {
-            DeltaTimeManager.createDelay("tardis-" + getLinkedTardis().getUuid().toString() + "-fueldraindelay", 500L);
+        if ((tardis().getTravel().getState() == TardisTravel.State.DEMAT || tardis().getTravel().getState() == TardisTravel.State.MAT) && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay")) {
+            DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay", 500L);
             removeFuel(5);
         }
-        if (getLinkedTardis().getTravel().getState() == TardisTravel.State.FLIGHT && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getLinkedTardis().getUuid().toString() + "-fueldraindelay")) {
-            DeltaTimeManager.createDelay("tardis-" + getLinkedTardis().getUuid().toString() + "-fueldraindelay", 500L);
+        if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay")) {
+            DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay", 500L);
             removeFuel(3);
         }
-        if (getLinkedTardis().getTravel().getState() == TardisTravel.State.LANDED && !isRefueling() && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getLinkedTardis().getUuid().toString() + "-fueldraindelay")) {
-            DeltaTimeManager.createDelay("tardis-" + getLinkedTardis().getUuid().toString() + "-fueldraindelay", 500L);
+        if (tardis().getTravel().getState() == TardisTravel.State.LANDED && !isRefueling() && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay")) {
+            DeltaTimeManager.createDelay("tardis-" + tardis().getUuid().toString() + "-fueldraindelay", 500L);
             removeFuel(0.25);
         }
-        if (getLinkedTardis().getTravel().getState() == TardisTravel.State.FLIGHT && !this.getLinkedTardis().hasPower()) {
-            getLinkedTardis().getTravel().crash(); // hehe force land if you don't have enough fuel
+        if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT && !this.tardis().hasPower()) {
+            tardis().getTravel().crash(); // hehe force land if you don't have enough fuel
         }
     }
 }

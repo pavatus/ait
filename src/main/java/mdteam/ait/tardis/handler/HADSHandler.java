@@ -2,13 +2,17 @@ package mdteam.ait.tardis.handler;
 
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionBehavior;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,15 +24,15 @@ public class HADSHandler extends TardisLink {
     }
 
     public boolean isHADSActive() {
-        return PropertiesHandler.getBool(getLinkedTardis().getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED);
+        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED);
     }
 
     public void setIsInDanger(boolean bool) {
-        PropertiesHandler.setBool(getLinkedTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER, bool);
+        PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER, bool);
     }
 
     public boolean isInDanger() {
-        return PropertiesHandler.getBool(getLinkedTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER);
+        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER);
     }
 
     @Override
@@ -76,14 +80,14 @@ public class HADSHandler extends TardisLink {
     public void dematerialiseWhenInDanger() {
         // fixme is bug pls fix - idea enqueue a remat ( NEEDS_MAT var ? )
         if(isInDanger()) {
-            if(getLinkedTardis().getTravel().getState() == TardisTravel.State.LANDED) {
-                getLinkedTardis().getTravel().dematerialise(false);
+            if(tardis().getTravel().getState() == TardisTravel.State.LANDED) {
+                tardis().getTravel().dematerialise(false);
             }
-            getLinkedTardis().getHandlers().getAlarms().enable();
-        } else if (getLinkedTardis().getHandlers().getAlarms().isEnabled()){
-            if(getLinkedTardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
-                getLinkedTardis().getTravel().materialise();
-            } else if (getLinkedTardis().getTravel().getState() == TardisTravel.State.MAT) getLinkedTardis().getHandlers().getAlarms().disable();
+            tardis().getHandlers().getAlarms().enable();
+        } else if (tardis().getHandlers().getAlarms().isEnabled()){
+            if(tardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
+                tardis().getTravel().materialise();
+            } else if (tardis().getTravel().getState() == TardisTravel.State.MAT) tardis().getHandlers().getAlarms().disable();
         }
     }
 

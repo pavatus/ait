@@ -99,7 +99,7 @@ public class TardisTravel extends TardisLink {
                 this.tardisId = found.getUuid();
         }
 
-        return this.getLinkedTardis();
+        return this.tardis();
     }
 
     // todo use me in places where similar things are used
@@ -361,7 +361,7 @@ public class TardisTravel extends TardisLink {
         this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
         // Play failure sound at the Tardis console position if the interior is not empty
-        if (TardisUtil.isInteriorNotEmpty(this.getTardis())) {
+        if (TardisUtil.isInteriorNotEmpty(tardis())) {
             TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
         }
 
@@ -375,12 +375,12 @@ public class TardisTravel extends TardisLink {
 
     private void failToTakeoff() {
         // dont do anything if out of fuel, make it sad :(
-        if (!this.getTardis().hasPower()) return;
+        if (!tardis().hasPower()) return;
 
         // demat will be cancelled
         this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
-        if (TardisUtil.isInteriorNotEmpty(this.getTardis()))
+        if (TardisUtil.isInteriorNotEmpty(tardis()))
             TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
 
         TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to takeoff!")); // fixme translatable
@@ -420,7 +420,7 @@ public class TardisTravel extends TardisLink {
 
             setDestinationToTardisInterior(target.getTardis(), true, 256); // how many times should this be
 
-            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
+            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
         }
 
         // is long line
