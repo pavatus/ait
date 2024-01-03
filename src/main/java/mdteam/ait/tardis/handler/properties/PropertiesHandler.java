@@ -29,6 +29,7 @@ public class PropertiesHandler { // todo move more things over to properties
     public static final String HAS_POWER = "power";
     public static final String SIEGE_MODE = "siege_mode";
     public static final String SIEGE_HELD = "siege_held";
+    public static final String SIEGE_TIME = "siege_ticks";
 
     // Should these methods be in the holder instead?
 

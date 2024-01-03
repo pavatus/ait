@@ -35,4 +35,9 @@ public class HADSControl extends Control {
 
         return true;
     }
+
+    @Override
+    public boolean shouldFailOnNoPower() {
+        return false; // todo remember to change this back when this becomes a HADS control again!!
+    }
 }

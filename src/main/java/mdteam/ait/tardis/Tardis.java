@@ -19,7 +19,9 @@ import mdteam.ait.tardis.wrapper.server.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
 import java.util.Objects;
@@ -181,6 +183,8 @@ public class Tardis {
             enablePower();
     }
 
+
+    // todo move into a SiegeModeHandler
     public boolean isSiegeMode() {
         return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
     }
@@ -206,6 +210,30 @@ public class Tardis {
 
         PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD, b);
         this.markDirty();
+    }
+    public int getTimeInSiegeMode() {
+        return PropertiesHandler.getInt(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME);
+    }
+    public void tickSiegeMode() {
+        int siegeTime = getTimeInSiegeMode() + 1;
+        PropertiesHandler.set(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME, isSiegeMode() ? siegeTime : 0);
+        this.markDirty();
+
+        // todo add more downsides the longer you are in siege mode as it is meant to fail systems and kill you and that
+        // for example, this starts to freeze the player (like we see in the episode) after a minute (change the length if too short) and only if its on the ground, to stop people from just slaughtering lol
+        if (getTimeInSiegeMode() > (60 * 20) && !isSiegeBeingHeld()) {
+            for (PlayerEntity player : TardisUtil.getPlayersInInterior(this)) {
+                if (!player.isAlive()) continue;
+                if (player.getFrozenTicks() < player.getMinFreezeDamageTicks()) player.setFrozenTicks(player.getMinFreezeDamageTicks());
+                player.setFrozenTicks(player.getFrozenTicks() + 2);
+            }
+        } else {
+            for (PlayerEntity player : TardisUtil.getPlayersInInterior(this)) {
+                // something tells meee this will cause laggg
+                if (player.getFrozenTicks() > player.getMinFreezeDamageTicks())
+                    player.setFrozenTicks(0);
+            }
+        }
     }
 
     /**
@@ -248,6 +276,8 @@ public class Tardis {
         if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
             DoorHandler.lockTardis(true, this, null, true);
         }
+
+        this.tickSiegeMode();
     }
 
     /**
