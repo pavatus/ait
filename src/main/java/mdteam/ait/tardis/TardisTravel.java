@@ -90,7 +90,6 @@ public class TardisTravel extends TardisLink {
     public static int getSoundLength(MatSound sound) {
         if (sound == null)
             return (int) FORCE_LAND_TIMER;
-        System.out.println(sound.maxTime() / 20);
         return sound.maxTime() / 20;
     }
 
