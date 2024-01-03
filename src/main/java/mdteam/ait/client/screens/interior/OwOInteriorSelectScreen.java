@@ -115,7 +115,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private static TardisDesktopSchema nextDesktop(TardisDesktopSchema current) {
-        List<TardisDesktopSchema> list = DesktopRegistry.REGISTRY.stream().toList();
+        List<TardisDesktopSchema> list = DesktopRegistry.toList();
 
         int idx = list.indexOf(current);
         if (idx < 0 || idx + 1 == list.size()) return list.get(0);
@@ -129,7 +129,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private static TardisDesktopSchema previousDesktop(TardisDesktopSchema current) {
-        List<TardisDesktopSchema> list = DesktopRegistry.REGISTRY.stream().toList();
+        List<TardisDesktopSchema> list = DesktopRegistry.toList();
 
         int idx = list.indexOf(current);
         if (idx <= 0) return list.get(list.size() - 1);

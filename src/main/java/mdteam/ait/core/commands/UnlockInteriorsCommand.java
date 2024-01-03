@@ -35,8 +35,8 @@ public class UnlockInteriorsCommand {
         ServerPlayerEntity source = context.getSource().getPlayer();
         Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
         if (tardis == null || source == null) return 0;
-        for (int i = 0; i < DesktopRegistry.REGISTRY.size(); i++) {
-            tardis.unlockDesktop(DesktopRegistry.REGISTRY.get(i));
+        for (int i = 0; i < DesktopRegistry.size(); i++) {
+            tardis.unlockDesktop(DesktopRegistry.get(i));
         }
         source.sendMessage(Text.literal("Granted [" + tardis.getUuid() + "] all interiors"), true);
         return Command.SINGLE_SUCCESS;
