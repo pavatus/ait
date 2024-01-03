@@ -89,7 +89,7 @@ public class MonitorScreen extends TardisScreen {
 
         if (currentVariant == null)
             if(tardis().getExterior().getType() != getCurrentModel()) {
-                setCurrentVariant(TardisItemBuilder.findRandomVariant(getCurrentModel()));
+                setCurrentVariant(ExteriorVariantRegistry.withParentToList(getCurrentModel()).get(0));
             } else {
                 setCurrentVariant(tardis().getExterior().getVariant());
             }

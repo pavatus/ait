@@ -56,6 +56,16 @@ public class ExteriorVariantRegistry {
 
         return list;
     }
+    public static List<ExteriorVariantSchema> withParentToList(ExteriorSchema parent) {
+        List<ExteriorVariantSchema> list = new ArrayList<>();
+
+        for (Iterator<ExteriorVariantSchema> it = REGISTRY.iterator(); it.hasNext(); ) {
+            ExteriorVariantSchema schema = it.next();
+            if (schema.parent().equals(parent)) list.add(schema);
+        }
+
+        return list;
+    }
 
     public static ExteriorVariantSchema TARDIM_DEFAULT;
     public static ExteriorVariantSchema TARDIM_FIRE;
