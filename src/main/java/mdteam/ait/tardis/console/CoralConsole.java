@@ -30,12 +30,10 @@ public class CoralConsole extends ConsoleSchema {
             new ControlTypes(new ZControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7750000171363354f, 0.5125000961124897f, -0.5113281467929482f)), // 12
             new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.06249999f, 0.125f), new Vector3f(-0.9531250046566129f, 0.4624999985098839f, -0.3609375013038516f)), // 13
             new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-1.1007812544703484f, 0.4750000946223736f, 0.150390625f)), // 14
-            new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.07499999f, 0.1f), new Vector3f(-0.7218750026077032f, 0.5749999508261681f, 0.10117187909781933f)), // 15
-            new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.112500004f, 0.0875f), new Vector3f(-0.43515624571591616f, 0.5749998092651367f, 0.5015625059604645f)), // 15
+            new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7218750026077032f, 0.5749999508261681f, 0.10117187909781933f)), // 15
             new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.099999994f, 0.099999994f), new Vector3f(-0.9156250208616257f, 0.482499978505075f, 0.43984376080334187f)), // 16
             new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.1125f, 0.08749999f), new Vector3f(0.30000001285225153f, 0.4874998088926077f, -1.042968776077032f)), // 17
-            new ControlTypes(new HADSControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(0.516015631146729f, 0.5750001845881343f, 0.40332030411809683f)),
-            new ControlTypes(new PowerControl(), EntityDimensions.changing(0.125f, 0.1f), new Vector3f(0.7906250040978193f, 0.5250002853572369f, 0.45234375074505806f)),
+            new ControlTypes(new PowerControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(0.516015631146729f, 0.5750001845881343f, 0.40332030411809683f)),
     };
     public CoralConsole() {
         super(REFERENCE, "coral");

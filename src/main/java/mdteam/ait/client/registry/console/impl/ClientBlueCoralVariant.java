@@ -4,14 +4,16 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.CoralConsoleModel;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
-import mdteam.ait.tardis.variant.console.CoralBlueVariant;
+import mdteam.ait.tardis.variant.console.BlueCoralVariant;
+import mdteam.ait.tardis.variant.console.HartnellVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientBlueCoralVariant extends ClientConsoleVariantSchema {
-    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral_blue_console.png"));
-    public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral_blue_console_emission.png"));
+    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral/blue.png"));
+    public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral/blue_emission.png"));
+
     public ClientBlueCoralVariant() {
-        super(CoralBlueVariant.REFERENCE);
+        super(BlueCoralVariant.REFERENCE);
     }
 
     @Override
@@ -23,7 +25,6 @@ public class ClientBlueCoralVariant extends ClientConsoleVariantSchema {
     public Identifier emission() {
         return EMISSION;
     }
-
     @Override
     public ConsoleModel model() {
         return new CoralConsoleModel(CoralConsoleModel.getTexturedModelData().createModel());
