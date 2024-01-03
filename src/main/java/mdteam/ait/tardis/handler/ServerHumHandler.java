@@ -1,9 +1,7 @@
 package mdteam.ait.tardis.handler;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.AITSounds;
 import mdteam.ait.registry.HumsRegistry;
-import mdteam.ait.tardis.handler.TardisLink;
 import mdteam.ait.tardis.sound.HumSound;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -11,7 +9,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 import java.util.UUID;
@@ -36,14 +33,14 @@ public class ServerHumHandler extends TardisLink {
         this.current = hum;
 
         this.updateClientHum();
-        tardis().markDirty(); // should b ok here its not gonna spam like the door did
+        getLinkedTardis().markDirty(); // should b ok here its not gonna spam like the door did
     }
 
     private void updateClientHum() {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeIdentifier(this.current.sound().getId());
 
-        for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.tardis())) { // is bad? fixme
+        for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.getLinkedTardis())) { // is bad? fixme
             ServerPlayNetworking.send((ServerPlayerEntity) player, SEND, buf);
         }
     }

@@ -29,41 +29,41 @@ public class InteriorChangingHandler extends TardisLink {
     }
 
     private void setGenerating(boolean var) {
-        PropertiesHandler.set(tardis().getHandlers().getProperties(), IS_REGENERATING, var);
-        tardis().markDirty();
+        PropertiesHandler.set(getLinkedTardis().getHandlers().getProperties(), IS_REGENERATING, var);
+        getLinkedTardis().markDirty();
     }
     public boolean isGenerating() {
-        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), IS_REGENERATING);
+        return PropertiesHandler.getBool(getLinkedTardis().getHandlers().getProperties(), IS_REGENERATING);
     }
 
     private void setTicks(int var) {
-        PropertiesHandler.set(tardis().getHandlers().getProperties(), GENERATING_TICKS, var);
-        tardis().markDirty();
+        PropertiesHandler.set(getLinkedTardis().getHandlers().getProperties(), GENERATING_TICKS, var);
+        getLinkedTardis().markDirty();
     }
     private void addTick() {
         setTicks(getTicks() + 1);
     }
     public int getTicks() {
-        return PropertiesHandler.getInt(tardis().getHandlers().getProperties(), GENERATING_TICKS);
+        return PropertiesHandler.getInt(getLinkedTardis().getHandlers().getProperties(), GENERATING_TICKS);
     }
     public boolean hasReachedMax() {
         return getTicks() >= WARN_TIME;
     }
 
     private void setQueuedInterior(TardisDesktopSchema schema) {
-        PropertiesHandler.setDesktop(tardis().getHandlers().getProperties(), QUEUED_INTERIOR, schema);
-        tardis().markDirty();
+        PropertiesHandler.setDesktop(getLinkedTardis().getHandlers().getProperties(), QUEUED_INTERIOR, schema);
+        getLinkedTardis().markDirty();
     }
     public TardisDesktopSchema getQueuedInterior() {
-        return PropertiesHandler.getDesktop(tardis().getHandlers().getProperties(), QUEUED_INTERIOR);
+        return PropertiesHandler.getDesktop(getLinkedTardis().getHandlers().getProperties(), QUEUED_INTERIOR);
     }
 
     public void queueInteriorChange(TardisDesktopSchema schema) {
-        if (!tardis().hasPower()) return;
-        if (tardis().isGrowth() && tardis().hasGrowthExterior())
-            tardis().getExterior().setType(TardisItemBuilder.findRandomExterior());
-        if (tardis().getHandlers().getFuel().getFuel() < 5000 && !(tardis().isGrowth() && tardis().hasGrowthDesktop())) {
-            for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis())) {
+        if (!getLinkedTardis().hasPower()) return;
+        if (getLinkedTardis().isGrowth() && getLinkedTardis().hasGrowthExterior())
+            getLinkedTardis().getExterior().setType(TardisItemBuilder.findRandomExterior());
+        if (getLinkedTardis().getHandlers().getFuel().getFuel() < 5000 && !(getLinkedTardis().isGrowth() && getLinkedTardis().hasGrowthDesktop())) {
+            for (PlayerEntity player : TardisUtil.getPlayersInInterior(getLinkedTardis())) {
                 player.sendMessage(Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED), true);
                 return;
             }
@@ -71,28 +71,28 @@ public class InteriorChangingHandler extends TardisLink {
         setQueuedInterior(schema);
         setTicks(0);
         setGenerating(true);
-        DeltaTimeManager.createDelay("interior_change-" + tardis().getUuid().toString(), 100L);
-        tardis().getHandlers().getAlarms().enable();
-        tardis().getDesktop().setConsolePos(null);
-        if (!(tardis().hasGrowthDesktop()))
-            tardis().removeFuel(5000);
-        tardis().markDirty();
+        DeltaTimeManager.createDelay("interior_change-" + getLinkedTardis().getUuid().toString(), 100L);
+        getLinkedTardis().getHandlers().getAlarms().enable();
+        getLinkedTardis().getDesktop().setConsolePos(null);
+        if (!(getLinkedTardis().hasGrowthDesktop()))
+            getLinkedTardis().removeFuel(5000);
+        getLinkedTardis().markDirty();
     }
 
     private void onCompletion() {
         setGenerating(false);
         clearedOldInterior = false;
-        tardis().getHandlers().getAlarms().disable();
-        DoorHandler.lockTardis(PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis(), null, false);
+        getLinkedTardis().getHandlers().getAlarms().disable();
+        DoorHandler.lockTardis(PropertiesHandler.getBool(getLinkedTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), getLinkedTardis(), null, false);
     }
 
     private void warnPlayers() {
-        for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis())) {
+        for (PlayerEntity player : TardisUtil.getPlayersInInterior(getLinkedTardis())) {
             player.sendMessage(Text.translatable("tardis.message.interiorchange.warning").formatted(Formatting.RED), true);
         }
     }
     private boolean isInteriorEmpty() {
-        return TardisUtil.getPlayersInInterior(tardis()).isEmpty();
+        return TardisUtil.getPlayersInInterior(getLinkedTardis()).isEmpty();
     }
 
     public static Random random() {
@@ -109,18 +109,18 @@ public class InteriorChangingHandler extends TardisLink {
         super.tick(server);
         if (TardisUtil.isClient()) return;
         if (!isGenerating()) return;
-        if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + tardis().getUuid().toString())) return;
-        if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
-            tardis().getTravel().crash();
+        if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + getLinkedTardis().getUuid().toString())) return;
+        if (getLinkedTardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
+            getLinkedTardis().getTravel().crash();
         }
         if (isGenerating()) {
-            if (!tardis().getHandlers().getAlarms().isEnabled()) tardis().getHandlers().getAlarms().enable();
+            if (!getLinkedTardis().getHandlers().getAlarms().isEnabled()) getLinkedTardis().getHandlers().getAlarms().enable();
         }
 
 
-        if (!tardis().hasPower()) {
+        if (!getLinkedTardis().hasPower()) {
             setGenerating(false);
-            tardis().getHandlers().getAlarms().disable();
+            getLinkedTardis().getHandlers().getAlarms().disable();
             return;
         }
         if (!isGenerating()) return;
@@ -130,17 +130,17 @@ public class InteriorChangingHandler extends TardisLink {
             return;
         }
 
-        if (isInteriorEmpty() && !tardis().getDoor().locked()) {
-            DoorHandler.lockTardis(true, tardis(), null, true);
+        if (isInteriorEmpty() && !getLinkedTardis().getDoor().locked()) {
+            DoorHandler.lockTardis(true, getLinkedTardis(), null, true);
         }
         if (isInteriorEmpty() && !clearedOldInterior) {
-            tardis().getDesktop().clearOldInterior(getQueuedInterior());
-            DeltaTimeManager.createDelay("interior_change-" + tardis().getUuid().toString(), 15000L);
+            getLinkedTardis().getDesktop().clearOldInterior(getQueuedInterior());
+            DeltaTimeManager.createDelay("interior_change-" + getLinkedTardis().getUuid().toString(), 15000L);
             clearedOldInterior = true;
             return;
         }
         if (isInteriorEmpty() && clearedOldInterior) {
-            tardis().getDesktop().changeInterior(getQueuedInterior());
+            getLinkedTardis().getDesktop().changeInterior(getQueuedInterior());
             onCompletion();
         }
 

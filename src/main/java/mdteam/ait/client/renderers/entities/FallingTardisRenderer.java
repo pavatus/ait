@@ -42,7 +42,6 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
             model = null;
 
 
-        int maxLight = 0xFFFFFF;
         matrices.push();
         // matrices.translate(0.5, 0, 0.5);
         float f = entity.getBlockState().get(ExteriorBlock.FACING).asRotation();

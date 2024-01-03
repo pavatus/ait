@@ -83,6 +83,7 @@ public abstract class ExteriorAnimation {
 
         PacketByteBuf data = PacketByteBufs.create();
         data.writeInt(state.ordinal());
+        data.writeUuid(exterior.getTardis().getUuid());
 
         ServerPlayNetworking.send(player, UPDATE, data);
     }

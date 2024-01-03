@@ -91,7 +91,7 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
     @Override
     public void writeNbt(NbtCompound nbt) {
         if (this.getTardis() == null) {
-            AITMod.LOGGER.error("this.tardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
+            AITMod.LOGGER.error("this.getTardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
         super.writeNbt(nbt);
         if (tardisId != null)
