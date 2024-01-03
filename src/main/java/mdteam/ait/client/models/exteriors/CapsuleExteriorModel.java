@@ -1,7 +1,6 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
-import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
@@ -10,8 +9,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 
 public class CapsuleExteriorModel extends ExteriorModel {
     private final ModelPart body;
@@ -75,8 +72,8 @@ public class CapsuleExteriorModel extends ExteriorModel {
 
         /*this.body.getChild("doors").getChild("left_door").yaw = exterior.getLeftDoor();
         this.body.getChild("doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
-        if (exterior.tardis() == null) return;
-        DoorHandler handler = exterior.tardis().getDoor();
+        if (exterior.getTardis() == null) return;
+        DoorHandler handler = exterior.getTardis().getDoor();
 
         this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -5F : 0.0F;
         this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;

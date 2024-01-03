@@ -11,10 +11,6 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Function;
 
@@ -45,7 +41,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     private void checkAnimationTimer(ExteriorBlockEntity exterior) {
-        DoorHandler.DoorStateEnum state = exterior.tardis().getDoor().getDoorState();
+        DoorHandler.DoorStateEnum state = exterior.getTardis().getDoor().getDoorState();
         Animation anim = getAnimationForDoorState(state);
 
 
@@ -56,7 +52,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (exterior.tardis() == null) return;
+        if (exterior.getTardis() == null) return;
 
         root.render(matrices, vertices, light, overlay, red, green, blue, exterior.getAlpha());
     }

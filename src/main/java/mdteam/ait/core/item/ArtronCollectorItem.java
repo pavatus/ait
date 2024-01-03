@@ -4,7 +4,6 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
-import mdteam.ait.tardis.handler.FuelHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -23,8 +22,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
-
-import static mdteam.ait.tardis.handler.FuelHandler.TARDIS_MAX_FUEL;
 
 public class ArtronCollectorItem extends Item {
 
@@ -100,9 +97,9 @@ public class ArtronCollectorItem extends Item {
 
         if(player.isSneaking()) {
             if (world.getBlockEntity(clickedPos) instanceof ExteriorBlockEntity exterior) {
-                if (exterior.tardis() == null)
+                if (exterior.getTardis() == null)
                     return ActionResult.FAIL;
-                double residual = exterior.tardis().addFuel(nbt.getDouble(AU_LEVEL));
+                double residual = exterior.getTardis().addFuel(nbt.getDouble(AU_LEVEL));
                 nbt.putDouble(AU_LEVEL, residual);
                 return ActionResult.CONSUME;
             } else if (world.getBlockEntity(clickedPos) instanceof ConsoleBlockEntity console) {

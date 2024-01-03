@@ -1,22 +1,15 @@
 package mdteam.ait.client.models.exteriors;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
-import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 
 public class PoliceBoxModel extends ExteriorModel {
     private final ModelPart TARDIS;
@@ -101,14 +94,14 @@ public class PoliceBoxModel extends ExteriorModel {
         matrices.scale(0.63F, 0.63F, 0.63F);
         matrices.translate(0, -1.5f, 0);
 
-        DoorHandler door = exterior.tardis().getDoor();
+        DoorHandler door = exterior.getTardis().getDoor();
 
         this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
         this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
         // hide the doors if we have portals to stop the dupe
         if (DependencyChecker.hasPortals())
-            this.TARDIS.getChild("Doors").visible = exterior.tardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
+            this.TARDIS.getChild("Doors").visible = exterior.getTardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
 
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
