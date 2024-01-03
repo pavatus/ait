@@ -14,7 +14,8 @@
     "client.TitleScreenMixin",
     "client.rendering.GameRendererMixin",
     "client.rendering.PlayerPoseRendererMixin",
-    "client.rendering.WindowMixin"
+    "client.rendering.WindowMixin",
+    "client.rendering.BGRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

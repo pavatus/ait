@@ -2,6 +2,7 @@ package mdteam.ait.tardis;
 
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
+import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.SiegeTardisItem;
@@ -165,6 +166,7 @@ public class Tardis {
     public void disablePower() {
         if (!hasPower()) return;
 
+        //PropertiesHandler.set(this.getHandlers().getProperties(), PropertiesHandler.POWER_DELTA, MAX_POWER_DELTA_TICKS);
         PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.HAS_POWER, false);
         TardisEvents.LOSE_POWER.invoker().onLosePower(this);
         this.markDirty();
@@ -175,6 +177,7 @@ public class Tardis {
         if (isSiegeMode()) setSiegeMode(false);
         if (hasPower()) return;
 
+        //PropertiesHandler.set(this.getHandlers().getProperties(), PropertiesHandler.POWER_DELTA, 0);
         PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.HAS_POWER, true);
         TardisEvents.REGAIN_POWER.invoker().onRegainPower(this);
         this.markDirty();
@@ -307,6 +310,8 @@ public class Tardis {
             /*if (ClientShakeUtil.shouldShake(this)) */
             ClientShakeUtil.shakeFromConsole();
         }
+
+        ClientTardisUtil.tickPowerDelta();
     }
 
     public boolean isDirty() {

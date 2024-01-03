@@ -6,6 +6,7 @@ import mdteam.ait.client.registry.ClientDoorRegistry;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -19,6 +20,8 @@ import java.util.UUID;
 import static mdteam.ait.tardis.util.TardisUtil.*;
 
 public class ClientTardisUtil {
+    public static final int MAX_POWER_DELTA_TICKS = 3 * 20;
+
     public static void changeExteriorWithScreen(UUID uuid, String exterior, String variant, boolean variantchange) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(uuid);
@@ -82,5 +85,28 @@ public class ClientTardisUtil {
     }
     public static DoorModel getDoorModel(Tardis tardis) {
         return ClientDoorRegistry.withParent(tardis.getExterior().getVariant().door()).model();
+    }
+
+    public static void tickPowerDelta() {
+        if (!isPlayerInATardis()) return;
+        Tardis tardis = getCurrentTardis();
+
+        if (tardis.hasPower() && getPowerDelta() < MAX_POWER_DELTA_TICKS) {
+            setPowerDelta(getPowerDelta() + 1);
+        }
+        else if (!tardis.hasPower() && getPowerDelta() > 0) {
+            setPowerDelta(getPowerDelta() - 1);
+        }
+    }
+    public static int getPowerDelta() {
+        if (!isPlayerInATardis()) return 0;
+        return PropertiesHandler.getInt(getCurrentTardis().getHandlers().getProperties(), PropertiesHandler.POWER_DELTA);
+    }
+    public static float getPowerDeltaForLerp() {
+        return (float) getPowerDelta() / MAX_POWER_DELTA_TICKS;
+    }
+    public static void setPowerDelta(int delta) {
+        if (!isPlayerInATardis()) return;
+        PropertiesHandler.set(getCurrentTardis().getHandlers().getProperties(), PropertiesHandler.POWER_DELTA, delta);
     }
 }
