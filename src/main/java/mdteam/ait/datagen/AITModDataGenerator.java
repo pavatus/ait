@@ -196,6 +196,18 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_DOOR), FabricRecipeProvider.conditionsFromItem(Items.IRON_DOOR))
                     .criterion(FabricRecipeProvider.hasItem(Items.GLASS_PANE), FabricRecipeProvider.conditionsFromItem(Items.GLASS_PANE))
                     .criterion(FabricRecipeProvider.hasItem(Items.LIGHT_GRAY_CONCRETE), FabricRecipeProvider.conditionsFromItem(Items.LIGHT_GRAY_CONCRETE)));
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.WAYPOINT_CARTRIDGE, 1)
+                    .pattern("III")
+                    .pattern("IBI")
+                    .pattern("CGC")
+                    .input('I', Items.IRON_INGOT)
+                    .input('B', Items.REDSTONE_BLOCK)
+                    .input('C', Items.GREEN_DYE)
+                    .input('G', Items.GOLD_NUGGET)
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK))
+                    .criterion(FabricRecipeProvider.hasItem(Items.GREEN_DYE), FabricRecipeProvider.conditionsFromItem(Items.GREEN_DYE))
+                    .criterion(FabricRecipeProvider.hasItem(Items.GOLD_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.GOLD_NUGGET)));
             generateSmithingRecipes(provider);
             return provider;
         })));
@@ -359,6 +371,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
+        aitLanguageProvider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
         aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");

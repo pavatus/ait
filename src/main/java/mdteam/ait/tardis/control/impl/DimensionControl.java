@@ -79,6 +79,7 @@ public class DimensionControl extends Control {
         return String.join(" ", words);
     }
 
+    // @TODO for some reason in the dev env, this method tends to not like doing anything sometimes. idk, it works or it doesnt, but in builds, it always works. funny what a lil spaghetti man can tell you at 3 am
     public static String convertWorldValueToModified(String value) {
 
         // Split the string into words

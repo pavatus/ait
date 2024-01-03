@@ -28,6 +28,7 @@ import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
+import mdteam.ait.core.item.WaypointItem;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
@@ -99,6 +100,7 @@ public class AITModClient implements ClientModInitializer {
         entityRenderRegister();
         sonicModelPredicate();
         riftScannerPredicate();
+        waypointPredicate();
         setKeyBinding();
 
         ClientExteriorVariantRegistry.init();
@@ -322,6 +324,17 @@ public class AITModClient implements ClientModInitializer {
         ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
             return SonicItem.findModeInt(itemStack) == 4 ? 1.0F : 0.0F;
+        });
+    }
+
+    public void waypointPredicate() {
+        ModelPredicateProviderRegistry.register(AITItems.WAYPOINT_CARTRIDGE, new Identifier("type"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            if(itemStack.getItem() == AITItems.WAYPOINT_CARTRIDGE)
+                if(itemStack.getOrCreateNbt().contains(WaypointItem.BLOCK_POS_KEY))
+                    return 0.5f;
+                else return 0.0f;
+            else return 0.0f;
         });
     }
 

@@ -32,4 +32,7 @@ public class AITItems implements NeptuneItemInit {
     public static final Item RENAISSANCE_SONIC_SCREWDRIVER = new SonicItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP));
     @CustomName("coral")
     public static final Item CORAL_SONIC_SCREWDRIVER = new SonicItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP));
+
+    // Waypoint-related
+    public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
 }

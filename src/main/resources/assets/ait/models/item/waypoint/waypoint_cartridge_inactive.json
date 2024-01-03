@@ -1,0 +1,6 @@
+{
+	"parent": "ait:item/waypoint_cartridge",
+	"textures": {
+		"1": "ait:item/waypoint/waypoint_cartridge_inactive"
+	}
+}
