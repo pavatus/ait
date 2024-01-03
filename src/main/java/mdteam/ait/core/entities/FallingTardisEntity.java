@@ -1,6 +1,7 @@
 package mdteam.ait.core.entities;
 
 import com.mojang.logging.LogUtils;
+import mdteam.ait.AITMod;
 import mdteam.ait.core.AITDamageTypes;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -8,12 +9,15 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.wrapper.client.ClientTardis;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -53,6 +57,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import static mdteam.ait.tardis.handler.TardisLink.isClient;
+
 public class FallingTardisEntity extends Entity {
     private static final Logger LOGGER = LogUtils.getLogger();
     private BlockState block;
@@ -86,42 +92,24 @@ public class FallingTardisEntity extends Entity {
         this.setFallingBlockPos(this.getBlockPos());
     }
 
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.putString("TardisId", getTardisId().toString());
-        nbt.put("BlockPos", NbtHelper.fromBlockPos(this.getBlockPos()));
-        return nbt;
-    }
-
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.setTardisId(UUID.fromString(nbt.getString("TardisId")));
-        this.setBlockPos(NbtHelper.toBlockPos(nbt.getCompound("BlockPos")));
-    }
-
-    private void setBlockPos(BlockPos blockPos) {
-        this.dataTracker.set(BLOCK_POS, blockPos);
-    }
-
     public static FallingTardisEntity spawnFromBlock(World world, BlockPos pos, BlockState state) {
         FallingTardisEntity fallingBlockEntity = new FallingTardisEntity(world, (double)pos.getX() + 0.5, (double)pos.getY(), (double)pos.getZ() + 0.5, state.contains(Properties.WATERLOGGED) ? (BlockState)state.with(Properties.WATERLOGGED, false) : state);
 
         if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
-            fallingBlockEntity.setTardisId(exterior.getTardis().getUuid());
+            fallingBlockEntity.setTardisId(exterior.tardis().getUuid());
 
-            PropertiesHandler.setBool(exterior.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, true);
-            PropertiesHandler.setBool(exterior.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
-            exterior.getTardis().markDirty();
+            PropertiesHandler.setBool(exterior.tardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, true);
+            PropertiesHandler.setBool(exterior.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
+            exterior.tardis().markDirty();
         }
+
         world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
         world.spawnEntity(fallingBlockEntity);
         fallingBlockEntity.setHurtEntities(100.0F, 100);
         return fallingBlockEntity;
     }
 
-    public Tardis getTardis() {
+    public Tardis tardis() {
         if (getTardisId() == null) {
             LOGGER.error("TARDIS ID WAS NULL AT " + getPos());
             return null;
@@ -178,13 +166,13 @@ public class FallingTardisEntity extends Entity {
 
             this.move(MovementType.SELF, this.getVelocity());
             if (!this.getWorld().isClient) {
-                if (getTardis() == null ) return;
-                if (PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
+                if (tardis() == null ) return;
+                if (PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
                     stopFalling();
                     return;
                 }
 
-                getTardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(), this.getTardis().getTravel().getPosition().getDirection()));
+                tardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(), this.tardis().getTravel().getPosition().getDirection()));
 
 
                 BlockPos blockPos = this.getBlockPos();
@@ -278,8 +266,8 @@ public class FallingTardisEntity extends Entity {
 
     public void stopFalling(boolean antigravs) {
         if (antigravs) {
-            PropertiesHandler.setBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
-            getTardis().markDirty();
+            PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
+            tardis().markDirty();
         }
         Block block = this.block.getBlock();
         BlockPos blockPos = this.getBlockPos();

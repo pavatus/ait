@@ -58,7 +58,7 @@ public class TardimExteriorModel extends ExteriorModel {
         /*this.tardis.getChild("left_door").yaw = exterior.getRightDoor() ? 0 : -1.575f;
         this.tardis.getChild("right_door").yaw = exterior.getLeftDoor() ? 0 : 1.575f;*/
 
-        DoorHandler handler = exterior.getTardis().getDoor();
+        DoorHandler handler = exterior.tardis().getDoor();
 
         this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -1.575f : 0.0F;
         this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;

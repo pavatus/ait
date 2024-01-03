@@ -1,5 +1,6 @@
 package mdteam.ait.client.models.exteriors;
 
+import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
@@ -40,7 +41,7 @@ public class EasterHeadModel extends ExteriorModel {
 
 		matrices.translate(0,-1.5f,0);
 
-		this.head.getChild("door").pitch = (exterior.getTardis().getDoor().isOpen()) ? -45f : 0f;
+		this.head.getChild("door").pitch = (exterior.tardis().getDoor().isOpen()) ? -45f : 0f;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

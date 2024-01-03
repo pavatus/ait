@@ -2,7 +2,6 @@ package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
-import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -12,6 +11,10 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Function;
 
@@ -42,7 +45,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     private void checkAnimationTimer(ExteriorBlockEntity exterior) {
-        DoorHandler.DoorStateEnum state = exterior.getTardis().getDoor().getDoorState();
+        DoorHandler.DoorStateEnum state = exterior.tardis().getDoor().getDoorState();
         Animation anim = getAnimationForDoorState(state);
 
 
@@ -53,16 +56,12 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (exterior.getTardis() == null) return;
+        if (exterior.tardis() == null) return;
 
         root.render(matrices, vertices, light, overlay, red, green, blue, exterior.getAlpha());
     }
 
     public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
-
-    public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 

@@ -3,6 +3,9 @@ package mdteam.ait.core.item;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.registry.ConsoleRegistry;
+import mdteam.ait.registry.ConsoleVariantRegistry;
+import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
@@ -82,17 +85,17 @@ public class SonicItem extends Item {
                 Block block = world.getBlockState(pos).getBlock();
 
                 if (entity instanceof ExteriorBlockEntity exteriorBlock) {
-                    TardisTravel.State state = exteriorBlock.getTardis().getTravel().getState();
+                    TardisTravel.State state = exteriorBlock.tardis().getTravel().getState();
 
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
                         return;
                     }
 
                     List<ExteriorSchema> list = ExteriorRegistry.REGISTRY.stream().toList();
-                    exteriorBlock.getTardis().getExterior().setType(list.get((list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1));
+                    exteriorBlock.tardis().getExterior().setType(list.get((list.indexOf(exteriorBlock.tardis().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.tardis().getExterior().getType()) + 1));
                     //System.out.println(exteriorBlock.getTardis().getExterior().getType());
 
-                    exteriorBlock.getTardis().markDirty();
+                    exteriorBlock.tardis().markDirty();
                 }
 
                 // fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor
@@ -115,7 +118,7 @@ public class SonicItem extends Item {
 
                 BlockEntity entity = world.getBlockEntity(pos);
                 if (entity instanceof ExteriorBlockEntity exteriorBlock) {
-                    TardisTravel.State state = exteriorBlock.getTardis().getTravel().getState();
+                    TardisTravel.State state = exteriorBlock.tardis().getTravel().getState();
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
                     tardis.markDirty();

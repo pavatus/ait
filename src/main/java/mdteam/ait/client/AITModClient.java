@@ -13,8 +13,8 @@ import mdteam.ait.client.renderers.coral.CoralRenderer;
 import mdteam.ait.client.renderers.doors.DoorRenderer;
 import mdteam.ait.client.renderers.entities.ControlEntityRenderer;
 import mdteam.ait.client.renderers.entities.FallingTardisRenderer;
-import mdteam.ait.client.renderers.entities.TardisRealRenderer;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
+import mdteam.ait.client.screens.interior.InteriorSelectScreen;
 import mdteam.ait.client.screens.MonitorScreen;
 import mdteam.ait.client.screens.OwOFindPlayerScreen;
 import mdteam.ait.client.screens.interior.OwOInteriorSelectScreen;
@@ -128,15 +128,15 @@ public class AITModClient implements ClientModInitializer {
 
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
             if (block instanceof ExteriorBlockEntity exterior) {
-                if (exterior.getTardis() == null || exterior.getTardis().getDoor() == null) return;
-                ClientTardisManager.getInstance().ask(exterior.getTardis().getUuid());
+                if (exterior.tardis() == null || exterior.tardis().getDoor() == null) return;
+                ClientTardisManager.getInstance().ask(exterior.tardis().getUuid());
                 if (!ClientTardisManager.getInstance().exteriorToTardis.containsKey(exterior)) {
-                    ClientTardisManager.getInstance().exteriorToTardis.put(exterior, exterior.getTardis());
+                    ClientTardisManager.getInstance().exteriorToTardis.put(exterior, exterior.tardis());
                 }
-                if (!ClientTardisManager.getInstance().loadedTardises.contains(exterior.getTardis().getUuid())) {
-                    ClientTardisManager.getInstance().loadedTardises.add(exterior.getTardis().getUuid());
+                if (!ClientTardisManager.getInstance().loadedTardises.contains(exterior.tardis().getUuid())) {
+                    ClientTardisManager.getInstance().loadedTardises.add(exterior.tardis().getUuid());
                 }
-                exterior.getTardis().getDoor().clearExteriorAnimationState();
+                exterior.tardis().getDoor().clearExteriorAnimationState();
             } else if (block instanceof DoorBlockEntity door) {
                 if (door.getTardis() == null || door.getTardis().getDoor() == null) return;
                 ClientTardisManager.getInstance().ask(door.getTardis().getUuid());
@@ -175,11 +175,11 @@ public class AITModClient implements ClientModInitializer {
             }
             else if (block instanceof ExteriorBlockEntity exterior) {
                 ClientTardisManager.getInstance().exteriorToTardis.remove(exterior);
-                if (exterior.getTardis() == null) return;
-                if (!ClientTardisManager.getInstance().exteriorToTardis.containsValue(exterior.getTardis())) {
+                if (exterior.tardis() == null) return;
+                if (!ClientTardisManager.getInstance().exteriorToTardis.containsValue(exterior.tardis())) {
 
-                    ClientTardisManager.getInstance().loadedTardises.remove(exterior.getTardis().getUuid());
-                    ClientTardisManager.getInstance().letKnowUnloaded(exterior.getTardis().getUuid());
+                    ClientTardisManager.getInstance().loadedTardises.remove(exterior.tardis().getUuid());
+                    ClientTardisManager.getInstance().letKnowUnloaded(exterior.tardis().getUuid());
                 }
             }
             else if (block instanceof DoorBlockEntity door) {
@@ -348,7 +348,6 @@ public class AITModClient implements ClientModInitializer {
     public void entityRenderRegister() {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
-        EntityRendererRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, TardisRealRenderer::new);
     }
 
     private boolean keyHeldDown = false;
