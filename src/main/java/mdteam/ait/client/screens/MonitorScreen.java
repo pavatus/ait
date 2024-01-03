@@ -133,7 +133,7 @@ public class MonitorScreen extends TardisScreen {
             whichDirectionVariant(true);
         }, this.textRenderer));
         Text desktopSettingsText = Text.translatable("screen.ait.monitor.desktop_settings");
-        this.addButton(new PressableTextWidget((width / 2 + 12), (height / 2 + 38),
+        this.addButton(new PressableTextWidget((width / 2 - 28), (height / 2 + 42),
                 this.textRenderer.getWidth(desktopSettingsText), 10, Text.translatable("screen.ait.monitor.desktop_settings").formatted(Formatting.AQUA), button -> toInteriorSettingsScreen(), this.textRenderer));
         this.buttons.forEach(buttons -> {
             // buttons.visible = false;
@@ -240,13 +240,6 @@ public class MonitorScreen extends TardisScreen {
         for (int l = 0; l < 7; l++) {
             context.drawTexture(TEXTURE, (i + 11) + (l * 9), j + 5, 20 + (l * 6), 133, 6, 6);
         }
-        // Slider
-        context.drawTexture(TEXTURE, i + 215, j + 21, 20, 145, 12, 15);
-        // Panes
-        for (int k = 0; k < 8; k++) {
-            context.drawTexture(TEXTURE, (i + 51) + (k * 20), j + 21, 0, 133, 20, 40);
-            context.drawTexture(TEXTURE, (i + 51) + (k * 20), j + 61, 0, 133, 20, 40);
-        }
         context.pop();
         //context.drawTexture(TEXTURE, i + 18, j + 67, 1, 87, 25, 8);
     }
@@ -282,15 +275,29 @@ public class MonitorScreen extends TardisScreen {
         int j = ((this.width - this.backgroundWidth) / 2);
         if (tardis() == null) return;
         AbsoluteBlockPos.Directed abpd = tardis().getTravel().getPosition();
+        AbsoluteBlockPos.Directed dabpd = tardis().getTravel().getDestination();
         if(abpd == null) return;
         if(abpd.getDimension() == null) return;
-        String destinationText = "> " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
+        String positionText = "> " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
         String dimensionText = "> " + convertWorldValueToModified(abpd.getDimension().getValue());
         String directionText = "> " + abpd.getDirection().toString().toUpperCase();
+        String destinationText = "> " + dabpd.getX() + ", " + dabpd.getY() + ", " + dabpd.getZ();
+        String dDimensionText = "> " + convertWorldValueToModified(dabpd.getDimension().getValue());
+        String dDirectionText = "> " + dabpd.getDirection().toString().toUpperCase();
         String fuelText = "> " + Math.round((tardis().getFuel() / TARDIS_MAX_FUEL) * 100);
-        context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 67), (height / 2 + 38), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(dimensionText), (width / 2 - 19), (height / 2 + 48), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 67), (height / 2 + 48), 0xFFFFFF, true);
+
+        // position
+        context.drawText(this.textRenderer, Text.literal("Position"), (width / 2 - 64), (height / 2 - 46), 5636095, true);
+        context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 - 64), (height / 2 - 36), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(dimensionText), (width / 2 - 64), (height / 2 - 26), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 64), (height / 2 - 16), 0xFFFFFF, true);
+
+        // destination
+        context.drawText(this.textRenderer, Text.literal("Destination"), (width / 2 - 64), (height / 2 - 6), 5636095, true);
+        context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 64), (height / 2 + 4), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(dDimensionText), (width / 2 - 64), (height / 2 + 14), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 - 64), (height / 2 + 24), 0xFFFFFF, true);
+
         context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.fuel"), (width / 2 - 102), (height / 2 + 28), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(fuelText + "%"), (width / 2 - 108), (height / 2 + 38), 0xFFFFFF, true);
     }
