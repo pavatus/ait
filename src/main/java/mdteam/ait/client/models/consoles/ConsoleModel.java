@@ -56,9 +56,5 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
     public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
     }
 
-    public abstract Identifier getTexture();
-
-    public abstract Identifier getEmission();
-
     public abstract Animation getAnimationForState(TardisTravel.State state);
 }

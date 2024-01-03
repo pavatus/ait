@@ -23,7 +23,7 @@ public class ConsoleRegistry {
     public static void init() {
         HARTNELL = register(new HartnellConsole());
         BOREALIS = register(new BorealisConsole());
-        //CORAL = register(new CoralConsole());
+        CORAL = register(new CoralConsole());
         //TEMP = register(new TempConsole());
     }
 }

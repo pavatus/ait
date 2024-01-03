@@ -985,16 +985,6 @@ public class TempConsoleModel extends ConsoleModel {
     }
 
     @Override
-    public Identifier getTexture() {
-        return CONSOLE_TEXTURE;
-    }
-
-    @Override
-    public Identifier getEmission() {
-        return CONSOLE_TEXTURE_EMISSION;
-    }
-
-    @Override
     public Animation getAnimationForState(TardisTravel.State state) {
         return Animation.Builder.create(1).build();
     }

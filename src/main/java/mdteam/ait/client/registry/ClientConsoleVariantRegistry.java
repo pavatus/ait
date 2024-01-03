@@ -34,6 +34,8 @@ public class ClientConsoleVariantRegistry {
     public static ClientConsoleVariantSchema HARTNELL;
     public static ClientConsoleVariantSchema HARTNELL_WOOD;
     public static ClientConsoleVariantSchema HARTNELL_KELT;
+    public static ClientConsoleVariantSchema CORAL_GREEN;
+    public static ClientConsoleVariantSchema CORAL_BLUE;
 
     public static void init() {
         // Borealis variants
@@ -44,5 +46,9 @@ public class ClientConsoleVariantRegistry {
         HARTNELL = register(new ClientHartnellVariant());
         HARTNELL_KELT = register(new ClientKeltHartnellVariant());
         HARTNELL_WOOD = register(new ClientWoodenHartnellVariant()); // fixme this texture is awful - make tright remake it
+
+        // Coral variants
+        CORAL_GREEN = register(new ClientGreenCoralVariant());
+        CORAL_BLUE = register(new ClientBlueCoralVariant());
     }
 }

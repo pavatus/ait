@@ -3,12 +3,10 @@ package mdteam.ait.client.models.consoles;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.FuelHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -789,16 +787,6 @@ public class HartnellConsoleModel extends ConsoleModel {
 	}
 	@Override
 	public void setAngles(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-	}
-
-	@Override
-	public Identifier getTexture() {
-		return TEXTURE;
-	}
-
-	@Override
-	public Identifier getEmission() {
-		return EMISSION;
 	}
 
 	@Override

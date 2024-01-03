@@ -680,16 +680,6 @@ public class BorealisConsoleModel extends ConsoleModel {
     }
 
     @Override
-    public Identifier getTexture() {
-        return CONSOLE_TEXTURE;
-    }
-
-    @Override
-    public Identifier getEmission() {
-        return CONSOLE_TEXTURE_EMISSION;
-    }
-
-    @Override
     public Animation getAnimationForState(TardisTravel.State state) {
         return switch (state) {
             case LANDED -> BorealisAnimations.CONSOLE_IDLE_WHEATLEY;
