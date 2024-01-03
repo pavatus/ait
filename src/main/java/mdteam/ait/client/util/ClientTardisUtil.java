@@ -21,6 +21,9 @@ import static mdteam.ait.tardis.util.TardisUtil.*;
 
 public class ClientTardisUtil {
     public static final int MAX_POWER_DELTA_TICKS = 3 * 20;
+    public static final int MAX_ALARM_DELTA_TICKS = 30;
+    private static int alarmDeltaTick;
+    private static boolean alarmDeltaDirection; // true for increasing false for decreasing
 
     public static void changeExteriorWithScreen(UUID uuid, String exterior, String variant, boolean variantchange) {
         PacketByteBuf buf = PacketByteBufs.create();
@@ -108,5 +111,41 @@ public class ClientTardisUtil {
     public static void setPowerDelta(int delta) {
         if (!isPlayerInATardis()) return;
         PropertiesHandler.set(getCurrentTardis().getHandlers().getProperties(), PropertiesHandler.POWER_DELTA, delta);
+    }
+
+    public static void tickAlarmDelta() {
+        if (!isPlayerInATardis()) return;
+        Tardis tardis = getCurrentTardis();
+
+        if (!tardis.getHandlers().getAlarms().isEnabled()) {
+            if (getAlarmDelta() != MAX_ALARM_DELTA_TICKS)
+                setAlarmDelta(getAlarmDelta() + 1);
+            return;
+        }
+
+        if (getAlarmDelta() < MAX_ALARM_DELTA_TICKS && alarmDeltaDirection) {
+            setAlarmDelta(getAlarmDelta() + 1);
+        }
+        else if (getAlarmDelta() > 0 && !alarmDeltaDirection) {
+            setAlarmDelta(getAlarmDelta() - 1);
+        }
+
+        if (getAlarmDelta() >= MAX_ALARM_DELTA_TICKS) {
+            alarmDeltaDirection = false;
+        }
+        if (getAlarmDelta() == 0) {
+            alarmDeltaDirection = true;
+        }
+    }
+    public static int getAlarmDelta() {
+        if (!isPlayerInATardis()) return 0;
+        return alarmDeltaTick;
+    }
+    public static float getAlarmDeltaForLerp() {
+        return (float) getAlarmDelta() / MAX_ALARM_DELTA_TICKS;
+    }
+    public static void setAlarmDelta(int delta) {
+        if (!isPlayerInATardis()) return;
+        alarmDeltaTick = delta;
     }
 }

@@ -312,6 +312,7 @@ public class Tardis {
         }
 
         ClientTardisUtil.tickPowerDelta();
+        ClientTardisUtil.tickAlarmDelta();
     }
 
     public boolean isDirty() {
