@@ -2,17 +2,13 @@ package mdteam.ait.tardis.handler;
 
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,15 +20,15 @@ public class HADSHandler extends TardisLink {
     }
 
     public boolean isHADSActive() {
-        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED);
+        return PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED);
     }
 
     public void setIsInDanger(boolean bool) {
-        PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER, bool);
+        PropertiesHandler.setBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER, bool);
     }
 
     public boolean isInDanger() {
-        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER);
+        return PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER);
     }
 
     @Override
@@ -80,14 +76,14 @@ public class HADSHandler extends TardisLink {
     public void dematerialiseWhenInDanger() {
         // fixme is bug pls fix - idea enqueue a remat ( NEEDS_MAT var ? )
         if(isInDanger()) {
-            if(tardis().getTravel().getState() == TardisTravel.State.LANDED) {
-                tardis().getTravel().dematerialise(false);
+            if(getTardis().getTravel().getState() == TardisTravel.State.LANDED) {
+                getTardis().getTravel().dematerialise(false);
             }
-            tardis().getHandlers().getAlarms().enable();
-        } else if (tardis().getHandlers().getAlarms().isEnabled()){
-            if(tardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
-                tardis().getTravel().materialise();
-            } else if (tardis().getTravel().getState() == TardisTravel.State.MAT) tardis().getHandlers().getAlarms().disable();
+            getTardis().getHandlers().getAlarms().enable();
+        } else if (getTardis().getHandlers().getAlarms().isEnabled()){
+            if(getTardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
+                getTardis().getTravel().materialise();
+            } else if (getTardis().getTravel().getState() == TardisTravel.State.MAT) getTardis().getHandlers().getAlarms().disable();
         }
     }
 

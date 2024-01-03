@@ -60,14 +60,14 @@ public class ClientAlarmHandler extends SoundHandler {
         return found != null;
     }
 
-    public Tardis tardis() {
+    public Tardis getTardis() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos());
         return found;
     }
 
     public boolean isEnabled() {
-        return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
+        return PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
     }
 
     public void tick(MinecraftClient client) {

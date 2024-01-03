@@ -2,17 +2,13 @@ package mdteam.ait.tardis.handler.properties;
 
 import com.google.gson.internal.LinkedTreeMap;
 import mdteam.ait.AITMod;
-import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.TardisDesktopSchema;
-import mdteam.ait.tardis.desktops.CaveDesktop;
 import mdteam.ait.tardis.handler.FuelHandler;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 
 public class PropertiesHandler { // todo move more things over to properties
     public static final String AUTO_LAND = "auto_land";
@@ -128,7 +124,7 @@ public class PropertiesHandler { // todo move more things over to properties
     public static PropertiesHolder getSubProperties(PropertiesHolder holder, String key) {
         if (!holder.getData().containsKey(key)) {
             AITMod.LOGGER.error(key + " is not a properties holder!! im being kind, heres an empty properties instead of a null crash. to loqor - this wont b saved prolly");
-            return new PropertiesHolder(holder.tardis().getUuid());
+            return new PropertiesHolder(holder.getTardis().getUuid());
         }
 
         return (PropertiesHolder) holder.getData().get(key);

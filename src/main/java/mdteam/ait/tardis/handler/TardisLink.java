@@ -22,7 +22,7 @@ public abstract class TardisLink implements TardisTickable {
         this.tardisId = tardisId;
     }
 
-    public Tardis tardis() {
+    public Tardis getTardis() {
         if (isClient()) {
             return ClientTardisManager.getInstance().getLookup().get(tardisId);
         }
@@ -47,14 +47,14 @@ public abstract class TardisLink implements TardisTickable {
     }
 
     public AbsoluteBlockPos.Directed getDoorPos() {
-        Tardis tardis = tardis();
+        Tardis tardis = getTardis();
         if (tardis == null || tardis.getDesktop() == null)
             return new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
         return tardis.getDesktop().getInteriorDoorPos();
     }
 
     public AbsoluteBlockPos.Directed getExteriorPos() {
-        Tardis tardis = tardis();
+        Tardis tardis = getTardis();
         if (tardis == null || tardis.getTravel() == null)
             return new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
         return tardis.getTravel().getPosition();

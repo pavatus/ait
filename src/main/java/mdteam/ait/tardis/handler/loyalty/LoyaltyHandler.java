@@ -29,7 +29,7 @@ public class LoyaltyHandler extends TardisLink { // todo currently will be usele
     public void add(ServerPlayerEntity player, Loyalty loyalty) {
         this.data().put(player.getUuid(), loyalty);
 
-        tardis().markDirty();
+        getTardis().markDirty();
     }
 
     public Loyalty get(ServerPlayerEntity player) {

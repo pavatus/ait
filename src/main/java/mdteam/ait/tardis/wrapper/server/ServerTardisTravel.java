@@ -8,7 +8,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 
@@ -25,19 +24,19 @@ public class ServerTardisTravel extends TardisTravel implements TardisTickable {
     @Override
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
         super.setDestination(pos, withChecks);
-        this.tardis().markDirty();
+        this.getTardis().markDirty();
     }
 
     @Override
     public void setPosition(AbsoluteBlockPos.Directed pos) {
         super.setPosition(pos);
-        this.tardis().markDirty();
+        this.getTardis().markDirty();
     }
 
     @Override
     public void setState(State state) {
         super.setState(state);
-        this.tardis().markDirty();
+        this.getTardis().markDirty();
     }
 
     public static double getSoundEventLengthInSeconds(SoundEvent sound) {
@@ -58,13 +57,13 @@ public class ServerTardisTravel extends TardisTravel implements TardisTickable {
     @Override
     public void dematerialise(boolean withRemat) {
         super.dematerialise(withRemat);
-        this.tardis().markDirty();
+        this.getTardis().markDirty();
     }
 
     @Override
     public void materialise() {
         super.materialise();
-        this.tardis().markDirty();
+        this.getTardis().markDirty();
     }
 
     @Override

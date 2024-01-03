@@ -18,7 +18,6 @@ import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -100,7 +99,7 @@ public class TardisTravel extends TardisLink {
                 this.tardisId = found.getUuid();
         }
 
-        return this.tardis();
+        return this.getTardis();
     }
 
     // todo use me in places where similar things are used
@@ -362,7 +361,7 @@ public class TardisTravel extends TardisLink {
         this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
         // Play failure sound at the Tardis console position if the interior is not empty
-        if (TardisUtil.isInteriorNotEmpty(tardis())) {
+        if (TardisUtil.isInteriorNotEmpty(this.getTardis())) {
             TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
         }
 
@@ -376,12 +375,12 @@ public class TardisTravel extends TardisLink {
 
     private void failToTakeoff() {
         // dont do anything if out of fuel, make it sad :(
-        if (!tardis().hasPower()) return;
+        if (!this.getTardis().hasPower()) return;
 
         // demat will be cancelled
         this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
-        if (TardisUtil.isInteriorNotEmpty(tardis()))
+        if (TardisUtil.isInteriorNotEmpty(this.getTardis()))
             TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
 
         TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to takeoff!")); // fixme translatable
@@ -421,7 +420,7 @@ public class TardisTravel extends TardisLink {
 
             setDestinationToTardisInterior(target.tardis(), true, 256); // how many times should this be
 
-            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
+            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
         }
 
         // is long line
