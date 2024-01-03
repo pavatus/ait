@@ -169,6 +169,7 @@ public class Tardis {
     }
     public void enablePower() {
         if (getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL)) return; // cant enable power if not enough fuel
+        if (isSiegeBeingHeld()) return; // cant re-enable while being held, this may become OP tho
         if (isSiegeMode()) setSiegeMode(false);
         if (hasPower()) return;
 
