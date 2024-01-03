@@ -17,6 +17,8 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.*;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
@@ -189,6 +191,7 @@ public class Tardis {
         if (!b && !(this.getHandlers().getExteriorPos().getWorld().getBlockEntity(this.getHandlers().getExteriorPos()) instanceof ExteriorBlockEntity))
             this.getTravel().placeExterior();
         if (isSiegeBeingHeld()) return;
+        if (b) TardisUtil.giveEffectToInteriorPlayers(this, new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
 
         removeFuel(0.01 * FuelHandler.TARDIS_MAX_FUEL);
 

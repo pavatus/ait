@@ -28,6 +28,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -397,6 +398,12 @@ public class TardisUtil {
         } else {
             // Return the first Tardis object in the Map
             return matchingTardises.values().iterator().next();
+        }
+    }
+
+    public static void giveEffectToInteriorPlayers(Tardis tardis, StatusEffectInstance effect) {
+        for (PlayerEntity player : getPlayersInInterior(tardis)) {
+            player.addStatusEffect(effect);
         }
     }
 
