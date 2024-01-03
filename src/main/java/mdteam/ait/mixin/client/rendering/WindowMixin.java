@@ -12,7 +12,7 @@ public class WindowMixin {
 
     @Inject(at = @At("TAIL"), method = "onFramebufferSizeChanged")
     private void updateShaderSize(CallbackInfo ci) {
-        if(ShaderUtils.enabled)
+        if(ShaderUtils.enabled && false) // because i hate your alarm thingrrrrrrrrrrrrrrr
             ShaderUtils.shader.setupDimensions(ShaderUtils.client.getWindow().getFramebufferWidth(), ShaderUtils.client.getWindow().getFramebufferHeight());
     }
 }

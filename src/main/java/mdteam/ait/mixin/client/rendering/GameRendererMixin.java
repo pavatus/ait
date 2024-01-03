@@ -13,7 +13,7 @@ public abstract class GameRendererMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;updateWorldIcon()V"))
     public void render(CallbackInfo ci) {
-        if(ShaderUtils.enabled && ShaderUtils.shader != null) {
+        if(ShaderUtils.enabled && ShaderUtils.shader != null && false) {
             RenderSystem.disableBlend();
             RenderSystem.disableDepthTest();
             RenderSystem.resetTextureMatrix();
