@@ -5,6 +5,7 @@ import mdteam.ait.client.animation.ExteriorAnimation;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -73,6 +74,11 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
             }
+            return;
+        }
+
+        if (sneaking && getTardis().isSiegeMode() && !getTardis().isSiegeBeingHeld()) {
+            SiegeTardisItem.pickupTardis(getTardis(), (ServerPlayerEntity) player);
             return;
         }
 
