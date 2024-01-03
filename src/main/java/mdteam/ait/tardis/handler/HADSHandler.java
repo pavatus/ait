@@ -20,15 +20,15 @@ public class HADSHandler extends TardisLink {
     }
 
     public boolean isHADSActive() {
-        return PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED);
+        return PropertiesHandler.getBool(getLinkedTardis().getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED);
     }
 
     public void setIsInDanger(boolean bool) {
-        PropertiesHandler.setBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER, bool);
+        PropertiesHandler.setBool(getLinkedTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER, bool);
     }
 
     public boolean isInDanger() {
-        return PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER);
+        return PropertiesHandler.getBool(getLinkedTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER);
     }
 
     @Override
@@ -76,14 +76,14 @@ public class HADSHandler extends TardisLink {
     public void dematerialiseWhenInDanger() {
         // fixme is bug pls fix - idea enqueue a remat ( NEEDS_MAT var ? )
         if(isInDanger()) {
-            if(getTardis().getTravel().getState() == TardisTravel.State.LANDED) {
-                getTardis().getTravel().dematerialise(false);
+            if(getLinkedTardis().getTravel().getState() == TardisTravel.State.LANDED) {
+                getLinkedTardis().getTravel().dematerialise(false);
             }
-            getTardis().getHandlers().getAlarms().enable();
-        } else if (getTardis().getHandlers().getAlarms().isEnabled()){
-            if(getTardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
-                getTardis().getTravel().materialise();
-            } else if (getTardis().getTravel().getState() == TardisTravel.State.MAT) getTardis().getHandlers().getAlarms().disable();
+            getLinkedTardis().getHandlers().getAlarms().enable();
+        } else if (getLinkedTardis().getHandlers().getAlarms().isEnabled()){
+            if(getLinkedTardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
+                getLinkedTardis().getTravel().materialise();
+            } else if (getLinkedTardis().getTravel().getState() == TardisTravel.State.MAT) getLinkedTardis().getHandlers().getAlarms().disable();
         }
     }
 

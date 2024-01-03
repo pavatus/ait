@@ -124,7 +124,7 @@ public class PropertiesHandler { // todo move more things over to properties
     public static PropertiesHolder getSubProperties(PropertiesHolder holder, String key) {
         if (!holder.getData().containsKey(key)) {
             AITMod.LOGGER.error(key + " is not a properties holder!! im being kind, heres an empty properties instead of a null crash. to loqor - this wont b saved prolly");
-            return new PropertiesHolder(holder.getTardis().getUuid());
+            return new PropertiesHolder(holder.getLinkedTardis().getUuid());
         }
 
         return (PropertiesHolder) holder.getData().get(key);

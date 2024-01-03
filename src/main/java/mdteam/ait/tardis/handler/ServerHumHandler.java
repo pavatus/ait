@@ -33,14 +33,14 @@ public class ServerHumHandler extends TardisLink {
         this.current = hum;
 
         this.updateClientHum();
-        getTardis().markDirty(); // should b ok here its not gonna spam like the door did
+        getLinkedTardis().markDirty(); // should b ok here its not gonna spam like the door did
     }
 
     private void updateClientHum() {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeIdentifier(this.current.sound().getId());
 
-        for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.getTardis())) { // is bad? fixme
+        for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.getLinkedTardis())) { // is bad? fixme
             ServerPlayNetworking.send((ServerPlayerEntity) player, SEND, buf);
         }
     }

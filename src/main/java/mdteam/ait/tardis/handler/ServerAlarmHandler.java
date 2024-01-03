@@ -18,17 +18,17 @@ public class ServerAlarmHandler extends TardisLink {
     }
 
     public void enable() {
-        PropertiesHandler.setBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
-        getTardis().markDirty();
+        PropertiesHandler.setBool(getLinkedTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
+        getLinkedTardis().markDirty();
     }
 
     public void disable() {
-        PropertiesHandler.setBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, false);
-        getTardis().markDirty();
+        PropertiesHandler.setBool(getLinkedTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, false);
+        getLinkedTardis().markDirty();
     }
 
     public boolean isEnabled() {
-        return PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
+        return PropertiesHandler.getBool(getLinkedTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
     }
 
     public void toggle() {

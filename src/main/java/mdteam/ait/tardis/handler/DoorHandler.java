@@ -48,7 +48,7 @@ public class DoorHandler extends TardisLink {
      */
     private void succ() {
         // Get all entities in the Tardis interior
-        TardisUtil.getEntitiesInInterior(getTardis())
+        TardisUtil.getEntitiesInInterior(getLinkedTardis())
                 .stream()
                 .filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
                 .filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
@@ -63,7 +63,7 @@ public class DoorHandler extends TardisLink {
                 });
     }
     private boolean shouldSucc() {
-        return getTardis().getTravel().getState() == FLIGHT && this.isOpen();
+        return getLinkedTardis().getTravel().getState() == FLIGHT && this.isOpen();
     }
 
     // Remember to markDirty for these setters!!
@@ -71,14 +71,14 @@ public class DoorHandler extends TardisLink {
         this.left = var;
         if(this.left) this.setDoorState(DoorStateEnum.FIRST);
 
-        getTardis().markDirty();
+        getLinkedTardis().markDirty();
     }
 
     public void setRightRot(boolean var) {
         this.right = var;
         if(this.right) this.setDoorState(DoorStateEnum.SECOND);
 
-        getTardis().markDirty();
+        getLinkedTardis().markDirty();
     }
 
     public boolean isRightOpen() {
@@ -94,7 +94,7 @@ public class DoorHandler extends TardisLink {
         // should probs be in the method below
         if (var) setDoorState(DoorStateEnum.CLOSED);
 
-        getTardis().markDirty();
+        getLinkedTardis().markDirty();
     }
 
     public void setLockedAndDoors(boolean var) {
@@ -109,7 +109,7 @@ public class DoorHandler extends TardisLink {
     }
 
     public boolean isDoubleDoor() {
-        return getTardis().getExterior().getVariant().door().isDouble();
+        return getLinkedTardis().getExterior().getVariant().door().isDouble();
     }
 
     // fixme all these open methods are terrible
@@ -155,16 +155,16 @@ public class DoorHandler extends TardisLink {
 
             // if the last state ( doorState ) was closed and the new state ( var ) is open, fire the event
             if (doorState == DoorStateEnum.CLOSED) {
-                TardisEvents.DOOR_OPEN.invoker().onOpen(getTardis());
+                TardisEvents.DOOR_OPEN.invoker().onOpen(getLinkedTardis());
             }
             // if the last state was open and the new state is closed, fire the event
             if (doorState != DoorStateEnum.CLOSED && var == DoorStateEnum.CLOSED) {
-                TardisEvents.DOOR_CLOSE.invoker().onClose(getTardis());
+                TardisEvents.DOOR_CLOSE.invoker().onClose(getLinkedTardis());
             }
         }
 
         this.doorState = var;
-        getTardis().markDirty();
+        getLinkedTardis().markDirty();
     }
 
     /**
@@ -172,7 +172,7 @@ public class DoorHandler extends TardisLink {
      */
     public void clearExteriorAnimationState() {
         tempExteriorState = null;
-        getTardis().markDirty();
+        getLinkedTardis().markDirty();
     }
 
     /**
@@ -180,7 +180,7 @@ public class DoorHandler extends TardisLink {
      */
     public void clearInteriorAnimationState() {
         tempInteriorState = null;
-        getTardis().markDirty();
+        getLinkedTardis().markDirty();
     }
 
     public DoorStateEnum getDoorState() {

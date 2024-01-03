@@ -24,19 +24,19 @@ public class ServerTardisTravel extends TardisTravel implements TardisTickable {
     @Override
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
         super.setDestination(pos, withChecks);
-        this.getTardis().markDirty();
+        this.getLinkedTardis().markDirty();
     }
 
     @Override
     public void setPosition(AbsoluteBlockPos.Directed pos) {
         super.setPosition(pos);
-        this.getTardis().markDirty();
+        this.getLinkedTardis().markDirty();
     }
 
     @Override
     public void setState(State state) {
         super.setState(state);
-        this.getTardis().markDirty();
+        this.getLinkedTardis().markDirty();
     }
 
     public static double getSoundEventLengthInSeconds(SoundEvent sound) {
@@ -57,13 +57,13 @@ public class ServerTardisTravel extends TardisTravel implements TardisTickable {
     @Override
     public void dematerialise(boolean withRemat) {
         super.dematerialise(withRemat);
-        this.getTardis().markDirty();
+        this.getLinkedTardis().markDirty();
     }
 
     @Override
     public void materialise() {
         super.materialise();
-        this.getTardis().markDirty();
+        this.getLinkedTardis().markDirty();
     }
 
     @Override
