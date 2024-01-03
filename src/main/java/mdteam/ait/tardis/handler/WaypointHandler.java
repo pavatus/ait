@@ -1,57 +1,81 @@
 package mdteam.ait.tardis.handler;
 
+import mdteam.ait.core.item.WaypointItem;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import org.jetbrains.annotations.NotNull;
+import mdteam.ait.tardis.util.Waypoint;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Optional;
 import java.util.UUID;
 
-public class WaypointHandler extends TardisLink implements Iterable<AbsoluteBlockPos.Directed> { // todo eventually move into a positionhandler but thats too much work for rn
-    private ArrayList<AbsoluteBlockPos.Directed> data;
+public class WaypointHandler extends TardisLink {
+    private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
 
-    public WaypointHandler(UUID tardisId, ArrayList<AbsoluteBlockPos.Directed> waypoints) {
+    public WaypointHandler(UUID tardisId) {
         super(tardisId);
-        this.data = waypoints;
     }
 
-    public WaypointHandler(UUID tardis) {
-        this(tardis, new ArrayList<>());
+    // todo summon a new waypoint item at the console if spawnItem is true
+    /**
+     * Sets the new waypoint
+     * @param var
+     * @return The optional of the previous waypoiint
+     */
+    public Optional<Waypoint> set(Waypoint var, boolean spawnItem) {
+        Optional<Waypoint> prev = Optional.ofNullable(this.current);
+        // System.out.println(var);
+        // System.out.println(this.current);
+        this.current = var;
+        this.tardis().markDirty();
+
+        if (spawnItem && prev.isPresent()) {
+            this.spawnItem(prev.get());
+        }
+
+        return prev;
     }
 
-    public ArrayList<AbsoluteBlockPos.Directed> data() {
-        return this.data;
+    public Waypoint get() {
+        return this.current;
+    }
+    public boolean hasWaypoint() {
+        return this.current != null;
+    }
+    public void clear(boolean spawnItem) {
+        this.set(null, spawnItem);
     }
 
-    public boolean contains(AbsoluteBlockPos.Directed var) {
-        return this.data().contains(var);
+    public void gotoWaypoint() {
+        if (!this.hasWaypoint()) return; // todo move this check to the DEMAT event so the fail to takeoff happens
+
+        PropertiesHandler.setAutoPilot(this.tardis().getHandlers().getProperties(), true);
+        this.tardis().getTravel().travelTo(this.get());
+    }
+    public void setDestination() {
+        if (!this.hasWaypoint()) return;
+
+        this.tardis().getTravel().setDestination(this.get(), true);
     }
 
-    public void add(AbsoluteBlockPos.Directed var) {
-        this.data().add(var);
+    public void spawnItem() {
+        if (!this.hasWaypoint()) return;
 
-        tardis().markDirty();
+        spawnItem(this.get());
+        this.clear(false);
     }
 
-    public void remove(AbsoluteBlockPos.Directed var) {
-        if (!this.data().contains(var)) return;
-
-        this.data().remove(var);
-        tardis().markDirty();
+    public void spawnItem(Waypoint waypoint) {
+        spawnItem(waypoint, this.tardis().getDesktop().getConsolePos());
     }
 
-    public void remove(int index) {
-        this.data().remove(index);
-        tardis().markDirty();
+    public static ItemStack createWaypointItem(Waypoint waypoint) {
+        return WaypointItem.create(waypoint);
     }
-
-    public AbsoluteBlockPos.Directed get(int index) {
-        return this.data().get(index);
-    }
-
-    @NotNull
-    @Override
-    public Iterator<AbsoluteBlockPos.Directed> iterator() {
-        return this.data().iterator();
+    public static ItemEntity spawnItem(Waypoint waypoint, AbsoluteBlockPos pos) {
+        ItemEntity entity = new ItemEntity(pos.getWorld(), pos.getX(), pos.getY(), pos.getZ(), createWaypointItem(waypoint));
+        pos.getWorld().spawnEntity(entity);
+        return entity;
     }
 }

@@ -331,7 +331,7 @@ public class AITModClient implements ClientModInitializer {
         ModelPredicateProviderRegistry.register(AITItems.WAYPOINT_CARTRIDGE, new Identifier("type"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
             if(itemStack.getItem() == AITItems.WAYPOINT_CARTRIDGE)
-                if(itemStack.getOrCreateNbt().contains(WaypointItem.BLOCK_POS_KEY))
+                if(itemStack.getOrCreateNbt().contains(WaypointItem.POS_KEY))
                     return 0.5f;
                 else return 0.0f;
             else return 0.0f;

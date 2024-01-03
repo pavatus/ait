@@ -2,6 +2,9 @@ package mdteam.ait.tardis.util;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -66,6 +69,20 @@ public class AbsoluteBlockPos extends BlockPos {
         return new AbsoluteBlockPos(this.getX(), this.getY() + 1, this.getZ(), this.getWorld());
     }
 
+    public NbtCompound toNbt() {
+        NbtCompound nbt = new NbtCompound();
+
+        nbt.put("pos", NbtHelper.fromBlockPos(this));
+        nbt.putString("dimension", this.getDimension().getValue());
+
+        return nbt;
+    }
+    public static AbsoluteBlockPos fromNbt(NbtCompound nbt) {
+        BlockPos pos = NbtHelper.toBlockPos(nbt);
+        SerialDimension dimension = new SerialDimension(nbt.getString("dimension"));
+        return new AbsoluteBlockPos(pos, dimension);
+    }
+
     @Override
     public String toString() {
         return "AbsoluteBlockPos[ " + getX() + " _ " + getY() + " _ " + getZ() + " ] | [ " + getWorld() + " ]";
@@ -117,6 +134,23 @@ public class AbsoluteBlockPos extends BlockPos {
                 return this.direction == other.direction && super.equals(other);
 
             return super.equals(o);
+        }
+
+        @Override
+        public NbtCompound toNbt() {
+            NbtCompound nbt = super.toNbt();
+
+            nbt.putInt("direction", this.direction.getId());
+
+            return nbt;
+        }
+
+        public static Directed fromNbt(NbtCompound nbt) {
+            AbsoluteBlockPos pos = AbsoluteBlockPos.fromNbt(nbt);
+
+            Direction dir = Direction.byId(nbt.getInt("direction"));
+
+            return new Directed(pos, dir);
         }
     }
 

@@ -1,7 +1,10 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.Waypoint;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,6 +19,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -26,9 +30,7 @@ import java.util.List;
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 
 public class WaypointItem extends Item {
-    public static final String BLOCK_POS_KEY = "blockpos";
-    public static final String DIRECTION_KEY = "direction";
-    public static final String DIMENSION_KEY = "dimension";
+    public static final String POS_KEY = "pos";
     /*public static final String LOCKED_KEY = "locked";*/
     // fixme ehhhhh should we have a locked variable for the tardis waypoints? maybe it could be helpful?
 
@@ -42,30 +44,25 @@ public class WaypointItem extends Item {
         BlockPos pos = context.getBlockPos();
         PlayerEntity player = context.getPlayer();
         ItemStack itemStack = context.getStack();
+        Hand hand = context.getHand();
 
         if (player == null)
             return ActionResult.FAIL;
         if (world.isClient()) return ActionResult.SUCCESS;
 
-        NbtCompound nbt = itemStack.getOrCreateNbt();
+        if (!player.isSneaking()) return ActionResult.FAIL;
+        if (hand != Hand.MAIN_HAND) return ActionResult.FAIL;
+        if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity console)) return ActionResult.FAIL;
 
-        if (player.isSneaking()) {
-            if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock) {
-                if (consoleBlock.getTardis() == null || consoleBlock.getTardis().getTravel().getPosition() == null)
-                    return ActionResult.PASS;
+        if (console.getTardis() == null || console.getTardis().getTravel().getPosition() == null)
+            return ActionResult.PASS;
 
-                if(!nbt.contains(BLOCK_POS_KEY))
-                    nbt.put(BLOCK_POS_KEY, NbtHelper.fromBlockPos(consoleBlock.getTardis().getTravel().getPosition()));
-                if(!nbt.contains(DIRECTION_KEY))
-                    nbt.putInt(DIRECTION_KEY, consoleBlock.getTardis().getTravel().getPosition().getDirection().ordinal());
-                if(!nbt.contains(DIMENSION_KEY))
-                    nbt.putString(DIMENSION_KEY, consoleBlock.getTardis().getTravel().getPosition().getDimension().getValue());
+        if (getPos(itemStack) == null) setPos(itemStack, console.getTardis().getTravel().getPosition());
 
-                world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
+        console.getTardis().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)), true);
+        player.setStackInHand(hand, ItemStack.EMPTY);
 
-                return ActionResult.SUCCESS;
-            }
-        }
+        world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
 
         return ActionResult.SUCCESS;
     }
@@ -77,25 +74,44 @@ public class WaypointItem extends Item {
             return;
         }
 
-        NbtCompound tag = stack.getOrCreateNbt();
+        AbsoluteBlockPos.Directed pos = getPos(stack);
+        if (pos == null) return;
 
-        if (tag.contains(BLOCK_POS_KEY)) {
-            tooltip.add(Text.translatable("Block Position > " +
-                    NbtHelper.toBlockPos(tag.getCompound(BLOCK_POS_KEY)).getX() + ", " +
-                    NbtHelper.toBlockPos(tag.getCompound(BLOCK_POS_KEY)).getY() + ", " +
-                    NbtHelper.toBlockPos(tag.getCompound(BLOCK_POS_KEY)).getZ()).formatted(Formatting.GREEN));
-        } else {
-            tooltip.add(Text.literal("Block Position > ").formatted(Formatting.BLUE));
-        }
-        if (tag.contains(DIRECTION_KEY)) {
-            tooltip.add(Text.translatable("Direction > " + Direction.byId(tag.getInt(DIRECTION_KEY)).asString().toUpperCase()).formatted(Formatting.GREEN));
-        } else {
-            tooltip.add(Text.literal("Direction > ").formatted(Formatting.BLUE));
-        }
-        if (tag.contains(DIMENSION_KEY)) {
-            tooltip.add(Text.translatable("Dimension > " + convertWorldValueToModified(tag.getString(DIMENSION_KEY))).formatted(Formatting.GREEN));
-        } else {
-            tooltip.add(Text.literal("Dimension > ").formatted(Formatting.BLUE));
-        }
+        tooltip.add(Text.translatable("waypoint.position.tooltip").append(Text.literal(
+                " > " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ()))
+                .formatted(Formatting.BLUE));
+        tooltip.add(Text.translatable("waypoint.direction.tooltip").append(Text.literal(
+            " > " + pos.getDirection().asString().toUpperCase()))
+                .formatted(Formatting.BLUE));
+        tooltip.add(Text.translatable("waypoint.dimension.tooltip").append(Text.literal(
+            " > " + convertWorldValueToModified(pos.getDimension().getValue())))
+                .formatted(Formatting.BLUE));
+    }
+
+    public static ItemStack create(AbsoluteBlockPos.Directed pos) {
+        ItemStack stack = new ItemStack(AITItems.WAYPOINT_CARTRIDGE);
+        setPos(stack, pos);
+        return stack;
+    }
+
+    public static AbsoluteBlockPos.Directed getPos(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        if (!nbt.contains(POS_KEY)) return null;
+
+        System.out.println(nbt);
+
+        return AbsoluteBlockPos.Directed.fromNbt(nbt.getCompound(POS_KEY));
+    }
+    public static void setPos(ItemStack stack, AbsoluteBlockPos.Directed pos) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        nbt.put(POS_KEY, pos.toNbt());
+
+        System.out.println(pos);
+        System.out.println(getPos(stack));
+    }
+    public static boolean hasPos(ItemStack stack) {
+        return stack.getOrCreateNbt().contains(POS_KEY);
     }
 }
