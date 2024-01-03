@@ -13,8 +13,8 @@ import mdteam.ait.client.renderers.coral.CoralRenderer;
 import mdteam.ait.client.renderers.doors.DoorRenderer;
 import mdteam.ait.client.renderers.entities.ControlEntityRenderer;
 import mdteam.ait.client.renderers.entities.FallingTardisRenderer;
-import mdteam.ait.client.renderers.entities.TardisRealRenderer;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
+import mdteam.ait.client.screens.interior.InteriorSelectScreen;
 import mdteam.ait.client.screens.MonitorScreen;
 import mdteam.ait.client.screens.OwOFindPlayerScreen;
 import mdteam.ait.client.screens.interior.OwOInteriorSelectScreen;
@@ -348,7 +348,6 @@ public class AITModClient implements ClientModInitializer {
     public void entityRenderRegister() {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
-        EntityRendererRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, TardisRealRenderer::new);
     }
 
     private boolean keyHeldDown = false;

@@ -54,7 +54,7 @@ public class FindPlayerScreen extends TardisScreen {
     }
 
     public void onPress() {
-        if (tardis() != null) {
+        if (getTardis() != null) {
             // todo;
         }
     }
@@ -83,7 +83,7 @@ public class FindPlayerScreen extends TardisScreen {
     protected void drawPlayerText(DrawContext context) {
         int i = ((this.height - this.backgroundHeight) / 2);
         int j = ((this.width - this.backgroundWidth) / 2);
-        if (tardis() == null) {
+        if (getTardis() == null) {
             return;
         }
         if(MinecraftClient.getInstance().player == null) return;

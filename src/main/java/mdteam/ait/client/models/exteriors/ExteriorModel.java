@@ -2,7 +2,6 @@ package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
-import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -59,10 +58,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
-
-    public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 
