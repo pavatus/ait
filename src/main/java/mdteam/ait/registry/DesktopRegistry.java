@@ -42,8 +42,8 @@ public class DesktopRegistry {
     public static List<TardisDesktopSchema> toList() {
         return List.copyOf(REGISTRY.values());
     }
-    public static TardisDesktopSchema[] toArray() {
-        return (TardisDesktopSchema[]) REGISTRY.values().stream().toArray();
+    public static ArrayList<TardisDesktopSchema> toArrayList() {
+        return new ArrayList<>(REGISTRY.values());
     }
     public static Iterator<TardisDesktopSchema> iterator() {
         return REGISTRY.values().iterator();

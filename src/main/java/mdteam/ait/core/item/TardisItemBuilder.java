@@ -66,7 +66,7 @@ public class TardisItemBuilder extends Item {
     public static TardisDesktopSchema findRandomDesktop() {
         Random rnd = new Random();
         int randomized = rnd.nextInt(Math.abs(DesktopRegistry.size()));
-        return DesktopRegistry.toArray()[randomized];
+        return DesktopRegistry.toArrayList().get(randomized);
     }
     public static TardisDesktopSchema findRandomDesktop(Tardis tardis) { // todo this may cause looping crashes
         TardisDesktopSchema found = findRandomDesktop();
