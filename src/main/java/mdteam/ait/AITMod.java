@@ -119,6 +119,9 @@ public class AITMod implements ModInitializer {
             if (tardis.isGrowth() || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
                 return true; // cancelled
 
+            if (tardis.getDoor().isOpen() || !tardis.getDoor().locked())
+                return true;
+
             for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
                 TardisCriterions.TAKEOFF.trigger((ServerPlayerEntity) player);
             }
