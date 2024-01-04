@@ -4,6 +4,7 @@ import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.FlightUtil;
+import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
@@ -56,7 +57,7 @@ public class FlightHandler extends TardisLink {
         }
     }
     private boolean shouldAutoLand() {
-        return PropertiesHandler.willAutoPilot(tardis().getHandlers().getProperties());
+        return PropertiesHandler.willAutoPilot(tardis().getHandlers().getProperties()) || !TardisUtil.isInteriorNotEmpty(this.tardis()); // todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
     }
 
     public int getDurationAsPercentage() {
