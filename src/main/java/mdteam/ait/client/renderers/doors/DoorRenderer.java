@@ -66,7 +66,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         int green = 1;
         int blue = 1;
 
-        if (DependencyChecker.hasPortals() && entity.getTardis().getTravel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING) /*&& entity.getTardis().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED*/) {
+        if (DependencyChecker.hasPortals() && entity.getTardis().getTravel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING) && entity.getTardis().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED) {
             BlockPos pos = entity.getTardis().getTravel().getPosition();
             World world = entity.getTardis().getTravel().getPosition().getWorld();
             if (world != null) {
