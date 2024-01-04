@@ -209,6 +209,7 @@ public class Tardis {
         removeFuel(0.01 * FuelHandler.TARDIS_MAX_FUEL);
 
         PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE, b);
+        // Loqor is stinky
         this.markDirty();
     }
     public boolean isSiegeBeingHeld() {
