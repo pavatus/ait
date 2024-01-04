@@ -22,6 +22,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -42,6 +43,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import static mdteam.ait.AITMod.AIT_CONFIG;
 
+// todo this class is like a monopoly, im gonna slash it into little corporate pieces
 public class TardisTravel extends TardisLink {
 
     private State state = State.LANDED;
@@ -118,6 +120,61 @@ public class TardisTravel extends TardisLink {
         return true;
     }*/
 
+    public void tick(MinecraftServer server) {
+        super.tick(server);
+
+        this.tickDemat();
+        this.tickMat();
+    }
+
+    /**
+     * Gets the number of ticks that the Tardis has been materialising for
+     * @return ticks
+     */
+    public int getMatTicks() {
+        return PropertiesHandler.getInt(this.getTardis().getHandlers().getProperties(), PropertiesHandler.MAT_TICKS);
+    }
+    private void setMatTicks(int ticks) {
+        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.MAT_TICKS, ticks);
+        this.getTardis().markDirty();
+    }
+    private void tickMat() {
+        if (this.getState() != State.MAT) {
+            if (getMatTicks() != 0) setMatTicks(0);
+            return;
+        }
+
+        setMatTicks(getMatTicks() + 1);
+
+        if (getMatTicks() > (FlightUtil.getSoundLength(getMatSoundForCurrentState()) * 20)) {
+            this.forceLand();
+            this.setMatTicks(0);
+        }
+    }
+    /**
+     * Gets the number of ticks that the Tardis has been dematerialising for
+     * @return ticks
+     */
+    public int getDematTicks() {
+        return PropertiesHandler.getInt(this.getTardis().getHandlers().getProperties(), PropertiesHandler.DEMAT_TICKS);
+    }
+    private void setDematTicks(int ticks) {
+        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.DEMAT_TICKS, ticks);
+        this.getTardis().markDirty();
+    }
+    private void tickDemat() {
+        if (this.getState() != State.DEMAT) {
+            if (getDematTicks() != 0) setDematTicks(0);
+            return;
+        }
+
+        setDematTicks(getDematTicks() + 1);
+
+        if (getDematTicks() > (FlightUtil.getSoundLength(getMatSoundForCurrentState()) * 20)) {
+            this.toFlight();
+            this.setDematTicks(0);
+        }
+    }
     /**
      * Performs a crash for the Tardis.
      * If the Tardis is not in flight state, the crash will not be executed.
@@ -265,19 +322,20 @@ public class TardisTravel extends TardisLink {
         this.runAnimations(blockEntity);
 
         // Schedule a timer task to transition to flight state after the materialize sound finishes playing
-        Timer animTimer = new Timer();
-        TardisTravel travel = this;
-
-        animTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (travel.getState() != State.DEMAT) {
-                    return;
-                }
-
-                travel.toFlight();
-            }
-        }, (long) FlightUtil.getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
+        // Replaced by the tick method, if you believe this to be better msg me on discord and tell me why
+//        Timer animTimer = new Timer();
+//        TardisTravel travel = this;
+//
+//        animTimer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                if (travel.getState() != State.MAT) {
+//                    return;
+//                }
+//
+//                travel.forceLand(blockEntity);
+//            }
+//        }, (long) FlightUtil.getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
     }
 
     public void dematerialise(boolean withRemat) {
@@ -324,18 +382,20 @@ public class TardisTravel extends TardisLink {
 
         // A definite thing just in case the animation isnt run
 
-        Timer animTimer = new Timer();
-        TardisTravel travel = this;
+        // Replaced by the tick method, if you believe this to be better msg me on discord and tell me why
 
-        animTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (travel.getState() != State.DEMAT)
-                    return;
-
-                travel.toFlight();
-            }
-        }, (long) FlightUtil.getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
+//        Timer animTimer = new Timer();
+//        TardisTravel travel = this;
+//
+//        animTimer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                if (travel.getState() != State.DEMAT)
+//                    return;
+//
+//                travel.toFlight();
+//            }
+//        }, (long) FlightUtil.getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
     }
 
     private void failToMaterialise() {

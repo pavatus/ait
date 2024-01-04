@@ -298,6 +298,7 @@ public class Tardis {
         }
 
         this.tickSiegeMode();
+        this.getTravel().tick(server);
     }
 
     /**
