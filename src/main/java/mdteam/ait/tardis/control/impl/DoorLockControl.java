@@ -12,7 +12,7 @@ import static mdteam.ait.tardis.handler.DoorHandler.useDoor;
 
 public class DoorLockControl extends Control {
     public DoorLockControl() {
-        super("door");
+        super("door_lock");
     }
 
     @Override
