@@ -1,7 +1,7 @@
 package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.animation.ExteriorAnimation;
+import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.ExteriorBlock;
@@ -41,7 +41,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
-import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 import static mdteam.ait.tardis.TardisTravel.State.MAT;
 import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
@@ -206,9 +205,7 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
     }
 
     public ExteriorAnimation getAnimation() {
-        if(this.getTardis() != null)
-            if(this.getTardis().getTravel().getState() != LANDED)
-                this.verifyAnimation();
+        this.verifyAnimation();
 
         return this.animation;
     }

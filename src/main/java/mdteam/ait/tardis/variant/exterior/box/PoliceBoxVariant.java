@@ -1,8 +1,8 @@
 package mdteam.ait.tardis.variant.exterior.box;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.animation.ExteriorAnimation;
-import mdteam.ait.client.animation.PulsatingAnimation;
+import mdteam.ait.tardis.animation.ExteriorAnimation;
+import mdteam.ait.tardis.animation.PulsatingAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.PoliceBoxExterior;

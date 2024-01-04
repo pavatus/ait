@@ -1,13 +1,16 @@
-package mdteam.ait.client.animation;
+package mdteam.ait.tardis.animation;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
 
-@Deprecated
-public class ClassicAnimation extends ExteriorAnimation {
-    public ClassicAnimation(ExteriorBlockEntity exterior) {
+public class PulsatingAnimation extends ExteriorAnimation {
+    private int pulses = 0;
+    private int PULSE_LENGTH = 20;
+    private float frequency, intensity;
+
+    public PulsatingAnimation(ExteriorBlockEntity exterior) {
         super(exterior);
     }
 
@@ -18,47 +21,62 @@ public class ClassicAnimation extends ExteriorAnimation {
 
         TardisTravel.State state = exterior.getTardis().getTravel().getState();
 
+
         if (this.timeLeft < 0)
             this.setupAnimation(exterior.getTardis().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 
         if (state == TardisTravel.State.DEMAT) {
-            this.alpha = (float) this.timeLeft / (this.startTime);
-            this.timeLeft--;
+            this.setAlpha(1f - getPulseAlpha());
+            timeLeft--;
 
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.MAT) {
-            // Maybe this will fix the class animation taking too long
-            this.alpha = ((float) this.timeLeft / (this.startTime) - 1) * -1;
-            this.timeLeft--;
-            this.setAlpha(this.alpha);
+            timeLeft--;
+
+            if (timeLeft < startTime)
+                this.setAlpha(getPulseAlpha());
+            else
+                this.setAlpha(0f);
+
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.LANDED/* && alpha != 1f*/) {
             this.setAlpha(1f);
         }
     }
 
+    public float getPulseAlpha() {
+        if (timeLeft != maxTime && timeLeft % PULSE_LENGTH == 0)
+            pulses++;
+
+        return (float) ((float) (pulses / Math.floor((double) maxTime / PULSE_LENGTH)) + (Math.cos(timeLeft * frequency) * intensity)); // @TODO find alternative math or ask cwaig if we're allowed to use this, loqor says "its just math" but im still saying this just in case.
+    }
+
     @Override
     public void setupAnimation(TardisTravel.State state) {
-        if (exterior.getTardis() == null) {
+        if (exterior.getTardis() == null || exterior.getTardis().getExterior().getType() == null) {
             AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
             alpha = 0f; // just make me vanish.
             return;
         }
+
         MatSound sound = exterior.getTardis().getExterior().getType().getSound(state);
 
-        this.timeLeft = sound.timeLeft();
-        this.maxTime = sound.maxTime();
-        this.startTime = sound.startTime();
+        this.tellClientsToSetup(state);
+
+        timeLeft = sound.timeLeft();
+        maxTime = sound.maxTime();
+        frequency = sound.frequency();
+        intensity = sound.intensity();
+        startTime = sound.startTime();
 
         if (state == TardisTravel.State.DEMAT) {
-            this.timeLeft = 390;
-            this.maxTime = 390;
-            this.startTime = 390;
-            this.alpha = 1f;
+            alpha = 1f;
         } else if (state == TardisTravel.State.MAT) {
-            this.alpha = 0f;
+            alpha = 0f;
         } else if (state == TardisTravel.State.LANDED) {
-            this.alpha = 1f;
+            alpha = 1f;
         }
+
+        pulses = 0;
     }
 }
