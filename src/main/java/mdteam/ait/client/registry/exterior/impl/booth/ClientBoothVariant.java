@@ -1,17 +1,9 @@
 package mdteam.ait.client.registry.exterior.impl.booth;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.animation.ExteriorAnimation;
-import mdteam.ait.client.animation.PulsatingAnimation;
 import mdteam.ait.client.models.exteriors.BoothExteriorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.registry.DoorRegistry;
-import mdteam.ait.tardis.exterior.BoothExterior;
-import mdteam.ait.tardis.variant.door.BoothDoorVariant;
-import mdteam.ait.tardis.variant.door.DoorSchema;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
 
 // a useful class for creating tardim variants as they all have the same filepath you know

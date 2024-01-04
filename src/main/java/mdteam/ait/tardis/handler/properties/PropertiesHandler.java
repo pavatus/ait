@@ -29,7 +29,6 @@ public class PropertiesHandler { // todo move more things over to properties
     public static final String HADS_ENABLED = "hads_enabled";
     public static final String IS_IN_ACTIVE_DANGER = "is_in_active_danger";
     public static final String HAS_POWER = "power";
-    public static final String POWER_DELTA = "power_delta"; // the amount of ticks since the last power change goes from 0 -> MAX on enabled and MAX -> 0 on disable | CLIENT ONLY!! | ( idk why i put it here then )
     public static final String SIEGE_MODE = "siege_mode";
     public static final String IS_IN_REAL_FLIGHT = "is_in_real_flight";
 
@@ -181,7 +180,6 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(FuelHandler.FUEL_COUNT, 1000d);
         map.put(FuelHandler.REFUELING, false);
         map.put(HAS_POWER, true);
-        map.put(POWER_DELTA, 0);
         map.put(SIEGE_MODE, false);
         map.put(SIEGE_HELD, false);
         map.put(IS_IN_REAL_FLIGHT, false);

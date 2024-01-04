@@ -1,16 +1,13 @@
 package mdteam.ait.tardis.variant.exterior.growth;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.animation.ExteriorAnimation;
-import mdteam.ait.client.animation.PulsatingAnimation;
+import mdteam.ait.tardis.animation.ExteriorAnimation;
+import mdteam.ait.tardis.animation.PulsatingAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
-import mdteam.ait.tardis.exterior.EasterHeadExterior;
 import mdteam.ait.tardis.exterior.GrowthExterior;
-import mdteam.ait.tardis.variant.door.CapsuleDoorVariant;
 import mdteam.ait.tardis.variant.door.CoralGrowthDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
-import mdteam.ait.tardis.variant.door.EasterHeadDoorVariant;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;

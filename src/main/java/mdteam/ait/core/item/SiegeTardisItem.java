@@ -4,6 +4,9 @@ import mdteam.ait.core.AITItems;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.client.ClientTardis;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
@@ -37,6 +40,8 @@ public class SiegeTardisItem extends Item {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
+
+        if (world.isClient()) return;
 
          if (getTardis(stack) == null) {
              stack.setCount(0);
@@ -180,6 +185,9 @@ public class SiegeTardisItem extends Item {
         }
 
         UUID uuid = data.getUuid("tardis-uuid");
+        if (TardisUtil.isClient())
+            return ClientTardisManager.getInstance().getLookup().get(uuid);
+
         return ServerTardisManager.getInstance().getTardis(uuid);
     }
     public static void setTardis(ItemStack stack, Tardis tardis) {
