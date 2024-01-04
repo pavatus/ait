@@ -221,6 +221,8 @@ public class ConsoleControlEntity extends BaseControlEntity {
                 this.createDelay(this.control.getDelayLength());
             }
 
+            this.getTardis(world).getHandlers().getSequencing().add(this.control);
+
             return this.control.runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server
         }
         return false;

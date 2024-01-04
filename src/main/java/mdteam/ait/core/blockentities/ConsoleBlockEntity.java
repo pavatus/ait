@@ -90,7 +90,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             nbt.putString("variant", variant.toString());
 
         super.writeNbt(nbt);
-        nbt.putString("tardis", this.tardisId.toString());
+        if (this.tardisId != null)
+            nbt.putString("tardis", this.tardisId.toString());
     }
 
     @Override

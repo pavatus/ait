@@ -1,5 +1,7 @@
 package mdteam.ait.tardis.control.sequences;
 
+import com.mojang.datafixers.TypeRewriteRule;
+import mdteam.ait.registry.SequenceRegistry;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.handler.TardisLink;
 import mdteam.ait.tardis.util.FlightUtil;
@@ -22,6 +24,14 @@ public class SequenceHandler extends TardisLink {
     public void add(Control control) {
         recent.add(control);
         ticks = 0;
+        this.compareToSequences();
+    }
+
+    private void compareToSequences() {
+        for (Sequence sequence : SequenceRegistry.REGISTRY) {
+            if (sequence.isFinished(this.recent))
+                sequence.execute(this.tardis());
+        }
     }
 
     @Override

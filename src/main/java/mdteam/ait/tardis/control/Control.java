@@ -72,4 +72,19 @@ public class Control {
     public boolean shouldHaveDelay() {
         return true;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Control control = (Control) o;
+
+        return getId().equals(control.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }

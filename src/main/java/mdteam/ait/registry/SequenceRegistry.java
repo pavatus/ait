@@ -1,8 +1,13 @@
 package mdteam.ait.registry;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.tardis.control.impl.HandBrakeControl;
+import mdteam.ait.tardis.control.impl.RefuelerControl;
+import mdteam.ait.tardis.control.impl.ThrottleControl;
+import mdteam.ait.tardis.control.impl.pos.XControl;
 import mdteam.ait.tardis.control.sequences.Sequence;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.util.FlightUtil;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -16,6 +21,8 @@ public class SequenceRegistry {
     }
 
     public static void init() {
-
+        register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "takeoff"), (tardis -> {
+            FlightUtil.travelTo(tardis, tardis.destination());
+        }), new HandBrakeControl(), new RefuelerControl(), new XControl()));
     }
 }

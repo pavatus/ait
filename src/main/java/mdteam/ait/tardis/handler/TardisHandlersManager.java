@@ -2,6 +2,7 @@ package mdteam.ait.tardis.handler;
 
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.TardisTickable;
+import mdteam.ait.tardis.control.sequences.SequenceHandler;
 import mdteam.ait.tardis.handler.loyalty.LoyaltyHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHolder;
 import net.minecraft.server.MinecraftServer;
@@ -25,6 +26,7 @@ public class TardisHandlersManager extends TardisLink {
     private final FuelHandler fuel;
     private final HADSHandler hads;
     private final FlightHandler flight;
+    private final SequenceHandler sequence;
 
     public TardisHandlersManager(UUID tardisId) {
         super(tardisId);
@@ -40,6 +42,7 @@ public class TardisHandlersManager extends TardisLink {
         this.fuel = new FuelHandler(tardisId);
         this.hads = new HADSHandler(tardisId);
         this.flight = new FlightHandler(tardisId);
+        this.sequence = new SequenceHandler(tardisId);
 
         generateTickables();
     }
@@ -60,6 +63,7 @@ public class TardisHandlersManager extends TardisLink {
         addTickable(getFuel());
         addTickable(getHADS());
         addTickable(getFlight());
+        // addTickable(getSequencing()); // todo sequences
     }
 
     protected void addTickable(TardisLink var) {
@@ -138,4 +142,5 @@ public class TardisHandlersManager extends TardisLink {
     public FlightHandler getFlight() {
         return flight;
     }
+    public SequenceHandler getSequencing() {return this.sequence;}
 }

@@ -25,4 +25,38 @@ public abstract class Sequence {
     }
 
     public abstract void execute(Tardis tardis);
+
+    public interface ExecuteSequence {
+        void run(Tardis tardis);
+    }
+    public static class Builder extends Sequence {
+
+        private final Identifier id;
+        private final List<Control> controls;
+        private final ExecuteSequence execute;
+
+        private Builder(Identifier id, ExecuteSequence execute, Control... controls) {
+            this.id = id;
+            this.controls = List.of(controls);
+            this.execute = execute;
+        }
+
+        public static Sequence create(Identifier id, ExecuteSequence execute, Control... controls) {
+            return new Builder(id, execute, controls);
+        }
+
+        @Override
+        public Identifier id() {
+            return this.id;
+        }
+
+        public List<Control> getControls() {
+            return this.controls;
+        }
+
+        @Override
+        public void execute(Tardis tardis) {
+            this.execute.run(tardis);
+        }
+    }
 }
