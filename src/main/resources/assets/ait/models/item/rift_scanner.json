@@ -817,101 +817,38 @@
 		}
 	],
 	"overrides": [
-		{
-			"predicate": {
-				"scanner": 0
-			},
-			"model": "ait:item/rift_scanner/e"
-		},
-		{
-			"predicate": {
-				"scanner": 0.5
-			},
-			"model": "ait:item/rift_scanner/ene"
-		},
-		{
-			"predicate": {
-				"scanner": 0.1
-			},
-			"model": "ait:item/rift_scanner/ese"
-		},
-		{
-			"predicate": {
-				"scanner": 0.15
-			},
-			"model": "ait:item/rift_scanner/n"
-		},
-		{
-			"predicate": {
-				"scanner": 0.2
-			},
-			"model": "ait:item/rift_scanner/ne"
-		},
-		{
-			"predicate": {
-				"scanner": 0.25
-			},
-			"model": "ait:item/rift_scanner/nne"
-		},
-		{
-			"predicate": {
-				"scanner": 0.3
-			},
-			"model": "ait:item/rift_scanner/nnw"
-		},
-		{
-			"predicate": {
-				"scanner": 0.35
-			},
-			"model": "ait:item/rift_scanner/nw"
-		},
-		{
-			"predicate": {
-				"scanner": 0.4
-			},
-			"model": "ait:item/rift_scanner/s"
-		},
-		{
-			"predicate": {
-				"scanner": 0.45
-			},
-			"model": "ait:item/rift_scanner/se"
-		},
-		{
-			"predicate": {
-				"scanner": 0.5
-			},
-			"model": "ait:item/rift_scanner/sse"
-		},
-		{
-			"predicate": {
-				"scanner": 0.55
-			},
-			"model": "ait:item/rift_scanner/ssw"
-		},
-		{
-			"predicate": {
-				"scanner": 0.6
-			},
-			"model": "ait:item/rift_scanner/sw"
-		},
-		{
-			"predicate": {
-				"scanner": 0.65
-			},
-			"model": "ait:item/rift_scanner/w"
-		},
-		{
-			"predicate": {
-				"scanner": 0.7
-			},
-			"model": "ait:item/rift_scanner/wnw"
-		},
-		{
-			"predicate": {
-				"scanner": 0.75
-			},
-			"model": "ait:item/rift_scanner/wsw"
-		}
+		{ "predicate": { "scanner": 0.000000 }, "model": "item/compass" },
+		{ "predicate": { "scanner": 0.015625 }, "model": "item/compass_17" },
+		{ "predicate": { "scanner": 0.046875 }, "model": "item/compass_18" },
+		{ "predicate": { "scanner": 0.078125 }, "model": "item/compass_19" },
+		{ "predicate": { "scanner": 0.109375 }, "model": "item/compass_20" },
+		{ "predicate": { "scanner": 0.140625 }, "model": "item/compass_21" },
+		{ "predicate": { "scanner": 0.171875 }, "model": "item/compass_22" },
+		{ "predicate": { "scanner": 0.203125 }, "model": "item/compass_23" },
+		{ "predicate": { "scanner": 0.234375 }, "model": "item/compass_24" },
+		{ "predicate": { "scanner": 0.265625 }, "model": "item/compass_25" },
+		{ "predicate": { "scanner": 0.296875 }, "model": "item/compass_26" },
+		{ "predicate": { "scanner": 0.328125 }, "model": "item/compass_27" },
+		{ "predicate": { "scanner": 0.359375 }, "model": "item/compass_28" },
+		{ "predicate": { "scanner": 0.390625 }, "model": "item/compass_29" },
+		{ "predicate": { "scanner": 0.421875 }, "model": "item/compass_30" },
+		{ "predicate": { "scanner": 0.453125 }, "model": "item/compass_31" },
+		{ "predicate": { "scanner": 0.484375 }, "model": "item/compass_00" },
+		{ "predicate": { "scanner": 0.515625 }, "model": "item/compass_01" },
+		{ "predicate": { "scanner": 0.546875 }, "model": "item/compass_02" },
+		{ "predicate": { "scanner": 0.578125 }, "model": "item/compass_03" },
+		{ "predicate": { "scanner": 0.609375 }, "model": "item/compass_04" },
+		{ "predicate": { "scanner": 0.640625 }, "model": "item/compass_05" },
+		{ "predicate": { "scanner": 0.671875 }, "model": "item/compass_06" },
+		{ "predicate": { "scanner": 0.703125 }, "model": "item/compass_07" },
+		{ "predicate": { "scanner": 0.734375 }, "model": "item/compass_08" },
+		{ "predicate": { "scanner": 0.765625 }, "model": "item/compass_09" },
+		{ "predicate": { "scanner": 0.796875 }, "model": "item/compass_10" },
+		{ "predicate": { "scanner": 0.828125 }, "model": "item/compass_11" },
+		{ "predicate": { "scanner": 0.859375 }, "model": "item/compass_12" },
+		{ "predicate": { "scanner": 0.890625 }, "model": "item/compass_13" },
+		{ "predicate": { "scanner": 0.921875 }, "model": "item/compass_14" },
+		{ "predicate": { "scanner": 0.953125 }, "model": "item/compass_15" },
+		{ "predicate": { "scanner": 0.984375 }, "model": "item/compass" }
 	]
 }
