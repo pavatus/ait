@@ -123,7 +123,6 @@ public class InteriorChangingHandler extends TardisLink {
             tardis().getHandlers().getAlarms().disable();
             return;
         }
-        if (!isGenerating()) return;
 
         if (!isInteriorEmpty()) {
             warnPlayers();
