@@ -11,6 +11,7 @@ import mdteam.ait.tardis.control.impl.RandomiserControl;
 import mdteam.ait.tardis.control.impl.pos.PosManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.TardisLink;
+import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -46,10 +47,9 @@ public class TardisTravel extends TardisLink {
     private State state = State.LANDED;
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
-    private static final double FORCE_LAND_TIMER = 15;
-    private static final double FORCE_FLIGHT_TIMER = 10;
     private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
     private AbsoluteBlockPos.Directed lastPosition;
+    private boolean crashing = false;
     private static final int CHECK_LIMIT = AIT_CONFIG.SEARCH_HEIGHT(); // todo move into a config
 
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
@@ -64,6 +64,10 @@ public class TardisTravel extends TardisLink {
         if(this.lastPosition == null) this.lastPosition = pos;
         this.destination = dest;
         this.state = state;
+    }
+
+    public boolean isCrashing() {
+        return this.crashing;
     }
 
     public void setPosition(AbsoluteBlockPos.Directed pos) {
@@ -86,12 +90,6 @@ public class TardisTravel extends TardisLink {
         return new AbsoluteBlockPos.Client(position, position.getDirection(), position.getWorld());
     }
 
-    public static int getSoundLength(MatSound sound) {
-        if (sound == null)
-            return (int) FORCE_LAND_TIMER;
-        return sound.maxTime() / 20;
-    }
-
     public Tardis getTardis() {
         if (this.tardisId == null && this.getPosition() != null) {
             Tardis found = TardisUtil.findTardisByPosition(this.getPosition());
@@ -100,17 +98,6 @@ public class TardisTravel extends TardisLink {
         }
 
         return this.tardis();
-    }
-
-    // todo use me in places where similar things are used
-    public void travelTo(AbsoluteBlockPos.Directed pos) {
-        this.setDestination(pos, true);
-
-        if (this.getState() == State.LANDED) {
-            this.dematerialise(true);
-        } else if (this.getState() == State.FLIGHT) {
-            this.materialise();
-        }
     }
 
     /*public boolean ifNotInFlightDemat(ServerPlayerEntity player) {
@@ -130,27 +117,6 @@ public class TardisTravel extends TardisLink {
         }
         return true;
     }*/
-    
-    public static String getMaterialiseDelayId(Tardis tardis) {
-        return tardis.getUuid().toString() + "_materialise_delay";
-    }
-    public static String getDematerialiseDelayId(Tardis tardis) {
-        return tardis.getUuid().toString() + "_dematerialise_delay";
-    }
-
-    public static boolean isMaterialiseOnCooldown(Tardis tardis) {
-        return DeltaTimeManager.isStillWaitingOnDelay(getMaterialiseDelayId(tardis));
-    }
-    public static boolean isDematerialiseOnCooldown(Tardis tardis) {
-        return DeltaTimeManager.isStillWaitingOnDelay(getDematerialiseDelayId(tardis));
-    }
-
-    public static void createMaterialiseDelay(Tardis tardis) {
-        DeltaTimeManager.createDelay(getMaterialiseDelayId(tardis), 2000L);
-    }
-    public static void createDematerialiseDelay(Tardis tardis) {
-        DeltaTimeManager.createDelay(getDematerialiseDelayId(tardis), 2000L);
-    }
 
     /**
      * Performs a crash for the Tardis.
@@ -161,6 +127,10 @@ public class TardisTravel extends TardisLink {
         if (this.getState() != TardisTravel.State.FLIGHT) {
             return;
         }
+
+        // If already crashing, return
+        if (this.crashing) return;
+
         // Increment the position manager by 1000
         this.getPosManager().increment = 1000;
         // Randomize the Tardis destination
@@ -218,6 +188,7 @@ public class TardisTravel extends TardisLink {
                 ),
                 true
         );
+        this.crashing = true;
         // Mark Tardis as dirty
         this.getTardis().markDirty();
         // Remove fuel from Tardis
@@ -228,11 +199,15 @@ public class TardisTravel extends TardisLink {
         TardisEvents.CRASH.invoker().onCrash(this.getTardis());
     }
 
+    public void materialise() {
+        this.materialise(false);
+    }
+
     /**
      * Materialises the Tardis, bringing it to the specified destination.
      * This method handles the logic of materialization, including sound effects, locking the Tardis, and setting the Tardis state.
      */
-    public void materialise() {
+    public void materialise(boolean ignoreChecks) {
         // Check if running on the client side, and if so, return early
         if (this.getDestination().getWorld().isClient()) {
             return;
@@ -246,13 +221,13 @@ public class TardisTravel extends TardisLink {
         world.getChunk(this.getDestination());
 
         // Check if the Tardis materialization is prevented by event listeners
-        if (TardisEvents.MAT.invoker().onMat(getTardis())) {
+        if (!ignoreChecks && TardisEvents.MAT.invoker().onMat(getTardis())) {
             failToMaterialise();
             return;
         }
 
         // Check if materialization is on cooldown and return if it is
-        if (TardisTravel.isMaterialiseOnCooldown(getTardis())) {
+        if (!ignoreChecks && FlightUtil.isMaterialiseOnCooldown(getTardis())) {
             return;
         }
 
@@ -302,7 +277,7 @@ public class TardisTravel extends TardisLink {
 
                 travel.toFlight();
             }
-        }, (long) getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
+        }, (long) FlightUtil.getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
     }
 
     public void dematerialise(boolean withRemat) {
@@ -330,7 +305,7 @@ public class TardisTravel extends TardisLink {
             return;
         }
 
-        if (TardisTravel.isDematerialiseOnCooldown(getTardis()))
+        if (FlightUtil.isDematerialiseOnCooldown(getTardis()))
             return; // cancelled
 
         DoorHandler.lockTardis(true, this.getTardis(), null, true);
@@ -360,7 +335,7 @@ public class TardisTravel extends TardisLink {
 
                 travel.toFlight();
             }
-        }, (long) getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
+        }, (long) FlightUtil.getSoundLength(this.getMatSoundForCurrentState()) * 1000L);
     }
 
     private void failToMaterialise() {
@@ -376,7 +351,7 @@ public class TardisTravel extends TardisLink {
         TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to land!"));
 
         // Create materialization delay and return
-        createMaterialiseDelay(this.getTardis());
+        FlightUtil.createMaterialiseDelay(this.getTardis());
         return;
     }
 
@@ -391,7 +366,7 @@ public class TardisTravel extends TardisLink {
             TardisUtil.getTardisDimension().playSound(null, this.getTardis().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
 
         TardisUtil.sendMessageToPilot(this.getTardis(), Text.literal("Unable to takeoff!")); // fixme translatable
-        createDematerialiseDelay(this.getTardis());
+        FlightUtil.createDematerialiseDelay(this.getTardis());
         return;
     }
 
@@ -516,12 +491,14 @@ public class TardisTravel extends TardisLink {
         this.setLastPosition(this.getPosition());
         this.setState(TardisTravel.State.FLIGHT);
         this.deleteExterior();
-        this.checkShouldRemat();
+        // this.checkShouldRemat();
     }
 
     public void forceLand(ExteriorBlockEntity blockEntity) {
         if (this.getState() != State.MAT)
             return;
+
+        this.crashing = false;
 
         this.setState(TardisTravel.State.LANDED);
         if (blockEntity != null)
@@ -560,6 +537,9 @@ public class TardisTravel extends TardisLink {
 
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
         this.destination = pos;
+
+        // todo this sometimes resets it back to 0
+        this.tardis().getHandlers().getFlight().recalculate();
 
         if (withChecks)
             this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
@@ -600,10 +580,10 @@ public class TardisTravel extends TardisLink {
         this.position.addBlockEntity(exterior);
 
         // jeeeez
-        boolean increaseCostOfTravelFromDimensionalTravel = lastPosition.getWorld().equals(this.position.getWorld());
-        double distance = Math.sqrt(this.position.getSquaredDistance(lastPosition.toCenterPos()));
-        double fuel_cost = (distance / 100) * (increaseCostOfTravelFromDimensionalTravel ? 10 : 1);
-        this.getTardis().removeFuel(fuel_cost);
+        // boolean increaseCostOfTravelFromDimensionalTravel = lastPosition.getWorld().equals(this.position.getWorld());
+        // double distance = Math.sqrt(this.position.getSquaredDistance(lastPosition.toCenterPos()));
+        // double fuel_cost = (distance / 100) * (increaseCostOfTravelFromDimensionalTravel ? 10 : 1);
+        // this.getTardis().removeFuel(fuel_cost);
     }
 
     public void deleteExterior() {

@@ -22,12 +22,15 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -246,6 +249,13 @@ public class Tardis {
         }
     }
 
+    public AbsoluteBlockPos.Directed position() {
+        return this.getTravel().getPosition();
+    }
+    public AbsoluteBlockPos.Directed destination() {
+        return this.getTravel().getDestination();
+    }
+
     /**
      * Called at the end of a servers tick
      *
@@ -274,9 +284,9 @@ public class Tardis {
         }
 
         // autoland stuff
-        if (getTravel().getState() == TardisTravel.State.FLIGHT && PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.AUTO_LAND)) {
-            getTravel().materialise();
-        }
+        // if (getTravel().getState() == TardisTravel.State.FLIGHT && PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.AUTO_LAND)) {
+        //     getTravel().materialise();
+        // }
 
         // fixme nuh uh i dont like it when it locks on land it makes me sadge, instead lock if it was locked - Loqor
 

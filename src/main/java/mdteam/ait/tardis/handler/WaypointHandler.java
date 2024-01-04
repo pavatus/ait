@@ -3,6 +3,7 @@ package mdteam.ait.tardis.handler;
 import mdteam.ait.core.item.WaypointItem;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.Waypoint;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -59,7 +60,7 @@ public class WaypointHandler extends TardisLink {
         if (!this.hasWaypoint()) return; // todo move this check to the DEMAT event so the fail to takeoff happens
 
         PropertiesHandler.setAutoPilot(this.tardis().getHandlers().getProperties(), true);
-        this.tardis().getTravel().travelTo(this.get());
+        FlightUtil.travelTo(tardis(), this.get());
     }
     public void setDestination() {
         if (!this.hasWaypoint()) return;

@@ -35,17 +35,16 @@ public class RandomiserControl extends Control {
     public static AbsoluteBlockPos.Directed randomiseDestination(Tardis tardis, int limit) {
         TardisTravel travel = tardis.getTravel();
         int increment = travel.getPosManager().increment;
-        AbsoluteBlockPos.Directed current = travel.getPosition();
         AbsoluteBlockPos.Directed dest = travel.getDestination();
-        ServerWorld world = (ServerWorld) current.getWorld();
+        ServerWorld world = (ServerWorld) dest.getWorld();
 
         BlockPos pos;
         int x, z;
 
         for (int i = 0; i <= limit; i++) {
-            x = current.getX() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
-            z = current.getZ() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
-            pos = new BlockPos(x, current.getY(), z);
+            x = dest.getX() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
+            z = dest.getZ() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
+            pos = new BlockPos(x, dest.getY(), z);
 
             travel.setDestination(new AbsoluteBlockPos.Directed(pos, dest.getWorld(), dest.getDirection()), false);
             if (world.getBiome(travel.getDestination()).isIn(BiomeTags.IS_OCEAN)) continue;

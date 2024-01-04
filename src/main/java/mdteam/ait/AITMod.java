@@ -26,6 +26,7 @@ import mdteam.ait.tardis.handler.InteriorChangingHandler;
 import mdteam.ait.tardis.handler.ServerHumHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.sound.HumSound;
+import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
@@ -136,13 +137,16 @@ public class AITMod implements ModInitializer {
         }));
 
         TardisEvents.MAT.register((tardis -> {
+            // Check that the tardis has finished flight
+            boolean flightDone = tardis.getHandlers().getFlight().hasFinishedFlight();
+
             // Check if the Tardis is on cooldown
-            boolean isCooldown = TardisTravel.isMaterialiseOnCooldown(tardis);
+            boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
 
             // Check if the destination is already occupied
             boolean isDestinationOccupied = !tardis.getTravel().getPosition().equals(tardis.getTravel().getDestination()) && !tardis.getTravel().checkDestination();
 
-            return isCooldown || isDestinationOccupied;
+            return !flightDone || isCooldown || isDestinationOccupied;
         }));
 
         TardisEvents.CRASH.register((tardis -> {

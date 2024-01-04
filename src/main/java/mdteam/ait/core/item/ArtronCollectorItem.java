@@ -47,9 +47,9 @@ public class ArtronCollectorItem extends Item {
         if (!(entity instanceof ServerPlayerEntity) || !selected) return;
 
         RiftChunk riftChunk = (RiftChunk) world.getChunk(entity.getBlockPos());
-        if (riftChunk.isRiftChunk() && riftChunk.getArtronLevels() > 0  && getFuel(stack) < COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelayId(stack)))) {
-            riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast five artron in the chunk
-            addFuel(stack, 2);
+        if (riftChunk.isRiftChunk() && riftChunk.getArtronLevels() >= 5  && getFuel(stack) < COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelayId(stack)))) {
+            riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 5); // we shouldn't need to check how much it has because we can't even get here if don't have atleast five artron in the chunk
+            addFuel(stack, 5);
             DeltaTimeManager.createDelay(getDelayId(stack), 500L);
         }
 

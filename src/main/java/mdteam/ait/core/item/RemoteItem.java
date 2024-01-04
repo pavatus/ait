@@ -2,6 +2,7 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.gui.screen.Screen;
@@ -77,23 +78,11 @@ public class RemoteItem extends Item {
                 if (world != TardisUtil.getTardisDimension()) {
                     world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
-                    TardisTravel travel = tardis.getTravel();
-
                     BlockPos temp = pos.up();
 
                     if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
-                    travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection().getOpposite()), true);
-                    // travel.toggleHandbrake();
-
-                    //FIXME: this is not how you do it! (cope)
-                    if (travel.getState() == LANDED) {
-                        PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
-                        travel.dematerialise(true);
-                    }
-                    if (travel.getState() == FLIGHT) {
-                        travel.materialise();
-                    }
+                    FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection().getOpposite()));
                 } else {
                     world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                     player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
@@ -120,5 +109,11 @@ public class RemoteItem extends Item {
                 : Text.translatable("tooltip.ait.remoteitem.notardis").getString();
 
         tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
+
+        if (tag.contains("tardis")) {
+            Tardis tardis = ServerTardisManager.getInstance().getTardis(UUID.fromString(tag.getString("tardis")));
+            if (tardis.getTravel().getState() != LANDED)
+                tooltip.add(Text.literal("→ " + tardis.getHandlers().getFlight().getDurationAsPercentage() + "%").formatted(Formatting.GOLD));
+        }
     }
 }
