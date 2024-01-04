@@ -75,17 +75,24 @@ public class WaypointItem extends Item {
             return;
         }
 
-        AbsoluteBlockPos.Directed pos = getPos(stack);
-        if (pos == null) return;
+        NbtCompound main = stack.getOrCreateNbt();
+
+        if (!(main.contains(POS_KEY))) return;
+
+        NbtCompound nbt = main.getCompound(POS_KEY);
+
+        BlockPos pos = NbtHelper.toBlockPos(nbt.getCompound("pos"));
+        String dimension = nbt.getString("dimension");
+        Direction dir = Direction.byId(nbt.getInt("direction"));
 
         tooltip.add(Text.translatable("waypoint.position.tooltip").append(Text.literal(
                 " > " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ()))
                 .formatted(Formatting.BLUE));
         tooltip.add(Text.translatable("waypoint.direction.tooltip").append(Text.literal(
-            " > " + pos.getDirection().asString().toUpperCase()))
+            " > " + dir.asString().toUpperCase()))
                 .formatted(Formatting.BLUE));
         tooltip.add(Text.translatable("waypoint.dimension.tooltip").append(Text.literal(
-            " > " + convertWorldValueToModified(pos.getDimension().getValue())))
+            " > " + convertWorldValueToModified(dimension)))
                 .formatted(Formatting.BLUE));
     }
 
@@ -100,17 +107,12 @@ public class WaypointItem extends Item {
 
         if (!nbt.contains(POS_KEY)) return null;
 
-        System.out.println(nbt);
-
         return AbsoluteBlockPos.Directed.fromNbt(nbt.getCompound(POS_KEY));
     }
     public static void setPos(ItemStack stack, AbsoluteBlockPos.Directed pos) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
         nbt.put(POS_KEY, pos.toNbt());
-
-        System.out.println(pos);
-        System.out.println(getPos(stack));
     }
     public static boolean hasPos(ItemStack stack) {
         return stack.getOrCreateNbt().contains(POS_KEY);
