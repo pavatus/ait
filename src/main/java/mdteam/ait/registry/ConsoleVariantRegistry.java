@@ -39,6 +39,7 @@ public class ConsoleVariantRegistry {
     public static ConsoleVariantSchema HARTNELL_KELT;
     public static ConsoleVariantSchema CORAL_GREEN;
     public static ConsoleVariantSchema CORAL_BLUE;
+    public static ConsoleVariantSchema CORAL_WHITE;
     public static ConsoleVariantSchema TEMP; // @TODO implement the new hudolin when its made again
 
     public static void init() {
@@ -55,6 +56,7 @@ public class ConsoleVariantRegistry {
         // Coral variants
         CORAL_GREEN = register(new GreenCoralVariant());
         CORAL_BLUE = register(new BlueCoralVariant());
+        CORAL_WHITE = register(new WhiteCoralVariant());
 
         // "Temp" variants
         //TEMP = register(new TempVariant());

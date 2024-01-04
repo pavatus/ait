@@ -15,7 +15,7 @@ public class DoorControl extends Control {
     private SoundEvent soundEvent = SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF;
 
     public DoorControl() {
-        super("door");
+        super("door_control");
     }
 
     @Override

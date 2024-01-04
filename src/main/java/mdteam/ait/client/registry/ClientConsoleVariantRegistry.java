@@ -36,6 +36,7 @@ public class ClientConsoleVariantRegistry {
     public static ClientConsoleVariantSchema HARTNELL_KELT;
     public static ClientConsoleVariantSchema CORAL_GREEN;
     public static ClientConsoleVariantSchema CORAL_BLUE;
+    public static ClientConsoleVariantSchema CORAL_WHITE;
 
     public static void init() {
         // Borealis variants
@@ -50,5 +51,6 @@ public class ClientConsoleVariantRegistry {
         // Coral variants
         CORAL_GREEN = register(new ClientGreenCoralVariant());
         CORAL_BLUE = register(new ClientBlueCoralVariant());
+        CORAL_WHITE = register(new ClientWhiteCoralVariant());
     }
 }

@@ -7,6 +7,10 @@ import mdteam.ait.tardis.control.impl.pos.IncrementControl;
 import mdteam.ait.tardis.control.impl.pos.XControl;
 import mdteam.ait.tardis.control.impl.pos.YControl;
 import mdteam.ait.tardis.control.impl.pos.ZControl;
+import mdteam.ait.tardis.control.impl.waypoint.ApplyWaypointControl;
+import mdteam.ait.tardis.control.impl.waypoint.EjectWaypointControl;
+import mdteam.ait.tardis.control.impl.waypoint.InsertWaypointControl;
+import mdteam.ait.tardis.control.impl.waypoint.SetWaypointControl;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
@@ -14,26 +18,31 @@ import org.joml.Vector3f;
 public class CoralConsole extends ConsoleSchema {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/coral");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
-            new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.12499998f, 0.099999994f), new Vector3f(-0.37109375f, 0.4999998565763235f, 0.9755859375f)), // 0
-            new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.125f, 0.099999994f), new Vector3f(-0.041015625f, 0.4999998565763235f, 0.9755859375f)), //1
-            new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.125f, 0.1f), new Vector3f(-0.19687499664723873f, 0.47500018775463104f, 0.9875000109896064f)), // 2
-            new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.075f, 0.075f), new Vector3f(0.24960938468575478f, 0.6249999515712261f, 0.6625000154599547f)), // 3
-            new ControlTypes(new DoorControl(), EntityDimensions.changing(0.1125f, 0.07499997f), new Vector3f(0.7843749998137355f, 0.5249998569488525f, -0.5015625143423676f)), // 4
-            new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.1125f, 0.07499997f), new Vector3f(0.6601562481373549f, 0.5249997079372406f, -0.7000000029802322f)), // 4.5?
-            new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.1f, 0.0875f), new Vector3f(0.10312499292194843f, 0.4875000938773155f, 0.9656250094994903f)), // 5
-            new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.20000002f, 0.1125f), new Vector3f(0.7125000013038516f, 0.5375015260651708f, -0.1628906326368451f)), // 6
-            new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.17500004f, 0.15f), new Vector3f(-7.812418043613434E-4f, 0.4874999513849616f, -0.7267578281462193f)), // 7
-            new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.20000002f, 0.099999994f), new Vector3f(-0.34687500167638063f, 0.46500000916421413f, -0.9546875022351742f)), // 8
-            new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.125f, 0.0875f), new Vector3f(-0.6753906365483999f, 0.4875000948086381f, -0.8363281516358256f)), // 9
-            new ControlTypes(new XControl(), EntityDimensions.changing(0.074999996f, 0.099999994f), new Vector3f(-0.5355468858033419f, 0.5875000013038516f, -0.3718750197440386f)), // 10
-            new ControlTypes(new YControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.6503906389698386f, 0.5500000007450581f, -0.43632814567536116f)), // 11
-            new ControlTypes(new ZControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7750000171363354f, 0.5125000961124897f, -0.5113281467929482f)), // 12
-            new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.06249999f, 0.125f), new Vector3f(-0.9531250046566129f, 0.4624999985098839f, -0.3609375013038516f)), // 13
-            new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-1.1007812544703484f, 0.4750000946223736f, 0.150390625f)), // 14
-            new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7218750026077032f, 0.5749999508261681f, 0.10117187909781933f)), // 15
-            new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.099999994f, 0.099999994f), new Vector3f(-0.9156250208616257f, 0.482499978505075f, 0.43984376080334187f)), // 16
-            new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.1125f, 0.08749999f), new Vector3f(0.30000001285225153f, 0.4874998088926077f, -1.042968776077032f)), // 17
-            new ControlTypes(new PowerControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(0.516015631146729f, 0.5750001845881343f, 0.40332030411809683f)),
+            new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.18749999f, 0.16250001f), new Vector3f(0.016406255774199963f, 0.7500000037252903f, -0.6609375244006515f)),
+            new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.16250001f, 0.22500002f), new Vector3f(1.0734375165775418f, 0.2624999964609742f, -0.8734375275671482f)),
+            new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.06249999f, 0.1f), new Vector3f(-0.7453125081956387f, 0.5500003825873137f, 0.20078123826533556f)),
+            new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.12500001f, 0.11250001f), new Vector3f(0.7000000067055225f, 0.5499999988824129f, -0.20039063785225153f)),
+            new ControlTypes(new DoorControl(), EntityDimensions.changing(0.1375f, 0.14999999f), new Vector3f(1.222656256519258f, 0.2624996146187186f, 0.7230468932539225f)),
+            new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.099999994f, 0.09999998f), new Vector3f(-1.1023437762632966f, 0.5499996189028025f, 0.5757812689989805f)),
+            new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.17500001f, 0.16250001f), new Vector3f(1.026562513783574f, 0.5625001918524504f, 0.5898437444120646f)),
+            new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.36249992f, 0.31249997f), new Vector3f(0.3859374951571226f, 0.8250013394281268f, 0.6128906365483999f)),
+            new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.17500004f, 0.15f), new Vector3f(-0.3125000046566129f, 0.45000019017606974f, -0.8390625016763806f)),
+            new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.23750003f, 0.099999994f), new Vector3f(0.7398437662050128f, 0.7150001563131809f, -0.40507811680436134f)),
+            new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.1125f, 0.112500004f), new Vector3f(-7.812399417161942E-4f, 0.5875001922249794f, 1.2890625316649675f)),
+            new ControlTypes(new XControl(), EntityDimensions.changing(0.099999994f, 0.099999994f), new Vector3f(0.9898437727242708f, 0.450000093318522f, 0.3039062600582838f)),
+            new ControlTypes(new YControl(), EntityDimensions.changing(0.112500004f, 0.1f), new Vector3f(1.0140625247731805f, 0.45000018924474716f, 0.10195313300937414f)),
+            new ControlTypes(new ZControl(),  EntityDimensions.changing(0.1f, 0.1f), new Vector3f(1.0640625273808837f, 0.43750028498470783f, -0.08671874366700649f)),
+            new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(0.2218750175088644f, 0.6125000976026058f, -0.49882812704890966f)),
+            new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.15f, 0.15f), new Vector3f(-0.0015624836087226868f, 0.37499990314245224f, 1.337890642695129f)),
+            new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.1125f, 0.1125f), new Vector3f(-1.185156256891787f, 0.3999998066574335f, 0.6890625087544322f)),
+            new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.21250002f, 0.125f), new Vector3f(-0.6140624955296516f, 0.42000007536262274f, 0.8394531309604645f)),
+            new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.125f, 0.099999994f), new Vector3f(7.812455296516418E-4f, 0.5749997152015567f, -1.1804687520489097f)),
+            new ControlTypes(new PowerControl(), EntityDimensions.changing(0.15f, 0.16250001f), new Vector3f(-1.0218750229105353f, 0.5500002857297659f, -0.5851562647148967f)),
+            new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.1125f, 0.29999998f), new Vector3f(-1.258593762293458f, 0.24999980442225933f, 0.5769531261175871f)),
+            new ControlTypes(new HADSControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(-0.3843750134110451f, 0.5750000923871994f, -0.5351562639698386f)),
+            new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.074999996f), new Vector3f(0.80078125f, 0.537500761449337f, 0.07656250149011612f)),
+            new ControlTypes(new ApplyWaypointControl(), EntityDimensions.changing(0.07499999f, 0.074999996f), new Vector3f(0.8007812770083547f, 0.5375005733221769f, -0.02343749813735485f)),
+            new ControlTypes(new InsertWaypointControl(), EntityDimensions.changing(0.1375f, 0.1125f), new Vector3f(0.7257812488824129f, 0.5875006653368473f, 0.2390625039115548f)),
     };
     public CoralConsole() {
         super(REFERENCE, "coral");
