@@ -59,6 +59,8 @@ public class DesktopRegistry {
     }
 
     public static void syncToEveryone() {
+        if (TardisUtil.getServer() == null) return;
+
         for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
             syncToClient(player);
         }
