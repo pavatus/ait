@@ -584,8 +584,11 @@ public class TardisTravel extends TardisLink {
             return;
 
         this.crashing = false;
-        if (this.getSpeed() > 0) {
-            this.setSpeed(0);
+
+        if (PropertiesHandler.willAutoPilot(this.getTardis().getHandlers().getProperties())) {
+            if (this.getSpeed() > 0) {
+                this.setSpeed(0);
+            }
         }
 
         this.setState(TardisTravel.State.LANDED);
