@@ -879,7 +879,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Throttle Control Movements
 		ModelPart throttle = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_1").getChild("bone45");
-		throttle.roll = console.getTardis().getTravel().getState() == FLIGHT || console.getTardis().getTravel().getState() == DEMAT ? throttle.roll  + 1: throttle.roll;
+		throttle.roll = throttle.roll + (console.getTardis().getTravel().getSpeed() / (float) TardisTravel.MAX_SPEED);
 
 		// Handbrake Control Movements
 		ModelPart handbrake = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_2").getChild("bone46");

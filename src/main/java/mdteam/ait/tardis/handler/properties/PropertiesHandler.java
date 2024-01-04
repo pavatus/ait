@@ -33,6 +33,7 @@ public class PropertiesHandler { // todo move more things over to properties
     public static final String IS_IN_REAL_FLIGHT = "is_in_real_flight";
     public static final String DEMAT_TICKS = "demat_ticks";
     public static final String MAT_TICKS = "mat_ticks";
+    public static final String SPEED = "speed";
 
     // Should these methods be in the holder instead?
 
@@ -187,6 +188,7 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(IS_IN_REAL_FLIGHT, false);
         map.put(DEMAT_TICKS,0);
         map.put(MAT_TICKS,0);
+        map.put(SPEED,0);
         unlockAllFreebies(map);
 
         return map;

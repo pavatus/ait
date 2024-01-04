@@ -71,7 +71,9 @@ public class ServerTardisTravel extends TardisTravel implements TardisTickable {
     public void startTick(MinecraftServer server) {}
 
     @Override
-    public void tick(MinecraftServer server) {}
+    public void tick(MinecraftServer server) {
+        super.tick(server);
+    }
 
     @Override
     public void tick(ServerWorld world) {}

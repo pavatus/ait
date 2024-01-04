@@ -36,11 +36,11 @@ public class FlightHandler extends TardisLink {
     }
 
     private boolean isInFlight() {
-        return this.tardis().getTravel().getState().equals(TardisTravel.State.FLIGHT);
+        return this.tardis().getTravel().getState().equals(TardisTravel.State.FLIGHT) || this.tardis().getTravel().getState().equals(TardisTravel.State.MAT);
     }
 
     private boolean isFlightTicking() {
-        return this.isInFlight() && this.targetTicks != 0;
+        return this.tardis().getTravel().getState() == TardisTravel.State.FLIGHT && this.targetTicks != 0;
     }
 
     public boolean hasFinishedFlight() {
@@ -62,7 +62,7 @@ public class FlightHandler extends TardisLink {
     public int getDurationAsPercentage() {
         if (this.targetTicks == 0 || this.flightTicks == 0) {
             if (this.tardis().getTravel().getState() == TardisTravel.State.DEMAT) return 0;
-            if (this.tardis().getTravel().getState() == TardisTravel.State.MAT) return 100;
+            // if (this.tardis().getTravel().getState() == TardisTravel.State.MAT) return 100;
             return 100;
         }
 
@@ -78,6 +78,10 @@ public class FlightHandler extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
 
+        if ((this.targetTicks > 0 || this.flightTicks > 0) && this.tardis().getTravel().getState() == TardisTravel.State.LANDED) {
+            this.recalculate();
+        }
+
         if (this.isInFlight() && !this.tardis().getTravel().isCrashing() && !(this.flightTicks >= this.targetTicks) && this.targetTicks == 0) {
             this.recalculate();
         }
@@ -87,7 +91,7 @@ public class FlightHandler extends TardisLink {
                 this.onFlightFinished();
             }
 
-            this.flightTicks++;
+            this.flightTicks = this.flightTicks + this.tardis().getTravel().getSpeed();
         }
     }
 }

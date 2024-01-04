@@ -7,7 +7,9 @@ import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 
 public class FlightUtil {
     private static final int BASE_FLIGHT_TICKS = 5 * 20; //  seconds minimum
@@ -48,6 +50,14 @@ public class FlightUtil {
         return (int) (BASE_FLIGHT_TICKS + (distance / 10f) + (hasDirChanged ? covertSecondsToTicks(5) : 0) + (hasDimChanged ? covertSecondsToTicks(30) : 0));
     }
 
+    public static AbsoluteBlockPos.Directed getPositionFromPercentage(AbsoluteBlockPos.Directed source, AbsoluteBlockPos.Directed destination, int percentage) {
+        // https://stackoverflow.com/questions/33907276/calculate-point-between-two-coordinates-based-on-a-percentage
+
+        float per = percentage / 100f;
+        BlockPos diff = destination.subtract(source);
+        return new AbsoluteBlockPos.Directed(source.add(new BlockPos((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per))), destination.getDimension(), destination.getDirection());
+    }
+
     public static int getSoundLength(MatSound sound) {
         if (sound == null)
             return (int) FORCE_LAND_TIMER;
@@ -73,10 +83,10 @@ public class FlightUtil {
     }
 
     public static void createMaterialiseDelay(Tardis tardis) {
-        DeltaTimeManager.createDelay(getMaterialiseDelayId(tardis), 2000L);
+        DeltaTimeManager.createDelay(getMaterialiseDelayId(tardis), 5000L);
     }
     public static void createDematerialiseDelay(Tardis tardis) {
-        DeltaTimeManager.createDelay(getDematerialiseDelayId(tardis), 2000L);
+        DeltaTimeManager.createDelay(getDematerialiseDelayId(tardis), 5000L);
     }
 
     public static void playSoundAtConsole(Tardis tardis, SoundEvent sound, SoundCategory category, float volume, float pitch) {
