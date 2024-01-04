@@ -50,6 +50,9 @@ public class Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         return false;
     }
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
+        return runServer(tardis, player, world);
+    }
 
     public SoundEvent getSound() {
         return SoundEvents.BLOCK_NOTE_BLOCK_BIT.value();

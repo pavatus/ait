@@ -164,7 +164,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         }
 
         if (hand == Hand.MAIN_HAND)
-            this.run(player, player.getWorld());
+            this.run(player, player.getWorld(), false);
 
         return ActionResult.SUCCESS;
     }
@@ -175,13 +175,13 @@ public class ConsoleControlEntity extends BaseControlEntity {
             if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
                 controlEditorHandler(player);
             } else
-                this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld());
+                this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld(), true);
         }
 
         return super.damage(source, source.getAttacker() instanceof PlayerEntity ? 0 : amount);
     }
 
-    public boolean run(PlayerEntity player, World world) {
+    public boolean run(PlayerEntity player, World world, boolean leftClick) {
         Random random = new Random();
         int chance_int = random.nextInt(1, 10_000);
         if (chance_int == 72) {
@@ -223,7 +223,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
             // this.getTardis(world).getHandlers().getSequencing().add(this.control);
 
-            return this.control.runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world); // i dont gotta check these cus i know its server
+            return this.control.runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world, leftClick); // i dont gotta check these cus i know its server
         }
         return false;
     }

@@ -23,14 +23,14 @@ public class ThrottleControl extends Control {
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
 
         if(tardis.isInDanger())
             return false;
 
         TardisTravel travel = tardis.getTravel();
 
-        if (!player.isSneaking()) {
+        if (!leftClick) {
             travel.increaseSpeed();
         } else {
             travel.decreaseSpeed();
@@ -42,5 +42,10 @@ public class ThrottleControl extends Control {
     @Override
     public SoundEvent getSound() {
         return AITSounds.DEMAT_LEVER_PULL;
+    }
+
+    @Override
+    public boolean shouldFailOnNoPower() {
+        return false;
     }
 }
