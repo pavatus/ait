@@ -25,7 +25,7 @@ public class ThrottleControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
 
-        if(tardis.isInDanger() || tardis.getHandlers().getInteriorChanger().isGenerating())
+        if(tardis.isInDanger())
             return false;
 
         TardisTravel travel = tardis.getTravel();
