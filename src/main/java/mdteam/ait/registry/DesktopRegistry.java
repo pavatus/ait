@@ -5,14 +5,19 @@ import com.google.gson.JsonParser;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.desktops.*;
+import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
@@ -23,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DesktopRegistry {
+    public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_desktops");
     private static final HashMap<Identifier, TardisDesktopSchema> REGISTRY = new HashMap<>();
     public static TardisDesktopSchema register(TardisDesktopSchema schema) {
         return register(schema, schema.id());
@@ -50,6 +56,29 @@ public class DesktopRegistry {
     }
     public static int size() {
         return REGISTRY.size();
+    }
+
+    public static void syncToEveryone() {
+        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
+            syncToClient(player);
+        }
+    }
+
+    public static void syncToClient(ServerPlayerEntity player) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(REGISTRY.size());
+        for (TardisDesktopSchema schema : REGISTRY.values()) {
+            buf.encodeAsJson(DatapackDesktop.CODEC, schema);
+        }
+        ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
+    }
+    public static void readFromServer(PacketByteBuf buf) {
+        REGISTRY.clear();
+        int size = buf.readInt();
+
+        for (int i = 0; i < size; i++) {
+            register(buf.decodeAsJson(DatapackDesktop.CODEC));
+        }
     }
 
     public static TardisDesktopSchema BOTANIST;
@@ -104,7 +133,7 @@ public class DesktopRegistry {
 
                 for(Identifier id : manager.findResources("desktop", filename -> filename.getPath().endsWith(".json")).keySet()) {
                     try(InputStream stream = manager.getResource(id).get().getInputStream()) {
-                        DatapackDesktop created = DatapackDesktop.fromInputStream(stream);
+                        TardisDesktopSchema created = DatapackDesktop.fromInputStream(stream);
 
                         if (created == null) {
                             stream.close();
@@ -118,6 +147,8 @@ public class DesktopRegistry {
                         AITMod.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
                     }
                 }
+
+                syncToEveryone();
             }
         });
     }

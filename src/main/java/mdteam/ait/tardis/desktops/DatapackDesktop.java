@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DatapackDesktop extends TardisDesktopSchema {
-    public static final Codec<DatapackDesktop> CODEC = RecordCodecBuilder.create(
+    public static final Codec<TardisDesktopSchema> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     Identifier.CODEC.fieldOf("id").forGetter(TardisDesktopSchema::id)
             ).apply(instance, (DatapackDesktop::new)));
@@ -24,11 +24,11 @@ public class DatapackDesktop extends TardisDesktopSchema {
         super(id, new DesktopPreviewTexture(DesktopPreviewTexture.pathFromDesktopId(id)));
     }
 
-    public static DatapackDesktop fromInputStream(InputStream stream) {
+    public static TardisDesktopSchema fromInputStream(InputStream stream) {
         return fromJson(JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject());
     }
-    public static DatapackDesktop fromJson(JsonObject json) {
-        AtomicReference<DatapackDesktop> created = new AtomicReference<>();
+    public static TardisDesktopSchema fromJson(JsonObject json) {
+        AtomicReference<TardisDesktopSchema> created = new AtomicReference<>();
 
         CODEC.decode(JsonOps.INSTANCE, json)
                 .get()

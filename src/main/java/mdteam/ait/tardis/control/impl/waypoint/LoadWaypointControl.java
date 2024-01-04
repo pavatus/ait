@@ -5,9 +5,9 @@ import mdteam.ait.tardis.control.Control;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
-public class ApplyWaypointControl extends Control {
-    public ApplyWaypointControl() {
-        super("apply_waypoint");
+public class LoadWaypointControl extends Control {
+    public LoadWaypointControl() {
+        super("load_waypoint");
     }
 
     @Override

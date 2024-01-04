@@ -2,6 +2,7 @@ package mdteam.ait.tardis.util;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
@@ -153,7 +154,7 @@ public class AbsoluteBlockPos extends BlockPos {
             return new Directed(pos, dir);
         }
     }
-
+    // i dont understand how to use this class, it needs documentation. I don't understand why the world variable is there if the client can't get worlds other than its own
     public static class Client extends AbsoluteBlockPos.Directed {
         private final World world;
 
