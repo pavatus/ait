@@ -2,15 +2,12 @@ package mdteam.ait.tardis.variant.exterior;
 
 import com.google.gson.*;
 import mdteam.ait.AITMod;
-import mdteam.ait.client.animation.ExteriorAnimation;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;

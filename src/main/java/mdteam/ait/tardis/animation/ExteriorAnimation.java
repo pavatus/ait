@@ -1,4 +1,4 @@
-package mdteam.ait.client.animation;
+package mdteam.ait.tardis.animation;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;

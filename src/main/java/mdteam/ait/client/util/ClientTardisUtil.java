@@ -24,6 +24,7 @@ public class ClientTardisUtil {
     public static final int MAX_ALARM_DELTA_TICKS = 30;
     private static int alarmDeltaTick;
     private static boolean alarmDeltaDirection; // true for increasing false for decreasing
+    private static int powerDeltaTick;
 
     public static void changeExteriorWithScreen(UUID uuid, String exterior, String variant, boolean variantchange) {
         PacketByteBuf buf = PacketByteBufs.create();
@@ -103,14 +104,14 @@ public class ClientTardisUtil {
     }
     public static int getPowerDelta() {
         if (!isPlayerInATardis()) return 0;
-        return PropertiesHandler.getInt(getCurrentTardis().getHandlers().getProperties(), PropertiesHandler.POWER_DELTA);
+        return powerDeltaTick;
     }
     public static float getPowerDeltaForLerp() {
         return (float) getPowerDelta() / MAX_POWER_DELTA_TICKS;
     }
     public static void setPowerDelta(int delta) {
         if (!isPlayerInATardis()) return;
-        PropertiesHandler.set(getCurrentTardis().getHandlers().getProperties(), PropertiesHandler.POWER_DELTA, delta);
+        powerDeltaTick = delta;
     }
 
     public static void tickAlarmDelta() {
