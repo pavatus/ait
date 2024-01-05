@@ -60,7 +60,7 @@ public class WaypointItem extends Item {
         if (getPos(itemStack) == null) setPos(itemStack, console.getTardis().getTravel().getPosition());
 
         console.getTardis().getHandlers().getWaypoints().markHasCartridge();
-        console.getTardis().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)), true);
+        console.getTardis().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
         player.setStackInHand(hand, ItemStack.EMPTY);
 
         world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
@@ -96,9 +96,12 @@ public class WaypointItem extends Item {
                 .formatted(Formatting.BLUE));
     }
 
-    public static ItemStack create(AbsoluteBlockPos.Directed pos) {
+    public static ItemStack create(Waypoint pos) {
         ItemStack stack = new ItemStack(AITItems.WAYPOINT_CARTRIDGE);
         setPos(stack, pos);
+        if (pos.hasName()) {
+            stack.setCustomName(Text.literal(pos.name()));
+        }
         return stack;
     }
 

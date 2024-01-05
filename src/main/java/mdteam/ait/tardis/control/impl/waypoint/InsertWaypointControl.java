@@ -9,6 +9,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 
 import static mdteam.ait.core.item.WaypointItem.getPos;
@@ -33,7 +34,7 @@ public class InsertWaypointControl extends Control {
         if (getPos(itemStack) == null) setPos(itemStack, tardis.getTravel().getPosition());
 
         tardis.getHandlers().getWaypoints().markHasCartridge();
-        tardis.getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)), true);
+        tardis.getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
         player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
         world.playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
