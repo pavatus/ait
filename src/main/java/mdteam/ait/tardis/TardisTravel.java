@@ -261,6 +261,8 @@ public class TardisTravel extends TardisLink {
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
             }
         }
+        this.getTardis().setLockedTardis(false);
+        this.getTardis().getHandlers().getDoor().openDoors();
         // Load the chunk of the Tardis destination
         this.getDestination().getWorld().getChunk(this.getTardis().getTravel().getDestination());
         // Enable alarm and disable anti-mavity properties for Tardis

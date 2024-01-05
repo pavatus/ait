@@ -2,6 +2,7 @@ package mdteam.ait.client.models.consoles;
 
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;

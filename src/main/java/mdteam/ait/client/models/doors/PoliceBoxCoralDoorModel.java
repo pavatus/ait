@@ -27,13 +27,13 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
 
         ModelPartData cube_r1 = Posts.addChild("cube_r1", ModelPartBuilder.create().uv(236, 42).cuboid(-18.0F, -60.0F, -17.0F, 4.0F, 56.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -32.0F, 0.0F, 1.5708F, 0.0F));
 
-        ModelPartData cube_r2 = Posts.addChild("cube_r2", ModelPartBuilder.create().uv(251, 41).cuboid(-2.0F, -30.0F, 17.0F, 3.0F, 30.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -34.5F, -18.0F, -1.5708F, 1.4835F, -1.5708F));
+        ModelPartData cube_r2 = Posts.addChild("cube_r2", ModelPartBuilder.create().uv(236, 102).cuboid(-2.0F, -30.0F, 17.0F, 3.0F, 30.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -34.5F, -18.0F, -1.5708F, 1.4835F, -1.5708F));
 
-        ModelPartData cube_r3 = Posts.addChild("cube_r3", ModelPartBuilder.create().uv(251, 66).cuboid(-2.0F, 0.0F, 17.0F, 3.0F, 31.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -34.6743F, -18.0F, 1.5708F, 1.4835F, 1.5708F));
+        ModelPartData cube_r3 = Posts.addChild("cube_r3", ModelPartBuilder.create().uv(236, 127).cuboid(-2.0F, 0.0F, 17.0F, 3.0F, 31.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -34.6743F, -18.0F, 1.5708F, 1.4835F, 1.5708F));
 
-        ModelPartData cube_r4 = Posts.addChild("cube_r4", ModelPartBuilder.create().uv(251, 66).cuboid(-2.0F, 0.0F, 17.0F, 3.0F, 31.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-38.0F, -34.6743F, -18.0F, 1.5708F, 1.4835F, 1.5708F));
+        ModelPartData cube_r4 = Posts.addChild("cube_r4", ModelPartBuilder.create().uv(251, 127).cuboid(-2.0F, 0.0F, 17.0F, 3.0F, 31.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-38.0F, -34.6743F, -18.0F, 1.5708F, 1.4835F, 1.5708F));
 
-        ModelPartData cube_r5 = Posts.addChild("cube_r5", ModelPartBuilder.create().uv(251, 41).cuboid(-2.0F, -30.0F, 17.0F, 3.0F, 30.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-38.0F, -34.5F, -18.0F, -1.5708F, 1.4835F, -1.5708F));
+        ModelPartData cube_r5 = Posts.addChild("cube_r5", ModelPartBuilder.create().uv(251, 102).cuboid(-2.0F, -30.0F, 17.0F, 3.0F, 30.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-38.0F, -34.5F, -18.0F, -1.5708F, 1.4835F, -1.5708F));
 
         ModelPartData cube_r6 = Posts.addChild("cube_r6", ModelPartBuilder.create().uv(251, 41).cuboid(-17.0F, -60.0F, -18.0F, 3.0F, 56.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -32.0F, -3.1416F, 0.0F, 3.1416F));
 

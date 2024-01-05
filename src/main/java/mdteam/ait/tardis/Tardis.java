@@ -225,6 +225,8 @@ public class Tardis {
         // if (!isGrowth())
         //     this.getHandlers().tick(server);
 
+        // @TODO if tnt explodes in the interior (near the console), then it should crash
+
         if (isGrowth() && getDoor().isBothClosed() && !getHandlers().getInteriorChanger().isGenerating())
             getDoor().openDoors();
         if (isGrowth() && getDoor().locked() && !getHandlers().getInteriorChanger().isGenerating())

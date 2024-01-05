@@ -208,6 +208,18 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK))
                     .criterion(FabricRecipeProvider.hasItem(Items.GREEN_DYE), FabricRecipeProvider.conditionsFromItem(Items.GREEN_DYE))
                     .criterion(FabricRecipeProvider.hasItem(Items.GOLD_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.GOLD_NUGGET)));
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.HAMMER, 1)
+                    .pattern("DSD")
+                    .pattern(" A ")
+                    .pattern(" T ")
+                    .input('D', Items.DRIED_KELP)
+                    .input('S', Items.STRING)
+                    .input('A', Items.IRON_AXE)
+                    .input('T', Items.STICK)
+                    .criterion(FabricRecipeProvider.hasItem(Items.DRIED_KELP), FabricRecipeProvider.conditionsFromItem(Items.DRIED_KELP))
+                    .criterion(FabricRecipeProvider.hasItem(Items.STRING), FabricRecipeProvider.conditionsFromItem(Items.STRING))
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_AXE), FabricRecipeProvider.conditionsFromItem(Items.IRON_AXE))
+                    .criterion(FabricRecipeProvider.hasItem(Items.STICK), FabricRecipeProvider.conditionsFromItem(Items.STICK)));
             generateSmithingRecipes(provider);
             return provider;
         })));
@@ -285,6 +297,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             // Controls
             provider.addSound("controls/demat_lever_pull", AITSounds.DEMAT_LEVER_PULL);
             provider.addSound("controls/handbrake_lever_pull", AITSounds.HANDBRAKE_LEVER_PULL);
+            provider.addSound("controls/handbrake_up", AITSounds.HANDBRAKE_UP);
+            provider.addSound("controls/handbrake_down", AITSounds.HANDBRAKE_DOWN);
+            provider.addSound("controls/crank", AITSounds.CRANK);
             provider.addSound("controls/knock", AITSounds.KNOCK);
             provider.addSound("controls/snap", AITSounds.SNAP);
 
@@ -374,6 +389,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
         provider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
         provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
+        provider.addTranslation(AITItems.HAMMER, "Hammer");
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");

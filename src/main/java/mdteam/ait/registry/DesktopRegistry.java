@@ -83,39 +83,13 @@ public class DesktopRegistry {
         }
     }
 
-    public static TardisDesktopSchema BOTANIST;
-    public static TardisDesktopSchema CAVE;
-    public static TardisDesktopSchema COPPER;
     public static TardisDesktopSchema DEFAULT_CAVE;
     public static TardisDesktopSchema DEV;
-    public static TardisDesktopSchema OFFICE;
-    public static TardisDesktopSchema PRISTINE;
-    public static TardisDesktopSchema REGAL;
-    public static TardisDesktopSchema TYPE_40;
-    public static TardisDesktopSchema NEWBURY;
-    public static TardisDesktopSchema VICTORIAN;
-    public static TardisDesktopSchema WAR;
-    public static TardisDesktopSchema CRYSTALLINE;
-    public static TardisDesktopSchema CORAL;
-    public static TardisDesktopSchema TOYOTA;
 
     private static void initAitDesktops() {
-        // AIT's Desktops
-        BOTANIST = register(new BotanistDesktop());
-        CAVE = register(new CaveDesktop());
-        COPPER = register(new CopperDesktop());
+        // AIT's Default (non-datapack) Desktops
         DEFAULT_CAVE = register(new DefaultCaveDesktop());
         DEV = register(new DevDesktop());
-        OFFICE = register(new OfficeDesktop());
-        REGAL = register(new RegalDesktop());
-        TYPE_40 = register(new Type40Desktop());
-        NEWBURY = register(new NewburyDesktop());
-        VICTORIAN = register(new VictorianDesktop());
-        // WAR = register(new WarDesktop());
-        PRISTINE = register(new PristineDesktop());
-        CRYSTALLINE = register(new CrystallineDesktop());
-        CORAL = register(new CoralDesktop());
-        TOYOTA = register(new ToyotaDesktop());
     }
 
     public static void init() {

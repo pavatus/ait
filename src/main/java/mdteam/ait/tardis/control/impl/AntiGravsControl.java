@@ -1,10 +1,12 @@
 package mdteam.ait.tardis.control.impl;
 
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 
 public class AntiGravsControl extends Control {
@@ -20,6 +22,11 @@ public class AntiGravsControl extends Control {
         messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED));
 
         return true;
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.HANDBRAKE_LEVER_PULL;
     }
 
     public void messagePlayer(ServerPlayerEntity player, boolean autopilot) {

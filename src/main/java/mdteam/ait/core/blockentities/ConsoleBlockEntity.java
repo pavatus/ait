@@ -64,7 +64,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     private UUID tardisId;
     private Identifier type;
     private Identifier variant;
-    private int timeInSeconds;
+    private boolean wasPowered = false;
     private boolean needsReloading = true; // this is to ensure we get properly synced when reloaded yup ( does not work for multipalery : (
 
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
@@ -329,6 +329,11 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         desktop.setConsolePos(new AbsoluteBlockPos.Directed(
                 this.pos, TardisUtil.getTardisDimension(), this.getCachedState().get(HorizontalDirectionalBlock.FACING))
         );
+    }
+
+    public boolean wasPowered() {
+        if(this.getTardis() == null) return false;
+        return this.wasPowered ^ this.getTardis().hasPower();
     }
 
     public void checkAnimations() {

@@ -33,6 +33,9 @@ public class AITSounds implements NeptuneSoundEventInit {
     // Controls
     public static final SoundEvent DEMAT_LEVER_PULL = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/demat_lever_pull"));
     public static final SoundEvent HANDBRAKE_LEVER_PULL = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/handbrake_lever_pull"));
+    public static final SoundEvent HANDBRAKE_UP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/handbrake_up"));
+    public static final SoundEvent HANDBRAKE_DOWN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/handbrake_down"));
+    public static final SoundEvent CRANK = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/crank"));
     public static final SoundEvent KNOCK = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/knock"));
     public static final SoundEvent SNAP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/snap"));
 

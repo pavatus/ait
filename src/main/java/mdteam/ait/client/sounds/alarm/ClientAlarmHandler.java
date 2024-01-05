@@ -77,13 +77,13 @@ public class ClientAlarmHandler extends SoundHandler {
             this.startIfNotPlaying(getInteriorCloister());
 
             ClientShakeUtil.shake(0.15f);
-            if (client != null && client.getCameraEntity() != null) {
+            /*if (client != null && client.getCameraEntity() != null) {
                 toggleShader(true);
                 ShaderUtils.load();
-            }
+            }*/
         } else {
             this.stopSounds();
-            toggleShader(false);
+            /*toggleShader(false);*/
         }
     }
 }

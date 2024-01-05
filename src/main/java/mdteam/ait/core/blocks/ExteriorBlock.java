@@ -45,13 +45,13 @@ import org.jetbrains.annotations.Nullable;
 public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final VoxelShape LEDGE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 32.0, 16.0),
+    public static final VoxelShape LEDGE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
-    public static final VoxelShape LEDGE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 14.0, 32.0, 16.0),
+    public static final VoxelShape LEDGE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 11.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, 0, 19.5,1, 16));
-    public static final VoxelShape LEDGE_SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 14.0),
+    public static final VoxelShape LEDGE_SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 11.0),
             Block.createCuboidShape(0, 0, 0, 16,1, 19.5));
-    public static final VoxelShape LEDGE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(2.0, 0.0, 0.0, 16.0, 32.0, 16.0),
+    public static final VoxelShape LEDGE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(5.0, 0.0, 0.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
 
     public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 32.0, 16.0),
@@ -127,7 +127,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).getTardis() == null)
-            return getLedgeShape(state, world, pos);
+            return getNormalShape(state, world, pos);
 
         if (((ExteriorBlockEntity) blockEntity).getTardis().isSiegeMode())
             return SIEGE_SHAPE;
@@ -135,11 +135,11 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         // todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
         if (DependencyChecker.hasPortals())
             if (((ExteriorBlockEntity) blockEntity).getTardis().getDoor().isOpen() && ((ExteriorBlockEntity) blockEntity).getTardis().getExterior().getType().hasPortals()) // for some reason this check totally murders fps ??
-                return VoxelShapes.empty();
+                return getLedgeShape(state, world, pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).getTardis().getTravel().getState();
         if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
-            return getLedgeShape(state, world, pos);
+            return getNormalShape(state, world, pos);
 
         return VoxelShapes.empty();
     }
@@ -282,7 +282,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
             TardisUtil.getTardisDimension().playSound(null, fallingTardisEntity.getTardis().getDesktop().getConsolePos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
         PropertiesHandler.set(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, false);
-        PropertiesHandler.set(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, false);
+        PropertiesHandler.set(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, PropertiesHandler.getBool((fallingTardisEntity.getTardis().getHandlers().getProperties()), PropertiesHandler.ALARM_ENABLED));
         DoorHandler.lockTardis(PropertiesHandler.getBool(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), fallingTardisEntity.getTardis(), null, false);
         fallingTardisEntity.getTardis().markDirty();
     }

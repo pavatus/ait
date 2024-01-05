@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.control.impl;
 
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
@@ -23,7 +24,7 @@ public class PowerControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return SoundEvents.BLOCK_LEVER_CLICK;
+        return AITSounds.HANDBRAKE_LEVER_PULL;
     }
     @Override
     public boolean shouldFailOnNoPower() {

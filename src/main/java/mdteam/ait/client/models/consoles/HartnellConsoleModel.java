@@ -1,6 +1,7 @@
 package mdteam.ait.client.models.consoles;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.TardisTravel;
@@ -784,9 +785,6 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		ModelPartData bone171 = light_3.addChild("bone171", ModelPartBuilder.create().uv(0, 67).cuboid(2.9F, -7.75F, -0.05F, 1.0F, 7.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 		return TexturedModelData.of(modelData, 256, 256);
-	}
-	@Override
-	public void setAngles(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 	}
 
 	@Override

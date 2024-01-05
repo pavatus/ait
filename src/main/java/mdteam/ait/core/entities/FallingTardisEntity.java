@@ -112,7 +112,8 @@ public class FallingTardisEntity extends Entity {
             fallingBlockEntity.setTardisId(exterior.getTardis().getUuid());
 
             PropertiesHandler.setBool(exterior.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, true);
-            PropertiesHandler.setBool(exterior.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
+            // @TODO idk if we should have the alarm enabled when its falling that feels weird
+            //PropertiesHandler.setBool(exterior.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
             exterior.getTardis().markDirty();
         }
         world.setBlockState(pos, state.getFluidState().getBlockState(), 3);

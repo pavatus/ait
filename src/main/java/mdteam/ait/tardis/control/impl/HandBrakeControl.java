@@ -31,6 +31,8 @@ public class HandBrakeControl extends Control {
         super("handbrake");
     }
 
+    private SoundEvent soundEvent = AITSounds.HANDBRAKE_UP;
+
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
 
@@ -43,11 +45,12 @@ public class HandBrakeControl extends Control {
 
         tardis.markDirty();
 
+        this.soundEvent = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
+
         messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
 
-        if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
-            tardis.getTravel().crash();
-        }
+        if (tardis.getTravel().getState() == TardisTravel.State.DEMAT) tardis.getTravel().toFlight();
+        if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) tardis.getTravel().crash();
 
         return true;
     }
@@ -60,7 +63,7 @@ public class HandBrakeControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.HANDBRAKE_LEVER_PULL;
+        return this.soundEvent;
     }
 
     @Override

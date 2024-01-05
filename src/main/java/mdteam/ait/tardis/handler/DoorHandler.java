@@ -2,6 +2,8 @@ package mdteam.ait.tardis.handler;
 
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.entities.BaseControlEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.Tardis;
@@ -66,7 +68,7 @@ public class DoorHandler extends TardisLink {
                 });
     }
     private boolean shouldSucc() {
-        return tardis().getTravel().getState() == FLIGHT && this.isOpen();
+        return TardisUtil.getTardisDimension().getBlockEntity(tardis().getDesktop().getDoorPos()) instanceof DoorBlockEntity && (tardis().getTravel().getState() == FLIGHT || tardis().getTravel().getState() == CRASH) && this.isOpen();
     }
 
     // Remember to markDirty for these setters!!
