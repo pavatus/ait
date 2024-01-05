@@ -125,7 +125,7 @@ public class TardisTravel extends TardisLink {
         this.tickDemat();
         this.tickMat();
 
-        if (this.getSpeed() > 0 && this.getState() == State.LANDED) {
+        if (this.getSpeed() > 0 && this.getState() == State.LANDED && !(PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE))) {
             this.dematerialise(PropertiesHandler.willAutoPilot(this.tardis().getHandlers().getProperties()));
         }
         if (this.getSpeed() == 0 && this.getState() == State.FLIGHT) {
