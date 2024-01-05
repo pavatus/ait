@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "server.ChunkMixin",
+    "server.ItemEntityMixin",
     "server.PortalMixin",
     "server.ServerPlayerInteractionManagerMixin"
   ],
@@ -12,10 +13,10 @@
     "client.ClientPlayerInteractionManagerMixin",
     "client.DefaultLogoMixin",
     "client.TitleScreenMixin",
+    "client.rendering.BGRendererMixin",
     "client.rendering.GameRendererMixin",
     "client.rendering.PlayerPoseRendererMixin",
-    "client.rendering.WindowMixin",
-    "client.rendering.BGRendererMixin"
+    "client.rendering.WindowMixin"
   ],
   "injectors": {
     "defaultRequire": 1

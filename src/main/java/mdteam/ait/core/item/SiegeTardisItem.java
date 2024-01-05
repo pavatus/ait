@@ -96,9 +96,7 @@ public class SiegeTardisItem extends Item {
             return ActionResult.FAIL;
         }
 
-        tardis.getTravel().setPosition(fromItemContext(context));
-        tardis.getTravel().placeExterior();
-        tardis.setSiegeBeingHeld(false);
+        placeTardis(tardis, fromItemContext(context));
         player.getMainHandStack().setCount(0);
 
         if (player.isCreative()) {
@@ -168,6 +166,11 @@ public class SiegeTardisItem extends Item {
         tardis.getTravel().deleteExterior();
         player.getInventory().insertStack(create(tardis));
         player.getInventory().markDirty();
+    }
+    public static void placeTardis(Tardis tardis, AbsoluteBlockPos.Directed pos) {
+        tardis.getTravel().setPosition(pos);
+        tardis.getTravel().placeExterior();
+        tardis.setSiegeBeingHeld(false);
     }
 
     public static ItemStack create(Tardis tardis) {

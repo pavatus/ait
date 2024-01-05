@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class FlightSound extends PositionedLoopingSound {
     private static final Random rnd = new Random();
-    private static final int PITCH_CHANGE_TICK = FlightUtil.covertSecondsToTicks(4);
+    private static final int PITCH_CHANGE_TICK = FlightUtil.convertSecondsToTicks(4);
     private int ticks = 0;
 
     public FlightSound(SoundEvent soundEvent, SoundCategory soundCategory, BlockPos pos, float volume) {

@@ -9,7 +9,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
 public class FlightUtil {
     private static final int BASE_FLIGHT_TICKS = 5 * 20; //  seconds minimum
@@ -38,7 +37,7 @@ public class FlightUtil {
         }
     }
 
-    public static int covertSecondsToTicks(int seconds) {
+    public static int convertSecondsToTicks(int seconds) {
         return seconds * 20;
     }
 
@@ -47,7 +46,7 @@ public class FlightUtil {
         boolean hasDirChanged = !(source.getDirection().equals(destination.getDirection()));
         boolean hasDimChanged = !(source.getDimension().equals(destination.getDimension()));
 
-        return (int) (BASE_FLIGHT_TICKS + (distance / 10f) + (hasDirChanged ? covertSecondsToTicks(5) : 0) + (hasDimChanged ? covertSecondsToTicks(30) : 0));
+        return (int) (BASE_FLIGHT_TICKS + (distance / 10f) + (hasDirChanged ? convertSecondsToTicks(5) : 0) + (hasDimChanged ? convertSecondsToTicks(30) : 0));
     }
 
     public static AbsoluteBlockPos.Directed getPositionFromPercentage(AbsoluteBlockPos.Directed source, AbsoluteBlockPos.Directed destination, int percentage) {
