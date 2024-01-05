@@ -20,6 +20,7 @@ import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.handler.FlightHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -293,6 +294,7 @@ public class TardisUtil {
         };
     }
     public static void teleportOutside(Tardis tardis, ServerPlayerEntity player) {
+        AbsoluteBlockPos.Directed pos = tardis.getTravel().getState() == TardisTravel.State.FLIGHT ? FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage()) : tardis.position();
         TardisUtil.teleportWithDoorOffset(player, tardis.getDoor().getExteriorPos());
     }
 

@@ -57,7 +57,7 @@ public class DoorHandler extends TardisLink {
                 .filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
                 .forEach(entity -> {
                     // Calculate the motion vector away from the door
-                    Vec3d motion = this.getDoorPos().toCenterPos().subtract(entity.getPos()).normalize().multiply(0.1);
+                    Vec3d motion = this.getDoorPos().offset(this.getDoorPos().getDirection().getOpposite()).toCenterPos().subtract(entity.getPos()).normalize().multiply(0.1);
 
                     // Apply the motion to the entity
                     entity.setVelocity(entity.getVelocity().add(motion));
