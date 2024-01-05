@@ -33,9 +33,9 @@ public class FlightSound extends PositionedLoopingSound {
     }
 
     private static float getRandomPitch() {
-        if (ClientSoundManager.getFlight().hasThrottleAndHandbrakeDown()) {
-            int speed = ClientTardisUtil.getCurrentTardis().getTravel().getSpeed();
+        int speed = ClientTardisUtil.getCurrentTardis().getTravel().getSpeed();
 
+        if (ClientSoundManager.getFlight().hasThrottleAndHandbrakeDown()) {
             // todo i hate switch
             return switch (speed) {
                 default -> 1.0f;
@@ -45,6 +45,11 @@ public class FlightSound extends PositionedLoopingSound {
             };
         }
 
-        return rnd.nextFloat(0.95f, 1.1f);
+        return switch (speed) {
+            default -> 1.0f;
+            case 1 -> rnd.nextFloat(0.9f,0.95f);
+            case 2 -> rnd.nextFloat(0.95f,0.98f);
+            case 3 -> rnd.nextFloat(0.98f,1.1f);
+        };
     }
 }
