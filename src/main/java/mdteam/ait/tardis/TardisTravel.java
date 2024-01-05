@@ -666,7 +666,7 @@ public class TardisTravel extends TardisLink {
     }
 
     public void placeExterior() {
-        this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState());
+        this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(ExteriorBlock.FACING, this.position.getDirection()));
         ExteriorBlockEntity exterior = new ExteriorBlockEntity(
                 this.position, this.position.getBlockState()
         );

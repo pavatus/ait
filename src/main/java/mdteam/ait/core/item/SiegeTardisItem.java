@@ -125,7 +125,7 @@ public class SiegeTardisItem extends Item {
     }
 
     public static AbsoluteBlockPos.Directed fromItemContext(ItemUsageContext context) {
-        return new AbsoluteBlockPos.Directed(context.getBlockPos().offset(context.getSide()), context.getWorld(), context.getHorizontalPlayerFacing());
+        return new AbsoluteBlockPos.Directed(context.getBlockPos().offset(context.getSide()), context.getWorld(), context.getHorizontalPlayerFacing().getOpposite());
     }
 
     public static AbsoluteBlockPos.Directed fromEntity(Entity entity) {
