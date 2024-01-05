@@ -1,12 +1,16 @@
 package mdteam.ait.client.sounds.flight;
 
+import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.client.sounds.PositionedLoopingSound;
+import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.tardis.util.FlightUtil;
+import mdteam.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class FlightSound extends PositionedLoopingSound {
     private static final Random rnd = new Random();
@@ -29,6 +33,18 @@ public class FlightSound extends PositionedLoopingSound {
     }
 
     private static float getRandomPitch() {
+        if (ClientSoundManager.getFlight().hasThrottleAndHandbrakeDown()) {
+            int speed = ClientTardisUtil.getCurrentTardis().getTravel().getSpeed();
+
+            // todo i hate switch
+            return switch (speed) {
+                default -> 1.0f;
+                case 1 -> 0.5f;
+                case 2 -> 0.55f;
+                case 3 -> 0.6f;
+            };
+        }
+
         return rnd.nextFloat(0.95f, 1.1f);
     }
 }

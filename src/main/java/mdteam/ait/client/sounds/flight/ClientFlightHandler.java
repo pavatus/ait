@@ -9,6 +9,7 @@ import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.SoundHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
@@ -65,17 +66,32 @@ public class ClientFlightHandler extends SoundHandler {
         return found;
     }
 
+    private void playFlightSound() {
+        if (!isPlaying(getFlightLoop())) {
+            // ensures it plays at the right place
+            ((PositionedLoopingSound) getFlightLoop()).setPosition(tardis().getDesktop().getConsolePos());
+        }
+        this.startIfNotPlaying(this.getFlightLoop());
+    }
+
+    private boolean shouldPlaySounds() {
+        return inFlight() || hasThrottleAndHandbrakeDown();
+    }
+
+    private boolean inFlight() {
+        return (isPlayerInATardis() && tardis().getTravel().getState() == TardisTravel.State.FLIGHT);
+    }
+    public boolean hasThrottleAndHandbrakeDown() {
+        return (isPlayerInATardis() && tardis().getTravel().getSpeed() > 0 && PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
+    }
+
     public void tick(MinecraftClient client) {
         if (this.sounds == null) this.generate();
 
-        if (isPlayerInATardis() && tardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
-            if (!isPlaying(getFlightLoop())) {
-                // ensures it plays at the right place
-                ((PositionedLoopingSound) getFlightLoop()).setPosition(tardis().getDesktop().getConsolePos());
-            }
-            this.startIfNotPlaying(this.getFlightLoop());
-
-        } else {
+        if (shouldPlaySounds()) {
+            this.playFlightSound();
+        }
+        else {
             this.stopSounds();
         }
     }
