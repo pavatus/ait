@@ -192,64 +192,20 @@ public class Tardis {
     }
 
 
-    // todo move into a SiegeModeHandler
     public boolean isSiegeMode() {
-        return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
+        return this.getHandlers().getSiege().isSiegeMode();
     }
-    // todo this is getting bloateed, merge some if statements together
     public void setSiegeMode(boolean b) {
-        if (getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL)) return; // The required amount of fuel to enable/disable siege mode
-        if (b) disablePower();
-        if (!b) this.getHandlers().getAlarms().disable();
-        if (isSiegeBeingHeld()) return;
-        if (!b && this.getExterior().findExteriorBlock().isEmpty())
-            this.getTravel().placeExterior();
-        if (b) TardisUtil.giveEffectToInteriorPlayers(this, new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
-        if (b) TardisUtil.getTardisDimension().playSound(null, this.getDesktop().getConsolePos(), AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 3f, 1f);
-        if (!b) TardisUtil.getTardisDimension().playSound(null, this.getDesktop().getConsolePos(), AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 3f, 1f);
-
-        removeFuel(0.01 * FuelHandler.TARDIS_MAX_FUEL);
-
-        PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE, b);
-        // Loqor is stinky
-        this.markDirty();
+        this.getHandlers().getSiege().setSiegeMode(b);
     }
     public boolean isSiegeBeingHeld() {
-        return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD);
+        return this.getHandlers().getSiege().isSiegeBeingHeld();
     }
     public void setSiegeBeingHeld(boolean b) {
-        if (b) this.getHandlers().getAlarms().enable();
-
-        PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD, b);
-        this.markDirty();
+        this.getHandlers().getSiege().setSiegeBeingHeld(b);
     }
     public int getTimeInSiegeMode() {
-        return PropertiesHandler.getInt(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME);
-    }
-    public void tickSiegeMode() {
-        if (this.getExterior().findExteriorBlock().isPresent()) {
-            this.setSiegeBeingHeld(false);
-        }
-
-        int siegeTime = getTimeInSiegeMode() + 1;
-        PropertiesHandler.set(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME, isSiegeMode() ? siegeTime : 0);
-        // this.markDirty(); // DO NOT UNCOMMENT THAT LAG GOES CRAZYYYY!!!
-
-        // todo add more downsides the longer you are in siege mode as it is meant to fail systems and kill you and that
-        // for example, this starts to freeze the player (like we see in the episode) after a minute (change the length if too short) and only if its on the ground, to stop people from just slaughtering lol
-        if (getTimeInSiegeMode() > (60 * 20) && !isSiegeBeingHeld()) {
-            for (PlayerEntity player : TardisUtil.getPlayersInInterior(this)) {
-                if (!player.isAlive()) continue;
-                if (player.getFrozenTicks() < player.getMinFreezeDamageTicks()) player.setFrozenTicks(player.getMinFreezeDamageTicks());
-                player.setFrozenTicks(player.getFrozenTicks() + 2);
-            }
-        } else {
-            for (PlayerEntity player : TardisUtil.getPlayersInInterior(this)) {
-                // something tells meee this will cause laggg
-                if (player.getFrozenTicks() > player.getMinFreezeDamageTicks())
-                    player.setFrozenTicks(0);
-            }
-        }
+        return this.getHandlers().getSiege().getTimeInSiegeMode();
     }
 
     public AbsoluteBlockPos.Directed position() {
@@ -299,8 +255,6 @@ public class Tardis {
         if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
             DoorHandler.lockTardis(true, this, null, true);
         }
-
-        this.tickSiegeMode();
         this.getTravel().tick(server);
     }
 

@@ -26,6 +26,7 @@ public class TardisHandlersManager extends TardisLink {
     private FuelHandler fuel;
     private HADSHandler hads;
     private FlightHandler flight;
+    private SiegeModeHandler siege;
     // private final SequenceHandler sequence;
 
     public TardisHandlersManager(UUID tardisId) {
@@ -42,6 +43,7 @@ public class TardisHandlersManager extends TardisLink {
         this.fuel = new FuelHandler(tardisId);
         this.hads = new HADSHandler(tardisId);
         this.flight = new FlightHandler(tardisId);
+        this.siege = new SiegeModeHandler(tardisId);
         // this.sequence = new SequenceHandler(tardisId);
 
         generateTickables();
@@ -63,6 +65,7 @@ public class TardisHandlersManager extends TardisLink {
         addTickable(getFuel());
         addTickable(getHADS());
         addTickable(getFlight());
+        addTickable(getSiege());
         // addTickable(getSequencing()); // todo sequences
     }
 
@@ -174,6 +177,12 @@ public class TardisHandlersManager extends TardisLink {
         }
 
         return flight;
+    }
+    public SiegeModeHandler getSiege() {
+        if (this.siege == null) {
+            this.siege = new SiegeModeHandler(this.tardisId);
+        }
+        return this.siege;
     }
     // public SequenceHandler getSequencing() {return this.sequence;}
 }
