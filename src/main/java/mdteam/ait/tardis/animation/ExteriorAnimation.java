@@ -41,6 +41,9 @@ public abstract class ExteriorAnimation {
             this.setupAnimation(exterior.getTardis().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
             return 1f;
         }
+        if (this.exterior.getTardis().getTravel().getState() == TardisTravel.State.LANDED && this.exterior.getTardis().getHandlers().getCloak().isEnabled()) {
+            return 0.105f;
+        }
 
         return Math.clamp(0.0F, 1.0F, this.alpha);
     }

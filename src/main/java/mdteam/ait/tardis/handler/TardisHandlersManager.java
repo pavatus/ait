@@ -27,6 +27,7 @@ public class TardisHandlersManager extends TardisLink {
     private HADSHandler hads;
     private FlightHandler flight;
     private SiegeModeHandler siege;
+    private CloakHandler cloak;
     // private final SequenceHandler sequence;
 
     public TardisHandlersManager(UUID tardisId) {
@@ -44,6 +45,7 @@ public class TardisHandlersManager extends TardisLink {
         this.hads = new HADSHandler(tardisId);
         this.flight = new FlightHandler(tardisId);
         this.siege = new SiegeModeHandler(tardisId);
+        this.cloak = new CloakHandler(tardisId);
         // this.sequence = new SequenceHandler(tardisId);
 
         generateTickables();
@@ -183,6 +185,12 @@ public class TardisHandlersManager extends TardisLink {
             this.siege = new SiegeModeHandler(this.tardisId);
         }
         return this.siege;
+    }
+    public CloakHandler getCloak() {
+        if (this.cloak == null) {
+            this.cloak = new CloakHandler(this.tardisId);
+        }
+        return this.cloak;
     }
     // public SequenceHandler getSequencing() {return this.sequence;}
 }

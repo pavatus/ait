@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class PropertiesHandler { // todo move more things over to properties
+    // this is getting bloated
     public static final String AUTO_LAND = "auto_land";
     public static final String HUM_ENABLED = "hum_enabled";
     public static final String ALARM_ENABLED = "alarm_enabled";
@@ -34,6 +35,7 @@ public class PropertiesHandler { // todo move more things over to properties
     public static final String DEMAT_TICKS = "demat_ticks";
     public static final String MAT_TICKS = "mat_ticks";
     public static final String SPEED = "speed";
+    public static final String IS_CLOAKED = "cloaked";
 
     // Should these methods be in the holder instead?
 
@@ -189,6 +191,8 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(DEMAT_TICKS,0);
         map.put(MAT_TICKS,0);
         map.put(SPEED,0);
+        map.put(IS_CLOAKED, false);
+
         unlockAllFreebies(map);
 
         return map;
