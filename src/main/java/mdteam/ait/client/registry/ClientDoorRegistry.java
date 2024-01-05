@@ -32,6 +32,7 @@ public class ClientDoorRegistry {
     public static ClientDoorSchema BOOTH;
     public static ClientDoorSchema CAPSULE;
     public static ClientDoorSchema BOX;
+    public static ClientDoorSchema BOX_CORAL;
     public static ClientDoorSchema HEAD;
     public static ClientDoorSchema GROWTH;
 
@@ -41,6 +42,7 @@ public class ClientDoorRegistry {
         BOOTH = register(new ClientBoothDoorVariant());
         CAPSULE = register(new ClientCapsuleDoorVariant());
         BOX = register(new ClientPoliceBoxDoorVariant());
+        BOX_CORAL = register(new ClientPoliceBoxCoralDoorVariant());
         HEAD = register(new ClientEasterHeadDoorVariant());
         GROWTH = register(new ClientGrowthDoorVariant());
     }
