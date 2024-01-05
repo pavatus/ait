@@ -6,10 +6,7 @@ import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.variant.exterior.booth.BoothDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.booth.BoothFireVariant;
 import mdteam.ait.tardis.variant.exterior.booth.BoothSoulVariant;
-import mdteam.ait.tardis.variant.exterior.box.PoliceBoxDefaultVariant;
-import mdteam.ait.tardis.variant.exterior.box.PoliceBoxFireVariant;
-import mdteam.ait.tardis.variant.exterior.box.PoliceBoxFuturisticVariant;
-import mdteam.ait.tardis.variant.exterior.box.PoliceBoxSoulVariant;
+import mdteam.ait.tardis.variant.exterior.box.*;
 import mdteam.ait.tardis.variant.exterior.capsule.CapsuleDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.capsule.CapsuleFireVariant;
 import mdteam.ait.tardis.variant.exterior.capsule.CapsuleSoulVariant;
@@ -74,6 +71,7 @@ public class ExteriorVariantRegistry {
     public static ExteriorVariantSchema BOX_FIRE;
     public static ExteriorVariantSchema BOX_SOUL;
     public static ExteriorVariantSchema BOX_FUTURE;
+    public static ExteriorVariantSchema BOX_CORAL;
     public static ExteriorVariantSchema PRIME;
     public static ExteriorVariantSchema YETI;
     public static ExteriorVariantSchema DEFINITIVE;
@@ -102,6 +100,7 @@ public class ExteriorVariantRegistry {
         BOX_SOUL = register(new PoliceBoxSoulVariant());
         BOX_FIRE = register(new PoliceBoxFireVariant());
         BOX_FUTURE = register(new PoliceBoxFuturisticVariant());
+        BOX_CORAL = register(new PoliceBoxCoralVariant());
 
         // Classic Box
         PRIME = register(new ClassicBoxPrimeVariant());

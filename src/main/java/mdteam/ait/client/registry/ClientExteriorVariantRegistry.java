@@ -5,10 +5,7 @@ import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.registry.exterior.impl.booth.ClientBoothDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.booth.ClientBoothFireVariant;
 import mdteam.ait.client.registry.exterior.impl.booth.ClientBoothSoulVariant;
-import mdteam.ait.client.registry.exterior.impl.box.ClientPoliceBoxDefaultVariant;
-import mdteam.ait.client.registry.exterior.impl.box.ClientPoliceBoxFireVariant;
-import mdteam.ait.client.registry.exterior.impl.box.ClientPoliceBoxFuturisticVariant;
-import mdteam.ait.client.registry.exterior.impl.box.ClientPoliceBoxSoulVariant;
+import mdteam.ait.client.registry.exterior.impl.box.*;
 import mdteam.ait.client.registry.exterior.impl.capsule.ClientCapsuleDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.capsule.ClientCapsuleFireVariant;
 import mdteam.ait.client.registry.exterior.impl.capsule.ClientCapsuleSoulVariant;
@@ -56,6 +53,7 @@ public class ClientExteriorVariantRegistry {
     public static ClientExteriorVariantSchema BOX_FIRE;
     public static ClientExteriorVariantSchema BOX_SOUL;
     public static ClientExteriorVariantSchema BOX_FUTURE;
+    public static ClientExteriorVariantSchema BOX_CORAL;
     public static ClientExteriorVariantSchema PRIME;
     public static ClientExteriorVariantSchema YETI;
     public static ClientExteriorVariantSchema DEFINITIVE;
@@ -84,6 +82,7 @@ public class ClientExteriorVariantRegistry {
         BOX_SOUL = register(new ClientPoliceBoxSoulVariant());
         BOX_FIRE = register(new ClientPoliceBoxFireVariant());
         BOX_FUTURE = register(new ClientPoliceBoxFuturisticVariant());
+        BOX_CORAL = register(new ClientPoliceBoxCoralVariant());
 
         // Classic Box
         PRIME = register(new ClientClassicBoxPrimeVariant());

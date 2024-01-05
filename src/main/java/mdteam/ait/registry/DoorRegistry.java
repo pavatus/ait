@@ -1,10 +1,7 @@
 package mdteam.ait.registry;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.tardis.exterior.*;
 import mdteam.ait.tardis.variant.door.*;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -22,6 +19,7 @@ public class DoorRegistry {
     public static DoorSchema BOOTH;
     public static DoorSchema CAPSULE;
     public static DoorSchema BOX;
+    public static DoorSchema BOX_CORAL;
     public static DoorSchema HEAD;
     public static DoorSchema GROWTH;
 
@@ -31,6 +29,7 @@ public class DoorRegistry {
         BOOTH = register(new BoothDoorVariant());
         CAPSULE = register(new CapsuleDoorVariant());
         BOX = register(new PoliceBoxDoorVariant());
+        BOX_CORAL = register(new PoliceBoxCoralDoorVariant());
         HEAD = register(new EasterHeadDoorVariant());
         GROWTH = register(new CoralGrowthDoorVariant());
     }
