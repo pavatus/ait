@@ -91,8 +91,10 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
                 if (entity.getTardis().getHandlers().getOvergrownHandler().isOvergrown()) {
                     model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.getTardis().getHandlers().getOvergrownHandler().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
                 }
-                if (exteriorVariant.emission() != null && entity.getTardis().hasPower())
-                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(exteriorVariant.emission(), false)), light, overlay, 1, 1, 1, 1);
+                if (exteriorVariant.emission() != null && entity.getTardis().hasPower()) {
+                    boolean alarms = PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
+                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(exteriorVariant.emission(), false)), light, overlay, 1, alarms ? 0.3f : 1 , alarms ? 0.3f : 1, 1);
+                }
             }
         }
         matrices.pop();
