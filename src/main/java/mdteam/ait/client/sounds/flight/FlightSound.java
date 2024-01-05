@@ -48,8 +48,8 @@ public class FlightSound extends PositionedLoopingSound {
         return switch (speed) {
             default -> 1.0f;
             case 1 -> rnd.nextFloat(0.9f,0.95f);
-            case 2 -> rnd.nextFloat(0.95f,0.98f);
-            case 3 -> rnd.nextFloat(0.98f,1.1f);
+            case 2 -> rnd.nextFloat(0.95f,1.0f);
+            case 3 -> rnd.nextFloat(1.0f,1.25f);
         };
     }
 }
