@@ -15,17 +15,17 @@ public class TardisHandlersManager extends TardisLink {
     @Exclude
     private List<TardisLink> tickables = new ArrayList<>();
     // Yup
-    private final DoorHandler door;
-    private final PropertiesHolder properties;
-    private final WaypointHandler waypoints;
-    private final LoyaltyHandler loyalties;
-    private final OvergrownHandler overgrown;
+    private DoorHandler door;
+    private PropertiesHolder properties;
+    private WaypointHandler waypoints;
+    private LoyaltyHandler loyalties;
+    private OvergrownHandler overgrown;
     private ServerHumHandler hum = null;
     private ServerAlarmHandler alarms;
-    private final InteriorChangingHandler interior;
-    private final FuelHandler fuel;
-    private final HADSHandler hads;
-    private final FlightHandler flight;
+    private InteriorChangingHandler interior;
+    private FuelHandler fuel;
+    private HADSHandler hads;
+    private FlightHandler flight;
     // private final SequenceHandler sequence;
 
     public TardisHandlersManager(UUID tardisId) {
@@ -103,20 +103,35 @@ public class TardisHandlersManager extends TardisLink {
     }
 
     public PropertiesHolder getProperties() {
+        if (this.properties == null) {
+            this.properties = new PropertiesHolder(this.tardisId);
+        }
         return properties;
     }
 
     public WaypointHandler getWaypoints() {
+        if (this.waypoints == null) {
+            this.waypoints = new WaypointHandler(this.tardisId);
+        }
         return waypoints;
     }
 
     public LoyaltyHandler getLoyalties() {
+        if (this.loyalties == null) {
+            this.loyalties = new LoyaltyHandler(this.tardisId);
+        }
         return loyalties;
     }
     public DoorHandler getDoor() {
+        if (this.door == null) {
+            this.door = new DoorHandler(this.tardisId);
+        }
         return door;
     }
     public OvergrownHandler getOvergrownHandler() {
+        if (this.overgrown == null) {
+            this.overgrown = new OvergrownHandler(this.tardisId);
+        }
         return overgrown;
     }
     public ServerHumHandler getHum() {
@@ -128,18 +143,36 @@ public class TardisHandlersManager extends TardisLink {
     }
 
     public ServerAlarmHandler getAlarms() {
+        if (this.alarms == null) {
+            this.alarms = new ServerAlarmHandler(this.tardisId);
+        }
         return alarms;
     }
-    public InteriorChangingHandler getInteriorChanger() {return interior;}
+    public InteriorChangingHandler getInteriorChanger() {
+        if (this.interior == null) {
+            this.interior = new InteriorChangingHandler(this.tardisId);
+        }
+        return interior;
+    }
 
     public FuelHandler getFuel() {
+        if (this.fuel == null) {
+            this.fuel = new FuelHandler(this.tardisId);
+        }
         return fuel;
     }
 
     public HADSHandler getHADS() {
+        if (this.hads == null) {
+            this.hads = new HADSHandler(this.tardisId);
+        }
         return hads;
     }
     public FlightHandler getFlight() {
+        if (this.flight == null) {
+            this.flight = new FlightHandler(this.tardisId);
+        }
+
         return flight;
     }
     // public SequenceHandler getSequencing() {return this.sequence;}
