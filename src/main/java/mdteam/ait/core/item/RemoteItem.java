@@ -5,6 +5,7 @@ import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -111,7 +112,7 @@ public class RemoteItem extends Item {
         tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
 
         if (tag.contains("tardis")) {
-            Tardis tardis = ServerTardisManager.getInstance().getTardis(UUID.fromString(tag.getString("tardis")));
+            Tardis tardis = ClientTardisManager.getInstance().getLookup().get(UUID.fromString(tag.getString("tardis")));
             if (tardis.getTravel().getState() != LANDED)
                 tooltip.add(Text.literal("→ " + tardis.getHandlers().getFlight().getDurationAsPercentage() + "%").formatted(Formatting.GOLD));
         }
