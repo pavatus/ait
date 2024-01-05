@@ -1,13 +1,20 @@
 package mdteam.ait.client.models.consoles;
 
+import mdteam.ait.client.animation.console.coral.CoralAnimations;
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.console.CoralConsole;
 import mdteam.ait.tardis.handler.FuelHandler;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+
+import static mdteam.ait.tardis.TardisTravel.State.DEMAT;
+import static mdteam.ait.tardis.TardisTravel.State.FLIGHT;
 
 public class CoralConsoleModel extends ConsoleModel {
 	public static final Animation EMPTY_ANIM = Animation.Builder.create(1).build(); // temporary animation bc rn we have none
@@ -1323,7 +1330,8 @@ public class CoralConsoleModel extends ConsoleModel {
 	public Animation getAnimationForState(TardisTravel.State state) {
 		return switch (state) {
 			default -> HartnellAnimations.ROTOR;
-			case LANDED -> EMPTY_ANIM;
+			case DEMAT -> CoralAnimations.CORAL_CONSOLE_DEMAT_ANIMATION;
+			case LANDED -> CoralAnimations.CONSOLE_CORAL_IDLE_ANIMATION;
 		};
 	}
 
@@ -1338,13 +1346,60 @@ public class CoralConsoleModel extends ConsoleModel {
 		matrices.push();
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
+		this.console.getChild("rotor").getChild("top7").visible = !console.getVariant().equals(ConsoleVariantRegistry.CORAL_WHITE);
+
+		// Fuel Gauge
 		this.console.getChild("controls").getChild("ctrl_1").getChild("bone13").getChild("compass").getChild("needle").pitch =
 				-(float) (((console.getTardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
+
 		ModelPart fuelLowWarningLight = this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("light").getChild("bone45");
 		// Low Fuel Light
 		fuelLowWarningLight.visible = !(console.getTardis().getFuel() <= (FuelHandler.TARDIS_MAX_FUEL / 10));
 
+		// Anti-gravs Lever
+		this.console.getChild("controls").getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ?
+				this.console.getChild("controls").getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll : this.console.getChild("controls").getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll - 1.5f;
+
+		// Door Control
+		ModelPart doorControl = this.console.getChild("controls").getChild("p_ctrl_1").getChild("bone29").getChild("crank").getChild("bone32");
+
+		if(console.getTardis().getDoor().isLeftOpen()) {
+			doorControl.pitch = doorControl.pitch - 0.8f;
+		}
+		else if(console.getTardis().getDoor().isRightOpen()){
+			doorControl.pitch = doorControl.pitch - 1.5f;
+		}
+		else {
+			doorControl.pitch = doorControl.pitch;
+		}
+
+		// Power Lever
+		this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ?
+				this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll : this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll - 1.5f;
+		this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ?
+				this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll : this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll + 0.5f;
+
+		// Throttle
+		ModelPart throttle = this.console.getChild("controls").getChild("p_ctrl_5").getChild("bone49").getChild("lever3").getChild("bone52");
+		throttle.roll = throttle.roll  + (console.getTardis().getTravel().getSpeed() / (float) TardisTravel.MAX_SPEED);
+
+		// Increment
+		ModelPart increment = this.console.getChild("controls").getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("crank2");
+		ModelPart incrementTwo = this.console.getChild("controls").getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("bone34");
+
+		increment.yaw = console.getTardis().getTravel().getPosManager().increment >= 10 ? console.getTardis().getTravel().getPosManager().increment >= 100 ? console.getTardis().getTravel().getPosManager().increment >= 1000 ? increment.yaw + 1.5f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
+		incrementTwo.pivotY = console.getTardis().getTravel().getPosManager().increment >= 10 ? console.getTardis().getTravel().getPosManager().increment >= 100 ? console.getTardis().getTravel().getPosManager().increment >= 1000 ? incrementTwo.pivotY + 1.5f : incrementTwo.pivotY + 1f : incrementTwo.pivotY + 0.5f : incrementTwo.pivotY;
+
+		// Refueler
+		ModelPart refueler = this.console.getChild("controls").getChild("p_ctrl_5").getChild("bone49").getChild("ring2");
+
+		refueler.pivotY = console.getTardis().isRefueling() ? refueler.pivotY + 1 : refueler.pivotY;
+
+		// Waypoint
 		this.console.getChild("controls").getChild("ctrl_1").getChild("bone13").getChild("insert").visible = console.getTardis().getHandlers().getWaypoints().hasCartridge();
+
+		// Handbrake
+		this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").yaw = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").yaw + 0.75f : this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").yaw;
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
