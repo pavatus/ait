@@ -41,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
+import static mdteam.ait.tardis.TardisTravel.State.FLIGHT;
 import static mdteam.ait.tardis.TardisTravel.State.MAT;
 import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
@@ -171,6 +172,11 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
             for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(this.getPos()).expand(0, 1, 0), EntityPredicates.EXCEPT_SPECTATOR)) {
                 TardisUtil.teleportInside(this.getTardis(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
             }
+        }
+
+        // ensures we dont exist during flight
+        if (!world.isClient() && this.getTardis().getTravel().getState() == FLIGHT) {
+            world.removeBlock(this.getPos(), false);
         }
     }
 

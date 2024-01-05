@@ -43,10 +43,10 @@ public class SiegeTardisItem extends Item {
 
         if (world.isClient()) return;
 
-         if (getTardis(stack) == null) {
-             stack.setCount(0);
-             return;
-         }
+        if (getTardis(stack) == null) {
+            stack.setCount(0);
+            return;
+        }
 
         Tardis tardis = getTardis(stack);
         assert tardis != null;

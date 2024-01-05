@@ -201,9 +201,9 @@ public class Tardis {
         if (getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL)) return; // The required amount of fuel to enable/disable siege mode
         if (b) disablePower();
         if (!b) this.getHandlers().getAlarms().disable();
-        if (!b && !(this.getHandlers().getExteriorPos().getWorld().getBlockEntity(this.getHandlers().getExteriorPos()) instanceof ExteriorBlockEntity))
-            this.getTravel().placeExterior();
         if (isSiegeBeingHeld()) return;
+        if (!b && this.getExterior().findExteriorBlock().isEmpty())
+            this.getTravel().placeExterior();
         if (b) TardisUtil.giveEffectToInteriorPlayers(this, new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
         if (b) TardisUtil.getTardisDimension().playSound(null, this.getDesktop().getConsolePos(), AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 3f, 1f);
         if (!b) TardisUtil.getTardisDimension().playSound(null, this.getDesktop().getConsolePos(), AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 3f, 1f);
@@ -227,6 +227,10 @@ public class Tardis {
         return PropertiesHandler.getInt(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME);
     }
     public void tickSiegeMode() {
+        if (this.getExterior().findExteriorBlock().isPresent()) {
+            this.setSiegeBeingHeld(false);
+        }
+
         int siegeTime = getTimeInSiegeMode() + 1;
         PropertiesHandler.set(this.getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME, isSiegeMode() ? siegeTime : 0);
         // this.markDirty(); // DO NOT UNCOMMENT THAT LAG GOES CRAZYYYY!!!
