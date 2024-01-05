@@ -8,6 +8,7 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -282,6 +283,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
         PropertiesHandler.set(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, false);
         PropertiesHandler.set(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, false);
+        DoorHandler.lockTardis(PropertiesHandler.getBool(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), fallingTardisEntity.getTardis(), null, false);
         fallingTardisEntity.getTardis().markDirty();
     }
 

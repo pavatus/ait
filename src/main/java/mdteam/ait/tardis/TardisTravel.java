@@ -293,7 +293,7 @@ public class TardisTravel extends TardisLink {
         }
 
         // Disable autopilot
-        PropertiesHandler.setAutoPilot(this.getTardis().getHandlers().getProperties(), false);
+        // PropertiesHandler.setAutoPilot(this.getTardis().getHandlers().getProperties(), false);
 
         // Get the server world of the destination
         ServerWorld world = (ServerWorld) this.getDestination().getWorld();
