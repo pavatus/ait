@@ -31,9 +31,17 @@ public class ThrottleControl extends Control {
         TardisTravel travel = tardis.getTravel();
 
         if (!leftClick) {
-            travel.increaseSpeed();
+            if (player.isSneaking()) {
+                travel.setSpeed(TardisTravel.MAX_SPEED);
+            } else {
+                travel.increaseSpeed();
+            }
         } else {
-            travel.decreaseSpeed();
+            if (player.isSneaking()) {
+                travel.setSpeed(0);
+            } else {
+                travel.decreaseSpeed();
+            }
         }
 
         return true;

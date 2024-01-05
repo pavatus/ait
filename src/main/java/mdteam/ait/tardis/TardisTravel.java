@@ -144,7 +144,7 @@ public class TardisTravel extends TardisLink {
     public int getSpeed() {
         return PropertiesHandler.getInt(this.tardis().getHandlers().getProperties(), PropertiesHandler.SPEED);
     }
-    private void setSpeed(int speed) {
+    public void setSpeed(int speed) {
         PropertiesHandler.set(this.tardis().getHandlers().getProperties(), PropertiesHandler.SPEED, speed);
         this.tardis().markDirty();
     }
