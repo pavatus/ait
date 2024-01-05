@@ -5,6 +5,7 @@ import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.util.ForcedChunkUtil;
+import mdteam.ait.tardis.handler.TardisLink;
 import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -25,17 +26,14 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TardisDesktop {
-
-    @Exclude
-    protected final Tardis tardis; // todo this class needs moving to using a TardisLink
+public class TardisDesktop extends TardisLink {
     private TardisDesktopSchema schema;
     private AbsoluteBlockPos.Directed doorPos;
     private AbsoluteBlockPos.Directed consolePos;
     private final Corners corners;
 
     public TardisDesktop(Tardis tardis, TardisDesktopSchema schema) {
-        this.tardis = tardis;
+        super(tardis.getUuid());
         this.schema = schema;
         this.corners = TardisUtil.findInteriorSpot();
 
@@ -51,12 +49,12 @@ public class TardisDesktop {
         // this is needed for door and console initialization. when we call #setTardis(ITardis) the desktop field is still null.
         door.setDesktop(this);
         //console.setDesktop(this);
-        door.setTardis(tardis);
+        door.setTardis(tardis());
         //console.setTardis(tardis);
     }
 
     public TardisDesktop(Tardis tardis, TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed door, AbsoluteBlockPos.Directed console) {
-        this.tardis = tardis;
+        super(tardis.getUuid());
         this.schema = schema;
         this.corners = corners;
         this.doorPos = door;
@@ -90,15 +88,15 @@ public class TardisDesktop {
 
     public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
         // before we do this we need to make sure to delete the old portals, but how?! by registering to this event
-        TardisEvents.DOOR_MOVE.invoker().onMove(tardis, pos);
+        TardisEvents.DOOR_MOVE.invoker().onMove(tardis(), pos);
 
         this.doorPos = pos;
     }
 
     public void setConsolePos(AbsoluteBlockPos.Directed pos) {
         this.consolePos = pos;
-        if (tardis != null)
-            tardis.markDirty();
+        if (tardis() != null)
+            tardis().markDirty();
     }
 
     public Corners getCorners() {
@@ -114,7 +112,7 @@ public class TardisDesktop {
         // this is needed for door and console initialization. when we call #setTardis(ITardis) the desktop field is still null.
         door.setDesktop(this);
         //console.setDesktop(this);
-        door.setTardis(tardis);
+        door.setTardis(tardis());
         return true;
     }
 
@@ -153,13 +151,17 @@ public class TardisDesktop {
         for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemEntity.class, box, (entity) -> true)) {
             entity.discard();  // Kill any normal entities at that position.
         }
+
+        for (LivingEntity entity : TardisUtil.getEntitiesInInterior(tardis(), 100)) {
+            entity.kill();
+        }
+
         // for (LivingEntity entity : TardisUtil.getEntitiesInInterior(tardis)) {
         //     entity.discard();
         // }
 
         this.stopForceInterior();
     }
-
     private void forceLoadInterior() {
         World world = TardisUtil.getTardisDimension();
         if (world == null) return;

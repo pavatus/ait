@@ -438,8 +438,11 @@ public class TardisUtil {
         return list;
     }
 
+    public static List<LivingEntity> getEntitiesInInterior(Tardis tardis, int area) {
+        return getTardisDimension().getEntitiesByClass(LivingEntity.class, new Box(tardis.getDoor().getDoorPos().north(area).east(area).up(area), tardis.getDoor().getDoorPos().south(area).west(area).down(area)), (e) -> true);
+    }
     public static List<LivingEntity> getEntitiesInInterior(Tardis tardis) {
-        return getTardisDimension().getEntitiesByClass(LivingEntity.class, new Box(tardis.getDoor().getDoorPos().north(20).east(20).up(20), tardis.getDoor().getDoorPos().south(20).west(20).down(20)), (e) -> true);
+        return getEntitiesInInterior(tardis, 20);
     }
 
     public static List<PlayerEntity> getPlayersInInterior(Corners corners) {

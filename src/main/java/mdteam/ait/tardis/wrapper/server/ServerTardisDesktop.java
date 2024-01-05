@@ -20,14 +20,16 @@ public class ServerTardisDesktop extends TardisDesktop implements TardisTickable
     public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
         super.setInteriorDoorPos(pos);
 
-        this.tardis.markDirty();
+        if (this.tardis() == null) return;
+
+        this.tardis().markDirty();
     }
 
     @Override
     public void setConsolePos(AbsoluteBlockPos.Directed pos) {
         super.setConsolePos(pos);
 
-        this.tardis.markDirty();
+        this.tardis().markDirty();
     }
     @Override
     public void startTick(MinecraftServer server) {}
