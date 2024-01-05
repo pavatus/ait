@@ -253,7 +253,7 @@ public class TardisTravel extends TardisLink {
         }
         // Load the chunk of the Tardis destination
         this.getDestination().getWorld().getChunk(this.getTardis().getTravel().getDestination());
-        // Enable alarm and disable anti-gravity properties for Tardis
+        // Enable alarm and disable anti-mavity properties for Tardis
         PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
         PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
         // Set the destination position at the topmost block of the world at the X and Z coordinates of the destination
@@ -268,6 +268,8 @@ public class TardisTravel extends TardisLink {
                 true
         );
         this.crashing = true;
+        // Set speed to 0
+        this.setSpeed(0);
         // Mark Tardis as dirty
         this.getTardis().markDirty();
         // Remove fuel from Tardis

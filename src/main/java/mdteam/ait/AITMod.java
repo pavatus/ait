@@ -195,6 +195,7 @@ public class AITMod implements ModInitializer {
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             DesktopRegistry.syncToClient(handler.getPlayer());
+            ServerTardisManager.getInstance().addSubscriberToAll(handler.getPlayer());
         });
 
         AIT_ITEM_GROUP.initialize();

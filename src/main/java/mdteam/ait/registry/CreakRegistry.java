@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
 import java.util.Random;
@@ -28,10 +29,14 @@ public class CreakRegistry {
     public static CreakSound ONE;
     public static CreakSound TWO;
     public static CreakSound THREE;
+    public static CreakSound CAVE;
+    public static CreakSound WHISPER;
 
     public static void init() {
         ONE = register(CreakSound.create(AITMod.MOD_ID, "one", AITSounds.CREAK_ONE));
         TWO = register(CreakSound.create(AITMod.MOD_ID, "two", AITSounds.CREAK_TWO));
         THREE = register(CreakSound.create(AITMod.MOD_ID, "three", AITSounds.CREAK_THREE));
+        CAVE = register(CreakSound.create(AITMod.MOD_ID, "cave", SoundEvents.AMBIENT_CAVE.value()));
+        WHISPER = register(CreakSound.create(AITMod.MOD_ID, "whisper", AITSounds.WHISPER));
     }
 }

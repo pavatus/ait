@@ -1399,7 +1399,7 @@ public class CoralConsoleModel extends ConsoleModel {
 		this.console.getChild("controls").getChild("ctrl_1").getChild("bone13").getChild("insert").visible = console.getTardis().getHandlers().getWaypoints().hasCartridge();
 
 		// Handbrake
-		this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").yaw = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").yaw + 0.75f : this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").yaw;
+		this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw : this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw + 0.75f;
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();

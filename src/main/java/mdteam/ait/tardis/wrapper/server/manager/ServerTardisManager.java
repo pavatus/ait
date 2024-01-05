@@ -250,6 +250,12 @@ public class ServerTardisManager extends TardisManager {
         }
     }
 
+    public void addSubscriberToAll(ServerPlayerEntity player) {
+        for (Tardis tardis : this.lookup.values()) {
+            this.addSubscriberToTardis(player, tardis.getUuid());
+        }
+    }
+
     // fixme i think its easier if all clients just get updated about the tardises
     // @TODO not send everything to everyone
     public void subscribeEveryone(Tardis tardis) {
