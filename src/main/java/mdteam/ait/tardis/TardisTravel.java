@@ -131,6 +131,16 @@ public class TardisTravel extends TardisLink {
         if (this.getSpeed() == 0 && this.getState() == State.FLIGHT) {
             this.materialise();
         }
+        if (this.getSpeed() > 0 && this.getState() == State.FLIGHT) {
+            Random random = new Random();
+            if (random.nextFloat(1) > 0.985f) {
+                if (this.getSpeed() == 1) {
+                    this.crash();
+                }
+
+                this.decreaseSpeed();
+            }
+        }
     }
 
     public void increaseSpeed() {
