@@ -371,8 +371,9 @@ public class TardisTravel extends TardisLink {
 
         if (PropertiesHandler.willAutoPilot(tardis().getHandlers().getProperties())) {
             // fufill all the prerequisites
-            DoorHandler.lockTardis(true, tardis(), null, false);
+            // DoorHandler.lockTardis(true, tardis(), null, false);
             PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
+            this.tardis().getDoor().closeDoors();
             tardis().setRefueling(false);
             if (this.getSpeed() == 0) this.increaseSpeed();
         }
