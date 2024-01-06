@@ -29,6 +29,7 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -42,6 +43,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -403,6 +405,14 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             markNeedsSyncing();
             needsReloading = false;
         }
+
+        // @TODO fix this because lag
+        if(TardisUtil.getTardisDimension().getEntitiesByClass(ConsoleControlEntity.class,
+                new Box(pos.north(2).east(2).up(2),
+                        pos.south(2).west(2).down(2)), (e) -> true).isEmpty()) {
+            markNeedsControl();
+        }
+
         if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
             this.markRemoved();
         }
