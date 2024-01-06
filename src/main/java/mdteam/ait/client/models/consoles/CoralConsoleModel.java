@@ -1405,6 +1405,21 @@ public class CoralConsoleModel extends ConsoleModel {
 		// Handbrake
 		this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw : this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw + 0.75f;
 
+		// Siege Mode
+		ModelPart siege = this.console.getChild("controls").getChild("p_ctrl_3").getChild("bone36").getChild("handbrake");
+
+		siege.roll = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE) ? siege.roll + 0.45f : siege.roll;
+
+		// Autopilot
+		ModelPart autopilot = this.console.getChild("controls").getChild("ctrl_4").getChild("bone15").getChild("switch24").getChild("bone19");
+
+		autopilot.pivotY = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? autopilot.pivotY + 1 : autopilot.pivotY;
+
+		// Ground Searching
+		ModelPart groundSearch = this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("bow").getChild("bone68");
+
+		groundSearch.pitch = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch - 0.5f : groundSearch.pitch;
+
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}

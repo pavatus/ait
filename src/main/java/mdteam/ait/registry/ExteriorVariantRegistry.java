@@ -72,6 +72,7 @@ public class ExteriorVariantRegistry {
     public static ExteriorVariantSchema BOX_SOUL;
     public static ExteriorVariantSchema BOX_FUTURE;
     public static ExteriorVariantSchema BOX_CORAL;
+    public static ExteriorVariantSchema BOX_TOKAMAK;
     public static ExteriorVariantSchema PRIME;
     public static ExteriorVariantSchema YETI;
     public static ExteriorVariantSchema DEFINITIVE;
@@ -101,6 +102,7 @@ public class ExteriorVariantRegistry {
         BOX_FIRE = register(new PoliceBoxFireVariant());
         BOX_FUTURE = register(new PoliceBoxFuturisticVariant());
         BOX_CORAL = register(new PoliceBoxCoralVariant());
+        BOX_TOKAMAK = register(new PoliceBoxTokamakVariant());
 
         // Classic Box
         PRIME = register(new ClassicBoxPrimeVariant());
