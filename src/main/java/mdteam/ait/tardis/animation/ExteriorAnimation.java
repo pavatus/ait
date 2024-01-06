@@ -2,10 +2,12 @@ package mdteam.ait.tardis.animation;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -42,7 +44,7 @@ public abstract class ExteriorAnimation {
             return 1f;
         }
         if (this.exterior.getTardis().getTravel().getState() == TardisTravel.State.LANDED && this.exterior.getTardis().getHandlers().getCloak().isEnabled()) {
-            return 0.105f;
+            return 0.105f; // 0.105f
         }
 
         return Math.clamp(0.0F, 1.0F, this.alpha);

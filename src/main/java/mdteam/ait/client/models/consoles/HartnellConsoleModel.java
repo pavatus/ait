@@ -917,6 +917,11 @@ public class HartnellConsoleModel extends ConsoleModel {
 		refueler.yaw = console.getTardis().isRefueling() ? refueler.yaw + 1.575f : refueler.yaw;
 		refuelerLight.pivotY = console.getTardis().isRefueling() ? refuelerLight.pivotY : refuelerLight.pivotY + 1;
 
+		ModelPart cloak = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("ctrl_panel_2").getChild("bone108");
+		ModelPart cloakLight = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("ind_lamp_15").getChild("bone101");
+		cloak.yaw = console.getTardis().getHandlers().getCloak().isEnabled() ? cloak.yaw + 1.575f : cloak.yaw;
+		cloakLight.pivotY = console.getTardis().getHandlers().getCloak().isEnabled() ? cloakLight.pivotY : cloakLight.pivotY + 1;
+
 		// Ground Search Control Movements
 		ModelPart groundSearch = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("s_knob");
 		groundSearch.pivotZ = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pivotZ - 1.5f : groundSearch.pivotZ;

@@ -42,6 +42,7 @@ public class CoralConsole extends ConsoleSchema {
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.074999996f), new Vector3f(0.80078125f, 0.537500761449337f, 0.07656250149011612f)),
             new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.07499999f, 0.074999996f), new Vector3f(0.8007812770083547f, 0.5375005733221769f, -0.02343749813735485f)),
             new ControlTypes(new InsertWaypointControl(), EntityDimensions.changing(0.1375f, 0.1125f), new Vector3f(0.7257812488824129f, 0.5875006653368473f, 0.2390625039115548f)),
+            new ControlTypes(new CloakControl(), EntityDimensions.changing(0.1375f, 0.1375f), new Vector3f(-0.3484375160187483f, 0.600000855512917f, 0.4757812535390258f)),
     };
     public CoralConsole() {
         super(REFERENCE, "coral");

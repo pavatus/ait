@@ -17,7 +17,14 @@ public class CloakControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+
         tardis.getHandlers().getCloak().toggle();
+
         return true;
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return SoundEvents.BLOCK_SCULK_SENSOR_CLICKING;
     }
 }
