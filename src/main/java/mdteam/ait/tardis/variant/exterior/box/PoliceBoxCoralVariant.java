@@ -22,4 +22,9 @@ public class PoliceBoxCoralVariant extends PoliceBoxVariant {
         pos = super.adjustPortalPos(pos, direction);
         return pos.add(0,-0.1,0);
     }
+
+    @Override
+    public double portalHeight() {
+        return 2.2;
+    }
 }

@@ -12,6 +12,6 @@ public class CapsuleExterior extends ExteriorSchema {
 
     @Override
     public boolean hasPortals() {
-        return true;
+        return false;
     }
 }
