@@ -132,7 +132,10 @@ public class TardisTravel extends TardisLink {
         if (this.getSpeed() == 0 && this.getState() == State.FLIGHT) {
             this.materialise();
         }
-        if (this.getSpeed() > 0 && this.getState() == State.FLIGHT && !this.getTardis().getHandlers().getFlight().hasFinishedFlight()) {
+
+        // fixme this is a mess
+
+        /*if (this.getSpeed() > 0 && this.getState() == State.FLIGHT && !this.getTardis().getHandlers().getFlight().hasFinishedFlight()) {
             if (random.nextFloat(1) > 0.985f && !PropertiesHandler.willAutoPilot(this.tardis().getHandlers().getProperties())) {
                 if (this.getSpeed() == 1) {
                     this.crash();
@@ -140,7 +143,7 @@ public class TardisTravel extends TardisLink {
 
                 this.decreaseSpeed();
             }
-        }
+        }*/
     }
 
     public void increaseSpeed() {

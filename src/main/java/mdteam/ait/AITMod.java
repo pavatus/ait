@@ -4,9 +4,11 @@ import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneInitHandl
 import com.neptunedevelopmentteam.neptunelib.core.itemgroup.NeptuneItemGroup;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
+import mc.craig.software.regen.util.Platform;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.compat.immersive.PortalsHandler;
+import mdteam.ait.compat.regen.RegenHandler;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -87,6 +89,9 @@ public class AITMod implements ModInitializer {
         // ip support
         if (DependencyChecker.hasPortals())
             PortalsHandler.init();
+
+        if (DependencyChecker.hasRegeneration())
+            RegenHandler.init();
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             TeleportInteriorCommand.register(dispatcher);

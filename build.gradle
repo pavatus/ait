@@ -28,6 +28,12 @@ repositories {
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/releases/" }
 	maven { url "https://oss.sonatype.org/content/repositories/snapshots/"}
+	maven {url "https://cursemaven.com"
+		content {includeGroup "curse.maven"}
+		metadataSources {
+			artifact() //Look directly for artifact
+		}
+	}
 }
 
 loom {
@@ -92,6 +98,10 @@ dependencies {
 	/*modCompileOnlyApi*/modImplementation("me.shedaniel.cloth:cloth-config-fabric:11.0.99") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
+
+	modImplementation("curse.maven:forge-config-api-port-fabric-547434:4583000")
+
+	/*modCompileOnlyApi*/modImplementation("curse.maven:${project.regen_version}")
 }
 
 processResources {

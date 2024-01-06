@@ -14,6 +14,10 @@ public class DependencyChecker {
         return doesClassExist("qouteall.imm_ptl.core.IPModMain");
     }
 
+    public static boolean hasRegeneration() {
+        return doesModExist("regen");
+    }
+
     // @TODO add a check to see if the server has the mod or not
 
     // shoutout to my boy codeium for telling me i can do this love you bro ( please spare me in AI uprise )

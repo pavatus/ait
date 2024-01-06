@@ -1,8 +1,14 @@
 package mdteam.ait.tardis;
 
+import mc.craig.software.regen.Regeneration;
+import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.common.regen.fabric.RegenerationDataImpl;
+import mc.craig.software.regen.util.PlayerUtil;
+import mc.craig.software.regen.util.RegenUtil;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.client.util.ClientTardisUtil;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.SiegeTardisItem;
@@ -19,6 +25,7 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.*;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,11 +35,17 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionBehavior;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.UUID;
 import java.util.function.Function;
+
+import static mc.craig.software.regen.common.regen.state.RegenStates.REGENERATING;
 
 public class Tardis {
     // this is starting to get a little bloated..
