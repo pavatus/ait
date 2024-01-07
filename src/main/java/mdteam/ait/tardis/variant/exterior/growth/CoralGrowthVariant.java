@@ -33,10 +33,10 @@ public class CoralGrowthVariant extends ExteriorVariantSchema {
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return switch (direction) {
             case DOWN, UP -> pos;
-            case NORTH -> pos.add(0,0.1,-0.38);
-            case SOUTH -> pos.add(0,0.1,0.38);
-            case WEST -> pos.add(-0.38,0.1,0);
-            case EAST -> pos.add(0.38,0.1,0);
+            case NORTH -> pos.add(0,0.1,-0.5);
+            case SOUTH -> pos.add(0,0.1,0.5);
+            case WEST -> pos.add(-0.5,0.1,0);
+            case EAST -> pos.add(0.5,0.1,0);
         };
     }
 
@@ -47,6 +47,6 @@ public class CoralGrowthVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalWidth() {
-        return 0.9d;
+        return 0.6d;
     }
 }

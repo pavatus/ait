@@ -6,6 +6,7 @@ import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.DoorHandler;
@@ -259,7 +260,8 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         if (canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY()
                 && findTardis(world, pos) != null
                 && !PropertiesHandler.getBool(findTardis(world, pos).getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)
-                && findTardis(world, pos).getTravel().getState() == TardisTravel.State.LANDED) {
+                && findTardis(world, pos).getTravel().getState() == TardisTravel.State.LANDED
+                && findTardis(world, pos).getExterior().getType() != ExteriorRegistry.CORAL_GROWTH) {
             FallingTardisEntity falling = FallingTardisEntity.spawnFromBlock(world, pos, state);
             // OH SHIT WE FALLING
             this.configureFallingTardis(falling, world, pos);

@@ -39,6 +39,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -406,12 +407,21 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             needsReloading = false;
         }
 
-        // @TODO fix this because lag
-        if(TardisUtil.getTardisDimension().getEntitiesByClass(ConsoleControlEntity.class,
-                new Box(pos.north(2).east(2).up(2),
-                        pos.south(2).west(2).down(2)), (e) -> true).isEmpty()) {
-            markNeedsControl();
+        /*List<ConsoleControlEntity> entitiesNeedingControl = new ArrayList<>();
+        Box entityBox = new Box(pos.north(2).east(2).up(2), pos.south(2).west(2).down(2));
+        List<ConsoleControlEntity> entities = TardisUtil.getTardisDimension().getEntitiesByClass(ConsoleControlEntity.class, entityBox, (e) -> true);
+
+        for (ConsoleControlEntity entity : controlEntities) {
+            if (entities.isEmpty()) {
+                entitiesNeedingControl.add(entity);
+            }
         }
+
+        controlEntities.removeAll(entitiesNeedingControl);
+
+        if (!entitiesNeedingControl.isEmpty()) {
+            markNeedsControl();
+        }*/
 
         if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
             this.markRemoved();

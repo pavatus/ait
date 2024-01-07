@@ -60,7 +60,7 @@ public class TardisItemBuilder extends Item {
     public static ExteriorSchema findRandomExterior() {
         Random rnd = new Random();
         int randomized = rnd.nextInt(Math.abs(ExteriorRegistry.REGISTRY.size()));
-        return (ExteriorSchema) ExteriorRegistry.REGISTRY.stream().toArray()[randomized];
+        return (ExteriorSchema) ExteriorRegistry.REGISTRY.stream().toArray()[randomized] == ExteriorRegistry.CORAL_GROWTH ? ExteriorRegistry.TARDIM : (ExteriorSchema) ExteriorRegistry.REGISTRY.stream().toArray()[randomized];
     }
 
     public static TardisDesktopSchema findRandomDesktop() {

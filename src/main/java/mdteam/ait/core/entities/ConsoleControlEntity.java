@@ -57,6 +57,17 @@ public class ConsoleControlEntity extends BaseControlEntity {
     }
 
     @Override
+    public void onRemoved() {
+        if(this.consoleBlockPos == null) {
+            super.onRemoved();
+            return;
+        }
+        if(this.getWorld().getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
+            console.markNeedsControl();
+        }
+    }
+
+    @Override
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(IDENTITY, "");

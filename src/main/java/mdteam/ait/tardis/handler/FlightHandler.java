@@ -60,6 +60,10 @@ public class FlightHandler extends TardisLink {
         return PropertiesHandler.willAutoPilot(tardis().getHandlers().getProperties()) || !TardisUtil.isInteriorNotEmpty(this.tardis()); // todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
     }
 
+    public void increaseFlightTime(int ticks) {
+        targetTicks = targetTicks + ticks;
+    }
+
     public int getDurationAsPercentage() {
         if (this.targetTicks == 0 || this.flightTicks == 0) {
             if (this.tardis().getTravel().getState() == TardisTravel.State.DEMAT) return 0;
