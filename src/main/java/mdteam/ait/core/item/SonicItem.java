@@ -118,16 +118,16 @@ public class SonicItem extends Item {
                     TardisTravel.State state = exteriorBlock.getTardis().getTravel().getState();
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
-                    tardis.markDirty();
+                    /*tardis.markDirty();
                     if (!tardis.getHandlers().getInteriorChanger().isGenerating())
-                        AITMod.openScreen((ServerPlayerEntity) player, 2, tardis.getUuid());
+                        AITMod.openScreen((ServerPlayerEntity) player, 2, tardis.getUuid());*/
 
                 } else if (player.isSneaking() && world == TardisUtil.getTardisDimension()) {
-                    TardisTravel.State state = tardis.getTravel().getState();
+                    /*TardisTravel.State state = tardis.getTravel().getState();
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
                     if (!tardis.getHandlers().getInteriorChanger().isGenerating())
-                        AITMod.openScreen((ServerPlayerEntity) player, 2, tardis.getUuid());
+                        AITMod.openScreen((ServerPlayerEntity) player, 2, tardis.getUuid());*/
 
                 } else if (world.getRegistryKey() == World.OVERWORLD && !world.isClient()) {
                     Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
