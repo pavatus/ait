@@ -128,6 +128,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             nbt.putString("type", type.toString());
         if (variant != null)
             nbt.putString("variant", variant.toString());
+        markNeedsControl();
         markNeedsSyncing();
         markDirty();
         return nbt;

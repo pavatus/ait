@@ -56,7 +56,7 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class TardisUtil {
     private static final Random RANDOM = new Random();
-    private static MinecraftServer SERVER; //@TODO fixme this does not work on multiplayer.
+    private static MinecraftServer SERVER;
     private static ServerWorld TARDIS_DIMENSION;
     public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
     public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");

@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.Corners;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -34,7 +35,7 @@ public class DesktopGenerator {
         if (optional.isPresent()) {
             StructureTemplate template = optional.get();
 
-            template.place(level, BlockPos.ofFloored(corners.getBox().getCenter())/*centreTemplateAtCentre(centreTemplate(template), centreCorners(corners))*/, BlockPos.ofFloored(corners.getBox().getCenter()), new StructurePlacementData(), level.getRandom(), 2);
+            template.place(level, BlockPos.ofFloored(corners.getBox().getCenter())/*centreTemplateAtCentre(centreTemplate(template), centreCorners(corners))*/, BlockPos.ofFloored(corners.getBox().getCenter()), new StructurePlacementData(), level.getRandom(), Block.NO_REDRAW);
             return TardisUtil.findBlockInTemplate(template, BlockPos.ofFloored(corners.getBox().getCenter()), Direction.SOUTH, AITBlocks.DOOR_BLOCK);
         }
 
@@ -60,7 +61,7 @@ public class DesktopGenerator {
     public static void clearArea(ServerWorld level, Corners interiorCorners) {
         // @TODO: Just delete the chunks instead of doing this
         for (BlockPos pos : BlockPos.iterate(interiorCorners.getFirst().add(0, -64, 0), interiorCorners.getSecond().add(0, 256, 0))) {
-            level.setBlockState(pos, Blocks.AIR.getDefaultState());
+            level.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NO_REDRAW);
         }
 //        for (ItemEntity entity : level.getEntitiesByType(EntityType.ITEM/*TardisUtil.getPlayerInsideInterior(interiorCorners)*/, /*interiorCorners.getBox()*/EntityPredicates.EXCEPT_SPECTATOR)) {
 //            if (TardisUtil.inBox(interiorCorners.getBox(), entity.getBlockPos())) {

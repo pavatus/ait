@@ -37,7 +37,8 @@ public class HADSHandler extends TardisLink {
 
     @Override
     public void tick(MinecraftServer server) {
-        tickingForDanger(getExteriorPos().getWorld());
+        if(isHADSActive())
+            tickingForDanger(getExteriorPos().getWorld());
     }
 
 
