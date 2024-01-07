@@ -3,9 +3,7 @@ package mdteam.ait.registry;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.exterior.*;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
-import mdteam.ait.tardis.variant.exterior.booth.BoothDefaultVariant;
-import mdteam.ait.tardis.variant.exterior.booth.BoothFireVariant;
-import mdteam.ait.tardis.variant.exterior.booth.BoothSoulVariant;
+import mdteam.ait.tardis.variant.exterior.booth.*;
 import mdteam.ait.tardis.variant.exterior.box.*;
 import mdteam.ait.tardis.variant.exterior.capsule.CapsuleDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.capsule.CapsuleFireVariant;
@@ -83,6 +81,9 @@ public class ExteriorVariantRegistry {
     public static ExteriorVariantSchema BOOTH_DEFAULT;
     public static ExteriorVariantSchema BOOTH_FIRE;
     public static ExteriorVariantSchema BOOTH_SOUL;
+    public static ExteriorVariantSchema BOOTH_VINTAGE;
+    public static ExteriorVariantSchema BOOTH_BLUE;
+    public static ExteriorVariantSchema BOOTH_WHITE;
     public static ExteriorVariantSchema COOB; // dont use : (
     public static ExteriorVariantSchema HEAD_DEFAULT;
     public static ExteriorVariantSchema HEAD_SOUL;
@@ -119,6 +120,9 @@ public class ExteriorVariantRegistry {
         BOOTH_DEFAULT = register(new BoothDefaultVariant());
         BOOTH_FIRE = register(new BoothFireVariant());
         BOOTH_SOUL = register(new BoothSoulVariant());
+        BOOTH_VINTAGE = register(new BoothVintageVariant());
+        BOOTH_BLUE = register(new BoothBlueVariant());
+        BOOTH_WHITE = register(new BoothWhiteVariant());
 
         // funny
         // COOB = register(new RedCoobVariant()); // fixme CUBE HAS BEEN REMOVED, REPEAT, CUBE HAS BEEN REMOVED. DO NOT PANIC!!

@@ -109,6 +109,7 @@ public class InteriorChangingHandler extends TardisLink {
         super.tick(server);
         if (TardisUtil.isClient()) return;
         if (!isGenerating()) return;
+        if(tardis() == null) return;
         if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + tardis().getUuid().toString())) return;
         if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
             tardis().getTravel().crash();

@@ -2,9 +2,7 @@ package mdteam.ait.client.registry;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
-import mdteam.ait.client.registry.exterior.impl.booth.ClientBoothDefaultVariant;
-import mdteam.ait.client.registry.exterior.impl.booth.ClientBoothFireVariant;
-import mdteam.ait.client.registry.exterior.impl.booth.ClientBoothSoulVariant;
+import mdteam.ait.client.registry.exterior.impl.booth.*;
 import mdteam.ait.client.registry.exterior.impl.box.*;
 import mdteam.ait.client.registry.exterior.impl.capsule.ClientCapsuleDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.capsule.ClientCapsuleFireVariant;
@@ -65,6 +63,9 @@ public class ClientExteriorVariantRegistry {
     public static ClientExteriorVariantSchema BOOTH_DEFAULT;
     public static ClientExteriorVariantSchema BOOTH_FIRE;
     public static ClientExteriorVariantSchema BOOTH_SOUL;
+    public static ClientExteriorVariantSchema BOOTH_VINTAGE;
+    public static ClientExteriorVariantSchema BOOTH_BLUE;
+    public static ClientExteriorVariantSchema BOOTH_WHITE;
     public static ClientExteriorVariantSchema COOB; // dont use : (
     public static ClientExteriorVariantSchema HEAD_DEFAULT;
     public static ClientExteriorVariantSchema HEAD_SOUL;
@@ -101,6 +102,9 @@ public class ClientExteriorVariantRegistry {
         BOOTH_DEFAULT = register(new ClientBoothDefaultVariant());
         BOOTH_FIRE = register(new ClientBoothFireVariant());
         BOOTH_SOUL = register(new ClientBoothSoulVariant());
+        BOOTH_VINTAGE = register(new ClientBoothVintageVariant());
+        BOOTH_BLUE = register(new ClientBoothBlueVariant());
+        BOOTH_WHITE = register(new ClientBoothWhiteVariant());
 
         // funny
         // COOB = register(new RedCoobVariant()); // fixme CUBE HAS BEEN REMOVED, REPEAT, CUBE HAS BEEN REMOVED. DO NOT PANIC!!
