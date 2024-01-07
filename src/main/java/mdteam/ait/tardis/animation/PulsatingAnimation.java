@@ -59,7 +59,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
             return;
         }
 
-        MatSound sound = exterior.getTardis().getExterior().getType().getSound(state);
+        MatSound sound = exterior.getTardis().getExterior().getVariant().getSound(state);
 
         this.tellClientsToSetup(state);
 

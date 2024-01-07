@@ -2,6 +2,9 @@ package mdteam.ait.tardis.variant.exterior;
 
 import com.google.gson.*;
 import mdteam.ait.AITMod;
+import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.sounds.MatSound;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.ExteriorRegistry;
@@ -49,6 +52,14 @@ public abstract class ExteriorVariantSchema {
         return id.equals(that.id);
     }
 
+    public MatSound getSound(TardisTravel.State state) {
+        return switch (state) {
+            case LANDED, CRASH -> AITSounds.LANDED_ANIM;
+            case FLIGHT -> AITSounds.FLIGHT_ANIM;
+            case DEMAT -> AITSounds.DEMAT_ANIM;
+            case MAT -> AITSounds.MAT_ANIM;
+        };
+    }
 
     public ExteriorSchema parent() { return ExteriorRegistry.REGISTRY.get(this.parent); }
     public Identifier id() { return id; }

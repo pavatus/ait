@@ -29,6 +29,7 @@ public class AITSounds implements NeptuneSoundEventInit {
 
     public static final SoundEvent EIGHT_DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/eighth_demat"));
     public static final SoundEvent EIGHT_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/eighth_mat"));
+    public static final SoundEvent GHOST_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/ghost_mat"));
 
     // Controls
     public static final SoundEvent DEMAT_LEVER_PULL = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/demat_lever_pull"));
@@ -61,5 +62,6 @@ public class AITSounds implements NeptuneSoundEventInit {
     public static final MatSound FLIGHT_ANIM = new MatSound(FLIGHT_LOOP, 120, 60, 60, 0, 0);
     public static final MatSound EIGHT_DEMAT_ANIM = new MatSound(EIGHT_DEMAT, 8 * 20, 8 * 20, 8 * 20, 0.1f, 0.3f);
     public static final MatSound EIGHT_MAT_ANIM = new MatSound(EIGHT_MAT, 11 * 20, 11 * 20, 9 * 20, 0.2f, 0.4f);
+    public static final MatSound GHOST_MAT_ANIM = new MatSound(GHOST_MAT, 590, 320, 320, 0.2f, 0.4f);
     public static final MatSound LANDED_ANIM = new MatSound(null, 0, 0, 0, 0, 0);
 }

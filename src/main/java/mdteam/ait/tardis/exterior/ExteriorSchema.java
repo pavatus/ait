@@ -58,15 +58,6 @@ public abstract class ExteriorSchema {
         return this.name();
     }
 
-    public MatSound getSound(TardisTravel.State state) {
-        return switch (state) {
-            case LANDED, CRASH -> AITSounds.LANDED_ANIM;
-            case FLIGHT -> AITSounds.FLIGHT_ANIM;
-            case DEMAT -> AITSounds.DEMAT_ANIM;
-            case MAT -> AITSounds.MAT_ANIM;
-        };
-    }
-
     public static Object serializer() {
         return new Serializer();
     }

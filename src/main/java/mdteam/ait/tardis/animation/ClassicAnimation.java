@@ -44,7 +44,7 @@ public class ClassicAnimation extends ExteriorAnimation {
             alpha = 0f; // just make me vanish.
             return;
         }
-        MatSound sound = exterior.getTardis().getExterior().getType().getSound(state);
+        MatSound sound = exterior.getTardis().getExterior().getVariant().getSound(state);
 
         this.timeLeft = sound.timeLeft();
         this.maxTime = sound.maxTime();
