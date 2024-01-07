@@ -2,15 +2,13 @@ package mdteam.ait.tardis.util;
 
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
-import mdteam.ait.client.models.doors.DoorModel;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.interfaces.RiftChunk;
+import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
@@ -20,7 +18,6 @@ import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.FlightHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -48,7 +45,6 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -109,41 +105,32 @@ public class TardisUtil {
                             ServerTardisManager.getInstance().getTardis(uuid).getTravel().getPosition());*/
                 }
         );
-        ServerPlayNetworking.registerGlobalReceiver(SNAP, (server, player, handler, buf, responseSender) -> {
-            UUID uuid = buf.readUuid();
-            Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
+        ServerPlayNetworking.registerGlobalReceiver(SNAP,
+                (server, player, handler, buf, responseSender) -> {
+                    UUID uuid = buf.readUuid();
+                    Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-            if (tardis.getHandlers().getOvergrownHandler().isOvergrown()) {
-                return;
-            }
+                    if(tardis.getHandlers().getOvergrownHandler().isOvergrown()) return;
 
-            BlockPos doorPos = tardis.getDoor().getExteriorPos();
-            BlockPos playerPos = player.getBlockPos();
+                    player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
 
-            double distanceSquared = playerPos.getSquaredDistance(doorPos.getX(), doorPos.getY(), doorPos.getZ());
-            boolean inBox = TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), playerPos);
-
-            if (distanceSquared <= 200 || inBox) {
-                if (!player.isSneaking()) {
-                    if (!tardis.getDoor().locked()) {
-                        if (tardis.getDoor().isOpen()) {
-                            tardis.getDoor().closeDoors();
+                    BlockPos pos = player.getWorld().getRegistryKey() ==
+                            TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
+                    if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
+                        if (!player.isSneaking()) {
+                            if(!tardis.getDoor().locked()) {
+                            /*DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
+                                    player);*/
+                                if (tardis.getDoor().isOpen()) tardis.getDoor().closeDoors();
+                                else tardis.getDoor().openDoors();
+                            }
                         } else {
-                            tardis.getDoor().openDoors();
+                            DoorHandler.toggleLock(tardis, player);
                         }
+                        tardis.markDirty();
                     }
-                } else {
-                    DoorHandler.toggleLock(tardis, player);
                 }
-                tardis.markDirty();
-            }
-
-            // Play sound only if the player is in the Tardis dimension and conditions are met
-            if (player.getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey() &&
-                    (distanceSquared <= 200 || inBox)) {
-                player.getWorld().playSound(null, playerPos, AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
-            }
-        });
+        );
         ServerPlayNetworking.registerGlobalReceiver(FIND_PLAYER,
                 (server, currentPlayer, handler, buf, responseSender) -> {
                     UUID tardisId = buf.readUuid();
