@@ -27,9 +27,9 @@ import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -120,7 +120,7 @@ public class ServerTardisManager extends TardisManager {
         if (this.subscribers.containsKey(tardisUUID)) {
             this.subscribers.get(tardisUUID).add(serverPlayerEntity.getUuid());
         } else {
-            List<UUID> subscriber_list = new ArrayList<>();
+            List<UUID> subscriber_list = new CopyOnWriteArrayList<>();
             subscriber_list.add(serverPlayerEntity.getUuid());
             this.subscribers.put(tardisUUID, subscriber_list);
         }
@@ -160,7 +160,7 @@ public class ServerTardisManager extends TardisManager {
      * @param tardisUUID the TARDIS UUID
      */
     private void removeAllSubscribersFromTardis(UUID tardisUUID) {
-        this.subscribers.replace(tardisUUID, new ArrayList<>());
+        this.subscribers.replace(tardisUUID, new CopyOnWriteArrayList<>());
     }
 
     public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorSchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
@@ -216,7 +216,7 @@ public class ServerTardisManager extends TardisManager {
     }
 
     public void saveTardis(Tardis tardis) {
-        File savePath = ServerTardisManager.getSavePath(tardis);
+        /*File savePath = ServerTardisManager.getSavePath(tardis);
         savePath.getParentFile().mkdirs();
 
         try {
@@ -224,6 +224,68 @@ public class ServerTardisManager extends TardisManager {
         } catch (IOException e) {
             AITMod.LOGGER.warn("Couldn't save Tardis {}", tardis.getUuid());
             AITMod.LOGGER.warn(e.getMessage());
+        }*/
+        this.saveTardisAsync(tardis);
+    }
+
+    public void saveTardisAsync(Tardis tardis) {
+        CompletableFuture.runAsync(() -> {
+            File savePath = ServerTardisManager.getSavePath(tardis);
+            savePath.getParentFile().mkdirs();
+
+            try {
+                Files.writeString(savePath.toPath(),
+                        this.gson.toJson(tardis, ServerTardis.class));
+            } catch (IOException e) {
+                AITMod.LOGGER.warn("Couldn't save Tardis {}", tardis.getUuid());
+                AITMod.LOGGER.warn(e.getMessage());
+            }
+        });
+    }
+
+    public void saveTardises() {
+        List<Tardis> tardises = new CopyOnWriteArrayList<>(getLookup().values());
+
+        // Split the tardises into multiple groups
+        int numThreads = Runtime.getRuntime().availableProcessors();
+        int batchSize = (int) Math.ceil((double) tardises.size() / numThreads);
+
+        // Create an ExecutorService with a thread pool
+        ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
+
+        List<Callable<Void>> tasks = new ArrayList<>();
+
+        // Create a Callable for each batch of tardises
+        for (int i = 0; i < tardises.size(); i += batchSize) {
+            int endIndex = Math.min(i + batchSize, tardises.size());
+            List<Tardis> batch = tardises.subList(i, endIndex);
+
+            // Create a Callable to save the batch of tardises
+            Callable<Void> task = () -> {
+                for (Tardis tardis : batch) {
+                    // Save the tardis
+                    this.saveTardis(tardis);
+                }
+                return null;
+            };
+
+            tasks.add(task);
+        }
+
+        try {
+            // Submit all the tasks to the ExecutorService
+            List<Future<Void>> futures = executorService.invokeAll(tasks);
+
+            // Wait for all the tasks to complete
+            for (Future<Void> future : futures) {
+                future.get();
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            // Handle any exceptions that may occur
+            AITMod.LOGGER.warn("Failed to save tardises []" + e.getMessage());
+        } finally {
+            // Shutdown the ExecutorService
+            executorService.shutdown();
         }
     }
 
@@ -233,7 +295,6 @@ public class ServerTardisManager extends TardisManager {
         }
     }
 
-    // fixme this shit broken bro something about being edited while iterating through it
 
     public void sendToSubscribers(Tardis tardis) {
         if (tardis == null) return;
@@ -289,7 +350,7 @@ public class ServerTardisManager extends TardisManager {
     public void reset() {
         this.subscribers.clear();
 
-        this.saveTardis();
+        this.saveTardises();
         super.reset();
     }
 
@@ -309,7 +370,7 @@ public class ServerTardisManager extends TardisManager {
 
 
     public void loadTardises() {
-        File[] saved = new File(TardisUtil.getServer().getSavePath(
+        /*File[] saved = new File(TardisUtil.getServer().getSavePath(
                 WorldSavePath.ROOT) + "ait/").listFiles();
 
         if (saved == null)
@@ -322,6 +383,22 @@ public class ServerTardisManager extends TardisManager {
 
             if (!name.substring(name.lastIndexOf(".") + 1).equalsIgnoreCase("json"))
                 continue;
+
+            UUID uuid = UUID.fromString(name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf(".")));
+            this.loadTardis(uuid);
+        }*/
+        Path savePath = TardisUtil.getServer().getSavePath(WorldSavePath.ROOT).resolve("ait");
+
+        File[] saved = savePath.toFile().listFiles((dir, name) ->
+                name.toLowerCase().endsWith(".json") && !new File(dir, name).isDirectory());
+
+        if (saved == null) {
+            return;
+        }
+
+        for (String name : Stream.of(saved)
+                .map(File::getName)
+                .collect(Collectors.toSet())) {
 
             UUID uuid = UUID.fromString(name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf(".")));
             this.loadTardis(uuid);

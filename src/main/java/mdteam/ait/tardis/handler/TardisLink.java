@@ -33,33 +33,36 @@ public abstract class TardisLink implements TardisTickable {
 
     @Override
     public void tick(ServerWorld world) {
+        // Implementation of the server-side tick logic
     }
 
     @Override
     public void tick(MinecraftServer server) {
+        // Implementation of the server-side tick logic
     }
 
     @Override
     public void tick(MinecraftClient client) {
-
+        // Implementation of the client-side tick logic
     }
 
     @Override
     public void startTick(MinecraftServer server) {
+        // Implementation of the server-side tick logic when it starts
     }
 
     public AbsoluteBlockPos.Directed getDoorPos() {
         Tardis tardis = tardis();
-        if (tardis == null || tardis.getDesktop() == null)
-            return new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
-        return tardis.getDesktop().getInteriorDoorPos();
+        return tardis != null && tardis.getDesktop() != null ?
+                tardis.getDesktop().getInteriorDoorPos() :
+                new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
     }
 
     public AbsoluteBlockPos.Directed getExteriorPos() {
         Tardis tardis = tardis();
-        if (tardis == null || tardis.getTravel() == null)
-            return new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
-        return tardis.getTravel().getPosition();
+        return tardis != null && tardis.getTravel() != null ?
+                tardis.getTravel().getPosition() :
+                new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
     }
 
     public static boolean isClient() {
