@@ -152,6 +152,8 @@ public class InteriorSettingsScreen extends TardisScreen {
         //         0xadcaf7
         // );
 
+        if(this.selectedDesktop == null) return;
+
         context.drawTexture(this.selectedDesktop.previewTexture().texture(), left + 119, top + 18, 128, 128, 0, 0, this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2, this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2);
     }
 
