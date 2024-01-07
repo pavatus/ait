@@ -109,32 +109,41 @@ public class TardisUtil {
                             ServerTardisManager.getInstance().getTardis(uuid).getTravel().getPosition());*/
                 }
         );
-        ServerPlayNetworking.registerGlobalReceiver(SNAP,
-                (server, player, handler, buf, responseSender) -> {
-                    UUID uuid = buf.readUuid();
-                    Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
+        ServerPlayNetworking.registerGlobalReceiver(SNAP, (server, player, handler, buf, responseSender) -> {
+            UUID uuid = buf.readUuid();
+            Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-                    if(tardis.getHandlers().getOvergrownHandler().isOvergrown()) return;
+            if (tardis.getHandlers().getOvergrownHandler().isOvergrown()) {
+                return;
+            }
 
-                    player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
+            BlockPos doorPos = tardis.getDoor().getExteriorPos();
+            BlockPos playerPos = player.getBlockPos();
 
-                    BlockPos pos = player.getWorld().getRegistryKey() ==
-                            TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
-                    if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
-                        if (!player.isSneaking()) {
-                            if(!tardis.getDoor().locked()) {
-                            /*DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
-                                    player);*/
-                                if (tardis.getDoor().isOpen()) tardis.getDoor().closeDoors();
-                                else tardis.getDoor().openDoors();
-                            }
+            double distanceSquared = playerPos.getSquaredDistance(doorPos.getX(), doorPos.getY(), doorPos.getZ());
+            boolean inBox = TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), playerPos);
+
+            if (distanceSquared <= 200 || inBox) {
+                if (!player.isSneaking()) {
+                    if (!tardis.getDoor().locked()) {
+                        if (tardis.getDoor().isOpen()) {
+                            tardis.getDoor().closeDoors();
                         } else {
-                            DoorHandler.toggleLock(tardis, player);
+                            tardis.getDoor().openDoors();
                         }
-                        tardis.markDirty();
                     }
+                } else {
+                    DoorHandler.toggleLock(tardis, player);
                 }
-        );
+                tardis.markDirty();
+            }
+
+            // Play sound only if the player is in the Tardis dimension and conditions are met
+            if (player.getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey() &&
+                    (distanceSquared <= 200 || inBox)) {
+                player.getWorld().playSound(null, playerPos, AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
+            }
+        });
         ServerPlayNetworking.registerGlobalReceiver(FIND_PLAYER,
                 (server, currentPlayer, handler, buf, responseSender) -> {
                     UUID tardisId = buf.readUuid();
