@@ -1,6 +1,8 @@
 package mdteam.ait.client;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.sounds.ClientSoundManager;
+import mdteam.ait.core.*;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.ClientDoorRegistry;
@@ -17,10 +19,6 @@ import mdteam.ait.client.screens.MonitorScreen;
 import mdteam.ait.client.screens.OwOFindPlayerScreen;
 import mdteam.ait.client.screens.interior.OwOInteriorSelectScreen;
 import mdteam.ait.client.util.ClientTardisUtil;
-import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.AITDimensions;
-import mdteam.ait.core.AITEntityTypes;
-import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -54,6 +52,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import org.lwjgl.glfw.GLFW;
@@ -207,6 +206,11 @@ public class AITModClient implements ClientModInitializer {
                     // this.setupAnimation(TardisTravel.State.values()[p]);
                 }
         );
+
+        // does all this clientplaynetwrokigng shite really have to go in here, theres probably somewhere else it can go right??
+        ClientPlayNetworking.registerGlobalReceiver(AITMessages.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) -> {
+            client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS);
+        });
 
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
     }

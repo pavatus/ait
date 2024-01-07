@@ -49,7 +49,7 @@ public class HandBrakeControl extends Control {
 
         messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
 
-        if (tardis.getTravel().getState() == TardisTravel.State.DEMAT) tardis.getTravel().toFlight();
+        // if (tardis.getTravel().getState() == TardisTravel.State.DEMAT) tardis.getTravel().toFlight();
         if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) tardis.getTravel().crash();
 
         return true;

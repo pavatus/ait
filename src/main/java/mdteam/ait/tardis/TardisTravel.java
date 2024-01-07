@@ -3,6 +3,7 @@ package mdteam.ait.tardis;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.AITMessages;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
@@ -17,11 +18,13 @@ import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -45,7 +48,6 @@ import static mdteam.ait.AITMod.AIT_CONFIG;
 
 // todo this class is like a monopoly, im gonna slash it into little corporate pieces
 public class TardisTravel extends TardisLink {
-
     private State state = State.LANDED;
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
@@ -147,12 +149,15 @@ public class TardisTravel extends TardisLink {
     }
 
     public void increaseSpeed() {
-        PropertiesHandler.set(this.tardis().getHandlers().getProperties(), PropertiesHandler.SPEED, MathHelper.clamp(this.getSpeed() + 1,0, MAX_SPEED));
-        this.tardis().markDirty();
+        this.setSpeed(MathHelper.clamp(this.getSpeed() + 1,0, MAX_SPEED));
     }
     public void decreaseSpeed() {
-        PropertiesHandler.set(this.tardis().getHandlers().getProperties(), PropertiesHandler.SPEED, MathHelper.clamp(this.getSpeed() - 1,0, MAX_SPEED));
-        this.tardis().markDirty();
+        // this wont work if you shift punch the throttle, but i cba moving it down to the setSpeed method so tough
+        if (this.getState() == State.LANDED && this.getSpeed() == 1) {
+            TardisUtil.getTardisDimension().playSound(null, this.tardis().getDesktop().getConsolePos(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+        }
+
+        this.setSpeed(MathHelper.clamp(this.getSpeed() - 1,0, MAX_SPEED));
     }
     public int getSpeed() {
         return PropertiesHandler.getInt(this.tardis().getHandlers().getProperties(), PropertiesHandler.SPEED);
@@ -205,10 +210,29 @@ public class TardisTravel extends TardisLink {
 
         setDematTicks(getDematTicks() + 1);
 
+        if (PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
+            // cancel materialise
+            this.cancelDemat();
+            return;
+        }
+
         if (getDematTicks() > (FlightUtil.getSoundLength(getMatSoundForCurrentState()) * 40)) {
             this.toFlight();
             this.setDematTicks(0);
         }
+    }
+
+    /**
+     * Stops demat while its happening - then plays a boom sound to signify
+     */
+    private void cancelDemat() {
+        if (this.getState() != State.DEMAT) return; // rip
+
+        this.forceLand();
+        this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+        TardisUtil.getTardisDimension().playSound(null, this.tardis().getDesktop().getConsolePos(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+        AITMessages.sendToInterior(this.tardis(), AITMessages.CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
+
     }
     /**
      * Performs a crash for the Tardis.
@@ -599,8 +623,8 @@ public class TardisTravel extends TardisLink {
     }
 
     public void forceLand(ExteriorBlockEntity blockEntity) {
-        if (this.getState() != State.MAT)
-            return;
+        //if (this.getState() != State.MAT)
+        //    return;
 
         this.crashing = false;
 
