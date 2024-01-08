@@ -15,14 +15,14 @@ public class ConsoleRegistry {
         return Registry.register(REGISTRY, schema.id(), schema);
     }
 
-    public static ConsoleSchema BOREALIS;
+    //public static ConsoleSchema BOREALIS;
     public static ConsoleSchema CORAL; // @TODO implement the new coral when its made again
     public static ConsoleSchema HARTNELL;
-    public static ConsoleSchema TEMP; // @TODO implement the new hudolin when its made again
+    //public static ConsoleSchema TEMP; // @TODO implement the new hudolin when its made again
 
     public static void init() {
         HARTNELL = register(new HartnellConsole());
-        BOREALIS = register(new BorealisConsole());
+        //BOREALIS = register(new BorealisConsole());
         CORAL = register(new CoralConsole());
         //TEMP = register(new TempConsole());
     }

@@ -29,8 +29,8 @@ public class ClientConsoleVariantRegistry {
         return null;
     }
 
-    public static ClientConsoleVariantSchema BOREALIS;
-    public static ClientConsoleVariantSchema AUTUMN;
+    //public static ClientConsoleVariantSchema BOREALIS;
+    //public static ClientConsoleVariantSchema AUTUMN;
     public static ClientConsoleVariantSchema HARTNELL;
     public static ClientConsoleVariantSchema HARTNELL_WOOD;
     public static ClientConsoleVariantSchema HARTNELL_KELT;
@@ -40,8 +40,8 @@ public class ClientConsoleVariantRegistry {
 
     public static void init() {
         // Borealis variants
-        BOREALIS = register(new ClientBorealisVariant());
-        AUTUMN = register(new ClientAutumnVariant());
+        //BOREALIS = register(new ClientBorealisVariant());
+        //AUTUMN = register(new ClientAutumnVariant());
 
         // Hartnell variants
         HARTNELL = register(new ClientHartnellVariant());
