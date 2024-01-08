@@ -24,39 +24,39 @@ public class InteriorChangingHandler extends TardisLink {
     public static final String QUEUED_INTERIOR = "queued_interior";
     public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
     private static Random random;
+    private boolean isGenerating;
+    private int ticks;
+    private TardisDesktopSchema queuedInterior;
 
     public InteriorChangingHandler(Tardis tardis) {
         super(tardis, "interior-changing");
     }
 
     private void setGenerating(boolean var) {
-        PropertiesHandler.set(tardis().getHandlers().getProperties(), IS_REGENERATING, var);
-        tardis().markDirty();
+        this.isGenerating = var;
     }
     public boolean isGenerating() {
-        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), IS_REGENERATING);
+        return this.isGenerating;
     }
 
     private void setTicks(int var) {
-        PropertiesHandler.set(tardis().getHandlers().getProperties(), GENERATING_TICKS, var);
-        tardis().markDirty();
+        this.ticks = var;
     }
     private void addTick() {
         setTicks(getTicks() + 1);
     }
     public int getTicks() {
-        return PropertiesHandler.getInt(tardis().getHandlers().getProperties(), GENERATING_TICKS);
+        return this.ticks;
     }
     public boolean hasReachedMax() {
         return getTicks() >= WARN_TIME;
     }
 
     private void setQueuedInterior(TardisDesktopSchema schema) {
-        PropertiesHandler.setDesktop(tardis().getHandlers().getProperties(), QUEUED_INTERIOR, schema);
-        tardis().markDirty();
+        this.queuedInterior = schema;
     }
     public TardisDesktopSchema getQueuedInterior() {
-        return PropertiesHandler.getDesktop(tardis().getHandlers().getProperties(), QUEUED_INTERIOR);
+        return this.queuedInterior;
     }
 
     public void queueInteriorChange(TardisDesktopSchema schema) {
@@ -77,7 +77,6 @@ public class InteriorChangingHandler extends TardisLink {
         tardis().getDesktop().setConsolePos(null);
         if (!(tardis().hasGrowthDesktop()))
             tardis().removeFuel(5000);
-        tardis().markDirty();
     }
 
     private void onCompletion() {

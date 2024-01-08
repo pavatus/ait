@@ -22,8 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
 import static mdteam.ait.tardis.TardisTravel.State.*;
 
 public class DoorData extends TardisLink {
@@ -64,6 +62,7 @@ public class DoorData extends TardisLink {
                 });
     }
     private boolean shouldSucc() {
+        System.out.println(this.getTardis());
         return TardisUtil.getTardisDimension().getBlockEntity(tardis().getDesktop().getDoorPos()) instanceof DoorBlockEntity && (tardis().getTravel().getState() == FLIGHT || tardis().getTravel().getState() == CRASH) && this.isOpen();
     }
 
@@ -71,15 +70,11 @@ public class DoorData extends TardisLink {
     public void setLeftRot(boolean var) {
         this.left = var;
         if(this.left) this.setDoorState(DoorStateEnum.FIRST);
-
-        tardis().markDirty();
     }
 
     public void setRightRot(boolean var) {
         this.right = var;
         if(this.right) this.setDoorState(DoorStateEnum.SECOND);
-
-        tardis().markDirty();
     }
 
     public boolean isRightOpen() {
@@ -94,8 +89,6 @@ public class DoorData extends TardisLink {
         this.locked = var;
         // should probs be in the method below
         if (var) setDoorState(DoorStateEnum.CLOSED);
-
-        tardis().markDirty();
     }
 
     public void setLockedAndDoors(boolean var) {
@@ -165,7 +158,6 @@ public class DoorData extends TardisLink {
         }
 
         this.doorState = var;
-        tardis().markDirty();
     }
 
     /**
@@ -173,7 +165,6 @@ public class DoorData extends TardisLink {
      */
     public void clearExteriorAnimationState() {
         tempExteriorState = null;
-        tardis().markDirty();
     }
 
     /**
@@ -181,7 +172,6 @@ public class DoorData extends TardisLink {
      */
     public void clearInteriorAnimationState() {
         tempInteriorState = null;
-        tardis().markDirty();
     }
 
     public DoorStateEnum getDoorState() {
@@ -197,7 +187,7 @@ public class DoorData extends TardisLink {
             return false;
         }
 
-        if (tardis.getHandlers().getOvergrownHandler().isOvergrown()) {
+        if (tardis.getHandlers().getOvergrown().isOvergrown()) {
             // Bro cant escape
             if (player == null) return false;
 
@@ -205,7 +195,7 @@ public class DoorData extends TardisLink {
             ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
             if (stack.getItem() instanceof AxeItem) {
                 player.swingHand(Hand.MAIN_HAND);
-                tardis.getHandlers().getOvergrownHandler().removeVegetation();
+                tardis.getHandlers().getOvergrown().removeVegetation();
                 stack.setDamage(stack.getDamage() - 1);
 
                 if (pos != null)

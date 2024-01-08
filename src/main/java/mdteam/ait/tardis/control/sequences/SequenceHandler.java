@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.control.sequences;
 
 import mdteam.ait.registry.SequenceRegistry;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.util.FlightUtil;
@@ -14,9 +15,9 @@ public class SequenceHandler extends TardisLink {
     private RecentControls recent;
     private int ticks = 0;
 
-    public SequenceHandler(UUID tardisId) {
-        super(tardisId);
-        recent = new RecentControls(tardisId);
+    public SequenceHandler(Tardis tardisId) {
+        super(tardisId, "sequence");
+        recent = new RecentControls(tardisId.getUuid());
     }
 
     public void add(Control control) {

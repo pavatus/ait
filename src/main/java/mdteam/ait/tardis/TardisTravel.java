@@ -54,13 +54,13 @@ public class TardisTravel extends TardisLink {
     private static final Random random = new Random();
 
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-        super(tardis.getUuid());
+        super(tardis, "travel");
         this.position = pos;
         if(this.lastPosition == null) this.lastPosition = pos;
     }
 
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
-        super(tardis.getUuid());
+        super(tardis, "travel");
         this.position = pos;
         if(this.lastPosition == null) this.lastPosition = pos;
         this.destination = dest;
@@ -89,16 +89,6 @@ public class TardisTravel extends TardisLink {
 
     public AbsoluteBlockPos.Client getClientPosition() {
         return new AbsoluteBlockPos.Client(position, position.getDirection(), position.getWorld());
-    }
-
-    public Tardis getTardis() {
-        if (this.tardisId == null && this.getPosition() != null) {
-            Tardis found = TardisUtil.findTardisByPosition(this.getPosition());
-            if (found != null)
-                this.tardisId = found.getUuid();
-        }
-
-        return this.tardis();
     }
 
     /*public boolean ifNotInFlightDemat(ServerPlayerEntity player) {

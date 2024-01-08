@@ -55,7 +55,6 @@ public class PortalsHandler {
         // i  have trust issues with code
 
         portals.remove(tardis.getUuid());
-        tardis.markDirty();
     }
 
     private static void createPortals(Tardis tardis) {
@@ -74,7 +73,6 @@ public class PortalsHandler {
         list.add(interior);
 
         portals.put(tardis.getUuid(), list);
-        tardis.markDirty();
     }
 
     private static Portal createExteriorPortal(Tardis tardis) {

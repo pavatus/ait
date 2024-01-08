@@ -15,7 +15,7 @@ public class TardisExterior extends TardisLink {
     private ExteriorVariantSchema variant;
 
     public TardisExterior(Tardis tardis, ExteriorSchema exterior, ExteriorVariantSchema variant) {
-        super(tardis.getUuid());
+        super(tardis, "exterior");
         this.exterior = exterior;
         this.variant = variant;
     }

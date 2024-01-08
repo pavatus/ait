@@ -14,20 +14,23 @@ import net.minecraft.sound.SoundCategory;
 import java.util.UUID;
 
 public class SiegeData extends TardisLink {
+    private boolean isSiegeMode = false;
+    private UUID heldPlayer;
+
     public SiegeData(Tardis tardis) {
         super(tardis, "siege");
     }
 
     public boolean isSiegeMode() {
-        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
+        return this.isSiegeMode;
     }
     public boolean isSiegeBeingHeld() {
-        return PropertiesHandler.get(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD) != null;
+        return this.heldPlayer != null;
     }
     public UUID getHeldPlayerUUID() {
         if (!isSiegeBeingHeld()) return null;
 
-        return (UUID) PropertiesHandler.get(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD);
+        return this.heldPlayer;
     }
     public ServerPlayerEntity getHeldPlayer() {
         if (isClient()) return null;
@@ -37,8 +40,7 @@ public class SiegeData extends TardisLink {
     public void setSiegeBeingHeld(UUID playerId) {
         if (playerId != null) tardis().getHandlers().getAlarms().enable();
 
-        PropertiesHandler.set(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD, playerId);
-        tardis().markDirty();
+        this.heldPlayer = playerId;
     }
     public int getTimeInSiegeMode() {
         return PropertiesHandler.getInt(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME);
@@ -57,9 +59,7 @@ public class SiegeData extends TardisLink {
 
         tardis().removeFuel(0.01 * FuelData.TARDIS_MAX_FUEL);
 
-        PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE, b);
-        // Loqor is stinky
-        tardis().markDirty();
+        this.isSiegeMode = b;
     }
 
     @Override

@@ -38,7 +38,6 @@ public class WaypointHandler extends TardisLink {
         // System.out.println(var);
         // System.out.println(this.current);
         this.current = var;
-        this.tardis().markDirty();
 
         if (spawnItem && prev.isPresent()) {
             this.spawnItem(prev.get());

@@ -82,8 +82,8 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             if (!entity.getTardis().isSiegeMode()) {
                 model.animateTile(entity);
                 model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
-                if (entity.getTardis().getHandlers().getOvergrownHandler().isOvergrown()) {
-                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.getTardis().getHandlers().getOvergrownHandler().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+                if (entity.getTardis().getHandlers().getOvergrown().isOvergrown()) {
+                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.getTardis().getHandlers().getOvergrown().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
                 }
                 if (exteriorVariant.emission() != null && entity.getTardis().hasPower()) {
                     boolean alarms = PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);

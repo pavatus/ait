@@ -16,13 +16,15 @@ public class FuelData extends TardisLink {
     public static final double TARDIS_MAX_FUEL = 25000;
     public static final String FUEL_COUNT = "fuel_count";
     public static final String REFUELING = "refueling";
+    private double fuel;
+    private boolean refueling;
 
     public FuelData(Tardis tardis) {
         super(tardis, "fuel");
     }
 
     public double getFuel() {
-        return (double) PropertiesHandler.get(tardis().getHandlers().getProperties(), FUEL_COUNT);
+        return fuel;
     }
 
     public boolean isOutOfFuel() {
@@ -32,8 +34,7 @@ public class FuelData extends TardisLink {
     public void setFuelCount(double fuel) {
         double prev = getFuel();
 
-        PropertiesHandler.set(tardis().getHandlers().getProperties(), FUEL_COUNT, fuel);
-        tardis().markDirty();
+        this.fuel = fuel;
 
         // fire the event if ran out of fuel
         // this may get ran multiple times though for some reason
@@ -59,13 +60,12 @@ public class FuelData extends TardisLink {
     }
 
     public void setRefueling(boolean isRefueling) {
-        PropertiesHandler.setBool(tardis().getHandlers().getProperties(), REFUELING, isRefueling);
-        tardis().markDirty();
+        this.refueling = isRefueling;
     }
 
     // is always true for now
     public boolean isRefueling() {
-        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), REFUELING);
+        return this.refueling;
     }
 
     @Override

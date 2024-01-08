@@ -9,7 +9,6 @@ import net.minecraft.server.MinecraftServer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class TardisHandlersManager extends TardisLink {
     @Exclude
@@ -60,7 +59,7 @@ public class TardisHandlersManager extends TardisLink {
         addTickable(getProperties());
         addTickable(getWaypoints());
         addTickable(getLoyalties());
-        addTickable(getOvergrownHandler());
+        addTickable(getOvergrown());
         addTickable(getHum());
         addTickable(getAlarms());
         addTickable(getInteriorChanger());
@@ -114,11 +113,18 @@ public class TardisHandlersManager extends TardisLink {
         return properties;
     }
 
+    public void setProperties(PropertiesHolder properties) {
+        this.properties = properties;
+    }
+
     public WaypointHandler getWaypoints() {
         if (this.waypoints == null) {
             this.waypoints = new WaypointHandler(this.getTardis());
         }
         return waypoints;
+    }
+    public void setWaypoints(WaypointHandler waypoints) {
+        this.waypoints = waypoints;
     }
 
     public LoyaltyHandler getLoyalties() {
@@ -127,17 +133,26 @@ public class TardisHandlersManager extends TardisLink {
         }
         return loyalties;
     }
+    public void setLoyalties(LoyaltyHandler loyalties) {
+        this.loyalties = loyalties;
+    }
     public DoorData getDoor() {
         if (this.door == null) {
             this.door = new DoorData(this.getTardis());
         }
         return door;
     }
-    public OvergrownData getOvergrownHandler() {
+    public void setDoor(DoorData door) {
+        this.door = door;
+    }
+    public OvergrownData getOvergrown() {
         if (this.overgrown == null) {
             this.overgrown = new OvergrownData(this.getTardis());
         }
         return overgrown;
+    }
+    public void setOvergrown(OvergrownData overgrown) {
+        this.overgrown = overgrown;
     }
     public ServerHumHandler getHum() {
         if (this.hum == null) {
@@ -153,6 +168,9 @@ public class TardisHandlersManager extends TardisLink {
         }
         return alarms;
     }
+    public void setAlarms(ServerAlarmHandler alarms) {
+        this.alarms = alarms;
+    }
     public InteriorChangingHandler getInteriorChanger() {
         if (this.interior == null) {
             this.interior = new InteriorChangingHandler(this.getTardis());
@@ -166,12 +184,18 @@ public class TardisHandlersManager extends TardisLink {
         }
         return fuel;
     }
+    public void setFuel(FuelData fuel) {
+        this.fuel = fuel;
+    }
 
     public HADSData getHADS() {
         if (this.hads == null) {
             this.hads = new HADSData(this.getTardis());
         }
         return hads;
+    }
+    public void setHADS(HADSData hads) {
+        this.hads = hads;
     }
     public FlightData getFlight() {
         if (this.flight == null) {
@@ -180,17 +204,26 @@ public class TardisHandlersManager extends TardisLink {
 
         return flight;
     }
+    public void setFlight(FlightData flight) {
+        this.flight = flight;
+    }
     public SiegeData getSiege() {
         if (this.siege == null) {
             this.siege = new SiegeData(this.getTardis());
         }
         return this.siege;
     }
+    public void setSiege(SiegeData siege) {
+        this.siege = siege;
+    }
     public CloakData getCloak() {
         if (this.cloak == null) {
             this.cloak = new CloakData(this.getTardis());
         }
         return this.cloak;
+    }
+    public void setCloak(CloakData cloak) {
+        this.cloak = cloak;
     }
     // public SequenceHandler getSequencing() {return this.sequence;}
 }

@@ -32,7 +32,7 @@ public class TardisDesktop extends TardisLink {
     private final Corners corners;
 
     public TardisDesktop(Tardis tardis, TardisDesktopSchema schema) {
-        super(tardis.getUuid());
+        super(tardis,"desktop");
         this.schema = schema;
         this.corners = TardisUtil.findInteriorSpot();
 
@@ -53,7 +53,7 @@ public class TardisDesktop extends TardisLink {
     }
 
     public TardisDesktop(Tardis tardis, TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed door, AbsoluteBlockPos.Directed console) {
-        super(tardis.getUuid());
+        super(tardis, "desktop");
         this.schema = schema;
         this.corners = corners;
         this.doorPos = door;

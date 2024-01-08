@@ -41,7 +41,6 @@ public class Tardis {
         this.travel = travel.apply(this);
         this.desktop = desktop.apply(this);
         this.exterior = exterior.apply(this);
-        this.handlers = new TardisHandlersManager(uuid);
     }
 
     public UUID getUuid() {
@@ -84,7 +83,8 @@ public class Tardis {
      */
     public TardisHandlersManager getHandlers() {
         if (handlers == null) {
-            handlers = new TardisHandlersManager(getUuid());
+            System.out.println(this);
+            handlers = new TardisHandlersManager(this);
         }
 
         return handlers;
@@ -307,6 +307,7 @@ public class Tardis {
         return dirty;
     }
 
+    // todo replace all instances of "markDirty" with "updateTardis(this)"
     public void markDirty() {
         dirty = true;
     }

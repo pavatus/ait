@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class CloakData extends TardisLink {
+    private boolean isCloaked;
 
     // @TODO its been a minute since ive had to server to client logic bullshit so duzo you do it while i do components
     /*private float alphaBasedOnDistance = 1.0F;*/
@@ -23,17 +24,15 @@ public class CloakData extends TardisLink {
     }
 
     public void enable() {
-        PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_CLOAKED, true);
-        tardis().markDirty();
+        this.isCloaked = true;
     }
 
     public void disable() {
-        PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_CLOAKED, false);
-        tardis().markDirty();
+        this.isCloaked = false;
     }
 
     public boolean isEnabled() {
-        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_CLOAKED);
+        return this.isCloaked = true;
     }
 
     public void toggle() {

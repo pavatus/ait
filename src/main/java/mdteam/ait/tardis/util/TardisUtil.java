@@ -129,7 +129,7 @@ public class TardisUtil {
                     UUID uuid = buf.readUuid();
                     Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-                    if(tardis.getHandlers().getOvergrownHandler().isOvergrown()) return;
+                    if(tardis.getHandlers().getOvergrown().isOvergrown()) return;
 
                     player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
 

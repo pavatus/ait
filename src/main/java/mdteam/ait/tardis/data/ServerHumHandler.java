@@ -34,7 +34,6 @@ public class ServerHumHandler extends TardisLink {
         this.current = hum;
 
         this.updateClientHum();
-        tardis().markDirty(); // should b ok here its not gonna spam like the door did
     }
 
     private void updateClientHum() {
