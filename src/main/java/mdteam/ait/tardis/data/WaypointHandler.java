@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.data;
 
 import mdteam.ait.core.item.WaypointItem;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.FlightUtil;
@@ -15,8 +16,8 @@ public class WaypointHandler extends TardisLink {
     private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
     private boolean hasCartridge;
 
-    public WaypointHandler(UUID tardisId) {
-        super(tardisId);
+    public WaypointHandler(Tardis tardis) {
+        super(tardis, "waypoint");
     }
 
     public boolean hasCartridge() {

@@ -32,8 +32,8 @@ public class DoorData extends TardisLink {
     public DoorStateEnum tempExteriorState; // this is the previous state before it was changed, used for checking when the door has been changed so the animation can start. Set on server, used on client
     public DoorStateEnum tempInteriorState;
 
-    public DoorData(UUID tardis) {
-        super(tardis);
+    public DoorData(Tardis tardis) {
+        super(tardis, "door");
     }
 
     @Override

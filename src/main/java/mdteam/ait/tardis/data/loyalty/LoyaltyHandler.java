@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.data.loyalty;
 
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.TardisLink;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -9,12 +10,12 @@ import java.util.UUID;
 public class LoyaltyHandler extends TardisLink { // todo currently will be useless as will only be finished when all features have been added.
     private HashMap<UUID, Loyalty> data;
 
-    public LoyaltyHandler(UUID tardisId, HashMap<UUID, Loyalty> data) {
-        super(tardisId);
+    public LoyaltyHandler(Tardis tardisId, HashMap<UUID, Loyalty> data) {
+        super(tardisId, "loyalty");
         this.data = data;
     }
 
-    public LoyaltyHandler(UUID tardis) {
+    public LoyaltyHandler(Tardis tardis) {
         this(tardis, new HashMap<>());
     }
 

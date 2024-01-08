@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.data;
 
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundCategory;
@@ -13,8 +14,8 @@ public class ServerAlarmHandler extends TardisLink {
     public static final int CLOISTER_LENGTH_TICKS = 3 * 20;
     private int soundCounter = 0; // decides when to start the next cloister sound
 
-    public ServerAlarmHandler(UUID tardisId) {
-        super(tardisId);
+    public ServerAlarmHandler(Tardis tardis) {
+        super(tardis, "alarm");
     }
 
     public void enable() {

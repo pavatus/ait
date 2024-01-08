@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.data;
 
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -13,8 +14,8 @@ import net.minecraft.sound.SoundCategory;
 import java.util.UUID;
 
 public class SiegeData extends TardisLink {
-    public SiegeData(UUID tardisId) {
-        super(tardisId);
+    public SiegeData(Tardis tardis) {
+        super(tardis, "siege");
     }
 
     public boolean isSiegeMode() {

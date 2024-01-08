@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.data;
 
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.Entity;
@@ -15,8 +16,8 @@ import java.util.UUID;
 
 public class HADSData extends TardisLink {
 
-    public HADSData(UUID tardisID) {
-        super(tardisID);
+    public HADSData(Tardis tardis) {
+        super(tardis, "hads");
     }
 
     public boolean isHADSActive() {

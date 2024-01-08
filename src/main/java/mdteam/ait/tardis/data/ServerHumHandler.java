@@ -2,6 +2,7 @@ package mdteam.ait.tardis.data;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.registry.HumsRegistry;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.sound.HumSound;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -18,8 +19,8 @@ public class ServerHumHandler extends TardisLink {
     public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_hum");
     public static final Identifier RECEIVE = new Identifier(AITMod.MOD_ID, "receive_hum");
     private HumSound current;
-    public ServerHumHandler(UUID tardisId) {
-        super(tardisId);
+    public ServerHumHandler(Tardis tardisId) {
+        super(tardisId, "hum");
     }
 
     public HumSound getHum() {

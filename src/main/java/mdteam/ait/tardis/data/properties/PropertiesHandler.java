@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class PropertiesHandler { // todo move more things over to properties
+public class PropertiesHandler { // todo move things out of properties
     // this is getting bloated
     public static final String AUTO_LAND = "auto_land";
     public static final String HUM_ENABLED = "hum_enabled";
@@ -129,7 +129,7 @@ public class PropertiesHandler { // todo move more things over to properties
     public static PropertiesHolder getSubProperties(PropertiesHolder holder, String key) {
         if (!holder.getData().containsKey(key)) {
             AITMod.LOGGER.error(key + " is not a properties holder!! im being kind, heres an empty properties instead of a null crash. to loqor - this wont b saved prolly");
-            return new PropertiesHolder(holder.tardis().getUuid());
+            return new PropertiesHolder(holder.tardis());
         }
 
         return (PropertiesHolder) holder.getData().get(key);

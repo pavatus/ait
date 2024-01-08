@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.data;
 
+import mdteam.ait.tardis.AbstractTardisComponent;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.SerialDimension;
@@ -16,19 +17,13 @@ import net.minecraft.world.World;
 import java.util.UUID;
 
 // todo move everything over to TardisComponent
-public abstract class TardisLink implements TardisTickable {
-
-    protected UUID tardisId;
-
-    public TardisLink(UUID tardisId) {
-        this.tardisId = tardisId;
+public abstract class TardisLink extends AbstractTardisComponent implements TardisTickable {
+    public TardisLink(Tardis tardis, String id) {
+       super(tardis, id);
     }
 
     public Tardis tardis() {
-        if (isClient()) {
-            return (Tardis) ClientTardisManager.getInstance().getLookup().get(tardisId);
-        }
-        return ServerTardisManager.getInstance().getTardis(tardisId);
+        return this.getTardis();
     }
 
     @Override

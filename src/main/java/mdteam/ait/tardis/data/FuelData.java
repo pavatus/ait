@@ -4,6 +4,7 @@ import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.Exclude;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
@@ -16,8 +17,8 @@ public class FuelData extends TardisLink {
     public static final String FUEL_COUNT = "fuel_count";
     public static final String REFUELING = "refueling";
 
-    public FuelData(UUID tardisId) {
-        super(tardisId);
+    public FuelData(Tardis tardis) {
+        super(tardis, "fuel");
     }
 
     public double getFuel() {

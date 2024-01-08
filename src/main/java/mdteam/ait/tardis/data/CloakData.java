@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.data;
 
 import mdteam.ait.core.item.KeyItem;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -17,8 +18,8 @@ public class CloakData extends TardisLink {
     // @TODO its been a minute since ive had to server to client logic bullshit so duzo you do it while i do components
     /*private float alphaBasedOnDistance = 1.0F;*/
 
-    public CloakData(UUID tardisId) {
-        super(tardisId);
+    public CloakData(Tardis tardis) {
+        super(tardis, "cloak");
     }
 
     public void enable() {
@@ -39,14 +40,6 @@ public class CloakData extends TardisLink {
         if (isEnabled()) disable();
         else enable();
     }
-
-    /*public float getAlphaBasedOnDistance() {
-        return alphaBasedOnDistance;
-    }
-
-    public void setAlphaBasedOnDistance(float alphaBasedOnDistance) {
-        this.alphaBasedOnDistance = alphaBasedOnDistance;
-    }*/
 
     @Override
     public void tick(MinecraftServer server) {

@@ -3,6 +3,7 @@ package mdteam.ait.tardis.data;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.core.managers.DeltaTimeManager;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
@@ -24,8 +25,8 @@ public class InteriorChangingHandler extends TardisLink {
     public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
     private static Random random;
 
-    public InteriorChangingHandler(UUID tardisId) {
-        super(tardisId);
+    public InteriorChangingHandler(Tardis tardis) {
+        super(tardis, "interior-changing");
     }
 
     private void setGenerating(boolean var) {

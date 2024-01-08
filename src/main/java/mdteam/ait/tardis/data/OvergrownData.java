@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.data;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
@@ -18,8 +19,8 @@ public class OvergrownData extends TardisLink {
     public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
     private static Random random;
 
-    public OvergrownData(UUID tardisId) {
-        super(tardisId);
+    public OvergrownData(Tardis tardis) {
+        super(tardis, "overgrown");
     }
 
     public int getTicks() {

@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.data;
 
 import mdteam.ait.api.tardis.TardisEvents;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.FlightUtil;
@@ -15,8 +16,8 @@ public class FlightData extends TardisLink {
     private int flightTicks = 0;
     private int targetTicks = 0;
 
-    public FlightData(UUID tardisId) {
-        super(tardisId);
+    public FlightData(Tardis tardiz) {
+        super(tardiz, "flight");
 
         // todo this doesnt seem to work.
         TardisEvents.LANDED.register((tardis -> {
