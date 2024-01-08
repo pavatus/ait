@@ -236,10 +236,6 @@ public class MonitorScreen extends TardisScreen {
         int j = ((this.height) - this.backgroundHeight) / 2;
         context.push();
         context.drawTexture(TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        // Jewels
-        for (int l = 0; l < 7; l++) {
-            context.drawTexture(TEXTURE, (i + 11) + (l * 9), j + 5, 20 + (l * 6), 133, 6, 6);
-        }
         context.pop();
         //context.drawTexture(TEXTURE, i + 18, j + 67, 1, 87, 25, 8);
     }

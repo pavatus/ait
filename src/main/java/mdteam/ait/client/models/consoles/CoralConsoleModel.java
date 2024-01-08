@@ -1332,8 +1332,10 @@ public class CoralConsoleModel extends ConsoleModel {
 	}
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
+		/*System.out.println(state);*/
 		return switch (state) {
-			default -> HartnellAnimations.ROTOR;
+			default -> CoralAnimations.CORAL_CONSOLE_INFLIGHT_ANIMATION;
+			case MAT -> CoralAnimations.CORAL_CONSOLE_REMAT_ANIMATION;
 			case DEMAT -> CoralAnimations.CORAL_CONSOLE_DEMAT_ANIMATION;
 			case LANDED -> CoralAnimations.CONSOLE_CORAL_IDLE_ANIMATION;
 		};
