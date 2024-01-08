@@ -7,6 +7,7 @@ import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.events.ServerLoadEvent;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.TardisItemBuilder;
@@ -43,16 +44,19 @@ import net.minecraft.structure.StructureTemplate;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.*;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
     private static final Random RANDOM = new Random();
     private static MinecraftServer SERVER;
+    private static Path SAVE_PATH;
     private static ServerWorld TARDIS_DIMENSION;
     public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
     public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");
@@ -61,8 +65,23 @@ public class TardisUtil {
 
     public static void init() {
         ServerWorldEvents.UNLOAD.register((server, world) -> {
-            SERVER = server;
-            TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
+            if (world.getRegistryKey() == World.OVERWORLD) {
+                SERVER = null;
+            }
+        });
+
+        ServerLoadEvent.LOAD.register(server -> {
+            SAVE_PATH = server.getSavePath(WorldSavePath.ROOT);
+        });
+
+        ServerWorldEvents.LOAD.register((server, world) -> {
+            if (world.getRegistryKey() == World.OVERWORLD) {
+                SERVER = server;
+            }
+
+            if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
+                TARDIS_DIMENSION = world;
+            }
         });
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
@@ -156,15 +175,19 @@ public class TardisUtil {
     }
 
     public static MinecraftServer getServer() {
-        //MinecraftServer server = TARDIS_DIMENSION.getServer();
         return SERVER;
     }
 
+    public static Path getSavePath() {
+        return SAVE_PATH;
+    }
+
+    @Deprecated
     public static boolean isClient() {
         return !TardisUtil.isServer();
     }
 
-    // fixme on singleplayer worlds this isnt correct
+    @Deprecated
     public static boolean isServer() {
         return SERVER != null;
     }
@@ -318,8 +341,8 @@ public class TardisUtil {
     public static Tardis findTardisByInterior(BlockPos pos) {
         Map<UUID, Tardis> matchingTardises = new HashMap<>();
 
-        for (Map.Entry<UUID, Tardis> entry : TardisManager.getInstance().getLookup().entrySet()) {
-            Tardis tardis = entry.getValue();
+        for (Map.Entry<UUID, ?> entry : TardisManager.getInstance().getLookup().entrySet()) {
+            Tardis tardis = (Tardis) entry.getValue();
             if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos)) {
                 matchingTardises.put(entry.getKey(), tardis);
             }
@@ -339,8 +362,8 @@ public class TardisUtil {
     public static Tardis findTardisByPosition(AbsoluteBlockPos.Directed pos) {
         Map<UUID, Tardis> matchingTardises = new HashMap<>();
 
-        for (Map.Entry<UUID, Tardis> entry : TardisManager.getInstance().getLookup().entrySet()) {
-            Tardis tardis = entry.getValue();
+        for (Map.Entry<UUID, ?> entry : TardisManager.getInstance().getLookup().entrySet()) {
+            Tardis tardis = (Tardis) entry.getValue();
             if (tardis.getDoor().getExteriorPos().equals(pos)) {
                 matchingTardises.put(entry.getKey(), tardis);
             }
@@ -360,8 +383,8 @@ public class TardisUtil {
     public static Tardis findTardisByPosition(AbsoluteBlockPos pos) {
         Map<UUID, Tardis> matchingTardises = new HashMap<>();
 
-        for (Map.Entry<UUID, Tardis> entry : TardisManager.getInstance().getLookup().entrySet()) {
-            Tardis tardis = entry.getValue();
+        for (Map.Entry<UUID, ?> entry : TardisManager.getInstance().getLookup().entrySet()) {
+            Tardis tardis = (Tardis) entry.getValue();
             if (tardis.getDoor().getExteriorPos().equals(pos)) {
                 matchingTardises.put(entry.getKey(), tardis);
             }
@@ -381,8 +404,8 @@ public class TardisUtil {
     public static Tardis findTardisByPosition(BlockPos pos) {
         Map<UUID, Tardis> matchingTardises = new HashMap<>();
 
-        for (Map.Entry<UUID, Tardis> entry : TardisManager.getInstance().getLookup().entrySet()) {
-            Tardis tardis = entry.getValue();
+        for (Map.Entry<UUID, ?> entry : TardisManager.getInstance().getLookup().entrySet()) {
+            Tardis tardis = (Tardis) entry.getValue();
             if (tardis.getDoor().getExteriorPos().equals(pos)) {
                 matchingTardises.put(entry.getKey(), tardis);
             }

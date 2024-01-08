@@ -4,11 +4,11 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.core.events.BlockEntityPreLoadEvent;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
-import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.Corners;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
@@ -19,15 +19,22 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 
-import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public abstract class TardisManager {
-    protected final Map<UUID, Tardis> lookup = new HashMap<>();
+public abstract class TardisManager<T extends Tardis> {
+    public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "ask_tardis");
+    public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_tardis");
+    public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_tardis");
+
+    protected final Map<UUID, T> lookup = new HashMap<>();
     protected final Gson gson;
 
     public TardisManager() {
@@ -48,7 +55,7 @@ public abstract class TardisManager {
                 .registerTypeAdapter(ConsoleSchema.class, ConsoleSchema.serializer())
                 .registerTypeAdapter(ConsoleVariantSchema.class, ConsoleVariantSchema.serializer())
                 .registerTypeAdapter(Corners.class, Corners.serializer());
-        builder = this.init(builder);
+        builder = this.getGsonBuilder(builder);
         this.gson = builder.create();
     }
 
@@ -76,16 +83,32 @@ public abstract class TardisManager {
         });
     }
 
-    public GsonBuilder init(GsonBuilder builder) {
+    public GsonBuilder getGsonBuilder(GsonBuilder builder) {
         return builder;
     }
 
-    public static TardisManager getInstance() {
-//        return FabricLauncherBase.getLauncher().getEnvironmentType() == EnvType.SERVER ? ServerTardisManager.getInstance() : ClientTardisManager.getInstance();
-        return TardisUtil.isServer() ? ServerTardisManager.getInstance() : ClientTardisManager.getInstance();
+    public static TardisManager<?> getInstance(Entity entity) {
+        return TardisManager.getInstance(entity.getWorld());
     }
 
-    public void getTardis(UUID uuid, Consumer<Tardis> consumer) {
+    public static TardisManager<?> getInstance(BlockEntity entity) {
+        return TardisManager.getInstance(entity.getWorld());
+    }
+
+    public static TardisManager<?> getInstance(World world) {
+        return TardisManager.getInstance(!world.isClient());
+    }
+
+    @Deprecated
+    public static TardisManager<?> getInstance() {
+        return TardisManager.getInstance(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER);
+    }
+
+    public static TardisManager<?> getInstance(boolean isServer) {
+        return isServer ? ServerTardisManager.getInstance() : ClientTardisManager.getInstance();
+    }
+
+    public void getTardis(UUID uuid, Consumer<T> consumer) {
         if (this.lookup.containsKey(uuid)) {
             consumer.accept(this.lookup.get(uuid));
             return;
@@ -98,13 +121,14 @@ public abstract class TardisManager {
         this.getTardis(uuid, linkable::setTardis);
     }
 
-    public abstract void loadTardis(UUID uuid, Consumer<Tardis> consumer);
+    public abstract void loadTardis(UUID uuid, Consumer<T> consumer);
 
     public void reset() {
         this.lookup.clear();
     }
 
-    public Map<UUID, Tardis> getLookup() {
+    @Deprecated
+    public Map<UUID, T> getLookup() {
         return this.lookup;
     }
 }

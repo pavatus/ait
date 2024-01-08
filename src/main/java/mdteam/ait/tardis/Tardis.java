@@ -103,6 +103,35 @@ public class Tardis {
         return Objects.hash(uuid);
     }
 
+    public void init() {
+        this.init(false);
+    }
+
+    public void init(boolean dirty) {
+        // this.init(this.getTravel(), dirty);
+        // this.init(this.getDesktop(), dirty);
+        // this.init(this.getExterior(), dirty);
+        // this.init(this.getDoor(), dirty);
+    }
+
+    private void init(AbstractTardisComponent component, boolean dirty) {
+        AbstractTardisComponent.Init mode = component.getInitMode();
+        component.setTardis(this);
+
+        switch (mode) {
+            case NO_INIT -> {}
+            case ALWAYS -> component.init();
+            case FIRST -> {
+                if (!dirty) component.init();
+            }
+            case DESERIALIZE -> {
+                if (dirty) component.init();
+            }
+            default -> throw new IllegalArgumentException("Unimplemented init mode " + mode);
+        }
+    }
+
+    // todo clean up all this
     // fuel - because getHandlers() blah blah is annoying me
     public double addFuel(double fuel) {
         return this.getHandlers().getFuel().addFuel(fuel);
