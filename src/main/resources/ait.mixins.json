@@ -8,7 +8,8 @@
     "server.ItemEntityMixin",
     "server.PortalMixin",
     "server.ServerPlayerInteractionManagerMixin",
-    "server.StructureTemplateMixin"
+    "server.StructureTemplateMixin",
+    "server.BlockEntityMixin"
   ],
   "client": [
     "client.ClientPlayerInteractionManagerMixin",
