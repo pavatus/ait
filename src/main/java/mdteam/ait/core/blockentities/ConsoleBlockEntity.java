@@ -169,7 +169,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         if (isClient()) return;
 
         // ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
-        getTardis().markDirty();
+        // getTardis().markDirty();
         syncType();
         syncVariant();
         /*getWorld().updateListeners(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), Block.NOTIFY_ALL);*/

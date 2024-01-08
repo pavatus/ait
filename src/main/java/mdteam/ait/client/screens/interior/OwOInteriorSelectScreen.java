@@ -18,6 +18,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.UUID;
 import static mdteam.ait.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
 
 public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
+    private static final Identifier MISSING_PREVIEW = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/desktop/missing_preview.png");
 
     private Screen parent;
     private UUID tardisid;
@@ -159,7 +161,11 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
                 0xadcaf7
         );
 
-        context.drawTexture(this.selectedDesktop.previewTexture().texture(), left + 63, top + 9,128,128,0,0, this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2,this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2);
+        context.drawTexture(doesTextureExist(this.selectedDesktop.previewTexture().texture()) ? this.selectedDesktop.previewTexture().texture() : MISSING_PREVIEW, left + 63, top + 9,128,128,0,0, this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2,this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2);
+    }
+
+    private boolean doesTextureExist(Identifier id) {
+        return MinecraftClient.getInstance().getResourceManager().getResource(id).isPresent();
     }
 
     private boolean isCurrentUnlocked() {
