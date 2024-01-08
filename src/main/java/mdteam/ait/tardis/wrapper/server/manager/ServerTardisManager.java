@@ -126,7 +126,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
             subscriber_list.add(serverPlayerEntity.getUuid());
             this.subscribers.put(tardisUUID, subscriber_list);
         }
-
     }
 
     /**
@@ -269,14 +268,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         for (UUID playerId : tardisSubscribers) {
             ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
             this.updateTardis(player, uuid, component);
-        }
-    }
-
-    // todo this is bad
-    @Deprecated
-    public void addSubscriberToAll(ServerPlayerEntity player) {
-        for (Tardis tardis : this.lookup.values()) {
-            this.addSubscriberToTardis(player, tardis.getUuid());
         }
     }
 

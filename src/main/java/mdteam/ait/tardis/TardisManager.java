@@ -5,10 +5,10 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.core.events.BlockEntityPreLoadEvent;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.link.Linkable;
 import mdteam.ait.tardis.util.Corners;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
@@ -108,6 +108,10 @@ public abstract class TardisManager<T extends Tardis> {
         return isServer ? ServerTardisManager.getInstance() : ClientTardisManager.getInstance();
     }
 
+    public void link(UUID uuid, Linkable linkable) {
+        this.getTardis(uuid, linkable::setTardis);
+    }
+
     public void getTardis(UUID uuid, Consumer<T> consumer) {
         if (this.lookup.containsKey(uuid)) {
             consumer.accept(this.lookup.get(uuid));
@@ -115,10 +119,6 @@ public abstract class TardisManager<T extends Tardis> {
         }
 
         this.loadTardis(uuid, consumer);
-    }
-
-    public void link(UUID uuid, ILinkable linkable) {
-        this.getTardis(uuid, linkable::setTardis);
     }
 
     public abstract void loadTardis(UUID uuid, Consumer<T> consumer);

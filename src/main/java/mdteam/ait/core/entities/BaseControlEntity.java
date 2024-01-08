@@ -1,7 +1,6 @@
 package mdteam.ait.core.entities;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.ILinkable;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;

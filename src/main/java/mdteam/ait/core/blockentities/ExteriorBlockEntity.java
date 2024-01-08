@@ -9,6 +9,7 @@ import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.*;
@@ -39,15 +40,14 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
-import static mdteam.ait.tardis.TardisTravel.State.FLIGHT;
-import static mdteam.ait.tardis.TardisTravel.State.MAT;
+import static mdteam.ait.tardis.TardisTravel.State.*;
 import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
-public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicker<ExteriorBlockEntity> { // fixme copy tardishandler and refactor to use uuids instead, this is incredibly inefficient and the main cause of lag.
-    private UUID tardisId;
+public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ExteriorBlockEntity> { // fixme copy tardishandler and refactor to use uuids instead, this is incredibly inefficient and the main cause of lag.
     public int animationTimer = 0;
     public final AnimationState DOOR_STATE = new AnimationState();
     private ExteriorAnimation animation;
@@ -100,17 +100,12 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
             AITMod.LOGGER.error("this.tardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
         super.writeNbt(nbt);
-        if (tardisId != null)
-            nbt.putString("tardis", this.tardisId.toString());
         nbt.putFloat("alpha", this.getAlpha());
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        if (nbt.contains("tardis")) {
-            this.tardisId = UUID.fromString(nbt.getString("tardis"));
-        }
         if (this.getAnimation() != null)
             this.getAnimation().setAlpha(nbt.getFloat("alpha"));
         if(this.getTardis() != null)
@@ -128,34 +123,9 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
         }
     }
 
-    public Tardis getTardis() {
-        if (this.tardisId == null) {
-            //AITMod.LOGGER.warn("Exterior at " + this.getPos() + " is finding TARDIS!");
-            this.findTardisFromPosition();
-        }
-
-        if (isClient()) {
-            return ClientTardisManager.getInstance().getLookup().get(this.tardisId);
-        }
-
-        return ServerTardisManager.getInstance().getTardis(this.tardisId);
-    }
-
-    public void setTardis(Tardis tardis) {
-        this.tardisId = tardis.getUuid();
-    }
-
-    private void findTardisFromPosition() { // should only be used if tardisId is null so we can hopefully refind the tardis
-        Tardis found = findTardisByPosition(this.getPos());
-
-        if (found == null) return;
-
-        this.tardisId = found.getUuid();
-    }
-
     @Override
     public void tick(World world, BlockPos pos, BlockState blockState, ExteriorBlockEntity blockEntity) {
-        if (this.animation != null)
+        if (this.animation != null && this.getTardis().getTravel().getState() != LANDED)
             this.getAnimation().tick();
 
         if(world.isClient()) {
