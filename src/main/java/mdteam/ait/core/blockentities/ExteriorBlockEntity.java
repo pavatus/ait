@@ -162,6 +162,8 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
             this.checkAnimations();
         }
 
+        if (this.getTardis() == null) return;
+
         // Should be when tardis is set to landed / position is changed instead. fixme
         if (!world.isClient() && (blockState.getBlock() instanceof ExteriorBlock)) {
             // For checking falling
