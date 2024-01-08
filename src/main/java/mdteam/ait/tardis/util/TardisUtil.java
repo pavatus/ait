@@ -179,6 +179,10 @@ public class TardisUtil {
     }
 
     public static Path getSavePath() {
+        if (SAVE_PATH == null && SERVER != null) {
+            SAVE_PATH = SERVER.getSavePath(WorldSavePath.ROOT);
+        }
+
         return SAVE_PATH;
     }
 
