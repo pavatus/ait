@@ -7,6 +7,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 
 import java.util.UUID;
@@ -20,12 +21,22 @@ public class SiegeModeHandler extends TardisLink {
         return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
     }
     public boolean isSiegeBeingHeld() {
-        return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD);
+        return PropertiesHandler.get(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD) != null;
     }
-    public void setSiegeBeingHeld(boolean b) {
-        if (b) tardis().getHandlers().getAlarms().enable();
+    public UUID getHeldPlayerUUID() {
+        if (!isSiegeBeingHeld()) return null;
 
-        PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD, b);
+        return (UUID) PropertiesHandler.get(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD);
+    }
+    public ServerPlayerEntity getHeldPlayer() {
+        if (isClient()) return null;
+
+        return TardisUtil.getServer().getPlayerManager().getPlayer(getHeldPlayerUUID());
+    }
+    public void setSiegeBeingHeld(UUID playerId) {
+        if (playerId != null) tardis().getHandlers().getAlarms().enable();
+
+        PropertiesHandler.set(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_HELD, playerId);
         tardis().markDirty();
     }
     public int getTimeInSiegeMode() {
@@ -54,7 +65,7 @@ public class SiegeModeHandler extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
         if (tardis().getExterior().findExteriorBlock().isPresent()) {
-            tardis().setSiegeBeingHeld(false);
+            tardis().setSiegeBeingHeld(null);
         }
 
         int siegeTime = tardis().getTimeInSiegeMode() + 1;

@@ -214,7 +214,7 @@ public class Tardis {
     public boolean isSiegeBeingHeld() {
         return this.getHandlers().getSiege().isSiegeBeingHeld();
     }
-    public void setSiegeBeingHeld(boolean b) {
+    public void setSiegeBeingHeld(UUID b) {
         this.getHandlers().getSiege().setSiegeBeingHeld(b);
     }
     public int getTimeInSiegeMode() {

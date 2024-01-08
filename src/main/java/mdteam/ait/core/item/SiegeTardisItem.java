@@ -52,12 +52,19 @@ public class SiegeTardisItem extends Item {
         assert tardis != null;
 
         if (!tardis.isSiegeMode()) {
-            tardis.setSiegeBeingHeld(false);
+            tardis.setSiegeBeingHeld(null);
             stack.setCount(0);
             return;
         }
 
+        // todo this might be laggy
         if (entity instanceof ServerPlayerEntity player) {
+            if (!(player.getUuid().equals(tardis.getHandlers().getSiege().getHeldPlayerUUID()))) {
+                int found = findSlot(player, tardis);
+                player.getInventory().setStack(found, ItemStack.EMPTY);
+                return;
+            }
+
             if (getSiegeCount(player, tardis) > 1) {
                 int foundSlot = findSlot(player, tardis);
                 if (foundSlot == slot) {
@@ -68,7 +75,7 @@ public class SiegeTardisItem extends Item {
 
         tardis.getTravel().setPosition(fromEntity(entity));
         if (!tardis.isSiegeBeingHeld()) {
-            tardis.setSiegeBeingHeld(true);
+            tardis.setSiegeBeingHeld(entity.getUuid());
         }
     }
 
@@ -90,7 +97,7 @@ public class SiegeTardisItem extends Item {
         assert tardis != null;
 
         if (!tardis.isSiegeMode()) {
-            tardis.setSiegeBeingHeld(false);
+            tardis.setSiegeBeingHeld(null);
             player.getMainHandStack().setCount(0);
             player.getInventory().markDirty();
             return ActionResult.FAIL;
@@ -170,7 +177,7 @@ public class SiegeTardisItem extends Item {
     public static void placeTardis(Tardis tardis, AbsoluteBlockPos.Directed pos) {
         tardis.getTravel().setPosition(pos);
         tardis.getTravel().placeExterior();
-        tardis.setSiegeBeingHeld(false);
+        tardis.setSiegeBeingHeld(null);
     }
 
     public static ItemStack create(Tardis tardis) {
