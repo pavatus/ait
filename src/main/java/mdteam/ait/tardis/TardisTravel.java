@@ -7,24 +7,21 @@ import mdteam.ait.core.AITMessages;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
-import mdteam.ait.core.managers.DeltaTimeManager;
-import mdteam.ait.tardis.control.impl.RandomiserControl;
 import mdteam.ait.tardis.control.impl.pos.PosManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
-import mdteam.ait.tardis.handler.TardisLink;
+import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.DoorData;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -39,8 +36,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -354,7 +349,7 @@ public class TardisTravel extends TardisLink {
         }
 
         // Lock the Tardis doors
-        DoorHandler.lockTardis(true, this.getTardis(), null, true);
+        DoorData.lockTardis(true, this.getTardis(), null, true);
 
         // Set the Tardis state to materialize
         this.setState(State.MAT);
@@ -433,7 +428,7 @@ public class TardisTravel extends TardisLink {
             return;
         }
 
-        DoorHandler.lockTardis(true, this.getTardis(), null, true);
+        DoorData.lockTardis(true, this.getTardis(), null, true);
 
         this.setState(State.DEMAT);
 
@@ -637,8 +632,8 @@ public class TardisTravel extends TardisLink {
         this.setState(TardisTravel.State.LANDED);
         if (blockEntity != null)
             this.runAnimations(blockEntity);
-        if (DoorHandler.isClient()) return;
-        DoorHandler.lockTardis(PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), null, false);
+        if (DoorData.isClient()) return;
+        DoorData.lockTardis(PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis(), null, false);
 
         // fixme where does this go?
         TardisEvents.LANDED.invoker().onLanded(getTardis());

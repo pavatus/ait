@@ -1,11 +1,8 @@
-package mdteam.ait.tardis.handler;
+package mdteam.ait.tardis.data;
 
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import mdteam.ait.tardis.util.TardisUtil;
-import net.minecraft.entity.player.PlayerEntity;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 
 import java.util.UUID;

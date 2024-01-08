@@ -7,7 +7,7 @@ import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.client.util.ShaderUtils;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.SoundHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;

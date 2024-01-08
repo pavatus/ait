@@ -6,7 +6,6 @@ import mdteam.ait.client.registry.ClientDoorRegistry;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;

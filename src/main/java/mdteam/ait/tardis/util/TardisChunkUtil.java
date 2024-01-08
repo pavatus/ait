@@ -3,7 +3,7 @@ package mdteam.ait.tardis.util;
 import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.world.ServerWorld;
 
 public class TardisChunkUtil {

@@ -3,7 +3,7 @@ package mdteam.ait.client.models.exteriors;
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -72,7 +72,7 @@ public class BoothExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+    public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
         return switch (state) {
             case CLOSED -> DoorAnimations.K2BOOTH_EXTERIOR_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.K2BOOTH_EXTERIOR_OPEN_ANIMATION;

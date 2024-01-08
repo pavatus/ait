@@ -1,4 +1,4 @@
-package mdteam.ait.tardis.handler;
+package mdteam.ait.tardis.data;
 
 public class TardisRealFlight {
 

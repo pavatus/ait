@@ -4,25 +4,13 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import mdteam.ait.tardis.util.TardisUtil;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-
-import java.util.List;
-import java.util.Objects;
 
 public class TelepathicControl extends Control {
     public TelepathicControl() {

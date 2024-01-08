@@ -10,24 +10,18 @@ import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.DoorData;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.block.entity.DecoratedPotBlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
-import mdteam.ait.tardis.TardisExterior;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -66,7 +60,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         int green = 1;
         int blue = 1;
 
-        if (DependencyChecker.hasPortals() && entity.getTardis().getTravel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING) && entity.getTardis().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED) {
+        if (DependencyChecker.hasPortals() && entity.getTardis().getTravel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING) && entity.getTardis().getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED) {
             BlockPos pos = entity.getTardis().getTravel().getPosition();
             World world = entity.getTardis().getTravel().getPosition().getWorld();
             if (world != null) {

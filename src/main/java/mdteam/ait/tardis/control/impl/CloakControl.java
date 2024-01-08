@@ -7,8 +7,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 
-import static mdteam.ait.tardis.handler.DoorHandler.useDoor;
-
 public class CloakControl extends Control {
 
     public CloakControl() {

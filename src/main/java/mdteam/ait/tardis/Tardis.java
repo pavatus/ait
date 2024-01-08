@@ -1,51 +1,26 @@
 package mdteam.ait.tardis;
 
-import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.common.regen.RegenerationData;
-import mc.craig.software.regen.common.regen.fabric.RegenerationDataImpl;
-import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RegenUtil;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.client.util.ClientTardisUtil;
-import mdteam.ait.compat.DependencyChecker;
-import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
-import mdteam.ait.tardis.handler.FuelHandler;
-import mdteam.ait.tardis.handler.TardisHandlersManager;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.FuelData;
+import mdteam.ait.tardis.data.TardisHandlersManager;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.util.TardisChunkUtil;
-import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.*;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
-
-import static mc.craig.software.regen.common.regen.state.RegenStates.REGENERATING;
 
 public class Tardis {
     // this is starting to get a little bloated..
@@ -85,7 +60,7 @@ public class Tardis {
         return exterior;
     }
 
-    public DoorHandler getDoor() {
+    public DoorData getDoor() {
         return this.getHandlers().getDoor();
     }
 
@@ -187,7 +162,7 @@ public class Tardis {
         this.markDirty();
     }
     public void enablePower() {
-        if (getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL)) return; // cant enable power if not enough fuel
+        if (getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL)) return; // cant enable power if not enough fuel
         if (isSiegeBeingHeld()) return; // cant re-enable while being held, this may become OP tho
         if (isSiegeMode()) setSiegeMode(false);
         if (hasPower()) return;
@@ -268,7 +243,7 @@ public class Tardis {
             DoorHandler.lockTardis(true, this, null, true);
         }*/
         if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
-            DoorHandler.lockTardis(true, this, null, true);
+            DoorData.lockTardis(true, this, null, true);
         }
         this.getTravel().tick(server);
     }

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static mdteam.ait.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
+import static mdteam.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
 
 public class InteriorSelectScreen extends TardisScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/interior_select.png");

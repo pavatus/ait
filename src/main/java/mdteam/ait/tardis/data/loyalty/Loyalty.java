@@ -1,4 +1,4 @@
-package mdteam.ait.tardis.handler.loyalty;
+package mdteam.ait.tardis.data.loyalty;
 
 public enum Loyalty { // fixme someone like loqor who had that hour long rant on how this will work can change all this.
     NONE("none", 0),

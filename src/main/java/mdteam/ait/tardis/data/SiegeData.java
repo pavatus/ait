@@ -1,7 +1,7 @@
-package mdteam.ait.tardis.handler;
+package mdteam.ait.tardis.data;
 
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -12,8 +12,8 @@ import net.minecraft.sound.SoundCategory;
 
 import java.util.UUID;
 
-public class SiegeModeHandler extends TardisLink {
-    public SiegeModeHandler(UUID tardisId) {
+public class SiegeData extends TardisLink {
+    public SiegeData(UUID tardisId) {
         super(tardisId);
     }
 
@@ -44,7 +44,7 @@ public class SiegeModeHandler extends TardisLink {
     }
     // todo this is getting bloateed, merge some if statements together
     public void setSiegeMode(boolean b) {
-        if (tardis().getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL)) return; // The required amount of fuel to enable/disable siege mode
+        if (tardis().getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL)) return; // The required amount of fuel to enable/disable siege mode
         if (b) tardis().disablePower();
         if (!b) tardis().getHandlers().getAlarms().disable();
         if (tardis().isSiegeBeingHeld()) return;
@@ -54,7 +54,7 @@ public class SiegeModeHandler extends TardisLink {
         if (b) TardisUtil.getTardisDimension().playSound(null, tardis().getDesktop().getConsolePos(), AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 3f, 1f);
         if (!b) TardisUtil.getTardisDimension().playSound(null, tardis().getDesktop().getConsolePos(), AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 3f, 1f);
 
-        tardis().removeFuel(0.01 * FuelHandler.TARDIS_MAX_FUEL);
+        tardis().removeFuel(0.01 * FuelData.TARDIS_MAX_FUEL);
 
         PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE, b);
         // Loqor is stinky

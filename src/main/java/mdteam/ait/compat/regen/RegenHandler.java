@@ -1,23 +1,15 @@
 package mdteam.ait.compat.regen;
 
 import mc.craig.software.regen.common.regen.IRegen;
-import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.acting.Acting;
 import mc.craig.software.regen.common.regen.acting.ActingForwarder;
-import mc.craig.software.regen.common.regen.state.RegenStates;
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.compat.DependencyChecker;
-import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.core.item.TardisItemBuilder;
-import mdteam.ait.registry.DesktopRegistry;
-import mdteam.ait.registry.ExteriorRegistry;
-import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.random.Random;

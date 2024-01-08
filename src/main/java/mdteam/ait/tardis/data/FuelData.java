@@ -1,22 +1,22 @@
-package mdteam.ait.tardis.handler;
+package mdteam.ait.tardis.data;
 
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.UUID;
 
-public class FuelHandler extends TardisLink {
+public class FuelData extends TardisLink {
     @Exclude
     public static final double TARDIS_MAX_FUEL = 25000;
     public static final String FUEL_COUNT = "fuel_count";
     public static final String REFUELING = "refueling";
 
-    public FuelHandler(UUID tardisId) {
+    public FuelData(UUID tardisId) {
         super(tardisId);
     }
 
@@ -73,7 +73,7 @@ public class FuelHandler extends TardisLink {
 
         // creativious i moved your code here
         RiftChunk riftChunk = (RiftChunk) this.tardis().getTravel().getExteriorPos().getChunk();
-        if (tardis().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && riftChunk.getArtronLevels() > 0 && this.getFuel() < FuelHandler.TARDIS_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-refueldelay"))) {
+        if (tardis().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && riftChunk.getArtronLevels() > 0 && this.getFuel() < FuelData.TARDIS_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis().getUuid().toString() + "-refueldelay"))) {
             if(riftChunk.isRiftChunk()) {
                 riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
                 addFuel(5);

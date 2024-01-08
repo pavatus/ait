@@ -6,10 +6,8 @@ import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
-import mdteam.ait.client.screens.interior.InteriorSelectScreen;
 import mdteam.ait.client.screens.interior.InteriorSettingsScreen;
 import mdteam.ait.client.util.ClientTardisUtil;
-import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.BoothExterior;
@@ -35,7 +33,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
-import static mdteam.ait.tardis.handler.FuelHandler.TARDIS_MAX_FUEL;
+import static mdteam.ait.tardis.data.FuelData.TARDIS_MAX_FUEL;
 
 public class MonitorScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");

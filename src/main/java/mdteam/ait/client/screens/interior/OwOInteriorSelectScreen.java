@@ -2,7 +2,6 @@ package mdteam.ait.client.screens.interior;
 
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.Components;
-import io.wispforest.owo.ui.component.TextureComponent;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static mdteam.ait.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
+import static mdteam.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
 
 public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
 

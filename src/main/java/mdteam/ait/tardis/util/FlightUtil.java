@@ -4,7 +4,7 @@ import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;

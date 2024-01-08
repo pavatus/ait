@@ -1,16 +1,14 @@
-package mdteam.ait.tardis.handler;
+package mdteam.ait.tardis.data;
 
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.entities.BaseControlEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.advancement.TardisCriterions;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -22,21 +20,19 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3d;
 
 import java.util.UUID;
 
 import static mdteam.ait.tardis.TardisTravel.State.*;
 
-public class DoorHandler extends TardisLink {
+public class DoorData extends TardisLink {
     private boolean locked, left, right;
     private DoorStateEnum doorState = DoorStateEnum.CLOSED;
     public DoorStateEnum tempExteriorState; // this is the previous state before it was changed, used for checking when the door has been changed so the animation can start. Set on server, used on client
     public DoorStateEnum tempInteriorState;
 
-    public DoorHandler(UUID tardis) {
+    public DoorData(UUID tardis) {
         super(tardis);
     }
 
@@ -281,7 +277,7 @@ public class DoorHandler extends TardisLink {
         if (tardis.getTravel().getState() == DEMAT || tardis.getTravel().getState() == MAT)
             return false;
 
-        DoorHandler door = tardis.getDoor();
+        DoorData door = tardis.getDoor();
 
         if (door == null) return false; // how would that happen anyway
 
@@ -328,7 +324,7 @@ public class DoorHandler extends TardisLink {
         }
         tardis.setLockedTardis(locked);
 
-        DoorHandler door = tardis.getDoor();
+        DoorData door = tardis.getDoor();
 
         if (door == null)
             return false; // could have a case where the door is null but the thing above works fine meaning this false is wrong fixme

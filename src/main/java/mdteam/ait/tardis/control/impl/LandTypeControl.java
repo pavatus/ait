@@ -1,7 +1,7 @@
 package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.tardis.control.Control;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;

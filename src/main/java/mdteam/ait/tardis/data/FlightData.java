@@ -1,22 +1,21 @@
-package mdteam.ait.tardis.handler;
+package mdteam.ait.tardis.data;
 
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Properties;
 import java.util.UUID;
 
-public class FlightHandler extends TardisLink {
+public class FlightData extends TardisLink {
     private int flightTicks = 0;
     private int targetTicks = 0;
 
-    public FlightHandler(UUID tardisId) {
+    public FlightData(UUID tardisId) {
         super(tardisId);
 
         // todo this doesnt seem to work.

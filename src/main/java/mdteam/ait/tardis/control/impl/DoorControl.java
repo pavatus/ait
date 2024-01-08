@@ -7,8 +7,7 @@ import mdteam.ait.tardis.Tardis;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 
-import static mdteam.ait.tardis.handler.DoorHandler.toggleLock;
-import static mdteam.ait.tardis.handler.DoorHandler.useDoor;
+import static mdteam.ait.tardis.data.DoorData.useDoor;
 
 public class DoorControl extends Control {
 

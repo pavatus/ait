@@ -1,11 +1,11 @@
-package mdteam.ait.tardis.handler;
+package mdteam.ait.tardis.data;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -83,7 +83,7 @@ public class InteriorChangingHandler extends TardisLink {
         setGenerating(false);
         clearedOldInterior = false;
         tardis().getHandlers().getAlarms().disable();
-        DoorHandler.lockTardis(PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis(), null, false);
+        DoorData.lockTardis(PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis(), null, false);
     }
 
     private void warnPlayers() {
@@ -131,7 +131,7 @@ public class InteriorChangingHandler extends TardisLink {
         }
 
         if (isInteriorEmpty() && !tardis().getDoor().locked()) {
-            DoorHandler.lockTardis(true, tardis(), null, true);
+            DoorData.lockTardis(true, tardis(), null, true);
         }
         if (isInteriorEmpty() && !clearedOldInterior) {
             tardis().getDesktop().clearOldInterior(getQueuedInterior());

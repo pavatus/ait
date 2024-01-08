@@ -3,8 +3,8 @@ package mdteam.ait.client.models.consoles;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.console.borealis.BorealisAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.DoorData;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -644,8 +644,8 @@ public class BorealisConsoleModel extends ConsoleModel {
 
         boolean isInFlight = console.getTardis().getTravel().getState() == TardisTravel.State.DEMAT || console.getTardis().getTravel().getState() == TardisTravel.State.FLIGHT;
         boolean isHandbrakeActive = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE);
-        boolean leftDoor = console.getTardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.FIRST;
-        boolean rightDoor = console.getTardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.SECOND;
+        boolean leftDoor = console.getTardis().getDoor().getDoorState() == DoorData.DoorStateEnum.FIRST;
+        boolean rightDoor = console.getTardis().getDoor().getDoorState() == DoorData.DoorStateEnum.SECOND;
         boolean locked = console.getTardis().getDoor().locked();
         boolean isUpOrDown = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND);
 

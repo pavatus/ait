@@ -1,22 +1,18 @@
 package mdteam.ait.client.models.consoles;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.handler.FuelHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.FuelData;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-
-import static mdteam.ait.tardis.TardisTravel.State.*;
 
 // Made with Blockbench 4.9.2
 // Exported for Minecraft version 1.17+ for Yarn
@@ -810,10 +806,10 @@ public class HartnellConsoleModel extends ConsoleModel {
 		// matrices.scale(0.5f, 0.5f, 0.5f);
 		//System.out.println("Fuel: " + console.getTardis().getFuel() + " || clamped fuel: " + (((console.getTardis().getFuel() / 5000) * 2) - 1));
 		this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("m_meter_2").getChild("bone110").yaw =
-				(float) (((console.getTardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
+				(float) (((console.getTardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
 		ModelPart fuelLowWarningLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("sym_lamp2").getChild("bone96");
 		// Low Fuel Light
-		if (!(console.getTardis().getFuel() <= (FuelHandler.TARDIS_MAX_FUEL / 10))) {
+		if (!(console.getTardis().getFuel() <= (FuelData.TARDIS_MAX_FUEL / 10))) {
 			fuelLowWarningLight.pivotY = fuelLowWarningLight.pivotY + 1;
 		}
 

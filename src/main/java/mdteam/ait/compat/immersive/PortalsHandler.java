@@ -4,33 +4,22 @@ import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.FlightHandler;
+import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.ServerTardis;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.Portal;
-import qouteall.imm_ptl.core.portal.PortalExtension;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
-import qouteall.imm_ptl.core.portal.PortalUtils;
 import qouteall.q_misc_util.my_util.DQuaternion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 // NEVER EVER ACCESS THIS CLASS OR YO GAME GON CRAAASH
@@ -52,7 +41,7 @@ public class PortalsHandler {
     private static void removePortals(Tardis tardis) {
         if (tardis == null) return;
 
-        if (tardis.getHandlers().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED) return; // todo move to a seperate method so we can remove without checks
+        if (tardis.getHandlers().getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED) return; // todo move to a seperate method so we can remove without checks
 
         List<Portal> list = portals.get(tardis.getUuid());
 

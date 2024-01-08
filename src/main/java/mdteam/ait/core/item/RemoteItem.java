@@ -1,7 +1,6 @@
 package mdteam.ait.core.item;
 
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -23,7 +22,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.TardisTravel;
 
 import java.util.List;
 import java.util.UUID;

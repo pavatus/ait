@@ -1,31 +1,22 @@
 package mdteam.ait.client.screens.interior;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.AITModClient;
 import mdteam.ait.client.screens.TardisScreen;
 import mdteam.ait.client.sounds.ClientSoundManager;
-import mdteam.ait.client.sounds.hum.ClientHumHandler;
-import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.HumsRegistry;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.sound.HumSound;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.UUID;
-
-import static mdteam.ait.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
 
 public class InteriorSettingsScreen extends TardisScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/interior_settings.png");

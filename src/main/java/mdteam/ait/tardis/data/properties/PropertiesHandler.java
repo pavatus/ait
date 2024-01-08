@@ -1,17 +1,14 @@
-package mdteam.ait.tardis.handler.properties;
+package mdteam.ait.tardis.data.properties;
 
 import com.google.gson.internal.LinkedTreeMap;
 import mdteam.ait.AITMod;
-import mdteam.ait.datagen.datagen_providers.AITLanguageProvider;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.TardisDesktopSchema;
-import mdteam.ait.tardis.handler.FuelHandler;
+import mdteam.ait.tardis.data.FuelData;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 
 public class PropertiesHandler { // todo move more things over to properties
     // this is getting bloated
@@ -181,8 +178,8 @@ public class PropertiesHandler { // todo move more things over to properties
         map.put(ANTIGRAVS_ENABLED, false);
         map.put(IS_IN_ACTIVE_DANGER, false);
         map.put(HADS_ENABLED, false);
-        map.put(FuelHandler.FUEL_COUNT, 1000d);
-        map.put(FuelHandler.REFUELING, false);
+        map.put(FuelData.FUEL_COUNT, 1000d);
+        map.put(FuelData.REFUELING, false);
         map.put(HAS_POWER, true);
         map.put(SIEGE_MODE, false);
         map.put(SIEGE_HELD, false);

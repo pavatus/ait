@@ -1,16 +1,14 @@
 package mdteam.ait.core.blockentities;
 
-import com.neptunedevelopmentteam.neptunelib.core.util.NeptuneUtil;
 import mdteam.ait.AITMod;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
@@ -79,14 +77,14 @@ public class DoorBlockEntity extends BlockEntity {
                 return;
             }
             if (Objects.equals(this.getTardis().getUuid().toString(), tag.getString("tardis"))) {
-                DoorHandler.toggleLock(this.getTardis(), (ServerPlayerEntity) player);
+                DoorData.toggleLock(this.getTardis(), (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
             }
             return;
         }
-        DoorHandler.useDoor(this.getTardis(), (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
+        DoorData.useDoor(this.getTardis(), (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
         // fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
         if (sneaking)
             return;

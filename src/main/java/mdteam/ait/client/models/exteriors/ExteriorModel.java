@@ -3,7 +3,7 @@ package mdteam.ait.client.models.exteriors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.core.entities.TardisRealEntity;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -42,7 +42,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     private void checkAnimationTimer(ExteriorBlockEntity exterior) {
-        DoorHandler.DoorStateEnum state = exterior.getTardis().getDoor().getDoorState();
+        DoorData.DoorStateEnum state = exterior.getTardis().getDoor().getDoorState();
         Animation anim = getAnimationForDoorState(state);
 
 
@@ -72,5 +72,5 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
 
-    public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
+    public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);
 }

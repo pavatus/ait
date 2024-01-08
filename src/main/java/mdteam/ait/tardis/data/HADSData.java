@@ -1,25 +1,21 @@
-package mdteam.ait.tardis.handler;
+package mdteam.ait.tardis.data;
 
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import net.minecraft.block.BlockState;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
 
 import java.util.List;
 import java.util.UUID;
 
-public class HADSHandler extends TardisLink {
+public class HADSData extends TardisLink {
 
-    public HADSHandler(UUID tardisID) {
+    public HADSData(UUID tardisID) {
         super(tardisID);
     }
 

@@ -2,7 +2,7 @@ package mdteam.ait.client.models.coral;
 
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -373,7 +373,7 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
     public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {}
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+    public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
         return Animation.Builder.create(0).build();
     }
 

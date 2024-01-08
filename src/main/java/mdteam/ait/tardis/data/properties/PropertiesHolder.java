@@ -1,6 +1,6 @@
-package mdteam.ait.tardis.handler.properties;
+package mdteam.ait.tardis.data.properties;
 
-import mdteam.ait.tardis.handler.TardisLink;
+import mdteam.ait.tardis.data.TardisLink;
 
 import java.util.HashMap;
 import java.util.UUID;

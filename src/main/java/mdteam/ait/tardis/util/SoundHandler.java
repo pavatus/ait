@@ -3,9 +3,6 @@ package mdteam.ait.tardis.util;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.sounds.LoopingSound;
 import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
-import mdteam.ait.core.AITDimensions;
-import mdteam.ait.core.AITSounds;
-import mdteam.ait.tardis.handler.TardisLink;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.sound.SoundCategory;
@@ -15,7 +12,6 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class SoundHandler {
     protected List<LoopingSound> sounds; // shouldnt really be LoopingSound

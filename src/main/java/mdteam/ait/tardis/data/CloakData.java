@@ -1,8 +1,7 @@
-package mdteam.ait.tardis.handler;
+package mdteam.ait.tardis.data;
 
-import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.item.KeyItem;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -13,12 +12,12 @@ import net.minecraft.util.math.Box;
 import java.util.List;
 import java.util.UUID;
 
-public class CloakHandler extends TardisLink {
+public class CloakData extends TardisLink {
 
     // @TODO its been a minute since ive had to server to client logic bullshit so duzo you do it while i do components
     /*private float alphaBasedOnDistance = 1.0F;*/
 
-    public CloakHandler(UUID tardisId) {
+    public CloakData(UUID tardisId) {
         super(tardisId);
     }
 

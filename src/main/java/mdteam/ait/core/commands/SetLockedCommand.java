@@ -6,19 +6,13 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 
 import static mdteam.ait.core.commands.TeleportInteriorCommand.TARDIS_SUGGESTION;
-import static mdteam.ait.tardis.TardisTravel.State.FLIGHT;
-import static mdteam.ait.tardis.TardisTravel.State.LANDED;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -40,7 +34,7 @@ public class SetLockedCommand {
 
         if (tardis == null || source == null) return 0;
 
-        DoorHandler.lockTardis(locked, tardis, source, true);
+        DoorData.lockTardis(locked, tardis, source, true);
 
         return Command.SINGLE_SUCCESS;
     }

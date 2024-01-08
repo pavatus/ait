@@ -2,7 +2,7 @@ package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -53,7 +53,7 @@ public class EasterHeadModel extends ExteriorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
 		return switch (state) {
 			case CLOSED -> EasterHeadAnimations.EASTER_HEAD_EXTERIOR_CLOSE_ANIMATION;
 			case FIRST -> EasterHeadAnimations.EASTER_HEAD_EXTERIOR_OPEN_ANIMATION;

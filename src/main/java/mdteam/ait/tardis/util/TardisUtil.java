@@ -17,8 +17,8 @@ import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.PosType;
-import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.DoorData;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -125,7 +125,7 @@ public class TardisUtil {
                                 else tardis.getDoor().openDoors();
                             }
                         } else {
-                            DoorHandler.toggleLock(tardis, player);
+                            DoorData.toggleLock(tardis, player);
                         }
                         tardis.markDirty();
                     }

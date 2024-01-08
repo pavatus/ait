@@ -1,10 +1,8 @@
 package mdteam.ait.client.models.doors;
 
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -42,7 +40,7 @@ public class TardimDoorModel extends DoorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+    public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
         return switch (state) {
             case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
@@ -66,7 +64,7 @@ public class TardimDoorModel extends DoorModel {
         /*this.tardis.getChild("left_door").yaw = door.getLeftDoorRotation() == 0 ? 0 : -1.575f;
         this.tardis.getChild("right_door").yaw = door.getRightDoorRotation() == 0 ? 0 : 1.575f;*/
 
-        DoorHandler handler = door.getTardis().getDoor();
+        DoorData handler = door.getTardis().getDoor();
 
         this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -1.575f : 0.0F;
         this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;

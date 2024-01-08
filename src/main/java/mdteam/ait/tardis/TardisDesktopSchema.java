@@ -4,7 +4,6 @@ import com.google.gson.*;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.control.impl.DimensionControl;
 import mdteam.ait.tardis.desktops.textures.DesktopPreviewTexture;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureTemplate;

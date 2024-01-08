@@ -3,20 +3,14 @@ package mdteam.ait.core.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.wrapper.server.ServerTardis;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-
-import java.util.Collection;
 
 import static mdteam.ait.core.commands.TeleportInteriorCommand.TARDIS_SUGGESTION;
 import static net.minecraft.server.command.CommandManager.argument;

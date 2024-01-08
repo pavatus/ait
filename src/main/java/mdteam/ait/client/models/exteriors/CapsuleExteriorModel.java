@@ -3,7 +3,7 @@ package mdteam.ait.client.models.exteriors;
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -73,7 +73,7 @@ public class CapsuleExteriorModel extends ExteriorModel {
         /*this.body.getChild("doors").getChild("left_door").yaw = exterior.getLeftDoor();
         this.body.getChild("doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
         if (exterior.getTardis() == null) return;
-        DoorHandler handler = exterior.getTardis().getDoor();
+        DoorData handler = exterior.getTardis().getDoor();
 
         this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -5F : 0.0F;
         this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;
@@ -96,7 +96,7 @@ public class CapsuleExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+    public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
         return switch (state) {
             case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;

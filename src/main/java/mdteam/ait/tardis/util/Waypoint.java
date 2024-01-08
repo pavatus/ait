@@ -1,6 +1,5 @@
 package mdteam.ait.tardis.util;
 
-import mdteam.ait.tardis.handler.WaypointHandler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;

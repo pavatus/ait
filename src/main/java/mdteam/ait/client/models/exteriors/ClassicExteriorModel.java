@@ -4,7 +4,7 @@ import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -97,12 +97,12 @@ public class ClassicExteriorModel extends ExteriorModel {
 		/*this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
 		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
-		DoorHandler door = exterior.getTardis().getDoor();
+		DoorData door = exterior.getTardis().getDoor();
 		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
 		if (DependencyChecker.hasPortals())
-			this.getPart().getChild("Doors").visible = exterior.getTardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
+			this.getPart().getChild("Doors").visible = exterior.getTardis().getDoor().getDoorState() == DoorData.DoorStateEnum.CLOSED;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
@@ -110,7 +110,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
 		return switch (state) {
 			case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
 			case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;

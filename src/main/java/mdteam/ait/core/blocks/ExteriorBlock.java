@@ -9,8 +9,8 @@ import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.DoorData;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -285,7 +285,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
         PropertiesHandler.set(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, false);
         PropertiesHandler.set(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, PropertiesHandler.getBool((fallingTardisEntity.getTardis().getHandlers().getProperties()), PropertiesHandler.ALARM_ENABLED));
-        DoorHandler.lockTardis(PropertiesHandler.getBool(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), fallingTardisEntity.getTardis(), null, false);
+        DoorData.lockTardis(PropertiesHandler.getBool(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), fallingTardisEntity.getTardis(), null, false);
         fallingTardisEntity.getTardis().markDirty();
     }
 

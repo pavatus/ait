@@ -4,7 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
-import mdteam.ait.tardis.handler.TardisLink;
+import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.block.entity.BlockEntity;
 

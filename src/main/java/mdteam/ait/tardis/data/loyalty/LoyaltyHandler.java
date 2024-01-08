@@ -1,6 +1,6 @@
-package mdteam.ait.tardis.handler.loyalty;
+package mdteam.ait.tardis.data.loyalty;
 
-import mdteam.ait.tardis.handler.TardisLink;
+import mdteam.ait.tardis.data.TardisLink;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.HashMap;

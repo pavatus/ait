@@ -1,24 +1,19 @@
 package mdteam.ait.client.sounds.flight;
 
 import mdteam.ait.client.sounds.LoopingSound;
-import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
 import mdteam.ait.client.sounds.PositionedLoopingSound;
-import mdteam.ait.client.util.ClientShakeUtil;
-import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.SoundHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
-import java.util.List;
 
 // All this is CLIENT ONLY!!
 // Loqor, if you dont understand DONT TOUCH or ask me! - doozoo

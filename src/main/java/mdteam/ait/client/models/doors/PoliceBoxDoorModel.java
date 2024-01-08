@@ -1,18 +1,14 @@
 package mdteam.ait.client.models.doors;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
 
 public class PoliceBoxDoorModel extends DoorModel {
     private final ModelPart TARDIS;
@@ -66,7 +62,7 @@ public class PoliceBoxDoorModel extends DoorModel {
         /*this.TARDIS.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
         this.TARDIS.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();*/
 
-        DoorHandler door = doorEntity.getTardis().getDoor();
+        DoorData door = doorEntity.getTardis().getDoor();
 
         this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
         this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
@@ -81,7 +77,7 @@ public class PoliceBoxDoorModel extends DoorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+    public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
         return switch (state) {
             case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;

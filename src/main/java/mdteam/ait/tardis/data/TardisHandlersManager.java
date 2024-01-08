@@ -1,10 +1,9 @@
-package mdteam.ait.tardis.handler;
+package mdteam.ait.tardis.data;
 
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.TardisTickable;
-import mdteam.ait.tardis.control.sequences.SequenceHandler;
-import mdteam.ait.tardis.handler.loyalty.LoyaltyHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHolder;
+import mdteam.ait.tardis.data.loyalty.LoyaltyHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHolder;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.ArrayList;
@@ -15,37 +14,37 @@ public class TardisHandlersManager extends TardisLink {
     @Exclude
     private List<TardisLink> tickables = new ArrayList<>();
     // Yup
-    private DoorHandler door;
+    private DoorData door;
     private PropertiesHolder properties;
     private WaypointHandler waypoints;
     private LoyaltyHandler loyalties;
-    private OvergrownHandler overgrown;
+    private OvergrownData overgrown;
     private ServerHumHandler hum = null;
     private ServerAlarmHandler alarms;
     private InteriorChangingHandler interior;
-    private FuelHandler fuel;
-    private HADSHandler hads;
-    private FlightHandler flight;
-    private SiegeModeHandler siege;
-    private CloakHandler cloak;
+    private FuelData fuel;
+    private HADSData hads;
+    private FlightData flight;
+    private SiegeData siege;
+    private CloakData cloak;
     // private final SequenceHandler sequence;
 
     public TardisHandlersManager(UUID tardisId) {
         super(tardisId);
 
-        this.door = new DoorHandler(tardisId);
+        this.door = new DoorData(tardisId);
         this.properties = new PropertiesHolder(tardisId);
         this.waypoints = new WaypointHandler(tardisId);
         this.loyalties = new LoyaltyHandler(tardisId);
-        this.overgrown = new OvergrownHandler(tardisId);
+        this.overgrown = new OvergrownData(tardisId);
         this.hum = new ServerHumHandler(tardisId);
         alarms = new ServerAlarmHandler(tardisId);
         interior = new InteriorChangingHandler(tardisId);
-        this.fuel = new FuelHandler(tardisId);
-        this.hads = new HADSHandler(tardisId);
-        this.flight = new FlightHandler(tardisId);
-        this.siege = new SiegeModeHandler(tardisId);
-        this.cloak = new CloakHandler(tardisId);
+        this.fuel = new FuelData(tardisId);
+        this.hads = new HADSData(tardisId);
+        this.flight = new FlightData(tardisId);
+        this.siege = new SiegeData(tardisId);
+        this.cloak = new CloakData(tardisId);
         // this.sequence = new SequenceHandler(tardisId);
 
         generateTickables();
@@ -127,15 +126,15 @@ public class TardisHandlersManager extends TardisLink {
         }
         return loyalties;
     }
-    public DoorHandler getDoor() {
+    public DoorData getDoor() {
         if (this.door == null) {
-            this.door = new DoorHandler(this.tardisId);
+            this.door = new DoorData(this.tardisId);
         }
         return door;
     }
-    public OvergrownHandler getOvergrownHandler() {
+    public OvergrownData getOvergrownHandler() {
         if (this.overgrown == null) {
-            this.overgrown = new OvergrownHandler(this.tardisId);
+            this.overgrown = new OvergrownData(this.tardisId);
         }
         return overgrown;
     }
@@ -160,35 +159,35 @@ public class TardisHandlersManager extends TardisLink {
         return interior;
     }
 
-    public FuelHandler getFuel() {
+    public FuelData getFuel() {
         if (this.fuel == null) {
-            this.fuel = new FuelHandler(this.tardisId);
+            this.fuel = new FuelData(this.tardisId);
         }
         return fuel;
     }
 
-    public HADSHandler getHADS() {
+    public HADSData getHADS() {
         if (this.hads == null) {
-            this.hads = new HADSHandler(this.tardisId);
+            this.hads = new HADSData(this.tardisId);
         }
         return hads;
     }
-    public FlightHandler getFlight() {
+    public FlightData getFlight() {
         if (this.flight == null) {
-            this.flight = new FlightHandler(this.tardisId);
+            this.flight = new FlightData(this.tardisId);
         }
 
         return flight;
     }
-    public SiegeModeHandler getSiege() {
+    public SiegeData getSiege() {
         if (this.siege == null) {
-            this.siege = new SiegeModeHandler(this.tardisId);
+            this.siege = new SiegeData(this.tardisId);
         }
         return this.siege;
     }
-    public CloakHandler getCloak() {
+    public CloakData getCloak() {
         if (this.cloak == null) {
-            this.cloak = new CloakHandler(this.tardisId);
+            this.cloak = new CloakData(this.tardisId);
         }
         return this.cloak;
     }

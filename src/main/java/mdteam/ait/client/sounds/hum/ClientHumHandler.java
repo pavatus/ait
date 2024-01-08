@@ -2,15 +2,11 @@ package mdteam.ait.client.sounds.hum;
 
 import mdteam.ait.client.sounds.LoopingSound;
 import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
-import mdteam.ait.client.sounds.PlayerFollowingSound;
 import mdteam.ait.core.AITDimensions;
-import mdteam.ait.core.AITSounds;
-import mdteam.ait.registry.CreakRegistry;
 import mdteam.ait.registry.HumsRegistry;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.handler.ServerHumHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import mdteam.ait.tardis.sound.CreakSound;
+import mdteam.ait.tardis.data.ServerHumHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.sound.HumSound;
 import mdteam.ait.tardis.util.SoundHandler;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -21,7 +17,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 

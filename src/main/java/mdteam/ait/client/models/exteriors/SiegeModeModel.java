@@ -1,10 +1,9 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -56,7 +55,7 @@ public class SiegeModeModel extends ExteriorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
 		return Animation.Builder.create(0).build();
 	}
 }

@@ -1,22 +1,16 @@
 package mdteam.ait.client.models.consoles;
 
-import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.animation.console.coral.CoralAnimations;
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.console.CoralConsole;
-import mdteam.ait.tardis.handler.FuelHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import net.fabricmc.fabric.api.event.Event;
+import mdteam.ait.tardis.data.FuelData;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-
-import static mdteam.ait.tardis.TardisTravel.State.DEMAT;
-import static mdteam.ait.tardis.TardisTravel.State.FLIGHT;
 
 public class CoralConsoleModel extends ConsoleModel {
 	public static final Animation EMPTY_ANIM = Animation.Builder.create(1).build(); // temporary animation bc rn we have none
@@ -1354,11 +1348,11 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Fuel Gauge
 		this.console.getChild("controls").getChild("ctrl_1").getChild("bone13").getChild("compass").getChild("needle").pitch =
-				-(float) (((console.getTardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
+				-(float) (((console.getTardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
 
 		ModelPart fuelLowWarningLight = this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("light").getChild("bone45");
 		// Low Fuel Light
-		fuelLowWarningLight.visible = (console.getTardis().getFuel() <= (FuelHandler.TARDIS_MAX_FUEL / 10));
+		fuelLowWarningLight.visible = (console.getTardis().getFuel() <= (FuelData.TARDIS_MAX_FUEL / 10));
 
 		// Anti-gravs Lever
 		this.console.getChild("controls").getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ?

@@ -2,12 +2,11 @@ package mdteam.ait.client.models.coral;
 
 import mdteam.ait.client.models.doors.DoorModel;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.tardis.handler.DoorHandler;
+import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.RotationAxis;
 
 public class CoralGrowthDoorModel extends DoorModel {
 	private final ModelPart coral;
@@ -90,7 +89,7 @@ public class CoralGrowthDoorModel extends DoorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
 		return Animation.Builder.create(0).build();
 	}
 

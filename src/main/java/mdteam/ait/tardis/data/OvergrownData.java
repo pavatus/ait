@@ -1,25 +1,24 @@
-package mdteam.ait.tardis.handler;
+package mdteam.ait.tardis.data;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.Random;
 import java.util.UUID;
 
-public class OvergrownHandler extends TardisLink {
+public class OvergrownData extends TardisLink {
     public static final String IS_OVERGROWN = "overgrown";
     public static final String OVERGROWN_TICKS = "overgrown_ticks";
     public static final int MAXIMUM_TICKS = 600;
     public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
     private static Random random;
 
-    public OvergrownHandler(UUID tardisId) {
+    public OvergrownData(UUID tardisId) {
         super(tardisId);
     }
 

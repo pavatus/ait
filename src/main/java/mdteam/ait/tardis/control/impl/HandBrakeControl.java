@@ -1,30 +1,14 @@
 package mdteam.ait.tardis.control.impl;
 
-import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.Control;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
-import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.util.TardisUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.predicate.entity.DamageSourcePredicate;
-import net.minecraft.predicate.entity.EntityPredicates;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
 
 public class HandBrakeControl extends Control {
     public HandBrakeControl() {
