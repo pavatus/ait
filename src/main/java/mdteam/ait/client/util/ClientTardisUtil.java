@@ -21,7 +21,7 @@ import static mdteam.ait.tardis.util.TardisUtil.*;
 
 public class ClientTardisUtil {
     public static final int MAX_POWER_DELTA_TICKS = 3 * 20;
-    public static final int MAX_ALARM_DELTA_TICKS = 30;
+    public static final int MAX_ALARM_DELTA_TICKS = 60;
     private static int alarmDeltaTick;
     private static boolean alarmDeltaDirection; // true for increasing false for decreasing
     private static int powerDeltaTick;
@@ -123,6 +123,8 @@ public class ClientTardisUtil {
                 setAlarmDelta(getAlarmDelta() + 1);
             return;
         }
+
+        System.out.println(getAlarmDelta());
 
         if (getAlarmDelta() < MAX_ALARM_DELTA_TICKS && alarmDeltaDirection) {
             setAlarmDelta(getAlarmDelta() + 1);
