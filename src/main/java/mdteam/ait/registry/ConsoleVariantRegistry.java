@@ -32,8 +32,8 @@ public class ConsoleVariantRegistry {
         return list;
     }
 
-    public static ConsoleVariantSchema BOREALIS;
-    public static ConsoleVariantSchema AUTUMN;
+    //public static ConsoleVariantSchema BOREALIS;
+    //public static ConsoleVariantSchema AUTUMN;
     public static ConsoleVariantSchema HARTNELL;
     public static ConsoleVariantSchema HARTNELL_WOOD;
     public static ConsoleVariantSchema HARTNELL_KELT;
@@ -50,8 +50,8 @@ public class ConsoleVariantRegistry {
         HARTNELL_WOOD = register(new WoodenHartnellVariant()); // fixme this texture is awful - make tright remake it
 
         // Borealis variants
-        BOREALIS = register(new BorealisVariant());
-        AUTUMN = register(new AutumnVariant());
+        //BOREALIS = register(new BorealisVariant());
+        //AUTUMN = register(new AutumnVariant());
 
         // Coral variants
         CORAL_GREEN = register(new GreenCoralVariant());
