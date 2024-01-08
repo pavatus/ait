@@ -97,7 +97,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             // fixme would this cause lag?
             for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
-                System.out.println(ServerTardisManager.getInstance().getLookup());
                 tardis.tick(server);
             }
         });
