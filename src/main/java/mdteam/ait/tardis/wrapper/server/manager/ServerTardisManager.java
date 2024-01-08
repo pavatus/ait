@@ -1,5 +1,7 @@
 package mdteam.ait.tardis.wrapper.server.manager;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -41,6 +43,9 @@ public class ServerTardisManager extends TardisManager {
     private static final ServerTardisManager instance = new ServerTardisManager();
     // Changed from MultiMap to HashMap to fix some concurrent issues, maybe
     private final ConcurrentHashMap<UUID, List<UUID>> subscribers = new ConcurrentHashMap<>(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
+
+    private final ConcurrentHashMap<UUID, List<UUID>> exterior_subscribers = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, List<UUID>> interior_subscribers = new ConcurrentHashMap<>();
 
     public ServerTardisManager() {
         ServerPlayNetworking.registerGlobalReceiver(
@@ -116,7 +121,7 @@ public class ServerTardisManager extends TardisManager {
      * @param serverPlayerEntity PLAYER
      * @param tardisUUID TARDIS UUID
      */
-    private void addSubscriberToTardis(ServerPlayerEntity serverPlayerEntity, UUID tardisUUID) {
+    public void addSubscriberToTardis(ServerPlayerEntity serverPlayerEntity, UUID tardisUUID) {
         if (this.subscribers.containsKey(tardisUUID)) {
             this.subscribers.get(tardisUUID).add(serverPlayerEntity.getUuid());
         } else {
@@ -125,6 +130,88 @@ public class ServerTardisManager extends TardisManager {
             this.subscribers.put(tardisUUID, subscriber_list);
         }
 
+    }
+
+    /**
+     * Adds an exterior subscriber to the Tardis.
+     *
+     * @param  player  the server player entity to add as a subscriber
+     * @param  uuid    the UUID of the subscriber
+     */
+    public void addExteriorSubscriberToTardis(ServerPlayerEntity player, UUID uuid) {
+        if (this.exterior_subscribers.containsKey(uuid)) {
+            this.exterior_subscribers.get(uuid).add(player.getUuid());
+        } else {
+            List<UUID> subscriber_list = new CopyOnWriteArrayList<>();
+            subscriber_list.add(player.getUuid());
+            this.exterior_subscribers.put(uuid, subscriber_list);
+        }
+    }
+
+    /**
+     * Adds an interior subscriber to the Tardis.
+     *
+     * @param  player  the ServerPlayerEntity to add as a subscriber
+     * @param  uuid    the UUID of the subscriber
+     */
+    public void addInteriorSubscriberToTardis(ServerPlayerEntity player, UUID uuid) {
+        if (this.interior_subscribers.containsKey(uuid)) {
+            this.interior_subscribers.get(uuid).add(player.getUuid());
+        } else {
+            List<UUID> subscriber_list = new CopyOnWriteArrayList<>();
+            subscriber_list.add(player.getUuid());
+            this.interior_subscribers.put(uuid, subscriber_list);
+        }
+    }
+
+    /**
+     * Removes the specified player from the exterior subscribers of the Tardis with the given UUID.
+     *
+     * @param  player  the player to remove
+     * @param  uuid    the UUID of the Tardis
+     */
+    public void removeExteriorSubscriberToTardis(ServerPlayerEntity player, UUID uuid) {
+        if (!this.exterior_subscribers.containsKey(uuid)) return;
+        List<UUID> old_uuids = this.exterior_subscribers.get(uuid);
+        int i_to_remove = -1;
+        for (int i = 0; i < old_uuids.size(); i++) {
+            if (old_uuids.get(i).equals(player.getUuid())) {
+                i_to_remove = i;
+                break;
+            }
+        }
+        if (i_to_remove == -1) return;
+        old_uuids.remove(i_to_remove);
+        if (old_uuids.isEmpty()) {
+            this.exterior_subscribers.remove(uuid);
+        } else {
+            this.exterior_subscribers.put(uuid, old_uuids);
+        }
+    }
+
+    /**
+     * Removes the interior subscriber with the specified UUID for the given player.
+     *
+     * @param  player  the server player entity
+     * @param  uuid    the UUID of the interior subscriber to be removed
+     */
+    public void removeInteriorSubscriberToTardis(ServerPlayerEntity player, UUID uuid) {
+        if (!this.interior_subscribers.containsKey(uuid)) return;
+        List<UUID> old_uuids = this.interior_subscribers.get(uuid);
+        int i_to_remove = -1;
+        for (int i = 0; i < old_uuids.size(); i++) {
+            if (old_uuids.get(i).equals(player.getUuid())) {
+                i_to_remove = i;
+                break;
+            }
+        }
+        if (i_to_remove == -1) return;
+        old_uuids.remove(i_to_remove);
+        if (old_uuids.isEmpty()) {
+            this.interior_subscribers.remove(uuid);
+        } else {
+            this.interior_subscribers.put(uuid, old_uuids);
+        }
     }
 
     /**
@@ -153,14 +240,6 @@ public class ServerTardisManager extends TardisManager {
         } else {
             this.subscribers.put(tardisUUID, old_uuids); // update the subscriber list in case any other subscriber was added or removed during this operation
         }
-    }
-
-    /**
-     * Removes all subscribers from the TARDIS
-     * @param tardisUUID the TARDIS UUID
-     */
-    private void removeAllSubscribersFromTardis(UUID tardisUUID) {
-        this.subscribers.replace(tardisUUID, new CopyOnWriteArrayList<>());
     }
 
     public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorSchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
@@ -311,21 +390,6 @@ public class ServerTardisManager extends TardisManager {
         }
     }
 
-    public void addSubscriberToAll(ServerPlayerEntity player) {
-        for (Tardis tardis : this.lookup.values()) {
-            this.addSubscriberToTardis(player, tardis.getUuid());
-        }
-    }
-
-    // fixme i think its easier if all clients just get updated about the tardises
-    // @TODO not send everything to everyone
-    public void subscribeEveryone(Tardis tardis) {
-        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
-            if (this.subscribers.containsKey(player.getUuid())) continue;
-
-            addSubscriberToTardis(player, tardis.getUuid());
-        }
-    }
 
     private void sendTardis(ServerPlayerEntity player, UUID uuid) {
         if (player == null) return;
@@ -370,23 +434,6 @@ public class ServerTardisManager extends TardisManager {
 
 
     public void loadTardises() {
-        /*File[] saved = new File(TardisUtil.getServer().getSavePath(
-                WorldSavePath.ROOT) + "ait/").listFiles();
-
-        if (saved == null)
-            return;
-
-        for (String name : Stream.of(saved)
-                .filter(file -> !file.isDirectory())
-                .map(File::getName)
-                .collect(Collectors.toSet())) {
-
-            if (!name.substring(name.lastIndexOf(".") + 1).equalsIgnoreCase("json"))
-                continue;
-
-            UUID uuid = UUID.fromString(name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf(".")));
-            this.loadTardis(uuid);
-        }*/
         Path savePath = TardisUtil.getServer().getSavePath(WorldSavePath.ROOT).resolve("ait");
 
         File[] saved = savePath.toFile().listFiles((dir, name) ->

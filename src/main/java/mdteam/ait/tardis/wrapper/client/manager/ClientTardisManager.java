@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import mdteam.ait.tardis.wrapper.client.ClientTardis;
@@ -58,12 +59,6 @@ public class ClientTardisManager extends TardisManager {
                         this.sync(uuid, buf);
                     });
 
-            ClientTickEvents.END_WORLD_TICK.register(world -> {
-                for (int i = 0; i < this.buffers.size(); i++) {
-                    ClientPlayNetworking.send(ASK, this.buffers.pop());
-                }
-            });
-
             ClientTickEvents.END_CLIENT_TICK.register(client -> {
                 for (Tardis tardis : ClientTardisManager.getInstance().getLookup().values()) {
                     tardis.tick(client);
@@ -75,6 +70,8 @@ public class ClientTardisManager extends TardisManager {
             ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());
         }
     }
+
+
 
     @Override
     public void loadTardis(UUID uuid, Consumer<Tardis> consumer) {
