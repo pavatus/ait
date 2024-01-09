@@ -101,7 +101,7 @@ dependencies {
 
 	modImplementation("curse.maven:forge-config-api-port-fabric-547434:4583000")
 
-	/*modCompileOnlyApi*/modImplementation("curse.maven:${project.regen_version}")
+	/*modImplementation*/modCompileOnlyApi("curse.maven:${project.regen_version}")
 }
 
 processResources {

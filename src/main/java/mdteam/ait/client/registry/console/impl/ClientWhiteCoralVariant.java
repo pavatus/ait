@@ -8,8 +8,8 @@ import mdteam.ait.tardis.variant.console.WhiteCoralVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientWhiteCoralVariant extends ClientConsoleVariantSchema {
-    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral/white.png"));
-    public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral/white_emission.png"));
+    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral_white.png"));
+    public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral_white_emission.png"));
 
     public ClientWhiteCoralVariant() {
         super(WhiteCoralVariant.REFERENCE);

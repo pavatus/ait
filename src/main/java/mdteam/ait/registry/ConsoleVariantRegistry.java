@@ -3,8 +3,6 @@ package mdteam.ait.registry;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.variant.console.*;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -13,7 +11,6 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 public class ConsoleVariantRegistry {
@@ -37,7 +34,7 @@ public class ConsoleVariantRegistry {
     public static ConsoleVariantSchema HARTNELL;
     public static ConsoleVariantSchema HARTNELL_WOOD;
     public static ConsoleVariantSchema HARTNELL_KELT;
-    public static ConsoleVariantSchema CORAL_GREEN;
+    public static ConsoleVariantSchema CORAL;
     public static ConsoleVariantSchema CORAL_BLUE;
     public static ConsoleVariantSchema CORAL_WHITE;
     public static ConsoleVariantSchema TEMP; // @TODO implement the new hudolin when its made again
@@ -54,7 +51,7 @@ public class ConsoleVariantRegistry {
         //AUTUMN = register(new AutumnVariant());
 
         // Coral variants
-        CORAL_GREEN = register(new GreenCoralVariant());
+        CORAL = register(new CoralVariant());
         CORAL_BLUE = register(new BlueCoralVariant());
         CORAL_WHITE = register(new WhiteCoralVariant());
 

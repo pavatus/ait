@@ -298,9 +298,9 @@ public class TardisUtil {
         TardisUtil.teleportWithDoorOffset(player, tardis.getDoor().getDoorPos());
         TardisDesktop tardisDesktop = tardis.getDesktop();
         if(tardisDesktop.getConsolePos() != null) {
-            if(tardisDesktop.getConsolePos().getBlockEntity() != null) {
+            if(tardisDesktop.getConsolePos().getBlockEntity() instanceof ConsoleBlockEntity console) {
                 tardisDesktop.getConsolePos().getBlockEntity().markDirty();
-                ((ConsoleBlockEntity) tardisDesktop.getConsolePos().getBlockEntity()).sync(); // maybe force sync when a player enters the tardis
+                console.sync(); // maybe force sync when a player enters the tardis
             } else {
                 tardisDesktop.setConsolePos(null);
             }

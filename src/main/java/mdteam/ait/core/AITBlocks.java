@@ -21,6 +21,8 @@ public class AITBlocks implements NeptuneBlockInit {
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).strength(3F, 12000F));
     public static final Block CONSOLE = new ConsoleBlock(NeptuneBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)));
+    public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(NeptuneBlockSettings.create().nonOpaque().noBlockBreakParticles()
+            .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)));
     public static final Block CORAL_PLANT = new CoralPlantBlock(NeptuneBlockSettings.create().ticksRandomly().nonOpaque().noCollision()
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)));
     public static final Block RADIO = new RadioBlock(NeptuneBlockSettings.create().nonOpaque());

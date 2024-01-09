@@ -332,6 +332,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             AITModelProvider aitModelProvider = new AITModelProvider(output);
             aitModelProvider.registerDirectionalBlock(AITBlocks.RADIO);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE);
+            aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE_GENERATOR);
             aitModelProvider.registerDirectionalBlock(AITBlocks.EXTERIOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CORAL_PLANT);
@@ -378,6 +379,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
+        provider.addTranslation(AITBlocks.CONSOLE_GENERATOR, "Console Generator");
         provider.addTranslation(AITItems.IRON_KEY, "Iron Key");
         provider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
         provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
@@ -447,6 +449,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
         provider.addTranslation("screen.ait.interiorsettings.back", "> Back");
         provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
+        provider.addTranslation("screen.ait.interiorsettings.cacheconsole", "> Cache Console");
         provider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
         provider.addTranslation("screen.ait.interior.settings.coral", "Coral");
         provider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");

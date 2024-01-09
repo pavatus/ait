@@ -14,6 +14,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationCalculator;
 import net.minecraft.util.math.Vec3d;
@@ -59,7 +60,8 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
         //matrices.scale(1.0f, 1.0f, -1.0f);
         //matrices.scale(1.0f, -1.0f, 1.0f);
         if (getModel(entity) == null) return;
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(entity.getYaw() + 180f));
+        float superYaw = entity.getYaw() + 180f;
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(superYaw));
         matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(entity.getPitch()));
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 

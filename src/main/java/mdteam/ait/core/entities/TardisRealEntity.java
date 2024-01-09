@@ -34,6 +34,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -44,7 +45,7 @@ import java.util.function.Supplier;
 
 public class TardisRealEntity extends Entity {
 
-    private int rotation = 0;
+    private float rotation = 0.0F;
 
     public static final TrackedData<Optional<UUID>> TARDIS_ID;
     private Supplier<BlockState> blockStateSupplier;
@@ -138,10 +139,11 @@ public class TardisRealEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        rotation += 20;
+        float age = this.age;
+        float rotationTwo = (age) / 20.0F;
         if(this.getTardis() == null) return;
-        if(this.groundCollision)
-            this.refreshPositionAndAngles(this.getBlockPos(), rotation, this.getPitch());
+        if(this.getWorld().isClient()) return;
+        this.refreshPositionAndAngles(this.getBlockPos(), MathHelper.wrapDegrees(rotationTwo * 70), this.getPitch());
     }
 
     static {
