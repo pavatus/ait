@@ -62,6 +62,14 @@ public class RegenHandler implements Acting {
 
     @Override
     public void onRegenTick(IRegen iRegen) {
+        LivingEntity livingEntity = iRegen.getLiving();
+        World world = livingEntity.getWorld();
+        if (world.isClient()) return;
+
+        findTardis(livingEntity).ifPresent(tardis -> {
+            if (tardis.getTravel().getState() == TardisTravel.State.LANDED)
+                forceTakeOff(tardis);
+        });
     }
 
     @Override
