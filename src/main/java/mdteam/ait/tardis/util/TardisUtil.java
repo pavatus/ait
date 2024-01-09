@@ -54,7 +54,6 @@ public class TardisUtil {
     private static final Random RANDOM = new Random();
     private static MinecraftServer SERVER;
     private static ServerWorld TARDIS_DIMENSION;
-    public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
     public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");
 
     public static final Identifier FIND_PLAYER = new Identifier(AITMod.MOD_ID, "find_player");
@@ -73,38 +72,6 @@ public class TardisUtil {
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             SERVER = null;
         });
-        ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
-                (server, player, handler, buf, responseSender) -> {
-                    UUID uuid = buf.readUuid();
-                    Identifier exteriorValue = Identifier.tryParse(buf.readString());
-                    boolean variantChange = buf.readBoolean();
-                    String variantValue = buf.readString();
-                    Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-
-                    tardis.getExterior().setType(ExteriorRegistry.REGISTRY.get(exteriorValue));
-                    WorldOps.updateIfOnServer(server.getWorld(tardis
-                                    .getTravel().getPosition().getWorld().getRegistryKey()),
-                            tardis.getDoor().getExteriorPos());
-                    if (variantChange) {
-                        tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(Identifier.tryParse(variantValue)));
-                        WorldOps.updateIfOnServer(server.getWorld(tardis
-                                        .getTravel().getPosition().getWorld().getRegistryKey()),
-                                tardis.getDoor().getExteriorPos());
-                    }
-
-                    if (tardis.isGrowth())
-                        tardis.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(tardis));
-
-                    tardis.markDirty();
-
-                    /*ExteriorEnum[] values = ExteriorEnum.values();
-                    int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
-                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(values[nextIndex]);
-                    WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
-                                    .getTravel().getPosition().getWorld().getRegistryKey()),
-                            ServerTardisManager.getInstance().getTardis(uuid).getTravel().getPosition());*/
-                }
-        );
         ServerPlayNetworking.registerGlobalReceiver(SNAP,
                 (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();

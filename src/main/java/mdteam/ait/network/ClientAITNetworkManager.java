@@ -1,6 +1,11 @@
 package mdteam.ait.network;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
+import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
+import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.PacketByteBuf;
@@ -13,9 +18,15 @@ public class ClientAITNetworkManager {
     public static final Identifier ASK_FOR_EXTERIOR_SUBSCRIBERS = new Identifier(AITMod.MOD_ID, "ask_for_exterior_subscribers");
     public static final Identifier SEND_EXTERIOR_UNLOADED = new Identifier(AITMod.MOD_ID, "send_exterior_unloaded");
     public static final Identifier SEND_INTERIOR_UNLOADED = new Identifier(AITMod.MOD_ID, "send_interior_unloaded");
+    public static final Identifier SEND_REQUEST_EXTERIOR_CHANGE_FROM_MONITOR = new Identifier(AITMod.MOD_ID, "send_request_exterior_change_from_monitor");
 
     public static void init() {
-
+        ClientPlayNetworking.registerGlobalReceiver(ServerAITNetworkManager.SEND_EXTERIOR_CHANGED, ((client, handler, buf, responseSender) -> {
+            UUID uuid = buf.readUuid();
+            String json = buf.readString();
+            ExteriorVariantSchema exteriorVariantSchema = ServerTardisManager.getInstance().getGson().fromJson(json, ExteriorVariantSchema.class);
+            ClientTardisManager.getInstance().getLookup().get(uuid).getExterior().setVariant(exteriorVariantSchema);
+        }));
     }
 
     public static void ask_for_interior_subscriber(UUID uuid) {
@@ -44,5 +55,13 @@ public class ClientAITNetworkManager {
         buf.writeUuid(uuid);
 
         ClientPlayNetworking.send(SEND_INTERIOR_UNLOADED, buf);
+    }
+
+    public static void send_request_exterior_change_from_monitor(UUID uuid, ClientExteriorVariantSchema clientExteriorVariantSchema) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(uuid);
+        buf.writeString(ClientTardisManager.getInstance().getGson().toJson(clientExteriorVariantSchema));
+
+        ClientPlayNetworking.send(SEND_REQUEST_EXTERIOR_CHANGE_FROM_MONITOR, buf);
     }
 }

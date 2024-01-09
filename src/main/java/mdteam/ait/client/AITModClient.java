@@ -111,29 +111,20 @@ public class AITModClient implements ClientModInitializer {
                 if (!ClientTardisManager.getInstance().exteriorToTardis.containsKey(exterior)) {
                     ClientTardisManager.getInstance().exteriorToTardis.put(exterior, exterior.getTardis());
                 }
-                if (!ClientTardisManager.getInstance().loadedTardises.contains(exterior.getTardis().getUuid())) {
-                    ClientTardisManager.getInstance().loadedTardises.add(exterior.getTardis().getUuid());
-                }
                 exterior.getTardis().getDoor().clearExteriorAnimationState();
             } else if (block instanceof DoorBlockEntity door) {
                 if (door.getTardis() == null || door.getTardis().getDoor() == null) return;
-                ClientTardisManager.getInstance().ask(door.getTardis().getUuid());
+                ClientAITNetworkManager.ask_for_interior_subscriber(door.getTardis().getUuid());
                 door.getTardis().getDoor().clearInteriorAnimationState();
                 if (!ClientTardisManager.getInstance().interiorDoorToTardis.containsKey(door)) {
                     ClientTardisManager.getInstance().interiorDoorToTardis.put(door, door.getTardis());
-                }
-                if (!ClientTardisManager.getInstance().loadedTardises.contains(door.getTardis().getUuid())) {
-                    ClientTardisManager.getInstance().loadedTardises.add(door.getTardis().getUuid());
                 }
             } else if (block instanceof ConsoleBlockEntity console) {
                 if (console.getTardis() == null) return;
                 if (!ClientTardisManager.getInstance().consoleToTardis.containsKey(console)) {
                     ClientTardisManager.getInstance().consoleToTardis.put(console, console.getTardis());
                 }
-                if (!ClientTardisManager.getInstance().loadedTardises.contains(console.getTardis().getUuid())) {
-                    ClientTardisManager.getInstance().loadedTardises.add(console.getTardis().getUuid());
-                }
-                console.ask();
+                ClientAITNetworkManager.ask_for_interior_subscriber(console.getTardis().getUuid());
             }
         });
 
@@ -142,22 +133,18 @@ public class AITModClient implements ClientModInitializer {
                 if (console.getTardis() == null) return;
                 ClientTardisManager.getInstance().consoleToTardis.remove(console);
                 if (!ClientTardisManager.getInstance().consoleToTardis.containsValue(console.getTardis())) {
-                    if (ClientTardisManager.getInstance().exteriorToTardis.isEmpty()) {
-                        if (ClientTardisManager.getInstance().interiorDoorToTardis.isEmpty()) {
+                    if (ClientTardisManager.getInstance().interiorDoorToTardis.isEmpty()) {
 
-                            ClientTardisManager.getInstance().loadedTardises.remove(console.getTardis().getUuid());
-                            ClientTardisManager.getInstance().letKnowUnloaded(console.getTardis().getUuid());
-                        }
+                        ClientAITNetworkManager.send_interior_unloaded(console.getTardis().getUuid());
                     }
+
                 }
             }
             else if (block instanceof ExteriorBlockEntity exterior) {
                 ClientTardisManager.getInstance().exteriorToTardis.remove(exterior);
                 if (exterior.getTardis() == null) return;
                 if (!ClientTardisManager.getInstance().exteriorToTardis.containsValue(exterior.getTardis())) {
-
-                    ClientTardisManager.getInstance().loadedTardises.remove(exterior.getTardis().getUuid());
-                    ClientTardisManager.getInstance().letKnowUnloaded(exterior.getTardis().getUuid());
+                    ClientAITNetworkManager.send_exterior_unloaded(exterior.getTardis().getUuid());
                 }
             }
             else if (block instanceof DoorBlockEntity door) {
@@ -165,10 +152,7 @@ public class AITModClient implements ClientModInitializer {
                 if (door.getTardis() == null) return;
                 if (!ClientTardisManager.getInstance().interiorDoorToTardis.containsValue(door.getTardis())) {
                     if (ClientTardisManager.getInstance().consoleToTardis.isEmpty()) {
-                        if (ClientTardisManager.getInstance().exteriorToTardis.isEmpty()) {
-                            ClientTardisManager.getInstance().loadedTardises.remove(door.getTardis().getUuid());
-                            ClientTardisManager.getInstance().letKnowUnloaded(door.getTardis().getUuid());
-                        }
+                        ClientAITNetworkManager.send_interior_unloaded(door.getTardis().getUuid());
                     }
                 }
             }
