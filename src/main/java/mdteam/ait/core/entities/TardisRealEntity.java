@@ -5,29 +5,47 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.item.KeyItem;
+import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
 public class TardisRealEntity extends Entity {
+
+    private float rotation = 0.0F;
 
     public static final TrackedData<Optional<UUID>> TARDIS_ID;
     private Supplier<BlockState> blockStateSupplier;
@@ -65,9 +83,67 @@ public class TardisRealEntity extends Entity {
         PropertiesHandler.setBool(exterior_block_entity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
         // set dirty for the tardis after this, but not right now cuz I am testing @TODO
         world.spawnEntity(tardis_real_entity);
-        tardis_real_entity.setRotation(45f, block_state.get(ExteriorBlock.FACING).asRotation());
+        tardis_real_entity.setRotation(block_state.get(ExteriorBlock.FACING).asRotation(), 0);
         System.out.println(tardis_real_entity);
         return tardis_real_entity;
+    }
+
+    @Override
+    public ActionResult interact(PlayerEntity player, Hand hand) {
+        if (player == null)
+            return ActionResult.FAIL;
+
+        boolean sneaking = player.isSneaking();
+
+        if (this.getTardis().isGrowth())
+            return ActionResult.FAIL;
+
+        if (player.getMainHandStack().getItem() instanceof KeyItem && !getTardis().isSiegeMode() && !getTardis().getHandlers().getInteriorChanger().isGenerating()) {
+            ItemStack key = player.getMainHandStack();
+            NbtCompound tag = key.getOrCreateNbt();
+            if (!tag.contains("tardis")) {
+                return ActionResult.FAIL;
+            }
+            if (Objects.equals(this.getTardis().getUuid().toString(), tag.getString("tardis"))) {
+                DoorHandler.toggleLock(this.getTardis(), (ServerPlayerEntity) player);
+            } else {
+                this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
+            }
+            return ActionResult.SUCCESS;
+        }
+
+        if (sneaking && getTardis().isSiegeMode() && !getTardis().isSiegeBeingHeld()) {
+            SiegeTardisItem.pickupTardis(getTardis(), (ServerPlayerEntity) player);
+            return ActionResult.SUCCESS;
+        }
+
+        DoorHandler.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getBlockPos(), (ServerPlayerEntity) player);
+        // fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
+        if (sneaking)
+            return ActionResult.FAIL;
+        return ActionResult.SUCCESS;
+    }
+
+    public static TardisRealEntity spawnFromTardisId(World world, UUID tardisId, BlockPos spawnPos) {
+        Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisId);
+        if(tardis.getExterior().getExteriorPos() == null) return null;
+        BlockState blockState = world.getBlockState(tardis.getDesktop().getExteriorPos());
+        TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double)spawnPos.getX() + 0.5, (double)spawnPos.getY(), spawnPos.getZ() + 0.5, blockState);
+        PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
+        world.spawnEntity(tardisRealEntity);
+        tardisRealEntity.setRotation(blockState.get(ExteriorBlock.FACING).asRotation(), 0);
+        return tardisRealEntity;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        float age = this.age;
+        float rotationTwo = (age) / 20.0F;
+        if(this.getTardis() == null) return;
+        if(this.getWorld().isClient()) return;
+        this.refreshPositionAndAngles(this.getBlockPos(), MathHelper.wrapDegrees(rotationTwo * 70), this.getPitch());
     }
 
     static {

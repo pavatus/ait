@@ -1,6 +1,7 @@
 package mdteam.ait.client.renderers.entities;
 
 import mdteam.ait.client.models.exteriors.ExteriorModel;
+import mdteam.ait.client.models.exteriors.PoliceBoxModel;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
@@ -13,6 +14,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationCalculator;
 import net.minecraft.util.math.Vec3d;
@@ -46,19 +48,24 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
         if (model != null && !model.getClass().isInstance(modelClass)) model = null;
 
         matrices.push();
-        Vec3d rotationVector = entity.getRotationVector();
-        float pitch = (float) Math.toRadians(rotationVector.getX());
-        float yawE = (float) Math.toRadians(rotationVector.getY());
-        float roll = (float) Math.toRadians(rotationVector.getZ());
+        //Vec3d rotationVector = entity.getRotationVector();
+        //float pitch = (float) Math.toRadians(rotationVector.getX());
+        //float yawE = (float) Math.toRadians(rotationVector.getY());
+        //float roll = (float) Math.toRadians(rotationVector.getZ());
 
-        Quaternionf quaternion = new Quaternionf();
-        quaternion.rotationXYZ(pitch, yawE, roll);
-        matrices.multiply(quaternion);
-        matrices.scale(1.0f, 1.0f, -1.0f);
-        matrices.scale(1.0f, -1.0f, 1.0f);
-
-
+        //Quaternionf quaternion = new Quaternionf();
+        //quaternion.rotationXYZ(pitch, yawE, roll);
+        //matrices.multiply(quaternion);
+        //matrices.scale(1.0f, 1.0f, -1.0f);
+        //matrices.scale(1.0f, -1.0f, 1.0f);
         if (getModel(entity) == null) return;
+        float superYaw = entity.getYaw() + 180f;
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(superYaw));
+        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(entity.getPitch()));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
+
+
+
         getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light,1,1,1,1,1);
 
         if (exteriorVariantSchema.emission() != null) {

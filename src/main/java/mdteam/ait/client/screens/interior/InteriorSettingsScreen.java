@@ -5,10 +5,12 @@ import mdteam.ait.client.AITModClient;
 import mdteam.ait.client.screens.TardisScreen;
 import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.client.sounds.hum.ClientHumHandler;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.HumsRegistry;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.sound.HumSound;
+import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -18,6 +20,8 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -66,6 +70,7 @@ public class InteriorSettingsScreen extends TardisScreen {
 
         createTextButton(Text.translatable("screen.ait.interiorsettings.back"),(button -> backToExteriorChangeScreen()));
         createTextButton(Text.translatable("screen.ait.interiorsettings.changeinterior"), (button -> toSelectInteriorScreen()));
+        createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole"), (button -> cacheConsole()));
 
         this.addButton(
                 new PressableTextWidget(
@@ -89,6 +94,7 @@ public class InteriorSettingsScreen extends TardisScreen {
                         this.textRenderer
                 )
         );
+
         Text applyText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(
                 new PressableTextWidget(
@@ -131,6 +137,19 @@ public class InteriorSettingsScreen extends TardisScreen {
     public void toSelectInteriorScreen() {
         MinecraftClient.getInstance().setScreen(new OwOInteriorSelectScreen(tardis().getUuid(), this));
     }
+
+    private void cacheConsole() {
+        if(tardis().getDesktop().getConsolePos() == null) return;
+        TardisUtil.getTardisDimension().playSound(null, tardis().getDesktop().getConsolePos(), SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.BLOCKS, 0.5f, 1.0f);
+        if(TardisUtil.getTardisDimension().getBlockEntity(tardis().getDesktop().getConsolePos()) instanceof ConsoleBlockEntity console) {
+            console.killControls();
+        }
+        TardisUtil.getTardisDimension().removeBlock(tardis().getDesktop().getConsolePos(), false);
+        TardisUtil.getTardisDimension().removeBlockEntity(tardis().getDesktop().getConsolePos());
+        tardis().getDesktop().setConsolePos(null);
+        this.close();
+    }
+
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.drawBackground(context); // the grey backdrop

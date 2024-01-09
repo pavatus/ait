@@ -9,8 +9,8 @@ import mdteam.ait.tardis.variant.console.HartnellVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientBlueCoralVariant extends ClientConsoleVariantSchema {
-    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral/blue.png"));
-    public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral/blue_emission.png"));
+    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral_blue.png"));
+    public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral_blue_emission.png"));
 
     public ClientBlueCoralVariant() {
         super(BlueCoralVariant.REFERENCE);

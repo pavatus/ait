@@ -4,14 +4,13 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 
 public class DependencyChecker {
-    public static final String IP_MODID = "immersive_portals"; // cant use this for ip cus it doesnt have a modid i think lol, if it does then use that instead seems more future proofed
 
     public static boolean doesModExist(String modid) {
         return FabricLoader.getInstance().isModLoaded(modid);
     }
 
     public static boolean hasPortals() {
-        return doesClassExist("qouteall.imm_ptl.core.IPModMain");
+        return doesModExist("imm_ptl_core");
     }
 
     public static boolean hasRegeneration() {

@@ -46,8 +46,8 @@ public class MonitorScreen extends TardisScreen {
     private float scrollPosition;
     private boolean scrollbarClicked;
     private int visibleTopRow;
-    int backgroundHeight = 133;
-    int backgroundWidth = 236;
+    int backgroundHeight = 121;//101;
+    int backgroundWidth = 220;//200;
 
     public MonitorScreen(UUID tardis) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
@@ -230,9 +230,14 @@ public class MonitorScreen extends TardisScreen {
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         int i = (this.width - this.backgroundWidth) / 2;
         int j = ((this.height) - this.backgroundHeight) / 2;
-        context.push();
-        context.drawTexture(TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        context.pop();
+        context.drawTexture(TEXTURE, i - 8, j + 4, 0, 12, this.backgroundWidth, this.backgroundHeight);
+
+        // @TODO ive gotta move this to a OwO screen and fix the rendering for the new monitor stuff with the gallifreyan - Loqor
+
+        /*context.push();
+        context.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(delta * 10), i + 41.5f, j + 41.5f, 0);
+        context.drawTexture(TEXTURE, i, j, 0, 101, 83, 83);
+        context.pop();*/
         //context.drawTexture(TEXTURE, i + 18, j + 67, 1, 87, 25, 8);
     }
 

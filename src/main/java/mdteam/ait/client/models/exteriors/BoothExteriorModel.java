@@ -1,8 +1,10 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -68,6 +70,18 @@ public class BoothExteriorModel extends ExteriorModel {
         matrices.translate(0, -1.5f, 0);
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+        matrices.pop();
+    }
+
+    @Override
+    public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        matrices.push();
+        this.k2.getChild("Door").yaw = realEntity.getTardis().getDoor().isOpen() ? 1.575F : 0.0F;
+        matrices.scale(0.95f, 0.95f, 0.95f);
+        matrices.translate(0, -1.5f, 0);
+
+        super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+
         matrices.pop();
     }
 

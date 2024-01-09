@@ -4,6 +4,7 @@ import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -36,10 +37,12 @@ public class PoliceBoxModel extends ExteriorModel {
 
         ModelPartData right_door = Doors.addChild("right_door", ModelPartBuilder.create().uv(181, 177).cuboid(0.5F, -29.5F, -0.5F, 13.0F, 55.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 198).cuboid(0.5F, -29.5F, -1.0F, 14.0F, 55.0F, 0.0F, new Dilation(0.0F))
-                .uv(0, 10).cuboid(9.5F, -9.5F, -1.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-13.5F, -29.5F, -15.5F));
+                .uv(0, 10).cuboid(9.5F, -9.5F, -1.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+                .uv(5, 51).cuboid(2.5F, -9.5F, -1.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-13.5F, -29.5F, -15.5F));
 
         ModelPartData left_door = Doors.addChild("left_door", ModelPartBuilder.create().uv(189, 41).cuboid(-13.5F, -29.5F, -0.5F, 13.0F, 55.0F, 1.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(-12.5F, -10.5F, -1.5F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(13.5F, -29.5F, -15.5F));
+                .uv(0, 0).cuboid(-12.5F, -10.5F, -1.5F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F))
+                .uv(0, 51).cuboid(-12.5F, -4.5F, -1.5F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(13.5F, -29.5F, -15.5F));
 
         ModelPartData Walls = TARDIS.addChild("Walls", ModelPartBuilder.create().uv(129, 15).cuboid(-16.0F, -60.0F, -14.0F, 1.0F, 56.0F, 28.0F, new Dilation(0.0F))
                 .uv(59, 142).cuboid(-16.5F, -60.0F, -14.0F, 0.0F, 56.0F, 28.0F, new Dilation(0.0F))
@@ -70,11 +73,15 @@ public class PoliceBoxModel extends ExteriorModel {
                 .uv(0, 30).cuboid(14.0F, -67.5F, -17.0F, 3.0F, 4.0F, 3.0F, new Dilation(0.05F))
                 .uv(17, 26).cuboid(14.0F, -67.5F, 14.0F, 3.0F, 4.0F, 3.0F, new Dilation(0.05F))
                 .uv(0, 80).cuboid(-15.0F, -70.0F, -15.0F, 30.0F, 2.0F, 30.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(-3.0F, -72.0F, -3.0F, 6.0F, 2.0F, 6.0F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(-3.0F, -72.0F, -3.0F, 6.0F, 3.0F, 6.0F, new Dilation(0.0F))
                 .uv(0, 10).cuboid(-3.0F, -78.0F, -3.0F, 6.0F, 1.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
 
         ModelPartData cube_r7 = Roof.addChild("cube_r7", ModelPartBuilder.create().uv(17, 18).cuboid(-2.0F, -70.75F, -2.0F, 4.0F, 3.0F, 4.0F, new Dilation(0.4F))
                 .uv(0, 18).cuboid(-2.0F, -73.75F, -2.0F, 4.0F, 7.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.25F, 0.0F, 0.0F, 0.7854F, 0.0F));
+
+        ModelPartData Roof_t = TARDIS.addChild("Roof_t", ModelPartBuilder.create().uv(0, 294).cuboid(-17.0F, -66.5F, -17.0F, 34.0F, 3.0F, 34.0F, new Dilation(0.0F))
+                .uv(0, 332).cuboid(-15.0F, -68.25F, -15.0F, 30.0F, 2.0F, 30.0F, new Dilation(0.0F))
+                .uv(0, 365).cuboid(-13.0F, -70.0F, -13.0F, 26.0F, 2.0F, 26.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -0.5F, 0.0F));
         return TexturedModelData.of(modelData, 512, 512);
     }
 
@@ -105,6 +112,27 @@ public class PoliceBoxModel extends ExteriorModel {
 
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+        matrices.pop();
+    }
+
+    @Override
+    public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        matrices.push();
+        matrices.scale(0.63F, 0.63F, 0.63F);
+        matrices.translate(0, -1.5f, 0);
+
+        DoorHandler door = realEntity.getTardis().getDoor();
+
+        this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
+        this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
+
+        // hide the doors if we have portals to stop the dupe
+        //if (DependencyChecker.hasPortals())
+        //    this.TARDIS.getChild("Doors").visible = realEntity.getTardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
+
+
+        super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 
         matrices.pop();
     }

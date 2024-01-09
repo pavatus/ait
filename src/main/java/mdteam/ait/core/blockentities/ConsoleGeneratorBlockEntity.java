@@ -1,0 +1,118 @@
+package mdteam.ait.core.blockentities;
+
+import mdteam.ait.AITMod;
+import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.blocks.ConsoleGeneratorBlock;
+import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
+import mdteam.ait.registry.ConsoleRegistry;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
+import mdteam.ait.tardis.console.ConsoleSchema;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.EndCrystalItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.UUID;
+
+import static mdteam.ait.tardis.util.TardisUtil.isClient;
+
+public class ConsoleGeneratorBlockEntity extends BlockEntity {
+
+    private Identifier type;
+
+    public ConsoleGeneratorBlockEntity(BlockPos pos, BlockState state) {
+        super(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE, pos, state);
+        this.type = ConsoleRegistry.HARTNELL.id();
+    }
+    public static Identifier nextConsole(ConsoleSchema current) {
+        List<ConsoleSchema> list = ConsoleRegistry.REGISTRY.stream().toList();
+
+        int idx = list.indexOf(current);
+        if (idx < 0 || idx+1 == list.size()) return list.get(0).id();
+        return list.get(idx + 1).id();
+    }
+
+    public void useOn(World world, boolean sneaking, PlayerEntity player) {
+        //if(world != TardisUtil.getTardisDimension()) return;
+        if(player.getMainHandStack().getItem() instanceof EndCrystalItem) {
+
+            ConsoleBlockEntity consoleBlockEntity = new ConsoleBlockEntity(pos,AITBlocks.CONSOLE.getDefaultState());
+
+            consoleBlockEntity.setType(this.getConsoleSchema());
+
+            this.getWorld().setBlockState(this.pos, AITBlocks.CONSOLE.getDefaultState());
+            this.getWorld().addBlockEntity(consoleBlockEntity);
+
+            world.playSound(null, this.pos, SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 0.5f, 1.0f);
+
+            if(!player.isCreative()) {
+                player.getMainHandStack().decrement(1);
+                ItemEntity item = new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), new ItemStack(AITBlocks.CONSOLE_GENERATOR));
+                this.getWorld().spawnEntity(item);
+            }
+            return;
+        }
+
+        world.playSound(null, this.pos, SoundEvents.BLOCK_SCULK_CHARGE, SoundCategory.BLOCKS, 0.5f, 1.0f);
+
+        this.setConsoleSchema(nextConsole(this.getConsoleSchema()));
+    }
+
+    @Override
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        if(this.type != null)
+            nbt.putString("console", this.type.toString());
+    }
+
+    public ConsoleSchema getConsoleSchema() {
+        if (type == null) {
+            this.setConsoleSchema(ConsoleRegistry.HARTNELL.id());
+        }
+
+        return ConsoleRegistry.REGISTRY.get(type);
+    }
+
+    public void setConsoleSchema(Identifier type) {
+        this.type = type;
+        markDirty();
+        if(this.getWorld() == null) return;
+        this.getWorld().updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        if (nbt.contains("console")) {
+            Identifier console = new Identifier(nbt.getString("console"));
+            this.setConsoleSchema(console);
+        }
+        super.readNbt(nbt);
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+}

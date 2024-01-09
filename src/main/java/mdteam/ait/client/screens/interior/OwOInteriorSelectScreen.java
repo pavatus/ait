@@ -103,6 +103,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private void applyDesktop() {
+        if(this.selectedDesktop == null) return;
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(tardis().getUuid());
         buf.writeIdentifier(this.selectedDesktop.id());
@@ -125,6 +126,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private void nextDesktop() {
+        if(this.selectedDesktop == null) return;
         this.selectedDesktop = nextDesktop(this.selectedDesktop);
 
         if (!isCurrentUnlocked()) nextDesktop(); // ooo incursion crash
@@ -139,6 +141,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private void previousDesktop() {
+        if(this.selectedDesktop == null) return;
         this.selectedDesktop = previousDesktop(this.selectedDesktop);
 
         if (!isCurrentUnlocked()) previousDesktop(); // ooo incursion crash
@@ -151,6 +154,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private void renderDesktop(DrawContext context) {
+        if(this.selectedDesktop == null) return;
         if (Objects.equals(this.selectedDesktop, DesktopRegistry.DEFAULT_CAVE)) this.nextDesktop();
 
         context.drawCenteredTextWithShadow(
@@ -169,6 +173,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private boolean isCurrentUnlocked() {
+        if(this.selectedDesktop == null) return true;
         return tardis().isDesktopUnlocked(this.selectedDesktop);
     }
 }

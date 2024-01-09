@@ -17,6 +17,7 @@
     "client.rendering.BGRendererMixin",
     "client.rendering.GameRendererMixin",
     "client.rendering.PlayerPoseRendererMixin",
+    "client.rendering.TARDISSkyboxMixin",
     "client.rendering.WindowMixin"
   ],
   "injectors": {

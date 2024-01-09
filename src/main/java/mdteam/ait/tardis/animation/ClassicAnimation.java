@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.animation;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
@@ -45,6 +46,10 @@ public class ClassicAnimation extends ExteriorAnimation {
             return;
         }
         MatSound sound = exterior.getTardis().getExterior().getVariant().getSound(state);
+
+        if (exterior.getTardis().getTravel().isCrashing()) {
+            sound = AITSounds.GHOST_MAT_ANIM;
+        }
 
         this.timeLeft = sound.timeLeft();
         this.maxTime = sound.maxTime();

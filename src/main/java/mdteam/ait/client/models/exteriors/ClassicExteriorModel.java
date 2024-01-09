@@ -4,6 +4,7 @@ import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -105,6 +106,26 @@ public class ClassicExteriorModel extends ExteriorModel {
 			this.getPart().getChild("Doors").visible = exterior.getTardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+		matrices.pop();
+	}
+
+	@Override
+	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+		matrices.push();
+		matrices.scale(0.64F, 0.64F, 0.64F);
+		matrices.translate(0, -1.5f, 0);
+
+		/*this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
+		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
+
+		DoorHandler door = realEntity.getTardis().getDoor();
+		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
+		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
+
+		//if (DependencyChecker.hasPortals())
+		//	this.getPart().getChild("Doors").visible = realEntity.getTardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
+		super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 
 		matrices.pop();
 	}

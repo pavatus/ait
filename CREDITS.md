@@ -1,4 +1,4 @@
-Developers: Creativious, Loqor, Duzo
+Developers: Creativious, Loqor, Duzo and Theo (`>:(`)
 
 Modelers/Textures: Tright, Magic Man
 
