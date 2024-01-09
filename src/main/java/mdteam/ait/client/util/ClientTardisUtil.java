@@ -124,8 +124,6 @@ public class ClientTardisUtil {
             return;
         }
 
-        System.out.println(getAlarmDelta());
-
         if (getAlarmDelta() < MAX_ALARM_DELTA_TICKS && alarmDeltaDirection) {
             setAlarmDelta(getAlarmDelta() + 1);
         }
