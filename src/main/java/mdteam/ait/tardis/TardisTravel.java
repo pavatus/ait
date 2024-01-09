@@ -333,6 +333,8 @@ public class TardisTravel extends TardisLink {
             return;
         }
 
+        if (this.getState() != State.FLIGHT) return;
+
         // Disable autopilot
         // PropertiesHandler.setAutoPilot(this.getTardis().getHandlers().getProperties(), false);
 
@@ -409,6 +411,8 @@ public class TardisTravel extends TardisLink {
         }
         if (this.getPosition().getWorld().isClient())
             return;
+
+        if (this.getState() != State.LANDED) return;
 
         if (PropertiesHandler.willAutoPilot(tardis().getHandlers().getProperties())) {
             // fufill all the prerequisites
