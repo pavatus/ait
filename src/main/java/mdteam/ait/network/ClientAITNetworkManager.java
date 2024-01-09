@@ -58,11 +58,12 @@ public class ClientAITNetworkManager {
         ClientPlayNetworking.send(SEND_INTERIOR_UNLOADED, buf);
     }
 
-    public static void send_request_exterior_change_from_monitor(UUID uuid, ClientExteriorVariantSchema clientExteriorVariantSchema) {
+    public static void send_request_exterior_change_from_monitor(UUID uuid, ClientExteriorVariantSchema clientExteriorVariantSchema, boolean variantChange) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(uuid);
         buf.writeString(clientExteriorVariantSchema.parent().id().toString());
         buf.writeString(clientExteriorVariantSchema.id().toString());
+        buf.writeBoolean(variantChange);
         ClientPlayNetworking.send(SEND_REQUEST_EXTERIOR_CHANGE_FROM_MONITOR, buf);
     }
 

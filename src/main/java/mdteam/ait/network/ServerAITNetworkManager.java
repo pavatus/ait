@@ -62,11 +62,13 @@ public class ServerAITNetworkManager {
             UUID uuid = buf.readUuid();
             Identifier exteriorIdentifier = Identifier.tryParse(buf.readString());
             Identifier exteriorVariantSchema = Identifier.tryParse(buf.readString());
-
+            boolean variantChanged = buf.readBoolean();
             Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
             TardisExterior tardisExterior = tardis.getExterior();
             tardisExterior.setType(ExteriorRegistry.REGISTRY.get(exteriorVariantSchema));
-            tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(exteriorIdentifier));
+            if (variantChanged) {
+                tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(exteriorIdentifier));
+            }
             WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(tardis.getTravel().getPosition().getWorld().getRegistryKey()), tardis.getDoor().getExteriorPos());
             WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(TardisUtil.getTardisDimension().getRegistryKey()), tardis.getDoor().getDoorPos());
             if (tardis.isGrowth()) {
