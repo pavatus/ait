@@ -214,6 +214,18 @@ public class ServerTardisManager extends TardisManager {
         }
     }
 
+    public void removePlayerFromAllTardis(ServerPlayerEntity serverPlayerEntity) {
+        for (Map.Entry<UUID, List<UUID>> entry : this.exterior_subscribers.entrySet()) {
+            removeSubscriberToTardis(serverPlayerEntity, entry.getKey());
+        }
+        for (Map.Entry<UUID, List<UUID>> entry : this.interior_subscribers.entrySet()) {
+            removeSubscriberToTardis(serverPlayerEntity, entry.getKey());
+        }
+        for (Map.Entry<UUID, List<UUID>> entry : this.subscribers.entrySet()) {
+            removeSubscriberToTardis(serverPlayerEntity, entry.getKey());
+        }
+    }
+
     /**
      * Removes a subscriber from the TARDIS
      * @param serverPlayerEntity the player to remove from the subscribers list

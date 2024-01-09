@@ -17,6 +17,7 @@ import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.core.util.AITConfig;
+import mdteam.ait.network.ServerAITNetworkManager;
 import mdteam.ait.registry.*;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
@@ -59,6 +60,7 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ServerAITNetworkManager.init();
         ConsoleRegistry.init();
         DesktopRegistry.init();
         ExteriorRegistry.init();

@@ -16,6 +16,7 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -30,8 +31,13 @@ public class ServerAITNetworkManager {
     public static final Identifier SEND_TARDIS_DEMAT = new Identifier(AITMod.MOD_ID, "send_tardis_demat");
     public static final Identifier SEND_TARDIS_MAT = new Identifier(AITMod.MOD_ID, "send_tardis_mat");
     public static final Identifier SEND_EXTERIOR_CHANGED = new Identifier(AITMod.MOD_ID, "send_exterior_changed");
+    public static final Identifier SEND_INTERIOR_DOOR_TYPE_CHANGED = new Identifier(AITMod.MOD_ID, "send_interior_door_type_changed");
 
     public static void init() {
+        ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) -> {
+            ServerTardisManager.getInstance().removePlayerFromAllTardis(handler.getPlayer());
+        }));
+
         ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_REQUEST_ADD_TO_EXTERIOR_SUBSCRIBERS, ((server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
             assert player != null;
@@ -54,18 +60,19 @@ public class ServerAITNetworkManager {
         }));
         ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_REQUEST_EXTERIOR_CHANGE_FROM_MONITOR, ((server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
-            String json = buf.readString();
-            ClientExteriorVariantSchema clientExteriorVariantSchema = ServerTardisManager.getInstance().getGson().fromJson(json, ClientExteriorVariantSchema.class);
+            Identifier exteriorIdentifier = Identifier.tryParse(buf.readString());
+            Identifier exteriorVariantSchema = Identifier.tryParse(buf.readString());
 
             Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
             TardisExterior tardisExterior = tardis.getExterior();
-            tardisExterior.setType(ExteriorRegistry.REGISTRY.get(clientExteriorVariantSchema.id()));
-            tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(clientExteriorVariantSchema.parent().id()));
+            tardisExterior.setType(ExteriorRegistry.REGISTRY.get(exteriorVariantSchema));
+            tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(exteriorIdentifier));
             WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(tardis.getTravel().getPosition().getWorld().getRegistryKey()), tardis.getDoor().getExteriorPos());
             if (tardis.isGrowth()) {
                 tardis.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(tardis));
             }
             setSendExteriorChanged(uuid);
+            setSendInteriorChanged(uuid);
 
         }));
         ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_SNAP_TO_OPEN_DOORS, ((server, player, handler, buf, responseSender) -> {
@@ -106,15 +113,30 @@ public class ServerAITNetworkManager {
     public static void setSendExteriorChanged(UUID uuid) {
         Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
         ExteriorVariantSchema exteriorVariantSchema = tardis.getExterior().getVariant();
-        // serialize exteriorVariantSchema
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(uuid);
-        buf.writeString(ServerTardisManager.getInstance().getGson().toJson(exteriorVariantSchema));
-
+        buf.writeString(exteriorVariantSchema.parent().id().toString());
+        buf.writeString(exteriorVariantSchema.id().toString());
+        assert ServerTardisManager.getInstance().exterior_subscribers.containsKey(uuid);
         for (UUID player_uuid : ServerTardisManager.getInstance().exterior_subscribers.get(uuid)) {
             ServerPlayerEntity player = TardisUtil.getServer().getPlayerManager().getPlayer(player_uuid);
             assert player != null;
             ServerPlayNetworking.send(player, SEND_EXTERIOR_CHANGED, buf);
+        }
+    }
+
+    public static void setSendInteriorChanged(UUID uuid) {
+        Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
+        ExteriorVariantSchema exteriorVariantSchema = tardis.getExterior().getVariant();
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(uuid);
+        buf.writeString(exteriorVariantSchema.parent().id().toString());
+        buf.writeString(exteriorVariantSchema.id().toString());
+        assert ServerTardisManager.getInstance().interior_subscribers.containsKey(uuid);
+        for (UUID player_uuid : ServerTardisManager.getInstance().interior_subscribers.get(uuid)) {
+            ServerPlayerEntity player = TardisUtil.getServer().getPlayerManager().getPlayer(player_uuid);
+            assert player != null;
+            ServerPlayNetworking.send(player, SEND_INTERIOR_DOOR_TYPE_CHANGED, buf);
         }
     }
 }

@@ -88,12 +88,14 @@ public class SonicItem extends Item {
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
                         return;
                     }
+                    assert !world.isClient();
 
                     List<ExteriorSchema> list = ExteriorRegistry.REGISTRY.stream().toList();
                     exteriorBlock.getTardis().getExterior().setType(list.get((list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1));
                     //System.out.println(exteriorBlock.getTardis().getExterior().getType());
 
                     ServerAITNetworkManager.setSendExteriorChanged(exteriorBlock.getTardis().getUuid());
+                    ServerAITNetworkManager.setSendInteriorChanged(exteriorBlock.getTardis().getUuid());
                 }
 
                 // fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor
