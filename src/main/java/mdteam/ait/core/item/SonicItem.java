@@ -88,7 +88,7 @@ public class SonicItem extends Item {
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
                         return;
                     }
-                    assert !world.isClient();
+                    if (world.isClient()) return;
 
                     List<ExteriorSchema> list = ExteriorRegistry.REGISTRY.stream().toList();
                     exteriorBlock.getTardis().getExterior().setType(list.get((list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1));

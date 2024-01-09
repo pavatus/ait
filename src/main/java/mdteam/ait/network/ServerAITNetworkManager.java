@@ -40,22 +40,22 @@ public class ServerAITNetworkManager {
 
         ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_REQUEST_ADD_TO_EXTERIOR_SUBSCRIBERS, ((server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
-            assert player != null;
+            if (player == null) return;
             ServerTardisManager.getInstance().addExteriorSubscriberToTardis(player, uuid);
         }));
         ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_REQUEST_ADD_TO_INTERIOR_SUBSCRIBERS, ((server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
-            assert player != null;
+            if (player == null) return;
             ServerTardisManager.getInstance().addInteriorSubscriberToTardis(player, uuid);
         }));
         ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_EXTERIOR_UNLOADED, ((server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
-            assert player != null;
+            if (player == null) return;
             ServerTardisManager.getInstance().removeExteriorSubscriberToTardis(player, uuid);
         }));
         ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_INTERIOR_UNLOADED, ((server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
-            assert player != null;
+            if (player == null) return;
             ServerTardisManager.getInstance().removeInteriorSubscriberToTardis(player, uuid);
         }));
         ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_REQUEST_EXTERIOR_CHANGE_FROM_MONITOR, ((server, player, handler, buf, responseSender) -> {
@@ -77,7 +77,7 @@ public class ServerAITNetworkManager {
         }));
         ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_SNAP_TO_OPEN_DOORS, ((server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
-            assert player != null;
+            if (player == null) return;
             Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
             if (tardis.getHandlers().getOvergrownHandler().isOvergrown()) return;
             player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
@@ -97,8 +97,7 @@ public class ServerAITNetworkManager {
             UUID playerUUID = buf.readUuid();
             Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisUUID);
             ServerPlayerEntity serverPlayer = TardisUtil.getServer().getPlayerManager().getPlayer(playerUUID);
-            assert tardis.getDesktop().getCorners() != null;
-            assert serverPlayer != null;
+            if (tardis.getDesktop().getCorners() == null || serverPlayer == null) return;
             tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
                     serverPlayer.getBlockX(),
                             serverPlayer.getBlockY(),
@@ -117,10 +116,10 @@ public class ServerAITNetworkManager {
         buf.writeUuid(uuid);
         buf.writeString(exteriorVariantSchema.parent().id().toString());
         buf.writeString(exteriorVariantSchema.id().toString());
-        assert ServerTardisManager.getInstance().exterior_subscribers.containsKey(uuid);
+        if (!ServerTardisManager.getInstance().exterior_subscribers.containsKey(uuid)) return;
         for (UUID player_uuid : ServerTardisManager.getInstance().exterior_subscribers.get(uuid)) {
             ServerPlayerEntity player = TardisUtil.getServer().getPlayerManager().getPlayer(player_uuid);
-            assert player != null;
+            if (player == null) return;
             ServerPlayNetworking.send(player, SEND_EXTERIOR_CHANGED, buf);
         }
     }
@@ -132,10 +131,10 @@ public class ServerAITNetworkManager {
         buf.writeUuid(uuid);
         buf.writeString(exteriorVariantSchema.parent().id().toString());
         buf.writeString(exteriorVariantSchema.id().toString());
-        assert ServerTardisManager.getInstance().interior_subscribers.containsKey(uuid);
+        if (!ServerTardisManager.getInstance().interior_subscribers.containsKey(uuid)) return;
         for (UUID player_uuid : ServerTardisManager.getInstance().interior_subscribers.get(uuid)) {
             ServerPlayerEntity player = TardisUtil.getServer().getPlayerManager().getPlayer(player_uuid);
-            assert player != null;
+            if (player == null) return;
             ServerPlayNetworking.send(player, SEND_INTERIOR_DOOR_TYPE_CHANGED, buf);
         }
     }

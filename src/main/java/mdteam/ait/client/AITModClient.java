@@ -107,56 +107,52 @@ public class AITModClient implements ClientModInitializer {
 
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
             if (block instanceof ExteriorBlockEntity exterior) {
-                assert exterior.getTardis() != null;
+                if (exterior.getTardis() == null) return;
                 ClientAITNetworkManager.ask_for_exterior_subscriber(exterior.getTardis().getUuid());
-                assert !ClientTardisManager.getInstance().exteriorToTardis.containsKey(exterior);
+                if (ClientTardisManager.getInstance().exteriorToTardis.containsKey(exterior)) return;
                 ClientTardisManager.getInstance().exteriorToTardis.put(exterior, exterior.getTardis());
                 exterior.getTardis().getDoor().clearExteriorAnimationState();
             }
             else if (block instanceof DoorBlockEntity door) {
-                assert door.getTardis() != null;
+                if (door.getTardis() == null) return;
                 ClientAITNetworkManager.ask_for_interior_subscriber(door.getTardis().getUuid());
-                assert !ClientTardisManager.getInstance().interiorDoorToTardis.containsKey(door);
+                if (ClientTardisManager.getInstance().interiorDoorToTardis.containsKey(door)) return;
                 ClientTardisManager.getInstance().interiorDoorToTardis.put(door, door.getTardis());
                 door.getTardis().getDoor().clearInteriorAnimationState();
             }
             else if (block instanceof ConsoleBlockEntity console) {
-                assert console.getTardis() != null;
+                if (console.getTardis() == null) return;
                 ClientAITNetworkManager.ask_for_interior_subscriber(console.getTardis().getUuid());
-                assert !ClientTardisManager.getInstance().consoleToTardis.containsKey(console);
+                if (ClientTardisManager.getInstance().consoleToTardis.containsKey(console)) return;
                 ClientTardisManager.getInstance().consoleToTardis.put(console, console.getTardis());
             }
         });
 
         ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((block, world) -> {
             if (block instanceof ExteriorBlockEntity exteriorBlock) {
-                assert ClientTardisManager.getInstance().exteriorToTardis.containsKey(exteriorBlock);
+                if (!ClientTardisManager.getInstance().exteriorToTardis.containsKey(exteriorBlock)) return;
                 UUID uuid = ClientTardisManager.getInstance().exteriorToTardis.get(exteriorBlock).getUuid();
                 ClientTardisManager.getInstance().exteriorToTardis.remove(exteriorBlock);
-                assert exteriorBlock.getTardis() != null;
                 ClientAITNetworkManager.send_exterior_unloaded(uuid);
             }
             else if (block instanceof DoorBlockEntity doorBlockEntity) {
-                assert ClientTardisManager.getInstance().interiorDoorToTardis.containsKey(doorBlockEntity);
+                if (!ClientTardisManager.getInstance().interiorDoorToTardis.containsKey(doorBlockEntity)) return;
                 UUID uuid = ClientTardisManager.getInstance().interiorDoorToTardis.get(doorBlockEntity).getUuid();
                 ClientTardisManager.getInstance().interiorDoorToTardis.remove(doorBlockEntity);
-                assert doorBlockEntity.getTardis() != null;
-                assert ClientTardisManager.getInstance().consoleToTardis.isEmpty();
+                if (!ClientTardisManager.getInstance().consoleToTardis.isEmpty()) return;
                 ClientAITNetworkManager.send_interior_unloaded(uuid);
             }
             else if (block instanceof ConsoleBlockEntity consoleBlockEntity) {
-                assert ClientTardisManager.getInstance().consoleToTardis.containsKey(consoleBlockEntity);
+                if (!ClientTardisManager.getInstance().consoleToTardis.containsKey(consoleBlockEntity)) return;
                 UUID uuid = ClientTardisManager.getInstance().consoleToTardis.get(consoleBlockEntity).getUuid();
                 ClientTardisManager.getInstance().consoleToTardis.remove(consoleBlockEntity);
-                assert consoleBlockEntity.getTardis() != null;
-                assert ClientTardisManager.getInstance().interiorDoorToTardis.isEmpty();
+                if (!ClientTardisManager.getInstance().consoleToTardis.isEmpty()) return;
                 ClientAITNetworkManager.send_interior_unloaded(uuid);
             }
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
-            assert client.world != null;
-            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD || client.world == null) return;
 
             String id = buf.readString();
             ConsoleSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
@@ -165,7 +161,7 @@ public class AITModClient implements ClientModInitializer {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_VARIANT, (client, handler, buf, responseSender) -> {
-            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD || client.world == null) return;
 
             Identifier id = Identifier.tryParse(buf.readString());
             BlockPos consolePos = buf.readBlockPos();
@@ -178,7 +174,7 @@ public class AITModClient implements ClientModInitializer {
                     UUID tardisId = buf.readUuid();
                     ClientTardisManager.getInstance().getTardis(tardisId, (tardis -> {
                         if (tardis == null) return; // idk how the consumer works tbh, but im sure theo is gonna b happy
-
+                        if (MinecraftClient.getInstance().world == null) return;
                        BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.getExterior().getExteriorPos()); // todo remember to use the right world in future !!
                        if (!(block instanceof ExteriorBlockEntity exterior)) return;
 

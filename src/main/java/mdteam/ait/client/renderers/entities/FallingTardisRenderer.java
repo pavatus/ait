@@ -26,16 +26,12 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
     public void render(FallingTardisEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
 
-        if (entity.getTardis() == null) {
-            return;
-        }
+        if (entity.getTardis() == null) return;
 
         TardisExterior tardisExterior = entity.getTardis().getExterior();
         ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardisExterior.getVariant());
 
-        if (tardisExterior == null) return;
-
-        assert exteriorVariant != null;
+        if (tardisExterior == null || exteriorVariant == null) return;
         Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
 
         if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.
