@@ -27,20 +27,6 @@ public class ClientAITNetworkManager {
     public static final Identifier SEND_REQUEST_FIND_PLAYER_FROM_MONITOR = new Identifier(AITMod.MOD_ID, "send_request_find_player_from_monitor");
 
     public static void init() {
-        ClientPlayNetworking.registerGlobalReceiver(ServerAITNetworkManager.SEND_EXTERIOR_CHANGED, ((client, handler, buf, responseSender) -> {
-            UUID uuid = buf.readUuid();
-            Identifier exteriorIdentifier = Identifier.tryParse(buf.readString());
-            Identifier exteriorVariantSchema = Identifier.tryParse(buf.readString());
-            ClientTardisManager.getInstance().getLookup().get(uuid).getExterior().setType(ExteriorRegistry.REGISTRY.get(exteriorIdentifier));
-            ClientTardisManager.getInstance().getLookup().get(uuid).getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(exteriorVariantSchema));
-        }));
-        ClientPlayNetworking.registerGlobalReceiver(ServerAITNetworkManager.SEND_INTERIOR_DOOR_TYPE_CHANGED, ((client, handler, buf, responseSender) -> {
-            UUID uuid = buf.readUuid();
-            Identifier exteriorIdentifier = Identifier.tryParse(buf.readString());
-            Identifier exteriorVariantSchema = Identifier.tryParse(buf.readString());
-            ClientTardisManager.getInstance().getLookup().get(uuid).getExterior().setType(ExteriorRegistry.REGISTRY.get(exteriorIdentifier));
-            ClientTardisManager.getInstance().getLookup().get(uuid).getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(exteriorVariantSchema));
-        }));
         ClientPlayConnectionEvents.DISCONNECT.register((client, handler) -> ClientTardisManager.getInstance().reset());
     }
 

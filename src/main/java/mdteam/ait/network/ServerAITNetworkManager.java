@@ -68,11 +68,10 @@ public class ServerAITNetworkManager {
             tardisExterior.setType(ExteriorRegistry.REGISTRY.get(exteriorVariantSchema));
             tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(exteriorIdentifier));
             WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(tardis.getTravel().getPosition().getWorld().getRegistryKey()), tardis.getDoor().getExteriorPos());
+            WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(TardisUtil.getTardisDimension().getRegistryKey()), tardis.getDoor().getDoorPos());
             if (tardis.isGrowth()) {
                 tardis.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(tardis));
             }
-            setSendExteriorChanged(uuid);
-            setSendInteriorChanged(uuid);
 
         }));
         ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_SNAP_TO_OPEN_DOORS, ((server, player, handler, buf, responseSender) -> {
