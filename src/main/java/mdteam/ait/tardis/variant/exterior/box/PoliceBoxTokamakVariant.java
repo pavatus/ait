@@ -24,10 +24,4 @@ public class PoliceBoxTokamakVariant extends PoliceBoxVariant {
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return super.adjustPortalPos(pos, direction);
     }
-
-    @Override
-    public MatSound getSound(TardisTravel.State state) {
-        if (state == TardisTravel.State.MAT) return AITSounds.GHOST_MAT_ANIM;
-        else return super.getSound(state);
-    }
 }

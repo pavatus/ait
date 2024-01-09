@@ -734,14 +734,22 @@ public class TardisTravel extends TardisLink {
 
     @NotNull
     public SoundEvent getSoundForCurrentState() {
-        if (this.getTardis() != null)
+        if (this.getTardis() != null) {
+            if (this.isCrashing()) {
+                return AITSounds.GHOST_MAT;
+            }
             return this.getTardis().getExterior().getVariant().getSound(this.getState()).sound();
+        }
         return SoundEvents.INTENTIONALLY_EMPTY;
     }
 
     public MatSound getMatSoundForCurrentState() {
-        if (this.getTardis() != null)
+        if (this.getTardis() != null) {
+            if (this.isCrashing()) {
+                return AITSounds.GHOST_MAT_ANIM;
+            }
             return this.getTardis().getExterior().getVariant().getSound(this.getState());
+        }
         return AITSounds.LANDED_ANIM; // COUUULD be LANDED_ANIM but null is beteter
     }
 
