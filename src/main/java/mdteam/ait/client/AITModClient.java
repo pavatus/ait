@@ -3,6 +3,7 @@ package mdteam.ait.client;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.core.*;
+import mdteam.ait.network.ClientAITNetworkManager;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.ClientDoorRegistry;
@@ -106,7 +107,7 @@ public class AITModClient implements ClientModInitializer {
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
             if (block instanceof ExteriorBlockEntity exterior) {
                 if (exterior.getTardis() == null || exterior.getTardis().getDoor() == null) return;
-                ClientTardisManager.getInstance().ask(exterior.getTardis().getUuid());
+                ClientAITNetworkManager.ask_for_exterior_subscriber(exterior.getTardis().getUuid());
                 if (!ClientTardisManager.getInstance().exteriorToTardis.containsKey(exterior)) {
                     ClientTardisManager.getInstance().exteriorToTardis.put(exterior, exterior.getTardis());
                 }
