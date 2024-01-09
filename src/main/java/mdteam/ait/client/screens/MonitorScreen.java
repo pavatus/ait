@@ -144,9 +144,6 @@ public class MonitorScreen extends TardisScreen {
 
     public void sendExteriorPacket() {
         if (tardis() != null) {
-            /*TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel() != tardis().getExterior().getType() ?
-                    this.getCurrentModel().ordinal() : tardis().getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(),
-                    this.getCurrentVariant() != tardis().getExterior().getVariant());*/
             if (this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant().parent() != tardis().getExterior().getVariant()) {
                 ClientAITNetworkManager.send_request_exterior_change_from_monitor(this.tardisId, this.getCurrentVariant());
             }

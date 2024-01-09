@@ -351,7 +351,7 @@ public class AITModClient implements ClientModInitializer {
                             if (!tag.contains("tardis")) {
                                 return;
                             }
-                            ClientTardisUtil.snapToOpenDoors(UUID.fromString(tag.getString("tardis")));
+                            ClientAITNetworkManager.send_snap_to_open_doors(UUID.fromString(tag.getString("tardis")));
                         }
                     }
                 } else {

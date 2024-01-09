@@ -3,6 +3,7 @@ package mdteam.ait.core.item;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.network.ServerAITNetworkManager;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
@@ -92,7 +93,7 @@ public class SonicItem extends Item {
                     exteriorBlock.getTardis().getExterior().setType(list.get((list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1));
                     //System.out.println(exteriorBlock.getTardis().getExterior().getType());
 
-                    exteriorBlock.getTardis().markDirty();
+                    ServerAITNetworkManager.setSendExteriorChanged(exteriorBlock.getTardis().getUuid());
                 }
 
                 // fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor
