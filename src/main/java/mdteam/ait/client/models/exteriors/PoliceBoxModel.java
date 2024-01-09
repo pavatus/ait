@@ -4,6 +4,7 @@ import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -105,6 +106,27 @@ public class PoliceBoxModel extends ExteriorModel {
 
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+        matrices.pop();
+    }
+
+    @Override
+    public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        matrices.push();
+        matrices.scale(0.63F, 0.63F, 0.63F);
+        matrices.translate(0, -1.5f, 0);
+
+        DoorHandler door = realEntity.getTardis().getDoor();
+
+        this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
+        this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
+
+        // hide the doors if we have portals to stop the dupe
+        //if (DependencyChecker.hasPortals())
+        //    this.TARDIS.getChild("Doors").visible = realEntity.getTardis().getDoor().getDoorState() == DoorHandler.DoorStateEnum.CLOSED;
+
+
+        super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 
         matrices.pop();
     }

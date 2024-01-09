@@ -63,6 +63,8 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        if (realEntity.getTardis() == null) return;
+
         root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 

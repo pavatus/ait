@@ -2,6 +2,7 @@ package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.handler.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -43,6 +44,19 @@ public class EasterHeadModel extends ExteriorModel {
 		this.head.getChild("door").pitch = (exterior.getTardis().getDoor().isOpen()) ? -45f : 0f;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+		matrices.pop();
+	}
+
+	@Override
+	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+		matrices.push();
+
+		matrices.translate(0,-1.5f,0);
+
+		this.head.getChild("door").pitch = (realEntity.getTardis().getDoor().isOpen()) ? -45f : 0f;
+
+		super.renderRealWorld(realEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
 		matrices.pop();
 	}

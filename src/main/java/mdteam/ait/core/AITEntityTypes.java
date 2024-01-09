@@ -23,5 +23,5 @@ public class AITEntityTypes implements NeptuneEntityInit {
 
     @CustomName("tardis_real")
     public static final EntityType<TardisRealEntity> TARDIS_REAL_ENTITY_TYPE = FabricEntityTypeBuilder.create(
-            SpawnGroup.MISC, TardisRealEntity::new).dimensions(EntityDimensions.changing(0.98f, 0.98f)).build();
+            SpawnGroup.MISC, TardisRealEntity::new).dimensions(EntityDimensions.changing(0.98f, 1.96f)).build();
 }
