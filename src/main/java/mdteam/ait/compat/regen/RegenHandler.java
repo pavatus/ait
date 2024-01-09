@@ -23,7 +23,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
+import java.util.Optional;
+
 public class RegenHandler implements Acting {
+    private static final Random random = Random.create();
 
     public static void init() {
         if (!DependencyChecker.hasRegeneration()) {
@@ -32,6 +35,29 @@ public class RegenHandler implements Acting {
         }
         AITMod.LOGGER.info("AIT - Setting up Regeneration");
         ActingForwarder.register(new RegenHandler(), ActingForwarder.Side.COMMON);
+    }
+
+    // im bored so here i put them in different methods
+    private static Optional<Tardis> findTardis(LivingEntity livingEntity) {
+        Tardis found = TardisUtil.findTardisByInterior(livingEntity.getBlockPos());
+        return Optional.ofNullable(found);
+    }
+    private static void forceTakeOff(Tardis tardis) {
+        PropertiesHandler.setAutoPilot(tardis.getHandlers().getProperties(), true);
+        tardis.getTravel().dematerialise(true);
+        PropertiesHandler.setAutoPilot(tardis.getHandlers().getProperties(), false);
+    }
+
+    private static void extendFlight(Tardis tardis, IRegen regen) {
+        tardis.getHandlers().getFlight().increaseFlightTime(regen.transitionType().getAnimationLength());
+    }
+    private static void changeToRandomExterior(Tardis tardis) {
+        ExteriorSchema exteriorType = TardisItemBuilder.findRandomExterior();
+        tardis.getExterior().setType(exteriorType);
+        tardis.getExterior().setVariant(TardisItemBuilder.findRandomVariant(exteriorType));
+    }
+    private static void changeToRandomInterior(Tardis tardis) {
+        tardis.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(tardis));
     }
 
     @Override
@@ -44,6 +70,13 @@ public class RegenHandler implements Acting {
 
     @Override
     public void onHandsStartGlowing(IRegen iRegen) {
+        LivingEntity livingEntity = iRegen.getLiving();
+
+        World world = livingEntity.getWorld();
+
+        if(world.isClient()) return;
+
+        findTardis(livingEntity).ifPresent((RegenHandler::forceTakeOff));
     }
 
     @Override
@@ -53,20 +86,14 @@ public class RegenHandler implements Acting {
 
     @Override
     public void onRegenTrigger(IRegen iRegen) {
-        LivingEntity livingEntity = iRegen.getLiving();
-
-        World world = livingEntity.getWorld();
+        LivingEntity entity = iRegen.getLiving();
+        World world = entity.getWorld();
 
         if(world.isClient()) return;
 
-        Tardis tardis = TardisUtil.findTardisByInterior(livingEntity.getBlockPos());
-        if (tardis == null) return;
-        if(tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
-            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
-            tardis.getTravel().crash();
-            System.out.println("im getting run..?" + tardis.getTravel().getState());
-            tardis.getHandlers().getFlight().increaseFlightTime(iRegen.transitionType().getAnimationLength());
-        }
+        findTardis(entity).ifPresent(tardis -> {
+            tardis.getHandlers().getAlarms().enable();
+        });
     }
 
     @Override
@@ -77,16 +104,14 @@ public class RegenHandler implements Acting {
 
         if(world.isClient()) return;
 
-        Tardis tardis = TardisUtil.findTardisByInterior(livingEntity.getBlockPos());
-        if (tardis == null) return;
-        if(Random.create().nextBoolean()) {
-            //if(tardis.getTravel().getState() == TardisTravel.State.MAT || tardis.getTravel().getState() == TardisTravel.State.DEMAT) {
-                tardis.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(tardis));
-            //}
-        }
-        ExteriorSchema exteriorType = TardisItemBuilder.findRandomExterior();
-        tardis.getExterior().setType(exteriorType);
-        tardis.getExterior().setVariant(TardisItemBuilder.findRandomVariant(exteriorType));
+        findTardis(livingEntity).ifPresent((tardis -> {
+            tardis.getHandlers().getAlarms().enable();
+            tardis.getTravel().crash();
+            extendFlight(tardis, iRegen);
+
+            if (random.nextBoolean()) changeToRandomInterior(tardis);
+            changeToRandomExterior(tardis);
+        }));
     }
 
     @Override
