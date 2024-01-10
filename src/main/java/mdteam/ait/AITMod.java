@@ -19,6 +19,7 @@ import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.registry.*;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.advancement.TardisCriterions;
@@ -204,7 +205,7 @@ public class AITMod implements ModInitializer {
             DesktopRegistry.syncToClient(handler.getPlayer());
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(AITMessages.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
             Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
             if (tardis == null) return;
             tardis.getDesktop().cacheConsole();

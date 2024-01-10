@@ -60,8 +60,7 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
         //matrices.scale(1.0f, 1.0f, -1.0f);
         //matrices.scale(1.0f, -1.0f, 1.0f);
         if (getModel(entity) == null) return;
-        float superYaw = entity.getYaw() + 180f;
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(superYaw));
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(entity.getRotation(tickDelta)));
         matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(entity.getPitch()));
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 

@@ -9,6 +9,7 @@ import mdteam.ait.core.AITMessages;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.HumsRegistry;
+import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.sound.HumSound;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -69,7 +70,7 @@ public class InteriorSettingsScreen extends TardisScreen {
     private void sendCachePacket() {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(this.tardis().getUuid());
-        ClientPlayNetworking.send(AITMessages.CACHE_CONSOLE, buf);
+        ClientPlayNetworking.send(TardisDesktop.CACHE_CONSOLE, buf);
         this.close();
     }
 

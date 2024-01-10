@@ -19,6 +19,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -44,8 +45,6 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class TardisRealEntity extends Entity {
-
-    private float rotation = 0.0F;
 
     public static final TrackedData<Optional<UUID>> TARDIS_ID;
     private Supplier<BlockState> blockStateSupplier;
@@ -139,11 +138,17 @@ public class TardisRealEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        float age = this.age;
-        float rotationTwo = (age) / 20.0F;
         if(this.getTardis() == null) return;
         if(this.getWorld().isClient()) return;
-        this.refreshPositionAndAngles(this.getBlockPos(), MathHelper.wrapDegrees(rotationTwo * 70), this.getPitch());
+    }
+
+    public float getRotation(float tickDelta) {
+        return ((float)this.age + tickDelta) / 20.0f;
+    }
+
+    @Override
+    public float getBodyYaw() {
+        return 180.0f - this.getRotation(0.5f) / ((float)Math.PI * 2) * 360.0f;
     }
 
     static {
