@@ -120,42 +120,13 @@ public class ServerAITNetworkManager {
         }));
     }
 
-    public static void setSendExteriorChanged(UUID uuid) {
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-        ExteriorVariantSchema exteriorVariantSchema = tardis.getExterior().getVariant();
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(uuid);
-        buf.writeString(exteriorVariantSchema.parent().id().toString());
-        buf.writeString(exteriorVariantSchema.id().toString());
-        if (!ServerTardisManager.getInstance().exterior_subscribers.containsKey(uuid)) return;
-        for (UUID player_uuid : ServerTardisManager.getInstance().exterior_subscribers.get(uuid)) {
-            ServerPlayerEntity player = TardisUtil.getServer().getPlayerManager().getPlayer(player_uuid);
-            if (player == null) return;
-            ServerPlayNetworking.send(player, SEND_EXTERIOR_CHANGED, buf);
-        }
-    }
-
-    public static void setSendInteriorChanged(UUID uuid) {
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-        ExteriorVariantSchema exteriorVariantSchema = tardis.getExterior().getVariant();
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(uuid);
-        buf.writeString(exteriorVariantSchema.parent().id().toString());
-        buf.writeString(exteriorVariantSchema.id().toString());
-        if (!ServerTardisManager.getInstance().interior_subscribers.containsKey(uuid)) return;
-        for (UUID player_uuid : ServerTardisManager.getInstance().interior_subscribers.get(uuid)) {
-            ServerPlayerEntity player = TardisUtil.getServer().getPlayerManager().getPlayer(player_uuid);
-            if (player == null) return;
-            ServerPlayNetworking.send(player, SEND_INTERIOR_DOOR_TYPE_CHANGED, buf);
-        }
-    }
-
     public static void setSendExteriorAnimationUpdateSetup(UUID tardisUUID, TardisTravel.State state) {
         Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisUUID);
         if (tardis == null) return;
         PacketByteBuf data = PacketByteBufs.create();
         data.writeInt(state.ordinal());
         data.writeUuid(tardisUUID);
+        if (!ServerTardisManager.getInstance().exterior_subscribers.containsKey(tardisUUID)) return;
         for (UUID player_uuid : ServerTardisManager.getInstance().exterior_subscribers.get(tardisUUID)) {
             ServerPlayerEntity player = TardisUtil.getServer().getPlayerManager().getPlayer(player_uuid);
             if (player == null) return;
