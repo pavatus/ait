@@ -97,7 +97,7 @@ public class BoothExteriorModel extends ExteriorModel {
     @Override
     public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         matrices.push();
-        matrices.scale(0.95f, 0.95f, 0.95f);
+        matrices.scale(1f, 1f, 1f);
         matrices.translate(0, -1.5f, 0);
 
         super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);

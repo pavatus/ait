@@ -46,13 +46,13 @@ import org.jetbrains.annotations.Nullable;
 public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final VoxelShape LEDGE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
+    public static final VoxelShape LEDGE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 11.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
-    public static final VoxelShape LEDGE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 11.0, 32.0, 16.0),
+    public static final VoxelShape LEDGE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 5.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, 0, 19.5,1, 16));
-    public static final VoxelShape LEDGE_SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 11.0),
+    public static final VoxelShape LEDGE_SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 5.0),
             Block.createCuboidShape(0, 0, 0, 16,1, 19.5));
-    public static final VoxelShape LEDGE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(5.0, 0.0, 0.0, 16.0, 32.0, 16.0),
+    public static final VoxelShape LEDGE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(11.0, 0.0, 0.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
 
     public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 32.0, 16.0),
