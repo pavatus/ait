@@ -54,10 +54,6 @@ public class TardisUtil {
     private static final Random RANDOM = new Random();
     private static MinecraftServer SERVER;
     private static ServerWorld TARDIS_DIMENSION;
-    public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
-    public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");
-
-    public static final Identifier FIND_PLAYER = new Identifier(AITMod.MOD_ID, "find_player");
 
     public static void init() {
         ServerWorldEvents.UNLOAD.register((server, world) -> {
@@ -73,86 +69,6 @@ public class TardisUtil {
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             SERVER = null;
         });
-        ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
-                (server, player, handler, buf, responseSender) -> {
-                    UUID uuid = buf.readUuid();
-                    Identifier exteriorValue = Identifier.tryParse(buf.readString());
-                    boolean variantChange = buf.readBoolean();
-                    String variantValue = buf.readString();
-                    Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-
-                    tardis.getExterior().setType(ExteriorRegistry.REGISTRY.get(exteriorValue));
-                    WorldOps.updateIfOnServer(server.getWorld(tardis
-                                    .getTravel().getPosition().getWorld().getRegistryKey()),
-                            tardis.getDoor().getExteriorPos());
-                    if (variantChange) {
-                        tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(Identifier.tryParse(variantValue)));
-                        WorldOps.updateIfOnServer(server.getWorld(tardis
-                                        .getTravel().getPosition().getWorld().getRegistryKey()),
-                                tardis.getDoor().getExteriorPos());
-                    }
-
-                    if (tardis.isGrowth())
-                        tardis.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(tardis));
-
-                    tardis.markDirty();
-
-                    /*ExteriorEnum[] values = ExteriorEnum.values();
-                    int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
-                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(values[nextIndex]);
-                    WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
-                                    .getTravel().getPosition().getWorld().getRegistryKey()),
-                            ServerTardisManager.getInstance().getTardis(uuid).getTravel().getPosition());*/
-                }
-        );
-        ServerPlayNetworking.registerGlobalReceiver(SNAP,
-                (server, player, handler, buf, responseSender) -> {
-                    UUID uuid = buf.readUuid();
-                    Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-
-                    if(tardis.getHandlers().getOvergrownHandler().isOvergrown()) return;
-
-                    player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
-
-                    BlockPos pos = player.getWorld().getRegistryKey() ==
-                            TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
-                    if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
-                        if (!player.isSneaking()) {
-                            if(!tardis.getDoor().locked()) {
-                            /*DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
-                                    player);*/
-                                if (tardis.getDoor().isOpen()) tardis.getDoor().closeDoors();
-                                else tardis.getDoor().openDoors();
-                            }
-                        } else {
-                            DoorHandler.toggleLock(tardis, player);
-                        }
-                        tardis.markDirty();
-                    }
-                }
-        );
-        ServerPlayNetworking.registerGlobalReceiver(FIND_PLAYER,
-                (server, currentPlayer, handler, buf, responseSender) -> {
-                    UUID tardisId = buf.readUuid();
-                    UUID playerUuid = buf.readUuid();
-                    Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisId);
-                    ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(playerUuid);
-                    if(tardis.getDesktop().getConsolePos() == null) return;
-                    if(serverPlayer == null) {
-                        TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
-                        return;
-                    }
-                    tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
-                            serverPlayer.getBlockX(),
-                                    serverPlayer.getBlockY(),
-                                    serverPlayer.getBlockZ(),
-                                    serverPlayer.getWorld(),
-                                    serverPlayer.getMovementDirection()),
-                            PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND));
-                    TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
-                    tardis.markDirty();
-                }
-        );
     }
 
     public static MinecraftServer getServer() {

@@ -134,6 +134,9 @@ public class ClientTardisManager extends TardisManager {
     @Override
     public void reset() {
         this.subscribers.clear();
+        this.exteriorToTardis.clear();
+        this.consoleToTardis.clear();
+        this.interiorDoorToTardis.clear();
         super.reset();
     }
 

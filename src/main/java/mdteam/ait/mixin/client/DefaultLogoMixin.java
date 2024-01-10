@@ -31,8 +31,7 @@ public class DefaultLogoMixin {
             instance.drawTexture(texture, x, y, u, v, width, height, textureWidth, textureHeight);
             return;
         }
-
-        assert this.client.currentScreen != null;
+        if (this.client.currentScreen == null) return;
         int screenWidth = this.client.currentScreen.width;
         int i = screenWidth / 2 - 128;
         instance.drawTexture(AIT_LOGO, i, y, 0.0f, 0.0f, 256, 64, 256, 64);

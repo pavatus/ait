@@ -8,6 +8,7 @@ import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.client.screens.interior.InteriorSettingsScreen;
 import mdteam.ait.client.util.ClientTardisUtil;
+import mdteam.ait.network.ClientAITNetworkManager;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.BoothExterior;
@@ -143,13 +144,8 @@ public class MonitorScreen extends TardisScreen {
 
     public void sendExteriorPacket() {
         if (tardis() != null) {
-            /*TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel() != tardis().getExterior().getType() ?
-                    this.getCurrentModel().ordinal() : tardis().getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(),
-                    this.getCurrentVariant() != tardis().getExterior().getVariant());*/
             if (this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant().parent() != tardis().getExterior().getVariant()) {
-                ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
-                        this.getCurrentModel().id().toString(), this.getCurrentVariant().id().toString(),
-                        this.getCurrentVariant().parent() != tardis().getExterior().getVariant());
+                ClientAITNetworkManager.send_request_exterior_change_from_monitor(this.tardisId, this.getCurrentModel(), this.getCurrentVariant(), this.getCurrentVariant().parent() != tardis().getExterior().getVariant());
             }
         }
     }

@@ -49,7 +49,7 @@ public class SiegeTardisItem extends Item {
         }
 
         Tardis tardis = getTardis(stack);
-        assert tardis != null;
+        if (tardis == null) return;
 
         if (!tardis.isSiegeMode()) {
             tardis.setSiegeBeingHeld(null);
@@ -94,7 +94,7 @@ public class SiegeTardisItem extends Item {
         }
 
         Tardis tardis = getTardis(stack);
-        assert tardis != null;
+        if (tardis == null) return ActionResult.FAIL;
 
         if (!tardis.isSiegeMode()) {
             tardis.setSiegeBeingHeld(null);

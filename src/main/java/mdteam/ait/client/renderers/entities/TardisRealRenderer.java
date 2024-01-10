@@ -42,8 +42,7 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
         if (entity.getTardis() == null) return;
         TardisExterior tardisExterior = entity.getTardis().getExterior();
         ClientExteriorVariantSchema exteriorVariantSchema = ClientExteriorVariantRegistry.withParent(tardisExterior.getVariant());
-
-        assert exteriorVariantSchema != null;
+        if (exteriorVariantSchema == null) return;
         Class<? extends ExteriorModel> modelClass = exteriorVariantSchema.model().getClass();
 
         if (model != null && !model.getClass().isInstance(modelClass)) model = null;
@@ -76,7 +75,7 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
     }
 
     private ExteriorModel getModel(TardisRealEntity entity) {
-        assert entity.getTardis() != null;
+        if (entity.getTardis() == null) return model;
         if (model == null) {
             model = Objects.requireNonNull(ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant())).model();
         }

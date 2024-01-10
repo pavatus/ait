@@ -3,6 +3,7 @@ package mdteam.ait.client;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import mdteam.ait.core.*;
+import mdteam.ait.network.ClientAITNetworkManager;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.ClientDoorRegistry;
@@ -72,6 +73,7 @@ public class AITModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        ClientAITNetworkManager.init();
         setupBlockRendering();
         blockEntityRendererRegister();
         entityRenderRegister();
@@ -107,77 +109,52 @@ public class AITModClient implements ClientModInitializer {
 
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
             if (block instanceof ExteriorBlockEntity exterior) {
-                if (exterior.getTardis() == null || exterior.getTardis().getDoor() == null) return;
-                ClientTardisManager.getInstance().ask(exterior.getTardis().getUuid());
-                if (!ClientTardisManager.getInstance().exteriorToTardis.containsKey(exterior)) {
-                    ClientTardisManager.getInstance().exteriorToTardis.put(exterior, exterior.getTardis());
-                }
-                if (!ClientTardisManager.getInstance().loadedTardises.contains(exterior.getTardis().getUuid())) {
-                    ClientTardisManager.getInstance().loadedTardises.add(exterior.getTardis().getUuid());
-                }
+                if (exterior.getTardis() == null) return;
+                ClientAITNetworkManager.ask_for_exterior_subscriber(exterior.getTardis().getUuid());
+                if (ClientTardisManager.getInstance().exteriorToTardis.containsKey(exterior)) return;
+                ClientTardisManager.getInstance().exteriorToTardis.put(exterior, exterior.getTardis());
                 exterior.getTardis().getDoor().clearExteriorAnimationState();
-            } else if (block instanceof DoorBlockEntity door) {
-                if (door.getTardis() == null || door.getTardis().getDoor() == null) return;
-                ClientTardisManager.getInstance().ask(door.getTardis().getUuid());
+            }
+            else if (block instanceof DoorBlockEntity door) {
+                if (door.getTardis() == null) return;
+                ClientAITNetworkManager.ask_for_interior_subscriber(door.getTardis().getUuid());
+                if (ClientTardisManager.getInstance().interiorDoorToTardis.containsKey(door)) return;
+                ClientTardisManager.getInstance().interiorDoorToTardis.put(door, door.getTardis());
                 door.getTardis().getDoor().clearInteriorAnimationState();
-                if (!ClientTardisManager.getInstance().interiorDoorToTardis.containsKey(door)) {
-                    ClientTardisManager.getInstance().interiorDoorToTardis.put(door, door.getTardis());
-                }
-                if (!ClientTardisManager.getInstance().loadedTardises.contains(door.getTardis().getUuid())) {
-                    ClientTardisManager.getInstance().loadedTardises.add(door.getTardis().getUuid());
-                }
-            } else if (block instanceof ConsoleBlockEntity console) {
+            }
+            else if (block instanceof ConsoleBlockEntity console) {
                 if (console.getTardis() == null) return;
-                if (!ClientTardisManager.getInstance().consoleToTardis.containsKey(console)) {
-                    ClientTardisManager.getInstance().consoleToTardis.put(console, console.getTardis());
-                }
-                if (!ClientTardisManager.getInstance().loadedTardises.contains(console.getTardis().getUuid())) {
-                    ClientTardisManager.getInstance().loadedTardises.add(console.getTardis().getUuid());
-                }
-                console.ask();
+                ClientAITNetworkManager.ask_for_interior_subscriber(console.getTardis().getUuid());
+                if (ClientTardisManager.getInstance().consoleToTardis.containsKey(console)) return;
+                ClientTardisManager.getInstance().consoleToTardis.put(console, console.getTardis());
             }
         });
 
         ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((block, world) -> {
-            if (block instanceof ConsoleBlockEntity console) {
-                if (console.getTardis() == null) return;
-                ClientTardisManager.getInstance().consoleToTardis.remove(console);
-                if (!ClientTardisManager.getInstance().consoleToTardis.containsValue(console.getTardis())) {
-                    if (ClientTardisManager.getInstance().exteriorToTardis.isEmpty()) {
-                        if (ClientTardisManager.getInstance().interiorDoorToTardis.isEmpty()) {
-
-                            ClientTardisManager.getInstance().loadedTardises.remove(console.getTardis().getUuid());
-                            ClientTardisManager.getInstance().letKnowUnloaded(console.getTardis().getUuid());
-                        }
-                    }
-                }
+            if (block instanceof ExteriorBlockEntity exteriorBlock) {
+                if (!ClientTardisManager.getInstance().exteriorToTardis.containsKey(exteriorBlock)) return;
+                UUID uuid = ClientTardisManager.getInstance().exteriorToTardis.get(exteriorBlock).getUuid();
+                ClientTardisManager.getInstance().exteriorToTardis.remove(exteriorBlock);
+                ClientAITNetworkManager.send_exterior_unloaded(uuid);
             }
-            else if (block instanceof ExteriorBlockEntity exterior) {
-                ClientTardisManager.getInstance().exteriorToTardis.remove(exterior);
-                if (exterior.getTardis() == null) return;
-                if (!ClientTardisManager.getInstance().exteriorToTardis.containsValue(exterior.getTardis())) {
-
-                    ClientTardisManager.getInstance().loadedTardises.remove(exterior.getTardis().getUuid());
-                    ClientTardisManager.getInstance().letKnowUnloaded(exterior.getTardis().getUuid());
-                }
+            else if (block instanceof DoorBlockEntity doorBlockEntity) {
+                if (!ClientTardisManager.getInstance().interiorDoorToTardis.containsKey(doorBlockEntity)) return;
+                UUID uuid = ClientTardisManager.getInstance().interiorDoorToTardis.get(doorBlockEntity).getUuid();
+                ClientTardisManager.getInstance().interiorDoorToTardis.remove(doorBlockEntity);
+                if (!ClientTardisManager.getInstance().consoleToTardis.isEmpty()) return;
+                ClientAITNetworkManager.send_interior_unloaded(uuid);
             }
-            else if (block instanceof DoorBlockEntity door) {
-                ClientTardisManager.getInstance().interiorDoorToTardis.remove(door);
-                if (door.getTardis() == null) return;
-                if (!ClientTardisManager.getInstance().interiorDoorToTardis.containsValue(door.getTardis())) {
-                    if (ClientTardisManager.getInstance().consoleToTardis.isEmpty()) {
-                        if (ClientTardisManager.getInstance().exteriorToTardis.isEmpty()) {
-                            ClientTardisManager.getInstance().loadedTardises.remove(door.getTardis().getUuid());
-                            ClientTardisManager.getInstance().letKnowUnloaded(door.getTardis().getUuid());
-                        }
-                    }
-                }
+            else if (block instanceof ConsoleBlockEntity consoleBlockEntity) {
+                if (!ClientTardisManager.getInstance().consoleToTardis.containsKey(consoleBlockEntity)) return;
+                UUID uuid = ClientTardisManager.getInstance().consoleToTardis.get(consoleBlockEntity).getUuid();
+                ClientTardisManager.getInstance().consoleToTardis.remove(consoleBlockEntity);
+                if (!ClientTardisManager.getInstance().consoleToTardis.isEmpty()) return;
+                ClientAITNetworkManager.send_interior_unloaded(uuid);
             }
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
-            assert client.world != null;
-            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD || client.world == null) return;
 
             String id = buf.readString();
             ConsoleSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
@@ -186,28 +163,13 @@ public class AITModClient implements ClientModInitializer {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_VARIANT, (client, handler, buf, responseSender) -> {
-            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD || client.world == null) return;
 
             Identifier id = Identifier.tryParse(buf.readString());
             BlockPos consolePos = buf.readBlockPos();
             if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setVariant(id);
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(ExteriorAnimation.UPDATE,
-                (client, handler, buf, responseSender) -> {
-                    int p = buf.readInt();
-                    UUID tardisId = buf.readUuid();
-                    ClientTardisManager.getInstance().getTardis(tardisId, (tardis -> {
-                        if (tardis == null) return; // idk how the consumer works tbh, but im sure theo is gonna b happy
-
-                       BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.getExterior().getExteriorPos()); // todo remember to use the right world in future !!
-                       if (!(block instanceof ExteriorBlockEntity exterior)) return;
-
-                       exterior.getAnimation().setupAnimation(TardisTravel.State.values()[p]);
-                    }));
-                    // this.setupAnimation(TardisTravel.State.values()[p]);
-                }
-        );
 
         // does all this clientplaynetwrokigng shite really have to go in here, theres probably somewhere else it can go right??
         ClientPlayNetworking.registerGlobalReceiver(AITMessages.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) -> {
@@ -369,7 +331,7 @@ public class AITModClient implements ClientModInitializer {
                             if (!tag.contains("tardis")) {
                                 return;
                             }
-                            ClientTardisUtil.snapToOpenDoors(UUID.fromString(tag.getString("tardis")));
+                            ClientAITNetworkManager.send_snap_to_open_doors(UUID.fromString(tag.getString("tardis")));
                         }
                     }
                 } else {

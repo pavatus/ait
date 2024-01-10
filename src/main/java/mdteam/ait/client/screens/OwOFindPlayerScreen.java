@@ -8,6 +8,7 @@ import io.wispforest.owo.ui.container.ScrollContainer;
 import io.wispforest.owo.ui.core.*;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.util.ClientTardisUtil;
+import mdteam.ait.network.ClientAITNetworkManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.client.MinecraftClient;
@@ -79,7 +80,7 @@ public class OwOFindPlayerScreen extends BaseOwoScreen<FlowLayout> {
     public void onPress(UUID uuid) {
         if (tardis() != null) {
             if (this.tardis().getTravel() != null) {
-                ClientTardisUtil.setDestinationFromScreen(this.tardis().getUuid(), uuid);
+                ClientAITNetworkManager.send_request_find_player_from_monitor(this.tardis().getUuid(), uuid);
             }
         }
     }

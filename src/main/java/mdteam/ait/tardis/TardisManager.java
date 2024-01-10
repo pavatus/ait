@@ -107,4 +107,8 @@ public abstract class TardisManager {
     public Map<UUID, Tardis> getLookup() {
         return this.lookup;
     }
+
+    public Gson getGson() {
+        return this.gson;
+    }
 }

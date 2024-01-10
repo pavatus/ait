@@ -1,8 +1,10 @@
 package mdteam.ait.core.item;
 
+import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.network.ServerAITNetworkManager;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
@@ -87,12 +89,12 @@ public class SonicItem extends Item {
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
                         return;
                     }
+                    if (world.isClient()) return;
 
                     List<ExteriorSchema> list = ExteriorRegistry.REGISTRY.stream().toList();
                     exteriorBlock.getTardis().getExterior().setType(list.get((list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1));
-                    //System.out.println(exteriorBlock.getTardis().getExterior().getType());
-
-                    exteriorBlock.getTardis().markDirty();
+                    WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(tardis.getTravel().getPosition().getWorld().getRegistryKey()), tardis.getDoor().getExteriorPos());
+                    WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(TardisUtil.getTardisDimension().getRegistryKey()), tardis.getDoor().getDoorPos());
                 }
 
                 // fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor

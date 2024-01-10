@@ -26,28 +26,6 @@ public class ClientTardisUtil {
     private static boolean alarmDeltaDirection; // true for increasing false for decreasing
     private static int powerDeltaTick;
 
-    public static void changeExteriorWithScreen(UUID uuid, String exterior, String variant, boolean variantchange) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(uuid);
-        buf.writeString(exterior);
-        buf.writeBoolean(variantchange);
-        buf.writeString(variant);
-        ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);
-    }
-
-    public static void snapToOpenDoors(UUID uuid) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(uuid);
-        ClientPlayNetworking.send(SNAP, buf);
-    }
-
-    public static void setDestinationFromScreen(UUID tardisId, UUID playerUuid) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(tardisId);
-        buf.writeUuid(playerUuid);
-        ClientPlayNetworking.send(FIND_PLAYER, buf);
-    }
-
     public static boolean isPlayerInATardis() {
         if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return false;
         ClientPlayerEntity player = MinecraftClient.getInstance().player;

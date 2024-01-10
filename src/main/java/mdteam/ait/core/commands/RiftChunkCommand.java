@@ -35,7 +35,7 @@ public class RiftChunkCommand {
     private static int runIsRiftChunkCommand(CommandContext<ServerCommandSource> context) {
         BlockPos targetBlockPos = BlockPosArgumentType.getBlockPos(context, "position");
         ServerPlayerEntity source = context.getSource().getPlayer();
-        assert source != null;
+        if (source == null) return 0;
         boolean isARiftChunk = TardisUtil.isRiftChunk(source.getServerWorld(), targetBlockPos);
         Text is_a_rift_chunk = Text.translatable("command.ait.riftchunk.isariftchunk");
         Text not_a_rift_chunk = Text.translatable("command.ait.riftchunk.notariftchunk");
@@ -47,7 +47,7 @@ public class RiftChunkCommand {
     private static int runGetArtronLevels(CommandContext<ServerCommandSource> context) {
         BlockPos targetBlockPos = BlockPosArgumentType.getBlockPos(context, "position");
         ServerPlayerEntity source = context.getSource().getPlayer();
-        assert source != null;
+        if (source == null) return 0;
         boolean isARiftChunk = TardisUtil.isRiftChunk(source.getServerWorld(), targetBlockPos);
         Text message;
         if (!isARiftChunk) {
@@ -63,7 +63,7 @@ public class RiftChunkCommand {
     private static int runSetArtronLevels(CommandContext<ServerCommandSource> context) {
         BlockPos targetBlockPos = BlockPosArgumentType.getBlockPos(context, "position");
         ServerPlayerEntity source = context.getSource().getPlayer();
-        assert source != null;
+        if (source == null) return 0;
         boolean isARiftChunk = TardisUtil.isRiftChunk(source.getServerWorld(), targetBlockPos);
         Text message;
         if (!isARiftChunk) {

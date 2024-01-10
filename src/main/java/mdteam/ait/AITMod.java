@@ -17,6 +17,7 @@ import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.core.util.AITConfig;
+import mdteam.ait.network.ServerAITNetworkManager;
 import mdteam.ait.registry.*;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
@@ -60,6 +61,7 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ServerAITNetworkManager.init();
         ConsoleRegistry.init();
         DesktopRegistry.init();
         ExteriorRegistry.init();
@@ -183,14 +185,6 @@ public class AITMod implements ModInitializer {
                 console.markNeedsSyncing();
         }));
 
-        ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ((server, player, handler, buf, responseSender) -> {
-            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-            TardisDesktopSchema desktop = DesktopRegistry.get(buf.readIdentifier());
-
-            if (tardis == null || desktop == null) return;
-
-            tardis.getHandlers().getInteriorChanger().queueInteriorChange(desktop);
-        }));
 
         ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE, ((server, player, handler, buf, responseSender) -> {
             Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());

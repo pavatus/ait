@@ -44,8 +44,8 @@ public class ServerTardisManager extends TardisManager {
     // Changed from MultiMap to HashMap to fix some concurrent issues, maybe
     private final ConcurrentHashMap<UUID, List<UUID>> subscribers = new ConcurrentHashMap<>(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
 
-    private final ConcurrentHashMap<UUID, List<UUID>> exterior_subscribers = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<UUID, List<UUID>> interior_subscribers = new ConcurrentHashMap<>();
+    public final ConcurrentHashMap<UUID, List<UUID>> exterior_subscribers = new ConcurrentHashMap<>();
+    public final ConcurrentHashMap<UUID, List<UUID>> interior_subscribers = new ConcurrentHashMap<>();
 
     public ServerTardisManager() {
         ServerPlayNetworking.registerGlobalReceiver(
@@ -211,6 +211,18 @@ public class ServerTardisManager extends TardisManager {
             this.interior_subscribers.remove(uuid);
         } else {
             this.interior_subscribers.put(uuid, old_uuids);
+        }
+    }
+
+    public void removePlayerFromAllTardis(ServerPlayerEntity serverPlayerEntity) {
+        for (Map.Entry<UUID, List<UUID>> entry : this.exterior_subscribers.entrySet()) {
+            removeSubscriberToTardis(serverPlayerEntity, entry.getKey());
+        }
+        for (Map.Entry<UUID, List<UUID>> entry : this.interior_subscribers.entrySet()) {
+            removeSubscriberToTardis(serverPlayerEntity, entry.getKey());
+        }
+        for (Map.Entry<UUID, List<UUID>> entry : this.subscribers.entrySet()) {
+            removeSubscriberToTardis(serverPlayerEntity, entry.getKey());
         }
     }
 

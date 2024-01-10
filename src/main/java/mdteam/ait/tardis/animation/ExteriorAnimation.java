@@ -3,8 +3,8 @@ package mdteam.ait.tardis.animation;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
+import mdteam.ait.network.ServerAITNetworkManager;
 import mdteam.ait.tardis.util.TardisUtil;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +19,6 @@ public abstract class ExteriorAnimation {
     protected float alpha = 1;
     protected ExteriorBlockEntity exterior;
     protected int timeLeft, maxTime, startTime;
-    public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_setup_anim");
 
     public ExteriorAnimation(ExteriorBlockEntity exterior) {
         this.exterior = exterior;
@@ -63,22 +62,8 @@ public abstract class ExteriorAnimation {
     }
 
     public void tellClientsToSetup(TardisTravel.State state) {
-        if (exterior.getWorld() == null) return; // happens when tardis spawns above world limit, so thats nice
-        if (exterior.getWorld().isClient()) return;
-
-        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
-            // System.out.println(player);
-            tellClientToSetup(state, player);
-        }
+        if (exterior.getWorld() == null || exterior.getWorld().isClient() || exterior.getTardis() == null) return;
+        ServerAITNetworkManager.setSendExteriorAnimationUpdateSetup(exterior.getTardis().getUuid(), state);
     }
 
-    public void tellClientToSetup(TardisTravel.State state, ServerPlayerEntity player) {
-        if (exterior.getWorld().isClient()) return;
-
-        PacketByteBuf data = PacketByteBufs.create();
-        data.writeInt(state.ordinal());
-        data.writeUuid(exterior.getTardis().getUuid());
-
-        ServerPlayNetworking.send(player, UPDATE, data);
-    }
 }
