@@ -12,7 +12,11 @@ import mdteam.ait.core.blocks.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AITBlocks implements NeptuneBlockInit {
 
@@ -26,4 +30,16 @@ public class AITBlocks implements NeptuneBlockInit {
     public static final Block CORAL_PLANT = new CoralPlantBlock(NeptuneBlockSettings.create().ticksRandomly().nonOpaque().noCollision()
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)));
     public static final Block RADIO = new RadioBlock(NeptuneBlockSettings.create().nonOpaque());
+
+    public static List<Block> getBlocks() {
+        List<Block> list = new ArrayList<>();
+
+        for (Block block : Registries.BLOCK) {
+            if (Registries.BLOCK.getId(block).getNamespace().equalsIgnoreCase(AITMod.MOD_ID)) {
+                list.add(block);
+            }
+        }
+
+        return list;
+    }
 }
