@@ -5,6 +5,7 @@ import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -25,9 +26,17 @@ public class ClientAITNetworkManager {
     public static final Identifier SEND_REQUEST_EXTERIOR_CHANGE_FROM_MONITOR = new Identifier(AITMod.MOD_ID, "send_request_exterior_change_from_monitor");
     public static final Identifier SEND_SNAP_TO_OPEN_DOORS = new Identifier(AITMod.MOD_ID, "send_snap_to_open_doors");
     public static final Identifier SEND_REQUEST_FIND_PLAYER_FROM_MONITOR = new Identifier(AITMod.MOD_ID, "send_request_find_player_from_monitor");
+    public static final Identifier SEND_REQUEST_INTERIOR_CHANGE_FROM_MONITOR = new Identifier(AITMod.MOD_ID, "send_request_interior_change_from_monitor");
 
     public static void init() {
         ClientPlayConnectionEvents.DISCONNECT.register((client, handler) -> ClientTardisManager.getInstance().reset());
+    }
+
+    public static void send_request_interior_change_from_monitor(UUID uuid, Identifier selected_interior) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(uuid);
+        buf.writeIdentifier(selected_interior);
+        ClientPlayNetworking.send(SEND_REQUEST_INTERIOR_CHANGE_FROM_MONITOR, buf);
     }
 
     public static void ask_for_interior_subscriber(UUID uuid) {
@@ -58,10 +67,10 @@ public class ClientAITNetworkManager {
         ClientPlayNetworking.send(SEND_INTERIOR_UNLOADED, buf);
     }
 
-    public static void send_request_exterior_change_from_monitor(UUID uuid, ClientExteriorVariantSchema clientExteriorVariantSchema, boolean variantChange) {
+    public static void send_request_exterior_change_from_monitor(UUID uuid, ExteriorSchema exteriorSchema, ClientExteriorVariantSchema clientExteriorVariantSchema, boolean variantChange) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(uuid);
-        buf.writeString(clientExteriorVariantSchema.parent().id().toString());
+        buf.writeString(exteriorSchema.id().toString());
         buf.writeString(clientExteriorVariantSchema.id().toString());
         buf.writeBoolean(variantChange);
         ClientPlayNetworking.send(SEND_REQUEST_EXTERIOR_CHANGE_FROM_MONITOR, buf);

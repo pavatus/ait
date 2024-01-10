@@ -2,6 +2,7 @@ package mdteam.ait.client.screens.interior;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.screens.TardisScreen;
+import mdteam.ait.network.ClientAITNetworkManager;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -19,8 +20,6 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-import static mdteam.ait.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
 
 public class InteriorSelectScreen extends TardisScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/interior_select.png");
@@ -112,11 +111,7 @@ public class InteriorSelectScreen extends TardisScreen {
     }
 
     private void applyDesktop() {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(tardis().getUuid());
-        buf.writeIdentifier(this.selectedDesktop.id());
-
-        ClientPlayNetworking.send(CHANGE_DESKTOP, buf);
+        ClientAITNetworkManager.send_request_interior_change_from_monitor(tardis().getUuid(), selectedDesktop.id());
 
         MinecraftClient.getInstance().setScreen(null);
     }

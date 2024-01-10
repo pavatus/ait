@@ -5,9 +5,11 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.item.TardisItemBuilder;
+import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisExterior;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
@@ -61,13 +63,13 @@ public class ServerAITNetworkManager {
         ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_REQUEST_EXTERIOR_CHANGE_FROM_MONITOR, ((server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
             Identifier exteriorIdentifier = Identifier.tryParse(buf.readString());
-            Identifier exteriorVariantSchema = Identifier.tryParse(buf.readString());
+            Identifier variantIdentifier = Identifier.tryParse(buf.readString());
             boolean variantChanged = buf.readBoolean();
             Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
             TardisExterior tardisExterior = tardis.getExterior();
-            tardisExterior.setType(ExteriorRegistry.REGISTRY.get(exteriorVariantSchema));
+            tardisExterior.setType(ExteriorRegistry.REGISTRY.get(exteriorIdentifier));
             if (variantChanged) {
-                tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(exteriorIdentifier));
+                tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(variantIdentifier));
             }
             WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(tardis.getTravel().getPosition().getWorld().getRegistryKey()), tardis.getDoor().getExteriorPos());
             WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(TardisUtil.getTardisDimension().getRegistryKey()), tardis.getDoor().getDoorPos());
@@ -107,6 +109,12 @@ public class ServerAITNetworkManager {
                             serverPlayer.getMovementDirection()),
                     PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND));
             TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
+        }));
+        ServerPlayNetworking.registerGlobalReceiver(ClientAITNetworkManager.SEND_REQUEST_INTERIOR_CHANGE_FROM_MONITOR, ((server, player, handler, buf, responseSender) -> {
+            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+            TardisDesktopSchema desktop = DesktopRegistry.get(buf.readIdentifier());
+            if (tardis == null || desktop == null) return;
+            tardis.getHandlers().getInteriorChanger().queueInteriorChange(desktop);
         }));
     }
 

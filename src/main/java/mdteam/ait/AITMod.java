@@ -184,14 +184,6 @@ public class AITMod implements ModInitializer {
                 console.markNeedsSyncing();
         }));
 
-        ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ((server, player, handler, buf, responseSender) -> {
-            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-            TardisDesktopSchema desktop = DesktopRegistry.get(buf.readIdentifier());
-
-            if (tardis == null || desktop == null) return;
-
-            tardis.getHandlers().getInteriorChanger().queueInteriorChange(desktop);
-        }));
 
         ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE, ((server, player, handler, buf, responseSender) -> {
             Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());

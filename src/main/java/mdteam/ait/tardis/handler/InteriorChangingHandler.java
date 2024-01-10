@@ -21,7 +21,6 @@ public class InteriorChangingHandler extends TardisLink {
     public static final String IS_REGENERATING = "is_regenerating";
     public static final String GENERATING_TICKS = "generating_ticks";
     public static final String QUEUED_INTERIOR = "queued_interior";
-    public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
     private static Random random;
 
     public InteriorChangingHandler(UUID tardisId) {

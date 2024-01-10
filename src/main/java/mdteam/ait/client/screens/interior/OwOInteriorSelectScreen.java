@@ -7,6 +7,7 @@ import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import mdteam.ait.AITMod;
+import mdteam.ait.network.ClientAITNetworkManager;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
@@ -24,8 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-import static mdteam.ait.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
 
 public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     private static final Identifier MISSING_PREVIEW = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/desktop/missing_preview.png");
@@ -104,11 +103,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
 
     private void applyDesktop() {
         if(this.selectedDesktop == null) return;
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(tardis().getUuid());
-        buf.writeIdentifier(this.selectedDesktop.id());
-
-        ClientPlayNetworking.send(CHANGE_DESKTOP, buf);
+        ClientAITNetworkManager.send_request_interior_change_from_monitor(this.tardisid, this.selectedDesktop.id());
 
         MinecraftClient.getInstance().setScreen(null);
     }

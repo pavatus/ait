@@ -29,8 +29,6 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 import java.util.UUID;
 
-import static mdteam.ait.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
-
 public class InteriorSettingsScreen extends TardisScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/interior_settings.png");
     int bgHeight = 166;
