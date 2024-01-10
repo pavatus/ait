@@ -35,12 +35,12 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
-        if(ClientConsoleVariantRegistry.REGISTRY.get(entity.getConsoleSchema().id()) == null) return;
+        if(ClientConsoleVariantRegistry.REGISTRY.get(entity.getConsoleVariant().id()) == null) return;
 
         int maxLight = 0xFFFFFF;
 
-        this.console = ClientConsoleVariantRegistry.REGISTRY.get(entity.getConsoleSchema().id()).model();
-        this.consoleTexture = ClientConsoleVariantRegistry.REGISTRY.get(entity.getConsoleSchema().id()).texture();
+        this.console = ClientConsoleVariantRegistry.REGISTRY.get(entity.getConsoleVariant().id()).model();
+        this.consoleTexture = ClientConsoleVariantRegistry.REGISTRY.get(entity.getConsoleVariant().id()).texture();
 
         matrices.push();
 

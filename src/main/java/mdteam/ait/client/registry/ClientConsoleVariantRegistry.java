@@ -49,7 +49,7 @@ public class ClientConsoleVariantRegistry {
         HARTNELL_WOOD = register(new ClientWoodenHartnellVariant()); // fixme this texture is awful - make tright remake it
 
         // Coral variants
-        CORAL_GREEN = register(new ClientCoralVariant());
+        CORAL_GREEN = register(new ClientGreenCoralVariant());
         CORAL_BLUE = register(new ClientBlueCoralVariant());
         CORAL_WHITE = register(new ClientWhiteCoralVariant());
     }

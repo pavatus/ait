@@ -19,7 +19,7 @@ public class ConsoleVariantRegistry {
         return Registry.register(REGISTRY, schema.id(), schema);
     }
 
-    public static Collection<ConsoleVariantSchema> withParent(ConsoleSchema parent) {
+    public static List<ConsoleVariantSchema> withParent(ConsoleSchema parent) {
         List<ConsoleVariantSchema> list = new ArrayList<>();
 
         for (ConsoleVariantSchema schema : REGISTRY) {

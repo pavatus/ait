@@ -290,7 +290,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         return list.get(idx + 1);
     }
     public static ConsoleVariantSchema nextVariant(ConsoleVariantSchema current) {
-        List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParent(current.parent()).stream().toList();
+        List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParent(current.parent());
 
         int idx = list.indexOf(current);
         if (idx < 0 || idx+1 == list.size()) return list.get(0);

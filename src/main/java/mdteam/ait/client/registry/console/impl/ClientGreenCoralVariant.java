@@ -7,11 +7,11 @@ import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
 import mdteam.ait.tardis.variant.console.CoralVariant;
 import net.minecraft.util.Identifier;
 
-public class ClientCoralVariant extends ClientConsoleVariantSchema {
+public class ClientGreenCoralVariant extends ClientConsoleVariantSchema {
     public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral.png"));
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral_emission.png"));
 
-    public ClientCoralVariant() {
+    public ClientGreenCoralVariant() {
         super(CoralVariant.REFERENCE);
     }
 

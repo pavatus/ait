@@ -6,11 +6,13 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blocks.ConsoleGeneratorBlock;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.registry.ConsoleRegistry;
+import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.Block;
@@ -35,22 +37,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
+import static mdteam.ait.core.blockentities.ConsoleBlockEntity.nextConsole;
+import static mdteam.ait.core.blockentities.ConsoleBlockEntity.nextVariant;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class ConsoleGeneratorBlockEntity extends BlockEntity {
 
     private Identifier type;
+    private Identifier variant;
 
     public ConsoleGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE, pos, state);
         this.type = ConsoleRegistry.HARTNELL.id();
-    }
-    public static Identifier nextConsole(ConsoleSchema current) {
-        List<ConsoleSchema> list = ConsoleRegistry.REGISTRY.stream().toList();
-
-        int idx = list.indexOf(current);
-        if (idx < 0 || idx+1 == list.size()) return list.get(0).id();
-        return list.get(idx + 1).id();
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
@@ -60,6 +58,7 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
             ConsoleBlockEntity consoleBlockEntity = new ConsoleBlockEntity(pos,AITBlocks.CONSOLE.getDefaultState());
 
             consoleBlockEntity.setType(this.getConsoleSchema());
+            consoleBlockEntity.setVariant(this.getConsoleVariant());
 
             this.getWorld().setBlockState(this.pos, AITBlocks.CONSOLE.getDefaultState());
             this.getWorld().addBlockEntity(consoleBlockEntity);
@@ -68,15 +67,18 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 
             if(!player.isCreative()) {
                 player.getMainHandStack().decrement(1);
-                ItemEntity item = new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), new ItemStack(AITBlocks.CONSOLE_GENERATOR));
-                this.getWorld().spawnEntity(item);
+                // ItemEntity item = new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), new ItemStack(AITBlocks.CONSOLE_GENERATOR));
+                // this.getWorld().spawnEntity(item);
             }
             return;
         }
 
         world.playSound(null, this.pos, SoundEvents.BLOCK_SCULK_CHARGE, SoundCategory.BLOCKS, 0.5f, 1.0f);
 
-        this.setConsoleSchema(nextConsole(this.getConsoleSchema()));
+        if (sneaking) {
+            this.changeConsole(nextVariant(this.getConsoleVariant()));
+        } else
+            this.changeConsole(nextConsole(this.getConsoleSchema()));
     }
 
     @Override
@@ -84,6 +86,8 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
         super.writeNbt(nbt);
         if(this.type != null)
             nbt.putString("console", this.type.toString());
+        if (this.variant != null)
+            nbt.putString("variant", this.variant.toString());
     }
 
     public ConsoleSchema getConsoleSchema() {
@@ -94,11 +98,34 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
         return ConsoleRegistry.REGISTRY.get(type);
     }
 
-    public void setConsoleSchema(Identifier type) {
+    private void setConsoleSchema(Identifier type) {
         this.type = type;
         markDirty();
         if(this.getWorld() == null) return;
         this.getWorld().updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+    }
+
+    public ConsoleVariantSchema getConsoleVariant() {
+        if (variant == null) {
+            this.variant = ConsoleVariantRegistry.withParent(this.getConsoleSchema()).get(0).id();
+        }
+
+        return ConsoleVariantRegistry.REGISTRY.get(this.variant);
+    }
+    private void setVariant(Identifier variant) {
+        this.variant = variant;
+        markDirty();
+        if(this.getWorld() == null) return;
+        this.getWorld().updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+    }
+
+    private void changeConsole(ConsoleSchema schema) {
+        this.setConsoleSchema(schema.id());
+        this.setVariant(ConsoleVariantRegistry.withParent(schema).get(0).id());
+    }
+    private void changeConsole(ConsoleVariantSchema schema) {
+        this.setConsoleSchema(schema.parent().id());
+        this.setVariant(schema.id());
     }
 
     @Override
@@ -107,6 +134,12 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
             Identifier console = new Identifier(nbt.getString("console"));
             this.setConsoleSchema(console);
         }
+
+        if (nbt.contains("variant")) {
+            Identifier variant = new Identifier(nbt.getString("variant"));
+            this.setVariant(variant);
+        }
+
         super.readNbt(nbt);
     }
 
