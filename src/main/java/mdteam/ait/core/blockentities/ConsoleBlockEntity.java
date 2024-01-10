@@ -304,7 +304,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 //        if (world != TardisUtil.getTardisDimension())
 //            return;
 
-        if (player.getMainHandStack().getItem() == Items.STICK) changeConsole(nextConsole(getConsoleSchema()));
+       /* if (player.getMainHandStack().getItem() == Items.STICK) changeConsole(nextConsole(getConsoleSchema()));
         if (player.getMainHandStack().getItem() == Items.BONE) setVariant(nextVariant(getVariant()));
         if (player.getMainHandStack().getItem() == Items.SHEARS) {
             world.breakBlock(pos, true);
@@ -314,7 +314,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, new ItemStack(AITBlocks.CONSOLE)));
             this.getDesktop().setConsolePos(null);
             markRemoved();
-        }
+        }*/
     }
 
     @Override

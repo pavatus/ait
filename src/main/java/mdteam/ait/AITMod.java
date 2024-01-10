@@ -199,10 +199,13 @@ public class AITMod implements ModInitializer {
             DesktopRegistry.syncToClient(handler.getPlayer());
         });
 
+
         ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
             Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-            if (tardis == null) return;
-            tardis.getDesktop().cacheConsole();
+            TardisUtil.getServer().execute(() -> {
+                if (tardis == null) return;
+                tardis.getDesktop().cacheConsole();
+            });
         });
 
         AIT_ITEM_GROUP.initialize();

@@ -10,6 +10,8 @@ import mdteam.ait.tardis.variant.door.BoothDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class BoothVariant extends ExteriorVariantSchema {
@@ -33,5 +35,26 @@ public abstract class BoothVariant extends ExteriorVariantSchema {
     @Override
     public DoorSchema door() {
         return DoorRegistry.REGISTRY.get(BoothDoorVariant.REFERENCE);
+    }
+
+    @Override
+    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+        return switch (direction) {
+            case DOWN, UP -> pos;
+            case NORTH -> pos.add(0,0.1,-0.45f);
+            case SOUTH -> pos.add(0,0.1,0.45f);
+            case WEST -> pos.add(-0.45f,0.1,0);
+            case EAST -> pos.add(0.45f,0.1,0);
+        };
+    }
+
+    @Override
+    public double portalWidth() {
+        return super.portalWidth();
+    }
+
+    @Override
+    public double portalHeight() {
+        return 2.2d;
     }
 }
