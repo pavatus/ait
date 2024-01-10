@@ -18,7 +18,7 @@ import org.joml.Math;
 import mdteam.ait.tardis.TardisTravel;
 
 public abstract class ExteriorAnimation {
-
+    private static final double MAX_CLOAK_DISTANCE = 5d;
     protected float alpha = 1;
     protected ExteriorBlockEntity exterior;
     protected int timeLeft, maxTime, startTime;
@@ -46,8 +46,11 @@ public abstract class ExteriorAnimation {
             return 1f;
         }
         if (this.exterior.getTardis().getTravel().getState() == TardisTravel.State.LANDED && this.exterior.getTardis().getHandlers().getCloak().isEnabled()) {
-            if (isServer() || isNearTardis(MinecraftClient.getInstance().player, exterior.getTardis(), 5)) // eee dont like this
-                return 0.105f; // 0.105f
+            if (isServer())
+                return 0.105f;
+            else if (isNearTardis(MinecraftClient.getInstance().player, exterior.getTardis(), MAX_CLOAK_DISTANCE)) {
+                return 1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, exterior.getTardis()) / MAX_CLOAK_DISTANCE);
+            }
             return 0f;
         }
 
@@ -59,10 +62,13 @@ public abstract class ExteriorAnimation {
     }
 
     private static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius) {
+        return radius >= distanceFromTardis(player, tardis);
+    }
+    private static double distanceFromTardis(PlayerEntity player, Tardis tardis) {
         BlockPos pPos = player.getBlockPos();
         BlockPos tPos = tardis.position();
         double distance = Math.sqrt(tPos.getSquaredDistance(pPos));
-        return radius >= distance;
+        return distance;
     }
 
     public abstract void tick();
