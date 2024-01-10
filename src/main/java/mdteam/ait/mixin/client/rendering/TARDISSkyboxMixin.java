@@ -36,17 +36,13 @@ public abstract class TARDISSkyboxMixin {
 
     @Inject(method="renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At("HEAD"), cancellable = true)
     public void renderSky(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, CallbackInfo ci) {
-        ci.cancel();
         ClientWorld world = MinecraftClient.getInstance().world;
         if(world == null) return;
         if(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
             if (world.getDimensionEffects().getSkyType() == DimensionEffects.SkyType.END) {
                 this.renderTardisSky(matrices);
             }
-        } else {
-            if (world.getDimensionEffects().getSkyType() == DimensionEffects.SkyType.END) {
-                this.renderEndSky(matrices);
-            }
+            ci.cancel();
         }
     }
 
