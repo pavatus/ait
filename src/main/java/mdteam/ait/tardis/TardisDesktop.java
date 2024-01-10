@@ -2,6 +2,7 @@ package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
+import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.util.ForcedChunkUtil;
@@ -18,6 +19,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -206,4 +209,21 @@ public class TardisDesktop extends TardisLink {
         return blockPosList;
     }
     private Iterable<BlockPos> iterateOverInterior() { return BlockPos.iterate(this.corners.getFirst(), this.corners.getSecond()); }
+    public void cacheConsole() {
+        if(this.getConsolePos() == null) return;
+        ServerWorld dim = (ServerWorld) TardisUtil.getTardisDimension();
+
+        dim.playSound(null, this.getConsolePos(), SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.BLOCKS, 0.5f, 1.0f);
+
+        if(dim.getBlockEntity(this.getConsolePos()) instanceof ConsoleBlockEntity console) {
+            console.killControls();
+        }
+
+        dim.removeBlock(this.getConsolePos(), false);
+        dim.removeBlockEntity(this.getConsolePos());
+
+        dim.setBlockState(this.getConsolePos(), AITBlocks.CONSOLE_GENERATOR.getDefaultState(), Block.NOTIFY_ALL);
+
+        this.setConsolePos(null);
+    }
 }

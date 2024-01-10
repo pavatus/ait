@@ -5,6 +5,7 @@ import mdteam.ait.client.AITModClient;
 import mdteam.ait.client.screens.TardisScreen;
 import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.client.sounds.hum.ClientHumHandler;
+import mdteam.ait.core.AITMessages;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.HumsRegistry;
@@ -65,12 +66,19 @@ public class InteriorSettingsScreen extends TardisScreen {
         super.init();
     }
 
+    private void sendCachePacket() {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(this.tardis().getUuid());
+        ClientPlayNetworking.send(AITMessages.CACHE_CONSOLE, buf);
+        this.close();
+    }
+
     private void createButtons() {
         choicesCount = 0;
 
         createTextButton(Text.translatable("screen.ait.interiorsettings.back"),(button -> backToExteriorChangeScreen()));
         createTextButton(Text.translatable("screen.ait.interiorsettings.changeinterior"), (button -> toSelectInteriorScreen()));
-        createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole"), (button -> cacheConsole()));
+        createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole"), (button -> sendCachePacket()));
 
         this.addButton(
                 new PressableTextWidget(
@@ -136,18 +144,6 @@ public class InteriorSettingsScreen extends TardisScreen {
     }
     public void toSelectInteriorScreen() {
         MinecraftClient.getInstance().setScreen(new OwOInteriorSelectScreen(tardis().getUuid(), this));
-    }
-
-    private void cacheConsole() {
-        if(tardis().getDesktop().getConsolePos() == null) return;
-        TardisUtil.getTardisDimension().playSound(null, tardis().getDesktop().getConsolePos(), SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.BLOCKS, 0.5f, 1.0f);
-        if(TardisUtil.getTardisDimension().getBlockEntity(tardis().getDesktop().getConsolePos()) instanceof ConsoleBlockEntity console) {
-            console.killControls();
-        }
-        TardisUtil.getTardisDimension().removeBlock(tardis().getDesktop().getConsolePos(), false);
-        TardisUtil.getTardisDimension().removeBlockEntity(tardis().getDesktop().getConsolePos());
-        tardis().getDesktop().setConsolePos(null);
-        this.close();
     }
 
     @Override

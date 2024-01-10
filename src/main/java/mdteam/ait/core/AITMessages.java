@@ -23,6 +23,7 @@ import net.minecraft.util.math.Vec3i;
 // todo instead of sending updates to everyone, only send updates to "tracking" !! ( especially for animation stuff )
 public class AITMessages {
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
+    public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
 
     // THESE SHOULD ONLY BE RAN ON SERVER
     public static void send(ServerPlayerEntity player, Identifier id, PacketByteBuf buf) {
