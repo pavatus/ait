@@ -663,6 +663,7 @@ public class TardisTravel extends TardisLink {
 
             exterior.getAnimation().setupAnimation(this.state);
             exterior.getAnimation().tellClientsToSetup(this.state);
+
         }
     }
 

@@ -3,8 +3,10 @@ package mdteam.ait.network;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -12,6 +14,8 @@ import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -30,6 +34,16 @@ public class ClientAITNetworkManager {
 
     public static void init() {
         ClientPlayConnectionEvents.DISCONNECT.register((client, handler) -> ClientTardisManager.getInstance().reset());
+        ClientPlayNetworking.registerGlobalReceiver(ServerAITNetworkManager.SEND_EXTERIOR_ANIMATION_UPDATE_SETUP, ((client, handler, buf, responseSender) -> {
+            int p = buf.readInt();
+            UUID uuid = buf.readUuid();
+            ClientTardisManager.getInstance().getTardis(uuid, (tardis -> {
+                if (tardis == null || MinecraftClient.getInstance().world == null) return;
+                BlockEntity blockEntity = MinecraftClient.getInstance().world.getBlockEntity(tardis.getExterior().getExteriorPos());
+                if (!(blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity)) return;
+                exteriorBlockEntity.getAnimation().setupAnimation(TardisTravel.State.values()[p]);
+            }));
+        }));
     }
 
     public static void send_request_interior_change_from_monitor(UUID uuid, Identifier selected_interior) {

@@ -170,21 +170,6 @@ public class AITModClient implements ClientModInitializer {
             if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setVariant(id);
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(ExteriorAnimation.UPDATE,
-                (client, handler, buf, responseSender) -> {
-                    int p = buf.readInt();
-                    UUID tardisId = buf.readUuid();
-                    ClientTardisManager.getInstance().getTardis(tardisId, (tardis -> {
-                        if (tardis == null) return; // idk how the consumer works tbh, but im sure theo is gonna b happy
-                        if (MinecraftClient.getInstance().world == null) return;
-                       BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.getExterior().getExteriorPos()); // todo remember to use the right world in future !!
-                       if (!(block instanceof ExteriorBlockEntity exterior)) return;
-
-                       exterior.getAnimation().setupAnimation(TardisTravel.State.values()[p]);
-                    }));
-                    // this.setupAnimation(TardisTravel.State.values()[p]);
-                }
-        );
 
         // does all this clientplaynetwrokigng shite really have to go in here, theres probably somewhere else it can go right??
         ClientPlayNetworking.registerGlobalReceiver(AITMessages.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) -> {

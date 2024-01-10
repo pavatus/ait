@@ -11,6 +11,7 @@ import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisExterior;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.DoorHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -34,6 +35,7 @@ public class ServerAITNetworkManager {
     public static final Identifier SEND_TARDIS_MAT = new Identifier(AITMod.MOD_ID, "send_tardis_mat");
     public static final Identifier SEND_EXTERIOR_CHANGED = new Identifier(AITMod.MOD_ID, "send_exterior_changed");
     public static final Identifier SEND_INTERIOR_DOOR_TYPE_CHANGED = new Identifier(AITMod.MOD_ID, "send_interior_door_type_changed");
+    public static final Identifier SEND_EXTERIOR_ANIMATION_UPDATE_SETUP = new Identifier(AITMod.MOD_ID, "send_exterior_animation_update_setup");
 
     public static void init() {
         ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) -> {
@@ -145,6 +147,19 @@ public class ServerAITNetworkManager {
             ServerPlayerEntity player = TardisUtil.getServer().getPlayerManager().getPlayer(player_uuid);
             if (player == null) return;
             ServerPlayNetworking.send(player, SEND_INTERIOR_DOOR_TYPE_CHANGED, buf);
+        }
+    }
+
+    public static void setSendExteriorAnimationUpdateSetup(UUID tardisUUID, TardisTravel.State state) {
+        Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisUUID);
+        if (tardis == null) return;
+        PacketByteBuf data = PacketByteBufs.create();
+        data.writeInt(state.ordinal());
+        data.writeUuid(tardisUUID);
+        for (UUID player_uuid : ServerTardisManager.getInstance().exterior_subscribers.get(tardisUUID)) {
+            ServerPlayerEntity player = TardisUtil.getServer().getPlayerManager().getPlayer(player_uuid);
+            if (player == null) return;
+            ServerPlayNetworking.send(player, SEND_EXTERIOR_ANIMATION_UPDATE_SETUP, data);
         }
     }
 }
