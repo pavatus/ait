@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.handler.TardisLink;
@@ -218,14 +219,22 @@ public class TardisDesktop extends TardisLink {
 
         dim.playSound(null, this.getConsolePos(), SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.BLOCKS, 0.5f, 1.0f);
 
+        ConsoleGeneratorBlockEntity generator = new ConsoleGeneratorBlockEntity(this.getConsolePos(), AITBlocks.CONSOLE_GENERATOR.getDefaultState());
+
+        // todo the console is always null
         if(dim.getBlockEntity(this.getConsolePos()) instanceof ConsoleBlockEntity console) {
             console.killControls();
+
+            generator.changeConsole(console.getVariant());
+            generator.changeConsole(console.getConsoleSchema());
         }
 
         dim.removeBlock(this.getConsolePos(), false);
         dim.removeBlockEntity(this.getConsolePos());
 
+
         dim.setBlockState(this.getConsolePos(), AITBlocks.CONSOLE_GENERATOR.getDefaultState(), Block.NOTIFY_ALL);
+        dim.addBlockEntity(generator);
 
         this.setConsolePos(null);
     }

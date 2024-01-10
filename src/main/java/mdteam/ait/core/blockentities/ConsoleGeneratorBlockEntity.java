@@ -119,11 +119,11 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
         this.getWorld().updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
     }
 
-    private void changeConsole(ConsoleSchema schema) {
+    public void changeConsole(ConsoleSchema schema) {
         this.setConsoleSchema(schema.id());
         this.setVariant(ConsoleVariantRegistry.withParent(schema).get(0).id());
     }
-    private void changeConsole(ConsoleVariantSchema schema) {
+    public void changeConsole(ConsoleVariantSchema schema) {
         this.setConsoleSchema(schema.parent().id());
         this.setVariant(schema.id());
     }
