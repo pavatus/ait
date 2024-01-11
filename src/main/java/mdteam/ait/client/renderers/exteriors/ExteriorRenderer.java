@@ -82,4 +82,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         }
         matrices.pop();
     }
+
+    @Override
+    public boolean rendersOutsideBoundingBox(T blockEntity) {
+        return true;
+    }
 }

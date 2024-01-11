@@ -2,6 +2,7 @@ package mdteam.ait.tardis.util;
 
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
@@ -46,6 +47,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import qouteall.imm_ptl.core.api.PortalAPI;
 
 import java.util.*;
 
@@ -226,8 +228,12 @@ public class TardisUtil {
     private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
         Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
         SERVER.execute(() -> {
-            WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
-            player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+            if(DependencyChecker.hasPortals()) {
+                PortalAPI.teleportEntity(player, (ServerWorld) pos.getWorld(), vec);
+            } else {
+                WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
+                player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+            }
         });
     }
 
