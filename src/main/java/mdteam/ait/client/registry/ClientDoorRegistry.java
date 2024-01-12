@@ -3,6 +3,7 @@ package mdteam.ait.client.registry;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.registry.door.ClientDoorSchema;
 import mdteam.ait.client.registry.door.impl.*;
+import mdteam.ait.client.registry.exterior.impl.doom.ClientDoomVariant;
 import mdteam.ait.tardis.variant.door.*;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
@@ -36,6 +37,7 @@ public class ClientDoorRegistry {
     public static ClientDoorSchema BOX_TOKAMAK;
     public static ClientDoorSchema HEAD;
     public static ClientDoorSchema GROWTH;
+    public static ClientDoorSchema DOOM;
 
     public static void init() {
         TARDIM = register(new ClientTardimDoorVariant());
@@ -47,5 +49,6 @@ public class ClientDoorRegistry {
         BOX_TOKAMAK = register(new ClientPoliceBoxTokamakDoorVariant());
         HEAD = register(new ClientEasterHeadDoorVariant());
         GROWTH = register(new ClientGrowthDoorVariant());
+        DOOM = register(new ClientDoomDoorVariant());
     }
 }

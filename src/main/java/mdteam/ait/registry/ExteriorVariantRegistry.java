@@ -13,6 +13,7 @@ import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxPrimeVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxPtoredVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxYetiVariant;
 import mdteam.ait.tardis.variant.exterior.cube.RedCoobVariant;
+import mdteam.ait.tardis.variant.exterior.doom.DoomVariant;
 import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadFireVariant;
 import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadSoulVariant;
@@ -88,6 +89,7 @@ public class ExteriorVariantRegistry {
     public static ExteriorVariantSchema HEAD_SOUL;
     public static ExteriorVariantSchema HEAD_FIRE;
     public static ExteriorVariantSchema CORAL_GROWTH;
+    public static ExteriorVariantSchema DOOM;
 
     // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
     public static void init() {
@@ -132,5 +134,8 @@ public class ExteriorVariantRegistry {
 
         // Coral Growth
         CORAL_GROWTH = register(new CoralGrowthVariant());
+
+        // Doom
+        DOOM = register(new DoomVariant());
     }
 }
