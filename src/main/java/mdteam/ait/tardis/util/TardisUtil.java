@@ -49,9 +49,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import qouteall.imm_ptl.core.IPGlobal;
 import qouteall.imm_ptl.core.api.PortalAPI;
 
 import java.util.*;
+
+import static qouteall.imm_ptl.core.teleportation.ServerTeleportationManager.teleportRegularEntityTo;
 
 @SuppressWarnings("unused")
 public class TardisUtil {

@@ -90,7 +90,26 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
                 .uv(241, 22).cuboid(-12.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
                 .uv(241, 28).cuboid(-12.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F)), ModelTransform.pivot(0.0F, -3.0F, 0.0F));
 
-        ModelPartData lights_t = PCB.addChild("lights_t", ModelPartBuilder.create().uv(267, 55).cuboid(7.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
+        ModelPartData TARDIS_t = TARDIS.addChild("TARDIS_t", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData PCB_t = TARDIS_t.addChild("PCB_t", ModelPartBuilder.create().uv(0, 434).cuboid(-17.0F, -64.0F, -19.0F, 34.0F, 5.0F, 6.0F, new Dilation(0.0F))
+                .uv(8, 435).cuboid(-11.0F, -60.0F, -17.0F, 22.0F, 0.0F, 4.0F, new Dilation(0.0F))
+                .uv(0, 446).cuboid(-11.0F, -63.0F, -17.0F, 22.0F, 3.0F, 0.0F, new Dilation(0.0F))
+                .uv(0, 450).cuboid(-1.0F, -63.0F, -14.0F, 2.0F, 3.0F, 0.0F, new Dilation(0.0F))
+                .uv(0, 437).cuboid(11.0F, -63.0F, -17.0F, 0.0F, 3.0F, 4.0F, new Dilation(0.0F))
+                .uv(38, 437).cuboid(-11.0F, -63.0F, -17.0F, 0.0F, 3.0F, 4.0F, new Dilation(0.0F))
+                .uv(21, 435).cuboid(-11.0F, -63.0F, -17.0F, 22.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
+
+        ModelPartData lights2 = PCB_t.addChild("lights2", ModelPartBuilder.create().uv(241, 28).cuboid(10.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
+                .uv(241, 22).cuboid(10.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
+                .uv(241, 22).cuboid(4.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
+                .uv(241, 28).cuboid(4.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
+                .uv(241, 22).cuboid(-6.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
+                .uv(241, 28).cuboid(-6.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
+                .uv(241, 22).cuboid(-12.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
+                .uv(241, 28).cuboid(-12.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F)), ModelTransform.pivot(0.0F, -3.0F, 0.0F));
+
+        ModelPartData lights_t2 = PCB_t.addChild("lights_t2", ModelPartBuilder.create().uv(267, 55).cuboid(7.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
                 .uv(267, 49).cuboid(7.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
                 .uv(267, 49).cuboid(1.75F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
                 .uv(267, 55).cuboid(1.75F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))

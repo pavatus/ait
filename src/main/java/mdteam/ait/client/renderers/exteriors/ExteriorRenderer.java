@@ -47,7 +47,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         BlockState blockState = entity.getCachedState();
         float f = blockState.get(ExteriorBlock.FACING).asRotation();
-        int maxLight = 0xFFFFFF;
+        int maxLight = 0xF000F0;
         /*matrices.push();
         matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(180f));
         matrices.translate(0, -2.72f, -0.32);

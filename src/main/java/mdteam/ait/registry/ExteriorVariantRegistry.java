@@ -83,7 +83,6 @@ public class ExteriorVariantRegistry {
     public static ExteriorVariantSchema BOOTH_SOUL;
     public static ExteriorVariantSchema BOOTH_VINTAGE;
     public static ExteriorVariantSchema BOOTH_BLUE;
-    public static ExteriorVariantSchema BOOTH_WHITE;
     public static ExteriorVariantSchema COOB; // dont use : (
     public static ExteriorVariantSchema HEAD_DEFAULT;
     public static ExteriorVariantSchema HEAD_SOUL;
@@ -122,7 +121,6 @@ public class ExteriorVariantRegistry {
         BOOTH_SOUL = register(new BoothSoulVariant());
         BOOTH_VINTAGE = register(new BoothVintageVariant());
         BOOTH_BLUE = register(new BoothBlueVariant());
-        BOOTH_WHITE = register(new BoothWhiteVariant());
 
         // funny
         // COOB = register(new RedCoobVariant()); // fixme CUBE HAS BEEN REMOVED, REPEAT, CUBE HAS BEEN REMOVED. DO NOT PANIC!!

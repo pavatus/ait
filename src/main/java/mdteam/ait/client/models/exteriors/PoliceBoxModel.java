@@ -79,9 +79,33 @@ public class PoliceBoxModel extends ExteriorModel {
         ModelPartData cube_r7 = Roof.addChild("cube_r7", ModelPartBuilder.create().uv(17, 18).cuboid(-2.0F, -70.75F, -2.0F, 4.0F, 3.0F, 4.0F, new Dilation(0.4F))
                 .uv(0, 18).cuboid(-2.0F, -73.75F, -2.0F, 4.0F, 7.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -5.25F, 0.0F, 0.0F, 0.7854F, 0.0F));
 
-        ModelPartData Roof_t = TARDIS.addChild("Roof_t", ModelPartBuilder.create().uv(0, 294).cuboid(-17.0F, -66.5F, -17.0F, 34.0F, 3.0F, 34.0F, new Dilation(0.0F))
+        ModelPartData TARDIS_t = TARDIS.addChild("TARDIS_t", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData PCB_t = TARDIS_t.addChild("PCB_t", ModelPartBuilder.create().uv(0, 394).cuboid(-16.0F, -64.0F, -19.0F, 32.0F, 5.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
+
+        ModelPartData cube_r8 = PCB_t.addChild("cube_r8", ModelPartBuilder.create().uv(0, 404).cuboid(-16.0F, -61.0F, -19.0F, 32.0F, 5.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+
+        ModelPartData cube_r9 = PCB_t.addChild("cube_r9", ModelPartBuilder.create().uv(0, 414).cuboid(-16.0F, -61.0F, -19.0F, 32.0F, 5.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
+
+        ModelPartData cube_r10 = PCB_t.addChild("cube_r10", ModelPartBuilder.create().uv(0, 424).cuboid(-16.0F, -61.0F, -19.0F, 32.0F, 5.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+
+        ModelPartData Roof_t = TARDIS_t.addChild("Roof_t", ModelPartBuilder.create().uv(0, 294).cuboid(-17.0F, -66.5F, -17.0F, 34.0F, 3.0F, 34.0F, new Dilation(0.0F))
                 .uv(0, 332).cuboid(-15.0F, -68.25F, -15.0F, 30.0F, 2.0F, 30.0F, new Dilation(0.0F))
-                .uv(0, 365).cuboid(-13.0F, -70.0F, -13.0F, 26.0F, 2.0F, 26.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -0.5F, 0.0F));
+                .uv(0, 365).cuboid(-13.0F, -70.0F, -13.0F, 26.0F, 2.0F, 26.0F, new Dilation(0.0F))
+                .uv(13, 65).cuboid(-17.5F, -65.75F, -17.5F, 3.0F, 1.0F, 3.0F, new Dilation(0.05F))
+                .uv(0, 58).cuboid(14.5F, -65.75F, -17.5F, 3.0F, 1.0F, 3.0F, new Dilation(0.05F))
+                .uv(13, 58).cuboid(-17.5F, -65.75F, 14.5F, 3.0F, 1.0F, 3.0F, new Dilation(0.05F))
+                .uv(0, 65).cuboid(14.5F, -65.75F, 14.5F, 3.0F, 1.0F, 3.0F, new Dilation(0.05F))
+                .uv(0, 295).cuboid(-3.0F, -71.0F, -3.0F, 6.0F, 1.0F, 6.0F, new Dilation(0.0F))
+                .uv(0, 303).cuboid(-2.0F, -72.0F, -2.0F, 4.0F, 1.0F, 4.0F, new Dilation(0.0F))
+                .uv(0, 309).cuboid(-2.0F, -78.0F, -2.0F, 4.0F, 2.0F, 4.0F, new Dilation(0.0F))
+                .uv(9, 315).cuboid(0.0F, -76.5F, -3.0F, 0.0F, 5.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.25F, 0.0F));
+
+        ModelPartData cube_r11 = Roof_t.addChild("cube_r11", ModelPartBuilder.create().uv(9, 316).cuboid(-1.0F, -75.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.5F))
+                .uv(0, 321).cuboid(-1.0F, -76.0F, -1.0F, 2.0F, 4.0F, 2.0F, new Dilation(0.2F))
+                .uv(0, 316).cuboid(-1.0F, -79.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
+
+        ModelPartData cube_r12 = Roof_t.addChild("cube_r12", ModelPartBuilder.create().uv(9, 315).cuboid(0.0F, -76.5F, -3.0F, 0.0F, 5.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
         return TexturedModelData.of(modelData, 512, 512);
     }
 

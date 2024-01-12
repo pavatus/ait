@@ -41,10 +41,10 @@ public abstract class BoothVariant extends ExteriorVariantSchema {
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return switch (direction) {
             case DOWN, UP -> pos;
-            case NORTH -> pos.add(0,0.1,-0.45f);
-            case SOUTH -> pos.add(0,0.1,0.45f);
-            case WEST -> pos.add(-0.45f,0.1,0);
-            case EAST -> pos.add(0.45f,0.1,0);
+            case NORTH -> pos.add(0,0.25,-0.48f);
+            case SOUTH -> pos.add(0,0.25,0.48f);
+            case WEST -> pos.add(-0.48f,0.25,0);
+            case EAST -> pos.add(0.48f,0.25,0);
         };
     }
 
@@ -55,6 +55,6 @@ public abstract class BoothVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalHeight() {
-        return 2.2d;
+        return 2.25d;
     }
 }
