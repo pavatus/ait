@@ -26,12 +26,14 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -207,13 +209,13 @@ public class TardisUtil {
             case WEST -> new BlockPos.Mutable(pos.getX() - 0.0125, pos.getY(), pos.getZ() + 0.5);
         };
     }
-    public static void teleportOutside(Tardis tardis, ServerPlayerEntity player) {
+    public static void teleportOutside(Tardis tardis, Entity entity) {
         AbsoluteBlockPos.Directed pos = tardis.getTravel().getState() == TardisTravel.State.FLIGHT ? FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage()) : tardis.position();
-        TardisUtil.teleportWithDoorOffset(player, tardis.getDoor().getExteriorPos());
+        TardisUtil.teleportWithDoorOffset(entity, tardis.getDoor().getExteriorPos());
     }
 
-    public static void teleportInside(Tardis tardis, ServerPlayerEntity player) {
-        TardisUtil.teleportWithDoorOffset(player, tardis.getDoor().getDoorPos());
+    public static void teleportInside(Tardis tardis, Entity entity) {
+        TardisUtil.teleportWithDoorOffset(entity, tardis.getDoor().getDoorPos());
         TardisDesktop tardisDesktop = tardis.getDesktop();
         if(tardisDesktop.getConsolePos() != null) {
             if(tardisDesktop.getConsolePos().getBlockEntity() instanceof ConsoleBlockEntity console) {
@@ -225,14 +227,22 @@ public class TardisUtil {
         }
     }
 
-    private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
+    private static void teleportWithDoorOffset(Entity entity, AbsoluteBlockPos.Directed pos) {
         Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
         SERVER.execute(() -> {
             if(DependencyChecker.hasPortals()) {
-                PortalAPI.teleportEntity(player, (ServerWorld) pos.getWorld(), vec);
+                PortalAPI.teleportEntity(entity, (ServerWorld) pos.getWorld(), vec);
             } else {
-                WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
-                player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+                if(entity instanceof ServerPlayerEntity player) {
+                    WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
+                    player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+                } else {
+                    if(entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
+                        entity.refreshPositionAndAngles(vec.x, vec.y, vec.z, pos.getDirection().asRotation(), entity.getPitch());
+                    } else {
+                        entity.teleport((ServerWorld) pos.getWorld(), vec.x, vec.y, vec.z, Set.of(), pos.getDirection().asRotation(), entity.getPitch());
+                    }
+                }
             }
         });
     }

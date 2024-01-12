@@ -122,12 +122,12 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     public void onEntityCollision(Entity entity) {
-        if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
+        if (this.getWorld() != TardisUtil.getTardisDimension())
             return;
         if (this.getTardis() != null && this.getTardis().getDoor().isOpen()) {
             if (!this.getTardis().getLockedTardis() && !PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
                 if (!DependencyChecker.hasPortals() || !this.getTardis().getExterior().getType().hasPortals())
-                    TardisUtil.teleportOutside(this.getTardis(), player);
+                    TardisUtil.teleportOutside(this.getTardis(), entity);
             }
         }
     }

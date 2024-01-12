@@ -118,13 +118,10 @@ public class ExteriorBlockEntity extends BlockEntity implements BlockEntityTicke
     }
 
     public void onEntityCollision(Entity entity) {
-        if (!(entity instanceof ServerPlayerEntity player))
-            return;
-
         if (this.getTardis() != null && this.getTardis().getDoor().isOpen()) {
             if (!this.getTardis().getLockedTardis())
                 if (!DependencyChecker.hasPortals() || !getTardis().getExterior().getType().hasPortals())
-                    TardisUtil.teleportInside(this.getTardis(), player);
+                    TardisUtil.teleportInside(this.getTardis(), entity);
         }
     }
 
