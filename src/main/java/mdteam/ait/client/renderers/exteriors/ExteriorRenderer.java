@@ -59,12 +59,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         int maxLight = 0xF000F0;
         matrices.push();
         matrices.translate(0.5, 0, 0.5);
-        if (!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM)) {
-            matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
-        } else {
-            if(MinecraftClient.getInstance().player == null) return;
-            matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(MinecraftClient.getInstance().player.getHeadYaw() + 180f));
-        }
+        if(MinecraftClient.getInstance().player == null) return;
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         Identifier texture = exteriorVariant.texture();
 

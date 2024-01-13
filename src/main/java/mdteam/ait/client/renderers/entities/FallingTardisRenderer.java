@@ -8,6 +8,7 @@ import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.tardis.TardisExterior;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -42,7 +43,8 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
         matrices.push();
         // matrices.translate(0.5, 0, 0.5);
         float f = entity.getBlockState().get(ExteriorBlock.FACING).asRotation();
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
+        if(MinecraftClient.getInstance().player == null) return;
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
         if (getModel(entity) == null) return;
