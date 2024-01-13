@@ -55,6 +55,6 @@ public abstract class CapsuleVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalWidth() {
-        return 0.8d;
+        return 0.75d;
     }
 }

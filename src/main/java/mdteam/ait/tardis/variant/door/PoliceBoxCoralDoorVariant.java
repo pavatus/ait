@@ -20,10 +20,10 @@ public class PoliceBoxCoralDoorVariant extends DoorSchema {
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return switch (direction) {
             case DOWN, UP -> pos;
-            case NORTH -> pos.add(0,0.05,0.45);
-            case SOUTH -> pos.add(0,0.05,-0.45);
-            case WEST -> pos.add(0.45,0.05,0);
-            case EAST -> pos.add(-0.45,0.05,0);
+            case NORTH -> pos.add(0,0.075,0.45);
+            case SOUTH -> pos.add(0,0.075,-0.45);
+            case WEST -> pos.add(0.45,0.075,0);
+            case EAST -> pos.add(-0.45,0.075,0);
         };
     }
 }

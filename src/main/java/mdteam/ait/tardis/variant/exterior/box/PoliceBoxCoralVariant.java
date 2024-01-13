@@ -20,7 +20,7 @@ public class PoliceBoxCoralVariant extends PoliceBoxVariant {
     @Override
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         pos = super.adjustPortalPos(pos, direction);
-        return pos.add(0,-0.1,0);
+        return pos.add(0,-0.05,0);
     }
 
     @Override
