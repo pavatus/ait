@@ -17,8 +17,8 @@ public class DoomExteriorModel extends ExteriorModel {
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData doom = modelPartData.addChild("doom", ModelPartBuilder.create().uv(0, 0).cuboid(-32.0F, -96.0F, -1.0F, 64.0F, 96.0F, 0.0F, new Dilation(0.005F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
-		return TexturedModelData.of(modelData, 128, 96);
+		ModelPartData doom = modelPartData.addChild("doom", ModelPartBuilder.create().uv(0, 0).cuboid(-25.5F, -86.0F, -1.0F, 51.0F, 86.0F, 0.0F, new Dilation(0.005F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+		return TexturedModelData.of(modelData, 102, 86);
 	}
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
@@ -28,8 +28,8 @@ public class DoomExteriorModel extends ExteriorModel {
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		matrices.push();
-		matrices.translate(0, -1.125f, 0);
-		matrices.scale(0.75f, 0.75f, 0.75f);
+		matrices.translate(0, -1.05f, 0);
+		matrices.scale(0.7f, 0.7f, 0.7f);
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}
@@ -37,8 +37,8 @@ public class DoomExteriorModel extends ExteriorModel {
 	@Override
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		matrices.push();
-		matrices.translate(0, -1.125f, 0);
-		matrices.scale(0.75f, 0.75f, 0.75f);
+		matrices.translate(0, -1.05f, 0);
+		matrices.scale(0.7f, 0.7f, 0.7f);
 		super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 		matrices.pop();
 	}
@@ -46,8 +46,8 @@ public class DoomExteriorModel extends ExteriorModel {
 	@Override
 	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		matrices.push();
-		matrices.translate(0, -1.125f, 0);
-		matrices.scale(0.75f, 0.75f, 0.75f);
+		matrices.translate(0, -1.05f, 0);
+		matrices.scale(0.7f, 0.7f, 0.7f);
 		super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 		matrices.pop();
 	}

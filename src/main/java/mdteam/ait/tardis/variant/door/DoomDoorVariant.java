@@ -17,7 +17,7 @@ public class DoomDoorVariant extends DoorSchema {
 
     @Override
     public boolean isDouble() {
-        return true;
+        return false;
     }
 
     @Override

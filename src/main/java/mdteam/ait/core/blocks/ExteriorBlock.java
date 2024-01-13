@@ -7,6 +7,7 @@ import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.DoorHandler;
@@ -96,6 +97,10 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
         if (((ExteriorBlockEntity) blockEntity).getTardis().isSiegeMode())
             return SIEGE_SHAPE;
+
+        if (((ExteriorBlockEntity) blockEntity).getTardis().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM)) {
+            return VoxelShapes.fullCube();
+        }
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).getTardis().getTravel().getState();
         if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)

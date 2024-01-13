@@ -2,6 +2,7 @@ package mdteam.ait.client.registry.exterior.impl.doom;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.coral.CoralGrowthExteriorModel;
+import mdteam.ait.client.models.doors.DoomDoorModel;
 import mdteam.ait.client.models.exteriors.DoomExteriorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
@@ -21,7 +22,7 @@ public class ClientDoomVariant extends ClientExteriorVariantSchema {
     }
     @Override
     public Identifier texture() {
-        return ExteriorRenderer.DOOM_TEXTURE;
+        return ExteriorRenderer.DOOM_FRONT_BACK;
     }
 
     @Override
