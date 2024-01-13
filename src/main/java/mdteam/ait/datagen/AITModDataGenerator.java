@@ -368,6 +368,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         generate_DE_CH_Language(pack); // de_ch (German Switzerland)
         generate_NDS_DE_Language(pack); // nds_de (Nordic German)
         generate_PT_BR_Language(pack); // pt_br (Portuguese Brazil)
+        generate_RU_RU_Language(pack); // ru_ru (Russian Russia)
     }
 
     /**
@@ -818,5 +819,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     }
     public void generate_PT_BR_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> addPortugueseTranslations(output, registriesFuture, LanguageType.PT_BR))); // pt_br (Portuguese Brazil)
+    }
+    public void generate_RU_RU_Language(FabricDataGenerator.Pack pack) {
+        pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.RU_RU))); // ru_ru (Russian Russia)
     }
 }
