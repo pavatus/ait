@@ -2,6 +2,7 @@ package mdteam.ait.datagen.datagen_providers;
 
 import com.neptunedevelopmentteam.neptunelib.core.itemgroup.NeptuneItemGroup;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
+import mdteam.ait.AITMod;
 import mdteam.ait.datagen.LanguageType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
@@ -29,7 +30,7 @@ public class AITLanguageProvider extends FabricLanguageProvider {
             translationBuilder.add(key, translations.get(key));
         }
 
-        dataGenerator.getModContainer().findPath("assets/mymod/lang/en_us.existing.json").ifPresent(existingFilePath -> {
+        dataGenerator.getModContainer().findPath("assets/" + AITMod.MOD_ID + "/lang/" + languageType.name().toLowerCase() + ".existing.json").ifPresent(existingFilePath -> {
             try {
                 translationBuilder.add(existingFilePath);
             } catch (Exception e) {

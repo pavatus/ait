@@ -20,7 +20,5 @@ public enum LanguageType {
     DE_CH,
     DE_DE,
     NDS_DE,
-
-
-
+    PT_BR,
 }
