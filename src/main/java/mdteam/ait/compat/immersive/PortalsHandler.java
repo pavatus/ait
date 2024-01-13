@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 
 // NEVER EVER ACCESS THIS CLASS OR YO GAME GON CRAAASH
 public class PortalsHandler {
-    private static HashMap<UUID, List<Portal>> portals = new HashMap<>();
+    private static HashMap<UUID, List<TardisPortal>> portals = new HashMap<>();
 
     public static void init() {
         if (!DependencyChecker.hasPortals()) {
@@ -54,11 +54,11 @@ public class PortalsHandler {
 
         if (tardis.getHandlers().getDoor().getDoorState() != DoorHandler.DoorStateEnum.CLOSED) return; // todo move to a seperate method so we can remove without checks
 
-        List<Portal> list = portals.get(tardis.getUuid());
+        List<TardisPortal> list = portals.get(tardis.getUuid());
 
         if (list == null) return;
 
-        for (Portal portal : list) {
+        for (TardisPortal portal : list) {
             PortalManipulation.removeConnectedPortals(portal, (p) -> {});
             portal.discard();
         }
@@ -74,11 +74,11 @@ public class PortalsHandler {
 
         if (!tardis.getExterior().getType().hasPortals()) return;
 
-        List<Portal> list = new ArrayList<>();
+        List<TardisPortal> list = new ArrayList<>();
 
-        Portal interior = createInteriorPortal(tardis);
+        TardisPortal interior = createInteriorPortal(tardis);
         if (tardis.getTravel().getState() == TardisTravel.State.LANDED) {
-            Portal exterior = createExteriorPortal(tardis);
+            TardisPortal exterior = createExteriorPortal(tardis);
             list.add(exterior);
         }
 
@@ -88,13 +88,13 @@ public class PortalsHandler {
         tardis.markDirty();
     }
 
-    private static Portal createExteriorPortal(Tardis tardis) {
+    private static TardisPortal createExteriorPortal(Tardis tardis) {
         AbsoluteBlockPos.Directed doorPos = tardis.getTravel().getDoorPos();
         AbsoluteBlockPos.Directed exteriorPos = tardis.getTravel().getState() == TardisTravel.State.LANDED ? tardis.getTravel().getExteriorPos() : FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage());
         Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(),doorPos);
         Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(),exteriorPos);
 
-        Portal portal = Portal.entityType.create(exteriorPos.getWorld());
+        TardisPortal portal = new TardisPortal(exteriorPos.getWorld(), tardis);
 
         portal.setOrientationAndSize(
                 new Vec3d(1, 0, 0), // axisW
@@ -117,19 +117,17 @@ public class PortalsHandler {
         portal.renderingMergable = true;
         portal.getWorld().spawnEntity(portal);
 
-        ((ITardisPortal) portal).setTardis(tardis);
-
         return portal;
     }
 
     // todo allow for multiple interior doors
-    private static Portal createInteriorPortal(Tardis tardis) {
+    private static TardisPortal createInteriorPortal(Tardis tardis) {
         AbsoluteBlockPos.Directed doorPos = tardis.getTravel().getDoorPos();
         AbsoluteBlockPos.Directed exteriorPos = tardis.getTravel().getState() == TardisTravel.State.LANDED ? tardis.getTravel().getExteriorPos() : FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage());
         Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
         Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
 
-        Portal portal = Portal.entityType.create(doorPos.getWorld());
+        TardisPortal portal = new TardisPortal(doorPos.getWorld(), tardis);
 
         portal.setOrientationAndSize(
                 new Vec3d(1, 0, 0), // axisW
@@ -151,7 +149,6 @@ public class PortalsHandler {
         portal.setInteractable(false);
         portal.renderingMergable = true;
         portal.getWorld().spawnEntity(portal);
-        ((ITardisPortal) portal).setTardis(tardis);
 
         return portal;
     }

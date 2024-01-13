@@ -6,7 +6,6 @@
   "mixins": [
     "server.ChunkMixin",
     "server.ItemEntityMixin",
-    "server.PortalMixin",
     "server.ServerPlayerInteractionManagerMixin",
     "server.StructureTemplateMixin"
   ],
