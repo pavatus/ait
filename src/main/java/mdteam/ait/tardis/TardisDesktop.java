@@ -225,8 +225,10 @@ public class TardisDesktop extends TardisLink {
         if(dim.getBlockEntity(this.getConsolePos()) instanceof ConsoleBlockEntity console) {
             console.killControls();
 
-            generator.changeConsole(console.getVariant());
-            generator.changeConsole(console.getConsoleSchema());
+            // todo this doesnt send to client or something
+            // generator.changeConsole(console.getVariant());
+            // generator.changeConsole(console.getConsoleSchema());
+            // generator.markDirty();
         }
 
         dim.removeBlock(this.getConsolePos(), false);
