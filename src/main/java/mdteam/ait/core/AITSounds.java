@@ -64,4 +64,8 @@ public class AITSounds implements NeptuneSoundEventInit {
     public static final MatSound EIGHT_MAT_ANIM = new MatSound(EIGHT_MAT, 11 * 20, 11 * 20, 9 * 20, 0.2f, 0.4f);
     public static final MatSound GHOST_MAT_ANIM = new MatSound(GHOST_MAT, 590, 320, 320, 0.2f, 0.4f);
     public static final MatSound LANDED_ANIM = new MatSound(null, 0, 0, 0, 0, 0);
+
+    // Secret
+    public static final SoundEvent DOOM_DOOR_OPEN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/secret/doom_door_open"));
+    public static final SoundEvent DOOM_DOOR_CLOSE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/secret/doom_door_close"));
 }
