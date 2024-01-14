@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.variant.door;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.AITSounds;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
@@ -17,16 +18,16 @@ public class DoomDoorVariant extends DoorSchema {
 
     @Override
     public boolean isDouble() {
-        return true;
+        return false;
     }
 
     @Override
     public SoundEvent openSound() {
-        return SoundEvents.BLOCK_WOODEN_DOOR_OPEN;
+        return AITSounds.DOOM_DOOR_OPEN;
     }
 
     @Override
     public SoundEvent closeSound() {
-        return SoundEvents.BLOCK_WOODEN_DOOR_CLOSE;
+        return AITSounds.DOOM_DOOR_CLOSE;
     }
 }

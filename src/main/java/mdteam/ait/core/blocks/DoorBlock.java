@@ -26,10 +26,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
-    public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 13.1, 16.0, 32.0, 16.0);
-    public static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 2.9, 32.0, 16.0);
-    public static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 2.9);
-    public static final VoxelShape WEST_SHAPE = Block.createCuboidShape(13.1, 0.0, 0.0, 16.0, 32.0, 16.0);
+    public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 11.1, 16.0, 32.0, 16.0);
+    public static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 4.9, 32.0, 16.0);
+    public static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 4.9);
+    public static final VoxelShape WEST_SHAPE = Block.createCuboidShape(11.1, 0.0, 0.0, 16.0, 32.0, 16.0);
 
     public DoorBlock(Settings settings) {
         super(settings);

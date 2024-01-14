@@ -113,7 +113,7 @@ public class PortalsHandler {
 
         portal.setDestinationDimension(doorPos.getWorld().getRegistryKey());
         portal.setDestination(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
-        portal.setInteractable(false);
+        //portal.setInteractable(false);
         portal.renderingMergable = true;
         portal.getWorld().spawnEntity(portal);
 
@@ -146,7 +146,7 @@ public class PortalsHandler {
         portal.setOriginPos(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
         portal.setDestinationDimension(exteriorPos.getWorld().getRegistryKey());
         portal.setDestination(new Vec3d(exteriorAdjust.getX() + 0.5, exteriorAdjust.getY() + 1, exteriorAdjust.getZ() + 0.5));
-        portal.setInteractable(false);
+        //portal.setInteractable(false);
         portal.renderingMergable = true;
         portal.getWorld().spawnEntity(portal);
 
