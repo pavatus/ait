@@ -26,6 +26,7 @@ public class ExteriorRegistry {
     public static ExteriorSchema EASTER_HEAD;
     public static ExteriorSchema CORAL_GROWTH;
     public static ExteriorSchema DOOM;
+    public static ExteriorSchema PLINTH;
 
     public static void init() {
         CLASSIC = register(new ClassicExterior());
@@ -37,5 +38,6 @@ public class ExteriorRegistry {
         EASTER_HEAD = register(new EasterHeadExterior());
         CORAL_GROWTH = register(new GrowthExterior());
         DOOM = register(new DoomExterior());
+        PLINTH = register(new PlinthExterior());
     }
 }

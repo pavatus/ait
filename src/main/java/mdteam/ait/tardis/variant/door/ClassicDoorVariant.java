@@ -24,10 +24,10 @@ public class ClassicDoorVariant extends DoorSchema {
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return switch (direction) {
             case DOWN, UP -> pos;
-            case NORTH -> pos.add(0,0.075,0.48);
-            case SOUTH -> pos.add(0,0.075,-0.48);
-            case WEST -> pos.add(0.48,0.075,0);
-            case EAST -> pos.add(-0.48,0.075,0);
+            case NORTH -> pos.add(0,0.075,0.47);
+            case SOUTH -> pos.add(0,0.075,-0.47);
+            case WEST -> pos.add(0.47,0.075,0);
+            case EAST -> pos.add(-0.47,0.075,0);
         };
     }
 }
