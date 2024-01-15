@@ -457,6 +457,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
         provider.addTranslation("screen.ait.monitor.apply", "Apply");
         provider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
+        provider.addTranslation("screen.ait.monitor.traveltime", "Travel Time: ");
         provider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
         provider.addTranslation("screen.ait.interiorsettings.back", "> Back");
         provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");

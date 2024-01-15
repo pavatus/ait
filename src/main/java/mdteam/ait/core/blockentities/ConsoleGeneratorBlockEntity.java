@@ -5,6 +5,7 @@ import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blocks.ConsoleGeneratorBlock;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
+import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.Tardis;
@@ -53,7 +54,11 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
         //if(world != TardisUtil.getTardisDimension()) return;
-        if(player.getMainHandStack().getItem() instanceof EndCrystalItem) {
+        if(player.getMainHandStack().getItem() instanceof SonicItem) {
+
+            NbtCompound nbt = player.getMainHandStack().getOrCreateNbt();
+
+            if(!nbt.contains("tardis")) return;
 
             ConsoleBlockEntity consoleBlockEntity = new ConsoleBlockEntity(pos,AITBlocks.CONSOLE.getDefaultState());
 
@@ -65,11 +70,11 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 
             world.playSound(null, this.pos, SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 0.5f, 1.0f);
 
-            if(!player.isCreative()) {
+            /*if(!player.isCreative()) {
                 player.getMainHandStack().decrement(1);
                 // ItemEntity item = new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), new ItemStack(AITBlocks.CONSOLE_GENERATOR));
                 // this.getWorld().spawnEntity(item);
-            }
+            }*/
             return;
         }
 

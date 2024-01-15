@@ -3,6 +3,8 @@ package mdteam.ait.network;
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
+import mdteam.ait.compat.DependencyChecker;
+import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.registry.DesktopRegistry;
@@ -70,6 +72,9 @@ public class ServerAITNetworkManager {
             Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
             TardisExterior tardisExterior = tardis.getExterior();
             tardisExterior.setType(ExteriorRegistry.REGISTRY.get(exteriorIdentifier));
+            if(DependencyChecker.hasPortals()) {
+                PortalsHandler.removePortals(tardis);
+            }
             if (variantChanged) {
                 tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(variantIdentifier));
             }

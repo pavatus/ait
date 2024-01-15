@@ -75,6 +75,7 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
         matrices.push();
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+        if(entity.getWorld() == null) return;
         matrices.translate(0.5f, -1.5f + entity.getWorld().random.nextFloat() * 0.02, -0.5f);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
 

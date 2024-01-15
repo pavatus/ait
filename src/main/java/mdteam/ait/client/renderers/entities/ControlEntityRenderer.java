@@ -88,7 +88,7 @@ public class ControlEntityRenderer
     }
 
     public static boolean isPlayerLookingAtControl(HitResult hitResult, ConsoleControlEntity entity) {
-        if (!entity.getWorld().isClient())
+        if (entity.getWorld() == null || !entity.getWorld().isClient())
             return false;
         PlayerEntity player = MinecraftClient.getInstance().player;
         if (player != null) {
