@@ -27,6 +27,7 @@ public class PositionedLoopingSound extends LoopingSound {
     }
 
     public void setPosition(BlockPos pos) {
+        if(pos == null) return;
         this.x = pos.getX();
         this.y = pos.getY();
         this.z = pos.getZ();

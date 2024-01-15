@@ -16,6 +16,9 @@ import mdteam.ait.client.registry.exterior.impl.easter_head.ClientEasterHeadDefa
 import mdteam.ait.client.registry.exterior.impl.easter_head.ClientEasterHeadFireVariant;
 import mdteam.ait.client.registry.exterior.impl.easter_head.ClientEasterHeadSoulVariant;
 import mdteam.ait.client.registry.exterior.impl.growth.ClientGrowthVariant;
+import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthDefaultVariant;
+import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthFireVariant;
+import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthSoulVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimFireVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimSoulVariant;
@@ -72,6 +75,9 @@ public class ClientExteriorVariantRegistry {
     public static ClientExteriorVariantSchema HEAD_FIRE;
     public static ClientExteriorVariantSchema CORAL_GROWTH;
     public static ClientExteriorVariantSchema DOOM;
+    public static ClientExteriorVariantSchema PLINTH_DEFAULT;
+    public static ClientExteriorVariantSchema PLINTH_SOUL;
+    public static ClientExteriorVariantSchema PLINTH_FIRE;
 
     // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
     public static void init() {
@@ -119,5 +125,10 @@ public class ClientExteriorVariantRegistry {
 
         // Doom
         DOOM = register(new ClientDoomVariant());
+
+        // Plinth
+        PLINTH_DEFAULT = register(new ClientPlinthDefaultVariant());
+        PLINTH_SOUL = register(new ClientPlinthSoulVariant());
+        PLINTH_FIRE = register(new ClientPlinthFireVariant());
     }
 }

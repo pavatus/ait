@@ -38,6 +38,7 @@ public class ClientDoorRegistry {
     public static ClientDoorSchema HEAD;
     public static ClientDoorSchema GROWTH;
     public static ClientDoorSchema DOOM;
+    public static ClientDoorSchema PLINTH;
 
     public static void init() {
         TARDIM = register(new ClientTardimDoorVariant());
@@ -50,5 +51,6 @@ public class ClientDoorRegistry {
         HEAD = register(new ClientEasterHeadDoorVariant());
         GROWTH = register(new ClientGrowthDoorVariant());
         DOOM = register(new ClientDoomDoorVariant());
+        PLINTH = register(new ClientPlinthDoorVariant());
     }
 }

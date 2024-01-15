@@ -154,7 +154,7 @@ public class AITModClient implements ClientModInitializer {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
-            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD || client.world == null) return;
+            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
 
             String id = buf.readString();
             ConsoleSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
@@ -163,7 +163,7 @@ public class AITModClient implements ClientModInitializer {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_VARIANT, (client, handler, buf, responseSender) -> {
-            if (client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD || client.world == null) return;
+            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
 
             Identifier id = Identifier.tryParse(buf.readString());
             BlockPos consolePos = buf.readBlockPos();

@@ -3,6 +3,7 @@ package mdteam.ait.compat.immersive;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
@@ -42,6 +43,14 @@ public class TardisPortal extends Portal {
         // we know we are closed and have a tardis so we shouldnt be existing AHHH
         AITMod.LOGGER.info("Killing portal (" + this.getId() + ") with tardis (" + this.tardisId + ")");
         this.discard();
+    }
+
+    @Override
+    public Iterable<Entity> getPassengersDeep() {
+        for(Entity entity : super.getPassengersDeep()) {
+            entity.setBoundingBox(entity.getBoundingBox().shrink(0, -0.75f, 0));
+        }
+        return super.getPassengersDeep();
     }
 
     @Override

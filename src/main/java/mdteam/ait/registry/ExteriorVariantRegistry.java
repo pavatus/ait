@@ -1,7 +1,7 @@
 package mdteam.ait.registry;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.tardis.exterior.*;
+import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.variant.exterior.booth.*;
 import mdteam.ait.tardis.variant.exterior.box.*;
@@ -12,17 +12,17 @@ import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxDefinitiveVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxPrimeVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxPtoredVariant;
 import mdteam.ait.tardis.variant.exterior.classic.ClassicBoxYetiVariant;
-import mdteam.ait.tardis.variant.exterior.cube.RedCoobVariant;
 import mdteam.ait.tardis.variant.exterior.doom.DoomVariant;
 import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadFireVariant;
 import mdteam.ait.tardis.variant.exterior.easter_head.EasterHeadSoulVariant;
 import mdteam.ait.tardis.variant.exterior.growth.CoralGrowthVariant;
+import mdteam.ait.tardis.variant.exterior.plinth.PlinthDefaultVariant;
+import mdteam.ait.tardis.variant.exterior.plinth.PlinthFireVariant;
+import mdteam.ait.tardis.variant.exterior.plinth.PlinthSoulVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimDefaultVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimFireVariant;
 import mdteam.ait.tardis.variant.exterior.tardim.TardimSoulVariant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -90,6 +90,9 @@ public class ExteriorVariantRegistry {
     public static ExteriorVariantSchema HEAD_FIRE;
     public static ExteriorVariantSchema CORAL_GROWTH;
     public static ExteriorVariantSchema DOOM;
+    public static ExteriorVariantSchema PLINTH_DEFAULT;
+    public static ExteriorVariantSchema PLINTH_SOUL;
+    public static ExteriorVariantSchema PLINTH_FIRE;
 
     // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
     public static void init() {
@@ -137,5 +140,10 @@ public class ExteriorVariantRegistry {
 
         // Doom
         DOOM = register(new DoomVariant());
+
+        // Plinth
+        PLINTH_DEFAULT = register(new PlinthDefaultVariant());
+        PLINTH_SOUL = register(new PlinthSoulVariant());
+        PLINTH_FIRE = register(new PlinthFireVariant());
     }
 }
