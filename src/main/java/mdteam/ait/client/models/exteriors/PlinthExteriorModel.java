@@ -22,10 +22,10 @@ public class PlinthExteriorModel extends ExteriorModel {
 		ModelPartData door = plinth.addChild("door", ModelPartBuilder.create().uv(72, 61).cuboid(-12.0F, -42.0F, 0.0F, 12.0F, 42.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(6.0F, -3.0F, -8.0F));
 
 		ModelPartData body = plinth.addChild("body", ModelPartBuilder.create().uv(0, 0).cuboid(6.0F, -45.0F, -8.0F, 2.0F, 42.0F, 16.0F, new Dilation(0.0F))
-		.uv(0, 58).cuboid(-9.0F, -3.0F, -9.0F, 18.0F, 3.0F, 18.0F, new Dilation(0.0F))
-		.uv(54, 40).cuboid(-9.0F, -48.0F, -9.0F, 18.0F, 3.0F, 18.0F, new Dilation(0.0F))
-		.uv(0, 79).cuboid(-6.0F, -45.0F, 6.0F, 12.0F, 42.0F, 2.0F, new Dilation(0.0F))
-		.uv(36, 0).cuboid(-8.0F, -45.0F, -8.0F, 2.0F, 42.0F, 16.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+				.uv(0, 58).cuboid(-9.0F, -3.0F, -9.0F, 18.0F, 3.0F, 18.0F, new Dilation(0.0F))
+				.uv(54, 40).cuboid(-9.0F, -48.0F, -9.0F, 18.0F, 3.0F, 18.0F, new Dilation(0.0F))
+				.uv(0, 79).cuboid(-6.0F, -45.0F, 6.0F, 12.0F, 42.0F, 2.0F, new Dilation(0.0F))
+				.uv(36, 0).cuboid(-8.0F, -45.0F, -8.0F, 2.0F, 42.0F, 16.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 		return TexturedModelData.of(modelData, 128, 128);
 	}
 	@Override
