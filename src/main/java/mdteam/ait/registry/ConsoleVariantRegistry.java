@@ -29,15 +29,16 @@ public class ConsoleVariantRegistry {
         return list;
     }
 
-    //public static ConsoleVariantSchema BOREALIS;
-    //public static ConsoleVariantSchema AUTUMN;
     public static ConsoleVariantSchema HARTNELL;
     public static ConsoleVariantSchema HARTNELL_WOOD;
     public static ConsoleVariantSchema HARTNELL_KELT;
     public static ConsoleVariantSchema CORAL;
     public static ConsoleVariantSchema CORAL_BLUE;
     public static ConsoleVariantSchema CORAL_WHITE;
-    public static ConsoleVariantSchema TEMP; // @TODO implement the new hudolin when its made again
+    public static ConsoleVariantSchema COPPER;
+    public static ConsoleVariantSchema TOYOTA;
+    //public static ConsoleVariantSchema TOYOTA_WARM;
+    //public static ConsoleVariantSchema TOYOTA_COOL;
 
     public static void init() {
 
@@ -46,16 +47,17 @@ public class ConsoleVariantRegistry {
         HARTNELL_KELT = register(new KeltHartnellVariant());
         HARTNELL_WOOD = register(new WoodenHartnellVariant()); // fixme this texture is awful - make tright remake it
 
-        // Borealis variants
-        //BOREALIS = register(new BorealisVariant());
-        //AUTUMN = register(new AutumnVariant());
-
         // Coral variants
         CORAL = register(new CoralVariant());
         CORAL_BLUE = register(new BlueCoralVariant());
         CORAL_WHITE = register(new WhiteCoralVariant());
 
-        // "Temp" variants
-        //TEMP = register(new TempVariant());
+        // Copper variants
+        COPPER = register(new CopperVariant());
+
+        // Toyota variants
+        TOYOTA = register(new ToyotaVariant());
+        //TOYOTA_WARM = register(new ToyotaWarmVariant());
+        //TOYOTA_COOL = register(new ToyotaCoolVariant());
     }
 }
