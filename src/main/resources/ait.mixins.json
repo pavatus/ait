@@ -13,7 +13,6 @@
     "client.ClientPlayerInteractionManagerMixin",
     "client.DefaultLogoMixin",
     "client.TitleScreenMixin",
-    "client.LightMapMixin",
     "client.rendering.BGRendererMixin",
     "client.rendering.GameRendererMixin",
     "client.rendering.PlayerPoseRendererMixin",
