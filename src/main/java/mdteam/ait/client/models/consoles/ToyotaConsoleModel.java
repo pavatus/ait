@@ -619,7 +619,13 @@ public class ToyotaConsoleModel extends ConsoleModel {
 	}
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+		matrices.push();
+
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f));
+
 		toyota.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+
+		matrices.pop();
 	}
 
 	@Override
