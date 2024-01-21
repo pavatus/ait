@@ -25,6 +25,14 @@ public class ToyotaConsole extends ConsoleSchema {
             new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.07499999f, 0.087499976f), new Vector3f(0.34843752160668373f, 0.7124992394819856f, -0.9218750223517418f)),
             new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.1125f, 0.099999994f), new Vector3f(0.20234373770654202f, 0.7375000026077032f, -0.8312500212341547f)),
             new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.43749985f, 0.16250001f), new Vector3f(0.9867187589406967f, 0.5875017130747437f, -0.5656250175088644f)),
+
+            // Extra monitors
+            new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.43749988f, 0.3749999f), new Vector3f(0.7257812460884452f, 1.0000016214326024f, -0.4624999985098839f)),
+            new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.43749988f, 0.3749999f), new Vector3f(-0.7367187757045031f, 1.000001815147698f, 0.4625000152736902f)),
+
+            // Siege mode extra thingy
+            //new ControlTypes(new ShowSiegeModeLeverControl(), EntityDimensions.changing(0f, 0f), new Vector3f(0f, 0f, 0f)),
+
             new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.79999954f, 0.18750001f), new Vector3f(0.925000018440187f, 0.5624998109415174f, 0.5390625204890966f)),
             new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.16250001f, 0.15f), new Vector3f(-0.39921876695007086f, 0.6775001520290971f, -1.0687500098720193f)),
             new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.1125f, 0.1f), new Vector3f(-0.8875000132247806f, 0.6500005731359124f, -0.773437530733645f)),
@@ -37,7 +45,7 @@ public class ToyotaConsole extends ConsoleSchema {
             new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.1125f, 0.1125f), new Vector3f(0.9117187727242708f, 0.5950000789016485f, -1.1015625288709998f)),
             new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.099999994f, 0.1125f), new Vector3f(-1.5000000223517418f, 0.5749998092651367f, -0.30468748696148396f)),
             new ControlTypes(new PowerControl(), EntityDimensions.changing(0.17500001f, 0.17500001f), new Vector3f(0.37656252086162567f, 0.5875001912936568f, -1.385937511920929f)),
-            new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.08749999f, 0.125f), new Vector3f(-0.6578124910593033f, 0.7750000078231096f, -0.14687501080334187f)),
+            new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.15f, 0.20000002f), new Vector3f(-1.3437500102445483f, 0.13750008586794138f, 0.7765625137835741f)),
             new ControlTypes(new HADSControl(), EntityDimensions.changing(0.07499999f, 0.17500001f), new Vector3f(-0.09531249571591616f, 0.7624998120591044f, 0.7687500193715096f)),
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.0875f), new Vector3f(0.18828124087303877f, 0.5750003820285201f, -1.4593750229105353f)),
             new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.06249999f, 0.112500004f), new Vector3f(0.15078124031424522f, 0.7000003838911653f, -1.0609375154599547f)),

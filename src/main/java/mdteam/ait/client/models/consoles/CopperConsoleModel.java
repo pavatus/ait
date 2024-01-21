@@ -1,6 +1,5 @@
 package mdteam.ait.client.models.consoles;
 
-import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.TardisTravel;
 import net.minecraft.client.model.*;
@@ -451,67 +450,67 @@ public class CopperConsoleModel extends ConsoleModel {
 
 		ModelPartData rot7 = panel_1.addChild("rot7", ModelPartBuilder.create(), ModelTransform.of(20.0F, -13.0F, 0.0F, 0.0F, 0.0F, 0.5672F));
 
-		ModelPartData atomic_acc = rot7.addChild("atomic_acc", ModelPartBuilder.create().uv(117, 40).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(123, 74).cuboid(-0.5F, -1.25F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-4.0482F, 0.2624F, 0.0F, 0.0F, 0.0F, -0.5236F));
+		ModelPartData atomic_acc = rot7.addChild("atomic_acc", ModelPartBuilder.create().uv(55, 117).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(67, 125).cuboid(-0.5F, -1.25F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-4.0482F, 0.2624F, 0.0F, 0.0F, 0.0F, -0.5236F));
 
-		ModelPartData bone2 = atomic_acc.addChild("bone2", ModelPartBuilder.create().uv(123, 32).cuboid(-0.5F, -1.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(90, 118).cuboid(-0.5F, -1.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
+		ModelPartData bone2 = atomic_acc.addChild("bone2", ModelPartBuilder.create().uv(125, 24).cuboid(-0.5F, -1.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
+		.uv(119, 25).cuboid(-0.5F, -1.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
 
-		ModelPartData cube_r151 = bone2.addChild("cube_r151", ModelPartBuilder.create().uv(118, 81).cuboid(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 1.5708F, 0.0F, 0.0F));
+		ModelPartData cube_r151 = bone2.addChild("cube_r151", ModelPartBuilder.create().uv(119, 17).cuboid(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 1.5708F, 0.0F, 0.0F));
 
-		ModelPartData cube_r152 = bone2.addChild("cube_r152", ModelPartBuilder.create().uv(83, 118).cuboid(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 1.5708F, 0.0F, 3.1416F));
+		ModelPartData cube_r152 = bone2.addChild("cube_r152", ModelPartBuilder.create().uv(119, 21).cuboid(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 1.5708F, 0.0F, 3.1416F));
 
-		ModelPartData cube_r153 = bone2.addChild("cube_r153", ModelPartBuilder.create().uv(90, 118).cuboid(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
+		ModelPartData cube_r153 = bone2.addChild("cube_r153", ModelPartBuilder.create().uv(119, 25).cuboid(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
 
-		ModelPartData cube_r154 = bone2.addChild("cube_r154", ModelPartBuilder.create().uv(83, 118).cuboid(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+		ModelPartData cube_r154 = bone2.addChild("cube_r154", ModelPartBuilder.create().uv(119, 21).cuboid(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
 
-		ModelPartData cube_r155 = bone2.addChild("cube_r155", ModelPartBuilder.create().uv(83, 118).cuboid(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+		ModelPartData cube_r155 = bone2.addChild("cube_r155", ModelPartBuilder.create().uv(119, 21).cuboid(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 2.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
-		ModelPartData button = rot7.addChild("button", ModelPartBuilder.create().uv(118, 122).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.1F))
-		.uv(122, 104).cuboid(-0.5F, -1.2F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-1.75F, 0.6F, 0.0F));
+		ModelPartData button = rot7.addChild("button", ModelPartBuilder.create().uv(22, 125).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.1F))
+		.uv(125, 20).cuboid(-0.5F, -1.2F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-1.75F, 0.6F, 0.0F));
 
-		ModelPartData bone3 = button.addChild("bone3", ModelPartBuilder.create().uv(122, 101).cuboid(-0.5F, -1.55F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+		ModelPartData bone3 = button.addChild("bone3", ModelPartBuilder.create().uv(125, 16).cuboid(-0.5F, -1.55F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData button2 = rot7.addChild("button2", ModelPartBuilder.create().uv(101, 122).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(122, 98).cuboid(-0.5F, -1.4F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-2.25F, 0.5F, -2.0F));
+		ModelPartData button2 = rot7.addChild("button2", ModelPartBuilder.create().uv(9, 125).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
+		.uv(115, 124).cuboid(-0.5F, -1.4F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-2.25F, 0.5F, -2.0F));
 
-		ModelPartData bone4 = button2.addChild("bone4", ModelPartBuilder.create().uv(123, 119).cuboid(-0.5F, -1.75F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.4F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+		ModelPartData bone4 = button2.addChild("bone4", ModelPartBuilder.create().uv(125, 108).cuboid(-0.5F, -1.75F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.4F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData keyboard = rot7.addChild("keyboard", ModelPartBuilder.create().uv(23, 83).cuboid(-2.0F, -1.0F, -4.0F, 5.0F, 1.0F, 8.0F, new Dilation(-0.3F))
 		.uv(72, 89).cuboid(-1.5F, -1.25F, -3.5F, 4.0F, 1.0F, 7.0F, new Dilation(-0.2F))
 		.uv(88, 62).cuboid(-1.5F, -1.55F, -3.5F, 4.0F, 1.0F, 7.0F, new Dilation(-0.4F))
 		.uv(17, 66).cuboid(-1.5F, -1.65F, -3.5F, 4.0F, 1.0F, 7.0F, new Dilation(-0.4F)), ModelTransform.pivot(3.35F, 2.5F, 0.0F));
 
-		ModelPartData cash_reg = rot7.addChild("cash_reg", ModelPartBuilder.create().uv(42, 83).cuboid(-0.9F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(0.3F))
-		.uv(122, 92).cuboid(-0.2F, -0.7F, -1.4F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.of(2.0F, 2.0F, -9.0F, 0.0F, 0.0F, -0.5672F));
+		ModelPartData cash_reg = rot7.addChild("cash_reg", ModelPartBuilder.create().uv(53, 83).cuboid(-0.9F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(0.3F))
+		.uv(105, 124).cuboid(-0.2F, -0.7F, -1.4F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.of(2.0F, 2.0F, -9.0F, 0.0F, 0.0F, -0.5672F));
 
-		ModelPartData cube_r156 = cash_reg.addChild("cube_r156", ModelPartBuilder.create().uv(118, 77).cuboid(-0.15F, -1.25F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-0.5F, -0.5F, 0.0F, 0.0F, 0.0F, 0.7854F));
+		ModelPartData cube_r156 = cash_reg.addChild("cube_r156", ModelPartBuilder.create().uv(119, 13).cuboid(-0.15F, -1.25F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-0.5F, -0.5F, 0.0F, 0.0F, 0.0F, 0.7854F));
 
-		ModelPartData pump = rot7.addChild("pump", ModelPartBuilder.create().uv(117, 5).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.9661F, 2.03F, -5.0F, 0.0F, -1.0036F, -0.5672F));
+		ModelPartData pump = rot7.addChild("pump", ModelPartBuilder.create().uv(117, 44).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.9661F, 2.03F, -5.0F, 0.0F, -1.0036F, -0.5672F));
 
-		ModelPartData bone5 = pump.addChild("bone5", ModelPartBuilder.create().uv(74, 116).cuboid(-0.5F, -0.5F, -2.5F, 1.0F, 1.0F, 3.0F, new Dilation(-0.3F))
+		ModelPartData bone5 = pump.addChild("bone5", ModelPartBuilder.create().uv(117, 39).cuboid(-0.5F, -0.5F, -2.5F, 1.0F, 1.0F, 3.0F, new Dilation(-0.3F))
 		.uv(13, 100).cuboid(-1.0F, -1.0F, -2.7F, 2.0F, 2.0F, 1.0F, new Dilation(-0.4F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData pump2 = rot7.addChild("pump2", ModelPartBuilder.create().uv(117, 5).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.9661F, 2.03F, 5.0F, 0.0F, -0.5672F, -0.5672F));
+		ModelPartData pump2 = rot7.addChild("pump2", ModelPartBuilder.create().uv(117, 44).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.9661F, 2.03F, 5.0F, 0.0F, -0.5672F, -0.5672F));
 
-		ModelPartData bone6 = pump2.addChild("bone6", ModelPartBuilder.create().uv(74, 116).cuboid(-0.5F, -0.5F, -2.5F, 1.0F, 1.0F, 3.0F, new Dilation(-0.3F))
+		ModelPartData bone6 = pump2.addChild("bone6", ModelPartBuilder.create().uv(117, 39).cuboid(-0.5F, -0.5F, -2.5F, 1.0F, 1.0F, 3.0F, new Dilation(-0.3F))
 		.uv(13, 100).cuboid(-1.0F, -1.0F, -2.7F, 2.0F, 2.0F, 1.0F, new Dilation(-0.4F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
-		ModelPartData lever = rot7.addChild("lever", ModelPartBuilder.create().uv(118, 57).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(0.1F))
-		.uv(45, 123).cuboid(0.85F, -1.9F, -1.1F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(45, 123).cuboid(0.85F, -1.9F, 0.1F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(50, 123).cuboid(-1.9F, -1.7F, -1.25F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(50, 123).cuboid(-1.9F, -1.7F, 0.25F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-3.5F, 0.5F, -6.9F, 0.0F, 0.48F, 0.0F));
+		ModelPartData lever = rot7.addChild("lever", ModelPartBuilder.create().uv(118, 78).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(0.1F))
+		.uv(54, 125).cuboid(0.85F, -1.9F, -1.1F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(54, 125).cuboid(0.85F, -1.9F, 0.1F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(59, 125).cuboid(-1.9F, -1.7F, -1.25F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(59, 125).cuboid(-1.9F, -1.7F, 0.25F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-3.5F, 0.5F, -6.9F, 0.0F, 0.48F, 0.0F));
 
 		ModelPartData bone7 = lever.addChild("bone7", ModelPartBuilder.create().uv(0, 63).cuboid(-0.75F, -0.75F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.0F))
-		.uv(88, 122).cuboid(-0.5F, -0.5F, -0.65F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(83, 122).cuboid(-0.5F, -3.0F, -0.9F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(0.5F, -1.5F, 1.15F, 0.0F, 0.0F, 0.3927F));
+		.uv(100, 124).cuboid(-0.5F, -0.5F, -0.65F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(95, 124).cuboid(-0.5F, -3.0F, -0.9F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(0.5F, -1.5F, 1.15F, 0.0F, 0.0F, 0.3927F));
 
 		ModelPartData cube_r157 = bone7.addChild("cube_r157", ModelPartBuilder.create().uv(38, 0).cuboid(-1.0F, -2.0F, -0.001F, 1.0F, 2.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.25F, -0.75F, 0.001F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData bone8 = lever.addChild("bone8", ModelPartBuilder.create().uv(0, 63).cuboid(-0.75F, -0.75F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.0F))
-		.uv(83, 122).cuboid(-0.5F, -3.0F, -0.1F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(88, 122).cuboid(-0.5F, -0.5F, -0.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.of(0.5F, -1.5F, -1.15F, 0.0F, 0.0F, 0.3927F));
+		.uv(95, 124).cuboid(-0.5F, -3.0F, -0.1F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(100, 124).cuboid(-0.5F, -0.5F, -0.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.of(0.5F, -1.5F, -1.15F, 0.0F, 0.0F, 0.3927F));
 
 		ModelPartData cube_r158 = bone8.addChild("cube_r158", ModelPartBuilder.create().uv(38, 0).cuboid(-1.0F, -2.0F, -0.001F, 1.0F, 2.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.25F, -0.75F, 0.001F, -0.2618F, 0.0F, 0.0F));
 
@@ -519,20 +518,20 @@ public class CopperConsoleModel extends ConsoleModel {
 		.uv(104, 63).cuboid(-7.75F, -1.5F, -1.8F, 6.0F, 0.0F, 3.0F, new Dilation(0.0F))
 		.uv(103, 26).cuboid(-7.75F, -1.8F, -1.8F, 6.0F, 0.0F, 3.0F, new Dilation(0.0F))
 		.uv(63, 27).cuboid(-5.0F, -1.55F, -1.4F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(123, 115).cuboid(-5.1F, -2.25F, -1.4F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(123, 115).cuboid(-4.5F, -2.25F, -1.4F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(123, 115).cuboid(-3.9F, -2.25F, -1.4F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(123, 115).cuboid(-4.5F, -2.25F, -0.3F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(123, 115).cuboid(-5.1F, -2.25F, -0.3F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(123, 115).cuboid(-3.9F, -2.25F, -0.3F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(72, 125).cuboid(-5.1F, -2.25F, -1.4F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(72, 125).cuboid(-4.5F, -2.25F, -1.4F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(72, 125).cuboid(-3.9F, -2.25F, -1.4F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(72, 125).cuboid(-4.5F, -2.25F, -0.3F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(72, 125).cuboid(-5.1F, -2.25F, -0.3F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(72, 125).cuboid(-3.9F, -2.25F, -0.3F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
 		.uv(63, 27).cuboid(-5.0F, -1.55F, -0.3F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(40, 123).cuboid(-6.05F, -2.15F, -0.3F, 1.0F, 1.0F, 1.0F, new Dilation(-0.1F))
+		.uv(49, 125).cuboid(-6.05F, -2.15F, -0.3F, 1.0F, 1.0F, 1.0F, new Dilation(-0.1F))
 		.uv(88, 101).cuboid(2.45F, -1.85F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
 		.uv(8, 63).cuboid(2.45F, -2.05F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.1F))
 		.uv(36, 30).cuboid(2.7F, -2.25F, -0.25F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
 		.uv(67, 101).cuboid(1.7F, -1.85F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(55, 117).cuboid(-2.0F, -2.5F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F))
-		.uv(55, 117).cuboid(0.0F, -2.5F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-5.0F, 0.75F, 6.1F, 0.0227F, -0.4795F, -0.0492F));
+		.uv(118, 57).cuboid(-2.0F, -2.5F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F))
+		.uv(118, 57).cuboid(0.0F, -2.5F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-5.0F, 0.75F, 6.1F, 0.0227F, -0.4795F, -0.0492F));
 
 		ModelPartData bone9 = bell.addChild("bone9", ModelPartBuilder.create().uv(79, 84).cuboid(-1.65F, -0.1F, -0.65F, 2.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-1.0F, -2.5F, 0.0F, 0.0F, -0.1745F, 0.0F));
 
@@ -541,37 +540,37 @@ public class CopperConsoleModel extends ConsoleModel {
 		ModelPartData bone11 = rot7.addChild("bone11", ModelPartBuilder.create().uv(98, 89).cuboid(-0.75F, -1.1F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.1F))
 		.uv(42, 88).cuboid(-3.05F, -1.55F, 0.5F, 2.0F, 1.0F, 1.0F, new Dilation(-0.2F))
 		.uv(42, 88).cuboid(-2.25F, -1.55F, 1.1F, 2.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(118, 116).cuboid(0.25F, -0.9F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F))
-		.uv(88, 89).cuboid(-0.75F, -1.35F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(-0.1F))
-		.uv(65, 122).cuboid(-2.15F, -1.15F, -0.55F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(100, 0).cuboid(-0.75F, -2.55F, -1.0F, 1.0F, 2.0F, 1.0F, new Dilation(-0.35F))
-		.uv(100, 0).cuboid(-0.75F, -2.55F, 0.0F, 1.0F, 2.0F, 1.0F, new Dilation(-0.35F))
-		.uv(122, 66).cuboid(-0.75F, -2.55F, -1.0F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(122, 66).cuboid(-0.75F, -2.55F, 0.0F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.of(-7.0F, 0.5F, -5.1F, 0.0F, 0.0F, -0.0436F));
+		.uv(47, 120).cuboid(0.25F, -0.9F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F))
+		.uv(16, 89).cuboid(-0.75F, -1.35F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(-0.1F))
+		.uv(124, 86).cuboid(-2.15F, -1.15F, -0.55F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(103, 11).cuboid(-0.75F, -2.55F, -1.0F, 1.0F, 2.0F, 1.0F, new Dilation(-0.35F))
+		.uv(103, 11).cuboid(-0.75F, -2.55F, 0.0F, 1.0F, 2.0F, 1.0F, new Dilation(-0.35F))
+		.uv(90, 124).cuboid(-0.75F, -2.55F, -1.0F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(90, 124).cuboid(-0.75F, -2.55F, 0.0F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.of(-7.0F, 0.5F, -5.1F, 0.0F, 0.0F, -0.0436F));
 
 		ModelPartData bone12 = rot7.addChild("bone12", ModelPartBuilder.create().uv(79, 79).cuboid(-1.8107F, 0.2016F, -4.0F, 5.0F, 1.0F, 8.0F, new Dilation(0.0F))
 		.uv(86, 48).cuboid(-1.8107F, 0.4016F, -4.0F, 5.0F, 0.0F, 8.0F, new Dilation(0.0F))
-		.uv(122, 52).cuboid(-1.55F, -0.1F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-12.55F, -2.15F, 0.0F, 0.0F, 0.0F, 0.5236F));
+		.uv(85, 124).cuboid(-1.55F, -0.1F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-12.55F, -2.15F, 0.0F, 0.0F, 0.0F, 0.5236F));
 
-		ModelPartData valve = rot7.addChild("valve", ModelPartBuilder.create().uv(122, 49).cuboid(-0.5F, -2.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(17, 122).cuboid(0.25F, -2.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(119, 13).cuboid(-0.5F, -1.25F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-17.75F, -4.25F, 0.5F, 0.0F, 0.0F, -0.6981F));
+		ModelPartData valve = rot7.addChild("valve", ModelPartBuilder.create().uv(80, 124).cuboid(-0.5F, -2.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
+		.uv(17, 124).cuboid(0.25F, -2.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(76, 121).cuboid(-0.5F, -1.25F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-17.75F, -4.25F, 0.5F, 0.0F, 0.0F, -0.6981F));
 
-		ModelPartData bone13 = valve.addChild("bone13", ModelPartBuilder.create().uv(119, 10).cuboid(-1.05F, -0.5F, -0.5F, 2.0F, 1.0F, 1.0F, new Dilation(-0.4F))
-		.uv(12, 122).cuboid(-0.05F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.15F))
-		.uv(67, 96).cuboid(0.7F, -1.25F, -1.25F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(123, 35).cuboid(0.15F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(1.0F, -1.5F, 0.0F, 0.7854F, 0.0F, 0.0F));
+		ModelPartData bone13 = valve.addChild("bone13", ModelPartBuilder.create().uv(120, 63).cuboid(-1.05F, -0.5F, -0.5F, 2.0F, 1.0F, 1.0F, new Dilation(-0.4F))
+		.uv(124, 4).cuboid(-0.05F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.15F))
+		.uv(100, 0).cuboid(0.7F, -1.25F, -1.25F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(125, 43).cuboid(0.15F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(1.0F, -1.5F, 0.0F, 0.7854F, 0.0F, 0.0F));
 
-		ModelPartData valve2 = rot7.addChild("valve2", ModelPartBuilder.create().uv(122, 49).cuboid(-0.5F, -2.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(17, 122).cuboid(0.25F, -2.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(119, 13).cuboid(-0.5F, -1.25F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-17.5F, -4.0F, 2.0F, -0.3054F, 0.0F, -0.6981F));
+		ModelPartData valve2 = rot7.addChild("valve2", ModelPartBuilder.create().uv(80, 124).cuboid(-0.5F, -2.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
+		.uv(17, 124).cuboid(0.25F, -2.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(76, 121).cuboid(-0.5F, -1.25F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-17.5F, -4.0F, 2.0F, -0.3054F, 0.0F, -0.6981F));
 
-		ModelPartData bone14 = valve2.addChild("bone14", ModelPartBuilder.create().uv(119, 10).cuboid(-1.05F, -0.5F, -0.5F, 2.0F, 1.0F, 1.0F, new Dilation(-0.4F))
-		.uv(12, 122).cuboid(-0.05F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.15F))
-		.uv(67, 96).cuboid(0.7F, -1.25F, -1.25F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(123, 35).cuboid(0.15F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(1.0F, -1.5F, 0.0F, 1.0472F, 0.0F, 0.0F));
+		ModelPartData bone14 = valve2.addChild("bone14", ModelPartBuilder.create().uv(120, 63).cuboid(-1.05F, -0.5F, -0.5F, 2.0F, 1.0F, 1.0F, new Dilation(-0.4F))
+		.uv(124, 4).cuboid(-0.05F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.15F))
+		.uv(100, 0).cuboid(0.7F, -1.25F, -1.25F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(125, 43).cuboid(0.15F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(1.0F, -1.5F, 0.0F, 1.0472F, 0.0F, 0.0F));
 
-		ModelPartData cables2 = rot7.addChild("cables2", ModelPartBuilder.create().uv(6, 115).cuboid(-0.25F, 0.5F, -6.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
+		ModelPartData cables2 = rot7.addChild("cables2", ModelPartBuilder.create().uv(0, 120).cuboid(-0.25F, 0.5F, -6.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
 		.uv(77, 12).cuboid(-1.5F, 1.0F, 5.25F, 4.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(1.0F, 8.25F, 0.0F, 0.0F, 0.0F, 2.3562F));
 
 		ModelPartData cube_r159 = cables2.addChild("cube_r159", ModelPartBuilder.create().uv(100, 96).cuboid(-1.0F, 0.0F, 0.0F, 3.0F, 0.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
@@ -586,48 +585,48 @@ public class CopperConsoleModel extends ConsoleModel {
 
 		ModelPartData lever2 = rot8.addChild("lever2", ModelPartBuilder.create().uv(76, 98).cuboid(-1.0F, -2.5F, -1.0F, 2.0F, 3.0F, 2.0F, new Dilation(0.0F))
 		.uv(60, 75).cuboid(-1.0F, -2.5F, -1.0F, 2.0F, 3.0F, 2.0F, new Dilation(0.001F))
-		.uv(109, 116).cuboid(-0.75F, -2.75F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.1F))
-		.uv(0, 115).cuboid(-0.5F, -2.0F, -1.5F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(-5.5F, -0.35F, 5.75F, 0.0F, -0.48F, 0.0F));
+		.uv(117, 5).cuboid(-0.75F, -2.75F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.1F))
+		.uv(74, 116).cuboid(-0.5F, -2.0F, -1.5F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(-5.5F, -0.35F, 5.75F, 0.0F, -0.48F, 0.0F));
 
 		ModelPartData lights2 = lever2.addChild("lights2", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData light = lights2.addChild("light", ModelPartBuilder.create().uv(88, 65).cuboid(0.0F, 0.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.03F)), ModelTransform.pivot(0.0F, -1.5F, 0.0F));
+		ModelPartData light = lights2.addChild("light", ModelPartBuilder.create().uv(86, 52).cuboid(0.0F, 0.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.03F)), ModelTransform.pivot(0.0F, -1.5F, 0.0F));
 
-		ModelPartData light2 = lights2.addChild("light2", ModelPartBuilder.create().uv(88, 65).cuboid(0.0F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.03F)), ModelTransform.pivot(0.0F, -1.5F, 0.0F));
+		ModelPartData light2 = lights2.addChild("light2", ModelPartBuilder.create().uv(86, 52).cuboid(0.0F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.03F)), ModelTransform.pivot(0.0F, -1.5F, 0.0F));
 
-		ModelPartData light3 = lights2.addChild("light3", ModelPartBuilder.create().uv(88, 65).cuboid(0.0F, 0.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.03F)), ModelTransform.of(0.0F, -1.5F, 0.0F, 0.0F, 0.0F, -1.5708F));
+		ModelPartData light3 = lights2.addChild("light3", ModelPartBuilder.create().uv(86, 52).cuboid(0.0F, 0.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.03F)), ModelTransform.of(0.0F, -1.5F, 0.0F, 0.0F, 0.0F, -1.5708F));
 
-		ModelPartData light4 = lights2.addChild("light4", ModelPartBuilder.create().uv(88, 65).cuboid(0.0F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.03F)), ModelTransform.of(0.0F, -1.5F, 0.0F, 0.0F, 0.0F, -1.5708F));
+		ModelPartData light4 = lights2.addChild("light4", ModelPartBuilder.create().uv(86, 52).cuboid(0.0F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.03F)), ModelTransform.of(0.0F, -1.5F, 0.0F, 0.0F, 0.0F, -1.5708F));
 
-		ModelPartData light5 = lights2.addChild("light5", ModelPartBuilder.create().uv(88, 65).cuboid(0.0F, 0.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.03F)), ModelTransform.of(0.0F, -1.5F, 0.0F, 0.0F, 0.0F, -3.1416F));
+		ModelPartData light5 = lights2.addChild("light5", ModelPartBuilder.create().uv(86, 52).cuboid(0.0F, 0.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.03F)), ModelTransform.of(0.0F, -1.5F, 0.0F, 0.0F, 0.0F, -3.1416F));
 
 		ModelPartData bone29 = lever2.addChild("bone29", ModelPartBuilder.create().uv(28, 30).cuboid(-0.75F, -2.25F, -1.25F, 1.0F, 2.0F, 0.0F, new Dilation(0.0F))
-		.uv(16, 89).cuboid(-0.5F, -3.05F, -1.85F, 1.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(0.0F, -1.5F, 0.0F, 0.0F, 0.0F, -1.309F));
+		.uv(88, 65).cuboid(-0.5F, -3.05F, -1.85F, 1.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(0.0F, -1.5F, 0.0F, 0.0F, 0.0F, -1.309F));
 
-		ModelPartData bone30 = lever2.addChild("bone30", ModelPartBuilder.create().uv(16, 89).cuboid(-0.5F, -3.05F, -0.2F, 1.0F, 1.0F, 2.0F, new Dilation(-0.2F))
+		ModelPartData bone30 = lever2.addChild("bone30", ModelPartBuilder.create().uv(88, 65).cuboid(-0.5F, -3.05F, -0.2F, 1.0F, 1.0F, 2.0F, new Dilation(-0.2F))
 		.uv(28, 30).cuboid(-0.75F, -2.25F, 1.25F, 1.0F, 2.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -1.5F, 0.0F, 0.0F, 0.0F, -1.2217F));
 
-		ModelPartData disc = rot8.addChild("disc", ModelPartBuilder.create().uv(97, 118).cuboid(-1.75F, 0.3F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F))
-		.uv(117, 45).cuboid(-2.6F, 0.2F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F))
-		.uv(4, 122).cuboid(1.85F, 0.15F, -2.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.1F)), ModelTransform.pivot(-4.0F, -0.5F, 0.0F));
+		ModelPartData disc = rot8.addChild("disc", ModelPartBuilder.create().uv(7, 120).cuboid(-1.75F, 0.3F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F))
+		.uv(117, 116).cuboid(-2.6F, 0.2F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F))
+		.uv(121, 123).cuboid(1.85F, 0.15F, -2.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.1F)), ModelTransform.pivot(-4.0F, -0.5F, 0.0F));
 
-		ModelPartData cube_r162 = disc.addChild("cube_r162", ModelPartBuilder.create().uv(117, 45).cuboid(-2.6F, 0.0F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.2F, 0.0F, -3.1416F, 1.0472F, 3.1416F));
+		ModelPartData cube_r162 = disc.addChild("cube_r162", ModelPartBuilder.create().uv(117, 116).cuboid(-2.6F, 0.0F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.2F, 0.0F, -3.1416F, 1.0472F, 3.1416F));
 
-		ModelPartData cube_r163 = disc.addChild("cube_r163", ModelPartBuilder.create().uv(117, 45).cuboid(-2.6F, 0.0F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.2F, 0.0F, -3.1416F, -1.0472F, 3.1416F));
+		ModelPartData cube_r163 = disc.addChild("cube_r163", ModelPartBuilder.create().uv(117, 116).cuboid(-2.6F, 0.0F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.2F, 0.0F, -3.1416F, -1.0472F, 3.1416F));
 
-		ModelPartData cube_r164 = disc.addChild("cube_r164", ModelPartBuilder.create().uv(117, 45).cuboid(-2.6F, 0.0F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.2F, 0.0F, -3.1416F, 0.0F, 3.1416F));
+		ModelPartData cube_r164 = disc.addChild("cube_r164", ModelPartBuilder.create().uv(117, 116).cuboid(-2.6F, 0.0F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.2F, 0.0F, -3.1416F, 0.0F, 3.1416F));
 
-		ModelPartData cube_r165 = disc.addChild("cube_r165", ModelPartBuilder.create().uv(117, 45).cuboid(-2.6F, 0.0F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F))
-		.uv(97, 118).cuboid(-1.75F, 0.1F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.2F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData cube_r165 = disc.addChild("cube_r165", ModelPartBuilder.create().uv(117, 116).cuboid(-2.6F, 0.0F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F))
+		.uv(7, 120).cuboid(-1.75F, 0.1F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.2F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-		ModelPartData cube_r166 = disc.addChild("cube_r166", ModelPartBuilder.create().uv(117, 45).cuboid(-2.6F, 0.0F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F))
-		.uv(97, 118).cuboid(-1.75F, 0.1F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.2F, 0.0F, 0.0F, 1.0472F, 0.0F));
+		ModelPartData cube_r166 = disc.addChild("cube_r166", ModelPartBuilder.create().uv(117, 116).cuboid(-2.6F, 0.0F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F))
+		.uv(7, 120).cuboid(-1.75F, 0.1F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.2F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
-		ModelPartData cube_r167 = disc.addChild("cube_r167", ModelPartBuilder.create().uv(97, 118).cuboid(-1.75F, 0.0F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.3F, 0.0F, -3.1416F, 1.0472F, 3.1416F));
+		ModelPartData cube_r167 = disc.addChild("cube_r167", ModelPartBuilder.create().uv(7, 120).cuboid(-1.75F, 0.0F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.3F, 0.0F, -3.1416F, 1.0472F, 3.1416F));
 
-		ModelPartData cube_r168 = disc.addChild("cube_r168", ModelPartBuilder.create().uv(97, 118).cuboid(-1.75F, 0.0F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.3F, 0.0F, -3.1416F, -1.0472F, 3.1416F));
+		ModelPartData cube_r168 = disc.addChild("cube_r168", ModelPartBuilder.create().uv(7, 120).cuboid(-1.75F, 0.0F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.3F, 0.0F, -3.1416F, -1.0472F, 3.1416F));
 
-		ModelPartData cube_r169 = disc.addChild("cube_r169", ModelPartBuilder.create().uv(97, 118).cuboid(-1.75F, 0.0F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.3F, 0.0F, -3.1416F, 0.0F, 3.1416F));
+		ModelPartData cube_r169 = disc.addChild("cube_r169", ModelPartBuilder.create().uv(7, 120).cuboid(-1.75F, 0.0F, -1.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.3F, 0.0F, -3.1416F, 0.0F, 3.1416F));
 
 		ModelPartData bone31 = disc.addChild("bone31", ModelPartBuilder.create().uv(28, 45).cuboid(-1.0F, -1.0F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.0F))
 		.uv(70, 12).cuboid(-0.5F, 0.0F, -0.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(1.75F, 0.05F, 0.0F, 0.0F, 3.1416F, 0.0F));
@@ -644,44 +643,44 @@ public class CopperConsoleModel extends ConsoleModel {
 		ModelPartData bone33 = disc.addChild("bone33", ModelPartBuilder.create().uv(28, 45).cuboid(-1.0F, -1.0F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.0F))
 		.uv(70, 12).cuboid(-0.5F, 0.0F, -0.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.05F, 1.75F, 0.0F, 1.5708F, 0.0F));
 
-		ModelPartData dial = rot8.addChild("dial", ModelPartBuilder.create().uv(0, 89).cuboid(0.0F, -1.25F, -1.25F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(113, 121).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(1.25F, 0.9F, 9.0F, 0.0F, 0.0F, -0.5672F));
+		ModelPartData dial = rot8.addChild("dial", ModelPartBuilder.create().uv(67, 96).cuboid(0.0F, -1.25F, -1.25F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(123, 114).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(1.25F, 0.9F, 9.0F, 0.0F, 0.0F, -0.5672F));
 
 		ModelPartData crank = rot8.addChild("crank", ModelPartBuilder.create().uv(28, 15).cuboid(-0.2F, -0.5F, -0.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(1.2686F, 0.6717F, -9.75F, 0.0F, 0.0F, -0.5672F));
 
-		ModelPartData bone36 = crank.addChild("bone36", ModelPartBuilder.create().uv(118, 89).cuboid(-0.6F, -0.5F, -0.5F, 2.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(121, 109).cuboid(0.8F, 0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(57, 48).cuboid(1.1F, -0.25F, -0.25F, 0.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.25F, 0.0F, 0.0F, -0.2182F, 0.0F, 0.0F));
+		ModelPartData bone36 = crank.addChild("bone36", ModelPartBuilder.create().uv(40, 120).cuboid(-0.6F, -0.5F, -0.5F, 2.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(123, 92).cuboid(0.8F, 0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(11, 66).cuboid(1.1F, -0.25F, -0.25F, 0.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.25F, 0.0F, 0.0F, -0.2182F, 0.0F, 0.0F));
 
 		ModelPartData crank2 = rot8.addChild("crank2", ModelPartBuilder.create().uv(28, 15).cuboid(-0.2F, -0.5F, -0.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(1.2686F, 0.6717F, -8.25F, 0.0F, 0.0F, -0.5672F));
 
-		ModelPartData bone37 = crank2.addChild("bone37", ModelPartBuilder.create().uv(118, 89).cuboid(-0.6F, -0.5F, -0.5F, 2.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(121, 109).cuboid(0.8F, 0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(57, 48).cuboid(1.1F, -0.25F, -0.25F, 0.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-1.0F, 0.0F, 0.0F, 0.0873F, 0.0F, 0.0F));
+		ModelPartData bone37 = crank2.addChild("bone37", ModelPartBuilder.create().uv(40, 120).cuboid(-0.6F, -0.5F, -0.5F, 2.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(123, 92).cuboid(0.8F, 0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(11, 66).cuboid(1.1F, -0.25F, -0.25F, 0.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-1.0F, 0.0F, 0.0F, 0.0873F, 0.0F, 0.0F));
 
 		ModelPartData button3 = rot8.addChild("button3", ModelPartBuilder.create().uv(63, 40).cuboid(-0.5F, 0.0F, -0.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-2.0F, -0.25F, -4.0F));
 
-		ModelPartData bone38 = button3.addChild("bone38", ModelPartBuilder.create().uv(108, 121).cuboid(-0.5F, -0.75F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+		ModelPartData bone38 = button3.addChild("bone38", ModelPartBuilder.create().uv(123, 75).cuboid(-0.5F, -0.75F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData cables = rot8.addChild("cables", ModelPartBuilder.create().uv(6, 115).cuboid(-0.25F, 0.5F, -6.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
+		ModelPartData cables = rot8.addChild("cables", ModelPartBuilder.create().uv(0, 120).cuboid(-0.25F, 0.5F, -6.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
 		.uv(77, 12).cuboid(-1.5F, 1.0F, 5.25F, 4.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(1.0F, 8.25F, 0.0F, 0.0F, 0.0F, 2.3562F));
 
 		ModelPartData cube_r170 = cables.addChild("cube_r170", ModelPartBuilder.create().uv(100, 96).cuboid(-1.0F, 0.0F, 0.0F, 3.0F, 0.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
 
 		ModelPartData cube_r171 = cables.addChild("cube_r171", ModelPartBuilder.create().uv(101, 33).cuboid(-1.0F, 0.0F, -6.0F, 3.0F, 0.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.1745F, 0.0F, 0.0F));
 
-		ModelPartData lever3 = rot8.addChild("lever3", ModelPartBuilder.create().uv(74, 112).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(74, 112).cuboid(-7.0F, -1.0F, -1.0F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(28, 108).cuboid(-1.0F, -1.8F, -1.0F, 2.0F, 1.0F, 1.0F, new Dilation(-0.1F))
+		ModelPartData lever3 = rot8.addChild("lever3", ModelPartBuilder.create().uv(110, 119).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
+		.uv(110, 119).cuboid(-7.0F, -1.0F, -1.0F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
+		.uv(119, 100).cuboid(-1.0F, -1.8F, -1.0F, 2.0F, 1.0F, 1.0F, new Dilation(-0.1F))
 		.uv(51, 72).cuboid(-6.0F, -1.7F, -1.0F, 6.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(28, 108).cuboid(-7.0F, -1.8F, -1.0F, 2.0F, 1.0F, 1.0F, new Dilation(-0.1F))
-		.uv(78, 121).cuboid(-6.5F, -2.05F, -1.0F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(78, 121).cuboid(-0.5F, -2.05F, -1.0F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(114, 72).cuboid(-4.0F, -2.5F, -1.5F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(96, 121).cuboid(-3.5F, -2.0F, 0.25F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-2.5F, 0.0F, -6.75F, -0.0182F, 0.4796F, -0.0393F));
+		.uv(119, 100).cuboid(-7.0F, -1.8F, -1.0F, 2.0F, 1.0F, 1.0F, new Dilation(-0.1F))
+		.uv(63, 123).cuboid(-6.5F, -2.05F, -1.0F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(63, 123).cuboid(-0.5F, -2.05F, -1.0F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(0, 115).cuboid(-4.0F, -2.5F, -1.5F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(123, 69).cuboid(-3.5F, -2.0F, 0.25F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-2.5F, 0.0F, -6.75F, -0.0182F, 0.4796F, -0.0393F));
 
 		ModelPartData bone39 = lever3.addChild("bone39", ModelPartBuilder.create().uv(70, 38).cuboid(0.0F, -0.75F, 0.0F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F))
-		.uv(73, 121).cuboid(-0.5F, -0.5F, 1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-3.0F, -1.5F, 1.0F, 0.48F, 0.0F, 0.0F));
+		.uv(45, 123).cuboid(-0.5F, -0.5F, 1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-3.0F, -1.5F, 1.0F, 0.48F, 0.0F, 0.0F));
 
 		ModelPartData cube_r172 = bone39.addChild("cube_r172", ModelPartBuilder.create().uv(70, 38).cuboid(0.0F, -0.75F, 0.25F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -0.25F, 0.0F, 0.0F, -1.5708F));
 
@@ -691,45 +690,45 @@ public class CopperConsoleModel extends ConsoleModel {
 		ModelPartData cube_r173 = panel.addChild("cube_r173", ModelPartBuilder.create().uv(83, 39).cuboid(-2.75F, -0.4F, -4.2F, 4.0F, 0.0F, 5.0F, new Dilation(0.0F))
 		.uv(104, 57).cuboid(-2.75F, -0.3F, -4.2F, 4.0F, 0.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.2618F));
 
-		ModelPartData dial2 = panel.addChild("dial2", ModelPartBuilder.create().uv(121, 71).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.1F))
+		ModelPartData dial2 = panel.addChild("dial2", ModelPartBuilder.create().uv(40, 123).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.1F))
 		.uv(34, 45).cuboid(-0.5F, -1.75F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(1.25F, -0.1F, -2.25F));
 
-		ModelPartData dial3 = panel.addChild("dial3", ModelPartBuilder.create().uv(121, 71).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		ModelPartData dial3 = panel.addChild("dial3", ModelPartBuilder.create().uv(40, 123).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
 		.uv(34, 45).cuboid(-0.5F, -1.75F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(1.25F, -0.1F, 0.25F));
 
-		ModelPartData light15 = panel.addChild("light15", ModelPartBuilder.create().uv(60, 121).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-0.5F, -0.75F, -2.4F));
+		ModelPartData light15 = panel.addChild("light15", ModelPartBuilder.create().uv(123, 39).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-0.5F, -0.75F, -2.4F));
 
-		ModelPartData bone40 = light15.addChild("bone40", ModelPartBuilder.create().uv(55, 121).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.19F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+		ModelPartData bone40 = light15.addChild("bone40", ModelPartBuilder.create().uv(123, 33).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.19F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData light16 = panel.addChild("light16", ModelPartBuilder.create().uv(60, 121).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-0.5F, -0.75F, -1.5F));
+		ModelPartData light16 = panel.addChild("light16", ModelPartBuilder.create().uv(123, 39).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-0.5F, -0.75F, -1.5F));
 
-		ModelPartData bone41 = light16.addChild("bone41", ModelPartBuilder.create().uv(55, 121).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.19F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+		ModelPartData bone41 = light16.addChild("bone41", ModelPartBuilder.create().uv(123, 33).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.19F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData light17 = panel.addChild("light17", ModelPartBuilder.create().uv(60, 121).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-0.5F, -0.75F, -0.6F));
+		ModelPartData light17 = panel.addChild("light17", ModelPartBuilder.create().uv(123, 39).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-0.5F, -0.75F, -0.6F));
 
-		ModelPartData bone42 = light17.addChild("bone42", ModelPartBuilder.create().uv(55, 121).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.19F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+		ModelPartData bone42 = light17.addChild("bone42", ModelPartBuilder.create().uv(123, 33).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.19F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData light18 = panel.addChild("light18", ModelPartBuilder.create().uv(60, 121).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-0.5F, -0.75F, 0.3F));
+		ModelPartData light18 = panel.addChild("light18", ModelPartBuilder.create().uv(123, 39).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-0.5F, -0.75F, 0.3F));
 
-		ModelPartData bone43 = light18.addChild("bone43", ModelPartBuilder.create().uv(55, 121).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.19F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+		ModelPartData bone43 = light18.addChild("bone43", ModelPartBuilder.create().uv(123, 33).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.19F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData fluid_reservoir = rot8.addChild("fluid_reservoir", ModelPartBuilder.create().uv(79, 79).cuboid(0.0F, -1.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-15.0F, -2.0F, -2.5F, 0.0F, 0.0F, -0.829F));
+		ModelPartData fluid_reservoir = rot8.addChild("fluid_reservoir", ModelPartBuilder.create().uv(42, 83).cuboid(0.0F, -1.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-15.0F, -2.0F, -2.5F, 0.0F, 0.0F, -0.829F));
 
-		ModelPartData cube_r174 = fluid_reservoir.addChild("cube_r174", ModelPartBuilder.create().uv(104, 118).cuboid(-1.2549F, -2.1001F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.0999F))
-		.uv(121, 29).cuboid(-0.5049F, -2.6001F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(8, 119).cuboid(-0.5049F, -2.1001F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(3.75F, -1.0F, 0.0F, 0.0F, 0.0F, 0.3491F));
+		ModelPartData cube_r174 = fluid_reservoir.addChild("cube_r174", ModelPartBuilder.create().uv(121, 0).cuboid(-1.2549F, -2.1001F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.0999F))
+		.uv(5, 123).cuboid(-0.5049F, -2.6001F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(71, 121).cuboid(-0.5049F, -2.1001F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(3.75F, -1.0F, 0.0F, 0.0F, 0.0F, 0.3491F));
 
-		ModelPartData cube_r175 = fluid_reservoir.addChild("cube_r175", ModelPartBuilder.create().uv(109, 89).cuboid(-0.5546F, -0.5912F, -0.5F, 3.0F, 1.0F, 1.0F, new Dilation(-0.1F)), ModelTransform.of(1.75F, -1.25F, 0.0F, 0.0F, 0.0F, -0.3054F));
+		ModelPartData cube_r175 = fluid_reservoir.addChild("cube_r175", ModelPartBuilder.create().uv(101, 118).cuboid(-0.5546F, -0.5912F, -0.5F, 3.0F, 1.0F, 1.0F, new Dilation(-0.1F)), ModelTransform.of(1.75F, -1.25F, 0.0F, 0.0F, 0.0F, -0.3054F));
 
-		ModelPartData cube_r176 = fluid_reservoir.addChild("cube_r176", ModelPartBuilder.create().uv(114, 36).cuboid(0.35F, -1.45F, -0.5F, 3.0F, 1.0F, 1.0F, new Dilation(-0.099F))
-		.uv(121, 0).cuboid(0.75F, -0.85F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
-		.uv(121, 0).cuboid(2.0F, -0.85F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		ModelPartData cube_r176 = fluid_reservoir.addChild("cube_r176", ModelPartBuilder.create().uv(119, 10).cuboid(0.35F, -1.45F, -0.5F, 3.0F, 1.0F, 1.0F, new Dilation(-0.099F))
+		.uv(0, 123).cuboid(0.75F, -0.85F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
+		.uv(0, 123).cuboid(2.0F, -0.85F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.3F))
 		.uv(72, 56).cuboid(0.0F, -0.45F, -0.5F, 4.0F, 1.0F, 1.0F, new Dilation(-0.1F)), ModelTransform.of(0.75F, 0.0F, 0.0F, 0.0F, 0.0F, -0.1309F));
 
-		ModelPartData cube_r177 = fluid_reservoir.addChild("cube_r177", ModelPartBuilder.create().uv(120, 63).cuboid(-0.8158F, -0.9721F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.2F)), ModelTransform.of(4.75F, 0.0F, 0.0F, 0.0F, 0.0F, -0.5672F));
+		ModelPartData cube_r177 = fluid_reservoir.addChild("cube_r177", ModelPartBuilder.create().uv(122, 120).cuboid(-0.8158F, -0.9721F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.2F)), ModelTransform.of(4.75F, 0.0F, 0.0F, 0.0F, 0.0F, -0.5672F));
 
 		ModelPartData needle = rot8.addChild("needle", ModelPartBuilder.create().uv(39, 33).cuboid(0.0F, -3.0F, -0.25F, 0.0F, 3.0F, 1.0F, new Dilation(0.0F))
-		.uv(50, 120).cuboid(-0.5F, -2.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.1F)), ModelTransform.pivot(-4.0F, 0.0F, 0.0F));
+		.uv(111, 122).cuboid(-0.5F, -2.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.1F)), ModelTransform.pivot(-4.0F, 0.0F, 0.0F));
 
 		ModelPartData cube_r178 = needle.addChild("cube_r178", ModelPartBuilder.create().uv(39, 33).cuboid(0.0F, -3.0F, -0.25F, 0.0F, 3.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
 
@@ -737,28 +736,29 @@ public class CopperConsoleModel extends ConsoleModel {
 
 		ModelPartData rot9 = panel_3.addChild("rot9", ModelPartBuilder.create(), ModelTransform.of(20.0F, -13.0F, 0.0F, 0.0F, 0.0F, 0.5672F));
 
-		ModelPartData meter = rot9.addChild("meter", ModelPartBuilder.create().uv(113, 67).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.2F))
-		.uv(33, 66).cuboid(-0.15F, -1.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-14.0F, -1.0F, -3.25F, 0.0F, 0.0F, -0.829F));
+		ModelPartData meter = rot9.addChild("meter", ModelPartBuilder.create().uv(111, 114).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(79, 79).cuboid(-0.15F, -1.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-14.0F, -1.0F, -3.25F, 0.0F, 0.0F, -0.829F));
 
 		ModelPartData bone15 = meter.addChild("bone15", ModelPartBuilder.create().uv(28, 0).cuboid(0.85F, -1.0F, -0.25F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.1F, 0.25F, 0.0F, 0.6109F, 0.0F, 0.0F));
 
-		ModelPartData meter2 = rot9.addChild("meter2", ModelPartBuilder.create().uv(113, 67).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.2F))
-		.uv(33, 66).cuboid(-0.15F, -1.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-14.0F, -1.0F, -1.15F, 0.0F, 0.0F, -0.829F));
+		ModelPartData meter2 = rot9.addChild("meter2", ModelPartBuilder.create().uv(111, 114).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(79, 79).cuboid(-0.15F, -1.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-14.0F, -1.0F, -1.15F, 0.0F, 0.0F, -0.829F));
 
 		ModelPartData bone16 = meter2.addChild("bone16", ModelPartBuilder.create().uv(28, 0).cuboid(0.85F, -1.0F, -0.25F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.1F, 0.25F, 0.0F, 0.6109F, 0.0F, 0.0F));
 
-		ModelPartData meter3 = rot9.addChild("meter3", ModelPartBuilder.create().uv(113, 67).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.2F))
-		.uv(33, 66).cuboid(-0.15F, -1.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-14.0F, -1.0F, 1.15F, 0.0F, 0.0F, -0.829F));
+		ModelPartData meter3 = rot9.addChild("meter3", ModelPartBuilder.create().uv(111, 114).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(79, 79).cuboid(-0.15F, -1.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-14.0F, -1.0F, 1.15F, 0.0F, 0.0F, -0.829F));
 
 		ModelPartData bone17 = meter3.addChild("bone17", ModelPartBuilder.create().uv(28, 0).cuboid(0.85F, -1.0F, -0.25F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.1F, 0.25F, 0.0F, 0.6109F, 0.0F, 0.0F));
 
-		ModelPartData meter4 = rot9.addChild("meter4", ModelPartBuilder.create().uv(113, 67).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.2F))
-		.uv(33, 66).cuboid(-0.15F, -1.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-14.0F, -1.0F, 3.25F, 0.0F, 0.0F, -0.829F));
+		ModelPartData meter4 = rot9.addChild("meter4", ModelPartBuilder.create().uv(111, 114).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(79, 79).cuboid(-0.15F, -1.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-14.0F, -1.0F, 3.25F, 0.0F, 0.0F, -0.829F));
 
 		ModelPartData bone18 = meter4.addChild("bone18", ModelPartBuilder.create().uv(28, 0).cuboid(0.85F, -1.0F, -0.25F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.1F, 0.25F, 0.0F, 0.6109F, 0.0F, 0.0F));
 
-		ModelPartData bone19 = rot9.addChild("bone19", ModelPartBuilder.create().uv(113, 92).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 4.0F, new Dilation(0.2F))
-		.uv(119, 23).cuboid(-0.5F, -3.0F, 0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.2F))
+		ModelPartData bone19 = rot9.addChild("bone19", ModelPartBuilder.create().uv(114, 33).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 4.0F, new Dilation(0.2F))
+		.uv(13, 122).cuboid(-0.5F, -3.0F, 0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.2F))
+		.uv(86, 121).cuboid(-0.5F, -3.5F, 0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
 		.uv(113, 51).cuboid(-1.25F, -2.1F, -0.75F, 2.0F, 1.0F, 4.0F, new Dilation(0.2F)), ModelTransform.of(-17.0F, -1.75F, -1.0F, 0.0F, 0.0F, 0.7418F));
 
 		ModelPartData vent = rot9.addChild("vent", ModelPartBuilder.create().uv(0, 73).cuboid(-3.0F, -1.501F, -1.0F, 4.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-2.0F, 0.851F, 7.75F, 0.0227F, -0.4795F, -0.0492F));
@@ -767,46 +767,165 @@ public class CopperConsoleModel extends ConsoleModel {
 
 		ModelPartData levers = rot9.addChild("levers", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, -1.0F));
 
-		ModelPartData lever4 = levers.addChild("lever4", ModelPartBuilder.create().uv(113, 98).cuboid(-1.0F, -0.25F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.pivot(-3.55F, -0.15F, 2.0F));
+		ModelPartData lever4 = levers.addChild("lever4", ModelPartBuilder.create().uv(109, 89).cuboid(-1.0F, -0.25F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.pivot(-3.55F, -0.15F, 2.0F));
 
 		ModelPartData bone20 = lever4.addChild("bone20", ModelPartBuilder.create().uv(63, 30).cuboid(0.0F, -1.0F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.0F))
-		.uv(123, 45).cuboid(-0.25F, -1.3F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.pivot(-0.5F, 0.0F, -0.4F));
+		.uv(125, 56).cuboid(-0.25F, -1.3F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.pivot(-0.5F, 0.0F, -0.4F));
 
-		ModelPartData lever5 = levers.addChild("lever5", ModelPartBuilder.create().uv(113, 98).cuboid(-1.0F, -0.25F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-2.75F, -0.15F, 3.25F, 0.0F, 0.7854F, 0.0F));
+		ModelPartData lever5 = levers.addChild("lever5", ModelPartBuilder.create().uv(109, 89).cuboid(-1.0F, -0.25F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-2.75F, -0.15F, 3.25F, 0.0F, 0.7854F, 0.0F));
 
 		ModelPartData bone21 = lever5.addChild("bone21", ModelPartBuilder.create().uv(63, 30).cuboid(0.0F, -1.0F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.0F))
-		.uv(123, 45).cuboid(-0.25F, -1.3F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.pivot(-0.5F, 0.0F, -0.4F));
+		.uv(125, 56).cuboid(-0.25F, -1.3F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.pivot(-0.5F, 0.0F, -0.4F));
 
-		ModelPartData lever6 = levers.addChild("lever6", ModelPartBuilder.create().uv(113, 98).cuboid(-1.0F, -0.25F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-1.25F, -0.15F, 3.5F, 0.0F, 1.5708F, 0.0F));
+		ModelPartData lever6 = levers.addChild("lever6", ModelPartBuilder.create().uv(109, 89).cuboid(-1.0F, -0.25F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(-1.25F, -0.15F, 3.5F, 0.0F, 1.5708F, 0.0F));
 
 		ModelPartData bone22 = lever6.addChild("bone22", ModelPartBuilder.create().uv(63, 30).cuboid(0.0F, -1.0F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.0F))
-		.uv(123, 45).cuboid(-0.25F, -1.3F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.pivot(-0.5F, 0.0F, -0.4F));
+		.uv(125, 56).cuboid(-0.25F, -1.3F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.pivot(-0.5F, 0.0F, -0.4F));
 
 		ModelPartData needle2 = rot9.addChild("needle2", ModelPartBuilder.create().uv(62, 50).cuboid(-0.5F, 0.0F, -0.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.0F))
 		.uv(38, 15).cuboid(-0.25F, -2.6F, 0.0F, 1.0F, 2.0F, 0.0F, new Dilation(0.0F))
-		.uv(45, 120).cuboid(-0.5F, -0.8F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-2.0F, -0.2F, -3.5F));
+		.uv(122, 103).cuboid(-0.5F, -0.8F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-2.0F, -0.2F, -3.5F));
 
 		ModelPartData cube_r180 = needle2.addChild("cube_r180", ModelPartBuilder.create().uv(38, 15).cuboid(-0.25F, -2.6F, 0.0F, 1.0F, 2.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
-		ModelPartData bone23 = rot9.addChild("bone23", ModelPartBuilder.create().uv(67, 91).cuboid(-1.0F, -2.0F, -1.0F, 3.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-6.25F, 1.75F, 0.0F, 0.0F, 0.0F, -0.5672F));
+		ModelPartData spinny = rot9.addChild("spinny", ModelPartBuilder.create().uv(67, 91).cuboid(-1.0F, -2.0F, -1.0F, 3.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-6.25F, 1.75F, 0.0F, 0.0F, 0.0F, -0.5672F));
 
-		ModelPartData bone24 = bone23.addChild("bone24", ModelPartBuilder.create().uv(40, 111).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.1F))
+		ModelPartData bone24 = spinny.addChild("bone24", ModelPartBuilder.create().uv(117, 120).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.1F))
 		.uv(69, 30).cuboid(-0.5F, -0.7F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.05F))
 		.uv(69, 30).cuboid(-0.5F, -1.2F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.05F)), ModelTransform.pivot(1.0F, -2.0F, 0.0F));
 
 		ModelPartData bone26 = bone24.addChild("bone26", ModelPartBuilder.create().uv(36, 93).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.1F))
 		.uv(112, 0).cuboid(-1.0F, -1.5F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.3F))
-		.uv(53, 83).cuboid(-0.5F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(-0.2F))
+		.uv(86, 48).cuboid(-0.5F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, new Dilation(-0.2F))
 		.uv(53, 88).cuboid(-0.5F, -1.0F, -1.5F, 1.0F, 1.0F, 3.0F, new Dilation(-0.4F)), ModelTransform.pivot(0.0F, -0.6F, 0.0F));
 
-		ModelPartData bone27 = bone26.addChild("bone27", ModelPartBuilder.create().uv(69, 119).cuboid(-0.5F, -1.4F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.04F))
-		.uv(119, 26).cuboid(-0.5F, -1.85F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.24F))
-		.uv(64, 119).cuboid(-0.5F, -1.25F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -0.25F, 0.0F));
+		ModelPartData bone27 = bone26.addChild("bone27", ModelPartBuilder.create().uv(53, 122).cuboid(-0.5F, -1.4F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.04F))
+		.uv(122, 49).cuboid(-0.5F, -1.85F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.24F))
+		.uv(122, 52).cuboid(-0.5F, -1.25F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -0.25F, 0.0F));
 
-		ModelPartData stabilizers = rot9.addChild("stabilizers", ModelPartBuilder.create().uv(40, 120).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-2.0F, 0.5F, 4.5F));
+		ModelPartData stabilizers = rot9.addChild("stabilizers", ModelPartBuilder.create().uv(122, 72).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-2.0F, 0.5F, 4.5F));
 
-		ModelPartData bone25 = stabilizers.addChild("bone25", ModelPartBuilder.create().uv(0, 120).cuboid(-0.5F, -0.75F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.1F))
-		.uv(118, 119).cuboid(-0.5F, -1.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
+		ModelPartData bone25 = stabilizers.addChild("bone25", ModelPartBuilder.create().uv(122, 66).cuboid(-0.5F, -0.75F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.1F))
+		.uv(58, 122).cuboid(-0.5F, -1.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
+
+		ModelPartData lever7 = rot9.addChild("lever7", ModelPartBuilder.create().uv(118, 89).cuboid(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 2.0F, new Dilation(0.0F))
+		.uv(96, 121).cuboid(0.0F, -1.0F, 0.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.1F)), ModelTransform.pivot(-6.25F, -0.5F, -6.0F));
+
+		ModelPartData bone96 = lever7.addChild("bone96", ModelPartBuilder.create().uv(83, 118).cuboid(-0.5F, -0.5F, -0.5F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F))
+		.uv(76, 39).cuboid(2.75F, -0.5F, -0.5F, 3.0F, 1.0F, 1.0F, new Dilation(-0.1F))
+		.uv(91, 121).cuboid(2.25F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.5F, -0.5F, 0.5F));
+
+		ModelPartData lever10 = rot9.addChild("lever10", ModelPartBuilder.create().uv(118, 82).cuboid(-1.4F, -0.5F, -0.5F, 2.0F, 1.0F, 2.0F, new Dilation(0.0F))
+		.uv(125, 28).cuboid(-0.9F, -1.5F, 0.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
+		.uv(64, 119).cuboid(-1.0F, -2.5F, 0.0F, 2.0F, 2.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.pivot(-8.8F, 0.0F, -4.4F));
+
+		ModelPartData bone97 = lever10.addChild("bone97", ModelPartBuilder.create().uv(39, 38).cuboid(-0.25F, -2.75F, 0.0F, 1.0F, 3.0F, 0.0F, new Dilation(0.0F))
+		.uv(81, 121).cuboid(-0.5F, -2.75F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(-0.35F, -1.5F, 0.5F));
+
+		ModelPartData button4 = rot9.addChild("button4", ModelPartBuilder.create().uv(-2, 137).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 0.0F, 2.0F, new Dilation(0.0F))
+		.uv(0, 147).cuboid(-0.75F, -2.5F, -0.25F, 1.0F, 1.0F, 1.0F, new Dilation(-0.1F)), ModelTransform.pivot(-9.5F, 1.5F, 3.25F));
+
+		ModelPartData bone98 = button4.addChild("bone98", ModelPartBuilder.create().uv(0, 150).cuboid(-1.0F, -2.0F, 0.0F, 1.0F, 1.0F, 1.0F, new Dilation(-0.1F)), ModelTransform.pivot(0.25F, -0.4F, -0.25F));
+
+		ModelPartData lever11 = rot9.addChild("lever11", ModelPartBuilder.create().uv(0, 158).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(0.0F))
+		.uv(0, 192).cuboid(-0.5F, -2.4F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.1F)), ModelTransform.pivot(-1.25F, 1.3F, -8.0F));
+
+		ModelPartData bone99 = lever11.addChild("bone99", ModelPartBuilder.create().uv(15, 176).cuboid(-0.25F, -2.0F, 0.0F, 1.0F, 2.0F, 0.0F, new Dilation(0.0F))
+		.uv(14, 193).cuboid(-0.5F, -2.4F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(0.0F, -2.0F, 0.0F, 0.0F, 0.0F, 0.1309F));
+
+		ModelPartData panel_4 = controls.addChild("panel_4", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
+
+		ModelPartData rot16 = panel_4.addChild("rot16", ModelPartBuilder.create(), ModelTransform.of(20.0F, -13.0F, 0.0F, 0.0F, 0.0F, 0.5672F));
+
+		ModelPartData spinny2 = rot16.addChild("spinny2", ModelPartBuilder.create().uv(67, 91).cuboid(-1.0F, -2.0F, -1.0F, 3.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-6.25F, 1.75F, 0.0F, 0.0F, 0.0F, -0.5672F));
+
+		ModelPartData bone23 = spinny2.addChild("bone23", ModelPartBuilder.create().uv(52, 203).cuboid(-0.5F, -1.5F, -1.1F, 1.0F, 2.0F, 1.0F, new Dilation(-0.3F))
+		.uv(30, 215).cuboid(-1.0F, -2.9F, -1.1F, 2.0F, 2.0F, 1.0F, new Dilation(-0.3F))
+		.uv(30, 215).cuboid(-1.0F, -2.9F, 0.1F, 2.0F, 2.0F, 1.0F, new Dilation(-0.3F))
+		.uv(36, 186).cuboid(-0.5F, -2.4F, -1.1F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(36, 186).cuboid(-0.5F, -2.4F, 0.1F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+		.uv(52, 203).cuboid(-0.5F, -1.5F, 0.1F, 1.0F, 2.0F, 1.0F, new Dilation(-0.3F))
+		.uv(36, 233).cuboid(-1.0F, -0.75F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.1F)), ModelTransform.of(1.0F, -2.15F, 0.0F, 0.0F, 0.3054F, 0.0F));
+
+		ModelPartData bone100 = bone23.addChild("bone100", ModelPartBuilder.create().uv(87, 238).cuboid(-0.75F, -0.5F, -0.5F, 2.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(0.0F, -1.9F, 0.0F, 0.0F, 0.0F, -0.3054F));
+
+		ModelPartData middle_1 = controls.addChild("middle_1", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.5236F, 0.0F));
+
+		ModelPartData rot10 = middle_1.addChild("rot10", ModelPartBuilder.create(), ModelTransform.of(21.0F, -13.0F, 0.0F, 0.0F, 0.0F, 0.48F));
+
+		ModelPartData coil = rot10.addChild("coil", ModelPartBuilder.create().uv(111, 109).cuboid(-3.5F, -2.0F, -1.0F, 5.0F, 2.0F, 2.0F, new Dilation(-0.3F))
+		.uv(114, 73).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(114, 73).cuboid(-3.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(17, 66).cuboid(2.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(17, 66).cuboid(-5.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(0, 89).cuboid(1.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(0, 89).cuboid(-3.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(107, 30).cuboid(-5.0F, -1.5F, -0.5F, 8.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.pivot(-1.5F, -0.5F, 0.0F));
+
+		ModelPartData middle_2 = controls.addChild("middle_2", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+
+		ModelPartData rot11 = middle_2.addChild("rot11", ModelPartBuilder.create(), ModelTransform.of(21.0F, -13.0F, 0.0F, 0.0F, 0.0F, 0.48F));
+
+		ModelPartData coil2 = rot11.addChild("coil2", ModelPartBuilder.create().uv(111, 109).cuboid(-3.5F, -2.0F, -1.0F, 5.0F, 2.0F, 2.0F, new Dilation(-0.3F))
+		.uv(114, 73).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(114, 73).cuboid(-3.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(17, 66).cuboid(2.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(17, 66).cuboid(-5.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(0, 89).cuboid(1.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(0, 89).cuboid(-3.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(107, 30).cuboid(-5.0F, -1.5F, -0.5F, 8.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.pivot(-1.5F, -0.5F, 0.0F));
+
+		ModelPartData middle_3 = controls.addChild("middle_3", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 2.618F, 0.0F));
+
+		ModelPartData rot12 = middle_3.addChild("rot12", ModelPartBuilder.create(), ModelTransform.of(21.0F, -13.0F, 0.0F, 0.0F, 0.0F, 0.48F));
+
+		ModelPartData coil3 = rot12.addChild("coil3", ModelPartBuilder.create().uv(111, 109).cuboid(-3.5F, -2.0F, -1.0F, 5.0F, 2.0F, 2.0F, new Dilation(-0.3F))
+		.uv(114, 73).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(114, 73).cuboid(-3.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(17, 66).cuboid(2.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(17, 66).cuboid(-5.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(0, 89).cuboid(1.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(0, 89).cuboid(-3.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(107, 30).cuboid(-5.0F, -1.5F, -0.5F, 8.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.pivot(-1.5F, -0.5F, 0.0F));
+
+		ModelPartData middle_4 = controls.addChild("middle_4", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -2.618F, 0.0F));
+
+		ModelPartData rot13 = middle_4.addChild("rot13", ModelPartBuilder.create(), ModelTransform.of(21.0F, -13.0F, 0.0F, 0.0F, 0.0F, 0.48F));
+
+		ModelPartData coil4 = rot13.addChild("coil4", ModelPartBuilder.create().uv(111, 109).cuboid(-3.5F, -2.0F, -1.0F, 5.0F, 2.0F, 2.0F, new Dilation(-0.3F))
+		.uv(114, 73).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(114, 73).cuboid(-3.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(17, 66).cuboid(2.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(17, 66).cuboid(-5.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(0, 89).cuboid(1.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(0, 89).cuboid(-3.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(107, 30).cuboid(-5.0F, -1.5F, -0.5F, 8.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.pivot(-1.5F, -0.5F, 0.0F));
+
+		ModelPartData middle_5 = controls.addChild("middle_5", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+
+		ModelPartData rot14 = middle_5.addChild("rot14", ModelPartBuilder.create(), ModelTransform.of(21.0F, -13.0F, 0.0F, 0.0F, 0.0F, 0.48F));
+
+		ModelPartData coil5 = rot14.addChild("coil5", ModelPartBuilder.create().uv(111, 109).cuboid(-3.5F, -2.0F, -1.0F, 5.0F, 2.0F, 2.0F, new Dilation(-0.3F))
+		.uv(114, 73).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(114, 73).cuboid(-3.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(17, 66).cuboid(2.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(17, 66).cuboid(-5.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(0, 89).cuboid(1.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(0, 89).cuboid(-3.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(107, 30).cuboid(-5.0F, -1.5F, -0.5F, 8.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.pivot(-1.5F, -0.5F, 0.0F));
+
+		ModelPartData middle_6 = controls.addChild("middle_6", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
+
+		ModelPartData rot15 = middle_6.addChild("rot15", ModelPartBuilder.create(), ModelTransform.of(21.0F, -13.0F, 0.0F, 0.0F, 0.0F, 0.48F));
+
+		ModelPartData coil6 = rot15.addChild("coil6", ModelPartBuilder.create().uv(111, 109).cuboid(-3.5F, -2.0F, -1.0F, 5.0F, 2.0F, 2.0F, new Dilation(-0.3F))
+		.uv(114, 73).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(114, 73).cuboid(-3.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.1F))
+		.uv(17, 66).cuboid(2.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(17, 66).cuboid(-5.0F, -2.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(-0.2F))
+		.uv(0, 89).cuboid(1.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(0, 89).cuboid(-3.5F, -2.0F, -1.0F, 0.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(107, 30).cuboid(-5.0F, -1.5F, -0.5F, 8.0F, 1.0F, 1.0F, new Dilation(-0.3F)), ModelTransform.pivot(-1.5F, -0.5F, 0.0F));
 
 		ModelPartData column = copper.addChild("column", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
@@ -895,50 +1014,50 @@ public class CopperConsoleModel extends ConsoleModel {
 		.uv(63, 12).cuboid(4.2F, -26.5F, 0.0F, 3.0F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
 		ModelPartData bone45 = rings.addChild("bone45", ModelPartBuilder.create().uv(72, 48).cuboid(8.5F, -27.0F, -5.5F, 1.0F, 2.0F, 11.0F, new Dilation(0.0F))
-		.uv(107, 30).cuboid(6.5F, -26.5F, -3.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -19.0F, 0.0F));
+		.uv(74, 112).cuboid(6.5F, -26.5F, -3.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -19.0F, 0.0F));
 
 		ModelPartData bone46 = bone45.addChild("bone46", ModelPartBuilder.create().uv(72, 48).cuboid(8.5F, -27.0F, -5.5F, 1.0F, 2.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
 		ModelPartData bone75 = bone46.addChild("bone75", ModelPartBuilder.create().uv(72, 48).cuboid(8.5F, -27.0F, -5.5F, 1.0F, 2.0F, 11.0F, new Dilation(0.0F))
-		.uv(107, 30).cuboid(6.5F, -26.5F, 2.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
+		.uv(74, 112).cuboid(6.5F, -26.5F, 2.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
 		ModelPartData bone76 = bone75.addChild("bone76", ModelPartBuilder.create().uv(72, 48).cuboid(8.5F, -27.0F, -5.5F, 1.0F, 2.0F, 11.0F, new Dilation(0.0F))
-		.uv(107, 30).cuboid(6.5F, -26.5F, -3.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
+		.uv(74, 112).cuboid(6.5F, -26.5F, -3.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
 		ModelPartData bone77 = bone76.addChild("bone77", ModelPartBuilder.create().uv(72, 48).cuboid(8.5F, -27.0F, -5.5F, 1.0F, 2.0F, 11.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
 		ModelPartData bone78 = bone77.addChild("bone78", ModelPartBuilder.create().uv(72, 48).cuboid(8.5F, -27.0F, -5.5F, 1.0F, 2.0F, 11.0F, new Dilation(0.0F))
-		.uv(107, 30).cuboid(6.5F, -26.5F, 2.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
+		.uv(74, 112).cuboid(6.5F, -26.5F, 2.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
 		ModelPartData rotor7 = column.addChild("rotor7", ModelPartBuilder.create().uv(0, 89).cuboid(-2.5F, -31.0F, -2.5F, 5.0F, 5.0F, 5.0F, new Dilation(0.5F))
-		.uv(114, 30).cuboid(-1.0F, -34.5F, -1.0F, 2.0F, 3.0F, 2.0F, new Dilation(0.1F))
-		.uv(17, 66).cuboid(-0.5F, -48.5F, -0.5F, 1.0F, 5.0F, 1.0F, new Dilation(-0.1F))
+		.uv(114, 67).cuboid(-1.0F, -34.5F, -1.0F, 2.0F, 3.0F, 2.0F, new Dilation(0.1F))
+		.uv(33, 66).cuboid(-0.5F, -48.5F, -0.5F, 1.0F, 5.0F, 1.0F, new Dilation(-0.1F))
 		.uv(62, 91).cuboid(-0.5F, -25.5F, -0.5F, 1.0F, 22.0F, 1.0F, new Dilation(-0.1F))
-		.uv(119, 20).cuboid(-0.5F, -49.75F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(64, 112).cuboid(-1.5F, -37.5F, -1.5F, 3.0F, 3.0F, 3.0F, new Dilation(0.2F))
-		.uv(64, 112).cuboid(-1.5F, -40.65F, -1.5F, 3.0F, 3.0F, 3.0F, new Dilation(0.0F))
+		.uv(106, 121).cuboid(-0.5F, -49.75F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
+		.uv(113, 93).cuboid(-1.5F, -37.5F, -1.5F, 3.0F, 3.0F, 3.0F, new Dilation(0.2F))
+		.uv(113, 93).cuboid(-1.5F, -40.65F, -1.5F, 3.0F, 3.0F, 3.0F, new Dilation(0.0F))
 		.uv(97, 40).cuboid(-1.0F, -44.0F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F))
 		.uv(97, 40).cuboid(-1.0F, -49.0F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F))
-		.uv(64, 112).cuboid(-1.5F, -43.4F, -1.5F, 3.0F, 3.0F, 3.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+		.uv(113, 93).cuboid(-1.5F, -43.4F, -1.5F, 3.0F, 3.0F, 3.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData top = column.addChild("top", ModelPartBuilder.create().uv(87, 12).cuboid(-2.5F, -62.0F, -2.5F, 5.0F, 5.0F, 5.0F, new Dilation(0.0F))
 		.uv(31, 111).cuboid(-1.0F, -75.0F, -1.0F, 2.0F, 13.0F, 2.0F, new Dilation(0.3F))
 		.uv(96, 23).cuboid(-1.0F, -75.0F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(0.6F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData horn = column.addChild("horn", ModelPartBuilder.create().uv(88, 93).cuboid(0.0F, -2.0F, 0.0F, 3.0F, 2.0F, 0.0F, new Dilation(0.0F))
+		ModelPartData horn = column.addChild("horn", ModelPartBuilder.create().uv(28, 108).cuboid(0.0F, -2.0F, 0.0F, 3.0F, 2.0F, 0.0F, new Dilation(0.0F))
 		.uv(17, 63).cuboid(4.0F, -6.0F, -0.9F, 4.0F, 1.0F, 1.0F, new Dilation(-0.1F))
-		.uv(119, 17).cuboid(6.75F, -6.75F, 0.1F, 2.0F, 2.0F, 0.0F, new Dilation(0.0F))
-		.uv(86, 48).cuboid(4.0F, -9.0F, 0.0F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F))
-		.uv(103, 11).cuboid(4.0F, -10.75F, 0.0F, 1.0F, 2.0F, 1.0F, new Dilation(-0.1F)), ModelTransform.of(6.0F, -27.0F, -2.0F, 0.0F, 0.5236F, 0.0F));
+		.uv(101, 121).cuboid(6.75F, -6.75F, 0.1F, 2.0F, 2.0F, 0.0F, new Dilation(0.0F))
+		.uv(88, 89).cuboid(4.0F, -9.0F, 0.0F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F))
+		.uv(40, 111).cuboid(4.0F, -10.75F, 0.0F, 1.0F, 2.0F, 1.0F, new Dilation(-0.1F)), ModelTransform.of(6.0F, -27.0F, -2.0F, 0.0F, 0.5236F, 0.0F));
 
-		ModelPartData cube_r181 = horn.addChild("cube_r181", ModelPartBuilder.create().uv(111, 109).cuboid(-0.6F, -2.75F, -1.0F, 3.0F, 3.0F, 3.0F, new Dilation(0.0F))
+		ModelPartData cube_r181 = horn.addChild("cube_r181", ModelPartBuilder.create().uv(64, 112).cuboid(-0.6F, -2.75F, -1.0F, 3.0F, 3.0F, 3.0F, new Dilation(0.0F))
 		.uv(100, 0).cuboid(2.4F, -3.75F, -2.0F, 3.0F, 5.0F, 5.0F, new Dilation(0.0F))
 		.uv(60, 72).cuboid(5.5F, -5.75F, -4.0F, 0.0F, 9.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(4.5F, -10.0F, 0.0F, 0.0F, 0.0F, -0.1309F));
 
 		ModelPartData cube_r182 = horn.addChild("cube_r182", ModelPartBuilder.create().uv(62, 48).cuboid(1.0F, 0.0F, 0.0F, 4.0F, 1.0F, 0.0F, new Dilation(0.0F))
-		.uv(39, 38).cuboid(0.0F, -2.0F, 0.0F, 1.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(5.1492F, -3.3736F, 0.0F, 0.0F, 0.0F, -1.5708F));
+		.uv(57, 48).cuboid(0.0F, -2.0F, 0.0F, 1.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(5.1492F, -3.3736F, 0.0F, 0.0F, 0.0F, -1.5708F));
 
-		ModelPartData cube_r183 = horn.addChild("cube_r183", ModelPartBuilder.create().uv(76, 39).cuboid(0.0F, -2.0F, 0.0F, 4.0F, 2.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(3.0F, 0.0F, 0.0F, 0.0F, 0.0F, -1.0036F));
+		ModelPartData cube_r183 = horn.addChild("cube_r183", ModelPartBuilder.create().uv(92, 118).cuboid(0.0F, -2.0F, 0.0F, 4.0F, 2.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(3.0F, 0.0F, 0.0F, 0.0F, 0.0F, -1.0036F));
 
 		ModelPartData rack = column.addChild("rack", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
@@ -981,7 +1100,7 @@ public class CopperConsoleModel extends ConsoleModel {
 		ModelPartData bone94 = bone93.addChild("bone94", ModelPartBuilder.create().uv(57, 45).cuboid(-12.0F, -46.0F, 20.75F, 24.0F, 2.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
 		ModelPartData bone95 = bone94.addChild("bone95", ModelPartBuilder.create().uv(72, 62).cuboid(1.0F, -46.0F, 20.75F, 11.0F, 2.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
-		return TexturedModelData.of(modelData, 128, 128);
+		return TexturedModelData.of(modelData, 256, 256);
 	}
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {

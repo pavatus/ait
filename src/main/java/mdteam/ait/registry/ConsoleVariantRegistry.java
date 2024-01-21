@@ -37,8 +37,7 @@ public class ConsoleVariantRegistry {
     public static ConsoleVariantSchema CORAL_WHITE;
     public static ConsoleVariantSchema COPPER;
     public static ConsoleVariantSchema TOYOTA;
-    //public static ConsoleVariantSchema TOYOTA_WARM;
-    //public static ConsoleVariantSchema TOYOTA_COOL;
+    public static ConsoleVariantSchema TOYOTA_BLUE;
 
     public static void init() {
 
@@ -57,7 +56,6 @@ public class ConsoleVariantRegistry {
 
         // Toyota variants
         TOYOTA = register(new ToyotaVariant());
-        //TOYOTA_WARM = register(new ToyotaWarmVariant());
-        //TOYOTA_COOL = register(new ToyotaCoolVariant());
+        TOYOTA_BLUE = register(new ToyotaBlueVariant());
     }
 }
