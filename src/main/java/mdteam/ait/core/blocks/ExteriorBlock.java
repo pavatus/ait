@@ -283,8 +283,8 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         if(fallingTardisEntity.getTardis().getDesktop().getConsolePos() != null)
             TardisUtil.getTardisDimension().playSound(null, fallingTardisEntity.getTardis().getDesktop().getConsolePos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
-        PropertiesHandler.set(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING, false);
-        PropertiesHandler.set(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, PropertiesHandler.getBool((fallingTardisEntity.getTardis().getHandlers().getProperties()), PropertiesHandler.ALARM_ENABLED));
+        PropertiesHandler.set(fallingTardisEntity.getTardis(), PropertiesHandler.IS_FALLING, false);
+        PropertiesHandler.set(fallingTardisEntity.getTardis(), PropertiesHandler.ALARM_ENABLED, PropertiesHandler.getBool((fallingTardisEntity.getTardis().getHandlers().getProperties()), PropertiesHandler.ALARM_ENABLED));
         DoorData.lockTardis(PropertiesHandler.getBool(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), fallingTardisEntity.getTardis(), null, false);
         fallingTardisEntity.getTardis().markDirty();
     }

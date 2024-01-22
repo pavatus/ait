@@ -148,7 +148,7 @@ public class TardisTravel extends TardisLink {
         return PropertiesHandler.getInt(this.tardis().getHandlers().getProperties(), PropertiesHandler.SPEED);
     }
     public void setSpeed(int speed) {
-        PropertiesHandler.set(this.tardis().getHandlers().getProperties(), PropertiesHandler.SPEED, speed);
+        PropertiesHandler.set(this.tardis(), PropertiesHandler.SPEED, speed);
         this.tardis().markDirty();
     }
 
@@ -160,7 +160,7 @@ public class TardisTravel extends TardisLink {
         return PropertiesHandler.getInt(this.getTardis().getHandlers().getProperties(), PropertiesHandler.MAT_TICKS);
     }
     private void setMatTicks(int ticks) {
-        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.MAT_TICKS, ticks);
+        PropertiesHandler.set(this.getTardis(), PropertiesHandler.MAT_TICKS, ticks);
         this.getTardis().markDirty();
     }
     private void tickMat() {
@@ -184,7 +184,7 @@ public class TardisTravel extends TardisLink {
         return PropertiesHandler.getInt(this.getTardis().getHandlers().getProperties(), PropertiesHandler.DEMAT_TICKS);
     }
     private void setDematTicks(int ticks) {
-        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.DEMAT_TICKS, ticks);
+        PropertiesHandler.set(this.getTardis(), PropertiesHandler.DEMAT_TICKS, ticks);
         this.getTardis().markDirty();
     }
     private void tickDemat() {
@@ -278,8 +278,8 @@ public class TardisTravel extends TardisLink {
         // Load the chunk of the Tardis destination
         this.getDestination().getWorld().getChunk(this.getTardis().getTravel().getDestination());
         // Enable alarm and disable anti-mavity properties for Tardis
-        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
-        PropertiesHandler.set(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
+        PropertiesHandler.set(this.getTardis(), PropertiesHandler.ALARM_ENABLED, true);
+        PropertiesHandler.set(this.getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
         // Set the destination position at the topmost block of the world at the X and Z coordinates of the destination
         this.setDestination(
                 new AbsoluteBlockPos.Directed(
@@ -398,7 +398,7 @@ public class TardisTravel extends TardisLink {
         if (PropertiesHandler.willAutoPilot(tardis().getHandlers().getProperties())) {
             // fufill all the prerequisites
             // DoorHandler.lockTardis(true, tardis(), null, false);
-            PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
+            PropertiesHandler.set(tardis(), PropertiesHandler.HANDBRAKE, false);
             this.tardis().getDoor().closeDoors();
             tardis().setRefueling(false);
             if (this.getSpeed() == 0) this.increaseSpeed();

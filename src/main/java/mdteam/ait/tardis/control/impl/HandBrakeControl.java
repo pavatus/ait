@@ -23,7 +23,7 @@ public class HandBrakeControl extends Control {
         if(tardis.isInDanger())
             return false;
 
-        PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
+        PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
         if(tardis.isRefueling())
             tardis.setRefueling(false);
 

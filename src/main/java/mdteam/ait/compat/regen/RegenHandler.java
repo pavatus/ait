@@ -54,7 +54,7 @@ public class RegenHandler implements Acting {
         Tardis tardis = TardisUtil.findTardisByInterior(livingEntity.getBlockPos());
         if (tardis == null) return;
         if(tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
-            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, true);
+            PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
             tardis.getTravel().crash();
             System.out.println("im getting run..?" + tardis.getTravel().getState());
             tardis.getHandlers().getFlight().increaseFlightTime(iRegen.transitionType().getAnimationLength());

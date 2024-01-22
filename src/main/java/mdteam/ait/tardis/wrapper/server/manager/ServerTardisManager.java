@@ -271,6 +271,125 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         }
     }
 
+    // TODO - we dont need a million send methods just bc of the different thing, theres a better way, im just tired and want this networking shit to be over and done with.
+    /**
+     * For sending changes to do with the PropertiesHandler
+     */
+    public void sendToSubscribers(UUID uuid, String key, String value) {
+        MinecraftServer mc = TardisUtil.getServer();
+
+        // todo is this deep copy necessary
+        Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);
+        List<UUID> tardisSubscribers = new CopyOnWriteArrayList<>(subscribersCopy.getOrDefault(uuid, Collections.emptyList()));
+
+        for (UUID playerId : tardisSubscribers) {
+            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
+            this.updateTardisProperty(player, uuid, key, value);
+        }
+    }
+    public void updateTardisProperty(@NotNull ServerPlayerEntity player, UUID tardis, String key, String value) {
+        PacketByteBuf data = PacketByteBufs.create();
+
+        data.writeUuid(tardis);
+        data.writeString("properties");
+
+        data.writeString(key);
+        data.writeString(value);
+
+        ServerPlayNetworking.send(player, UPDATE, data);
+    }
+    public void sendToSubscribers(UUID uuid, String key, int value) {
+        MinecraftServer mc = TardisUtil.getServer();
+
+        // todo is this deep copy necessary
+        Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);
+        List<UUID> tardisSubscribers = new CopyOnWriteArrayList<>(subscribersCopy.getOrDefault(uuid, Collections.emptyList()));
+
+        for (UUID playerId : tardisSubscribers) {
+            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
+            this.updateTardisProperty(player, uuid, key, value);
+        }
+    }
+    public void updateTardisProperty(@NotNull ServerPlayerEntity player, UUID tardis, String key, int value) {
+        PacketByteBuf data = PacketByteBufs.create();
+
+        data.writeUuid(tardis);
+        data.writeString("properties");
+
+        data.writeString(key);
+        data.writeInt(value);
+
+        ServerPlayNetworking.send(player, UPDATE, data);
+    }
+    public void sendToSubscribers(UUID uuid, String key, double value) {
+        MinecraftServer mc = TardisUtil.getServer();
+
+        // todo is this deep copy necessary
+        Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);
+        List<UUID> tardisSubscribers = new CopyOnWriteArrayList<>(subscribersCopy.getOrDefault(uuid, Collections.emptyList()));
+
+        for (UUID playerId : tardisSubscribers) {
+            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
+            this.updateTardisProperty(player, uuid, key, value);
+        }
+    }
+    public void updateTardisProperty(@NotNull ServerPlayerEntity player, UUID tardis, String key, double value) {
+        PacketByteBuf data = PacketByteBufs.create();
+
+        data.writeUuid(tardis);
+        data.writeString("properties");
+
+        data.writeString(key);
+        data.writeDouble(value);
+
+        ServerPlayNetworking.send(player, UPDATE, data);
+    }
+    public void sendToSubscribers(UUID uuid, String key, float value) {
+        MinecraftServer mc = TardisUtil.getServer();
+
+        // todo is this deep copy necessary
+        Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);
+        List<UUID> tardisSubscribers = new CopyOnWriteArrayList<>(subscribersCopy.getOrDefault(uuid, Collections.emptyList()));
+
+        for (UUID playerId : tardisSubscribers) {
+            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
+            this.updateTardisProperty(player, uuid, key, value);
+        }
+    }
+    public void updateTardisProperty(@NotNull ServerPlayerEntity player, UUID tardis, String key, float value) {
+        PacketByteBuf data = PacketByteBufs.create();
+
+        data.writeUuid(tardis);
+        data.writeString("properties");
+
+        data.writeString(key);
+        data.writeFloat(value);
+
+        ServerPlayNetworking.send(player, UPDATE, data);
+    }
+    public void sendToSubscribers(UUID uuid, String key, boolean value) {
+        MinecraftServer mc = TardisUtil.getServer();
+
+        // todo is this deep copy necessary
+        Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);
+        List<UUID> tardisSubscribers = new CopyOnWriteArrayList<>(subscribersCopy.getOrDefault(uuid, Collections.emptyList()));
+
+        for (UUID playerId : tardisSubscribers) {
+            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
+            this.updateTardisProperty(player, uuid, key, value);
+        }
+    }
+    public void updateTardisProperty(@NotNull ServerPlayerEntity player, UUID tardis, String key, boolean value) {
+        PacketByteBuf data = PacketByteBufs.create();
+
+        data.writeUuid(tardis);
+        data.writeString("properties");
+
+        data.writeString(key);
+        data.writeBoolean(value);
+
+        ServerPlayNetworking.send(player, UPDATE, data);
+    }
     private void updateTardis(@NotNull ServerPlayerEntity player, UUID uuid, AbstractTardisComponent component) {
         this.updateTardis(player, uuid, component.getId(), this.gson.toJson(component));
     }

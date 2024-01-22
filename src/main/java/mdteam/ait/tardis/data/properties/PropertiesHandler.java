@@ -3,12 +3,16 @@ package mdteam.ait.tardis.data.properties;
 import com.google.gson.internal.LinkedTreeMap;
 import mdteam.ait.AITMod;
 import mdteam.ait.registry.DesktopRegistry;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.data.FuelData;
+import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.UUID;
 
 public class PropertiesHandler { // todo move things out of properties
     // this is getting bloated
@@ -34,17 +38,10 @@ public class PropertiesHandler { // todo move things out of properties
     public static final String IS_CLOAKED = "cloaked";
 
     // Should these methods be in the holder instead?
-
-    /**
-     * used for setting things to a boolean
-     */
-    public static void setBool(PropertiesHolder holder, String key, boolean val) {
-        if (holder.getData().containsKey(key)) {
-            holder.getData().replace(key, val);
-            return;
-        }
-
-        holder.getData().put(key, val);
+    
+    public static void set(Tardis tardis, String key, Object val) {
+        set(tardis, key, val);
+        sync(tardis.getHandlers().getProperties(), key, tardis.getUuid());
     }
 
     public static void set(PropertiesHolder holder, String key, Object val) {
@@ -71,7 +68,7 @@ public class PropertiesHandler { // todo move things out of properties
         return DesktopRegistry.get(getIdentifier(holder,key));
     }
     public static void setDesktop(PropertiesHolder holder, String key, TardisDesktopSchema val) {
-        setIdentifier(holder, key, val.id());
+        set(holder, key, val.id());
     }
 
     public static Identifier getIdentifier(PropertiesHolder holder, String key) {
@@ -86,16 +83,6 @@ public class PropertiesHandler { // todo move things out of properties
 
         return (Identifier) holder.getData().get(key);
     }
-    // why do i keep rewriting the same method???
-    public static void setIdentifier(PropertiesHolder holder, String key, Identifier val) {
-        if (holder.getData().containsKey(key)) {
-            holder.getData().replace(key, val);
-            return;
-        }
-
-        holder.getData().put(key, val);
-    }
-
     public static boolean getBool(PropertiesHolder holder, String key) {
         if (!holder.getData().containsKey(key)) return false;
 
@@ -126,31 +113,15 @@ public class PropertiesHandler { // todo move things out of properties
         return (int) holder.getData().get(key);
     }
 
-    public static PropertiesHolder getSubProperties(PropertiesHolder holder, String key) {
-        if (!holder.getData().containsKey(key)) {
-            AITMod.LOGGER.error(key + " is not a properties holder!! im being kind, heres an empty properties instead of a null crash. to loqor - this wont b saved prolly");
-            return new PropertiesHolder(holder.tardis());
-        }
-
-        return (PropertiesHolder) holder.getData().get(key);
-    }
-    public static void setSubProperties(PropertiesHolder holder, String key, PropertiesHolder val) {
-        if (holder.getData().containsKey(key)) {
-            holder.getData().replace(key, val);
-            return;
-        }
-        holder.getData().put(key, val);
-    }
-
     public static void setSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema, boolean val) {
-        setBool(holder, schema.id().getPath() + "_unlocked", val);
+        set(holder, schema.id().getPath() + "_unlocked", val);
     }
     public static boolean isSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema) {
         return getBool(holder, schema.id().getPath() + "_unlocked");
     }
 
     public static void setAutoPilot(PropertiesHolder handler, boolean val) {
-        setBool(handler, AUTO_LAND, val);
+        set(handler, AUTO_LAND, val);
     }
 
     public static boolean willAutoPilot(PropertiesHolder holder) {
@@ -161,6 +132,41 @@ public class PropertiesHandler { // todo move things out of properties
             TardisDesktopSchema schema = it.next();
 
             map.put(schema.id().getPath() + "_unlocked", schema.freebie());
+        }
+    }
+
+    // todo kill me bad bad bad i never want to write code or work on ait again jesus christ how did we let the code get this bad i genuienyl cant even write good code anymore its not worth the effort i just want to finish this god damn networking problem
+    public static void sync(PropertiesHolder holder, String key, UUID tardis) {
+        // lord baby jesus give us strength, this is some loqor ass code im boutta write. if it fits network i do not care.
+
+        // I DONT CAAAAAAARE THAT ITS DEPRECATED.
+        if (TardisUtil.isClient()) return;
+
+        Object val = holder.getData().get(key);
+
+        if (val instanceof Integer) {
+            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, (Integer) val);
+            return;
+        }
+
+        if (val instanceof Double) {
+            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, (Double) val);
+            return;
+        }
+
+        if (val instanceof Float) {
+            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, (Float) val);
+            return;
+        }
+
+        if (val instanceof Boolean) {
+            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, (Boolean) val);
+            return;
+        }
+
+        if (val instanceof String) {
+            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, (String) val);
+            return;
         }
     }
 

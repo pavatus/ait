@@ -17,7 +17,7 @@ public class SiegeModeControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         tardis.setSiegeMode(!tardis.isSiegeMode());
-        PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, false);
+        PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, false);
         Text enabled = Text.translatable("tardis.message.control.siege.enabled");
         Text disabled = Text.translatable("tardis.message.control.siege.disabled");
         player.sendMessage((tardis.isSiegeMode() ? enabled : disabled), true);

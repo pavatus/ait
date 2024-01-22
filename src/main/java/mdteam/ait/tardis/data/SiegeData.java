@@ -70,7 +70,7 @@ public class SiegeData extends TardisLink {
         }
 
         int siegeTime = tardis().getTimeInSiegeMode() + 1;
-        PropertiesHandler.set(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME, tardis().isSiegeMode() ? siegeTime : 0);
+        PropertiesHandler.set(tardis(), PropertiesHandler.SIEGE_TIME, tardis().isSiegeMode() ? siegeTime : 0);
         // this.markDirty(); // DO NOT UNCOMMENT THAT LAG GOES CRAZYYYY!!!
 
         // todo add more downsides the longer you are in siege mode as it is meant to fail systems and kill you and that

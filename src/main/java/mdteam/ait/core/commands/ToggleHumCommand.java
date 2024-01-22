@@ -31,7 +31,7 @@ public class ToggleHumCommand {
 
         if (tardis == null || source == null) return 0;
 
-        PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HUM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HUM_ENABLED));
+        PropertiesHandler.set(tardis, PropertiesHandler.HUM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HUM_ENABLED));
 
         source.sendMessage(Text.literal("Hums set to: " + PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HUM_ENABLED)), true);
 

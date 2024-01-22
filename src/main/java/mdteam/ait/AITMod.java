@@ -159,10 +159,10 @@ public class AITMod implements ModInitializer {
             }
 
             // disabling protocols
-            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, false);
-            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
-            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HAIL_MARY, false);
-            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED, false);
+            PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, false);
+            PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
+            PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
+            PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
         }));
         TardisEvents.REGAIN_POWER.register((tardis -> {
             if (tardis.getDesktop().getConsolePos() != null) {

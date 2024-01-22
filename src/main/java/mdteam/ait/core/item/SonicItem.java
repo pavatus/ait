@@ -150,8 +150,8 @@ public class SonicItem extends Item {
 
                 if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
-                PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
-                PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, true);
+                PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, false);
+                PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, true);
                 if(tardis.getHandlers().getHADS().isInDanger()) {
                     tardis.setIsInDanger(false);
                 }

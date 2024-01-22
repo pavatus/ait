@@ -17,7 +17,7 @@ public class HADSControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
 
-        /*PropertiesHandler.setBool(tardis.getHandlers().getProperties(),
+        /*PropertiesHandler.set(tardis,
                 PropertiesHandler.HADS_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED));
 
         tardis.markDirty();
@@ -26,7 +26,7 @@ public class HADSControl extends Control {
                         PropertiesHandler.HADS_ENABLED) ? "ENABLED" : "DISABLED")), true);
 
         return true;*/
-        PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED));
+        PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED));
 
         tardis.markDirty();
         Text alarm_enabled = Text.translatable("tardis.message.control.hads.alarm_enabled");

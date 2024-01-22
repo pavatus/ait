@@ -130,8 +130,8 @@ public class KeyItem extends Item {
 
             player.getItemCooldownManager().set(stack.getItem(), 60 * 20);
 
-            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HAIL_MARY, false); // should this just set the handbrake on instead?
-            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, false); // so you get SUCKED up
+            PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false); // should this just set the handbrake on instead?
+            PropertiesHandler.set(tardis, PropertiesHandler.PREVIOUSLY_LOCKED, false); // so you get SUCKED up
 
             player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f); // like a sound to show its been called
             player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);

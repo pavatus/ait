@@ -322,7 +322,7 @@ public class DoorData extends TardisLink {
         door.setDoorState(DoorStateEnum.CLOSED);
 
         if (!forced) {
-            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, locked);
+            PropertiesHandler.set(tardis, PropertiesHandler.PREVIOUSLY_LOCKED, locked);
         }
 
         if (tardis.isSiegeMode()) return true;

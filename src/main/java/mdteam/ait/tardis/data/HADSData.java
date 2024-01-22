@@ -25,7 +25,7 @@ public class HADSData extends TardisLink {
     }
 
     public void setIsInDanger(boolean bool) {
-        PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER, bool);
+        PropertiesHandler.set(tardis(), PropertiesHandler.IS_IN_ACTIVE_DANGER, bool);
     }
 
     public boolean isInDanger() {

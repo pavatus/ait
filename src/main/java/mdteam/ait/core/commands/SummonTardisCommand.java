@@ -42,7 +42,7 @@ public class SummonTardisCommand {
 
         //FIXME: move to a kind of "goto" method, i would make it but theo said hands off the tardis package
         if (tardis.getTravel().getState() == LANDED) {
-            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
+            PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, false);
             tardis.getTravel().dematerialise(true);
         }
         if (tardis.getTravel().getState() == FLIGHT) {
@@ -67,7 +67,7 @@ public class SummonTardisCommand {
 
         //FIXME: move to a kind of "goto" method, i would make it but theo said hands off the tardis package
         if (tardis.getTravel().getState() == LANDED) {
-            PropertiesHandler.setBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
+            PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, false);
             tardis.getTravel().dematerialise(true);
         }
         if (tardis.getTravel().getState() == FLIGHT) {

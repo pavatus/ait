@@ -185,8 +185,8 @@ public class Tardis {
     public void disablePower() {
         if (!hasPower()) return;
 
-        //PropertiesHandler.set(this.getHandlers().getProperties(), PropertiesHandler.POWER_DELTA, MAX_POWER_DELTA_TICKS);
-        PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.HAS_POWER, false);
+        //PropertiesHandler.set(this, PropertiesHandler.POWER_DELTA, MAX_POWER_DELTA_TICKS);
+        PropertiesHandler.set(this, PropertiesHandler.HAS_POWER, false);
         TardisEvents.LOSE_POWER.invoker().onLosePower(this);
         this.markDirty();
     }
@@ -196,8 +196,8 @@ public class Tardis {
         if (isSiegeMode()) setSiegeMode(false);
         if (hasPower()) return;
 
-        //PropertiesHandler.set(this.getHandlers().getProperties(), PropertiesHandler.POWER_DELTA, 0);
-        PropertiesHandler.setBool(this.getHandlers().getProperties(), PropertiesHandler.HAS_POWER, true);
+        //PropertiesHandler.set(this, PropertiesHandler.POWER_DELTA, 0);
+        PropertiesHandler.set(this, PropertiesHandler.HAS_POWER, true);
         TardisEvents.REGAIN_POWER.invoker().onRegainPower(this);
         this.markDirty();
     }
