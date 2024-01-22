@@ -51,6 +51,11 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
     }
 
     @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
+
+    @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient()) {
             return ActionResult.SUCCESS;
