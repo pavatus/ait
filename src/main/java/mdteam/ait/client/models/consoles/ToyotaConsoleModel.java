@@ -4,6 +4,7 @@ package mdteam.ait.client.models.consoles;
 import mdteam.ait.client.animation.console.toyota.ToyotaAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.FuelHandler;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -44,53 +45,53 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r9 = controls.addChild("cube_r9", ModelPartBuilder.create().uv(27, 138).cuboid(-7.0F, 0.35F, -1.0F, 8.0F, 0.0F, 2.0F, new Dilation(0.001F)), ModelTransform.of(3.0F, -3.9015F, -23.3038F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData cube_r10 = controls.addChild("cube_r10", ModelPartBuilder.create().uv(7, 194).cuboid(5.0F, -11.25F, -21.0F, 1.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(142, 194).cuboid(-7.0F, -11.25F, -21.0F, 1.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.5F, -0.1F, 0.0F, 0.2618F, 0.0F, 0.0F));
+				.uv(142, 194).cuboid(-7.0F, -11.25F, -21.0F, 1.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.5F, -0.1F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData powerlights = controls.addChild("powerlights", ModelPartBuilder.create(), ModelTransform.pivot(-7.0F, -3.975F, -20.5665F));
 
 		ModelPartData cube_r11 = powerlights.addChild("cube_r11", ModelPartBuilder.create().uv(199, 128).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F))
-		.uv(50, 201).cuboid(-2.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(14.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+				.uv(50, 201).cuboid(-2.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(14.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData powerlights2 = powerlights.addChild("powerlights2", ModelPartBuilder.create(), ModelTransform.pivot(1.0F, 0.9478F, -0.014F));
 
 		ModelPartData cube_r12 = powerlights2.addChild("cube_r12", ModelPartBuilder.create().uv(0, 196).cuboid(-2.5F, -1.0541F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F))
-		.uv(199, 103).cuboid(-0.5F, -1.0541F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(13.0F, 0.0522F, 0.014F, 0.2618F, 0.0F, 0.0F));
+				.uv(199, 103).cuboid(-0.5F, -1.0541F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(13.0F, 0.0522F, 0.014F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData dooropenlights = controls.addChild("dooropenlights", ModelPartBuilder.create(), ModelTransform.pivot(-7.0F, -3.975F, -20.5665F));
 
 		ModelPartData cube_r13 = dooropenlights.addChild("cube_r13", ModelPartBuilder.create().uv(0, 204).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F))
-		.uv(203, 175).cuboid(-2.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(2.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+				.uv(203, 175).cuboid(-2.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(2.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData doorlights2 = dooropenlights.addChild("doorlights2", ModelPartBuilder.create(), ModelTransform.pivot(1.0F, 0.9478F, -0.014F));
 
 		ModelPartData cube_r14 = doorlights2.addChild("cube_r14", ModelPartBuilder.create().uv(55, 201).cuboid(-2.5F, -1.0541F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F))
-		.uv(60, 201).cuboid(-0.5F, -1.0541F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(1.0F, 0.0522F, 0.014F, 0.2618F, 0.0F, 0.0F));
+				.uv(60, 201).cuboid(-0.5F, -1.0541F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(1.0F, 0.0522F, 0.014F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData dooropen = controls.addChild("dooropen", ModelPartBuilder.create(), ModelTransform.pivot(-5.5F, -4.8F, -22.0F));
 
 		ModelPartData cube_r15 = dooropen.addChild("cube_r15", ModelPartBuilder.create().uv(142, 178).cuboid(-6.5F, -10.75F, -20.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(193, 173).cuboid(-4.75F, -10.75F, -21.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.001F))
-		.uv(186, 193).cuboid(-6.25F, -10.75F, -21.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.001F))
-		.uv(181, 195).cuboid(-6.25F, -10.75F, -21.5F, 2.0F, 1.0F, 0.0F, new Dilation(0.001F))
-		.uv(192, 110).cuboid(-6.0F, -10.75F, -24.5F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(5.0F, 4.7F, 22.0F, 0.2618F, 0.0F, 0.0F));
+				.uv(193, 173).cuboid(-4.75F, -10.75F, -21.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.001F))
+				.uv(186, 193).cuboid(-6.25F, -10.75F, -21.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.001F))
+				.uv(181, 195).cuboid(-6.25F, -10.75F, -21.5F, 2.0F, 1.0F, 0.0F, new Dilation(0.001F))
+				.uv(192, 110).cuboid(-6.0F, -10.75F, -24.5F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(5.0F, 4.7F, 22.0F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData power = controls.addChild("power", ModelPartBuilder.create(), ModelTransform.pivot(5.5F, -4.8F, -22.0F));
 
 		ModelPartData cube_r16 = power.addChild("cube_r16", ModelPartBuilder.create().uv(180, 36).cuboid(4.5F, -10.75F, -20.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(182, 127).cuboid(4.75F, -10.75F, -21.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.001F))
-		.uv(97, 187).cuboid(6.25F, -10.75F, -21.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.001F))
-		.uv(167, 195).cuboid(4.25F, -10.75F, -21.5F, 2.0F, 1.0F, 0.0F, new Dilation(0.001F))
-		.uv(192, 90).cuboid(5.0F, -10.75F, -24.5F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(-5.0F, 4.7F, 22.0F, 0.2618F, 0.0F, 0.0F));
+				.uv(182, 127).cuboid(4.75F, -10.75F, -21.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.001F))
+				.uv(97, 187).cuboid(6.25F, -10.75F, -21.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.001F))
+				.uv(167, 195).cuboid(4.25F, -10.75F, -21.5F, 2.0F, 1.0F, 0.0F, new Dilation(0.001F))
+				.uv(192, 90).cuboid(5.0F, -10.75F, -24.5F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(-5.0F, 4.7F, 22.0F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData geigercounter = controls.addChild("geigercounter", ModelPartBuilder.create(), ModelTransform.of(-7.0F, -4.0F, -19.0F, 0.3365F, 0.6699F, 0.2139F));
 
 		ModelPartData cube_r17 = geigercounter.addChild("cube_r17", ModelPartBuilder.create().uv(107, 189).cuboid(-1.5F, -4.0F, -1.5F, 3.0F, 2.0F, 3.0F, new Dilation(-0.4F))
-		.uv(120, 189).cuboid(-1.5F, -4.0F, -1.5F, 3.0F, 2.0F, 3.0F, new Dilation(-0.2F))
-		.uv(62, 191).cuboid(-1.5F, -4.0F, -1.5F, 3.0F, 2.0F, 3.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, 2.2109F, 0.75F, 0.0F, 0.0873F, 0.0F));
+				.uv(120, 189).cuboid(-1.5F, -4.0F, -1.5F, 3.0F, 2.0F, 3.0F, new Dilation(-0.2F))
+				.uv(62, 191).cuboid(-1.5F, -4.0F, -1.5F, 3.0F, 2.0F, 3.0F, new Dilation(-0.3F)), ModelTransform.of(0.0F, 2.2109F, 0.75F, 0.0F, 0.0873F, 0.0F));
 
-		ModelPartData needle = geigercounter.addChild("needle", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 1.2109F, 0.75F));
+		ModelPartData needle = geigercounter.addChild("needle", ModelPartBuilder.create(), ModelTransform.pivot(0.25F, 1.2109F, 0.5F));
 
-		ModelPartData cube_r18 = needle.addChild("cube_r18", ModelPartBuilder.create().uv(164, 181).cuboid(-1.6401F, -0.05F, -0.735F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.4F, -2.6F, -0.5F, 0.0F, 0.8727F, 0.0F));
+		ModelPartData cube_r18 = needle.addChild("cube_r18", ModelPartBuilder.create().uv(164, 181).cuboid(-1.6401F, -0.05F, -0.735F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.15F, -2.6F, -0.25F, 0.0F, 0.8727F, 0.0F));
 
 		ModelPartData lockernob1 = controls.addChild("lockernob1", ModelPartBuilder.create().uv(207, 112).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-3.0F, -3.9015F, -23.3038F, 0.2618F, 0.0F, 0.0F));
 
@@ -102,67 +103,71 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		ModelPartData lockernob5 = controls.addChild("lockernob5", ModelPartBuilder.create().uv(207, 72).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(3.0F, -3.9015F, -23.3038F, 0.2618F, 0.0F, 0.0F));
 
-		ModelPartData faucettaps1 = controls.addChild("faucettaps1", ModelPartBuilder.create().uv(128, 178).cuboid(-1.475F, -0.7975F, 0.0637F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(30, 198).cuboid(-0.525F, -0.556F, -0.4513F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(-3.225F, -6.2617F, -13.3693F, 0.2618F, 0.0F, 0.0F));
+		ModelPartData faucettaps1 = controls.addChild("faucettaps1", ModelPartBuilder.create(), ModelTransform.of(-3.225F, -6.2617F, -13.3693F, 0.2618F, 0.0F, 0.0F));
+
+		ModelPartData pivot2 = faucettaps1.addChild("pivot2", ModelPartBuilder.create().uv(128, 178).cuboid(-1.475F, -0.7975F, 0.0637F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
+				.uv(30, 198).cuboid(-0.525F, -0.556F, -0.4513F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData faucettaps2 = controls.addChild("faucettaps2", ModelPartBuilder.create().uv(135, 178).cuboid(-0.475F, -0.7975F, 0.0637F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(201, 152).cuboid(-0.525F, -0.556F, -0.4513F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(3.275F, -6.2617F, -13.3693F, 0.2618F, 0.0F, 0.0F));
+				.uv(201, 152).cuboid(-0.525F, -0.556F, -0.4513F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(3.275F, -6.2617F, -13.3693F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData redknob = controls.addChild("redknob", ModelPartBuilder.create().uv(207, 62).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -4.0309F, -20.8209F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData largefaucettap = controls.addChild("largefaucettap", ModelPartBuilder.create().uv(15, 204).cuboid(0.25F, -0.7823F, -2.1733F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-3.25F, -5.65F, -15.05F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData largefaucettaplever = largefaucettap.addChild("largefaucettaplever", ModelPartBuilder.create().uv(207, 59).cuboid(-0.5F, -0.5F, -0.55F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(40, 207).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(25, 198).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(195, 158).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(13, 198).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
+				.uv(40, 207).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(25, 198).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(195, 158).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(13, 198).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
 
 		ModelPartData largefaucettap2 = controls.addChild("largefaucettap2", ModelPartBuilder.create().uv(90, 201).cuboid(0.25F, -0.7823F, -2.1733F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-2.25F, -5.65F, -15.05F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData largefaucettaplever2 = largefaucettap2.addChild("largefaucettaplever2", ModelPartBuilder.create().uv(205, 41).cuboid(-0.5F, -0.5F, -0.55F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(205, 38).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(122, 195).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(117, 195).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(112, 195).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
+				.uv(205, 38).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(122, 195).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(117, 195).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(112, 195).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
 
 		ModelPartData largefaucettap3 = controls.addChild("largefaucettap3", ModelPartBuilder.create().uv(85, 201).cuboid(0.25F, -0.7823F, -2.1733F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-1.25F, -5.65F, -15.05F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData largefaucettaplever3 = largefaucettap3.addChild("largefaucettaplever3", ModelPartBuilder.create().uv(205, 31).cuboid(-0.5F, -0.5F, -0.55F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(205, 28).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(107, 195).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(72, 191).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(152, 189).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
+				.uv(205, 28).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(107, 195).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(72, 191).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(152, 189).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
 
 		ModelPartData largefaucettap4 = controls.addChild("largefaucettap4", ModelPartBuilder.create().uv(80, 201).cuboid(0.25F, -0.7823F, -2.1733F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-0.25F, -5.65F, -15.05F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData largefaucettaplever4 = largefaucettap4.addChild("largefaucettaplever4", ModelPartBuilder.create().uv(205, 25).cuboid(-0.5F, -0.5F, -0.55F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(204, 127).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(130, 189).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(117, 189).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(189, 13).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
+				.uv(204, 127).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(130, 189).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(117, 189).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(189, 13).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
 
 		ModelPartData largefaucettap5 = controls.addChild("largefaucettap5", ModelPartBuilder.create().uv(75, 201).cuboid(0.25F, -0.7823F, -2.1733F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(0.75F, -5.65F, -15.05F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData largefaucettaplever5 = largefaucettap5.addChild("largefaucettaplever5", ModelPartBuilder.create().uv(204, 102).cuboid(-0.5F, -0.5F, -0.55F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(40, 204).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(185, 188).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(171, 188).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(185, 175).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
+				.uv(40, 204).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(185, 188).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(171, 188).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(185, 175).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
 
 		ModelPartData largefaucettap6 = controls.addChild("largefaucettap6", ModelPartBuilder.create().uv(65, 201).cuboid(0.25F, -0.7823F, -2.1733F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(1.75F, -5.65F, -15.05F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData largefaucettaplever6 = largefaucettap6.addChild("largefaucettaplever6", ModelPartBuilder.create().uv(35, 204).cuboid(-0.5F, -0.5F, -0.55F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(30, 204).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(184, 135).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(184, 13).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
-		.uv(171, 181).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
+				.uv(30, 204).cuboid(-0.5F, -0.5F, -1.15F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(184, 135).cuboid(-0.5F, -0.5F, -1.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(184, 13).cuboid(-0.5F, -0.5F, -2.95F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F))
+				.uv(171, 181).cuboid(-0.5F, -0.5F, -2.35F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.75F, -0.8823F, -1.6233F));
 
-		ModelPartData smalllockernob = controls.addChild("smalllockernob", ModelPartBuilder.create().uv(5, 204).cuboid(-0.5F, -0.375F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(207, 56).cuboid(-0.5F, -1.125F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(-5.5F, -5.7927F, -14.7259F, 0.2618F, 0.0F, 0.0F));
+		ModelPartData smalllockernob = controls.addChild("smalllockernob", ModelPartBuilder.create(), ModelTransform.of(-5.5F, -5.7927F, -14.7259F, 0.2618F, 0.0F, 0.0F));
+
+		ModelPartData pivot3 = smalllockernob.addChild("pivot3", ModelPartBuilder.create().uv(5, 204).cuboid(-0.5F, -0.375F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+				.uv(207, 56).cuboid(-0.5F, -1.125F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData smallswitch = controls.addChild("smallswitch", ModelPartBuilder.create().uv(172, 142).cuboid(0.0F, -1.6136F, -0.5033F, 0.0F, 1.0F, 1.0F, new Dilation(0.001F))
-		.uv(91, 153).cuboid(-1.0F, -2.4136F, -1.0033F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(6.5F, -5.4356F, -16.9125F, 0.2618F, 0.0F, 0.0F));
+				.uv(91, 153).cuboid(-1.0F, -2.4136F, -1.0033F, 2.0F, 1.0F, 2.0F, new Dilation(-0.2F)), ModelTransform.of(6.5F, -5.4356F, -16.9125F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData tinylever = controls.addChild("tinylever", ModelPartBuilder.create(), ModelTransform.pivot(9.25F, -4.1268F, -22.8931F));
 
@@ -193,12 +198,12 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r23 = panel2.addChild("cube_r23", ModelPartBuilder.create().uv(57, 0).cuboid(-14.0F, -7.6235F, 12.523F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 2.1387F, -21.0F, 1.309F, 0.0F, 0.0F));
 
 		ModelPartData cube_r24 = panel2.addChild("cube_r24", ModelPartBuilder.create().uv(104, 57).cuboid(-7.0F, -0.1235F, -14.523F, 14.0F, 0.0F, 2.0F, new Dilation(0.001F))
-		.uv(0, 135).cuboid(-7.0F, -14.1235F, -14.523F, 14.0F, 0.0F, 2.0F, new Dilation(0.001F))
-		.uv(0, 138).cuboid(-7.0F, -0.1235F, -14.523F, 14.0F, 0.0F, 0.0F, new Dilation(0.001F))
-		.uv(51, 76).cuboid(7.0F, -14.1235F, -14.523F, 0.0F, 14.0F, 2.0F, new Dilation(0.001F))
-		.uv(51, 93).cuboid(-7.0F, -14.1235F, -14.523F, 0.0F, 14.0F, 2.0F, new Dilation(0.001F))
-		.uv(57, 142).cuboid(-7.0F, -14.1235F, -12.523F, 14.0F, 14.0F, 0.0F, new Dilation(0.001F))
-		.uv(0, 161).cuboid(-14.0F, -17.6235F, -14.523F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, -1.0F, -21.0F, -1.309F, 0.0F, 0.0F));
+				.uv(0, 135).cuboid(-7.0F, -14.1235F, -14.523F, 14.0F, 0.0F, 2.0F, new Dilation(0.001F))
+				.uv(0, 138).cuboid(-7.0F, -0.1235F, -14.523F, 14.0F, 0.0F, 0.0F, new Dilation(0.001F))
+				.uv(51, 76).cuboid(7.0F, -14.1235F, -14.523F, 0.0F, 14.0F, 2.0F, new Dilation(0.001F))
+				.uv(51, 93).cuboid(-7.0F, -14.1235F, -14.523F, 0.0F, 14.0F, 2.0F, new Dilation(0.001F))
+				.uv(57, 142).cuboid(-7.0F, -14.1235F, -12.523F, 14.0F, 14.0F, 0.0F, new Dilation(0.001F))
+				.uv(0, 161).cuboid(-14.0F, -17.6235F, -14.523F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, -1.0F, -21.0F, -1.309F, 0.0F, 0.0F));
 
 		ModelPartData controls3 = panel2.addChild("controls3", ModelPartBuilder.create(), ModelTransform.pivot(1.25F, -4.5F, -8.0F));
 
@@ -216,16 +221,18 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		ModelPartData largegear2 = gears.addChild("largegear2", ModelPartBuilder.create(), ModelTransform.pivot(4.875F, -16.0492F, 2.8403F));
 
-		ModelPartData cube_r29 = largegear2.addChild("cube_r29", ModelPartBuilder.create().uv(175, 25).cuboid(-2.0F, -2.5F, 0.0F, 4.0F, 4.0F, 0.0F, new Dilation(0.001F))
-		.uv(207, 3).cuboid(-2.5F, -1.0F, -2.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
-		.uv(92, 189).cuboid(-2.5F, -1.0F, -2.0F, 2.0F, 1.0F, 0.0F, new Dilation(0.001F))
-		.uv(82, 194).cuboid(-0.5F, -1.0F, -2.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.001F)), ModelTransform.of(-0.125F, 1.3972F, -0.1433F, -1.309F, 0.0F, 0.0F));
+		ModelPartData pivot5 = largegear2.addChild("pivot5", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+		ModelPartData cube_r29 = pivot5.addChild("cube_r29", ModelPartBuilder.create().uv(175, 25).cuboid(-2.0F, -2.5F, 0.0F, 4.0F, 4.0F, 0.0F, new Dilation(0.001F))
+				.uv(207, 3).cuboid(-2.5F, -1.0F, -2.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
+				.uv(92, 189).cuboid(-2.5F, -1.0F, -2.0F, 2.0F, 1.0F, 0.0F, new Dilation(0.001F))
+				.uv(82, 194).cuboid(-0.5F, -1.0F, -2.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.001F)), ModelTransform.of(-0.125F, 1.3972F, -0.1433F, -1.309F, 0.0F, 0.0F));
 
 		ModelPartData largegear3 = gears.addChild("largegear3", ModelPartBuilder.create(), ModelTransform.pivot(-1.625F, -15.0494F, -1.3142F));
 
 		ModelPartData cube_r30 = largegear3.addChild("cube_r30", ModelPartBuilder.create().uv(206, 151).cuboid(-6.25F, 2.5F, -2.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
-		.uv(172, 80).cuboid(-6.25F, 2.5F, -2.0F, 2.0F, 1.0F, 0.0F, new Dilation(0.001F))
-		.uv(192, 128).cuboid(-4.25F, 2.5F, -2.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.001F)), ModelTransform.of(4.625F, 0.5474F, 3.5113F, -1.309F, 0.0F, 0.0F));
+				.uv(172, 80).cuboid(-6.25F, 2.5F, -2.0F, 2.0F, 1.0F, 0.0F, new Dilation(0.001F))
+				.uv(192, 128).cuboid(-4.25F, 2.5F, -2.0F, 1.0F, 1.0F, 2.0F, new Dilation(0.001F)), ModelTransform.of(4.625F, 0.5474F, 3.5113F, -1.309F, 0.0F, 0.0F));
 
 		ModelPartData cube_r31 = largegear3.addChild("cube_r31", ModelPartBuilder.create().uv(192, 60).cuboid(-2.0F, -2.25F, -0.5F, 4.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.875F, 1.3885F, 0.3721F, -1.309F, 0.0F, 0.0F));
 
@@ -242,52 +249,54 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r34 = tinygear3.addChild("cube_r34", ModelPartBuilder.create().uv(207, 13).cuboid(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.309F, 0.0F, 0.0F));
 
 		ModelPartData tapnobs = controls3.addChild("tapnobs", ModelPartBuilder.create().uv(121, 178).cuboid(-1.0F, -0.5F, -0.25F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(206, 148).cuboid(-0.5F, -0.5F, -0.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(1.0F, -12.6228F, -9.958F, 0.2618F, 0.0F, 0.0F));
+				.uv(206, 148).cuboid(-0.5F, -0.5F, -0.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(1.0F, -12.6228F, -9.958F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData tapnobs2 = controls3.addChild("tapnobs2", ModelPartBuilder.create().uv(114, 178).cuboid(-1.0F, -0.5F, -0.25F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(140, 206).cuboid(-0.5F, -0.5F, -0.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(-2.5F, -13.3728F, -7.058F, 0.2618F, 0.0F, 0.0F));
+				.uv(140, 206).cuboid(-0.5F, -0.5F, -0.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(-2.5F, -13.3728F, -7.058F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData tapnobs3 = controls3.addChild("tapnobs3", ModelPartBuilder.create().uv(107, 178).cuboid(-1.0F, -0.5F, -0.25F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(206, 138).cuboid(-0.5F, -0.5F, -0.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(-2.5F, -11.7728F, -12.808F, 0.2618F, 0.0F, 0.0F));
+				.uv(206, 138).cuboid(-0.5F, -0.5F, -0.75F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(-2.5F, -11.7728F, -12.808F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData keyhole = controls3.addChild("keyhole", ModelPartBuilder.create().uv(135, 202).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-4.25F, -13.8F, -2.15F));
 
 		ModelPartData tinytapnob = controls3.addChild("tinytapnob", ModelPartBuilder.create().uv(206, 135).cuboid(-0.5F, -0.9167F, -0.6667F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
-		.uv(130, 202).cuboid(-0.5F, -0.1667F, -0.6667F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(135, 206).cuboid(-0.5F, -0.9167F, -0.1667F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(2.0F, -14.6333F, -2.0833F));
+				.uv(130, 202).cuboid(-0.5F, -0.1667F, -0.6667F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+				.uv(135, 206).cuboid(-0.5F, -0.9167F, -0.1667F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(2.0F, -14.6333F, -2.0833F));
 
 		ModelPartData tinytapnob2 = controls3.addChild("tinytapnob2", ModelPartBuilder.create().uv(130, 206).cuboid(-0.5F, -0.9167F, -0.6667F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
-		.uv(125, 202).cuboid(-0.5F, -0.1667F, -0.6667F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(125, 206).cuboid(-0.5F, -0.9167F, -0.1667F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-9.0F, -12.4333F, -12.0833F, 0.2618F, 0.0F, 0.0F));
+				.uv(125, 202).cuboid(-0.5F, -0.1667F, -0.6667F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+				.uv(125, 206).cuboid(-0.5F, -0.9167F, -0.1667F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-9.0F, -12.4333F, -12.0833F, 0.2618F, 0.0F, 0.0F));
 
-		ModelPartData tinytapnob3 = controls3.addChild("tinytapnob3", ModelPartBuilder.create().uv(206, 7).cuboid(-0.5F, -0.75F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
-		.uv(20, 204).cuboid(-0.5F, 0.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(176, 174).cuboid(-1.0F, -1.25F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.25F)), ModelTransform.of(-11.0F, -11.4512F, -15.2875F, 0.2618F, 0.0F, 0.0F));
+		ModelPartData tinytapnob3 = controls3.addChild("tinytapnob3", ModelPartBuilder.create(), ModelTransform.of(-11.0F, -11.4512F, -15.2875F, 0.2618F, 0.0F, 0.0F));
+
+		ModelPartData pivot4 = tinytapnob3.addChild("pivot4", ModelPartBuilder.create().uv(206, 7).cuboid(-0.5F, -0.75F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
+				.uv(20, 204).cuboid(-0.5F, 0.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+				.uv(176, 174).cuboid(-1.0F, -1.25F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.25F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData tinytapnob4 = controls3.addChild("tinytapnob4", ModelPartBuilder.create().uv(202, 17).cuboid(-0.5F, -0.3749F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(175, 18).cuboid(-1.0F, -1.1251F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.25F)), ModelTransform.of(6.5F, -11.0891F, -15.1904F, 0.2618F, 0.0F, 0.0F));
+				.uv(175, 18).cuboid(-1.0F, -1.1251F, -1.0F, 2.0F, 1.0F, 2.0F, new Dilation(-0.25F)), ModelTransform.of(6.5F, -11.0891F, -15.1904F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData siegemode = controls3.addChild("siegemode", ModelPartBuilder.create().uv(104, 60).cuboid(-1.5F, 3.6223F, -5.5237F, 3.0F, 0.0F, 2.0F, new Dilation(0.001F))
-		.uv(137, 57).cuboid(-1.5F, 2.6223F, -5.0237F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-1.3726F, -6.2488F, -11.7557F));
+				.uv(137, 57).cuboid(-1.5F, 2.6223F, -5.0237F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-1.3726F, -6.2488F, -11.7557F));
 
 		ModelPartData cube_r35 = siegemode.addChild("cube_r35", ModelPartBuilder.create().uv(91, 147).cuboid(5.5F, -1.0F, -4.3F, 3.0F, 0.0F, 5.0F, new Dilation(0.001F)), ModelTransform.of(-7.0F, 1.2879F, 0.2263F, 0.7854F, 0.0F, 0.0F));
 
 		ModelPartData siegemodehandle = siegemode.addChild("siegemodehandle", ModelPartBuilder.create().uv(175, 60).cuboid(1.0F, -3.0333F, -0.5F, 0.0F, 3.0F, 1.0F, new Dilation(0.0F))
-		.uv(183, 110).cuboid(-1.0F, -3.0333F, -0.5F, 0.0F, 3.0F, 1.0F, new Dilation(0.0F))
-		.uv(42, 135).cuboid(-1.5F, -3.5333F, -0.5F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 3.1557F, -4.5237F));
+				.uv(183, 110).cuboid(-1.0F, -3.0333F, -0.5F, 0.0F, 3.0F, 1.0F, new Dilation(0.0F))
+				.uv(42, 135).cuboid(-1.5F, -3.5333F, -0.5F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 3.1557F, -4.5237F));
 
 		ModelPartData panel3 = toyota.addChild("panel3", ModelPartBuilder.create().uv(118, 60).cuboid(-13.8726F, -7.6806F, -17.4019F, 28.0F, 3.0F, 0.0F, new Dilation(0.001F))
-		.uv(183, 115).cuboid(2.35F, -8.0962F, -17.6985F, 1.0F, 4.0F, 0.0F, new Dilation(0.001F))
-		.uv(113, 31).cuboid(0.35F, -5.0962F, -17.6985F, 2.0F, 1.0F, 0.0F, new Dilation(0.001F))
-		.uv(48, 138).cuboid(0.35F, -8.0962F, -17.6985F, 1.0F, 3.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(6.75F, -9.25F, 3.75F, 0.0F, -2.0944F, 0.0F));
+				.uv(183, 115).cuboid(2.35F, -8.0962F, -17.6985F, 1.0F, 4.0F, 0.0F, new Dilation(0.001F))
+				.uv(113, 31).cuboid(0.35F, -5.0962F, -17.6985F, 2.0F, 1.0F, 0.0F, new Dilation(0.001F))
+				.uv(48, 138).cuboid(0.35F, -8.0962F, -17.6985F, 1.0F, 3.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(6.75F, -9.25F, 3.75F, 0.0F, -2.0944F, 0.0F));
 
 		ModelPartData cube_r36 = panel3.addChild("cube_r36", ModelPartBuilder.create().uv(146, 57).cuboid(0.6F, -12.4F, -15.0F, 1.0F, 0.0F, 2.0F, new Dilation(0.001F))
-		.uv(113, 46).cuboid(2.6F, -12.4F, -15.0F, 1.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(165, 148).cuboid(2.35F, -12.9F, -14.0F, 2.0F, 1.0F, 5.0F, new Dilation(0.0F))
-		.uv(100, 153).cuboid(-4.85F, -13.9F, -12.35F, 0.0F, 2.0F, 3.0F, new Dilation(0.001F))
-		.uv(165, 142).cuboid(-7.1F, -13.9F, -11.1F, 3.0F, 2.0F, 0.0F, new Dilation(0.001F))
-		.uv(19, 139).cuboid(5.85F, -13.91F, -8.0F, 2.0F, 0.0F, 2.0F, new Dilation(0.0F))
-		.uv(66, 58).cuboid(6.35F, -13.9F, -7.5F, 1.0F, 3.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.25F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+				.uv(113, 46).cuboid(2.6F, -12.4F, -15.0F, 1.0F, 0.0F, 1.0F, new Dilation(0.0F))
+				.uv(165, 148).cuboid(2.35F, -12.9F, -14.0F, 2.0F, 1.0F, 5.0F, new Dilation(0.0F))
+				.uv(100, 153).cuboid(-4.85F, -13.9F, -12.35F, 0.0F, 2.0F, 3.0F, new Dilation(0.001F))
+				.uv(165, 142).cuboid(-7.1F, -13.9F, -11.1F, 3.0F, 2.0F, 0.0F, new Dilation(0.001F))
+				.uv(19, 139).cuboid(5.85F, -13.91F, -8.0F, 2.0F, 0.0F, 2.0F, new Dilation(0.0F))
+				.uv(66, 58).cuboid(6.35F, -13.9F, -7.5F, 1.0F, 3.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.25F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData cube_r37 = panel3.addChild("cube_r37", ModelPartBuilder.create().uv(153, 35).cuboid(-1.0F, -8.023F, -31.6235F, 2.0F, 2.0F, 22.0F, new Dilation(-0.001F)), ModelTransform.of(0.1274F, 9.2891F, 7.7207F, -0.2618F, 0.5236F, 0.0F));
 
@@ -320,7 +329,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData controls5 = panel3.addChild("controls5", ModelPartBuilder.create(), ModelTransform.pivot(0.1274F, 9.2891F, 7.7207F));
 
 		ModelPartData sonicport = controls5.addChild("sonicport", ModelPartBuilder.create().uv(180, 39).cuboid(-7.0F, -20.0F, -18.0F, 3.0F, 2.0F, 3.0F, new Dilation(0.0F))
-		.uv(171, 6).cuboid(-6.5F, -21.0F, -17.5F, 2.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+				.uv(171, 6).cuboid(-6.5F, -21.0F, -17.5F, 2.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData cube_r46 = sonicport.addChild("cube_r46", ModelPartBuilder.create().uv(33, 135).cuboid(6.15F, -1.0F, 1.5974F, 4.0F, 2.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(-12.4067F, -20.5F, -11.8481F, 0.0F, 0.7854F, 0.0F));
 
@@ -339,11 +348,11 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData spinnything3 = controls5.addChild("spinnything3", ModelPartBuilder.create().uv(175, 148).cuboid(-1.0F, -1.0F, -0.5F, 2.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-3.0F, -21.2016F, -11.2982F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData sliders = spinnything3.addChild("sliders", ModelPartBuilder.create().uv(207, 115).cuboid(0.75F, -21.4516F, -13.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
-		.uv(85, 205).cuboid(-0.25F, -21.4516F, -13.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
-		.uv(90, 205).cuboid(-1.25F, -21.4516F, -13.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
-		.uv(100, 205).cuboid(-2.25F, -21.4516F, -13.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
-		.uv(80, 205).cuboid(-4.25F, -21.4516F, -13.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
-		.uv(105, 205).cuboid(-3.25F, -21.4516F, -13.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.pivot(3.0F, 21.2016F, 11.2982F));
+				.uv(85, 205).cuboid(-0.25F, -21.4516F, -13.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
+				.uv(90, 205).cuboid(-1.25F, -21.4516F, -13.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
+				.uv(100, 205).cuboid(-2.25F, -21.4516F, -13.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
+				.uv(80, 205).cuboid(-4.25F, -21.4516F, -13.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F))
+				.uv(105, 205).cuboid(-3.25F, -21.4516F, -13.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.pivot(3.0F, 21.2016F, 11.2982F));
 
 		ModelPartData slider1 = sliders.addChild("slider1", ModelPartBuilder.create().uv(50, 205).cuboid(-4.25F, -21.4516F, -14.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
@@ -358,27 +367,27 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData slider6 = sliders.addChild("slider6", ModelPartBuilder.create().uv(207, 165).cuboid(0.75F, -21.4516F, -14.9982F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData rotaryswitch1 = controls5.addChild("rotaryswitch1", ModelPartBuilder.create().uv(180, 142).cuboid(-0.75F, -0.0647F, -0.0085F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(205, 142).cuboid(-0.75F, -0.4353F, -0.4915F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(5.6226F, -18.631F, -20.0501F, 0.2618F, 0.0F, 0.0F));
+				.uv(205, 142).cuboid(-0.75F, -0.4353F, -0.4915F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(5.6226F, -18.631F, -20.0501F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData rotaryswitch2 = controls5.addChild("rotaryswitch2", ModelPartBuilder.create().uv(165, 80).cuboid(-0.75F, 0.0F, -0.017F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(115, 205).cuboid(-0.75F, -0.3706F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(5.6226F, -18.2427F, -21.499F, 0.2618F, 0.0F, 0.0F));
+				.uv(115, 205).cuboid(-0.75F, -0.3706F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(5.6226F, -18.2427F, -21.499F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData rotaryswitch3 = controls5.addChild("rotaryswitch3", ModelPartBuilder.create().uv(66, 157).cuboid(-0.75F, 0.0F, -0.017F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(110, 205).cuboid(-0.75F, -0.3706F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(5.6226F, -17.8545F, -22.9479F, 0.2618F, 0.0F, 0.0F));
+				.uv(110, 205).cuboid(-0.75F, -0.3706F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(5.6226F, -17.8545F, -22.9479F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData panel4 = toyota.addChild("panel4", ModelPartBuilder.create().uv(107, 181).cuboid(-14.0F, -14.9306F, -25.1225F, 28.0F, 3.0F, 0.0F, new Dilation(0.001F))
-		.uv(201, 139).cuboid(-3.5F, -19.25F, -12.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(201, 135).cuboid(-2.0F, -19.25F, -12.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(115, 201).cuboid(-0.5F, -19.25F, -12.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(110, 201).cuboid(1.0F, -19.25F, -12.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(105, 201).cuboid(2.5F, -19.25F, -12.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -2.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
+				.uv(201, 139).cuboid(-3.5F, -19.25F, -12.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+				.uv(201, 135).cuboid(-2.0F, -19.25F, -12.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+				.uv(115, 201).cuboid(-0.5F, -19.25F, -12.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+				.uv(110, 201).cuboid(1.0F, -19.25F, -12.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+				.uv(105, 201).cuboid(2.5F, -19.25F, -12.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -2.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
 
 		ModelPartData cube_r50 = panel4.addChild("cube_r50", ModelPartBuilder.create().uv(186, 0).cuboid(-1.5F, -1.0F, -1.0F, 3.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(186, 5).cuboid(-8.5F, -1.0F, -1.0F, 3.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(3.5F, -17.65F, -16.0F, 0.2618F, 0.0F, 0.0F));
+				.uv(186, 5).cuboid(-8.5F, -1.0F, -1.0F, 3.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(3.5F, -17.65F, -16.0F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData cube_r51 = panel4.addChild("cube_r51", ModelPartBuilder.create().uv(192, 98).cuboid(6.0F, -22.4F, -19.4F, 4.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(86, 142).cuboid(-3.0F, -21.4F, -16.0F, 8.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(192, 123).cuboid(-9.0F, -21.9F, -18.9F, 3.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(-1.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+				.uv(86, 142).cuboid(-3.0F, -21.4F, -16.0F, 8.0F, 2.0F, 2.0F, new Dilation(0.0F))
+				.uv(192, 123).cuboid(-9.0F, -21.9F, -18.9F, 3.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(-1.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData cube_r52 = panel4.addChild("cube_r52", ModelPartBuilder.create().uv(165, 110).cuboid(-1.0F, -8.023F, -31.6235F, 2.0F, 2.0F, 22.0F, new Dilation(-0.001F)), ModelTransform.of(0.0F, 2.0391F, 0.0F, -0.2618F, 0.5236F, 0.0F));
 
@@ -401,21 +410,23 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData throttle = controls4.addChild("throttle", ModelPartBuilder.create(), ModelTransform.of(8.0F, -15.9197F, -23.197F, -0.7854F, 0.0F, 0.0F));
 
 		ModelPartData cube_r58 = throttle.addChild("cube_r58", ModelPartBuilder.create().uv(174, 129).cuboid(-1.25F, -23.5F, -18.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(86, 178).cuboid(1.25F, -23.5F, -18.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(47, 186).cuboid(2.75F, -22.5F, -18.5F, 0.0F, 2.0F, 1.0F, new Dilation(0.001F))
-		.uv(187, 138).cuboid(-0.75F, -22.5F, -18.5F, 0.0F, 2.0F, 1.0F, new Dilation(0.001F))
-		.uv(113, 60).cuboid(-0.75F, -21.0F, -18.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.001F))
-		.uv(98, 153).cuboid(1.75F, -21.0F, -18.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.001F))
-		.uv(149, 194).cuboid(2.25F, -21.0F, -18.5F, 0.0F, 2.0F, 1.0F, new Dilation(0.001F))
-		.uv(195, 161).cuboid(-0.25F, -21.0F, -18.5F, 0.0F, 2.0F, 1.0F, new Dilation(0.001F)), ModelTransform.of(-1.0F, 13.6722F, 22.2068F, 0.2618F, 0.0F, 0.0F));
+				.uv(86, 178).cuboid(1.25F, -23.5F, -18.5F, 2.0F, 1.0F, 1.0F, new Dilation(0.0F))
+				.uv(47, 186).cuboid(2.75F, -22.5F, -18.5F, 0.0F, 2.0F, 1.0F, new Dilation(0.001F))
+				.uv(187, 138).cuboid(-0.75F, -22.5F, -18.5F, 0.0F, 2.0F, 1.0F, new Dilation(0.001F))
+				.uv(113, 60).cuboid(-0.75F, -21.0F, -18.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.001F))
+				.uv(98, 153).cuboid(1.75F, -21.0F, -18.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.001F))
+				.uv(149, 194).cuboid(2.25F, -21.0F, -18.5F, 0.0F, 2.0F, 1.0F, new Dilation(0.001F))
+				.uv(195, 161).cuboid(-0.25F, -21.0F, -18.5F, 0.0F, 2.0F, 1.0F, new Dilation(0.001F)), ModelTransform.of(-1.0F, 13.6722F, 22.2068F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData handbrake = controls4.addChild("handbrake", ModelPartBuilder.create(), ModelTransform.of(-7.45F, -16.4308F, -22.5199F, 0.2618F, 0.0F, 0.0F));
 
-		ModelPartData cube_r59 = handbrake.addChild("cube_r59", ModelPartBuilder.create().uv(57, 157).cuboid(0.6F, -0.058F, -0.5647F, 3.0F, 0.0F, 1.0F, new Dilation(0.001F))
-		.uv(142, 189).cuboid(-2.5F, 0.041F, -1.5647F, 3.0F, 1.0F, 3.0F, new Dilation(0.1F)), ModelTransform.of(0.95F, -0.25F, 0.0F, 0.0F, 0.0F, 0.0F));
+		ModelPartData pivot = handbrake.addChild("pivot", ModelPartBuilder.create(), ModelTransform.pivot(-0.05F, -0.25F, 0.0F));
+
+		ModelPartData cube_r59 = pivot.addChild("cube_r59", ModelPartBuilder.create().uv(57, 157).cuboid(0.6F, -0.058F, -0.5647F, 3.0F, 0.0F, 1.0F, new Dilation(0.001F))
+				.uv(142, 189).cuboid(-2.5F, 0.041F, -1.5647F, 3.0F, 1.0F, 3.0F, new Dilation(0.1F)), ModelTransform.of(1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 
 		ModelPartData tinyswitch2 = controls4.addChild("tinyswitch2", ModelPartBuilder.create().uv(54, 76).cuboid(0.25F, -1.0F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.001F))
-		.uv(54, 93).cuboid(-0.75F, -0.983F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(-5.25F, -17.1495F, -17.0152F, 0.2618F, 0.0F, 0.0F));
+				.uv(54, 93).cuboid(-0.75F, -0.983F, 0.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(-5.25F, -17.1495F, -17.0152F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData lockernob = controls4.addChild("lockernob", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
@@ -434,8 +445,8 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r63 = lockernob8.addChild("cube_r63", ModelPartBuilder.create().uv(201, 148).cuboid(-1.5F, -22.4F, -15.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData rotatingclockthing = controls4.addChild("rotatingclockthing", ModelPartBuilder.create().uv(181, 188).cuboid(-1.5F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, new Dilation(0.001F))
-		.uv(167, 188).cuboid(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, new Dilation(0.001F))
-		.uv(180, 135).cuboid(1.5F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, new Dilation(0.001F)), ModelTransform.of(1.0F, -17.5F, -16.5F, 0.2618F, 0.0F, 0.0F));
+				.uv(167, 188).cuboid(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, new Dilation(0.001F))
+				.uv(180, 135).cuboid(1.5F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, new Dilation(0.001F)), ModelTransform.of(1.0F, -17.5F, -16.5F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData coloredlever = controls4.addChild("coloredlever", ModelPartBuilder.create().uv(165, 135).cuboid(-0.5F, -3.0F, 0.0F, 1.0F, 3.0F, 0.0F, new Dilation(0.001F)), ModelTransform.pivot(-1.75F, -19.25F, -12.0F));
 
@@ -450,19 +461,19 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData flightlights = panel4.addChild("flightlights", ModelPartBuilder.create(), ModelTransform.pivot(-6.0F, -15.9359F, -20.5665F));
 
 		ModelPartData cube_r64 = flightlights.addChild("cube_r64", ModelPartBuilder.create().uv(195, 41).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(127, 195).cuboid(-2.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(14.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+				.uv(127, 195).cuboid(-2.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(14.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData flightlights2 = flightlights.addChild("flightlights2", ModelPartBuilder.create(), ModelTransform.pivot(1.0F, 0.9478F, -0.014F));
 
 		ModelPartData cube_r65 = flightlights2.addChild("cube_r65", ModelPartBuilder.create().uv(132, 194).cuboid(-2.5F, -1.0541F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(194, 192).cuboid(-0.5F, -1.0541F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(13.0F, 0.0522F, 0.014F, 0.2618F, 0.0F, 0.0F));
+				.uv(194, 192).cuboid(-0.5F, -1.0541F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(13.0F, 0.0522F, 0.014F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData handbrakelights = flightlights.addChild("handbrakelights", ModelPartBuilder.create(), ModelTransform.pivot(-11.0F, 0.25F, 0.25F));
 
 		ModelPartData cube_r66 = handbrakelights.addChild("cube_r66", ModelPartBuilder.create().uv(14, 194).cuboid(-2.0F, -1.0F, -2.0F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(165, 155).cuboid(-5.5F, -1.0F, 1.25F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(170, 135).cuboid(-4.0F, -1.0F, 0.75F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(96, 194).cuboid(-2.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(14.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+				.uv(165, 155).cuboid(-5.5F, -1.0F, 1.25F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+				.uv(170, 135).cuboid(-4.0F, -1.0F, 0.75F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+				.uv(96, 194).cuboid(-2.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(14.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData handbrakelights2 = handbrakelights.addChild("handbrakelights2", ModelPartBuilder.create(), ModelTransform.pivot(1.0F, 0.9478F, -0.014F));
 
@@ -509,11 +520,11 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r78 = panel5.addChild("cube_r78", ModelPartBuilder.create().uv(0, 19).cuboid(-14.0F, -7.6235F, 12.523F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 2.1387F, -21.0F, 1.309F, 0.0F, 0.0F));
 
 		ModelPartData cube_r79 = panel5.addChild("cube_r79", ModelPartBuilder.create().uv(118, 38).cuboid(-14.0F, -17.6235F, -13.273F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F))
-		.uv(108, 121).cuboid(-14.0F, -17.6235F, -13.523F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F))
-		.uv(51, 123).cuboid(-14.0F, -17.6235F, -13.773F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F))
-		.uv(108, 140).cuboid(-14.0F, -17.6235F, -14.023F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F))
-		.uv(118, 19).cuboid(-14.0F, -17.6235F, -14.273F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F))
-		.uv(0, 142).cuboid(-14.0F, -17.6235F, -14.523F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, -1.0F, -21.0F, -1.309F, 0.0F, 0.0F));
+				.uv(108, 121).cuboid(-14.0F, -17.6235F, -13.523F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F))
+				.uv(51, 123).cuboid(-14.0F, -17.6235F, -13.773F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F))
+				.uv(108, 140).cuboid(-14.0F, -17.6235F, -14.023F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F))
+				.uv(118, 19).cuboid(-14.0F, -17.6235F, -14.273F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F))
+				.uv(0, 142).cuboid(-14.0F, -17.6235F, -14.523F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, -1.0F, -21.0F, -1.309F, 0.0F, 0.0F));
 
 		ModelPartData panel6 = toyota.addChild("panel6", ModelPartBuilder.create().uv(180, 52).cuboid(-14.0F, -14.9306F, -25.1225F, 28.0F, 3.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, -2.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
@@ -526,7 +537,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r83 = panel6.addChild("cube_r83", ModelPartBuilder.create().uv(0, 38).cuboid(-14.0F, -7.6235F, 12.523F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 2.1387F, -21.0F, 1.309F, 0.0F, 0.0F));
 
 		ModelPartData cube_r84 = panel6.addChild("cube_r84", ModelPartBuilder.create().uv(114, 0).cuboid(-14.0F, -17.6235F, -14.023F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F))
-		.uv(57, 159).cuboid(-14.0F, -17.6235F, -14.523F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, -1.0F, -21.0F, -1.309F, 0.0F, 0.0F));
+				.uv(57, 159).cuboid(-14.0F, -17.6235F, -14.523F, 28.0F, 18.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, -1.0F, -21.0F, -1.309F, 0.0F, 0.0F));
 
 		ModelPartData controls2 = panel6.addChild("controls2", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
@@ -539,12 +550,12 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r86 = gallifreyanball2.addChild("cube_r86", ModelPartBuilder.create().uv(192, 74).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(-0.25F)), ModelTransform.of(0.0F, 0.0259F, -0.0966F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData smallnob = controls2.addChild("smallnob", ModelPartBuilder.create().uv(35, 207).cuboid(-0.5F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(104, 153).cuboid(0.0F, -1.0F, 0.0F, 1.0F, 2.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(-4.5F, -18.7839F, -12.7475F, 0.2618F, 0.0F, 0.0F));
+				.uv(104, 153).cuboid(0.0F, -1.0F, 0.0F, 1.0F, 2.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(-4.5F, -18.7839F, -12.7475F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData smallnob2 = controls2.addChild("smallnob2", ModelPartBuilder.create(), ModelTransform.of(4.5F, -18.7839F, -12.7475F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData cube_r87 = smallnob2.addChild("cube_r87", ModelPartBuilder.create().uv(165, 64).cuboid(-0.75F, -1.0F, 0.0F, 1.0F, 2.0F, 0.0F, new Dilation(0.001F))
-		.uv(30, 207).cuboid(-0.25F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.25F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+				.uv(30, 207).cuboid(-0.25F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.25F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 
 		ModelPartData tinyswitches = controls2.addChild("tinyswitches", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, -18.1802F, -12.5857F));
 
@@ -583,13 +594,13 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r93 = switchlights3.addChild("cube_r93", ModelPartBuilder.create().uv(66, 29).cuboid(4.25F, -1.9132F, 7.8848F, 1.0F, 2.0F, 1.0F, new Dilation(-0.25F)), ModelTransform.of(1.0F, 0.0522F, 0.014F, 0.2618F, 0.0F, 0.0F));
 
 		ModelPartData top = toyota.addChild("top", ModelPartBuilder.create().uv(57, 49).cuboid(-8.0F, -46.0F, -7.0F, 16.0F, 0.0F, 14.0F, new Dilation(0.001F))
-		.uv(57, 34).cuboid(-8.0F, -84.0F, -7.0F, 16.0F, 0.0F, 14.0F, new Dilation(0.001F)), ModelTransform.pivot(0.0F, 23.0F, 0.0F));
+				.uv(57, 34).cuboid(-8.0F, -84.0F, -7.0F, 16.0F, 0.0F, 14.0F, new Dilation(0.001F)), ModelTransform.pivot(0.0F, 23.0F, 0.0F));
 
 		ModelPartData cube_r94 = top.addChild("cube_r94", ModelPartBuilder.create().uv(31, 214).cuboid(-7.75F, -27.0F, -4.5F, 2.0F, 1.0F, 9.0F, new Dilation(0.0F))
-		.uv(0, 204).cuboid(-8.65F, -26.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -20.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
+				.uv(0, 204).cuboid(-8.65F, -26.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -20.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
 
 		ModelPartData cube_r95 = top.addChild("cube_r95", ModelPartBuilder.create().uv(212, 203).cuboid(-7.75F, -30.0F, -4.5F, 2.0F, 1.0F, 9.0F, new Dilation(0.0F))
-		.uv(203, 158).cuboid(-8.65F, -29.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -17.0F, 0.0F, 0.0F, 0.5236F, 0.0F));
+				.uv(203, 158).cuboid(-8.65F, -29.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -17.0F, 0.0F, 0.0F, 0.5236F, 0.0F));
 
 		ModelPartData cube_r96 = top.addChild("cube_r96", ModelPartBuilder.create().uv(188, 212).cuboid(-7.75F, -30.0F, -4.5F, 2.0F, 1.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -17.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
 
@@ -622,10 +633,10 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r109 = toprotor.addChild("cube_r109", ModelPartBuilder.create().uv(62, 178).cuboid(-8.65F, -31.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 2.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
 		ModelPartData cube_r110 = toprotor.addChild("cube_r110", ModelPartBuilder.create().uv(207, 101).cuboid(-7.75F, -27.0F, -4.5F, 2.0F, 1.0F, 9.0F, new Dilation(0.0F))
-		.uv(25, 180).cuboid(-8.65F, -26.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
+				.uv(25, 180).cuboid(-8.65F, -26.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
 
 		ModelPartData cube_r111 = toprotor.addChild("cube_r111", ModelPartBuilder.create().uv(208, 89).cuboid(-7.75F, -30.0F, -4.5F, 2.0F, 1.0F, 9.0F, new Dilation(0.0F))
-		.uv(77, 181).cuboid(-8.65F, -29.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.5236F, 0.0F));
+				.uv(77, 181).cuboid(-8.65F, -29.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.5236F, 0.0F));
 
 		ModelPartData cube_r112 = toprotor.addChild("cube_r112", ModelPartBuilder.create().uv(208, 114).cuboid(-7.75F, -30.0F, -4.5F, 2.0F, 1.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
 
@@ -636,24 +647,24 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData monitor1 = monitors.addChild("monitor1", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData cube_r114 = monitor1.addChild("cube_r114", ModelPartBuilder.create().uv(41, 193).cuboid(7.25F, -48.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(179, 188).cuboid(14.0F, -54.4F, -6.0F, 1.0F, 8.0F, 12.0F, new Dilation(0.0F))
-		.uv(113, 34).cuboid(14.5F, -53.4F, -7.0F, 0.0F, 6.0F, 1.0F, new Dilation(0.0F))
-		.uv(99, 178).cuboid(14.5F, -53.4F, 6.0F, 0.0F, 6.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 47.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
+				.uv(179, 188).cuboid(14.0F, -54.4F, -6.0F, 1.0F, 8.0F, 12.0F, new Dilation(0.0F))
+				.uv(113, 34).cuboid(14.5F, -53.4F, -7.0F, 0.0F, 6.0F, 1.0F, new Dilation(0.0F))
+				.uv(99, 178).cuboid(14.5F, -53.4F, 6.0F, 0.0F, 6.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 47.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
 
 		ModelPartData cube_r115 = monitor1.addChild("cube_r115", ModelPartBuilder.create().uv(165, 104).cuboid(13.5287F, 7.75F, -0.6609F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(165, 126).cuboid(13.5287F, 7.75F, -0.6609F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-7.25F, 0.0F, -4.0F, 0.281F, -0.4478F, -0.588F));
+				.uv(165, 126).cuboid(13.5287F, 7.75F, -0.6609F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-7.25F, 0.0F, -4.0F, 0.281F, -0.4478F, -0.588F));
 
 		ModelPartData gallifreyan2 = monitor1.addChild("gallifreyan2", ModelPartBuilder.create().uv(180, 25).cuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, new Dilation(0.001F)), ModelTransform.of(13.0198F, -3.45F, 7.517F, 0.0F, -0.5236F, 0.0F));
 
 		ModelPartData monitor2 = monitors.addChild("monitor2", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
 
 		ModelPartData cube_r116 = monitor2.addChild("cube_r116", ModelPartBuilder.create().uv(34, 193).cuboid(7.25F, -48.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(152, 188).cuboid(14.0F, -54.4F, -6.0F, 1.0F, 8.0F, 12.0F, new Dilation(0.0F))
-		.uv(54, 110).cuboid(14.5F, -53.4F, -7.0F, 0.0F, 6.0F, 1.0F, new Dilation(0.0F))
-		.uv(113, 19).cuboid(14.5F, -53.4F, 6.0F, 0.0F, 6.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 47.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
+				.uv(152, 188).cuboid(14.0F, -54.4F, -6.0F, 1.0F, 8.0F, 12.0F, new Dilation(0.0F))
+				.uv(54, 110).cuboid(14.5F, -53.4F, -7.0F, 0.0F, 6.0F, 1.0F, new Dilation(0.0F))
+				.uv(113, 19).cuboid(14.5F, -53.4F, 6.0F, 0.0F, 6.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 47.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
 
 		ModelPartData cube_r117 = monitor2.addChild("cube_r117", ModelPartBuilder.create().uv(0, 139).cuboid(13.5287F, 7.75F, -0.6609F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(165, 101).cuboid(13.5287F, 7.75F, -0.6609F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-7.25F, 0.0F, -4.0F, 0.281F, -0.4478F, -0.588F));
+				.uv(165, 101).cuboid(13.5287F, 7.75F, -0.6609F, 8.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-7.25F, 0.0F, -4.0F, 0.281F, -0.4478F, -0.588F));
 
 		ModelPartData gallifreyan3 = monitor2.addChild("gallifreyan3", ModelPartBuilder.create().uv(152, 189).cuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, new Dilation(0.001F)), ModelTransform.of(13.0198F, -3.45F, 7.517F, 0.0F, -0.5236F, 0.0F));
 
@@ -696,8 +707,8 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r135 = bottom.addChild("cube_r135", ModelPartBuilder.create().uv(216, 125).cuboid(-0.5F, -27.0F, -5.0F, 1.0F, 15.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -16.0F, 0.5F, -3.1416F, 0.0F, 3.1416F));
 
 		ModelPartData cube_r136 = bottom.addChild("cube_r136", ModelPartBuilder.create().uv(192, 85).cuboid(-8.65F, -28.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F))
-		.uv(214, 179).cuboid(-7.75F, -29.0F, -4.5F, 2.0F, 1.0F, 9.0F, new Dilation(0.0F))
-		.uv(135, 202).cuboid(-8.65F, -35.5F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
+				.uv(214, 179).cuboid(-7.75F, -29.0F, -4.5F, 2.0F, 1.0F, 9.0F, new Dilation(0.0F))
+				.uv(135, 202).cuboid(-8.65F, -35.5F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -1.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
 
 		ModelPartData cube_r137 = bottom.addChild("cube_r137", ModelPartBuilder.create().uv(192, 69).cuboid(-8.65F, -31.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 2.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
@@ -714,8 +725,8 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r143 = bottom.addChild("cube_r143", ModelPartBuilder.create().uv(192, 110).cuboid(-8.65F, -31.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 2.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
 
 		ModelPartData cube_r144 = bottom.addChild("cube_r144", ModelPartBuilder.create().uv(196, 199).cuboid(-8.65F, -31.0F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F))
-		.uv(100, 214).cuboid(-7.75F, -32.0F, -4.5F, 2.0F, 1.0F, 9.0F, new Dilation(0.0F))
-		.uv(60, 201).cuboid(-8.65F, -38.5F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 2.0F, 0.0F, 0.0F, 0.5236F, 0.0F));
+				.uv(100, 214).cuboid(-7.75F, -32.0F, -4.5F, 2.0F, 1.0F, 9.0F, new Dilation(0.0F))
+				.uv(60, 201).cuboid(-8.65F, -38.5F, -5.0F, 2.0F, 2.0F, 10.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 2.0F, 0.0F, 0.0F, 0.5236F, 0.0F));
 
 		ModelPartData cube_r145 = bottom.addChild("cube_r145", ModelPartBuilder.create().uv(77, 214).cuboid(-7.75F, -30.0F, -4.5F, 2.0F, 1.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
 
@@ -778,20 +789,20 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPartData cube_r171 = rotorlights.addChild("cube_r171", ModelPartBuilder.create().uv(171, 220).cuboid(-0.5F, -27.0F, -4.25F, 1.0F, 15.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -2.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
 
 		ModelPartData rotorgizmo = rotor.addChild("rotorgizmo", ModelPartBuilder.create().uv(165, 85).cuboid(-1.5F, -35.0F, -1.5F, 3.0F, 12.0F, 3.0F, new Dilation(0.0F))
-		.uv(25, 193).cuboid(-1.0F, -37.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+				.uv(25, 193).cuboid(-1.0F, -37.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData cube_r172 = rotorgizmo.addChild("cube_r172", ModelPartBuilder.create().uv(192, 115).cuboid(-1.0F, -37.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
-		.uv(165, 64).cuboid(-1.5F, -35.0F, -1.5F, 3.0F, 12.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -85.0F, 0.0F, -3.1416F, 0.0F, 0.0F));
+				.uv(165, 64).cuboid(-1.5F, -35.0F, -1.5F, 3.0F, 12.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -85.0F, 0.0F, -3.1416F, 0.0F, 0.0F));
 
 		ModelPartData uppertimepiece = rotorgizmo.addChild("uppertimepiece", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, -48.0F, 0.0F));
 
 		ModelPartData cube_r173 = uppertimepiece.addChild("cube_r173", ModelPartBuilder.create().uv(66, 49).cuboid(-0.5F, -42.0F, 0.0F, 1.0F, 8.0F, 0.0F, new Dilation(0.001F))
-		.uv(66, 19).cuboid(0.0F, -42.0F, -0.5F, 0.0F, 8.0F, 1.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, -37.0F, 0.0F, 3.1416F, 0.7854F, 0.0F));
+				.uv(66, 19).cuboid(0.0F, -42.0F, -0.5F, 0.0F, 8.0F, 1.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, -37.0F, 0.0F, 3.1416F, 0.7854F, 0.0F));
 
 		ModelPartData lowertimepiece = rotorgizmo.addChild("lowertimepiece", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, -37.0F, 0.0F));
 
 		ModelPartData cube_r174 = lowertimepiece.addChild("cube_r174", ModelPartBuilder.create().uv(66, 34).cuboid(0.0F, -42.0F, -0.5F, 0.0F, 8.0F, 1.0F, new Dilation(0.001F))
-		.uv(51, 110).cuboid(-0.5F, -42.0F, 0.0F, 1.0F, 8.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 37.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
+				.uv(51, 110).cuboid(-0.5F, -42.0F, 0.0F, 1.0F, 8.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 37.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
 		return TexturedModelData.of(modelData, 256, 256);
 	}
 	@Override
@@ -816,26 +827,41 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPart throttle = this.toyota.getChild("panel4").getChild("controls4").getChild("throttle");
 		throttle.pitch = throttle.pitch + ((console.getTardis().getTravel().getSpeed() / (float) TardisTravel.MAX_SPEED) * 1.5f);
 
-		ModelPart handbrake = this.toyota.getChild("panel4").getChild("controls4").getChild("handbrake");
-		if(!PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
-			handbrake.pitch -= 1.8f;
-			handbrake.yaw -= 1.85f;
-			handbrake.roll += 1.525f;
-		} else {
-			handbrake.pitch = handbrake.pitch;
-			handbrake.yaw = handbrake.yaw;
-			handbrake.roll = handbrake.roll;
-		}
+		ModelPart handbrake = this.toyota.getChild("panel4").getChild("controls4").getChild("handbrake").getChild("pivot");
+		handbrake.yaw = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? handbrake.yaw - 1.5f : handbrake.yaw;
 
 		// @TODO MONSTER THE ONE ON THE LEFT IS THE POWER NOT THE RIGHT SMH
 		ModelPart power = this.toyota.getChild("panel1").getChild("controls").getChild("dooropen");
 		power.pitch = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ? power.pitch : power.pitch - 1.5f;
+
+		ModelPart antigravs = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps1").getChild("pivot2");
+		antigravs.yaw = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? antigravs.yaw : antigravs.yaw - 1.5f;
+
+		ModelPart doorlock = this.toyota.getChild("panel1").getChild("controls").getChild("smalllockernob").getChild("pivot3");
+		doorlock.yaw = console.getTardis().getDoor().locked() ? doorlock.yaw + 0.5f : doorlock.yaw;
+
+		ModelPart alarms = this.toyota.getChild("panel4").getChild("controls4").getChild("coloredlever2");
+		alarms.pitch = console.getTardis().getHandlers().getAlarms().isEnabled() ? alarms.pitch + 0.85f : alarms.pitch;
+
+		ModelPart autopilot = this.toyota.getChild("panel4").getChild("controls4").getChild("tinyswitch2");
+		autopilot.pitch = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? autopilot.pitch + 1f : autopilot.pitch;
 
 		ModelPart doorControl = this.toyota.getChild("panel1").getChild("controls").getChild("power");
 		doorControl.pitch = console.getTardis().getDoor().isLeftOpen() ? doorControl.pitch - 1f : console.getTardis().getDoor().isRightOpen() ? doorControl.pitch - 1.5f: doorControl.pitch;
 
 		ModelPart siegeMode = this.toyota.getChild("panel2").getChild("controls3").getChild("siegemode").getChild("siegemodehandle");
 		siegeMode.pitch = console.getTardis().isSiegeMode() ? siegeMode.pitch + 1f : siegeMode.pitch;
+
+		ModelPart fuelGauge = this.toyota.getChild("panel1").getChild("controls").getChild("geigercounter").getChild("needle");
+		fuelGauge.pivotX = fuelGauge.pivotX + 0.25f;
+		fuelGauge.pivotZ = fuelGauge.pivotZ + 0.25f;
+		fuelGauge.yaw = (float) (((console.getTardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
+
+		ModelPart groundSearch = this.toyota.getChild("panel1").getChild("controls").getChild("smallswitch");
+		groundSearch.pitch = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch + 1f : groundSearch.pitch;
+
+		ModelPart increment = this.toyota.getChild("panel2").getChild("controls3").getChild("gears").getChild("largegear2").getChild("pivot5");
+		increment.yaw = console.getTardis().getTravel().getPosManager().increment >= 10 ? console.getTardis().getTravel().getPosManager().increment >= 100 ? console.getTardis().getTravel().getPosManager().increment >= 1000 ? increment.yaw + 1.5f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
@@ -850,6 +876,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
 		return switch(state) {
+			case MAT, DEMAT, FLIGHT -> ToyotaAnimations.CONSOLE_TOYOTA_FLIGHT;
 			case LANDED -> ToyotaAnimations.CONSOLE_TOYOTA_IDLE;
 			default -> Animation.Builder.create(0).build();
 		};

@@ -38,6 +38,7 @@ public class ConsoleVariantRegistry {
     public static ConsoleVariantSchema COPPER;
     public static ConsoleVariantSchema TOYOTA;
     public static ConsoleVariantSchema TOYOTA_BLUE;
+    public static ConsoleVariantSchema TOYOTA_LEGACY;
 
     public static void init() {
 
@@ -57,5 +58,6 @@ public class ConsoleVariantRegistry {
         // Toyota variants
         TOYOTA = register(new ToyotaVariant());
         TOYOTA_BLUE = register(new ToyotaBlueVariant());
+        TOYOTA_LEGACY = register(new ToyotaLegacyVariant());
     }
 }
