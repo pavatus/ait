@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "ait:block/monitor_block",
+      "y": 180
+    },
+    "facing=north": {
+      "model": "ait:block/monitor_block",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "ait:block/monitor_block",
+      "y": 270
+    },
+    "facing=west": {
+      "model": "ait:block/monitor_block",
+      "y": 0
+    }
+  }
+}

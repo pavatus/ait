@@ -2,6 +2,7 @@ package mdteam.ait.client;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
+import mdteam.ait.client.renderers.monitors.MonitorRenderer;
 import mdteam.ait.core.*;
 import mdteam.ait.network.ClientAITNetworkManager;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
@@ -301,6 +302,7 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererRegistry.register(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, ExteriorRenderer::new);
         BlockEntityRendererRegistry.register(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, DoorRenderer::new);
         BlockEntityRendererRegistry.register(AITBlockEntityTypes.CORAL_BLOCK_ENTITY_TYPE, CoralRenderer::new);
+        BlockEntityRendererRegistry.register(AITBlockEntityTypes.MONITOR_BLOCK_ENTITY_TYPE, MonitorRenderer::new);
     }
 
     public void entityRenderRegister() {

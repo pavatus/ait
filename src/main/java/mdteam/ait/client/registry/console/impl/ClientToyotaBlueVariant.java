@@ -9,7 +9,7 @@ import mdteam.ait.tardis.variant.console.ToyotaVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientToyotaBlueVariant extends ClientConsoleVariantSchema {
-    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/toyota_blue.png"));
+    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/toyota_default.png"));
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/toyota_blue_emission.png"));
 
     public ClientToyotaBlueVariant() {

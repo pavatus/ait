@@ -345,6 +345,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             aitModelProvider.registerDirectionalBlock(AITBlocks.EXTERIOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CORAL_PLANT);
+            aitModelProvider.registerDirectionalBlock(AITBlocks.MONITOR_BLOCK);
 
             //falloutModelProvider.registerSimpleBlock(AITBlocks.DEEPSLATE_URANIUM_ORE);
             return aitModelProvider;
@@ -410,6 +411,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.RADIO, "Radio");
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
         provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
+        provider.addTranslation(AITBlocks.MONITOR_BLOCK, "Monitor");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
