@@ -31,6 +31,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -49,27 +50,32 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final VoxelShape LEDGE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 11.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
-    public static final VoxelShape LEDGE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 5.0, 32.0, 16.0),
+    /*public static final VoxelShape LEDGE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 5.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, 0, 19.5,1, 16));
     public static final VoxelShape LEDGE_SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 5.0),
             Block.createCuboidShape(0, 0, 0, 16,1, 19.5));
     public static final VoxelShape LEDGE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(11.0, 0.0, 0.0, 16.0, 32.0, 16.0),
-            Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
+            Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));*/
 
     public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
-    public static final VoxelShape CUBE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 14.0, 32.0, 16.0),
+    /*public static final VoxelShape CUBE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 14.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, 0, 19.5,1, 16));
     public static final VoxelShape CUBE_SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 14.0),
             Block.createCuboidShape(0, 0, 0, 16,1, 19.5));
     public static final VoxelShape CUBE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(2.0, 0.0, 0.0, 16.0, 32.0, 16.0),
-            Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
+            Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));*/
 
     public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
     public ExteriorBlock(Settings settings) {
         super(settings.nonOpaque());
 
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
+    }
+
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
     }
 
     @Nullable
@@ -154,14 +160,20 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         if ( world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.getTardis() != null && exterior.getTardis().getExterior().getVariant().bounding(state.get(FACING)) != null)
             return exterior.getTardis().getExterior().getVariant().bounding(state.get(FACING));
 
-        return switch (state.get(FACING)) {
-            case NORTH -> CUBE_NORTH_SHAPE;
-            case EAST -> CUBE_EAST_SHAPE;
-            case SOUTH -> CUBE_SOUTH_SHAPE;
-            case WEST -> CUBE_WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
-        };
+        return rotateShape(Direction.NORTH, state.get(FACING), CUBE_NORTH_SHAPE);
+    }
+
+    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[]{ shape, VoxelShapes.empty() };
+
+        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
+        for (int i = 0; i < times; i++) {
+            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.combine(buffer[1], VoxelShapes.cuboid(1-maxZ, minY, minX, 1-minZ, maxY, maxX), BooleanBiFunction.OR));
+            buffer[0] = buffer[1];
+            buffer[1] = VoxelShapes.empty();
+        }
+
+        return buffer[0];
     }
 
     public VoxelShape getLedgeShape(BlockState state, BlockView world, BlockPos pos) {
@@ -169,14 +181,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.getTardis() != null && exterior.getTardis().getExterior().getVariant().bounding(state.get(FACING)) != null)
             return exterior.getTardis().getExterior().getVariant().bounding(state.get(FACING));
 
-        return switch (state.get(FACING)) {
-            case NORTH -> LEDGE_NORTH_SHAPE;
-            case EAST -> LEDGE_EAST_SHAPE;
-            case SOUTH -> LEDGE_SOUTH_SHAPE;
-            case WEST -> LEDGE_WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
-        };
+        return rotateShape(Direction.NORTH, state.get(FACING), LEDGE_NORTH_SHAPE);
     }
 
     @Override

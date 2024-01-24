@@ -37,6 +37,10 @@ public class ClientConsoleVariantRegistry {
     public static ClientConsoleVariantSchema CORAL_GREEN;
     public static ClientConsoleVariantSchema CORAL_BLUE;
     public static ClientConsoleVariantSchema CORAL_WHITE;
+    public static ClientConsoleVariantSchema COPPER;
+    public static ClientConsoleVariantSchema TOYOTA;
+    public static ClientConsoleVariantSchema TOYOTA_BLUE;
+    public static ClientConsoleVariantSchema TOYOTA_LEGACY;
 
     public static void init() {
         // Borealis variants
@@ -52,5 +56,13 @@ public class ClientConsoleVariantRegistry {
         CORAL_GREEN = register(new ClientGreenCoralVariant());
         CORAL_BLUE = register(new ClientBlueCoralVariant());
         CORAL_WHITE = register(new ClientWhiteCoralVariant());
+
+        // Copper variants
+        COPPER = register(new ClientCopperVariant());
+
+        // Toyota variants
+        TOYOTA = register(new ClientToyotaVariant());
+        TOYOTA_BLUE = register(new ClientToyotaBlueVariant());
+        TOYOTA_LEGACY = register(new ClientToyotaLegacyVariant());
     }
 }

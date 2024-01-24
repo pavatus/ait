@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITDimensions;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
@@ -17,6 +18,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,8 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(WorldRenderer.class)
 public abstract class TARDISSkyboxMixin {
 
-    @Shadow protected abstract void renderEndSky(MatrixStack matrices);
-
+    @Shadow private boolean cloudsDirty;
     @Unique
     private static final Identifier TARDIS_SKY = new Identifier(AITMod.MOD_ID, "textures/environment/tardis_sky.png");
 
@@ -39,9 +40,7 @@ public abstract class TARDISSkyboxMixin {
         ClientWorld world = MinecraftClient.getInstance().world;
         if(world == null) return;
         if(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
-            if (world.getDimensionEffects().getSkyType() == DimensionEffects.SkyType.END) {
-                this.renderTardisSky(matrices);
-            }
+            this.renderTardisSky(matrices);
             ci.cancel();
         }
     }
