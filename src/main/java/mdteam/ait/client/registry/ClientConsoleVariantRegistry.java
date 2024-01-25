@@ -41,6 +41,7 @@ public class ClientConsoleVariantRegistry {
     public static ClientConsoleVariantSchema TOYOTA;
     public static ClientConsoleVariantSchema TOYOTA_BLUE;
     public static ClientConsoleVariantSchema TOYOTA_LEGACY;
+    public static ClientConsoleVariantSchema ALNICO;
 
     public static void init() {
         // Borealis variants
@@ -64,5 +65,8 @@ public class ClientConsoleVariantRegistry {
         TOYOTA = register(new ClientToyotaVariant());
         TOYOTA_BLUE = register(new ClientToyotaBlueVariant());
         TOYOTA_LEGACY = register(new ClientToyotaLegacyVariant());
+
+        // Alnico variants
+        ALNICO = register(new ClientAlnicoVariant());
     }
 }

@@ -34,6 +34,10 @@ repositories {
 			artifact() //Look directly for artifact
 		}
 	}
+    maven {
+        name = "Modrinth"
+        url "https://api.modrinth.com/maven"
+    }
 }
 
 loom {
@@ -104,6 +108,8 @@ dependencies {
 	modImplementation("curse.maven:forge-config-api-port-fabric-547434:4583000")
 
 	/*modImplementation*/modCompileOnlyApi("curse.maven:${project.regen_version}")
+
+    modImplementation("maven.modrinth:k9-mod:${project.k9_version}")
 }
 
 processResources {

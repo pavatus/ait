@@ -19,11 +19,13 @@ public class ConsoleRegistry {
     public static ConsoleSchema HARTNELL;
     public static ConsoleSchema COPPER;
     public static ConsoleSchema TOYOTA;
+    public static ConsoleSchema ALNICO;
 
     public static void init() {
         HARTNELL = register(new HartnellConsole());
         CORAL = register(new CoralConsole());
         COPPER = register(new CopperConsole());
         TOYOTA = register(new ToyotaConsole());
+        ALNICO = register(new AlnicoConsole());
     }
 }
