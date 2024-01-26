@@ -32,15 +32,15 @@ public class ThrottleControl extends Control {
 
         if (!leftClick) {
             if (player.isSneaking()) {
-                travel.setSpeed(TardisTravel.MAX_SPEED);
-            } else {
                 travel.increaseSpeed();
+            } else {
+                travel.setSpeed(TardisTravel.MAX_SPEED);
             }
         } else {
             if (player.isSneaking()) {
-                travel.setSpeed(0);
-            } else {
                 travel.decreaseSpeed();
+            } else {
+                travel.setSpeed(0);
             }
         }
 

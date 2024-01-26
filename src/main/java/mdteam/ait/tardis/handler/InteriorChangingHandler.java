@@ -1,14 +1,17 @@
 package mdteam.ait.tardis.handler;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.core.managers.DeltaTimeManager;
+import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -58,9 +61,7 @@ public class InteriorChangingHandler extends TardisLink {
     }
 
     public void queueInteriorChange(TardisDesktopSchema schema) {
-        if (!tardis().hasPower()) return;
-        if (tardis().isGrowth() && tardis().hasGrowthExterior())
-            tardis().getExterior().setType(TardisItemBuilder.findRandomExterior());
+        if (!tardis().isGrowth() && !tardis().hasPower()) return;
         if (tardis().getHandlers().getFuel().getFuel() < 5000 && !(tardis().isGrowth() && tardis().hasGrowthDesktop())) {
             for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis())) {
                 player.sendMessage(Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED), true);
@@ -82,6 +83,14 @@ public class InteriorChangingHandler extends TardisLink {
         setGenerating(false);
         clearedOldInterior = false;
         tardis().getHandlers().getAlarms().disable();
+        if(tardis().hasGrowthExterior()) {
+            PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
+            PropertiesHandler.setBool(tardis().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, true);
+            tardis().getExterior().setType(TardisItemBuilder.findRandomExterior());
+            tardis().getExterior().getExteriorPos().getWorld().playSound(null, tardis().getExterior().getExteriorPos(), AITSounds.MAT, SoundCategory.BLOCKS, 5f, 1f);
+            tardis().getTravel().setState(TardisTravel.State.MAT);
+            tardis().markDirty();
+        }
         DoorHandler.lockTardis(PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis(), null, false);
     }
 

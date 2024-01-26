@@ -12,6 +12,9 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
+import net.minecraft.entity.damage.DamageType;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -20,6 +23,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.predicate.entity.DamageSourcePredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -182,13 +186,13 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
+        if(source.isOf(DamageTypes.PLAYER_EXPLOSION)) return false;
         if (source.getAttacker() instanceof PlayerEntity player) {
             if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
                 controlEditorHandler(player);
             } else
                 this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld(), true);
         }
-
         return super.damage(source, source.getAttacker() instanceof PlayerEntity ? 0 : amount);
     }
 

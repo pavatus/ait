@@ -159,7 +159,7 @@ public class TardisDesktop extends TardisLink {
             entity.discard();  // Kill any normal entities at that position.
         }
 
-        for (LivingEntity entity : TardisUtil.getEntitiesInInterior(tardis(), 100)) {
+        for (LivingEntity entity : TardisUtil.getLivingEntitiesInInterior(tardis(), 100)) {
             entity.kill();
         }
 

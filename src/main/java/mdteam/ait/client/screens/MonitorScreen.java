@@ -153,6 +153,7 @@ public class MonitorScreen extends TardisScreen {
     }
 
     public void toInteriorSettingsScreen() {
+        if (tardis() == null || tardis().isGrowth()) return;
         MinecraftClient.getInstance().setScreenAndRender(new InteriorSettingsScreen(this.tardisId, this));
     }
 

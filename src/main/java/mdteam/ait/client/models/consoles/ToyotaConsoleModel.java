@@ -572,7 +572,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		ModelPartData smallnob6 = controls2.addChild("smallnob6", ModelPartBuilder.create().uv(140, 202).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(3.5F, -15.3106F, -23.6996F, 0.2618F, 0.0F, 0.0F));
 
-		ModelPartData gallifreyan = panel6.addChild("gallifreyan", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, -16.4362F, -18.5378F));
+		ModelPartData gallifreyan = panel6.addChild("gallifreyan", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, -16.6362F, -18.5378F));
 
 		ModelPartData middlegallifreyan = gallifreyan.addChild("middlegallifreyan", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 

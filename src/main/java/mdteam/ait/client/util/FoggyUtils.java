@@ -16,7 +16,7 @@ public class FoggyUtils {
             MinecraftClient.getInstance().gameRenderer.getCamera().getSubmersionType();
         }
         // spoooky black fog
-        if (ClientTardisUtil.isPlayerInATardis() && ClientTardisUtil.getPowerDelta() != ClientTardisUtil.MAX_POWER_DELTA_TICKS) {
+        if (ClientTardisUtil.isPlayerInATardis() && !ClientTardisUtil.getCurrentTardis().isGrowth() && ClientTardisUtil.getPowerDelta() != ClientTardisUtil.MAX_POWER_DELTA_TICKS) {
             RenderSystem.setShaderFogStart(MathHelper.lerp(ClientTardisUtil.getPowerDeltaForLerp(), -8, 24));
             RenderSystem.setShaderFogEnd(MathHelper.lerp(ClientTardisUtil.getPowerDeltaForLerp(), 11, 32));
             RenderSystem.setShaderFogShape(FogShape.SPHERE);

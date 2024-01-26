@@ -1,17 +1,9 @@
 package mdteam.ait.tardis;
 
-import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.common.regen.RegenerationData;
-import mc.craig.software.regen.common.regen.fabric.RegenerationDataImpl;
-import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RegenUtil;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.client.util.ClientTardisUtil;
-import mdteam.ait.compat.DependencyChecker;
-import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.item.SiegeTardisItem;
+import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -25,27 +17,18 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.*;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
+import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.Box;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
-
-import static mc.craig.software.regen.common.regen.state.RegenStates.REGENERATING;
 
 public class Tardis {
     // this is starting to get a little bloated..
@@ -228,6 +211,25 @@ public class Tardis {
         return this.getTravel().getDestination();
     }
 
+    private void generateInteriorWithNetherStar() {
+        TardisUtil.getEntitiesInInterior(this, 50)
+                .stream()
+                .filter(entity -> (entity instanceof ItemEntity) &&
+                ((ItemEntity) entity).getStack().getItem() == Items.NETHER_STAR &&
+                entity.isTouchingWater()).forEach(entity -> {
+            if (this.getExterior().getExteriorPos() == null) return;
+            this.setFuelCount(8000);
+            this.enablePower();
+            entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
+            entity.getWorld().playSound(null, this.getExterior().getExteriorPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
+            this.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(this));
+            if (this.getHandlers().getInteriorChanger().isGenerating()) {
+                entity.discard();
+            }
+        });
+    }
+
+
     /**
      * Called at the end of a servers tick
      *
@@ -239,6 +241,17 @@ public class Tardis {
         //     this.getHandlers().tick(server);
 
         // @TODO if tnt explodes in the interior (near the console), then it should crash
+
+        if (this.isGrowth()) {
+            /*if (this.getHandlers().getInteriorChanger().isGenerating()) {
+                for (PlayerEntity player : TardisUtil.getPlayersInInterior(this)) {
+                    TardisUtil.teleportOutside(this, player);
+                }
+            } else {
+                this.generateInteriorWithNetherStar();
+            }*/
+            this.generateInteriorWithNetherStar();
+        }
 
         if (isGrowth() && getDoor().isBothClosed() && !getHandlers().getInteriorChanger().isGenerating())
             getDoor().openDoors();

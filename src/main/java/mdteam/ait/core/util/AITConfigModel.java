@@ -8,7 +8,7 @@ import mdteam.ait.AITMod;
 @Modmenu(modId = AITMod.MOD_ID)
 @Config(name = "ait-config", wrapperName = "AITConfig")
 public class AITConfigModel {
-    public int SEARCH_HEIGHT = 32;
+    public int SEARCH_HEIGHT = 256;
     public float INTERIOR_HUM_VOLUME = 0.2f;
     public boolean CUSTOM_MENU = true;
 }

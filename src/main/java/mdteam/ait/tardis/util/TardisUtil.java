@@ -4,27 +4,19 @@ import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITDimensions;
-import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.item.KeyItem;
-import mdteam.ait.core.item.TardisItemBuilder;
-import mdteam.ait.registry.ExteriorRegistry;
-import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.PosType;
-import mdteam.ait.tardis.handler.DoorHandler;
-import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -33,14 +25,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.text.Text;
@@ -49,12 +38,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import qouteall.imm_ptl.core.IPGlobal;
 import qouteall.imm_ptl.core.api.PortalAPI;
 
 import java.util.*;
-
-import static qouteall.imm_ptl.core.teleportation.ServerTeleportationManager.teleportRegularEntityTo;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
@@ -369,11 +355,16 @@ public class TardisUtil {
         return list;
     }
 
-    public static List<LivingEntity> getEntitiesInInterior(Tardis tardis, int area) {
+    public static List<LivingEntity> getLivingEntitiesInInterior(Tardis tardis, int area) {
         return getTardisDimension().getEntitiesByClass(LivingEntity.class, new Box(tardis.getDoor().getDoorPos().north(area).east(area).up(area), tardis.getDoor().getDoorPos().south(area).west(area).down(area)), (e) -> true);
     }
-    public static List<LivingEntity> getEntitiesInInterior(Tardis tardis) {
-        return getEntitiesInInterior(tardis, 20);
+
+    public static List<Entity> getEntitiesInInterior(Tardis tardis, int area) {
+        return getTardisDimension().getEntitiesByClass(Entity.class, new Box(tardis.getDoor().getDoorPos().north(area).east(area).up(area), tardis.getDoor().getDoorPos().south(area).west(area).down(area)), (e) -> true);
+    }
+
+    public static List<LivingEntity> getLivingEntitiesInInterior(Tardis tardis) {
+        return getLivingEntitiesInInterior(tardis, 20);
     }
 
     public static List<PlayerEntity> getPlayersInInterior(Corners corners) {

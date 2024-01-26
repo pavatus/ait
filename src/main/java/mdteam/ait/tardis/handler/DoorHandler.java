@@ -2,7 +2,6 @@ package mdteam.ait.tardis.handler;
 
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.entities.BaseControlEntity;
 import mdteam.ait.core.item.KeyItem;
@@ -10,7 +9,6 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.advancement.TardisCriterions;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -22,9 +20,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3d;
 
 import java.util.UUID;
 
@@ -53,7 +49,7 @@ public class DoorHandler extends TardisLink {
      */
     private void succ() {
         // Get all entities in the Tardis interior
-        TardisUtil.getEntitiesInInterior(tardis())
+        TardisUtil.getLivingEntitiesInInterior(tardis())
                 .stream()
                 .filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
                 .filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators

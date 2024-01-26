@@ -3,6 +3,8 @@ package mdteam.ait.client.models.consoles;
 import mdteam.ait.client.animation.console.alnico.AlnicoAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.handler.FuelHandler;
+import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -354,13 +356,13 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		ModelPartData controls4 = section4.addChild("controls4", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData biglever2 = controls4.addChild("biglever2", ModelPartBuilder.create().uv(124, 159).cuboid(8.75F, -19.25F, 3.0F, 2.0F, 2.0F, 4.0F, new Dilation(0.0F))
-		.uv(88, 40).cuboid(7.75F, -18.25F, 4.0F, 4.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-20.75F, 5.5F, -16.5F, 0.2618F, 0.5236F, 0.0F));
+				.uv(88, 40).cuboid(7.75F, -18.25F, 4.0F, 4.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-20.75F, 5.5F, -16.5F, 0.2618F, 0.5236F, 0.0F));
 
-		ModelPartData bone12 = biglever2.addChild("bone12", ModelPartBuilder.create().uv(48, 49).cuboid(8.25F, -6.8F, 5.5F, 0.0F, 4.0F, 1.0F, new Dilation(0.001F))
-		.uv(50, 54).cuboid(11.25F, -6.8F, 5.5F, 0.0F, 4.0F, 1.0F, new Dilation(0.001F))
-		.uv(48, 37).cuboid(8.25F, -6.8F, 5.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.001F))
-		.uv(13, 10).cuboid(9.25F, -9.8F, 5.5F, 1.0F, 3.0F, 1.0F, new Dilation(0.0F))
-		.uv(69, 0).cuboid(10.25F, -6.8F, 5.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.001F)), ModelTransform.pivot(0.0F, -14.45F, -1.0F));
+		ModelPartData bone12 = biglever2.addChild("bone12", ModelPartBuilder.create().uv(48, 49).cuboid(-1.75F, -3.8F, -0.5F, 0.0F, 4.0F, 1.0F, new Dilation(0.001F))
+				.uv(50, 54).cuboid(1.25F, -3.8F, -0.5F, 0.0F, 4.0F, 1.0F, new Dilation(0.001F))
+				.uv(48, 37).cuboid(-1.75F, -3.8F, -0.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.001F))
+				.uv(13, 10).cuboid(-0.75F, -6.8F, -0.5F, 1.0F, 3.0F, 1.0F, new Dilation(0.0F))
+				.uv(69, 0).cuboid(0.25F, -3.8F, -0.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.001F)), ModelTransform.pivot(10.0F, -17.45F, 5.0F));
 
 		ModelPartData tinyswitch3 = controls4.addChild("tinyswitch3", ModelPartBuilder.create(), ModelTransform.of(-3.0F, -14.25F, -14.0F, -0.2618F, 0.0F, 0.0F));
 
@@ -724,6 +726,24 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		matrices.push();
 
 		matrices.translate(0.5f, -1.5f, -0.5f);
+
+		ModelPart throttle = alnico.getChild("section1").getChild("controls").getChild("fliplever1").getChild("bone5");
+		throttle.pitch = throttle.pitch + ((console.getTardis().getTravel().getSpeed() / (float) TardisTravel.MAX_SPEED) * 1.5f);
+
+		ModelPart handbrake = alnico.getChild("section1").getChild("controls").getChild("biglever").getChild("bone");
+		handbrake.pitch = !PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? handbrake.pitch + 0.9f : handbrake.pitch - 0.9f;
+
+		ModelPart power = alnico.getChild("section4").getChild("controls4").getChild("biglever2").getChild("bone12");
+		power.pitch = !console.getTardis().hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
+
+		ModelPart autoPilot = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch1");
+		autoPilot.pitch = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? autoPilot.pitch + 0.5f : autoPilot.pitch;
+
+		ModelPart fuelGauge = alnico.getChild("section3").getChild("controls3").getChild("geiger").getChild("needle");
+		fuelGauge.roll = (float) (((console.getTardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
+
+		ModelPart increment = alnico.getChild("section5").getChild("controls5").getChild("multiswitchpanel2").getChild("longswitch5");
+		increment.pitch = console.getTardis().getTravel().getPosManager().increment >= 10 ? console.getTardis().getTravel().getPosManager().increment >= 100 ? console.getTardis().getTravel().getPosManager().increment >= 1000 ? increment.pitch + 1.5f : increment.pitch + 1f : increment.pitch + 0.5f : increment.pitch;
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

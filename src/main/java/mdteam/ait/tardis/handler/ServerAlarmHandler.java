@@ -3,6 +3,11 @@ package mdteam.ait.tardis.handler;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.handler.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.PiglinEntity;
+import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -43,7 +48,18 @@ public class ServerAlarmHandler extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
 
-        if (!isEnabled()) return;
+        if (!isEnabled()) {
+
+            // @TODO make a new control that makes it (by default) detect hostile entities in the interior,
+            //  @TODO maybe a property for the distance from the door as well? - Loqor
+
+            /*for (Entity entity : TardisUtil.getEntitiesInInterior(tardis(), 20)) {
+                if (entity instanceof HostileEntity) {
+                    this.enable();
+                }
+            }*/
+            return;
+        }
 
         soundCounter++;
 

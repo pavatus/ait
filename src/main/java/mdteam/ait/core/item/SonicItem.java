@@ -300,7 +300,7 @@ public class SonicItem extends Item {
         String position = Text.translatable("message.ait.sonic.none").getString();
         if(tag.contains("tardis")) {
             Tardis tardis = ClientTardisManager.getInstance().getLookup().get(UUID.fromString(tag.getString("tardis")));
-            position = tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();
+            position = tardis.getTravel() == null || tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();
         }
 
         if (tag.contains("tardis")) { // Adding the sonics mode
