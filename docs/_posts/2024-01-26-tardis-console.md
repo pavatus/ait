@@ -15,7 +15,7 @@ categories: ["Tardis", "Specifics"]
 
 ## What Is It?
 > The TARDIS Console, quite simply, is the interface that which a player (or other entity) uses to interact with the TARDIS itself.
-> Out-of-universe, the console is a collection of *"control entities"* that do different functions.
+> Out-of-universe, the console is a collection of [*"control entities"*]({% post_url 2024-01-26-control-entities %}) that do different functions.
 
 ---
 

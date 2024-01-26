@@ -30,7 +30,7 @@ categories: ["Tardis", "Desktop Configuration"]
 >
 > 6. Exit the interior, and wait for the cloister bells to stop ringing.
 >
-> > You're also able to add your own custom desktops with [**datapacks**]({% post_url 2024-01-26-datapack-interiors.md %}). 
+> > You're also able to add your own custom desktops with [**datapacks**]({% post_url 2024-01-26-datapack-interiors %}). 
 
 ---
 
