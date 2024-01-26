@@ -13,4 +13,4 @@ categories: ["Tardis", "Specifics"]
 ## Where Is It Collected From?
 > **Artron energy** is collected by the TARDIS during **refueling**, 
 > and can be passively gained from anywhere (slowly) or gained in 
-> larger amounts quicker in a [**rift chunk**]({% post_url 2024-01-26-rift-chunk.md %}).
+> larger amounts quicker in a [**rift chunk**]({% post_url 2024-01-26-rift-chunk %}).
