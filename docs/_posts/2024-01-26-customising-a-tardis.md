@@ -1,43 +1,45 @@
 ---
 layout: post
 title:  "Customising a Tardis"
-category: "Tardis"
+categories: ["Tardis", "Desktop Configuration"]
 ---
 
 ## Changing the Exterior
 
-Open the monitor by using the control
-
-The white arrows either side of the exterior shown will change the type
-
-The purple arrows change the variant
-
-To save your changes, press apply.
+> 1. Open the monitor by using the control or monitor block.
+>
+> 2. Use the **white arrows** to change the exterior **type**. 
+>
+> 3. Use the **purple arrows** to change the exterior **variant**.
+>
+> 4. To save your changes, click **"Apply"**.
 
 ---
 
 ## Changing the Interior
 
-Open the monitor
-
-Navigate to the interior change screen by pressing "Desktop Settings" -> "Change Interior"
-
-The arrows change the selected interior
-
-To start Interior Reconfiguration, press apply
-
-The process will use up 5000 AU
-
-Exit the interior, and wait for the bells to stop ringing.
+> 1. Open the monitor by using the control or monitor block.
+>
+> 2. Navigate to the interior change screen by clicking **"Desktop Settings" -> "Change Interior"**.
+>
+> 3. Use the arrows to change the selected interior.
+>
+> 4. To start **Interior Reconfiguration**, click the image of the desktop you want.
+>
+> 5. The process will use up [**5000 AU**]({% post_yrl 2024-01-26-artron-energy.md %}).
+>
+> 6. Exit the interior, and wait for the cloister bells to stop ringing.
+>
+> > You're also able to add your own custom desktops with [**datapacks**]({% post_url 2024-01-26-datapack-interiors.md %}). 
 
 ---
 
 ## Changing the Hum
 
-Open the monitor
-
-Navigate to the desktop settings screen by pressing the button
-
-The arrows will change the selected hum
-
-Press apply to save.
+> 1. Open the monitor by using the control or monitor block.
+>
+> 2. Navigate to the desktop settings screen by pressing **"Desktop Settings"**.
+>
+> 3. Use the arrows to change the selected hum (currently only have the **Coral** & **Toyota** hums).
+>
+> 4. Click **"Apply"** to select the active hum.
