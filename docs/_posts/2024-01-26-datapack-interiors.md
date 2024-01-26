@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Datapack Interiors"
-categories: ["Tardis", "Specifics", "Datapacks"]
+title:  "Datapack Desktops"
+categories: ["Tardis", "Specifics", "Datapacks", "Desktop"]
 ---
 
 ## Preview Photo

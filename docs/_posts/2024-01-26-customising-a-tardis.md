@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Customising a Tardis"
-categories: ["Tardis", "Desktop Configuration"]
+categories: ["Tardis", "Desktop"]
 ---
 
 ## Changing the Exterior
