@@ -24,7 +24,7 @@ public class CopperConsole extends ConsoleSchema {
             new ControlTypes(new DoorControl(), EntityDimensions.changing(0.06249999f, 0.11249998f), new Vector3f(0.6101562408730388f, 0.29999980982393026f, -1.310937530361116f)),
             new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.07499999f, 0.14999999f), new Vector3f(0.8484375290572643f, 0.26249923277646303f, 1.1281250081956387f)),
             new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.125f, 0.16250001f), new Vector3f(0.7023437451571226f, 0.5625f, 0.8812500042840838f)),
-            new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.3749999f, 0.36249992f), new Vector3f(-0.5257812635973096f, 1.5750017277896404f, 0.7093750014901161f)),
+            new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.57499975f, 0.3874999f), new Vector3f(-1.2503906358033419f, 1.3125017127022147f, 0.008984364569187164f)),
             new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.27500004f, 0.20000002f), new Vector3f(0.2000000076368451f, 0.46249980945140123f, 1.1390625294297934f)),
             new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.15f, 0.17500001f), new Vector3f(-0.48671876825392246f, 1.065000157803297f, -0.26874999795109034f)),
             new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.06249999f, 0.125f), new Vector3f(1.1125000165775418f, 0.4875005707144737f, -0.385937524959445f)),
