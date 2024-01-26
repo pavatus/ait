@@ -54,7 +54,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         BlockState blockState = entity.getCachedState();
         float f = blockState.get(ExteriorBlock.FACING).asRotation();
-        int maxLight = 0xFFFFFF;
+        int maxLight = 0xF000F0;
         matrices.push();
         matrices.translate(0.5, 0, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
@@ -78,16 +78,16 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             World world = entity.getTardis().getTravel().getPosition().getWorld();
             if (world != null) {
                 World doorWorld = entity.getWorld();
-            BlockPos doorPos = entity.getPos();
-            int lightConst = 524296; // 1 / maxLight;
-            //light = WorldRenderer.getLightmapCoordinates(entity.getTardis().getHandlers().getExteriorPos().getWorld(), entity.getTardis().getHandlers().getExteriorPos());;
-            int i = world.getLightLevel(LightType.SKY, pos);
-            int j = world.getLightLevel(LightType.BLOCK, pos);
-            int k = doorWorld.getLightLevel(LightType.BLOCK, doorPos);
-            /*light = ((i + j >= 15 ? ((i + j) * 2) : i != 0 ? i * (world.isNight() ? 1 : 2) +
+                BlockPos doorPos = entity.getPos();
+                int lightConst = 524296; // 1 / maxLight;
+                //light = WorldRenderer.getLightmapCoordinates(entity.getTardis().getHandlers().getExteriorPos().getWorld(), entity.getTardis().getHandlers().getExteriorPos());;
+                int i = world.getLightLevel(LightType.SKY, pos);
+                int j = world.getLightLevel(LightType.BLOCK, pos);
+                int k = doorWorld.getLightLevel(LightType.BLOCK, doorPos);
+                /*light = ((i + j >= 15 ? ((i + j) * 2) : i != 0 ? i * (world.isNight() ? 1 : 2) +
                     (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j + 6) : j * 2) * lightConst);*/
-            light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight() ? (i / 15) + j > 0 ? j + 13 : j : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j)) * lightConst;
-            //System.out.println("Sky: " + i + " | Block: " + j + " | light: " + light);
+                light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight() ? (i / 15) + j > 0 ? j + 13 : j : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j)) * lightConst;
+                //System.out.println("Sky: " + i + " | Block: " + j + " | light: " + light);
             }
         }
 
@@ -100,7 +100,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
                 }
                 if (emission != null && entity.getTardis().hasPower()) {
                     boolean alarms = PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
-                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(emission, false)), light, overlay, 1, alarms ? 0.3f : 1 , alarms ? 0.3f : 1, 1);
+                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentEmissive(emission, true)), maxLight, overlay, 1, alarms ? 0.3f : 1 , alarms ? 0.3f : 1, 1);
                 }
             }
         }

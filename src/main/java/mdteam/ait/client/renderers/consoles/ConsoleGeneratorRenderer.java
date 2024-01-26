@@ -7,6 +7,7 @@ import mdteam.ait.client.models.consoles.CoralConsoleModel;
 import mdteam.ait.client.models.consoles.HartnellConsoleModel;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
+import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import mdteam.ait.core.blocks.ConsoleGeneratorBlock;
@@ -82,7 +83,7 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
         /*if(entity.isLocked()) {
             this.console.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(this.consoleTexture)), maxLight, OverlayTexture.DEFAULT_UV, 0.2f, 0.2f, 0.2f, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
         } else {*/
-            this.console.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(this.consoleTexture)), maxLight, OverlayTexture.DEFAULT_UV, 0.3607843137f, 0.9450980392f, 1, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+            this.console.render(matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(this.consoleTexture, true)), maxLight, OverlayTexture.DEFAULT_UV, 0.3607843137f, 0.9450980392f, 1, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
         //}
         matrices.pop();
     }
