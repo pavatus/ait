@@ -64,7 +64,7 @@ public class DoorHandler extends TardisLink {
                 });
     }
     private boolean shouldSucc() {
-        return TardisUtil.getTardisDimension().getBlockEntity(tardis().getDesktop().getDoorPos()) instanceof DoorBlockEntity && (tardis().getTravel().getState() == FLIGHT || tardis().getTravel().getState() == CRASH) && this.isOpen();
+        return (tardis().getTravel().getState() != LANDED) && this.isOpen() &&  TardisUtil.getTardisDimension().getBlockEntity(tardis().getDesktop().getDoorPos()) instanceof DoorBlockEntity;
     }
 
     // Remember to markDirty for these setters!!

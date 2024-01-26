@@ -357,7 +357,7 @@ public class TardisTravel extends TardisLink {
         }
 
         // Lock the Tardis doors
-        DoorHandler.lockTardis(true, this.getTardis(), null, true);
+        // DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
         // Set the Tardis state to materialize
         this.setState(State.MAT);
@@ -438,7 +438,7 @@ public class TardisTravel extends TardisLink {
             return;
         }
 
-        DoorHandler.lockTardis(true, this.getTardis(), null, true);
+        // DoorHandler.lockTardis(true, this.getTardis(), null, true);
 
         this.setState(State.DEMAT);
 
