@@ -27,8 +27,6 @@ public class HandBrakeControl extends Control {
         if(tardis.isRefueling())
             tardis.setRefueling(false);
 
-        tardis.markDirty();
-
         this.soundEvent = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
 
         messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));

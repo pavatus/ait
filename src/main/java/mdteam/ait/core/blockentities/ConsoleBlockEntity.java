@@ -11,6 +11,7 @@ import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.control.ControlTypes;
+import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
@@ -47,7 +48,7 @@ import java.util.*;
 
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
-public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
+public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
     public final AnimationState ANIM_FLIGHT = new AnimationState();
     public int animationTimer = 0;
     public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
@@ -72,7 +73,7 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
     @Override
     public void writeNbt(NbtCompound nbt) {
-        if (this.getTardis() == null) {
+        if (this.getTardis().isEmpty()) {
             AITMod.LOGGER.error("this.getTardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
 
@@ -129,35 +130,6 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
         return BlockEntityUpdateS2CPacket.create(this);
     }
 
-    // WHY OH WHY
-    public Optional<Tardis> getTardis() {
-        if (this.tardisId == null)
-            this.findTardis();
-
-        if (TardisUtil.isClient()) { // todo replace deprecated check
-            if (!ClientTardisManager.getInstance().hasTardis(this.tardisId)) {
-                ClientTardisManager.getInstance().loadTardis(this.tardisId, tardis -> {});
-                return Optional.empty();
-                // todo add of `ifPresent()` of `isEmpty()` checks
-                // eg if before it was PropertiesHandler.set(this.getTardis, ...)
-                // it should become:
-                // this.getTardis().ifPresent(tardis -> PropertiesHandler.set(tardis, ...))
-                // or
-                // if (this.getTardis().isEmpty()) return;
-                //  because i dont want to rewrite a lot of the code base rn. this needs replacing badly but i am desperate for this release to come out and idc.
-                // issues with doing it this way is that client will probably have to repeat things multiple times to get things to happen.
-            }
-            return Optional.of(ClientTardisManager.getInstance().getTardis(this.tardisId));
-        }
-        return Optional.of(ServerTardisManager.getInstance().getTardis(this.tardisId));
-    }
-
-
-    private void findTardis() {
-        this.setTardis(TardisUtil.findTardisByInterior(pos));
-        markDirty();
-    }
-
     public void ask() {
         if (!getWorld().isClient()) return;
         PacketByteBuf buf = PacketByteBufs.create();
@@ -167,11 +139,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
 
     public void sync() {
         if (isClient()) return;
-
-        // ServerTardisManager.getInstance().sendToSubscribers(this.getTardis());
         syncType();
         syncVariant();
-        /*getWorld().updateListeners(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), Block.NOTIFY_ALL);*/
         needsSync = false;
     }
 
@@ -219,14 +188,14 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     }
 
     public void linkDesktop() {
-        if (this.getTardis() == null)
+        if (this.getTardis().isEmpty())
             return;
-        if (this.getTardis() != null)
-            this.setDesktop(this.getDesktop());
+        this.setDesktop(this.getDesktop());
     }
 
     public TardisDesktop getDesktop() {
-        return this.getTardis().getDesktop();
+        if(this.getTardis().isEmpty()) return null;
+        return this.getTardis().get().getDesktop();
     }
 
     public ConsoleSchema getConsoleSchema() {
@@ -335,8 +304,8 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
     }
 
     public boolean wasPowered() {
-        if(this.getTardis() == null) return false;
-        return this.wasPowered ^ this.getTardis().hasPower();
+        if(this.getTardis().isEmpty()) return false;
+        return this.wasPowered ^ this.getTardis().get().hasPower();
     }
 
     public void checkAnimations() {
@@ -406,22 +375,6 @@ public class ConsoleBlockEntity extends BlockEntity implements BlockEntityTicker
             markNeedsSyncing();
             needsReloading = false;
         }
-
-        /*List<ConsoleControlEntity> entitiesNeedingControl = new ArrayList<>();
-        Box entityBox = new Box(pos.north(2).east(2).up(2), pos.south(2).west(2).down(2));
-        List<ConsoleControlEntity> entities = TardisUtil.getTardisDimension().getEntitiesByClass(ConsoleControlEntity.class, entityBox, (e) -> true);
-
-        for (ConsoleControlEntity entity : controlEntities) {
-            if (entities.isEmpty()) {
-                entitiesNeedingControl.add(entity);
-            }
-        }
-
-        controlEntities.removeAll(entitiesNeedingControl);
-
-        if (!entitiesNeedingControl.isEmpty()) {
-            markNeedsControl();
-        }*/
 
         if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
             this.markRemoved();

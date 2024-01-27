@@ -40,7 +40,7 @@ public class PropertiesHandler { // todo move things out of properties
     // Should these methods be in the holder instead?
     
     public static void set(Tardis tardis, String key, Object val) {
-        set(tardis, key, val);
+        set(tardis.getHandlers().getProperties(), key, val);
         sync(tardis.getHandlers().getProperties(), key, tardis.getUuid());
     }
 

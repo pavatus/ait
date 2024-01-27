@@ -2,7 +2,6 @@ package mdteam.ait.tardis.wrapper.server;
 
 import mdteam.ait.tardis.TardisTickable;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisDesktopSchema;
@@ -19,27 +18,14 @@ public class ServerTardisDesktop extends TardisDesktop implements TardisTickable
     @Override
     public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
         super.setInteriorDoorPos(pos);
-
-        if (this.tardis() == null) return;
-
-        this.tardis().markDirty();
+        if (this.getTardis().isEmpty()) return;
+        this.sync();
     }
 
     @Override
     public void setConsolePos(AbsoluteBlockPos.Directed pos) {
         super.setConsolePos(pos);
 
-        this.tardis().markDirty();
+        this.sync();
     }
-    @Override
-    public void startTick(MinecraftServer server) {}
-
-    @Override
-    public void tick(MinecraftServer server) {}
-
-    @Override
-    public void tick(ServerWorld world) {}
-
-    @Override
-    public void tick(MinecraftClient client) {}
 }

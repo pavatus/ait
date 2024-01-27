@@ -46,8 +46,9 @@ public class DoorData extends TardisLink {
      * Moves entities in the Tardis interior towards the door.
      */
     private void succ() {
+        if(getTardis().isEmpty()) return;
         // Get all entities in the Tardis interior
-        TardisUtil.getEntitiesInInterior(tardis())
+        TardisUtil.getEntitiesInInterior(getTardis().get())
                 .stream()
                 .filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
                 .filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
@@ -62,11 +63,12 @@ public class DoorData extends TardisLink {
                 });
     }
     private boolean shouldSucc() {
-        System.out.println(this.getTardis());
-        return TardisUtil.getTardisDimension().getBlockEntity(tardis().getDesktop().getDoorPos()) instanceof DoorBlockEntity && (tardis().getTravel().getState() == FLIGHT || tardis().getTravel().getState() == CRASH) && this.isOpen();
+        if(this.getTardis().isEmpty() || getDoorPos() == null) return false;
+        System.out.println(this.getTardis().get());
+        return TardisUtil.getTardisDimension().getBlockEntity(getTardis().get().getDesktop().getDoorPos()) instanceof DoorBlockEntity && (getTardis().get().getTravel().getState() == FLIGHT || getTardis().get().getTravel().getState() == CRASH) && this.isOpen();
     }
 
-    // Remember to markDirty for these setters!!
+    // Remember to this.sync() for these setters!!
     public void setLeftRot(boolean var) {
         this.left = var;
         if(this.left) this.setDoorState(DoorStateEnum.FIRST);
@@ -106,7 +108,8 @@ public class DoorData extends TardisLink {
     }
 
     public boolean isDoubleDoor() {
-        return tardis().getExterior().getVariant().door().isDouble();
+        if(getTardis().isEmpty()) return false;
+        return getTardis().get().getExterior().getVariant().door().isDouble();
     }
 
     // fixme all these open methods are terrible
@@ -146,21 +149,23 @@ public class DoorData extends TardisLink {
     }
 
     public void setDoorState(DoorStateEnum var) {
+        if(getTardis().isEmpty()) return;
         if (var != doorState) {
             tempExteriorState = this.doorState;
             tempInteriorState = this.doorState;
 
             // if the last state ( doorState ) was closed and the new state ( var ) is open, fire the event
             if (doorState == DoorStateEnum.CLOSED) {
-                TardisEvents.DOOR_OPEN.invoker().onOpen(tardis());
+                TardisEvents.DOOR_OPEN.invoker().onOpen(getTardis().get());
             }
             // if the last state was open and the new state is closed, fire the event
             if (doorState != DoorStateEnum.CLOSED && var == DoorStateEnum.CLOSED) {
-                TardisEvents.DOOR_CLOSE.invoker().onClose(tardis());
+                TardisEvents.DOOR_CLOSE.invoker().onClose(getTardis().get());
             }
         }
 
         this.doorState = var;
+        this.sync();
     }
 
     /**
@@ -300,8 +305,6 @@ public class DoorData extends TardisLink {
             door.setDoorState(door.getDoorState() == DoorStateEnum.FIRST ? DoorStateEnum.CLOSED : DoorStateEnum.FIRST);
         }
 
-        tardis.markDirty();
-
         return true;
     }
 
@@ -336,8 +339,6 @@ public class DoorData extends TardisLink {
 
         door.getExteriorPos().getWorld().playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
         door.getDoorPos().getWorld().playSound(null, door.getDoorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
-
-        tardis.markDirty();
 
         return true;
     }

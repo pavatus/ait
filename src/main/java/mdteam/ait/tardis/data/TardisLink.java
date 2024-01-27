@@ -4,8 +4,6 @@ import mdteam.ait.tardis.AbstractTardisComponent;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.SerialDimension;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTickable;
 import net.minecraft.client.MinecraftClient;
@@ -14,16 +12,12 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import java.util.UUID;
+import java.util.Optional;
 
 // todo move everything over to TardisComponent
 public abstract class TardisLink extends AbstractTardisComponent implements TardisTickable {
     public TardisLink(Tardis tardis, String id) {
        super(tardis, id);
-    }
-
-    public Tardis tardis() {
-        return this.getTardis();
     }
 
     @Override
@@ -47,15 +41,17 @@ public abstract class TardisLink extends AbstractTardisComponent implements Tard
     }
 
     public AbsoluteBlockPos.Directed getDoorPos() {
-        Tardis tardis = tardis();
-        return tardis != null && tardis.getDesktop() != null ?
+        if(getTardis().isEmpty()) return new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
+        Tardis tardis = getTardis().get();
+        return tardis.getDesktop() != null ?
                 tardis.getDesktop().getInteriorDoorPos() :
                 new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
     }
 
     public AbsoluteBlockPos.Directed getExteriorPos() {
-        Tardis tardis = tardis();
-        return tardis != null && tardis.getTravel() != null ?
+        if(getTardis().isEmpty()) return null;
+        Tardis tardis = getTardis().get();
+        return tardis.getTravel() != null ?
                 tardis.getTravel().getPosition() :
                 new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
     }

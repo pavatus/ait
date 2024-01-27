@@ -27,13 +27,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.getTardis() == null) {
+        if (entity.getTardis().isEmpty()) {
             return;
         }
 
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-        ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant());
-        TardisExterior tardisExterior = entity.getTardis().getExterior();
+        ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.getTardis().get().getExterior().getVariant());
+        TardisExterior tardisExterior = entity.getTardis().get().getExterior();
 
         if (tardisExterior == null) return;
 
@@ -60,7 +60,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         Identifier texture = exteriorVariant.texture();
 
-        if (entity.getTardis().isSiegeMode()) {
+        if (entity.getTardis().get().isSiegeMode()) {
             if (siege == null) siege = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
             siege.renderWithAnimations(entity, this.siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), maxLight, overlay, 1, 1, 1, 1);
             matrices.pop();
@@ -70,12 +70,12 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         if (model != null) {
             model.animateTile(entity);
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
-            if (entity.getTardis() == null) return; // WHY IS THIS NULL HERE, BUT NOT AT THE BEGINNING OF THIS FUCKING FUNCTION THREAD
-            if (entity.getTardis().getHandlers().getOvergrown().isOvergrown()) {
-                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.getTardis().getHandlers().getOvergrown().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+            if (entity.getTardis().isEmpty()) return; // WHY IS THIS NULL HERE, BUT NOT AT THE BEGINNING OF THIS FUCKING FUNCTION THREAD
+            if (entity.getTardis().get().getHandlers().getOvergrown().isOvergrown()) {
+                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.getTardis().get().getHandlers().getOvergrown().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
             }
-            if (exteriorVariant.emission() != null && entity.getTardis().hasPower()) {
-                boolean alarms = PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
+            if (exteriorVariant.emission() != null && entity.getTardis().get().hasPower()) {
+                boolean alarms = PropertiesHandler.getBool(entity.getTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
 
                 model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(exteriorVariant.emission(), false)), maxLight, overlay, 1, alarms ? 0.3f : 1 , alarms ? 0.3f : 1, 1);
             }

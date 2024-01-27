@@ -91,7 +91,7 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
             }
             return Optional.of(ClientTardisManager.getInstance().getTardis(this.tardisId));
         }
-        return Optional.of(ServerTardisManager.getInstance().getTardis(this.tardisId));
+        return Optional.ofNullable(ServerTardisManager.getInstance().getTardis(this.tardisId));
     }
 
     @Override

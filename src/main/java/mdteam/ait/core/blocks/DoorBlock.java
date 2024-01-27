@@ -38,7 +38,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
-            if (door.getTardis() != null && door.getTardis().isSiegeMode()) return VoxelShapes.empty();
+            if (door.getTardis().isPresent() && door.getTardis().get().isSiegeMode()) return VoxelShapes.empty();
         }
 
         return switch (state.get(FACING)) {

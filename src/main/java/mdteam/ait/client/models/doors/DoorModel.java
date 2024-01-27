@@ -27,7 +27,7 @@ public abstract class DoorModel extends SinglePartEntityModel {
     }
 
     public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (door.getTardis() == null) return;
+        if(door.getTardis().isEmpty()) return;
 
         root.render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
     }
@@ -38,11 +38,6 @@ public abstract class DoorModel extends SinglePartEntityModel {
     }
 
     public void animateTile(DoorBlockEntity interiorDoor) {
-        // this.getPart().traverse().forEach(ModelPart::resetTransform);
-        // if (interiorDoor.getTardis() == null)
-        //     return;
-        // DoorHandler.DoorStateEnum state = interiorDoor.getTardis().getDoor().getDoorState();
-        // updateAnimation(interiorDoor.DOOR_STATE, getAnimationForDoorState(state), interiorDoor.animationTimer);
     }
 
     public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);

@@ -15,7 +15,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.util.Random;
-import java.util.UUID;
 
 public class InteriorChangingHandler extends TardisLink {
     private static final int WARN_TIME = 10 * 40;
@@ -60,11 +59,12 @@ public class InteriorChangingHandler extends TardisLink {
     }
 
     public void queueInteriorChange(TardisDesktopSchema schema) {
-        if (!tardis().hasPower()) return;
-        if (tardis().isGrowth() && tardis().hasGrowthExterior())
-            tardis().getExterior().setType(TardisItemBuilder.findRandomExterior());
-        if (tardis().getHandlers().getFuel().getFuel() < 5000 && !(tardis().isGrowth() && tardis().hasGrowthDesktop())) {
-            for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis())) {
+        if(getTardis().isEmpty()) return;
+        if (!getTardis().get().hasPower()) return;
+        if (getTardis().get().isGrowth() && getTardis().get().hasGrowthExterior())
+            getTardis().get().getExterior().setType(TardisItemBuilder.findRandomExterior());
+        if (getTardis().get().getHandlers().getFuel().getFuel() < 5000 && !(getTardis().get().isGrowth() && getTardis().get().hasGrowthDesktop())) {
+            for (PlayerEntity player : TardisUtil.getPlayersInInterior(getTardis().get())) {
                 player.sendMessage(Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED), true);
                 return;
             }
@@ -72,27 +72,30 @@ public class InteriorChangingHandler extends TardisLink {
         setQueuedInterior(schema);
         setTicks(0);
         setGenerating(true);
-        DeltaTimeManager.createDelay("interior_change-" + tardis().getUuid().toString(), 100L);
-        tardis().getHandlers().getAlarms().enable();
-        tardis().getDesktop().setConsolePos(null);
-        if (!(tardis().hasGrowthDesktop()))
-            tardis().removeFuel(5000);
+        DeltaTimeManager.createDelay("interior_change-" + getTardis().get().getUuid().toString(), 100L);
+        getTardis().get().getHandlers().getAlarms().enable();
+        getTardis().get().getDesktop().setConsolePos(null);
+        if (!(getTardis().get().hasGrowthDesktop()))
+            getTardis().get().removeFuel(5000);
     }
 
     private void onCompletion() {
+        if(getTardis().isEmpty()) return;
         setGenerating(false);
         clearedOldInterior = false;
-        tardis().getHandlers().getAlarms().disable();
-        DoorData.lockTardis(PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis(), null, false);
+        getTardis().get().getHandlers().getAlarms().disable();
+        DoorData.lockTardis(PropertiesHandler.getBool(getTardis().get().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), getTardis().get(), null, false);
     }
 
     private void warnPlayers() {
-        for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis())) {
+        if(getTardis().isEmpty()) return;
+        for (PlayerEntity player : TardisUtil.getPlayersInInterior(getTardis().get())) {
             player.sendMessage(Text.translatable("tardis.message.interiorchange.warning").formatted(Formatting.RED), true);
         }
     }
     private boolean isInteriorEmpty() {
-        return TardisUtil.getPlayersInInterior(tardis()).isEmpty();
+        if(getTardis().isEmpty()) return false;
+        return TardisUtil.getPlayersInInterior(getTardis().get()).isEmpty();
     }
 
     public static Random random() {
@@ -107,21 +110,21 @@ public class InteriorChangingHandler extends TardisLink {
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
+        if(getTardis().isEmpty()) return;
         if (TardisUtil.isClient()) return;
         if (!isGenerating()) return;
-        if(tardis() == null) return;
-        if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + tardis().getUuid().toString())) return;
-        if (tardis().getTravel().getState() == TardisTravel.State.FLIGHT) {
-            tardis().getTravel().crash();
+        if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + getTardis().get().getUuid().toString())) return;
+        if (getTardis().get().getTravel().getState() == TardisTravel.State.FLIGHT) {
+            getTardis().get().getTravel().crash();
         }
         if (isGenerating()) {
-            if (!tardis().getHandlers().getAlarms().isEnabled()) tardis().getHandlers().getAlarms().enable();
+            if (!getTardis().get().getHandlers().getAlarms().isEnabled()) getTardis().get().getHandlers().getAlarms().enable();
         }
 
 
-        if (!tardis().hasPower()) {
+        if (!getTardis().get().hasPower()) {
             setGenerating(false);
-            tardis().getHandlers().getAlarms().disable();
+            getTardis().get().getHandlers().getAlarms().disable();
             return;
         }
 
@@ -130,17 +133,17 @@ public class InteriorChangingHandler extends TardisLink {
             return;
         }
 
-        if (isInteriorEmpty() && !tardis().getDoor().locked()) {
-            DoorData.lockTardis(true, tardis(), null, true);
+        if (isInteriorEmpty() && !getTardis().get().getDoor().locked()) {
+            DoorData.lockTardis(true, getTardis().get(), null, true);
         }
         if (isInteriorEmpty() && !clearedOldInterior) {
-            tardis().getDesktop().clearOldInterior(getQueuedInterior());
-            DeltaTimeManager.createDelay("interior_change-" + tardis().getUuid().toString(), 15000L);
+            getTardis().get().getDesktop().clearOldInterior(getQueuedInterior());
+            DeltaTimeManager.createDelay("interior_change-" + getTardis().get().getUuid().toString(), 15000L);
             clearedOldInterior = true;
             return;
         }
         if (isInteriorEmpty() && clearedOldInterior) {
-            tardis().getDesktop().changeInterior(getQueuedInterior());
+            getTardis().get().getDesktop().changeInterior(getQueuedInterior());
             onCompletion();
         }
 

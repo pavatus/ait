@@ -634,7 +634,7 @@ public class BorealisConsoleModel extends ConsoleModel {
 
     @Override
     public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (console.getTardis() == null) return;
+        if(console.getTardis().isEmpty()) return;
         matrices.push();
         // fixme id do it but i genuinely dont want to bc i cba
 
@@ -642,14 +642,14 @@ public class BorealisConsoleModel extends ConsoleModel {
         ModelPart northControls = this.base_console.getChild("NORTH").getChild("northcontrolpanel");
         ModelPart southControls = this.base_console.getChild("SOUTH").getChild("southcontrolpanel");
 
-        boolean isInFlight = console.getTardis().getTravel().getState() == TardisTravel.State.DEMAT || console.getTardis().getTravel().getState() == TardisTravel.State.FLIGHT;
-        boolean isHandbrakeActive = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE);
-        boolean leftDoor = console.getTardis().getDoor().getDoorState() == DoorData.DoorStateEnum.FIRST;
-        boolean rightDoor = console.getTardis().getDoor().getDoorState() == DoorData.DoorStateEnum.SECOND;
-        boolean locked = console.getTardis().getDoor().locked();
-        boolean isUpOrDown = PropertiesHandler.getBool(console.getTardis().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND);
+        boolean isInFlight = console.getTardis().get().getTravel().getState() == TardisTravel.State.DEMAT || console.getTardis().get().getTravel().getState() == TardisTravel.State.FLIGHT;
+        boolean isHandbrakeActive = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE);
+        boolean leftDoor = console.getTardis().get().getDoor().getDoorState() == DoorData.DoorStateEnum.FIRST;
+        boolean rightDoor = console.getTardis().get().getDoor().getDoorState() == DoorData.DoorStateEnum.SECOND;
+        boolean locked = console.getTardis().get().getDoor().locked();
+        boolean isUpOrDown = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND);
 
-        int increment = console.getTardis().getTravel().getPosManager().increment;
+        int increment = console.getTardis().get().getTravel().getPosManager().increment;
         float throttleZ = southEastControls.getChild("throttle").pivotZ;
         float doorZ = northControls.getChild("door_control").pivotZ;
         float doorY = northControls.getChild("door_control").pivotY;

@@ -62,8 +62,10 @@ public class BoothExteriorModel extends ExteriorModel {
 
     @Override
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        if(exterior.getTardis().isEmpty()) return;
+
         matrices.push();
-        this.k2.getChild("Door").yaw = exterior.getTardis().getDoor().isOpen() ? 1.575F : 0.0F;
+        this.k2.getChild("Door").yaw = exterior.getTardis().get().getDoor().isOpen() ? 1.575F : 0.0F;
         matrices.scale(0.95f, 0.95f, 0.95f);
         matrices.translate(0, -1.5f, 0);
 

@@ -70,13 +70,13 @@ public class ClassicDoorModel extends DoorModel {
 	public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		/*this.classic.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
 		this.classic.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();*/
-
+		if(doorEntity.getTardis().isEmpty()) return;
 		matrices.push();
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5, 0.35);
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180));
 
-		DoorData door = doorEntity.getTardis().getDoor();
+		DoorData door = doorEntity.getTardis().get().getDoor();
 
 		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;

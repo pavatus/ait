@@ -45,21 +45,21 @@ public class TardisExterior extends TardisLink {
             AITMod.LOGGER.error("Force changing exterior variant to a random one to ensure it matches!");
             setVariant(TardisItemBuilder.findRandomVariant(exterior));
         }
-        if (tardis() != null) {
-            tardis().getDoor().closeDoors();
+        if (getTardis().isEmpty()) {
+            getTardis().get().getDoor().closeDoors();
         }
     }
 
     public void setVariant(ExteriorVariantSchema variant) {
-        if (tardis() != null) {
-            tardis().getDoor().closeDoors();
+        if (getTardis().isEmpty()) {
+            getTardis().get().getDoor().closeDoors();
         }
 
         this.variant = variant;
     }
 
     public Optional<ExteriorBlockEntity> findExteriorBlock() {
-        if (tardis() == null) return Optional.empty();
+        if (getTardis().isEmpty()) return Optional.empty();
 
         BlockEntity found = this.getExteriorPos().getWorld().getBlockEntity(this.getExteriorPos());
 

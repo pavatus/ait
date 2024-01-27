@@ -7,8 +7,6 @@ import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.util.FlightUtil;
 import net.minecraft.server.MinecraftServer;
 
-import java.util.UUID;
-
 public class SequenceHandler extends TardisLink {
     private static final int REMOVE_CONTROL_TICK = FlightUtil.convertSecondsToTicks(2);
 
@@ -28,8 +26,8 @@ public class SequenceHandler extends TardisLink {
 
     private void compareToSequences() {
         for (Sequence sequence : SequenceRegistry.REGISTRY) {
-            if (sequence.isFinished(this.recent))
-                sequence.execute(this.tardis());
+            if (sequence.isFinished(this.recent) && this.getTardis().isPresent())
+                    sequence.execute(this.getTardis().get());
         }
     }
 

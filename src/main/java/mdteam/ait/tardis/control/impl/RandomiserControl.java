@@ -24,7 +24,6 @@ public class RandomiserControl extends Control {
 
         randomiseDestination(tardis, 10);
         tardis.removeFuel(0.1d * tardis.getTravel().getPosManager().increment);
-        tardis.markDirty();
 
         messagePlayer(player, travel);
 

@@ -61,8 +61,9 @@ public class PoliceBoxDoorModel extends DoorModel {
     public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         /*this.TARDIS.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
         this.TARDIS.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();*/
+        if(doorEntity.getTardis().isEmpty()) return;
 
-        DoorData door = doorEntity.getTardis().getDoor();
+        DoorData door = doorEntity.getTardis().get().getDoor();
 
         this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
         this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;

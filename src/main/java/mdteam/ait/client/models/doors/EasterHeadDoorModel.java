@@ -31,11 +31,13 @@ public class EasterHeadDoorModel extends DoorModel {
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+		if(door.getTardis().isEmpty()) return;
+
 		matrices.push();
 
 		matrices.translate(0,-1.5f,0);
 
-		if (door.getTardis().getDoor().isOpen())
+		if (door.getTardis().get().getDoor().isOpen())
 			this.bottom.translate(new Vector3f(0,-30,0));
 
 		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);

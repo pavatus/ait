@@ -80,17 +80,18 @@ public class SonicItem extends Item {
                 Block block = world.getBlockState(pos).getBlock();
 
                 if (entity instanceof ExteriorBlockEntity exteriorBlock) {
-                    TardisTravel.State state = exteriorBlock.getTardis().getTravel().getState();
+
+                    if(exteriorBlock.getTardis().isEmpty())
+                        return;
+
+                    TardisTravel.State state = exteriorBlock.getTardis().get().getTravel().getState();
 
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
                         return;
                     }
 
                     List<ExteriorSchema> list = ExteriorRegistry.REGISTRY.stream().toList();
-                    exteriorBlock.getTardis().getExterior().setType(list.get((list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.getTardis().getExterior().getType()) + 1));
-                    //System.out.println(exteriorBlock.getTardis().getExterior().getType());
-
-                    exteriorBlock.getTardis().markDirty();
+                    exteriorBlock.getTardis().get().getExterior().setType(list.get((list.indexOf(exteriorBlock.getTardis().get().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.getTardis().get().getExterior().getType()) + 1));
                 }
 
                 // fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor
@@ -113,7 +114,8 @@ public class SonicItem extends Item {
 
                 BlockEntity entity = world.getBlockEntity(pos);
                 if (entity instanceof ExteriorBlockEntity exteriorBlock) {
-                    TardisTravel.State state = exteriorBlock.getTardis().getTravel().getState();
+                    if(exteriorBlock.getTardis().isEmpty()) return;
+                    TardisTravel.State state = exteriorBlock.getTardis().get().getTravel().getState();
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
                     /*tardis.markDirty();
@@ -192,10 +194,10 @@ public class SonicItem extends Item {
 
         if (player.isSneaking()) {
             if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock) {
-                if (consoleBlock.getTardis() == null)
+                if (consoleBlock.getTardis().isEmpty())
                     return ActionResult.PASS;
 
-                link(consoleBlock.getTardis(), itemStack);
+                link(consoleBlock.getTardis().get(), itemStack);
                 return ActionResult.SUCCESS;
             }
 

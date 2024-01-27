@@ -17,7 +17,6 @@ public class AutoPilotControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         PropertiesHandler.setAutoPilot(tardis.getHandlers().getProperties(), !PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));
-        tardis.markDirty();
 
         messagePlayer(player, PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));
 

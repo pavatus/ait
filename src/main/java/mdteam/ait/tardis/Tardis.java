@@ -162,7 +162,6 @@ public class Tardis {
     }
     public void unlockDesktop(TardisDesktopSchema schema) {
         PropertiesHandler.setSchemaUnlocked(getHandlers().getProperties(), schema, true);
-        this.markDirty();
     }
 
     // for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta
@@ -186,7 +185,6 @@ public class Tardis {
         //PropertiesHandler.set(this, PropertiesHandler.POWER_DELTA, MAX_POWER_DELTA_TICKS);
         PropertiesHandler.set(this, PropertiesHandler.HAS_POWER, false);
         TardisEvents.LOSE_POWER.invoker().onLosePower(this);
-        this.markDirty();
     }
     public void enablePower() {
         if (getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL)) return; // cant enable power if not enough fuel
@@ -197,7 +195,6 @@ public class Tardis {
         //PropertiesHandler.set(this, PropertiesHandler.POWER_DELTA, 0);
         PropertiesHandler.set(this, PropertiesHandler.HAS_POWER, true);
         TardisEvents.REGAIN_POWER.invoker().onRegainPower(this);
-        this.markDirty();
     }
     public void togglePower() {
         if (hasPower())

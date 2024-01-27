@@ -57,19 +57,19 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
     }
 
     public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
-        if (player == null)
+        if (getTardis().isEmpty() || player == null)
             return;
-        if (this.getTardis().isGrowth())
+        if (this.getTardis().get().isGrowth())
             return;
 
-        if (player.getMainHandStack().getItem() instanceof KeyItem && !getTardis().isSiegeMode() && !getTardis().getHandlers().getInteriorChanger().isGenerating()) {
+        if (player.getMainHandStack().getItem() instanceof KeyItem && !getTardis().get().isSiegeMode() && !getTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
             if (!tag.contains("tardis")) {
                 return;
             }
-            if (Objects.equals(this.getTardis().getUuid().toString(), tag.getString("tardis"))) {
-                DoorData.toggleLock(this.getTardis(), (ServerPlayerEntity) player);
+            if (Objects.equals(this.getTardis().get().getUuid().toString(), tag.getString("tardis"))) {
+                DoorData.toggleLock(this.getTardis().get(), (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
@@ -77,12 +77,12 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
             return;
         }
 
-        if (sneaking && getTardis().isSiegeMode() && !getTardis().isSiegeBeingHeld()) {
-            SiegeTardisItem.pickupTardis(getTardis(), (ServerPlayerEntity) player);
+        if (sneaking && getTardis().get().isSiegeMode() && !getTardis().get().isSiegeBeingHeld()) {
+            SiegeTardisItem.pickupTardis(getTardis().get(), (ServerPlayerEntity) player);
             return;
         }
 
-        DoorData.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
+        DoorData.useDoor(this.getTardis().get(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
         // fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
         if (sneaking)
             return;
@@ -96,9 +96,6 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 
     @Override
     public void writeNbt(NbtCompound nbt) {
-        if (this.getTardis() == null) {
-            AITMod.LOGGER.error("this.tardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
-        }
         super.writeNbt(nbt);
         nbt.putFloat("alpha", this.getAlpha());
     }
@@ -108,24 +105,23 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
         super.readNbt(nbt);
         if (this.getAnimation() != null)
             this.getAnimation().setAlpha(nbt.getFloat("alpha"));
-        if(this.getTardis() != null)
-            this.getTardis().markDirty();
     }
 
     public void onEntityCollision(Entity entity) {
         if (!(entity instanceof ServerPlayerEntity player))
             return;
 
-        if (this.getTardis() != null && this.getTardis().getDoor().isOpen()) {
-            if (!this.getTardis().getLockedTardis())
-                if (!DependencyChecker.hasPortals() || !getTardis().getExterior().getType().hasPortals())
-                    TardisUtil.teleportInside(this.getTardis(), player);
+        if (this.getTardis().isPresent() && this.getTardis().get().getDoor().isOpen()) {
+            if (!this.getTardis().get().getLockedTardis())
+                if (!DependencyChecker.hasPortals() || !getTardis().get().getExterior().getType().hasPortals())
+                    TardisUtil.teleportInside(this.getTardis().get(), player);
         }
     }
 
     @Override
     public void tick(World world, BlockPos pos, BlockState blockState, ExteriorBlockEntity blockEntity) {
-        if (this.animation != null && this.getTardis().getTravel().getState() != LANDED)
+        if(getTardis().isEmpty()) return;
+        if (this.animation != null && this.getTardis().get().getTravel().getState() != LANDED)
             this.getAnimation().tick();
 
         if(world.isClient()) {
@@ -138,46 +134,61 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
             ((ExteriorBlock) blockState.getBlock()).tryFall(blockState, (ServerWorld) world, pos);
         }
 
-        if (!world.isClient() && this.getTardis() != null && !PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && this.getTardis().getTravel().getState() == MAT && this.getAlpha() >= 0.9f) {
+        if (!world.isClient() && !PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && this.getTardis().get().getTravel().getState() == MAT && this.getAlpha() >= 0.9f) {
             for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(this.getPos()).expand(0, 1, 0), EntityPredicates.EXCEPT_SPECTATOR)) {
-                TardisUtil.teleportInside(this.getTardis(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
+                TardisUtil.teleportInside(this.getTardis().get(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
             }
         }
 
         // ensures we dont exist during flight
-        if (!world.isClient() && this.getTardis().getTravel().getState() == FLIGHT) {
+        if (!world.isClient() && this.getTardis().get().getTravel().getState() == FLIGHT) {
             world.removeBlock(this.getPos(), false);
         }
     }
 
     // es caca
     public void verifyAnimation() {
-        if (this.animation != null || this.getTardis() == null || this.getTardis().getExterior() == null)
+        if (this.animation != null || this.getTardis().isEmpty() || this.getTardis().get().getExterior() == null)
             return;
 
-        this.animation = this.getTardis().getExterior().getVariant().animation(this);
+        this.animation = this.getTardis().get().getExterior().getVariant().animation(this);
         AITMod.LOGGER.warn("Created new ANIMATION for " + this);
-        this.animation.setupAnimation(this.getTardis().getTravel().getState());
+        this.animation.setupAnimation(this.getTardis().get().getTravel().getState());
 
         if (this.getWorld() != null) {
             if (!this.getWorld().isClient()) {
-                this.animation.tellClientsToSetup(this.getTardis().getTravel().getState());
+                this.animation.tellClientsToSetup(this.getTardis().get().getTravel().getState());
             }
         }
     }
 
     public void checkAnimations() {
     // DO NOT RUN THIS ON SERVER!!
-        if(getTardis() == null) return;
+        if(getTardis().isEmpty()) return;
         animationTimer++;
 //        if (!DOOR_STATE.isRunning()) {
 //            DOOR_STATE.startIfNotRunning(animationTimer);
 //        }
-        if(getTardis().getHandlers().getDoor().getAnimationExteriorState() == null) return;;
-        if (getTardis().getHandlers().getDoor().getAnimationExteriorState() == null || !(getTardis().getHandlers().getDoor().getAnimationExteriorState().equals(getTardis().getDoor().getDoorState()))) {
+        if(getTardis().get().getHandlers().getDoor().getAnimationExteriorState() == null) return;;
+        if (getTardis().get().getHandlers().getDoor().getAnimationExteriorState() == null || !(getTardis().get().getHandlers().getDoor().getAnimationExteriorState().equals(getTardis().get().getDoor().getDoorState()))) {
             DOOR_STATE.start(animationTimer);
-            getTardis().getHandlers().getDoor().tempExteriorState = getTardis().getDoor().getDoorState();
+            getTardis().get().getHandlers().getDoor().tempExteriorState = getTardis().get().getDoor().getDoorState();
         }
+    }
+
+    @Override
+    public Optional<Tardis> getTardis() {
+        if(this.tardisId == null)
+            findTardisFromPosition();
+        return super.getTardis();
+    }
+
+    private void findTardisFromPosition() { // should only be used if tardisId is null so we can hopefully refind the tardis
+        Tardis found = findTardisByPosition(this.getPos());
+
+        if (found == null) return;
+
+        this.tardisId = found.getUuid();
     }
 
     public ExteriorAnimation getAnimation() {
@@ -187,8 +198,8 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
     }
 
     public ExteriorSchema getExteriorType() {
-        if(this.getTardis() == null) return ExteriorRegistry.REGISTRY.get(CapsuleExterior.REFERENCE);
-        return this.getTardis().getExterior().getType();
+        if(getTardis().isEmpty()) return ExteriorRegistry.REGISTRY.get(CapsuleExterior.REFERENCE);
+        return this.getTardis().get().getExterior().getType();
     }
 
     public float getAlpha() {
@@ -200,7 +211,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
     }
 
     public void onBroken() {
-        if(this.getTardis() != null)
-            this.getTardis().getTravel().setState(TardisTravel.State.FLIGHT);
+        if(this.getTardis().isPresent())
+            this.getTardis().get().getTravel().setState(TardisTravel.State.FLIGHT);
     }
 }

@@ -33,8 +33,6 @@ public class ToggleSiegeModeCommand {
 
         PropertiesHandler.set(tardis, PropertiesHandler.SIEGE_MODE, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE));
 
-        tardis.markDirty();
-
         source.sendMessage(Text.literal("Siege Mode set to: " + PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE)), true);
 
         return Command.SINGLE_SUCCESS;

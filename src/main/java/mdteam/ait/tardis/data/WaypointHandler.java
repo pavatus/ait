@@ -10,7 +10,6 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public class WaypointHandler extends TardisLink {
     private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
@@ -57,15 +56,15 @@ public class WaypointHandler extends TardisLink {
     }
 
     public void gotoWaypoint() {
-        if (!this.hasWaypoint()) return; // todo move this check to the DEMAT event so the fail to takeoff happens
+        if (getTardis().isEmpty() || !this.hasWaypoint()) return; // todo move this check to the DEMAT event so the fail to takeoff happens
 
-        PropertiesHandler.setAutoPilot(this.tardis().getHandlers().getProperties(), true);
-        FlightUtil.travelTo(tardis(), this.get());
+        PropertiesHandler.setAutoPilot(this.getTardis().get().getHandlers().getProperties(), true);
+        FlightUtil.travelTo(getTardis().get(), this.get());
     }
     public void setDestination() {
-        if (!this.hasWaypoint()) return;
+        if (getTardis().isEmpty() || !this.hasWaypoint()) return;
 
-        this.tardis().getTravel().setDestination(this.get(), true);
+        this.getTardis().get().getTravel().setDestination(this.get(), true);
     }
 
     public void spawnItem() {
@@ -76,9 +75,9 @@ public class WaypointHandler extends TardisLink {
     }
 
     public void spawnItem(Waypoint waypoint) {
-        if (!this.hasCartridge) return;
+        if (getTardis().isEmpty() ||!this.hasCartridge) return;
 
-        spawnItem(waypoint, this.tardis().getDesktop().getConsolePos());
+        spawnItem(waypoint, this.getTardis().get().getDesktop().getConsolePos());
         this.hasCartridge = false;
     }
 

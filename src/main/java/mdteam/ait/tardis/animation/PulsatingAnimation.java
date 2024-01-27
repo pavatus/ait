@@ -16,14 +16,14 @@ public class PulsatingAnimation extends ExteriorAnimation {
 
     @Override
     public void tick() {
-        if (exterior.getTardis() == null)
+        if (exterior.getTardis().isEmpty())
             return;
 
-        TardisTravel.State state = exterior.getTardis().getTravel().getState();
+        TardisTravel.State state = exterior.getTardis().get().getTravel().getState();
 
 
         if (this.timeLeft < 0)
-            this.setupAnimation(exterior.getTardis().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+            this.setupAnimation(exterior.getTardis().get().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 
         if (state == TardisTravel.State.DEMAT) {
             this.setAlpha(1f - getPulseAlpha());
@@ -53,13 +53,13 @@ public class PulsatingAnimation extends ExteriorAnimation {
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
-        if (exterior.getTardis() == null || exterior.getTardis().getExterior().getType() == null) {
+        if (exterior.getTardis().isEmpty() || exterior.getTardis().get().getExterior().getType() == null) {
             AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
             alpha = 0f; // just make me vanish.
             return;
         }
 
-        MatSound sound = exterior.getTardis().getExterior().getVariant().getSound(state);
+        MatSound sound = exterior.getTardis().get().getExterior().getVariant().getSound(state);
 
         this.tellClientsToSetup(state);
 

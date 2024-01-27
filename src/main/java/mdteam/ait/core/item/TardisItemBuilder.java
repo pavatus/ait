@@ -90,7 +90,10 @@ public class TardisItemBuilder extends Item {
             BlockEntity entity = world.getBlockEntity(context.getBlockPos());
 
             if (entity instanceof ConsoleBlockEntity consoleBlock) {
-                TardisTravel.State state = consoleBlock.getTardis().getTravel().getState();
+
+                if (consoleBlock.getTardis().isEmpty()) return ActionResult.PASS;
+
+                TardisTravel.State state = consoleBlock.getTardis().get().getTravel().getState();
 
                 if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
                     return ActionResult.PASS;

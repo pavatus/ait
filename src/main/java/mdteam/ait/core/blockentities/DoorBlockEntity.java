@@ -51,7 +51,7 @@ public class DoorBlockEntity extends BlockEntity {
         Tardis found = TardisUtil.findTardisByPosition(pos);
         if (found != null)
             this.setTardis(found);
-        if (this.getTardis() != null) {
+        if (this.getTardis().isPresent()) {
             this.setDesktop(this.getDesktop());
             /*if(this.getDesktop() != null) {
                 this.getDesktop().setInteriorDoorPos(new AbsoluteBlockPos.Directed(pos, TardisUtil.getTardisDimension(), this.getFacing()));
@@ -67,25 +67,25 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
-        if (player == null)
+        if (player == null || this.getTardis().isEmpty())
             return;
-        if (this.getTardis().isGrowth() && this.getTardis().hasGrowthExterior())
+        if (this.getTardis().get().isGrowth() && this.getTardis().get().hasGrowthExterior())
             return;
-        if (player.getMainHandStack().getItem() instanceof KeyItem && !getTardis().isSiegeMode()) {
+        if (player.getMainHandStack().getItem() instanceof KeyItem && !getTardis().get().isSiegeMode()) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
             if (!tag.contains("tardis")) {
                 return;
             }
-            if (Objects.equals(this.getTardis().getUuid().toString(), tag.getString("tardis"))) {
-                DoorData.toggleLock(this.getTardis(), (ServerPlayerEntity) player);
+            if (Objects.equals(this.getTardis().get().getUuid().toString(), tag.getString("tardis"))) {
+                DoorData.toggleLock(this.getTardis().get(), (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
             }
             return;
         }
-        DoorData.useDoor(this.getTardis(), (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
+        DoorData.useDoor(this.getTardis().get(), (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
         // fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
         if (sneaking)
             return;
@@ -102,11 +102,8 @@ public class DoorBlockEntity extends BlockEntity {
 
     @Override
     public void writeNbt(NbtCompound nbt) {
-        if (this.getTardis() == null) {
-            AITMod.LOGGER.error("this.getTardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
-        }
         super.writeNbt(nbt);
-        if (this.tardisId == null) // panick
+        if (this.tardisId != null) // panick
             nbt.putString("tardis", this.tardisId.toString());
     }
 
@@ -116,29 +113,27 @@ public class DoorBlockEntity extends BlockEntity {
         if (nbt.contains("tardis")) {
             this.setTardis(UUID.fromString(nbt.getString("tardis")));
         }
-        if(this.getTardis() != null)
-            this.getTardis().markDirty();
     }
 
     public void onEntityCollision(Entity entity) {
         if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
             return;
-        if (this.getTardis() != null && this.getTardis().getDoor().isOpen()) {
-            if (!this.getTardis().getLockedTardis() && !PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
-                if (!DependencyChecker.hasPortals() || !this.getTardis().getExterior().getType().hasPortals())
-                    TardisUtil.teleportOutside(this.getTardis(), player);
+        if (this.getTardis().isPresent() && this.getTardis().get().getDoor().isOpen()) {
+            if (!this.getTardis().get().getLockedTardis() && !PropertiesHandler.getBool(getTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
+                if (!DependencyChecker.hasPortals() || !this.getTardis().get().getExterior().getType().hasPortals())
+                    TardisUtil.teleportOutside(this.getTardis().get(), player);
             }
         }
     }
 
     public void checkAnimations() {
         // DO NOT RUN THIS ON SERVER!!
-        if(getTardis() == null) return;
+        if(getTardis().isEmpty()) return;
         animationTimer++;
 
-        if (getTardis().getHandlers().getDoor().getAnimationInteriorState() == null || !(getTardis().getHandlers().getDoor().getAnimationInteriorState().equals(getTardis().getDoor().getDoorState()))) {
+        if (getTardis().get().getHandlers().getDoor().getAnimationInteriorState() == null || !(getTardis().get().getHandlers().getDoor().getAnimationInteriorState().equals(getTardis().get().getDoor().getDoorState()))) {
             DOOR_STATE.start(animationTimer);
-            getTardis().getHandlers().getDoor().tempInteriorState = getTardis().getDoor().getDoorState();
+            getTardis().get().getHandlers().getDoor().tempInteriorState = getTardis().get().getDoor().getDoorState();
         }
     }
 
@@ -162,7 +157,7 @@ public class DoorBlockEntity extends BlockEntity {
             }
             return Optional.of(ClientTardisManager.getInstance().getTardis(this.tardisId));
         }
-        return Optional.of(ServerTardisManager.getInstance().getTardis(this.tardisId));
+        return Optional.ofNullable(ServerTardisManager.getInstance().getTardis(this.tardisId));
     }
 
     private void findTardis() {
@@ -187,14 +182,14 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     public void linkDesktop() {
-        if (this.getTardis() == null)
+        if (this.getTardis().isEmpty())
             return;
-        if (this.getTardis() != null)
-            this.setDesktop(this.getDesktop());
+        this.setDesktop(this.getDesktop());
     }
 
     public TardisDesktop getDesktop() {
-        return this.getTardis().getDesktop();
+        if(this.getTardis().isEmpty()) return null;
+        return this.getTardis().get().getDesktop();
     }
 
     public void setDesktop(TardisDesktop desktop) {

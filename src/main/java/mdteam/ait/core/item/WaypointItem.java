@@ -54,13 +54,13 @@ public class WaypointItem extends Item {
         if (hand != Hand.MAIN_HAND) return ActionResult.FAIL;
         if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity console)) return ActionResult.FAIL;
 
-        if (console.getTardis() == null || console.getTardis().getTravel().getPosition() == null)
+        if (console.getTardis().isEmpty() || console.getTardis().get().getTravel().getPosition() == null)
             return ActionResult.PASS;
 
-        if (getPos(itemStack) == null) setPos(itemStack, console.getTardis().getTravel().getPosition());
+        if (getPos(itemStack) == null) setPos(itemStack, console.getTardis().get().getTravel().getPosition());
 
-        console.getTardis().getHandlers().getWaypoints().markHasCartridge();
-        console.getTardis().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
+        console.getTardis().get().getHandlers().getWaypoints().markHasCartridge();
+        console.getTardis().get().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
         player.setStackInHand(hand, ItemStack.EMPTY);
 
         world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);

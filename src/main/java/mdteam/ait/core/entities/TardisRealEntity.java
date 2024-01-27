@@ -46,10 +46,11 @@ public class TardisRealEntity extends Entity {
     public static TardisRealEntity spawnFromExteriorBlockEntity(World world, BlockPos pos) {
         BlockEntity block_entity = world.getBlockEntity(pos);
         if (!(block_entity instanceof ExteriorBlockEntity exterior_block_entity)) throw new IllegalStateException("Failed to find the exterior block entity!");
+        if(exterior_block_entity.getTardis().isEmpty()) return null;
         BlockState block_state = world.getBlockState(pos);
         if (!(block_state.getBlock() instanceof ExteriorBlock)) throw new IllegalStateException("Failed to find the exterior block!");
-        TardisRealEntity tardis_real_entity = new TardisRealEntity(world, exterior_block_entity.getTardis().getUuid(), (double)pos.getX() + 0.5, (double)pos.getY(), pos.getZ() + 0.5, block_state);
-        PropertiesHandler.set(exterior_block_entity.getTardis(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
+        TardisRealEntity tardis_real_entity = new TardisRealEntity(world, exterior_block_entity.getTardis().get().getUuid(), (double)pos.getX() + 0.5, (double)pos.getY(), pos.getZ() + 0.5, block_state);
+        PropertiesHandler.set(exterior_block_entity.getTardis().get(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
         // set dirty for the tardis after this, but not right now cuz I am testing @TODO
         world.spawnEntity(tardis_real_entity);
         return tardis_real_entity;
@@ -58,10 +59,11 @@ public class TardisRealEntity extends Entity {
     public static TardisRealEntity testSpawnFromExteriorBlockEntity(World world, BlockPos pos, BlockPos spawnPos) {
         BlockEntity block_entity = world.getBlockEntity(pos);
         if (!(block_entity instanceof ExteriorBlockEntity exterior_block_entity)) throw new IllegalStateException("Failed to find the exterior block entity!");
+        if(exterior_block_entity.getTardis().isEmpty()) return null;
         BlockState block_state = world.getBlockState(pos);
         if (!(block_state.getBlock() instanceof ExteriorBlock)) throw new IllegalStateException("Failed to find the exterior block!");
-        TardisRealEntity tardis_real_entity = new TardisRealEntity(world, exterior_block_entity.getTardis().getUuid(), (double)spawnPos.getX() + 0.5, (double)spawnPos.getY(), spawnPos.getZ() + 0.5, block_state);
-        PropertiesHandler.set(exterior_block_entity.getTardis(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
+        TardisRealEntity tardis_real_entity = new TardisRealEntity(world, exterior_block_entity.getTardis().get().getUuid(), (double)spawnPos.getX() + 0.5, (double)spawnPos.getY(), spawnPos.getZ() + 0.5, block_state);
+        PropertiesHandler.set(exterior_block_entity.getTardis().get(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
         // set dirty for the tardis after this, but not right now cuz I am testing @TODO
         world.spawnEntity(tardis_real_entity);
         tardis_real_entity.setRotation(45f, block_state.get(ExteriorBlock.FACING).asRotation());

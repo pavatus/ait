@@ -56,6 +56,8 @@ public class TardimDoorModel extends DoorModel {
 
     @Override
     public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        if(door.getTardis().isEmpty()) return;
+
         matrices.push();
         // matrices.scale(0.6F,0.6f,0.6f);
         matrices.translate(0, -1.5f, 0);
@@ -64,7 +66,7 @@ public class TardimDoorModel extends DoorModel {
         /*this.tardis.getChild("left_door").yaw = door.getLeftDoorRotation() == 0 ? 0 : -1.575f;
         this.tardis.getChild("right_door").yaw = door.getRightDoorRotation() == 0 ? 0 : 1.575f;*/
 
-        DoorData handler = door.getTardis().getDoor();
+        DoorData handler = door.getTardis().get().getDoor();
 
         this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -1.575f : 0.0F;
         this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;

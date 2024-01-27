@@ -23,8 +23,6 @@ public class DirectionControl extends Control {
 
         travel.setDestination(new AbsoluteBlockPos.Directed(dest, getNextDirection(dest.getDirection())), false);
 
-        tardis.markDirty();
-
         messagePlayer(player, travel.getDestination().getDirection());
 
         return true;

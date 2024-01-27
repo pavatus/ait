@@ -56,7 +56,7 @@ public abstract class AbstractTardisComponent {
             }
             return Optional.of(ClientTardisManager.getInstance().getTardis(this.tardisId));
         }
-        return Optional.of(ServerTardisManager.getInstance().getTardis(this.tardisId));
+        return Optional.ofNullable(ServerTardisManager.getInstance().getTardis(this.tardisId));
     }
 
     public String getId() {

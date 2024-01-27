@@ -24,7 +24,7 @@ public class FastReturnControl extends Control {
             travel.setDestination(bl ? travel.getPosition() : travel.getLastPosition(),
                     PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND));
             messagePlayer(player, bl);
-            tardis.markDirty();
+
         } else {
             Text text = Text.translatable("tardis.message.control.fast_return.destination_nonexistent");
             player.sendMessage(text, true);

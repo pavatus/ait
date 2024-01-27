@@ -976,7 +976,7 @@ public class TempConsoleModel extends ConsoleModel {
 
     @Override
     public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        //this.door.yaw = exterior.getLeftDoorRotation();
+        if(console.getTardis().isEmpty()) return;
         matrices.push();
         matrices.translate(0.5, -1.35, -0.5);
         matrices.scale(0.9f, 0.9f, 0.9f);

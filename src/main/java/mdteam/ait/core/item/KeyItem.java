@@ -150,10 +150,10 @@ public class KeyItem extends Item {
 
         if (player.isSneaking()) {
             if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock) {
-                if (consoleBlock.getTardis() == null)
+                if (consoleBlock.getTardis().isEmpty())
                     return ActionResult.FAIL;
 
-                this.link(itemStack, consoleBlock.getTardis());
+                this.link(itemStack, consoleBlock.getTardis().get());
                 return ActionResult.SUCCESS;
             }
         }

@@ -51,8 +51,6 @@ public class DimensionControl extends Control {
             }
         }*/
 
-        tardis.markDirty();
-
         return true;
     }
 

@@ -89,7 +89,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if(exterior.getTardis() == null) return;
+		if(exterior.getTardis().isEmpty()) return;
 		matrices.push();
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5f, 0);
@@ -97,12 +97,12 @@ public class ClassicExteriorModel extends ExteriorModel {
 		/*this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
 		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
-		DoorData door = exterior.getTardis().getDoor();
+		DoorData door = exterior.getTardis().get().getDoor();
 		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
 		if (DependencyChecker.hasPortals())
-			this.getPart().getChild("Doors").visible = exterior.getTardis().getDoor().getDoorState() == DoorData.DoorStateEnum.CLOSED;
+			this.getPart().getChild("Doors").visible = exterior.getTardis().get().getDoor().getDoorState() == DoorData.DoorStateEnum.CLOSED;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

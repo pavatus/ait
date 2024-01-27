@@ -47,8 +47,9 @@ public class TardisDesktop extends TardisLink {
 
         // this is needed for door and console initialization. when we call #setTardis(ITardis) the desktop field is still null.
         door.setDesktop(this);
+        if(getTardis().isEmpty()) return;
         //console.setDesktop(this);
-        door.setTardis(tardis());
+        door.setTardis(getTardis().get());
         //console.setTardis(tardis);
     }
 
@@ -87,32 +88,32 @@ public class TardisDesktop extends TardisLink {
 
     public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
         // before we do this we need to make sure to delete the old portals, but how?! by registering to this event
-        TardisEvents.DOOR_MOVE.invoker().onMove(tardis(), pos);
+        if(getTardis().isEmpty()) return;
+        TardisEvents.DOOR_MOVE.invoker().onMove(getTardis().get(), pos);
 
         this.doorPos = pos;
     }
 
     public void setConsolePos(AbsoluteBlockPos.Directed pos) {
         this.consolePos = pos;
-        if (tardis() != null)
-            tardis().markDirty();
+        this.sync();
     }
 
     public Corners getCorners() {
         return corners;
     }
 
-    public boolean updateDoor() {
+    public void updateDoor() {
         if (!(TardisUtil.getTardisDimension().getBlockEntity(doorPos) instanceof DoorBlockEntity door)) {
             AITMod.LOGGER.error("Failed to find the interior door!");
-            return false;
+            return;
         }
 
         // this is needed for door and console initialization. when we call #setTardis(ITardis) the desktop field is still null.
         door.setDesktop(this);
+        if(getTardis().isEmpty()) return;
         //console.setDesktop(this);
-        door.setTardis(tardis());
-        return true;
+        door.setTardis(getTardis().get());
     }
 
     public void changeInterior(TardisDesktopSchema schema) {
@@ -151,7 +152,9 @@ public class TardisDesktop extends TardisLink {
             entity.discard();  // Kill any normal entities at that position.
         }
 
-        for (LivingEntity entity : TardisUtil.getEntitiesInInterior(tardis(), 100)) {
+        if(getTardis().isEmpty()) return;
+
+        for (LivingEntity entity : TardisUtil.getEntitiesInInterior(getTardis().get(), 100)) {
             entity.kill();
         }
 

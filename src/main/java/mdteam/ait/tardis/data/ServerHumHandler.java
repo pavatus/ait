@@ -12,8 +12,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-import java.util.UUID;
-
 // Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
 public class ServerHumHandler extends TardisLink {
     public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_hum");
@@ -39,8 +37,9 @@ public class ServerHumHandler extends TardisLink {
     private void updateClientHum() {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeIdentifier(this.current.sound().getId());
+        if(this.getTardis().isEmpty()) return;
 
-        for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.tardis())) { // is bad? fixme
+        for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.getTardis().get())) { // is bad? fixme
             ServerPlayNetworking.send((ServerPlayerEntity) player, SEND, buf);
         }
     }

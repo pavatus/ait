@@ -252,13 +252,15 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         for (UUID uuid : tardisSubscribers) {
             ServerPlayerEntity player = mc.getPlayerManager().getPlayer(uuid);
+            if (player == null) continue;
             this.sendTardis(player, tardis);
         }
     }
 
     // TODO - yes this is much better than sending the entire tardis class, but it still sends the entire component class. If everything is saved in a PropertiesHolder then this is a non-issue though.
     public void sendToSubscribers(AbstractTardisComponent component) {
-        UUID uuid = component.getTardis().getUuid();
+        if(component.getTardis().isEmpty()) return;
+        UUID uuid = component.getTardis().get().getUuid();
 
         MinecraftServer mc = TardisUtil.getServer();
 
@@ -268,6 +270,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         for (UUID playerId : tardisSubscribers) {
             ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
+            if(player == null) continue;
             this.updateTardis(player, uuid, component);
         }
     }
@@ -285,6 +288,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         for (UUID playerId : tardisSubscribers) {
             ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
+            if(player == null) continue;
             this.updateTardisProperty(player, uuid, key, value);
         }
     }
@@ -309,6 +313,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         for (UUID playerId : tardisSubscribers) {
             ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
+            if(player == null) continue;
             this.updateTardisProperty(player, uuid, key, value);
         }
     }
@@ -320,7 +325,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         data.writeString(key);
         data.writeString("int");
-        data.writeInt(value);
+        data.writeString(String.valueOf(value));
 
         ServerPlayNetworking.send(player, UPDATE, data);
     }
@@ -333,6 +338,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         for (UUID playerId : tardisSubscribers) {
             ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
+            if(player == null) continue;
             this.updateTardisProperty(player, uuid, key, value);
         }
     }
@@ -344,7 +350,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         data.writeString(key);
         data.writeString("double");
-        data.writeDouble(value);
+        data.writeString(String.valueOf(value));
 
         ServerPlayNetworking.send(player, UPDATE, data);
     }
@@ -357,6 +363,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         for (UUID playerId : tardisSubscribers) {
             ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
+            if(player == null) continue;
             this.updateTardisProperty(player, uuid, key, value);
         }
     }
@@ -368,7 +375,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         data.writeString(key);
         data.writeString("float");
-        data.writeFloat(value);
+        data.writeString(String.valueOf(value));
 
         ServerPlayNetworking.send(player, UPDATE, data);
     }
@@ -381,6 +388,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         for (UUID playerId : tardisSubscribers) {
             ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
+            if(player == null) continue;
             this.updateTardisProperty(player, uuid, key, value);
         }
     }
@@ -392,7 +400,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         data.writeString(key);
         data.writeString("boolean");
-        data.writeBoolean(value);
+        data.writeString(String.valueOf(value));
 
         ServerPlayNetworking.send(player, UPDATE, data);
     }

@@ -2,7 +2,6 @@ package mdteam.ait.tardis.data;
 
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -44,14 +43,14 @@ public class CloakData extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
 
-        if (this.isEnabled() && !tardis().hasPower()) {
+        if (getTardis().isEmpty() || this.isEnabled() && !getTardis().get().hasPower()) {
             this.disable();
             return;
         }
 
-        if(this.tardis().getExterior().getExteriorPos() == null) return;
-        List<PlayerEntity> players = this.tardis().getTravel().getPosition().getWorld().getEntitiesByClass(PlayerEntity.class,
-                new Box(tardis().getExterior().getExteriorPos()).expand(3), EntityPredicates.EXCEPT_SPECTATOR);
+        if(this.getTardis().get().getExterior().getExteriorPos() == null) return;
+        List<PlayerEntity> players = this.getTardis().get().getTravel().getPosition().getWorld().getEntitiesByClass(PlayerEntity.class,
+                new Box(getTardis().get().getExterior().getExteriorPos()).expand(3), EntityPredicates.EXCEPT_SPECTATOR);
         for (PlayerEntity player : players) {
             ItemStack stack = KeyItem.getFirstKeyStackInInventory(player);
             if (stack != null && stack.getItem() instanceof KeyItem) {
@@ -59,7 +58,7 @@ public class CloakData extends TardisLink {
                 if (!tag.contains("tardis")) {
                     return;
                 }
-                if(UUID.fromString(tag.getString("tardis")).equals(this.tardis().getUuid())) {
+                if(UUID.fromString(tag.getString("tardis")).equals(this.getTardis().get().getUuid())) {
                     //this.setAlphaBasedOnDistance(0.45f);
                     return;
                 }/* else {
@@ -70,6 +69,6 @@ public class CloakData extends TardisLink {
 
         if (!this.isEnabled()) return;
 
-        this.tardis().removeFuel(2); // idle drain of 2 fuel per tick
+        this.getTardis().get().removeFuel(2); // idle drain of 2 fuel per tick
     }
 }

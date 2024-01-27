@@ -32,10 +32,10 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.getTardis() == null)
+        if (entity.getTardis().isEmpty())
             return;
 
-        ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant());
+        ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.getTardis().get().getExterior().getVariant());
         ClientDoorSchema variant = ClientDoorRegistry.withParent(exteriorVariant.parent().door());
         Class<? extends DoorModel> modelClass = variant.model().getClass();
 
@@ -60,9 +60,9 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         int green = 1;
         int blue = 1;
 
-        if (DependencyChecker.hasPortals() && entity.getTardis().getTravel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_FALLING) && entity.getTardis().getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED) {
-            BlockPos pos = entity.getTardis().getTravel().getPosition();
-            World world = entity.getTardis().getTravel().getPosition().getWorld();
+        if (DependencyChecker.hasPortals() && entity.getTardis().get().getTravel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.getTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_FALLING) && entity.getTardis().get().getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED) {
+            BlockPos pos = entity.getTardis().get().getTravel().getPosition();
+            World world = entity.getTardis().get().getTravel().getPosition().getWorld();
             if (world != null) {
                 World doorWorld = entity.getWorld();
             BlockPos doorPos = entity.getPos();
@@ -79,14 +79,14 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         }
 
         if (model != null) {
-            if (!entity.getTardis().isSiegeMode()) {
+            if (!entity.getTardis().get().isSiegeMode()) {
                 model.animateTile(entity);
                 model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
-                if (entity.getTardis().getHandlers().getOvergrown().isOvergrown()) {
-                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.getTardis().getHandlers().getOvergrown().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+                if (entity.getTardis().get().getHandlers().getOvergrown().isOvergrown()) {
+                    model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.getTardis().get().getHandlers().getOvergrown().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
                 }
-                if (exteriorVariant.emission() != null && entity.getTardis().hasPower()) {
-                    boolean alarms = PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
+                if (exteriorVariant.emission() != null && entity.getTardis().get().hasPower()) {
+                    boolean alarms = PropertiesHandler.getBool(entity.getTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
                     model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(exteriorVariant.emission(), false)), light, overlay, 1, alarms ? 0.3f : 1 , alarms ? 0.3f : 1, 1);
                 }
             }

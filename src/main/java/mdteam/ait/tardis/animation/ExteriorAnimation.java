@@ -27,23 +27,26 @@ public abstract class ExteriorAnimation {
 
     // fixme bug that sometimes happens where server doesnt have animation
     protected void runAlphaChecks(TardisTravel.State state) {
-        if (this.exterior.getWorld().isClient())
+        if (this.exterior.getWorld().isClient() || this.exterior.getTardis().isEmpty())
             return;
 
         if (alpha <= 0f && state == TardisTravel.State.DEMAT) {
-            exterior.getTardis().getTravel().toFlight();
+            exterior.getTardis().get().getTravel().toFlight();
         }
         if (alpha >= 1f && state == TardisTravel.State.MAT) {
-            exterior.getTardis().getTravel().forceLand(this.exterior);
+            exterior.getTardis().get().getTravel().forceLand(this.exterior);
         }
     }
 
     public float getAlpha() {
+
+        if(this.exterior.getTardis().isEmpty()) return 1f;
+
         if (this.timeLeft < 0) {
-            this.setupAnimation(exterior.getTardis().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+            this.setupAnimation(exterior.getTardis().get().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
             return 1f;
         }
-        if (this.exterior.getTardis().getTravel().getState() == TardisTravel.State.LANDED && this.exterior.getTardis().getHandlers().getCloak().isEnabled()) {
+        if (this.exterior.getTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.exterior.getTardis().get().getHandlers().getCloak().isEnabled()) {
             return 0.105f; // 0.105f
         }
 
@@ -73,11 +76,11 @@ public abstract class ExteriorAnimation {
     }
 
     public void tellClientToSetup(TardisTravel.State state, ServerPlayerEntity player) {
-        if (exterior.getWorld().isClient()) return;
+        if (exterior.getWorld().isClient() && exterior.getTardis().isEmpty()) return;
 
         PacketByteBuf data = PacketByteBufs.create();
         data.writeInt(state.ordinal());
-        data.writeUuid(exterior.getTardis().getUuid());
+        data.writeUuid(exterior.getTardis().get().getUuid());
 
         ServerPlayNetworking.send(player, UPDATE, data);
     }

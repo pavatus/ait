@@ -114,8 +114,6 @@ public class TardisUtil {
                     if (tardis.isGrowth())
                         tardis.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(tardis));
 
-                    tardis.markDirty();
-
                     /*ExteriorEnum[] values = ExteriorEnum.values();
                     int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
                     ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(values[nextIndex]);
@@ -146,7 +144,6 @@ public class TardisUtil {
                         } else {
                             DoorData.toggleLock(tardis, player);
                         }
-                        tardis.markDirty();
                     }
                 }
         );
@@ -169,7 +166,6 @@ public class TardisUtil {
                                     serverPlayer.getMovementDirection()),
                             PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND));
                     TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
-                    tardis.markDirty();
                 }
         );
     }

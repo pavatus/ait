@@ -19,7 +19,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
     public ConsoleRenderer(BlockEntityRendererFactory.Context ctx) {}
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.getTardis() == null) return;
+        if (entity.getTardis().isEmpty()) return;
 
         ClientConsoleVariantSchema variant = ClientConsoleVariantRegistry.withParent(entity.getVariant());
 
@@ -65,11 +65,11 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         //matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         if (console != null) {
-            if (entity.getTardis() == null) return; // for some it forgets the tardis can be null, fucking weird
+            if (entity.getTardis().isEmpty()) return; // for some it forgets the tardis can be null, fucking weird
             console.animateTile(entity);
             console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
 
-            if (entity.getTardis().hasPower())
+            if (entity.getTardis().get().hasPower())
                 console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(variant.emission())), maxLight, overlay, 1, 1, 1, 1);
         }
         matrices.pop();
