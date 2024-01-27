@@ -34,6 +34,7 @@ import mdteam.ait.tardis.TardisDesktop;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
@@ -105,8 +106,8 @@ public class DoorBlockEntity extends BlockEntity {
             AITMod.LOGGER.error("this.getTardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
         super.writeNbt(nbt);
-        if (this.getTardis() != null) // panick
-            nbt.putString("tardis", this.getTardis().getUuid().toString());
+        if (this.tardisId == null) // panick
+            nbt.putString("tardis", this.tardisId.toString());
     }
 
     @Override
@@ -141,17 +142,24 @@ public class DoorBlockEntity extends BlockEntity {
         }
     }
 
-    public Tardis getTardis() {
-        if (this.tardisId == null) {
-            AITMod.LOGGER.warn("Door at " + this.getPos() + " is finding TARDIS!");
-            this.findTardis();
+    // oh god.
+    public Optional<Tardis> getTardis() {
+        if (TardisUtil.isClient()) { // todo replace deprecated check
+            if (!ClientTardisManager.getInstance().hasTardis(this.tardisId)) {
+                ClientTardisManager.getInstance().loadTardis(this.tardisId, tardis -> {});
+                return Optional.empty();
+                // todo add of `ifPresent()` of `isEmpty()` checks
+                // eg if before it was PropertiesHandler.set(this.getTardis, ...)
+                // it should become:
+                // this.getTardis().ifPresent(tardis -> PropertiesHandler.set(tardis, ...))
+                // or
+                // if (this.getTardis().isEmpty()) return;
+                //  because i dont want to rewrite a lot of the code base rn. this needs replacing badly but i am desperate for this release to come out and idc.
+                // issues with doing it this way is that client will probably have to repeat things multiple times to get things to happen.
+            }
+            return Optional.of(ClientTardisManager.getInstance().getTardis(this.tardisId));
         }
-
-        if (isClient()) {
-            return ClientTardisManager.getInstance().getLookup().get(this.tardisId);
-        }
-
-        return ServerTardisManager.getInstance().getTardis(this.tardisId);
+        return Optional.of(ServerTardisManager.getInstance().getTardis(this.tardisId));
     }
 
     private void findTardis() {
