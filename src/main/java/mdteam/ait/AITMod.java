@@ -203,12 +203,6 @@ public class AITMod implements ModInitializer {
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             DesktopRegistry.syncToClient(handler.getPlayer());
-
-            // is bad, idk what else to do.
-            for (ServerTardis tardis : NetworkUtil.getTardisesNearPlayer(handler.getPlayer())) {
-                ServerTardisManager.getInstance().sendTardis(handler.getPlayer(), tardis);
-            }
-
             // ServerTardisManager.getInstance().addSubscriberToAll(handler.getPlayer());
         });
 

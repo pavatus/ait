@@ -44,21 +44,6 @@ public class NetworkUtil {
         found.addAll(getPlayersNearExterior(tardis));
         return found;
     }
-    public static boolean isPlayerNearTardis(Tardis tardis, ServerPlayerEntity player) {
-        return getNearbyTardisPlayers(tardis).contains(player);
-    }
-    public static Collection<ServerTardis> getTardisesNearPlayer(ServerPlayerEntity player) {
-        List<ServerTardis> list = List.of();
-
-        // Laggy probably
-        for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
-            if (isPlayerNearTardis(tardis, player)) {
-                list.add(tardis);
-            }
-        }
-
-        return list;
-    }
     public static void sendToInterior(Tardis tardis, Identifier id, PacketByteBuf buf) {
         for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
             send(player, id, buf);
