@@ -10,6 +10,7 @@ import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.exterior.CapsuleExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.*;
@@ -184,7 +185,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
     }
 
     private void findTardisFromPosition() { // should only be used if tardisId is null so we can hopefully refind the tardis
-        Tardis found = findTardisByPosition(this.getPos());
+        Tardis found = findTardisByPosition(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
 
         if (found == null) return;
 

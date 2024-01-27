@@ -26,9 +26,7 @@ import mdteam.ait.tardis.data.ServerHumHandler;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.sound.HumSound;
 import mdteam.ait.tardis.util.FlightUtil;
-import mdteam.ait.tardis.util.NetworkUtil;
 import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -203,6 +201,9 @@ public class AITMod implements ModInitializer {
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             DesktopRegistry.syncToClient(handler.getPlayer());
+
+            ServerTardisManager.getInstance().onPlayerJoin(handler.getPlayer());
+
             // ServerTardisManager.getInstance().addSubscriberToAll(handler.getPlayer());
         });
 

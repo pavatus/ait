@@ -114,6 +114,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     @Override
     public Optional<Tardis> getTardis() {
         if(this.tardisId == null) {
+            System.out.println(ClientTardisManager.getInstance().getLookup());
             this.setTardis(findTardisByInterior(pos));
         }
         return super.getTardis();
@@ -167,7 +168,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
     public void setTardis(Tardis tardis) {
         if (tardis == null) {
-            AITMod.LOGGER.error("Tardis was null in ConsoleBlockEntity at " + this.getPos());
+//            AITMod.LOGGER.error("Tardis was null in ConsoleBlockEntity at " + this.getPos());
             return;
         }
 

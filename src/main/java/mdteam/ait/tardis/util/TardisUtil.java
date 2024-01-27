@@ -359,7 +359,7 @@ public class TardisUtil {
 
         if (matchingTardises.isEmpty()) {
             if (isClient()) {
-                ClientTardisManager.getInstance().ask(pos);
+                ClientTardisManager.getInstance().askTardis(pos);
             }
             return null;
         } else {
@@ -380,7 +380,7 @@ public class TardisUtil {
 
         if (matchingTardises.isEmpty()) {
             if (isClient()) {
-                ClientTardisManager.getInstance().ask(pos);
+                ClientTardisManager.getInstance().askTardis(pos);
             }
             return null;
         } else {
@@ -389,26 +389,6 @@ public class TardisUtil {
         }
     }
 
-    public static Tardis findTardisByPosition(BlockPos pos) {
-        Map<UUID, Tardis> matchingTardises = new HashMap<>();
-
-        for (Map.Entry<UUID, ?> entry : TardisManager.getInstance().getLookup().entrySet()) {
-            Tardis tardis = (Tardis) entry.getValue();
-            if (tardis.getDoor().getExteriorPos().equals(pos)) {
-                matchingTardises.put(entry.getKey(), tardis);
-            }
-        }
-
-        if (matchingTardises.isEmpty()) {
-            if (isClient()) {
-                ClientTardisManager.getInstance().ask(pos);
-            }
-            return null;
-        } else {
-            // Return the first Tardis object in the Map
-            return matchingTardises.values().iterator().next();
-        }
-    }
 
     public static void giveEffectToInteriorPlayers(Tardis tardis, StatusEffectInstance effect) {
         for (PlayerEntity player : getPlayersInInterior(tardis)) {

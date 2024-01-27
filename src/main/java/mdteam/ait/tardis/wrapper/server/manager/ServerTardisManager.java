@@ -15,10 +15,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
@@ -65,7 +62,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
         ServerPlayNetworking.registerGlobalReceiver(
                 ClientTardisManager.ASK_POS, (server, player, handler, buf, responseSender) -> {
-                    BlockPos pos = buf.readBlockPos();
+                    BlockPos pos = AbsoluteBlockPos.fromNbt(buf.readNbt());
                     UUID uuid = null;
                     for (Tardis tardis : this.getLookup().values()) {
                         if (!tardis.getTravel().getPosition().equals(pos)) continue;
@@ -342,7 +339,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         this.sendTardis(player, this.getTardis(uuid));
     }
 
-    public void sendTardis(@NotNull ServerPlayerEntity player, Tardis tardis) {
+    private void sendTardis(@NotNull ServerPlayerEntity player, Tardis tardis) {
         this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
     }
 
@@ -352,6 +349,17 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         data.writeString(json);
 
         ServerPlayNetworking.send(player, SEND, data);
+    }
+
+    public void onPlayerJoin(ServerPlayerEntity player) {
+        if (player.getWorld().getRegistryKey().equals(TardisUtil.getTardisDimension().getRegistryKey())) {
+            // if the player is a tardis already, sync the one at their location
+            Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos());
+            System.out.println(found);
+            if (found == null) return;
+
+            this.sendTardis(player, found);
+        }
     }
 
     @Override
