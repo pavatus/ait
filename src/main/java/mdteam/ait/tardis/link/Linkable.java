@@ -5,11 +5,11 @@ import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.DoorData;
 
+import java.util.Optional;
+
 public interface Linkable {
-    Tardis getTardis();
+    Optional<Tardis> getTardis();
     void setTardis(Tardis tardis);
-    default TardisDesktop getDesktop() { return this.getTardis().getDesktop(); }
-    default TardisTravel getTravel() { return this.getTardis().getTravel(); }
 
     /**
      * If false, calling {@link Linkable#setTardis(Tardis)} might throw an exception!
