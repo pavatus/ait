@@ -5,6 +5,7 @@ import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
@@ -1385,8 +1386,8 @@ public class CoralConsoleModel extends ConsoleModel {
 		ModelPart increment = this.console.getChild("controls").getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("crank2");
 		ModelPart incrementTwo = this.console.getChild("controls").getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("bone34");
 
-		increment.yaw = console.getTardis().get().getTravel().getPosManager().increment >= 10 ? console.getTardis().get().getTravel().getPosManager().increment >= 100 ? console.getTardis().get().getTravel().getPosManager().increment >= 1000 ? increment.yaw + 1.5f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
-		incrementTwo.pivotY = console.getTardis().get().getTravel().getPosManager().increment >= 10 ? console.getTardis().get().getTravel().getPosManager().increment >= 100 ? console.getTardis().get().getTravel().getPosManager().increment >= 1000 ? incrementTwo.pivotY + 3f : incrementTwo.pivotY + 2f : incrementTwo.pivotY + 1f : incrementTwo.pivotY;
+		increment.yaw = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? increment.yaw + 1.5f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
+		incrementTwo.pivotY =IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? incrementTwo.pivotY + 3f : incrementTwo.pivotY + 2f : incrementTwo.pivotY + 1f : incrementTwo.pivotY;
 
 		// Refueler
 		ModelPart refueler = this.console.getChild("controls").getChild("p_ctrl_5").getChild("bone49").getChild("ring2").getChild("switch30");

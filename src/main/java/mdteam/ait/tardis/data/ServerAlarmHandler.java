@@ -13,7 +13,6 @@ public class ServerAlarmHandler extends TardisLink {
     // fixme this is bad bad but i cant be assed with packets and thinking so hardcoding this value will be okay for now
     public static final int CLOISTER_LENGTH_TICKS = 3 * 20;
     private int soundCounter = 0; // decides when to start the next cloister sound
-    private boolean isEnabled;
 
     public ServerAlarmHandler(Tardis tardis) {
         super(tardis, "alarm");
@@ -27,11 +26,13 @@ public class ServerAlarmHandler extends TardisLink {
         this.set(false);
     }
     private void set(boolean var) {
-        this.isEnabled = var;
+        if (this.getTardis().isEmpty()) return;
+        PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.ALARM_ENABLED, var);
     }
 
     public boolean isEnabled() {
-        return this.isEnabled;
+        if (this.getTardis().isEmpty()) return false;
+        return PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
     }
 
     public void toggle() {

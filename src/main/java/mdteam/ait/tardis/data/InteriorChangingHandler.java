@@ -3,6 +3,7 @@ package mdteam.ait.tardis.data;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.core.managers.DeltaTimeManager;
+import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
@@ -23,19 +24,19 @@ public class InteriorChangingHandler extends TardisLink {
     public static final String QUEUED_INTERIOR = "queued_interior";
     public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
     private static Random random;
-    private boolean isGenerating;
-    private int ticks;
-    private TardisDesktopSchema queuedInterior;
+    private int ticks; // this shouldnt rly be stored in propertieshandler, will cause packet spam
 
     public InteriorChangingHandler(Tardis tardis) {
         super(tardis, "interior-changing");
     }
 
     private void setGenerating(boolean var) {
-        this.isGenerating = var;
+        if (this.getTardis().isEmpty()) return;
+        PropertiesHandler.set(this.getTardis().get(), IS_REGENERATING, var);
     }
     public boolean isGenerating() {
-        return this.isGenerating;
+        if (this.getTardis().isEmpty()) return false;
+        return PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), IS_REGENERATING);
     }
 
     private void setTicks(int var) {
@@ -52,10 +53,12 @@ public class InteriorChangingHandler extends TardisLink {
     }
 
     private void setQueuedInterior(TardisDesktopSchema schema) {
-        this.queuedInterior = schema;
+        if (this.getTardis().isEmpty()) return;
+        PropertiesHandler.set(this.getTardis().get(), QUEUED_INTERIOR, schema.id());
     }
     public TardisDesktopSchema getQueuedInterior() {
-        return this.queuedInterior;
+        if (this.getTardis().isEmpty()) return null;
+        return DesktopRegistry.get(PropertiesHandler.getIdentifier(this.getTardis().get().getHandlers().getProperties(), QUEUED_INTERIOR));
     }
 
     public void queueInteriorChange(TardisDesktopSchema schema) {

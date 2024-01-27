@@ -180,6 +180,11 @@ public class PropertiesHandler { // todo move things out of properties
             ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "string", (String) val);
             return;
         }
+
+        if (val instanceof Identifier || val instanceof LinkedTreeMap<?,?>) {
+            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "identifier", getIdentifier(holder, key).toString());
+            return;
+        }
     }
 
     public static HashMap<String, Object> createDefaultProperties() {

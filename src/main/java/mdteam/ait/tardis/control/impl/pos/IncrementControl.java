@@ -2,8 +2,6 @@ package mdteam.ait.tardis.control.impl.pos;
 
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.control.Control;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -20,15 +18,13 @@ public class IncrementControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         TardisTravel travel = tardis.getTravel();
 
-        PosManager postmanPat = travel.getPosManager(); // lol posmanager shortens to posman and postman pat sounds similar fixme if ur boring
-
         if (!player.isSneaking()) {
-            postmanPat.nextIncrement();
+            IncrementManager.nextIncrement(tardis);
         } else {
-            postmanPat.prevIncrement();
+            IncrementManager.prevIncrement(tardis);
         }
 
-        messagePlayerIncrement(player, postmanPat);
+        messagePlayerIncrement(player, tardis);
 
         return true;
     }
@@ -38,8 +34,8 @@ public class IncrementControl extends Control {
         return AITSounds.CRANK;
     }
 
-    private void messagePlayerIncrement(ServerPlayerEntity player, PosManager manager) {
-        Text text = Text.translatable("tardis.message.control.increment.info").append(Text.literal("" + manager.increment));
+    private void messagePlayerIncrement(ServerPlayerEntity player, Tardis tardis) {
+        Text text = Text.translatable("tardis.message.control.increment.info").append(Text.literal("" + IncrementManager.increment(tardis)));
         player.sendMessage(text, true);
     }
     @Override

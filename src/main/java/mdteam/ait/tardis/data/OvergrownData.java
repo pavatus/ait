@@ -3,6 +3,7 @@ package mdteam.ait.tardis.data;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.server.MinecraftServer;
@@ -16,8 +17,7 @@ public class OvergrownData extends TardisLink {
     public static final int MAXIMUM_TICKS = 600;
     public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
     private static Random random;
-    private boolean isOvergrown;
-    private int ticks;
+    private int ticks; // same as usual
 
     public OvergrownData(Tardis tardis) {
         super(tardis, "overgrown");
@@ -37,10 +37,12 @@ public class OvergrownData extends TardisLink {
     }
 
     public boolean isOvergrown() {
-        return this.isOvergrown;
+        if(getTardis().isEmpty()) return false;
+        return PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), IS_OVERGROWN);
     }
     public void setOvergrown(boolean var) {
-        this.isOvergrown = var;
+        if(getTardis().isEmpty()) return;
+        PropertiesHandler.set(this.getTardis().get(), IS_OVERGROWN, var);
     }
     public void removeVegetation() {
         this.setOvergrown(false);

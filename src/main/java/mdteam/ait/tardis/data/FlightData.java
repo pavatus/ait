@@ -11,7 +11,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 
 public class FlightData extends TardisLink {
-    private int flightTicks = 0;
+    private int flightTicks = 0; // todo, this shouldnt reaally be synced to client or be saved in PropertiesHolder because it'll spam packets when in flight.
     private int targetTicks = 0;
 
     public FlightData(Tardis tardiz) {

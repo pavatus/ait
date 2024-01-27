@@ -3,6 +3,7 @@ package mdteam.ait.client.models.consoles;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.console.borealis.BorealisAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
@@ -649,7 +650,7 @@ public class BorealisConsoleModel extends ConsoleModel {
         boolean locked = console.getTardis().get().getDoor().locked();
         boolean isUpOrDown = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND);
 
-        int increment = console.getTardis().get().getTravel().getPosManager().increment;
+        int increment = IncrementManager.increment(console.getTardis().get());
         float throttleZ = southEastControls.getChild("throttle").pivotZ;
         float doorZ = northControls.getChild("door_control").pivotZ;
         float doorY = northControls.getChild("door_control").pivotY;

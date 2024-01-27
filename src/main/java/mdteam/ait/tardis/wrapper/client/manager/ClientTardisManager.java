@@ -104,6 +104,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
             case "int" -> PropertiesHandler.set(tardis, key, Integer.parseInt(value));
             case "double" -> PropertiesHandler.set(tardis, key, Double.parseDouble(value));
             case "float" -> PropertiesHandler.set(tardis, key, Float.parseFloat(value));
+            case "identifier" -> PropertiesHandler.set(tardis, key, new Identifier(value));
         }
     }
 

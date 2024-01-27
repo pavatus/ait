@@ -1,9 +1,8 @@
 package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.tardis.control.Control;
+import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -11,7 +10,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
-import net.minecraft.world.biome.BiomeKeys;
 
 public class RandomiserControl extends Control {
     public RandomiserControl() {
@@ -23,7 +21,7 @@ public class RandomiserControl extends Control {
         TardisTravel travel = tardis.getTravel();
 
         randomiseDestination(tardis, 10);
-        tardis.removeFuel(0.1d * tardis.getTravel().getPosManager().increment);
+        tardis.removeFuel(0.1d * IncrementManager.increment(tardis));
 
         messagePlayer(player, travel);
 
@@ -33,7 +31,7 @@ public class RandomiserControl extends Control {
     // fixme this is LAGGYYY @TODO
     public static AbsoluteBlockPos.Directed randomiseDestination(Tardis tardis, int limit) {
         TardisTravel travel = tardis.getTravel();
-        int increment = travel.getPosManager().increment;
+        int increment = IncrementManager.increment(tardis);
         AbsoluteBlockPos.Directed dest = travel.getDestination();
         ServerWorld world = (ServerWorld) dest.getWorld();
 

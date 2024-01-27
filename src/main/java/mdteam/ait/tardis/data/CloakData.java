@@ -2,6 +2,7 @@ package mdteam.ait.tardis.data;
 
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class CloakData extends TardisLink {
-    private boolean isCloaked;
+    public static String CLOAKED = "is_cloaked";
 
     // @TODO its been a minute since ive had to server to client logic bullshit so duzo you do it while i do components
     /*private float alphaBasedOnDistance = 1.0F;*/
@@ -23,15 +24,21 @@ public class CloakData extends TardisLink {
     }
 
     public void enable() {
-        this.isCloaked = true;
+        if (this.getTardis().isEmpty()) return;
+
+        PropertiesHandler.set(this.getTardis().get(), CLOAKED, true);
     }
 
     public void disable() {
-        this.isCloaked = false;
+        if (this.getTardis().isEmpty()) return;
+
+        PropertiesHandler.set(this.getTardis().get(), CLOAKED, false);
     }
 
     public boolean isEnabled() {
-        return this.isCloaked = true;
+        if (this.getTardis().isEmpty()) return false;
+
+        return PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), CLOAKED);
     }
 
     public void toggle() {

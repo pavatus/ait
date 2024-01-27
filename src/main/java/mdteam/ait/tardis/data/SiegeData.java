@@ -14,7 +14,6 @@ import net.minecraft.sound.SoundCategory;
 import java.util.UUID;
 
 public class SiegeData extends TardisLink {
-    private boolean isSiegeMode = false;
     private UUID heldPlayer;
 
     public SiegeData(Tardis tardis) {
@@ -22,7 +21,8 @@ public class SiegeData extends TardisLink {
     }
 
     public boolean isSiegeMode() {
-        return this.isSiegeMode;
+        if(getTardis().isEmpty()) return false;
+        return PropertiesHandler.getBool(getTardis().get().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
     }
     public boolean isSiegeBeingHeld() {
         return this.heldPlayer != null;
@@ -63,7 +63,7 @@ public class SiegeData extends TardisLink {
 
         getTardis().get().removeFuel(0.01 * FuelData.TARDIS_MAX_FUEL);
 
-        this.isSiegeMode = b;
+        PropertiesHandler.set(getTardis().get(), PropertiesHandler.SIEGE_MODE, b, false);
         this.sync();
     }
 

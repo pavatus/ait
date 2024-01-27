@@ -12,18 +12,23 @@ import net.minecraft.item.ItemStack;
 import java.util.Optional;
 
 public class WaypointHandler extends TardisLink {
+    public static final String HAS_CARTRIDGE = "has_cartridge";
     private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
-    private boolean hasCartridge;
-
     public WaypointHandler(Tardis tardis) {
         super(tardis, "waypoint");
     }
 
     public boolean hasCartridge() {
-        return this.hasCartridge;
+        if (this.getTardis().isEmpty()) return false;
+        return PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), HAS_CARTRIDGE);
     }
     public void markHasCartridge() {
-        this.hasCartridge = true;
+        if (this.getTardis().isEmpty()) return;
+        PropertiesHandler.set(this.getTardis().get(), HAS_CARTRIDGE, true);
+    }
+    private void clearCartridge() {
+        if (this.getTardis().isEmpty()) return;
+        PropertiesHandler.set(this.getTardis().get(), HAS_CARTRIDGE, false);
     }
 
     // todo summon a new waypoint item at the console if spawnItem is true
@@ -75,10 +80,10 @@ public class WaypointHandler extends TardisLink {
     }
 
     public void spawnItem(Waypoint waypoint) {
-        if (getTardis().isEmpty() ||!this.hasCartridge) return;
+        if (getTardis().isEmpty() ||!this.hasCartridge()) return;
 
         spawnItem(waypoint, this.getTardis().get().getDesktop().getConsolePos());
-        this.hasCartridge = false;
+        this.clearCartridge();
     }
 
     public static ItemStack createWaypointItem(Waypoint waypoint) {

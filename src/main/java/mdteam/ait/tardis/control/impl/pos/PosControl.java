@@ -2,8 +2,6 @@ package mdteam.ait.tardis.control.impl.pos;
 
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -25,9 +23,8 @@ public abstract class PosControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         TardisTravel travel = tardis.getTravel();
         AbsoluteBlockPos.Directed destination = travel.getDestination();
-        PosManager manager = travel.getPosManager();
 
-        BlockPos pos = this.type.add(destination, (player.isSneaking()) ? -manager.increment : manager.increment, destination.getWorld());
+        BlockPos pos = this.type.add(destination, (player.isSneaking()) ? -IncrementManager.increment(tardis) : IncrementManager.increment(tardis), destination.getWorld());
         travel.setDestination(new AbsoluteBlockPos.Directed(pos,destination.getWorld(),destination.getDirection()), false);
 
         messagePlayerDestination(player, travel);

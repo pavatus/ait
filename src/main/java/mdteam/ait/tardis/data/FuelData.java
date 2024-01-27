@@ -6,6 +6,7 @@ import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
 
 public class FuelData extends TardisLink {
@@ -13,15 +14,14 @@ public class FuelData extends TardisLink {
     public static final double TARDIS_MAX_FUEL = 25000;
     public static final String FUEL_COUNT = "fuel_count";
     public static final String REFUELING = "refueling";
-    private double fuel;
-    private boolean refueling;
 
     public FuelData(Tardis tardis) {
         super(tardis, "fuel");
     }
 
     public double getFuel() {
-        return fuel;
+        if(getTardis().isEmpty()) return 0;
+        return (double) PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), FUEL_COUNT);
     }
 
     public boolean isOutOfFuel() {
@@ -29,10 +29,10 @@ public class FuelData extends TardisLink {
     }
 
     public void setFuelCount(double fuel) {
+        if(getTardis().isEmpty()) return;
         double prev = getFuel();
 
-        this.fuel = fuel;
-        if(getTardis().isEmpty()) return;
+        PropertiesHandler.set(getTardis().get(), FUEL_COUNT, fuel);
 
         // fire the event if ran out of fuel
         // this may get ran multiple times though for some reason
@@ -57,14 +57,14 @@ public class FuelData extends TardisLink {
         this.setFuelCount(getFuel() - fuel);
     }
 
-    public void setRefueling(boolean isRefueling) {
-        this.refueling = isRefueling;
-        this.sync();
+    public void setRefueling(boolean var) {
+        if(getTardis().isEmpty()) return;
+        PropertiesHandler.set(getTardis().get(), REFUELING, var);
     }
 
-    // is always true for now
     public boolean isRefueling() {
-        return this.refueling;
+        if(getTardis().isEmpty()) return false;
+        return PropertiesHandler.getBool(getTardis().get().getHandlers().getProperties(), REFUELING);
     }
 
     @Override

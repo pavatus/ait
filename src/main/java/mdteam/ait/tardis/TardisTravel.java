@@ -7,7 +7,7 @@ import mdteam.ait.core.AITMessages;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
-import mdteam.ait.tardis.control.impl.pos.PosManager;
+import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.util.FlightUtil;
@@ -47,7 +47,6 @@ public class TardisTravel extends TardisLink {
     private State state = State.LANDED;
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
-    private PosManager posManager; // kinda useless everything in posmanager could just be done here but this class is getting bloated
     private AbsoluteBlockPos.Directed lastPosition;
     private boolean crashing = false;
     private static final int CHECK_LIMIT = AIT_CONFIG.SEARCH_HEIGHT(); // todo move into a config
@@ -222,9 +221,6 @@ public class TardisTravel extends TardisLink {
         // If already crashing, return
         if (this.getTardis().isEmpty() || this.crashing) return;
 
-        // Increment the position manager by 1000
-        this.getPosManager().increment = 1000;
-        // Randomize the Tardis destination
         // RandomiserControl.randomiseDestination(this.getTardis().get(), 10);
         // Play explosion sound and create explosion at console position if available
         if (this.getTardis().get().getDesktop().getConsolePos() != null) {
@@ -667,14 +663,6 @@ public class TardisTravel extends TardisLink {
             return this.getTardis().get().getExterior().getVariant().getSound(this.getState());
         return AITSounds.LANDED_ANIM; // COUUULD be LANDED_ANIM but null is better
     }
-
-    public PosManager getPosManager() {
-        if (this.posManager == null)
-            this.posManager = new PosManager();
-
-        return this.posManager;
-    }
-
     public enum State {
         LANDED(true) {
             @Override
