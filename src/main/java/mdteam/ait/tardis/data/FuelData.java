@@ -19,6 +19,13 @@ public class FuelData extends TardisLink {
         super(tardis, "fuel");
     }
 
+    private static void createFuelSyncData(Tardis tardis) {
+        DeltaTimeManager.createDelay(tardis.getUuid() + "-fuel-sync", 10 * 1000L);
+    }
+    private static boolean isSyncOnDelay(Tardis tardis) {
+        return DeltaTimeManager.isStillWaitingOnDelay(tardis.getUuid() + "-fuel-sync");
+    }
+
     public double getFuel() {
         if(getTardis().isEmpty()) return 0;
         return (double) PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), FUEL_COUNT);
@@ -32,7 +39,11 @@ public class FuelData extends TardisLink {
         if(getTardis().isEmpty()) return;
         double prev = getFuel();
 
-        PropertiesHandler.set(getTardis().get(), FUEL_COUNT, fuel);
+        PropertiesHandler.set(getTardis().get(), FUEL_COUNT, fuel, !isSyncOnDelay(getTardis().get()));
+
+        if (!isSyncOnDelay(getTardis().get())) {
+            createFuelSyncData(getTardis().get());
+        }
 
         // fire the event if ran out of fuel
         // this may get ran multiple times though for some reason
