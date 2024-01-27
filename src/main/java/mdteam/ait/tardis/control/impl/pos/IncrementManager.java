@@ -14,6 +14,9 @@ public class IncrementManager { // todo can likely be moved into the properties 
     };
 
     public static int increment(Tardis tardis) {
+        if (!tardis.getHandlers().getProperties().getData().containsKey(INCREMENT))
+            setIncrement(tardis, 1);
+
         return PropertiesHandler.getInt(tardis.getHandlers().getProperties(), INCREMENT);
     }
     private static void setIncrement(Tardis tardis,int increment) {

@@ -3,6 +3,7 @@ package mdteam.ait.tardis.wrapper.client.manager;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
+import mdteam.ait.AITMod;
 import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
@@ -87,7 +88,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
         this.sync(buf.readUuid(), buf);
     }
     private void update(ClientTardis tardis, String header, String json) {
-        System.out.println("Updating " + header);
+        AITMod.LOGGER.info("Updating " + header); // remove this
         switch (header) {
             case "desktop" -> tardis.setDesktop(this.gson.fromJson(json, TardisDesktop.class));
             case "door" -> tardis.setDoor(this.gson.fromJson(json, DoorData.class));
@@ -97,7 +98,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
     }
 
     private void updateProperties(ClientTardis tardis, String key, String type, String value) {
-        System.out.println("Updating Properties " + key + " to " + value);
+        AITMod.LOGGER.info("Updating Properties " + key + " to " + value); // remove this
         switch (type) {
             case "string" -> PropertiesHandler.set(tardis, key, value);
             case "boolean" -> PropertiesHandler.set(tardis, key, Boolean.parseBoolean(value));

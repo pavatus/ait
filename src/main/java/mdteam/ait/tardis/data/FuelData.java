@@ -12,7 +12,7 @@ import net.minecraft.server.MinecraftServer;
 public class FuelData extends TardisLink {
     @Exclude
     public static final double TARDIS_MAX_FUEL = 25000;
-    public static final String FUEL_COUNT = "fuel_count";
+    public static final String FUEL_COUNT = "fuel_count"; // todo this gets synced too much, needs changing.
     public static final String REFUELING = "refueling";
 
     public FuelData(Tardis tardis) {

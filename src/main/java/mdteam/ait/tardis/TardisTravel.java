@@ -281,7 +281,6 @@ public class TardisTravel extends TardisLink {
         // Set speed to 0
         this.setSpeed(0);
         // Sync the tardis
-        this.sync();
         // Remove fuel from Tardis
         this.getTardis().get().removeFuel(80);
         // Materialize the Tardis
@@ -600,10 +599,10 @@ public class TardisTravel extends TardisLink {
     }
 
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
-
         if(this.getTardis().isEmpty()) return;
 
         if (Objects.equals(this.destination, pos)) return;
+
 
         this.destination = pos;
         this.getTardis().get().getHandlers().getFlight().recalculate();
