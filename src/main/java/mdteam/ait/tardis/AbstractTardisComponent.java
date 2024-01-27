@@ -7,6 +7,7 @@ import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -39,15 +40,23 @@ public abstract class AbstractTardisComponent {
         return Init.ALWAYS;
     }
 
-    public @Nullable Tardis getTardis() {
+    public Optional<Tardis> getTardis() {
         if (TardisUtil.isClient()) { // todo replace deprecated check
             if (!ClientTardisManager.getInstance().hasTardis(this.tardisId)) {
                 ClientTardisManager.getInstance().loadTardis(this.tardisId, tardis -> {});
-                return null; // todo add a bunch of null checks, because i dont want to rewrite a lot of the code base rn. this needs replacing badly but i am desperate for this release to come out and idc.
+                return Optional.empty();
+                // todo add of `ifPresent()` of `isEmpty()` checks
+                // eg if before it was PropertiesHandler.set(this.getTardis, ...)
+                // it should become:
+                // this.getTardis().ifPresent(tardis -> PropertiesHandler.set(tardis, ...))
+                // or
+                // if (this.getTardis().isEmpty()) return;
+                //  because i dont want to rewrite a lot of the code base rn. this needs replacing badly but i am desperate for this release to come out and idc.
+                // issues with doing it this way is that client will probably have to repeat things multiple times to get things to happen.
             }
-            return ClientTardisManager.getInstance().getTardis(this.tardisId);
+            return Optional.of(ClientTardisManager.getInstance().getTardis(this.tardisId));
         }
-        return ServerTardisManager.getInstance().getTardis(this.tardisId);
+        return Optional.of(ServerTardisManager.getInstance().getTardis(this.tardisId));
     }
 
     public String getId() {
