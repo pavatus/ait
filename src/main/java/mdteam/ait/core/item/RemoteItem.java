@@ -47,7 +47,7 @@ public class RemoteItem extends Item {
 
         // Link to exteriors tardis if it exists and player is crouching
         if (player.isSneaking()) {
-            if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock && consoleBlock.getTardis().isEmpty()) {
+            if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock && consoleBlock.getTardis().isPresent()) {
                 nbt.putString("tardis", consoleBlock.getTardis().get().getUuid().toString());
                 return ActionResult.SUCCESS; // Return early if the Tardis is successfully linked to the clicked block
             } else {
