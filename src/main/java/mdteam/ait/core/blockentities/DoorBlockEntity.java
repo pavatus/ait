@@ -53,10 +53,10 @@ public class DoorBlockEntity extends BlockEntity {
             this.setTardis(found);
         if (this.getTardis().isPresent()) {
             this.setDesktop(this.getDesktop());
-            /*if(this.getDesktop() != null) {
+            if(this.getDesktop() != null) {
                 this.getDesktop().setInteriorDoorPos(new AbsoluteBlockPos.Directed(pos, TardisUtil.getTardisDimension(), this.getFacing()));
                 this.getDesktop().updateDoor();
-            }*/
+            }
         }
     }
 

@@ -81,7 +81,6 @@ public class Tardis {
      */
     public TardisHandlersManager getHandlers() {
         if (handlers == null) {
-            System.out.println(this);
             handlers = new TardisHandlersManager(this);
         }
 

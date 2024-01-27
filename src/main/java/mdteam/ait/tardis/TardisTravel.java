@@ -147,7 +147,7 @@ public class TardisTravel extends TardisLink {
     private void setMatTicks(int ticks) {
         if(this.getTardis().isEmpty()) return;
 
-        PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.MAT_TICKS, ticks);
+        PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.MAT_TICKS, ticks, false);
     }
     private void tickMat() {
         if (this.getState() != State.MAT) {
@@ -174,7 +174,7 @@ public class TardisTravel extends TardisLink {
     private void setDematTicks(int ticks) {
         if(this.getTardis().isEmpty()) return;
 
-        PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.DEMAT_TICKS, ticks);
+        PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.DEMAT_TICKS, ticks, false);
     }
     private void tickDemat() {
         if (this.getState() != State.DEMAT) {
@@ -371,6 +371,9 @@ public class TardisTravel extends TardisLink {
         if (this.getPosition().getWorld().isClient())
             return;
 
+        if (FlightUtil.isDematerialiseOnCooldown(getTardis().get()))
+            return; // cancelled
+
         if (PropertiesHandler.willAutoPilot(getTardis().get().getHandlers().getProperties())) {
             // fufill all the prerequisites
             // DoorHandler.lockTardis(true, tardis(), null, false);
@@ -385,8 +388,6 @@ public class TardisTravel extends TardisLink {
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
         world.getChunk(this.getPosition());
 
-        if (FlightUtil.isDematerialiseOnCooldown(getTardis().get()))
-            return; // cancelled
 
         if (TardisEvents.DEMAT.invoker().onDemat(getTardis().get())) {
             failToTakeoff();

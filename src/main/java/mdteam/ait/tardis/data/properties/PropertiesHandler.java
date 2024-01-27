@@ -39,9 +39,19 @@ public class PropertiesHandler { // todo move things out of properties
 
     // Should these methods be in the holder instead?
     
-    public static void set(Tardis tardis, String key, Object val) {
+    public static void set(Tardis tardis, String key, Object val, boolean performSync) {
+        if (!hasChanged(tardis.getHandlers().getProperties(), key, val)) return;
+
         set(tardis.getHandlers().getProperties(), key, val);
-        sync(tardis.getHandlers().getProperties(), key, tardis.getUuid());
+        if (performSync)
+            sync(tardis.getHandlers().getProperties(), key, tardis.getUuid());
+    }
+    public static void set(Tardis tardis, String key, Object val) {
+        set(tardis, key, val, true);
+    }
+    private static boolean hasChanged(PropertiesHolder holder, String key, Object newVal) {
+        if (!holder.getData().containsKey(key)) return true;
+        return !holder.getData().get(key).equals(newVal);
     }
 
     public static void set(PropertiesHolder holder, String key, Object val) {

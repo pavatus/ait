@@ -43,7 +43,7 @@ public abstract class TardisLink extends AbstractTardisComponent implements Tard
     public AbsoluteBlockPos.Directed getDoorPos() {
         if(getTardis().isEmpty()) return new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
         Tardis tardis = getTardis().get();
-        return tardis.getDesktop() != null ?
+        return tardis.getDesktop() != null && tardis.getDesktop().getInteriorDoorPos() != null ?
                 tardis.getDesktop().getInteriorDoorPos() :
                 new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
     }

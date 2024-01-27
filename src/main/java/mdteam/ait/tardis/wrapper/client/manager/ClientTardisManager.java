@@ -87,6 +87,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
         this.sync(buf.readUuid(), buf);
     }
     private void update(ClientTardis tardis, String header, String json) {
+        System.out.println("Updating " + header);
         switch (header) {
             case "desktop" -> tardis.setDesktop(this.gson.fromJson(json, TardisDesktop.class));
             case "door" -> tardis.setDoor(this.gson.fromJson(json, DoorData.class));
@@ -96,6 +97,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
     }
 
     private void updateProperties(ClientTardis tardis, String key, String type, String value) {
+        System.out.println("Updating Properties " + key + " to " + value);
         switch (type) {
             case "string" -> PropertiesHandler.set(tardis, key, value);
             case "boolean" -> PropertiesHandler.set(tardis, key, Boolean.parseBoolean(value));

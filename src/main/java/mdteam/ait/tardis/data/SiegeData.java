@@ -71,9 +71,10 @@ public class SiegeData extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
         if(getTardis().isEmpty()) return;
-        if (getTardis().get().getExterior().findExteriorBlock().isPresent()) {
+        if (getTardis().get().isSiegeBeingHeld() && getTardis().get().getExterior().findExteriorBlock().isPresent()) {
             getTardis().get().setSiegeBeingHeld(null);
         }
+        if (!getTardis().get().isSiegeMode()) return;
 
         int siegeTime = getTardis().get().getTimeInSiegeMode() + 1;
         PropertiesHandler.set(getTardis().get(), PropertiesHandler.SIEGE_TIME, getTardis().get().isSiegeMode() ? siegeTime : 0);

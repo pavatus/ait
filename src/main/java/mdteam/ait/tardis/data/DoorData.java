@@ -64,7 +64,6 @@ public class DoorData extends TardisLink {
     }
     private boolean shouldSucc() {
         if(this.getTardis().isEmpty() || getDoorPos() == null) return false;
-        System.out.println(this.getTardis().get());
         return TardisUtil.getTardisDimension().getBlockEntity(getTardis().get().getDesktop().getDoorPos()) instanceof DoorBlockEntity && (getTardis().get().getTravel().getState() == FLIGHT || getTardis().get().getTravel().getState() == CRASH) && this.isOpen();
     }
 
