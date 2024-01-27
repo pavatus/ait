@@ -78,7 +78,8 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
     public Optional<Tardis> getTardis() {
         if (TardisUtil.isClient()) { // todo replace deprecated check
             if (!ClientTardisManager.getInstance().hasTardis(this.tardisId)) {
-                ClientTardisManager.getInstance().loadTardis(this.tardisId, tardis -> {});
+                if (this.tardisId != null)
+                    ClientTardisManager.getInstance().loadTardis(this.tardisId, tardis -> {});
                 return Optional.empty();
                 // todo add of `ifPresent()` of `isEmpty()` checks
                 // eg if before it was PropertiesHandler.set(this.getTardis, ...)

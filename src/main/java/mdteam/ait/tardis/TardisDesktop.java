@@ -75,6 +75,7 @@ public class TardisDesktop extends TardisLink {
     }
     // bad laggy bad bad but i cant be botehredddddd
     private void linkToInteriorBlocks() {
+        if (TardisUtil.isClient()) return;
         if (doorPos != null && consolePos != null) return; // no need to relink
 
         BlockEntity entity;
