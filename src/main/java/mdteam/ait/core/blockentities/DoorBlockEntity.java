@@ -46,24 +46,15 @@ public class DoorBlockEntity extends BlockEntity {
 
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
-
-        // even though TardisDesktop links the door, we need to link it here as well to avoid desync
-        Tardis found = TardisUtil.findTardisByPosition(pos);
-        if (found != null)
-            this.setTardis(found);
-        if (this.getTardis().isPresent()) {
-            this.setDesktop(this.getDesktop());
-            if(this.getDesktop() != null) {
-                this.getDesktop().setInteriorDoorPos(new AbsoluteBlockPos.Directed(pos, TardisUtil.getTardisDimension(), this.getFacing()));
-                this.getDesktop().updateDoor();
-            }
-        }
     }
 
-    public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T door) {
+    public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T tDoor) {
+        DoorBlockEntity door = (DoorBlockEntity) tDoor;
         if(world.isClient()) {
-            ((DoorBlockEntity) door).checkAnimations();
+            door.checkAnimations();
         }
+
+        if (door.tardisId == null) door.getTardis();
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
@@ -193,7 +184,7 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     public void setDesktop(TardisDesktop desktop) {
-        if (isClient()) return;
+        if (this.getWorld().isClient()) return;
 
         desktop.setInteriorDoorPos(new AbsoluteBlockPos.Directed(
                 this.pos, TardisUtil.getTardisDimension(), this.getFacing())

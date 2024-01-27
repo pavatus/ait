@@ -10,6 +10,7 @@ import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.link.Linkable;
 import mdteam.ait.tardis.util.Corners;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -101,7 +102,7 @@ public abstract class TardisManager<T extends Tardis> {
 
     @Deprecated
     public static TardisManager<?> getInstance() {
-        return TardisManager.getInstance(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER);
+        return TardisManager.getInstance(TardisUtil.isServer());
     }
 
     public static TardisManager<?> getInstance(boolean isServer) {

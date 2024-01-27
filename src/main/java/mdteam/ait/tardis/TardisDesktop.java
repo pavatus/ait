@@ -36,20 +36,21 @@ public class TardisDesktop extends TardisLink {
         this.schema = schema;
         this.corners = TardisUtil.findInteriorSpot();
 
-        BlockPos doorPos = new DesktopGenerator(schema).place(
-                (ServerWorld) TardisUtil.getTardisDimension(), this.getCorners()
-        );
-
-        if (!(TardisUtil.getTardisDimension().getBlockEntity(doorPos) instanceof DoorBlockEntity door)) {
-            AITMod.LOGGER.error("Failed to find the interior door!");
-            return;
-        }
-
-        // this is needed for door and console initialization. when we call #setTardis(ITardis) the desktop field is still null.
-        door.setDesktop(this);
-        if(getTardis().isEmpty()) return;
-        //console.setDesktop(this);
-        door.setTardis(getTardis().get());
+//        BlockPos doorPos = new DesktopGenerator(schema).place(
+//                (ServerWorld) TardisUtil.getTardisDimension(), this.getCorners()
+//        );
+//
+//        System.out.println(doorPos);
+//
+//        if (!(TardisUtil.getTardisDimension().getBlockEntity(doorPos) instanceof DoorBlockEntity door)) {
+//            AITMod.LOGGER.error("Failed to find the interior door!");
+//            return;
+//        }
+//
+//        // this is needed for door and console initialization. when we call #setTardis(ITardis) the desktop field is still null.
+//        door.setDesktop(this);
+//        door.setTardis(tardis);
+        this.changeInterior(schema);
         //console.setTardis(tardis);
     }
 
@@ -66,30 +67,40 @@ public class TardisDesktop extends TardisLink {
     }
 
     public AbsoluteBlockPos.Directed getInteriorDoorPos() {
+        if (this.doorPos == null && this.getTardis().isPresent()) {
+            linkToInteriorBlocks();
+        }
+
         return doorPos;
     }
+    // bad laggy bad bad but i cant be botehredddddd
+    private void linkToInteriorBlocks() {
+        if (doorPos != null && consolePos != null) return; // no need to relink
 
-    public AbsoluteBlockPos.Directed getConsolePos() {
-        //if (consolePos == null) searchForConsole(); // TODO - not do this, fix the core issue.
-
-        return consolePos;
-    }
-
-    private void searchForConsole() {
-        // here comes the lag dodododo
-        for (BlockPos pos : BlockPos.iterate(getCorners().getFirst(), getCorners().getSecond())) {
-            if (TardisUtil.getTardisDimension().getBlockEntity(pos) instanceof ConsoleBlockEntity found) {
-                // WE FOUND IT!!!
-                this.setConsolePos(new AbsoluteBlockPos.Directed(found.getPos(), found.getWorld(), Direction.NORTH));
-                return;
+        BlockEntity entity;
+        for (BlockPos pos : this.iterateOverInterior()) {
+            entity = TardisUtil.getTardisDimension().getBlockEntity(pos);
+            if (entity == null) continue;
+            if (doorPos == null && entity instanceof DoorBlockEntity door) {
+                door.setTardis(this.getTardis().get());
+                continue;
+            }
+            if (consolePos == null && entity instanceof ConsoleBlockEntity console) {
+                console.setTardis(this.getTardis().get());
+                continue;
             }
         }
     }
 
+    public AbsoluteBlockPos.Directed getConsolePos() {
+        if (consolePos == null && this.getTardis().isPresent()) linkToInteriorBlocks();
+
+        return consolePos;
+    }
     public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
         // before we do this we need to make sure to delete the old portals, but how?! by registering to this event
-        if(getTardis().isEmpty()) return;
-        TardisEvents.DOOR_MOVE.invoker().onMove(getTardis().get(), pos);
+        if(getTardis().isPresent())
+            TardisEvents.DOOR_MOVE.invoker().onMove(getTardis().get(), pos);
 
         this.doorPos = pos;
     }
@@ -121,8 +132,10 @@ public class TardisDesktop extends TardisLink {
         this.schema = schema;
         DesktopGenerator generator = new DesktopGenerator(this.schema);
         BlockPos doorPos = generator.place((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
-        if(doorPos != null) this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
-        this.updateDoor();
+        if(doorPos != null) {
+            this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
+            this.updateDoor();
+        }
         AITMod.LOGGER.warn("Time taken to generate interior: " + (System.currentTimeMillis() - currentTime));
     }
 

@@ -180,6 +180,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
     }
 
     public Tardis getTardis(UUID uuid) {
+        if (uuid == null) return null; // ugh
+
         if (this.lookup.containsKey(uuid))
             return this.lookup.get(uuid);
 

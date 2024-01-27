@@ -35,6 +35,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -605,6 +606,8 @@ public class TardisTravel extends TardisLink {
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
 
         if(this.getTardis().isEmpty()) return;
+
+        if (Objects.equals(this.destination, pos)) return;
 
         this.destination = pos;
         this.getTardis().get().getHandlers().getFlight().recalculate();

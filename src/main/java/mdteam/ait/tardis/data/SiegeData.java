@@ -77,7 +77,7 @@ public class SiegeData extends TardisLink {
         if (!getTardis().get().isSiegeMode()) return;
 
         int siegeTime = getTardis().get().getTimeInSiegeMode() + 1;
-        PropertiesHandler.set(getTardis().get(), PropertiesHandler.SIEGE_TIME, getTardis().get().isSiegeMode() ? siegeTime : 0);
+        PropertiesHandler.set(getTardis().get(), PropertiesHandler.SIEGE_TIME, getTardis().get().isSiegeMode() ? siegeTime : 0, false);
 
         // todo add more downsides the longer you are in siege mode as it is meant to fail systems and kill you and that
         // for example, this starts to freeze the player (like we see in the episode) after a minute (change the length if too short) and only if its on the ground, to stop people from just slaughtering lol

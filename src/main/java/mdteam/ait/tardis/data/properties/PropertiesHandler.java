@@ -130,10 +130,12 @@ public class PropertiesHandler { // todo move things out of properties
         return getBool(holder, schema.id().getPath() + "_unlocked");
     }
 
+    @Deprecated
     public static void setAutoPilot(PropertiesHolder handler, boolean val) {
         set(handler, AUTO_LAND, val);
     }
 
+    @Deprecated
     public static boolean willAutoPilot(PropertiesHolder holder) {
         return getBool(holder, AUTO_LAND);
     }

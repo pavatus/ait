@@ -339,24 +339,12 @@ public class TardisUtil {
     }
 
     public static Tardis findTardisByInterior(BlockPos pos) {
-        Map<UUID, Tardis> matchingTardises = new HashMap<>();
-
-        for (Map.Entry<UUID, ?> entry : TardisManager.getInstance().getLookup().entrySet()) {
-            Tardis tardis = (Tardis) entry.getValue();
-            if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos)) {
-                matchingTardises.put(entry.getKey(), tardis);
-            }
+        for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
+            if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos))
+                return tardis;
         }
 
-        if (matchingTardises.isEmpty()) {
-            if (isClient()) {
-                ClientTardisManager.getInstance().ask(pos);
-            }
-            return null;
-        } else {
-            // Return the first Tardis object in the Map
-            return matchingTardises.values().iterator().next();
-        }
+        return null;
     }
 
     public static Tardis findTardisByPosition(AbsoluteBlockPos.Directed pos) {

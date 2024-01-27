@@ -143,7 +143,9 @@ public class AITMod implements ModInitializer {
             // Check if the destination is already occupied
             boolean isDestinationOccupied = !tardis.getTravel().getPosition().equals(tardis.getTravel().getDestination()) && !tardis.getTravel().checkDestination();
 
-            return /*!flightDone ||*/ isCooldown || isDestinationOccupied;
+            System.out.println("$% " + isCooldown + " " + isDestinationOccupied);
+
+            return /*!flightDone ||*/ isCooldown /*|| isDestinationOccupied*/;
         }));
 
         TardisEvents.CRASH.register((tardis -> {

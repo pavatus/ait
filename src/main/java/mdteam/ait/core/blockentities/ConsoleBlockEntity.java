@@ -46,8 +46,7 @@ import mdteam.ait.tardis.TardisDesktop;
 
 import java.util.*;
 
-import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
-import static mdteam.ait.tardis.util.TardisUtil.isClient;
+import static mdteam.ait.tardis.util.TardisUtil.*;
 
 public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
     public final AnimationState ANIM_FLIGHT = new AnimationState();
@@ -55,7 +54,6 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
     private boolean needsControls = true;
     private boolean needsSync = true;
-    private UUID tardisId;
     private Identifier type;
     private Identifier variant;
     private boolean wasPowered = false;
@@ -67,33 +65,21 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
-        Tardis found = TardisUtil.findTardisByPosition(pos);
-        if (found != null)
-            this.setTardis(found);
     }
 
     @Override
     public void writeNbt(NbtCompound nbt) {
-        if (this.getTardis().isEmpty() && this.tardisId == null) {
-            AITMod.LOGGER.error("this.getTardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
-        }
-
         if (type != null)
             nbt.putString("type", type.toString());
         if (variant != null)
             nbt.putString("variant", variant.toString());
 
         super.writeNbt(nbt);
-        if (this.tardisId != null)
-            nbt.putString("tardis", this.tardisId.toString());
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        if (nbt.contains("tardis")) {
-            this.setTardis(UUID.fromString(nbt.getString("tardis")));
-        }
 
         if (nbt.contains("type"))
             setType(Identifier.tryParse(nbt.getString("type")));
@@ -127,8 +113,9 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
     @Override
     public Optional<Tardis> getTardis() {
-        if(this.tardisId == null)
-            findTardisByPosition(pos);
+        if(this.tardisId == null) {
+            this.setTardis(findTardisByInterior(pos));
+        }
         return super.getTardis();
     }
 
@@ -304,7 +291,9 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     }
 
     public void setDesktop(TardisDesktop desktop) {
-        if (isClient()) return;
+        if (this.getWorld().isClient()) return;
+
+        System.out.println("Linking destkop " + this.getTardis().get().getUuid());
 
         desktop.setConsolePos(new AbsoluteBlockPos.Directed(
                 this.pos, TardisUtil.getTardisDimension(), this.getCachedState().get(HorizontalDirectionalBlock.FACING))
