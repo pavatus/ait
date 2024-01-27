@@ -23,13 +23,14 @@ import java.util.UUID;
 import java.util.function.Function;
 
 public class Tardis {
-    // this is starting to get a little bloated..
+    // this is starting to get a little bloated.. - you're tellin' me fam
 
-    private final TardisTravel travel;
+    protected TardisTravel travel;
     private final UUID uuid;
-    private TardisDesktop desktop;
-    private final TardisExterior exterior;
-    private TardisHandlersManager handlers;
+    protected TardisDesktop desktop;
+    protected TardisExterior exterior;
+    //protected TardisDoor door;
+    protected TardisHandlersManager handlers;
     private boolean dirty = false;
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorSchema exteriorType, ExteriorVariantSchema variant) {
@@ -47,9 +48,6 @@ public class Tardis {
         return uuid;
     }
 
-    public void setDesktop(TardisDesktop desktop) {
-        this.desktop = desktop;
-    }
 
     public TardisDesktop getDesktop() {
         return desktop;

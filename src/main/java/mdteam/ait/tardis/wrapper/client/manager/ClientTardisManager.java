@@ -88,8 +88,8 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
         switch (header) {
             case "desktop" -> tardis.setDesktop(this.gson.fromJson(json, TardisDesktop.class));
             //case "door" -> tardis.setDoor(this.gson.fromJson(json, TardisDoor.class));
-            //case "exterior" -> tardis.setExterior(this.gson.fromJson(json, TardisExterior.class));
-            //case "travel" -> tardis.setTravel(this.gson.fromJson(json, TardisTravel.class));
+            case "exterior" -> tardis.setExterior(this.gson.fromJson(json, TardisExterior.class));
+            case "travel" -> tardis.setTravel(this.gson.fromJson(json, TardisTravel.class));
         }
     }
 

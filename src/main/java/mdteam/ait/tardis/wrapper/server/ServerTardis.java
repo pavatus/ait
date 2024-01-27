@@ -17,12 +17,6 @@ public class ServerTardis extends Tardis {
         super(uuid, tardis -> new ServerTardisTravel(tardis, pos), tardis -> new ServerTardisDesktop(tardis, schema), tardis -> new ServerTardisExterior(tardis, exteriorType, variantType), locked);
     }
 
-    @Override
-    public void setDesktop(TardisDesktop desktop) {
-        super.setDesktop(desktop);
-        this.markDirty();
-    }
-
     public void sync() {
         ServerTardisManager.getInstance().sendToSubscribers(this);
     }
