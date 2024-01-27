@@ -144,6 +144,9 @@ public class DoorBlockEntity extends BlockEntity {
 
     // oh god.
     public Optional<Tardis> getTardis() {
+        if (this.tardisId == null)
+            this.findTardis();
+
         if (TardisUtil.isClient()) { // todo replace deprecated check
             if (!ClientTardisManager.getInstance().hasTardis(this.tardisId)) {
                 ClientTardisManager.getInstance().loadTardis(this.tardisId, tardis -> {});
