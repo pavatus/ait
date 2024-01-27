@@ -155,27 +155,27 @@ public class PropertiesHandler { // todo move things out of properties
         Object val = holder.getData().get(key);
 
         if (val instanceof Integer) {
-            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, (Integer) val);
+            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "int", String.valueOf(val));
             return;
         }
 
         if (val instanceof Double) {
-            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, (Double) val);
+            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "double", String.valueOf(val));
             return;
         }
 
         if (val instanceof Float) {
-            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, (Float) val);
+            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "float", String.valueOf(val));
             return;
         }
 
         if (val instanceof Boolean) {
-            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, (Boolean) val);
+            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "boolean", String.valueOf(val));
             return;
         }
 
         if (val instanceof String) {
-            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, (String) val);
+            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "string", (String) val);
             return;
         }
     }
