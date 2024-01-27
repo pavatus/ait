@@ -342,7 +342,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         this.sendTardis(player, this.getTardis(uuid));
     }
 
-    private void sendTardis(@NotNull ServerPlayerEntity player, Tardis tardis) {
+    public void sendTardis(@NotNull ServerPlayerEntity player, Tardis tardis) {
         this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
     }
 

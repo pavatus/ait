@@ -1,6 +1,8 @@
 package mdteam.ait.tardis.util;
 
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
+import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
@@ -14,6 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
 import java.util.Collection;
+import java.util.List;
 
 public class NetworkUtil {
     // THESE SHOULD ONLY BE RAN ON SERVER
@@ -40,6 +43,21 @@ public class NetworkUtil {
         Collection<ServerPlayerEntity> found = getPlayersInInterior(tardis);
         found.addAll(getPlayersNearExterior(tardis));
         return found;
+    }
+    public static boolean isPlayerNearTardis(Tardis tardis, ServerPlayerEntity player) {
+        return getNearbyTardisPlayers(tardis).contains(player);
+    }
+    public static Collection<ServerTardis> getTardisesNearPlayer(ServerPlayerEntity player) {
+        List<ServerTardis> list = List.of();
+
+        // Laggy probably
+        for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
+            if (isPlayerNearTardis(tardis, player)) {
+                list.add(tardis);
+            }
+        }
+
+        return list;
     }
     public static void sendToInterior(Tardis tardis, Identifier id, PacketByteBuf buf) {
         for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
