@@ -442,9 +442,9 @@ public class TardisUtil {
         return null;
     }
 
-    public static List<PlayerEntity> getPlayersInInterior(Tardis tardis) {
+    public static List<ServerPlayerEntity> getPlayersInInterior(Tardis tardis) {
         Tardis found;
-        List<PlayerEntity> list = new ArrayList<>();
+        List<ServerPlayerEntity> list = new ArrayList<>();
 
         for (ServerPlayerEntity player : getServer().getPlayerManager().getPlayerList()) {
             if (player.getServerWorld() != getTardisDimension()) continue;
