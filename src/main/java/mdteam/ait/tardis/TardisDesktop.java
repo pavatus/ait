@@ -70,7 +70,7 @@ public class TardisDesktop extends TardisLink {
     }
 
     public AbsoluteBlockPos.Directed getConsolePos() {
-         if (consolePos == null) searchForConsole(); // TODO - not do this, fix the core issue.
+        //if (consolePos == null) searchForConsole(); // TODO - not do this, fix the core issue.
 
         return consolePos;
     }

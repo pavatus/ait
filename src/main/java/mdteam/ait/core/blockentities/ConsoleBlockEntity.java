@@ -46,6 +46,7 @@ import mdteam.ait.tardis.TardisDesktop;
 
 import java.util.*;
 
+import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
@@ -73,7 +74,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
     @Override
     public void writeNbt(NbtCompound nbt) {
-        if (this.getTardis().isEmpty()) {
+        if (this.getTardis().isEmpty() && this.tardisId == null) {
             AITMod.LOGGER.error("this.getTardis() is null! Is " + this + " invalid? BlockPos: " + "(" + this.getPos().toShortString() + ")");
         }
 
@@ -122,6 +123,13 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         markNeedsSyncing();
         markDirty();
         return nbt;
+    }
+
+    @Override
+    public Optional<Tardis> getTardis() {
+        if(this.tardisId == null)
+            findTardisByPosition(pos);
+        return super.getTardis();
     }
 
     @Nullable

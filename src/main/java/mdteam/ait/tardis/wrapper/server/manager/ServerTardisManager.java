@@ -260,6 +260,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
     // TODO - yes this is much better than sending the entire tardis class, but it still sends the entire component class. If everything is saved in a PropertiesHolder then this is a non-issue though.
     public void sendToSubscribers(AbstractTardisComponent component) {
         if(component.getTardis().isEmpty()) return;
+        if(!this.subscribers.containsKey(component.getTardis().get().getUuid())) return;
         UUID uuid = component.getTardis().get().getUuid();
 
         MinecraftServer mc = TardisUtil.getServer();

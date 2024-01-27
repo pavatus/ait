@@ -25,7 +25,7 @@ public class ServerTardisDesktop extends TardisDesktop implements TardisTickable
     @Override
     public void setConsolePos(AbsoluteBlockPos.Directed pos) {
         super.setConsolePos(pos);
-
+        if (this.getTardis().isEmpty()) return;
         this.sync();
     }
 }
