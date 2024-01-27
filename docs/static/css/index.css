@@ -3,7 +3,8 @@
  */
 /* commom */
 body {
-	background-image: url("../img/canvas_bg.jpg");
+	background-image: url("../img/bg.png");
+	background-position: 100% 90%;
     font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
 }
 article p{
