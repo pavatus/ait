@@ -16,6 +16,7 @@ import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.exterior.PoliceBoxExterior;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.*;
@@ -48,7 +49,9 @@ public class MonitorScreen extends TardisScreen {
 
     public MonitorScreen(UUID tardis) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
-        updateTardis();
+        this.tardisId = tardis;
+        System.out.println("@#!@@!: " + tardis + " | " + ClientTardisManager.getInstance().getLookup());
+        //getFromUUID(tardis);
     }
 
     @Override
@@ -70,7 +73,7 @@ public class MonitorScreen extends TardisScreen {
     public ExteriorSchema getCurrentModel() {
         // if (currentModel == ExteriorRegistry.CORAL_GROWTH) nextExterior();
 
-        return currentModel == null ? tardis().getExterior().getType() : currentModel;
+        return currentModel == null ? getFromUUID(tardisId).getExterior().getType() : currentModel;
     }
 
     public void setCurrentModel(ExteriorSchema currentModel) {
@@ -86,10 +89,10 @@ public class MonitorScreen extends TardisScreen {
         if (Objects.equals(currentVariant, ClientExteriorVariantRegistry.CORAL_GROWTH)) whichDirectionExterior(true);
 
         if (currentVariant == null)
-            if(tardis().getExterior().getType() != getCurrentModel()) {
+            if(getFromUUID(tardisId).getExterior().getType() != getCurrentModel()) {
                 setCurrentVariant(ExteriorVariantRegistry.withParentToList(getCurrentModel()).get(0));
             } else {
-                setCurrentVariant(tardis().getExterior().getVariant());
+                setCurrentVariant(getFromUUID(tardisId).getExterior().getVariant());
             }
 
         return currentVariant;
@@ -140,14 +143,14 @@ public class MonitorScreen extends TardisScreen {
     }
 
     public void sendExteriorPacket() {
-        if (tardis() != null) {
-            /*TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel() != tardis().getExterior().getType() ?
-                    this.getCurrentModel().ordinal() : tardis().getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(),
-                    this.getCurrentVariant() != tardis().getExterior().getVariant());*/
-            if (this.getCurrentModel() != tardis().getExterior().getType() || this.getCurrentVariant().parent() != tardis().getExterior().getVariant()) {
+        if (getFromUUID(tardisId) != null) {
+            /*TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel() != getFromUUID(tardis).getExterior().getType() ?
+                    this.getCurrentModel().ordinal() : getFromUUID(tardis).getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(),
+                    this.getCurrentVariant() != getFromUUID(tardis).getExterior().getVariant());*/
+            if (this.getCurrentModel() != getFromUUID(tardisId).getExterior().getType() || this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant()) {
                 ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
                         this.getCurrentModel().id().toString(), this.getCurrentVariant().id().toString(),
-                        this.getCurrentVariant().parent() != tardis().getExterior().getVariant());
+                        this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant());
             }
         }
     }
@@ -244,7 +247,7 @@ public class MonitorScreen extends TardisScreen {
 
     protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX) {
         // testing @todo
-        if (tardis() != null) {
+        if (getFromUUID(tardisId) != null) {
             if (this.getCurrentModel() == null || this.getCurrentVariant() == null) return;
             ExteriorModel model = this.getCurrentVariant().model();
             MatrixStack stack = context.getMatrices();
@@ -271,9 +274,9 @@ public class MonitorScreen extends TardisScreen {
     protected void drawInformationText(DrawContext context) {
         int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
         int j = ((this.width - this.backgroundWidth) / 2);
-        if (tardis() == null) return;
-        AbsoluteBlockPos.Directed abpd = tardis().getTravel().getPosition();
-        AbsoluteBlockPos.Directed dabpd = tardis().getTravel().getDestination();
+        if (getFromUUID(tardisId) == null) return;
+        AbsoluteBlockPos.Directed abpd = getFromUUID(tardisId).getTravel().getPosition();
+        AbsoluteBlockPos.Directed dabpd = getFromUUID(tardisId).getTravel().getDestination();
         if(abpd == null) return;
         if(abpd.getDimension() == null) return;
         String positionText = "> " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
@@ -282,7 +285,7 @@ public class MonitorScreen extends TardisScreen {
         String destinationText = "> " + dabpd.getX() + ", " + dabpd.getY() + ", " + dabpd.getZ();
         String dDimensionText = "> " + convertWorldValueToModified(dabpd.getDimension().getValue());
         String dDirectionText = "> " + dabpd.getDirection().toString().toUpperCase();
-        String fuelText = "> " + Math.round((tardis().getFuel() / TARDIS_MAX_FUEL) * 100);
+        String fuelText = "> " + Math.round((getFromUUID(tardisId).getFuel() / TARDIS_MAX_FUEL) * 100);
 
         // position
         context.drawText(this.textRenderer, Text.literal("Position"), (width / 2 - 64), (height / 2 - 46), 5636095, true);

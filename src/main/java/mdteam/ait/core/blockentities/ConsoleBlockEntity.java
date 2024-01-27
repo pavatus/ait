@@ -292,7 +292,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     }
 
     public void setDesktop(TardisDesktop desktop) {
-        if (this.getWorld().isClient()) return;
+        if (this.getWorld() == null || this.getWorld().isClient()) return;
 
         System.out.println("Linking destkop " + this.getTardis().get().getUuid());
 
