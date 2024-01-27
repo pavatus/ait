@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.wrapper.client;
 
 import mdteam.ait.tardis.*;
+import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -25,7 +26,7 @@ public class ClientTardis extends Tardis {
         this.exterior = exterior;
     }
 
-    /*public void setDoor(TardisDoor door) {
-        this.door = door;
-    }*/
+    public void setDoor(DoorData door) {
+        this.getHandlers().setDoor(door);
+    }
 }

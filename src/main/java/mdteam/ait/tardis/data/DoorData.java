@@ -70,11 +70,13 @@ public class DoorData extends TardisLink {
     public void setLeftRot(boolean var) {
         this.left = var;
         if(this.left) this.setDoorState(DoorStateEnum.FIRST);
+        this.sync();
     }
 
     public void setRightRot(boolean var) {
         this.right = var;
         if(this.right) this.setDoorState(DoorStateEnum.SECOND);
+        this.sync();
     }
 
     public boolean isRightOpen() {
@@ -89,6 +91,7 @@ public class DoorData extends TardisLink {
         this.locked = var;
         // should probs be in the method below
         if (var) setDoorState(DoorStateEnum.CLOSED);
+        this.sync();
     }
 
     public void setLockedAndDoors(boolean var) {

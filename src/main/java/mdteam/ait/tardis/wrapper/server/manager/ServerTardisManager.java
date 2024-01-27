@@ -256,6 +256,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         }
     }
 
+    // TODO - yes this is much better than sending the entire tardis class, but it still sends the entire component class. If everything is saved in a PropertiesHolder then this is a non-issue though.
     public void sendToSubscribers(AbstractTardisComponent component) {
         UUID uuid = component.getTardis().getUuid();
 
@@ -294,6 +295,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         data.writeString("properties");
 
         data.writeString(key);
+        data.writeString("string");
         data.writeString(value);
 
         ServerPlayNetworking.send(player, UPDATE, data);
@@ -317,6 +319,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         data.writeString("properties");
 
         data.writeString(key);
+        data.writeString("int");
         data.writeInt(value);
 
         ServerPlayNetworking.send(player, UPDATE, data);
@@ -340,6 +343,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         data.writeString("properties");
 
         data.writeString(key);
+        data.writeString("double");
         data.writeDouble(value);
 
         ServerPlayNetworking.send(player, UPDATE, data);
@@ -363,6 +367,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         data.writeString("properties");
 
         data.writeString(key);
+        data.writeString("float");
         data.writeFloat(value);
 
         ServerPlayNetworking.send(player, UPDATE, data);
@@ -386,6 +391,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         data.writeString("properties");
 
         data.writeString(key);
+        data.writeString("boolean");
         data.writeBoolean(value);
 
         ServerPlayNetworking.send(player, UPDATE, data);

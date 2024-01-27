@@ -305,9 +305,10 @@ public class Tardis {
         return dirty;
     }
 
-    // todo replace all instances of "markDirty" with "updateTardis(this)"
+    // todo replace all instances of "markDirty" with eg "this.sync()" or a properties sync (the set method with the tardis variable)
+    @Deprecated
     public void markDirty() {
-        dirty = true;
+        dirty = false;
     }
 
     /**

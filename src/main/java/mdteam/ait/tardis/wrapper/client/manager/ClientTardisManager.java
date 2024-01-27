@@ -8,6 +8,8 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.*;
+import mdteam.ait.tardis.data.DoorData;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.SerialDimension;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -87,9 +89,19 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
     private void update(ClientTardis tardis, String header, String json) {
         switch (header) {
             case "desktop" -> tardis.setDesktop(this.gson.fromJson(json, TardisDesktop.class));
-            //case "door" -> tardis.setDoor(this.gson.fromJson(json, TardisDoor.class));
+            case "door" -> tardis.setDoor(this.gson.fromJson(json, DoorData.class));
             case "exterior" -> tardis.setExterior(this.gson.fromJson(json, TardisExterior.class));
             case "travel" -> tardis.setTravel(this.gson.fromJson(json, TardisTravel.class));
+        }
+    }
+
+    private void updateProperties(ClientTardis tardis, String key, String type, String value) {
+        switch (type) {
+            case "string" -> PropertiesHandler.set(tardis, key, value);
+            case "boolean" -> PropertiesHandler.set(tardis, key, Boolean.parseBoolean(value));
+            case "int" -> PropertiesHandler.set(tardis, key, Integer.parseInt(value));
+            case "double" -> PropertiesHandler.set(tardis, key, Double.parseDouble(value));
+            case "float" -> PropertiesHandler.set(tardis, key, Float.parseFloat(value));
         }
     }
 
@@ -101,6 +113,12 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
         ClientTardis tardis = this.lookup.get(uuid);
         String header = buf.readString();
+
+        if (header.equals("properties")) {
+            this.updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
+            return;
+        }
+
         String json = buf.readString();
 
         this.update(tardis, header, json);

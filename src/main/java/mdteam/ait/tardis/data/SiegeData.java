@@ -41,6 +41,7 @@ public class SiegeData extends TardisLink {
         if (playerId != null) tardis().getHandlers().getAlarms().enable();
 
         this.heldPlayer = playerId;
+        this.sync();
     }
     public int getTimeInSiegeMode() {
         return PropertiesHandler.getInt(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME);
@@ -60,6 +61,7 @@ public class SiegeData extends TardisLink {
         tardis().removeFuel(0.01 * FuelData.TARDIS_MAX_FUEL);
 
         this.isSiegeMode = b;
+        this.sync();
     }
 
     @Override
