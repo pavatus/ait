@@ -49,23 +49,13 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
     public ClientTardisManager() {
         ClientPlayNetworking.registerGlobalReceiver(ServerTardisManager.SEND,
-                (client, handler, buf, responseSender) -> this.sync(buf)
+                (client, handler, buf, responseSender) -> ClientTardisManager.getInstance().sync(buf)
         );
 
         ClientPlayNetworking.registerGlobalReceiver(ServerTardisManager.UPDATE,
-                (client, handler, buf, responseSender) -> this.update(buf));
+                (client, handler, buf, responseSender) -> ClientTardisManager.getInstance().update(buf));
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (client.player == null || client.world == null) return;
-
-            for (Tardis tardis : ClientTardisManager.getInstance().getLookup().values()) {
-                tardis.tick(client);
-            }
-
-            ClientSoundManager.tick(client);
-        });
-
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());
+        ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
     }
 
     @Override
@@ -73,7 +63,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(uuid);
 
-        this.subscribers.put(uuid, consumer);
+        ClientTardisManager.getInstance().subscribers.put(uuid, consumer);
         ClientPlayNetworking.send(ASK, data);
     }
 
@@ -89,33 +79,32 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
     }
 
     private void sync(UUID uuid, String json) {
-        ClientTardis tardis = this.gson.fromJson(json, ClientTardis.class);
+        ClientTardis tardis = ClientTardisManager.getInstance().gson.fromJson(json, ClientTardis.class);
 
         synchronized (this) {
-            this.lookup.put(uuid, tardis);
+            ClientTardisManager.getInstance().getLookup().put(uuid, tardis);
+            System.out.println("RECIEVED TARDIS: " + uuid);
 
-            System.out.println(this.getLookup());
-
-            for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
+            for (Consumer<ClientTardis> consumer : ClientTardisManager.getInstance().subscribers.removeAll(uuid)) {
                 consumer.accept(tardis);
             }
         }
     }
 
     private void sync(UUID uuid, PacketByteBuf buf) {
-        this.sync(uuid, buf.readString());
+        ClientTardisManager.getInstance().sync(uuid, buf.readString());
     }
 
     private void sync(PacketByteBuf buf) {
-        this.sync(buf.readUuid(), buf);
+        ClientTardisManager.getInstance().sync(buf.readUuid(), buf);
     }
     private void update(ClientTardis tardis, String header, String json) {
         AITMod.LOGGER.info("Updating " + header); // remove this
         switch (header) {
-            case "desktop" -> tardis.setDesktop(this.gson.fromJson(json, TardisDesktop.class));
-            case "door" -> tardis.setDoor(this.gson.fromJson(json, DoorData.class));
-            case "exterior" -> tardis.setExterior(this.gson.fromJson(json, TardisExterior.class));
-            case "travel" -> tardis.setTravel(this.gson.fromJson(json, TardisTravel.class));
+            case "desktop" -> tardis.setDesktop(ClientTardisManager.getInstance().gson.fromJson(json, TardisDesktop.class));
+            case "door" -> tardis.setDoor(ClientTardisManager.getInstance().gson.fromJson(json, DoorData.class));
+            case "exterior" -> tardis.setExterior(ClientTardisManager.getInstance().gson.fromJson(json, TardisExterior.class));
+            case "travel" -> tardis.setTravel(ClientTardisManager.getInstance().gson.fromJson(json, TardisTravel.class));
         }
     }
 
@@ -132,26 +121,26 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
     }
 
     private void update(UUID uuid, PacketByteBuf buf) {
-        if (!this.lookup.containsKey(uuid)) {
-            this.getTardis(uuid, t -> {}); // force ASK
+        if (!ClientTardisManager.getInstance().getLookup().containsKey(uuid)) {
+            ClientTardisManager.getInstance().getTardis(uuid, t -> {}); // force ASK
             return;
         }
 
-        ClientTardis tardis = this.lookup.get(uuid);
+        ClientTardis tardis = ClientTardisManager.getInstance().getLookup().get(uuid);
         String header = buf.readString();
 
         if (header.equals("properties")) {
-            this.updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
+            ClientTardisManager.getInstance().updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
             return;
         }
 
         String json = buf.readString();
 
-        this.update(tardis, header, json);
+        ClientTardisManager.getInstance().update(tardis, header, json);
     }
 
     private void update(PacketByteBuf buf) {
-        this.update(buf.readUuid(), buf);
+        ClientTardisManager.getInstance().update(buf.readUuid(), buf);
     }
 
     @Override
@@ -177,9 +166,19 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
         ClientPlayNetworking.send(LET_KNOW_UNLOADED, PacketByteBufs.create().writeUuid(uuid));
     }
 
+    private void onTick(MinecraftClient client) {
+        if (client.player == null || client.world == null) return;
+
+        for (Tardis tardis : ClientTardisManager.getInstance().getLookup().values()) {
+            tardis.tick(client);
+        }
+
+        ClientSoundManager.tick(client);
+    }
+
     @Override
     public void reset() {
-        this.subscribers.clear();
+        ClientTardisManager.getInstance().subscribers.clear();
         super.reset();
     }
 
@@ -189,9 +188,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
     @Override
     public Map<UUID, ClientTardis> getLookup() {
-        if (!this.lookup.isEmpty())
-            System.out.println(this.lookup);
-
         return super.getLookup();
     }
 }

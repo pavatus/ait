@@ -59,6 +59,13 @@ public class PulsatingAnimation extends ExteriorAnimation {
             return;
         }
 
+        if (exterior.hasWorld() && exterior.getWorld().isClient()) {
+            // todo - the Render Thread for some reason has the wrong state? / it overrides it. This kind of thing is happening quite frequently, and im not too sure what the cause is.
+            System.out.println(exterior.getTardis().get().getTravel());
+            System.out.println(exterior.getTardis().get());
+            System.out.println(state);
+        }
+
         MatSound sound = exterior.getTardis().get().getExterior().getVariant().getSound(state);
 
         this.tellClientsToSetup(state);

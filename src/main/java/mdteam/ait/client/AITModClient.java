@@ -84,6 +84,10 @@ public class AITModClient implements ClientModInitializer {
         ClientConsoleVariantRegistry.init();
         ClientDoorRegistry.init();
 
+        System.out.println("WHAT THREAD IS THIS");
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ClientTardisManager.getInstance().reset());
+
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {
                     int id = buf.readInt();
@@ -103,75 +107,75 @@ public class AITModClient implements ClientModInitializer {
                 });
 
 
-        ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
-            if (block instanceof ExteriorBlockEntity exterior) {
-                if (exterior.getTardis().isEmpty() || exterior.getTardis().get().getDoor() == null) return;
-                ClientTardisManager.getInstance().ask(exterior.getTardis().get().getUuid());
-                if (!ClientTardisManager.getInstance().exteriorToTardis.containsKey(exterior)) {
-                    ClientTardisManager.getInstance().exteriorToTardis.put(exterior, exterior.getTardis().get());
-                }
-                if (!ClientTardisManager.getInstance().loadedTardises.contains(exterior.getTardis().get().getUuid())) {
-                    ClientTardisManager.getInstance().loadedTardises.add(exterior.getTardis().get().getUuid());
-                }
-                exterior.getTardis().get().getDoor().clearExteriorAnimationState();
-            } else if (block instanceof DoorBlockEntity door) {
-                if (door.getTardis().isEmpty()|| door.getTardis().get().getDoor() == null) return;
-                ClientTardisManager.getInstance().ask(door.getTardis().get().getUuid());
-                door.getTardis().get().getDoor().clearInteriorAnimationState();
-                if (!ClientTardisManager.getInstance().interiorDoorToTardis.containsKey(door)) {
-                    ClientTardisManager.getInstance().interiorDoorToTardis.put(door, door.getTardis().get());
-                }
-                if (!ClientTardisManager.getInstance().loadedTardises.contains(door.getTardis().get().getUuid())) {
-                    ClientTardisManager.getInstance().loadedTardises.add(door.getTardis().get().getUuid());
-                }
-            } else if (block instanceof ConsoleBlockEntity console) {
-                if(console.getTardis().isEmpty()) return;
-                if (!ClientTardisManager.getInstance().consoleToTardis.containsKey(console)) {
-                    ClientTardisManager.getInstance().consoleToTardis.put(console, console.getTardis().get());
-                }
-                if (!ClientTardisManager.getInstance().loadedTardises.contains(console.getTardis().get().getUuid())) {
-                    ClientTardisManager.getInstance().loadedTardises.add(console.getTardis().get().getUuid());
-                }
-                console.ask();
-            }
-        });
-
-        ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((block, world) -> {
-            if (block instanceof ConsoleBlockEntity console) {
-                if(console.getTardis().isEmpty()) return;
-                ClientTardisManager.getInstance().consoleToTardis.remove(console);
-                if (!ClientTardisManager.getInstance().consoleToTardis.containsValue(console.getTardis().get())) {
-                    if (ClientTardisManager.getInstance().exteriorToTardis.isEmpty()) {
-                        if (ClientTardisManager.getInstance().interiorDoorToTardis.isEmpty()) {
-
-                            ClientTardisManager.getInstance().loadedTardises.remove(console.getTardis().get().getUuid());
-                            ClientTardisManager.getInstance().letKnowUnloaded(console.getTardis().get().getUuid());
-                        }
-                    }
-                }
-            }
-            else if (block instanceof ExteriorBlockEntity exterior) {
-                ClientTardisManager.getInstance().exteriorToTardis.remove(exterior);
-                if(exterior.getTardis().isEmpty()) return;
-                if (!ClientTardisManager.getInstance().exteriorToTardis.containsValue(exterior.getTardis().get())) {
-
-                    ClientTardisManager.getInstance().loadedTardises.remove(exterior.getTardis().get().getUuid());
-                    ClientTardisManager.getInstance().letKnowUnloaded(exterior.getTardis().get().getUuid());
-                }
-            }
-            else if (block instanceof DoorBlockEntity door) {
-                ClientTardisManager.getInstance().interiorDoorToTardis.remove(door);
-                if(door.getTardis().isEmpty()) return;
-                if (!ClientTardisManager.getInstance().interiorDoorToTardis.containsValue(door.getTardis().get())) {
-                    if (ClientTardisManager.getInstance().consoleToTardis.isEmpty()) {
-                        if (ClientTardisManager.getInstance().exteriorToTardis.isEmpty()) {
-                            ClientTardisManager.getInstance().loadedTardises.remove(door.getTardis().get().getUuid());
-                            ClientTardisManager.getInstance().letKnowUnloaded(door.getTardis().get().getUuid());
-                        }
-                    }
-                }
-            }
-        });
+//        ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
+//            if (block instanceof ExteriorBlockEntity exterior) {
+//                if (exterior.getTardis().isEmpty() || exterior.getTardis().get().getDoor() == null) return;
+//                ClientTardisManager.getInstance().ask(exterior.getTardis().get().getUuid());
+//                if (!ClientTardisManager.getInstance().exteriorToTardis.containsKey(exterior)) {
+//                    ClientTardisManager.getInstance().exteriorToTardis.put(exterior, exterior.getTardis().get());
+//                }
+//                if (!ClientTardisManager.getInstance().loadedTardises.contains(exterior.getTardis().get().getUuid())) {
+//                    ClientTardisManager.getInstance().loadedTardises.add(exterior.getTardis().get().getUuid());
+//                }
+//                exterior.getTardis().get().getDoor().clearExteriorAnimationState();
+//            } else if (block instanceof DoorBlockEntity door) {
+//                if (door.getTardis().isEmpty()|| door.getTardis().get().getDoor() == null) return;
+//                ClientTardisManager.getInstance().ask(door.getTardis().get().getUuid());
+//                door.getTardis().get().getDoor().clearInteriorAnimationState();
+//                if (!ClientTardisManager.getInstance().interiorDoorToTardis.containsKey(door)) {
+//                    ClientTardisManager.getInstance().interiorDoorToTardis.put(door, door.getTardis().get());
+//                }
+//                if (!ClientTardisManager.getInstance().loadedTardises.contains(door.getTardis().get().getUuid())) {
+//                    ClientTardisManager.getInstance().loadedTardises.add(door.getTardis().get().getUuid());
+//                }
+//            } else if (block instanceof ConsoleBlockEntity console) {
+//                if(console.getTardis().isEmpty()) return;
+//                if (!ClientTardisManager.getInstance().consoleToTardis.containsKey(console)) {
+//                    ClientTardisManager.getInstance().consoleToTardis.put(console, console.getTardis().get());
+//                }
+//                if (!ClientTardisManager.getInstance().loadedTardises.contains(console.getTardis().get().getUuid())) {
+//                    ClientTardisManager.getInstance().loadedTardises.add(console.getTardis().get().getUuid());
+//                }
+//                console.ask();
+//            }
+//        });
+//
+//        ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((block, world) -> {
+//            if (block instanceof ConsoleBlockEntity console) {
+//                if(console.getTardis().isEmpty()) return;
+//                ClientTardisManager.getInstance().consoleToTardis.remove(console);
+//                if (!ClientTardisManager.getInstance().consoleToTardis.containsValue(console.getTardis().get())) {
+//                    if (ClientTardisManager.getInstance().exteriorToTardis.isEmpty()) {
+//                        if (ClientTardisManager.getInstance().interiorDoorToTardis.isEmpty()) {
+//
+//                            ClientTardisManager.getInstance().loadedTardises.remove(console.getTardis().get().getUuid());
+//                            ClientTardisManager.getInstance().letKnowUnloaded(console.getTardis().get().getUuid());
+//                        }
+//                    }
+//                }
+//            }
+//            else if (block instanceof ExteriorBlockEntity exterior) {
+//                ClientTardisManager.getInstance().exteriorToTardis.remove(exterior);
+//                if(exterior.getTardis().isEmpty()) return;
+//                if (!ClientTardisManager.getInstance().exteriorToTardis.containsValue(exterior.getTardis().get())) {
+//
+//                    ClientTardisManager.getInstance().loadedTardises.remove(exterior.getTardis().get().getUuid());
+//                    ClientTardisManager.getInstance().letKnowUnloaded(exterior.getTardis().get().getUuid());
+//                }
+//            }
+//            else if (block instanceof DoorBlockEntity door) {
+//                ClientTardisManager.getInstance().interiorDoorToTardis.remove(door);
+//                if(door.getTardis().isEmpty()) return;
+//                if (!ClientTardisManager.getInstance().interiorDoorToTardis.containsValue(door.getTardis().get())) {
+//                    if (ClientTardisManager.getInstance().consoleToTardis.isEmpty()) {
+//                        if (ClientTardisManager.getInstance().exteriorToTardis.isEmpty()) {
+//                            ClientTardisManager.getInstance().loadedTardises.remove(door.getTardis().get().getUuid());
+//                            ClientTardisManager.getInstance().letKnowUnloaded(door.getTardis().get().getUuid());
+//                        }
+//                    }
+//                }
+//            }
+//        });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
             assert client.world != null;

@@ -1,10 +1,15 @@
 package mdteam.ait.tardis.wrapper.client;
 
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.server.world.ServerWorld;
 
 import java.util.UUID;
 
