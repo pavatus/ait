@@ -114,8 +114,9 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     @Override
     public Optional<Tardis> getTardis() {
         if(this.tardisId == null) {
-            System.out.println(ClientTardisManager.getInstance().getLookup());
-            this.setTardis(findTardisByInterior(pos));
+            Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
+            if (found != null)
+                this.setTardis(found);
         }
         return super.getTardis();
     }

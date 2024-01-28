@@ -153,12 +153,11 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     private void findTardis() {
-        this.setTardis(TardisUtil.findTardisByInterior(pos));
+        this.setTardis(TardisUtil.findTardisByInterior(pos, !this.getWorld().isClient()));
     }
 
     public void setTardis(Tardis tardis) {
         if (tardis == null) {
-            AITMod.LOGGER.error("Tardis was null in DoorBlockEntity at " + this.getPos());
             return;
         }
 

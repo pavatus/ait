@@ -1,5 +1,6 @@
 package mdteam.ait.client;
 
+import mc.craig.software.regen.fabric.handlers.ClientEvents;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.core.*;
@@ -36,6 +37,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -81,8 +83,6 @@ public class AITModClient implements ClientModInitializer {
         ClientExteriorVariantRegistry.init();
         ClientConsoleVariantRegistry.init();
         ClientDoorRegistry.init();
-
-
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {
@@ -200,6 +200,7 @@ public class AITModClient implements ClientModInitializer {
 
                        BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.getExterior().getExteriorPos()); // todo remember to use the right world in future !!
                        if (!(block instanceof ExteriorBlockEntity exterior)) return;
+                       if (exterior.getAnimation() == null) return;
 
                        exterior.getAnimation().setupAnimation(TardisTravel.State.values()[p]);
                     }));

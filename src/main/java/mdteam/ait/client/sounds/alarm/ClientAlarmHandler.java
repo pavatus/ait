@@ -10,6 +10,7 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.SoundHandler;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -55,14 +56,14 @@ public class ClientAlarmHandler extends SoundHandler {
     public boolean isPlayerInATardis() {
         if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return false;
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos());
+        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
 
         return found != null;
     }
 
     public Tardis tardis() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos());
+        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
         return found;
     }
 

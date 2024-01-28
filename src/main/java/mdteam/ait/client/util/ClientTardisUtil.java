@@ -50,7 +50,7 @@ public class ClientTardisUtil {
     public static boolean isPlayerInATardis() {
         if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return false;
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos());
+        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
 
         return found != null;
     }
@@ -64,7 +64,7 @@ public class ClientTardisUtil {
 
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null) return null;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos());
+        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
         return found;
     }
 

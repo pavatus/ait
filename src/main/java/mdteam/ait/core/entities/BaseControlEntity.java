@@ -66,7 +66,7 @@ public abstract class BaseControlEntity extends MobEntity {
     }
 
     private void findTardis() {
-        this.setTardis(TardisUtil.findTardisByInterior(this.getBlockPos()));
+        this.setTardis(TardisUtil.findTardisByInterior(this.getBlockPos(), !this.getWorld().isClient()));
     }
 
     public void setTardis(Tardis tardis) {

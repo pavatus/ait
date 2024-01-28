@@ -338,8 +338,10 @@ public class TardisUtil {
         });
     }
 
-    public static Tardis findTardisByInterior(BlockPos pos) {
-        for (Tardis tardis : TardisManager.getInstance().getLookup().values()) {
+    public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
+        for (Tardis tardis : TardisManager.getInstance(isServer).getLookup().values()) {
+            // System.out.println(pos);
+            // System.out.println(tardis.getDesktop().getCorners());
             if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos))
                 return tardis;
         }
@@ -417,7 +419,7 @@ public class TardisUtil {
         for (ServerPlayerEntity player : getServer().getPlayerManager().getPlayerList()) {
             if (player.getServerWorld() != getTardisDimension()) continue;
 
-            found = findTardisByInterior(player.getBlockPos());
+            found = findTardisByInterior(player.getBlockPos(), true);
             if(found == null) continue; // fixme "Cannot invoke "..getUuid()" because "found" is null ????
             if (found.getUuid().equals(tardis.getUuid())) list.add(player);
         }

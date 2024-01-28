@@ -2,6 +2,8 @@ package mdteam.ait.tardis.wrapper.server.manager;
 
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
+import mdteam.ait.core.AITDimensions;
+import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.NetworkUtil;
@@ -344,17 +346,32 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
     }
 
     private void sendTardis(@NotNull ServerPlayerEntity player, UUID uuid, String json) {
+        if (isAskOnDelay(player)) return;
+
+        System.out.println("SENDING TARDIS");
+
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(uuid);
         data.writeString(json);
 
         ServerPlayNetworking.send(player, SEND, data);
+        createAskDelay(player);
+    }
+
+    /**
+     * A delay to stop the client getting overloaded with tons of tardises all at once, splitting it up over a few seconds to save server performance.
+     */
+    private void createAskDelay(ServerPlayerEntity player) {
+        DeltaTimeManager.createDelay(player.getUuidAsString() + "-ask-delay", 1 * 1000L); // A delay between asking for tardises to be synced
+    }
+    private boolean isAskOnDelay(ServerPlayerEntity player) {
+        return DeltaTimeManager.isStillWaitingOnDelay(player.getUuidAsString() + "-ask-delay");
     }
 
     public void onPlayerJoin(ServerPlayerEntity player) {
-        if (player.getWorld().getRegistryKey().equals(TardisUtil.getTardisDimension().getRegistryKey())) {
+        if (player.getWorld().getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
             // if the player is a tardis already, sync the one at their location
-            Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos());
+            Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), true);
             System.out.println(found);
             if (found == null) return;
 

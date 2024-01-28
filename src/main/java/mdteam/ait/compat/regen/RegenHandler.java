@@ -51,7 +51,7 @@ public class RegenHandler implements Acting {
 
         if(world.isClient()) return;
 
-        Tardis tardis = TardisUtil.findTardisByInterior(livingEntity.getBlockPos());
+        Tardis tardis = TardisUtil.findTardisByInterior(livingEntity.getBlockPos(), true);
         if (tardis == null) return;
         if(tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
             PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
@@ -69,7 +69,7 @@ public class RegenHandler implements Acting {
 
         if(world.isClient()) return;
 
-        Tardis tardis = TardisUtil.findTardisByInterior(livingEntity.getBlockPos());
+        Tardis tardis = TardisUtil.findTardisByInterior(livingEntity.getBlockPos(), true);
         if (tardis == null) return;
         if(Random.create().nextBoolean()) {
             //if(tardis.getTravel().getState() == TardisTravel.State.MAT || tardis.getTravel().getState() == TardisTravel.State.DEMAT) {

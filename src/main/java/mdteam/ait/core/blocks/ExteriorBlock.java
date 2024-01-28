@@ -182,16 +182,14 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient())
-            return ActionResult.SUCCESS;
-
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) {
-            if (world.isClient()) {
+            if (world.isClient()) { // this wont ever get called because of the early return above, remove?
                 if (exteriorBlockEntity.getTardis().isEmpty()) {
                     ClientTardisManager.getInstance().askTardis(new AbsoluteBlockPos(pos, world));
                     return ActionResult.FAIL;
                 }
+                return ActionResult.SUCCESS;
             }
 
             if(exteriorBlockEntity.getTardis().isEmpty()) return ActionResult.FAIL;

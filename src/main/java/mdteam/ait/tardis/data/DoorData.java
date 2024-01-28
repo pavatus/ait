@@ -190,7 +190,7 @@ public class DoorData extends TardisLink {
     public DoorStateEnum getAnimationInteriorState() {return tempInteriorState;}
 
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
-        if (isClient()) {
+        if (world.isClient()) { // not even possible.
             return false;
         }
 

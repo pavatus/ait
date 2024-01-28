@@ -39,6 +39,8 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
     public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
     public static final Identifier LET_KNOW_UNLOADED = new Identifier("ait", "let_know_unloaded");
     private static ClientTardisManager instance;
+
+    // Are all these maps necessary? What are they even for??
     public final Map<ConsoleBlockEntity, Tardis> consoleToTardis = new HashMap<>();
     public final Map<ExteriorBlockEntity, Tardis> exteriorToTardis = new HashMap<>();
     public final Map<DoorBlockEntity, Tardis> interiorDoorToTardis = new HashMap<>();
@@ -54,6 +56,8 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
                 (client, handler, buf, responseSender) -> this.update(buf));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.player == null || client.world == null) return;
+
             for (Tardis tardis : ClientTardisManager.getInstance().getLookup().values()) {
                 tardis.tick(client);
             }
@@ -66,17 +70,11 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
     @Override
     public void loadTardis(UUID uuid, Consumer<ClientTardis> consumer) {
-        if (this.isAskOnDelay()) {
-            AITMod.LOGGER.info("Tried to ask for tardis " + uuid + " but we're on delay, so we'll probably ask later.");
-            return;
-        }
-
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(uuid);
 
         this.subscribers.put(uuid, consumer);
         ClientPlayNetworking.send(ASK, data);
-        this.createAskDelay();
     }
 
     /**
@@ -84,16 +82,10 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
      * @param pos
      */
     public void askTardis(AbsoluteBlockPos pos) {
-        if (this.isAskOnDelay()) {
-            AITMod.LOGGER.info("Tried to ask for tardis at " + pos + " but we're on delay, so we'll probably ask later.");
-            return;
-        }
-
         PacketByteBuf data = PacketByteBufs.create();
         data.writeNbt(pos.toNbt());
 
         ClientPlayNetworking.send(ASK_POS, data);
-        this.createAskDelay();
     }
 
     private void sync(UUID uuid, String json) {
@@ -101,6 +93,8 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
         synchronized (this) {
             this.lookup.put(uuid, tardis);
+
+            System.out.println(this.getLookup());
 
             for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
                 consumer.accept(tardis);
@@ -183,16 +177,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
         ClientPlayNetworking.send(LET_KNOW_UNLOADED, PacketByteBufs.create().writeUuid(uuid));
     }
 
-    /**
-     * A delay to stop the client getting overloaded with tons of tardises all at once, splitting it up over a few seconds to save server performance when a player joins
-     */
-    private void createAskDelay() {
-        DeltaTimeManager.createDelay("client-ask-for-tardises-delay", 1 * 1000L); // A delay between asking for tardises to be synced
-    }
-    private boolean isAskOnDelay() {
-        return DeltaTimeManager.isStillWaitingOnDelay("client-ask-for-tardises-delay");
-    }
-
     @Override
     public void reset() {
         this.subscribers.clear();
@@ -201,5 +185,13 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
     public static ClientTardisManager getInstance() {
         return instance;
+    }
+
+    @Override
+    public Map<UUID, ClientTardis> getLookup() {
+        if (!this.lookup.isEmpty())
+            System.out.println(this.lookup);
+
+        return super.getLookup();
     }
 }

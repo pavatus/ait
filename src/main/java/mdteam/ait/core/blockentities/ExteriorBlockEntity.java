@@ -84,9 +84,6 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
         }
 
         DoorData.useDoor(this.getTardis().get(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
-        // fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
-        if (sneaking)
-            return;
     }
 
     @Nullable
