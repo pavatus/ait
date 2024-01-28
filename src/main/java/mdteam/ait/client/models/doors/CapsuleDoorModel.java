@@ -59,8 +59,8 @@ public class CapsuleDoorModel extends DoorModel {
 
         ModelPartData door_right = doors.addChild("door_right", ModelPartBuilder.create().uv(161, 95).cuboid(0.4706F, -11.0F, -0.5F, 6.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-6.5F, 0.0F, -8.5F));
 
-        ModelPartData door_left = doors.addChild("door_left", ModelPartBuilder.create().uv(161, 162).cuboid(-6.5294F, -11.0F, -0.5F, 6.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(6.5F, 0.0F, -8.5F));
-        return TexturedModelData.of(modelData, 256, 256);
+
+        ModelPartData door_left = doors.addChild("door_left", ModelPartBuilder.create().uv(162, 162).cuboid(-6.5294F, -11.0F, -0.5F, 6.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(6.5F, 0.0F, -8.5F));        return TexturedModelData.of(modelData, 256, 256);
     }
 
     @Override

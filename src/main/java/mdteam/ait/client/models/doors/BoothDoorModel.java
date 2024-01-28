@@ -67,7 +67,7 @@ public class BoothDoorModel extends DoorModel {
 
         matrices.push();
         this.k2.getChild("Door").yaw = door.getTardis().get().getDoor().isOpen() ? 1.575F : 0.0F;
-        matrices.scale(0.95f, 0.95f, 0.95f);
+        matrices.scale(1f, 1f, 1f);
         matrices.translate(0, -1.5f, 0);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
 
