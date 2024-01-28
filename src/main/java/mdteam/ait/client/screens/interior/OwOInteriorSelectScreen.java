@@ -26,7 +26,6 @@ import java.util.UUID;
 import static mdteam.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
 
 public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
-
     private Screen parent;
     private UUID tardisid;
     private TardisDesktopSchema selectedDesktop;
@@ -37,16 +36,10 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     public OwOInteriorSelectScreen(UUID tardis, Screen parent) {
         this.parent = parent;
         this.tardisid = tardis;
-        updateTardis();
     }
 
     protected Tardis tardis() {
         return ClientTardisManager.getInstance().getLookup().get(this.tardisid);
-    }
-
-    protected Tardis updateTardis() {
-        ClientTardisManager.getInstance().ask(this.tardisid);
-        return tardis();
     }
 
     @Override
@@ -61,7 +54,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     @Override
     protected void init() {
         this.selectedDesktop = tardis().getDesktop().getSchema();
-        this.top = (this.height - this.bgHeight) / 2; // this means everythings centered and scaling, same for below
+        this.top = (this.height - this.bgHeight) / 2;
         this.left = (this.width - this.bgWidth) / 2;
 
         super.init();
@@ -148,6 +141,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     private void renderDesktop(DrawContext context) {
+        if(this.selectedDesktop == null) return;
         if (Objects.equals(this.selectedDesktop, DesktopRegistry.DEFAULT_CAVE)) this.nextDesktop();
 
         context.drawCenteredTextWithShadow(

@@ -62,7 +62,7 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private void playFlightSound() {
-        if (!isPlaying(getFlightLoop())) {
+        if (!isPlaying(getFlightLoop()) && tardis().getDesktop().getConsolePos() != null) {
             // ensures it plays at the right place
             ((PositionedLoopingSound) getFlightLoop()).setPosition(tardis().getDesktop().getConsolePos());
         }

@@ -41,9 +41,6 @@ public class MonitorScreen extends TardisScreen {
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     private ExteriorSchema currentModel;
     private ClientExteriorVariantSchema currentVariant;
-    private float scrollPosition;
-    private boolean scrollbarClicked;
-    private int visibleTopRow;
     int backgroundHeight = 133;
     int backgroundWidth = 236;
 
@@ -51,7 +48,6 @@ public class MonitorScreen extends TardisScreen {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
         this.tardisId = tardis;
         System.out.println("@#!@@!: " + tardis + " | " + ClientTardisManager.getInstance().getLookup());
-        //getFromUUID(tardis);
     }
 
     @Override
@@ -71,8 +67,6 @@ public class MonitorScreen extends TardisScreen {
     }
 
     public ExteriorSchema getCurrentModel() {
-        // if (currentModel == ExteriorRegistry.CORAL_GROWTH) nextExterior();
-
         return currentModel == null ? getFromUUID(tardisId).getExterior().getType() : currentModel;
     }
 
@@ -144,9 +138,6 @@ public class MonitorScreen extends TardisScreen {
 
     public void sendExteriorPacket() {
         if (getFromUUID(tardisId) != null) {
-            /*TardisUtil.changeExteriorWithScreen(this.tardisId, this.getCurrentModel() != getFromUUID(tardis).getExterior().getType() ?
-                    this.getCurrentModel().ordinal() : getFromUUID(tardis).getExterior().getType().ordinal(), this.getCurrentVariant().ordinal(),
-                    this.getCurrentVariant() != getFromUUID(tardis).getExterior().getVariant());*/
             if (this.getCurrentModel() != getFromUUID(tardisId).getExterior().getType() || this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant()) {
                 ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
                         this.getCurrentModel().id().toString(), this.getCurrentVariant().id().toString(),
