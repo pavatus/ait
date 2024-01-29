@@ -83,10 +83,6 @@ public class AITModClient implements ClientModInitializer {
         ClientConsoleVariantRegistry.init();
         ClientDoorRegistry.init();
 
-        System.out.println("WHAT THREAD IS THIS");
-
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ClientTardisManager.getInstance().reset());
-
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {
                     int id = buf.readInt();
