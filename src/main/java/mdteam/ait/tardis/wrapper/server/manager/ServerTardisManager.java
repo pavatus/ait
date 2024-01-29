@@ -4,6 +4,8 @@ import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.managers.DeltaTimeManager;
+import mdteam.ait.core.util.AITConfig;
+import mdteam.ait.core.util.AITConfigModel;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.util.NetworkUtil;
@@ -362,7 +364,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
      * A delay to stop the client getting overloaded with tons of tardises all at once, splitting it up over a few seconds to save server performance.
      */
     private void createAskDelay(ServerPlayerEntity player) {
-        DeltaTimeManager.createDelay(player.getUuidAsString() + "-ask-delay", 1 * 1000L); // A delay between asking for tardises to be synced
+        DeltaTimeManager.createDelay(player.getUuidAsString() + "-ask-delay", (long) ((AITMod.AIT_CONFIG.ASK_DELAY()) * 1000L)); // A delay between asking for tardises to be synced
     }
     private boolean isAskOnDelay(ServerPlayerEntity player) {
         return DeltaTimeManager.isStillWaitingOnDelay(player.getUuidAsString() + "-ask-delay");
