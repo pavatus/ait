@@ -348,7 +348,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
     private void sendTardis(@NotNull ServerPlayerEntity player, UUID uuid, String json) {
         if (isAskOnDelay(player)) return;
 
-        System.out.println("SENDING TARDIS");
+        System.out.println("SENDING TARDIS " + uuid + " TO " + player.getName().getString());
 
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(uuid);

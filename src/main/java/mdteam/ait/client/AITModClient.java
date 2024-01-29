@@ -1,11 +1,11 @@
 package mdteam.ait.client;
 
-import mc.craig.software.regen.fabric.handlers.ClientEvents;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import mdteam.ait.client.renderers.monitors.MonitorRenderer;
-import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.core.*;
+import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
+import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.ClientDoorRegistry;
@@ -19,11 +19,9 @@ import mdteam.ait.client.renderers.entities.FallingTardisRenderer;
 import mdteam.ait.client.renderers.entities.TardisRealRenderer;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
 import mdteam.ait.client.screens.MonitorScreen;
-import mdteam.ait.client.screens.OwOFindPlayerScreen;
 import mdteam.ait.client.screens.interior.OwOInteriorSelectScreen;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
@@ -36,7 +34,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -124,6 +121,23 @@ public class AITModClient implements ClientModInitializer {
             if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setVariant(id);
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
+            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+
+            String id = buf.readString();
+            ConsoleSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
+            BlockPos consolePos = buf.readBlockPos();
+            if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console) console.setConsoleSchema(type.id());
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_VARIANT, (client, handler, buf, responseSender) -> {
+            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+            Identifier id = Identifier.tryParse(buf.readString());
+            BlockPos consolePos = buf.readBlockPos();
+            if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console) console.setVariant(id);
+        });
+
+
         ClientPlayNetworking.registerGlobalReceiver(ExteriorAnimation.UPDATE,
                 (client, handler, buf, responseSender) -> {
                     int p = buf.readInt();
@@ -144,6 +158,10 @@ public class AITModClient implements ClientModInitializer {
         // does all this clientplaynetwrokigng shite really have to go in here, theres probably somewhere else it can go right??
         ClientPlayNetworking.registerGlobalReceiver(AITMessages.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) -> {
             client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS);
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(DesktopRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
+            DesktopRegistry.readFromServer(buf);
         });
 
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
@@ -167,7 +185,7 @@ public class AITModClient implements ClientModInitializer {
         return switch (id) {
             default -> null;
             case 0 -> new MonitorScreen(tardis); // todo new OwoMonitorScreen(tardis); god rest ye merry gentlemen
-            case 1 -> new OwOFindPlayerScreen(tardis);
+            case 1 -> null;
             case 2 -> new OwOInteriorSelectScreen(tardis, new MonitorScreen(tardis));
         };
     }

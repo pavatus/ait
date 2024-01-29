@@ -129,7 +129,6 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) || (!TardisUtil.isRiftChunk((ServerWorld) world,pos) && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
             // GET IT OUTTA HERE!!!
             world.breakBlock(pos, true);
-            world.removeBlockEntity(pos);
             return;
         }
 
@@ -137,15 +136,6 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
             TardisCriterions.PLACE_CORAL.trigger(player);
         }
     }
-
-    @Override
-    public List<ItemStack> getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder) {
-        List<ItemStack> list = super.getDroppedStacks(state, builder);
-        list.add(AITBlocks.CORAL_PLANT.asItem().getDefaultStack());
-
-        return list;
-    }
-
     public void applyGrowth(World world, BlockPos pos, BlockState state) {
         int i = this.getAge(state) + this.getGrowthAmount(world);
         int j = this.getMaxAge();

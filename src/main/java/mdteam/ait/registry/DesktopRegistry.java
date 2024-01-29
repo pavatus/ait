@@ -81,6 +81,8 @@ public class DesktopRegistry {
         for (int i = 0; i < size; i++) {
             register(buf.decodeAsJson(DatapackDesktop.CODEC));
         }
+
+        AITMod.LOGGER.info("Read {} desktops from server", size);
     }
 
     public static TardisDesktopSchema DEFAULT_CAVE;

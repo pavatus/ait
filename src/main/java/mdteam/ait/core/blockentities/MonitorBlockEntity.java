@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
+import static mdteam.ait.tardis.util.TardisUtil.findTardisByInterior;
 import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
 
 public class MonitorBlockEntity extends BlockEntity {
@@ -24,9 +25,6 @@ public class MonitorBlockEntity extends BlockEntity {
 
     public MonitorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.MONITOR_BLOCK_ENTITY_TYPE, pos, state);
-        Tardis found = TardisUtil.findTardisByInterior(pos, true);
-        if (found == null) return;
-        this.tardisid = found.getUuid();
     }
 
     @Override
@@ -59,7 +57,7 @@ public class MonitorBlockEntity extends BlockEntity {
         return tardisid;
     }
     private void findTardisFromPosition() { // should only be used if tardisId is null so we can hopefully refind the tardis
-        Tardis found = findTardisByPosition(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
+        Tardis found = findTardisByInterior(this.getPos(), !this.getWorld().isClient());
 
         if (found == null) return;
 

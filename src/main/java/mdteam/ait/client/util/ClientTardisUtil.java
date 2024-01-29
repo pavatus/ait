@@ -114,7 +114,11 @@ public class ClientTardisUtil {
     }
 
     public static void tickAlarmDelta() {
-        if (!isPlayerInATardis()) return;
+        if (!isPlayerInATardis()) {
+            if (getAlarmDelta() > 0)
+                setAlarmDelta(0);
+            return;
+        }
         Tardis tardis = getCurrentTardis();
 
         if (!tardis.getHandlers().getAlarms().isEnabled()) {

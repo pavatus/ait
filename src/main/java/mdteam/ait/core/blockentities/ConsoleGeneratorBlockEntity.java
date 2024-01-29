@@ -16,6 +16,8 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -25,9 +27,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.EndCrystalItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
@@ -43,7 +47,8 @@ import static mdteam.ait.core.blockentities.ConsoleBlockEntity.nextVariant;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class ConsoleGeneratorBlockEntity extends BlockEntity {
-
+    public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_gen_type");
+    public static final Identifier SYNC_VARIANT = new Identifier(AITMod.MOD_ID, "sync_gen_variant");
     private Identifier type;
     private Identifier variant;
 
@@ -103,9 +108,10 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
         return ConsoleRegistry.REGISTRY.get(type);
     }
 
-    private void setConsoleSchema(Identifier type) {
+    public void setConsoleSchema(Identifier type) {
         this.type = type;
         markDirty();
+        this.syncType();
         if(this.getWorld() == null) return;
         this.getWorld().updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
     }
@@ -117,9 +123,10 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 
         return ConsoleVariantRegistry.REGISTRY.get(this.variant);
     }
-    private void setVariant(Identifier variant) {
+    public void setVariant(Identifier variant) {
         this.variant = variant;
         markDirty();
+        this.syncVariant();
         if(this.getWorld() == null) return;
         this.getWorld().updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
     }
@@ -131,6 +138,32 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
     public void changeConsole(ConsoleVariantSchema schema) {
         this.setConsoleSchema(schema.parent().id());
         this.setVariant(schema.id());
+    }
+
+    private void syncType() {
+        if (!hasWorld() || world.isClient()) return;
+
+        PacketByteBuf buf = PacketByteBufs.create();
+
+        buf.writeString(getConsoleSchema().id().toString());
+        buf.writeBlockPos(getPos());
+
+        for (PlayerEntity player : world.getPlayers()) {
+            ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_TYPE, buf); // safe cast as we know its server
+        }
+    }
+
+    private void syncVariant() {
+        if (!hasWorld() || world.isClient()) return;
+
+        PacketByteBuf buf = PacketByteBufs.create();
+
+        buf.writeString(getConsoleVariant().id().toString());
+        buf.writeBlockPos(getPos());
+
+        for (PlayerEntity player : world.getPlayers()) {
+            ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_VARIANT, buf); // safe cast as we know its server
+        }
     }
 
     @Override

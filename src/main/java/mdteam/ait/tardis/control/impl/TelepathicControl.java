@@ -21,27 +21,6 @@ public class TelepathicControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        if(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) &&
-                !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
-            if (player.getMainHandStack().getItem() instanceof KeyItem) {
-            /*ItemStack key = player.getMainHandStack();
-            NbtCompound tag = key.getOrCreateNbt();
-            List<PlayerEntity> playerList = TardisUtil.findPlayerByTardisKey(world, tardis);
-            if (!tag.contains("tardis") || playerList == null) {
-                return false;
-            }*/
-                AITMod.openScreen(player, 1, tardis.getUuid());
-            /*if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
-                AITMod.openScreen(player, 1, tardis.getUuid());
-            } else {
-                if(tardis.getDesktop().getConsolePos() != null)
-                    world.playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-                player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
-            }*/
-                return true;
-            }
-        }
-
         if (player.getMainHandStack().getItem() instanceof LinkableItem linker) {
             linker.link(player.getMainHandStack(), tardis);
             return true;
@@ -58,5 +37,10 @@ public class TelepathicControl extends Control {
         player.sendMessage(text, true);
 
         return true;
+    }
+
+    @Override
+    public boolean shouldFailOnNoPower() {
+        return false;
     }
 }

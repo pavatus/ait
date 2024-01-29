@@ -33,6 +33,8 @@ public class FlightSound extends PositionedLoopingSound {
     }
 
     private static float getRandomPitch() {
+        if (ClientTardisUtil.getCurrentTardis() == null) return 1f;
+
         int speed = ClientTardisUtil.getCurrentTardis().getTravel().getSpeed();
 
         if (ClientSoundManager.getFlight().hasThrottleAndHandbrakeDown()) {
