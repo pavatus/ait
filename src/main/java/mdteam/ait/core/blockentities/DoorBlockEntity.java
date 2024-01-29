@@ -54,7 +54,7 @@ public class DoorBlockEntity extends BlockEntity {
             door.checkAnimations();
         }
 
-        if (door.tardisId == null) door.getTardis().get();
+        if (door.tardisId == null) door.getTardis();
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
