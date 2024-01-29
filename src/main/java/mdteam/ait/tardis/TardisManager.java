@@ -150,4 +150,7 @@ public abstract class TardisManager<T extends Tardis> {
     public Map<UUID, T> getLookup() {
         return this.lookup;
     }
+    public Gson getGson() {
+        return this.gson;
+    }
 }

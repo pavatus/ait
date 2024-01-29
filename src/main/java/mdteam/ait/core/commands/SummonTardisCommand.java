@@ -8,6 +8,7 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.minecraft.block.Block;
 import net.minecraft.command.argument.*;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -42,7 +43,7 @@ public class SummonTardisCommand {
 
         //FIXME: move to a kind of "goto" method, i would make it but theo said hands off the tardis package
         if (tardis.getTravel().getState() == LANDED) {
-            PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, false);
+            PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
             tardis.getTravel().dematerialise(true);
         }
         if (tardis.getTravel().getState() == FLIGHT) {
@@ -67,7 +68,7 @@ public class SummonTardisCommand {
 
         //FIXME: move to a kind of "goto" method, i would make it but theo said hands off the tardis package
         if (tardis.getTravel().getState() == LANDED) {
-            PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, false);
+            PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
             tardis.getTravel().dematerialise(true);
         }
         if (tardis.getTravel().getState() == FLIGHT) {

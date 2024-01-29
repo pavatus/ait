@@ -2,7 +2,9 @@ package mdteam.ait.tardis;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
+import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.data.TardisLink;
@@ -10,6 +12,7 @@ import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.Corners;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -17,6 +20,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -26,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TardisDesktop extends TardisLink {
+    public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
     private TardisDesktopSchema schema;
     private AbsoluteBlockPos.Directed doorPos;
     private AbsoluteBlockPos.Directed consolePos;
@@ -168,7 +175,7 @@ public class TardisDesktop extends TardisLink {
 
         if(getTardis().isEmpty()) return;
 
-        for (LivingEntity entity : TardisUtil.getEntitiesInInterior(getTardis().get(), 100)) {
+        for (LivingEntity entity : TardisUtil.getLivingEntitiesInInterior(getTardis().get(), 100)) {
             entity.kill();
         }
 
@@ -177,6 +184,33 @@ public class TardisDesktop extends TardisLink {
         // }
 
         this.stopForceInterior();
+    }
+    public void cacheConsole() {
+        if(this.getConsolePos() == null) return;
+        ServerWorld dim = (ServerWorld) TardisUtil.getTardisDimension();
+
+        dim.playSound(null, this.getConsolePos(), SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.BLOCKS, 0.5f, 1.0f);
+
+        ConsoleGeneratorBlockEntity generator = new ConsoleGeneratorBlockEntity(this.getConsolePos(), AITBlocks.CONSOLE_GENERATOR.getDefaultState());
+
+        // todo the console is always null
+        if(dim.getBlockEntity(this.getConsolePos()) instanceof ConsoleBlockEntity console) {
+            console.killControls();
+
+            // todo this doesnt send to client or something
+            // generator.changeConsole(console.getVariant());
+            // generator.changeConsole(console.getConsoleSchema());
+            // generator.markDirty();
+        }
+
+        dim.removeBlock(this.getConsolePos(), false);
+        dim.removeBlockEntity(this.getConsolePos());
+
+
+        dim.setBlockState(this.getConsolePos(), AITBlocks.CONSOLE_GENERATOR.getDefaultState(), Block.NOTIFY_ALL);
+        dim.addBlockEntity(generator);
+
+        this.setConsolePos(null);
     }
     private void forceLoadInterior() {
         World world = TardisUtil.getTardisDimension();

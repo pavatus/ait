@@ -10,6 +10,9 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.function.Function;
 
@@ -27,7 +30,7 @@ public abstract class DoorModel extends SinglePartEntityModel {
     }
 
     public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if(door.getTardis().isEmpty()) return;
+        if (door.getTardis().isEmpty()) return;
 
         root.render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
     }
@@ -38,6 +41,11 @@ public abstract class DoorModel extends SinglePartEntityModel {
     }
 
     public void animateTile(DoorBlockEntity interiorDoor) {
+        // this.getPart().traverse().forEach(ModelPart::resetTransform);
+        // if (interiordoor.getTardis().get() == null)
+        //     return;
+        // DoorData.DoorStateEnum state = interiordoor.getTardis().get().getDoor().getDoorState();
+        // updateAnimation(interiorDoor.DOOR_STATE, getAnimationForDoorState(state), interiorDoor.animationTimer);
     }
 
     public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);

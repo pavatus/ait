@@ -41,16 +41,16 @@ public abstract class ClassicBoxVariant extends ExteriorVariantSchema {
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return switch (direction) {
             case DOWN, UP -> pos;
-            case NORTH -> pos.add(0,0.29,-0.641);
-            case SOUTH -> pos.add(0,0.29,0.641);
-            case WEST -> pos.add(-0.641,0.29,0);
-            case EAST -> pos.add(0.641,0.29,0);
+            case NORTH -> pos.add(0,0.15,-0.599);
+            case SOUTH -> pos.add(0,0.15,0.599);
+            case WEST -> pos.add(-0.599,0.15,0);
+            case EAST -> pos.add(0.599,0.15,0);
         };
     }
 
     @Override
     public double portalHeight() {
-        return 2.4d;
+        return 2.2d;
     }
 
     @Override

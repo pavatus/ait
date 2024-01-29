@@ -1,7 +1,9 @@
 package mdteam.ait.client.models.doors;
 
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
+import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -28,9 +30,9 @@ public class TardimDoorModel extends DoorModel {
 
         ModelPartData cube_r1 = tardis.addChild("cube_r1", ModelPartBuilder.create().uv(39, 25).cuboid(-11.0F, -32.0F, -8.0F, 3.0F, 32.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
 
-        ModelPartData left_door = tardis.addChild("left_door", ModelPartBuilder.create().uv(23, 74).cuboid(-6.5F, -32.0F, -1.5F, 8.0F, 32.0F, 3.0F, new Dilation(0.0F)), ModelTransform.pivot(6.5F, 0.0F, -9.5F));
+        ModelPartData left_door = tardis.addChild("left_door", ModelPartBuilder.create().uv(23, 74).cuboid(-6.5F, -32.0F, -1.5F, 8.0F, 32.0F, 3.0F, new Dilation(0.001F)), ModelTransform.pivot(6.5F, 0.0F, -9.5F));
 
-        ModelPartData right_door = tardis.addChild("right_door", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -32.0F, -1.5F, 8.0F, 32.0F, 3.0F, new Dilation(0.0F)), ModelTransform.pivot(-6.5F, 0.0F, -9.5F));
+        ModelPartData right_door = tardis.addChild("right_door", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -32.0F, -1.5F, 8.0F, 32.0F, 3.0F, new Dilation(0.001F)), ModelTransform.pivot(-6.5F, 0.0F, -9.5F));
         return TexturedModelData.of(modelData, 256, 256);
     }
 
@@ -56,8 +58,6 @@ public class TardimDoorModel extends DoorModel {
 
     @Override
     public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if(door.getTardis().isEmpty()) return;
-
         matrices.push();
         // matrices.scale(0.6F,0.6f,0.6f);
         matrices.translate(0, -1.5f, 0);

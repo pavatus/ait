@@ -8,4 +8,9 @@ public class BoothExterior extends ExteriorSchema {
     public BoothExterior() {
         super(REFERENCE, "booth");
     }
+
+    @Override
+    public boolean hasPortals() {
+        return true;
+    }
 }

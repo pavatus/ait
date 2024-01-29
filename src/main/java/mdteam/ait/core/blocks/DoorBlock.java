@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -27,9 +28,6 @@ import org.jetbrains.annotations.Nullable;
 public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
     public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 13.1, 16.0, 32.0, 16.0);
-    public static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 2.9, 32.0, 16.0);
-    public static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 2.9);
-    public static final VoxelShape WEST_SHAPE = Block.createCuboidShape(13.1, 0.0, 0.0, 16.0, 32.0, 16.0);
 
     public DoorBlock(Settings settings) {
         super(settings);
@@ -41,13 +39,25 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
             if (door.getTardis().isPresent() && door.getTardis().get().isSiegeMode()) return VoxelShapes.empty();
         }
 
-        return switch (state.get(FACING)) {
-            case NORTH -> NORTH_SHAPE;
-            case EAST -> EAST_SHAPE;
-            case SOUTH -> SOUTH_SHAPE;
-            case WEST -> WEST_SHAPE;
-            default -> throw new RuntimeException("Invalid facing direction in " + this);
-        };
+        return rotateShape(Direction.NORTH, state.get(FACING), NORTH_SHAPE);
+    }
+
+    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[]{ shape, VoxelShapes.empty() };
+
+        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
+        for (int i = 0; i < times; i++) {
+            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.combine(buffer[1], VoxelShapes.cuboid(1-maxZ, minY, minX, 1-minZ, maxY, maxX), BooleanBiFunction.OR));
+            buffer[0] = buffer[1];
+            buffer[1] = VoxelShapes.empty();
+        }
+
+        return buffer[0];
+    }
+
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
     }
 
     @Override

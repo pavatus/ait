@@ -2,20 +2,20 @@ package mdteam.ait.tardis.animation;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.item.KeyItem;
-import mdteam.ait.tardis.util.TardisUtil;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.util.NetworkUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import org.joml.Math;
-import mdteam.ait.tardis.TardisTravel;
 
 public abstract class ExteriorAnimation {
-
+    public static final double MAX_CLOAK_DISTANCE = 5d;
     protected float alpha = 1;
     protected ExteriorBlockEntity exterior;
     protected int timeLeft, maxTime, startTime;
@@ -47,10 +47,23 @@ public abstract class ExteriorAnimation {
             return 1f;
         }
         if (this.exterior.getTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.exterior.getTardis().get().getHandlers().getCloak().isEnabled()) {
-            return 0.105f; // 0.105f
+            return 0.105f;
         }
 
         return Math.clamp(0.0F, 1.0F, this.alpha);
+    }
+    private boolean isServer() {
+        return !this.exterior.getWorld().isClient();
+    }
+
+    public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius) {
+        return radius >= distanceFromTardis(player, tardis);
+    }
+    public static double distanceFromTardis(PlayerEntity player, Tardis tardis) {
+        BlockPos pPos = player.getBlockPos();
+        BlockPos tPos = tardis.position();
+        double distance = Math.sqrt(tPos.getSquaredDistance(pPos));
+        return distance;
     }
 
     public abstract void tick();
@@ -68,8 +81,9 @@ public abstract class ExteriorAnimation {
     public void tellClientsToSetup(TardisTravel.State state) {
         if (exterior.getWorld() == null) return; // happens when tardis spawns above world limit, so thats nice
         if (exterior.getWorld().isClient()) return;
+        if (exterior.getTardis().isEmpty()) return;
 
-        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
+        for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(exterior.getTardis().get())) {
             // System.out.println(player);
             tellClientToSetup(state, player);
         }

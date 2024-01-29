@@ -18,6 +18,7 @@ import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.registry.*;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.advancement.TardisCriterions;
@@ -99,11 +100,13 @@ public class AITMod implements ModInitializer {
             SetLockedCommand.register(dispatcher);
             // SetHumCommand.register(dispatcher);
             SetFuelCommand.register(dispatcher);
+            AddFuelCommand.register(dispatcher);
+            RemoveFuelCommand.register(dispatcher);
             ToggleHumCommand.register(dispatcher);
             ToggleAlarmCommand.register(dispatcher);
             ToggleSiegeModeCommand.register(dispatcher);
             RiftChunkCommand.register(dispatcher);
-            //RealWorldCommand.register(dispatcher);
+            RealWorldCommand.register(dispatcher);
         }));
 
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {
@@ -124,8 +127,8 @@ public class AITMod implements ModInitializer {
             if (tardis.isGrowth() || tardis.getHandlers().getInteriorChanger().isGenerating() || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
                 return true; // cancelled
 
-            if (tardis.getDoor().isOpen() /*|| !tardis.getDoor().locked()*/)
-                return true;
+//            if (tardis.getDoor().isOpen() /*|| !tardis.getDoor().locked()*/)
+//                return true;
 
             for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
                 TardisCriterions.TAKEOFF.trigger((ServerPlayerEntity) player);
@@ -203,8 +206,14 @@ public class AITMod implements ModInitializer {
             DesktopRegistry.syncToClient(handler.getPlayer());
 
             ServerTardisManager.getInstance().onPlayerJoin(handler.getPlayer());
+        });
 
-            // ServerTardisManager.getInstance().addSubscriberToAll(handler.getPlayer());
+        ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
+            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+            TardisUtil.getServer().execute(() -> {
+                if (tardis == null) return;
+                tardis.getDesktop().cacheConsole();
+            });
         });
 
         AIT_ITEM_GROUP.initialize();

@@ -1,6 +1,7 @@
 package mdteam.ait.client.models.doors;
 
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
+import mdteam.ait.client.models.doors.DoorModel;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.tardis.data.DoorData;
@@ -9,7 +10,9 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 // Made with Blockbench 4.9.1
 // Exported for Minecraft version 1.17+ for Yarn
@@ -59,7 +62,8 @@ public class CapsuleDoorModel extends DoorModel {
 
         ModelPartData door_right = doors.addChild("door_right", ModelPartBuilder.create().uv(161, 95).cuboid(0.4706F, -11.0F, -0.5F, 6.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-6.5F, 0.0F, -8.5F));
 
-        ModelPartData door_left = doors.addChild("door_left", ModelPartBuilder.create().uv(161, 162).cuboid(-6.5294F, -11.0F, -0.5F, 6.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(6.5F, 0.0F, -8.5F));
+        ModelPartData door_left = doors.addChild("door_left", ModelPartBuilder.create().uv(162, 162).cuboid(-6.5294F, -11.0F, -0.5F, 6.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(6.5F, 0.0F, -8.5F));
+
         return TexturedModelData.of(modelData, 256, 256);
     }
 
@@ -85,7 +89,6 @@ public class CapsuleDoorModel extends DoorModel {
 
     @Override
     public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if(door.getTardis().isEmpty()) return;
         matrices.push();
         // matrices.scale(0.6F,0.6f,0.6f);
         matrices.translate(0, -1.5f, 0);

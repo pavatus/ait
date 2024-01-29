@@ -4,8 +4,8 @@ import com.google.gson.*;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
-import mdteam.ait.tardis.variant.console.BorealisVariant;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
+import mdteam.ait.tardis.variant.console.HartnellVariant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
@@ -57,7 +57,7 @@ public abstract class ClientConsoleVariantSchema {
             try {
                 id = new Identifier(json.getAsJsonPrimitive().getAsString());
             } catch (InvalidIdentifierException e) {
-                id = BorealisVariant.REFERENCE;
+                id = HartnellVariant.REFERENCE;
             }
 
             return ClientConsoleVariantRegistry.REGISTRY.get(id);

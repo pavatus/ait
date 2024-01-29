@@ -1,6 +1,8 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.api.tardis.LinkableItem;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -22,13 +24,14 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
 
 import java.util.List;
 import java.util.UUID;
 
 import static mdteam.ait.tardis.TardisTravel.State.*;
 
-public class RemoteItem extends Item {
+public class RemoteItem extends LinkableItem {
 
     public RemoteItem(Settings settings) {
         super(settings);
@@ -44,16 +47,6 @@ public class RemoteItem extends Item {
         if (world.isClient() || player == null) return ActionResult.PASS;
 
         NbtCompound nbt = itemStack.getOrCreateNbt();
-
-        // Link to exteriors tardis if it exists and player is crouching
-        if (player.isSneaking()) {
-            if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock && consoleBlock.getTardis().isPresent()) {
-                nbt.putString("tardis", consoleBlock.getTardis().get().getUuid().toString());
-                return ActionResult.SUCCESS; // Return early if the Tardis is successfully linked to the clicked block
-            } else {
-                return ActionResult.FAIL; // If no valid Tardis instance found, do not proceed with any further operations
-            }
-        }
 
         // Move tardis to the clicked pos
         if (!nbt.contains("tardis"))

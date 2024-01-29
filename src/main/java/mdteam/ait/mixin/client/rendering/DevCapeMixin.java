@@ -1,4 +1,4 @@
-/*
+package mdteam.ait.mixin.client.rendering;/*
 package mdteam.ait.mixin.client.rendering;
 
 import com.google.common.collect.Maps;

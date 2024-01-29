@@ -10,6 +10,7 @@ import mdteam.ait.client.screens.interior.InteriorSettingsScreen;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.BoothExterior;
 import mdteam.ait.tardis.exterior.ClassicExterior;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -41,9 +42,8 @@ public class MonitorScreen extends TardisScreen {
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     private ExteriorSchema currentModel;
     private ClientExteriorVariantSchema currentVariant;
-    int backgroundHeight = 133;
-    int backgroundWidth = 236;
-
+    int backgroundHeight = 121;//101;
+    int backgroundWidth = 220;//200;
     public MonitorScreen(UUID tardis) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
         this.tardisId = tardis;
@@ -147,6 +147,7 @@ public class MonitorScreen extends TardisScreen {
     }
 
     public void toInteriorSettingsScreen() {
+        if (tardis() == null || tardis().isGrowth()) return;
         MinecraftClient.getInstance().setScreenAndRender(new InteriorSettingsScreen(this.tardisId, this));
     }
 
@@ -226,13 +227,14 @@ public class MonitorScreen extends TardisScreen {
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         int i = (this.width - this.backgroundWidth) / 2;
         int j = ((this.height) - this.backgroundHeight) / 2;
-        context.push();
-        context.drawTexture(TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        // Jewels
-        for (int l = 0; l < 7; l++) {
-            context.drawTexture(TEXTURE, (i + 11) + (l * 9), j + 5, 20 + (l * 6), 133, 6, 6);
-        }
-        context.pop();
+        context.drawTexture(TEXTURE, i - 8, j + 4, 0, 12, this.backgroundWidth, this.backgroundHeight);
+
+        // @TODO ive gotta move this to a OwO screen and fix the rendering for the new monitor stuff with the gallifreyan - Loqor
+
+        /*context.push();
+        context.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(delta * 10), i + 41.5f, j + 41.5f, 0);
+        context.drawTexture(TEXTURE, i, j, 0, 101, 83, 83);
+        context.pop();*/
         //context.drawTexture(TEXTURE, i + 18, j + 67, 1, 87, 25, 8);
     }
 
@@ -277,7 +279,7 @@ public class MonitorScreen extends TardisScreen {
         String dDimensionText = "> " + convertWorldValueToModified(dabpd.getDimension().getValue());
         String dDirectionText = "> " + dabpd.getDirection().toString().toUpperCase();
         String fuelText = "> " + Math.round((getFromUUID(tardisId).getFuel() / TARDIS_MAX_FUEL) * 100);
-
+        String flightTimeText = "> " + (tardis().getTravel().getState() == TardisTravel.State.LANDED ? "0" : tardis().getHandlers().getFlight().getDurationAsPercentage());
         // position
         context.drawText(this.textRenderer, Text.literal("Position"), (width / 2 - 64), (height / 2 - 46), 5636095, true);
         context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 - 64), (height / 2 - 36), 0xFFFFFF, true);
@@ -290,8 +292,12 @@ public class MonitorScreen extends TardisScreen {
         context.drawText(this.textRenderer, Text.literal(dDimensionText), (width / 2 - 64), (height / 2 + 14), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 - 64), (height / 2 + 24), 0xFFFFFF, true);
 
+        // fuel
         context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.fuel"), (width / 2 - 102), (height / 2 + 28), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(fuelText + "%"), (width / 2 - 108), (height / 2 + 38), 0xFFFFFF, true);
+        // percentage of travel time to destination
+        context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.traveltime"), (width / 2 + 30), (height / 2 - 9), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(flightTimeText + "%"), (width / 2 + 40), (height / 2 + 1), 0xFFFFFF, true);
     }
 
     @Override

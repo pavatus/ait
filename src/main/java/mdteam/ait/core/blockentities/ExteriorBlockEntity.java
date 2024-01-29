@@ -106,13 +106,10 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
     }
 
     public void onEntityCollision(Entity entity) {
-        if (!(entity instanceof ServerPlayerEntity player))
-            return;
-
         if (this.getTardis().isPresent() && this.getTardis().get().getDoor().isOpen()) {
             if (!this.getTardis().get().getLockedTardis())
                 if (!DependencyChecker.hasPortals() || !getTardis().get().getExterior().getType().hasPortals())
-                    TardisUtil.teleportInside(this.getTardis().get(), player);
+                    TardisUtil.teleportInside(this.getTardis().get(), entity);
         }
     }
 

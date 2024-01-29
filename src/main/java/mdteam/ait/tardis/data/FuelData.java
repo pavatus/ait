@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.data;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
@@ -28,6 +29,10 @@ public class FuelData extends TardisLink {
 
     public double getFuel() {
         if(getTardis().isEmpty()) return 0;
+        if (PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), FUEL_COUNT) == null) {
+            AITMod.LOGGER.warn("Fuel count was null, setting to 0");
+            this.setFuelCount(0);
+        }
         return (double) PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), FUEL_COUNT);
     }
 

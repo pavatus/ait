@@ -2,10 +2,10 @@ package mdteam.ait.datagen;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
-import mdteam.ait.core.AITDamageTypes;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.datagen.datagen_providers.*;
+import mdteam.ait.datagen.datagen_providers.loot.AITBlockLootTables;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -31,6 +31,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         generateBlockModels(pack);
         generateSoundData(pack);
         generateAdvancements(pack);
+        generateLoot(pack);
+    }
+
+    public void generateLoot(FabricDataGenerator.Pack pack) {
+        pack.addProvider(AITBlockLootTables::new);
     }
 
     private void generateAdvancements(FabricDataGenerator.Pack pack) {
@@ -157,47 +162,35 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.BLAZE_ROD), FabricRecipeProvider.conditionsFromItem(Items.BLAZE_ROD))
                     .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.MECHANICAL_SONIC_SCREWDRIVER, 1)
-                    .pattern(" LT")
-                    .pattern("ICL")
-                    .pattern("EI ")
+                    .pattern(" IE")
+                    .pattern("ICI")
+                    .pattern("BI ")
                     .input('I', Items.IRON_INGOT)
-                    .input('L', Items.LAPIS_LAZULI)
-                    .input('T', Items.TINTED_GLASS)
+                    .input('E', Items.ENDER_EYE)
                     .input('C', Items.COMPARATOR)
-                    .input('E', Items.ENDER_PEARL)
+                    .input('B', Items.BLAZE_ROD)
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.LAPIS_LAZULI), FabricRecipeProvider.conditionsFromItem(Items.LAPIS_LAZULI))
-                    .criterion(FabricRecipeProvider.hasItem(Items.TINTED_GLASS), FabricRecipeProvider.conditionsFromItem(Items.TINTED_GLASS))
+                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE))
                     .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
-                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_PEARL), FabricRecipeProvider.conditionsFromItem(Items.ENDER_PEARL)));
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.CORAL_SONIC_SCREWDRIVER, 1)
-                    .pattern(" GD")
-                    .pattern("ICG")
-                    .pattern("EI ")
+                    .criterion(FabricRecipeProvider.hasItem(Items.BLAZE_ROD), FabricRecipeProvider.conditionsFromItem(Items.BLAZE_ROD)));
+            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RENAISSANCE_SONIC_SCREWDRIVER, 1)
+                    .input(AITItems.CORAL_SONIC_SCREWDRIVER)
+                    .criterion(FabricRecipeProvider.hasItem(AITItems.CORAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.CORAL_SONIC_SCREWDRIVER)));
+            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.CORAL_SONIC_SCREWDRIVER, 1)
+                    .input(AITItems.MECHANICAL_SONIC_SCREWDRIVER)
+                    .criterion(FabricRecipeProvider.hasItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER)));
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.CONSOLE, 1)
+                    .pattern(" G ")
+                    .pattern("CEC")
+                    .pattern(" I ")
+                    .input('G', Items.GLASS)
+                    .input('C', Items.COMPARATOR)
+                    .input('E', Items.END_CRYSTAL)
                     .input('I', Items.IRON_INGOT)
-                    .input('G', Items.GRAY_TERRACOTTA)
-                    .input('D', Items.DIAMOND)
-                    .input('C', Items.COMPARATOR)
-                    .input('E', Items.ENDER_PEARL)
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.GRAY_TERRACOTTA), FabricRecipeProvider.conditionsFromItem(Items.GRAY_TERRACOTTA))
-                    .criterion(FabricRecipeProvider.hasItem(Items.DIAMOND), FabricRecipeProvider.conditionsFromItem(Items.DIAMOND))
+                    .criterion(FabricRecipeProvider.hasItem(Items.GLASS), FabricRecipeProvider.conditionsFromItem(Items.GLASS))
                     .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
-                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_PEARL), FabricRecipeProvider.conditionsFromItem(Items.ENDER_PEARL)));
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RENAISSANCE_SONIC_SCREWDRIVER, 1)
-                    .pattern(" OA")
-                    .pattern("ICO")
-                    .pattern("EI ")
-                    .input('I', Items.IRON_INGOT)
-                    .input('O', Items.OBSIDIAN)
-                    .input('A', Items.AMETHYST_SHARD)
-                    .input('C', Items.COMPARATOR)
-                    .input('E', Items.ENDER_PEARL)
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.OBSIDIAN), FabricRecipeProvider.conditionsFromItem(Items.OBSIDIAN))
-                    .criterion(FabricRecipeProvider.hasItem(Items.AMETHYST_SHARD), FabricRecipeProvider.conditionsFromItem(Items.AMETHYST_SHARD))
-                    .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
-                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_PEARL), FabricRecipeProvider.conditionsFromItem(Items.ENDER_PEARL)));
+                    .criterion(FabricRecipeProvider.hasItem(Items.END_CRYSTAL), FabricRecipeProvider.conditionsFromItem(Items.END_CRYSTAL))
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.DOOR_BLOCK, 1)
                     .pattern("GCG")
                     .pattern("CDC")
@@ -221,14 +214,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.GREEN_DYE), FabricRecipeProvider.conditionsFromItem(Items.GREEN_DYE))
                     .criterion(FabricRecipeProvider.hasItem(Items.GOLD_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.GOLD_NUGGET)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.HAMMER, 1)
-                    .pattern("WSW")
+                    .pattern("DSD")
                     .pattern(" A ")
                     .pattern(" T ")
-                    .input('W', Items.BLACK_WOOL)
+                    .input('D', Items.DRIED_KELP)
                     .input('S', Items.STRING)
                     .input('A', Items.IRON_AXE)
                     .input('T', Items.STICK)
-                    .criterion(FabricRecipeProvider.hasItem(Items.BLACK_WOOL), FabricRecipeProvider.conditionsFromItem(Items.BLACK_WOOL))
+                    .criterion(FabricRecipeProvider.hasItem(Items.DRIED_KELP), FabricRecipeProvider.conditionsFromItem(Items.DRIED_KELP))
                     .criterion(FabricRecipeProvider.hasItem(Items.STRING), FabricRecipeProvider.conditionsFromItem(Items.STRING))
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_AXE), FabricRecipeProvider.conditionsFromItem(Items.IRON_AXE))
                     .criterion(FabricRecipeProvider.hasItem(Items.STICK), FabricRecipeProvider.conditionsFromItem(Items.STICK)));
@@ -328,6 +321,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addSound("tardis/creaks/creak_three", AITSounds.CREAK_THREE);
             provider.addSound("tardis/creaks/whisper", AITSounds.WHISPER);
 
+            // Secret
+            provider.addSound("tardis/secret/doom_door_open", AITSounds.DOOM_DOOR_OPEN);
+            provider.addSound("tardis/secret/doom_door_close", AITSounds.DOOM_DOOR_CLOSE);
+
             // Other
             provider.addSound("tardis/cloister", AITSounds.CLOISTER);
 
@@ -344,9 +341,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             AITModelProvider aitModelProvider = new AITModelProvider(output);
             aitModelProvider.registerDirectionalBlock(AITBlocks.RADIO);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE);
+            aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE_GENERATOR);
             aitModelProvider.registerDirectionalBlock(AITBlocks.EXTERIOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CORAL_PLANT);
+            aitModelProvider.registerDirectionalBlock(AITBlocks.MONITOR_BLOCK);
 
             //falloutModelProvider.registerSimpleBlock(AITBlocks.DEEPSLATE_URANIUM_ORE);
             return aitModelProvider;
@@ -373,6 +372,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         generate_DE_AT_Language(pack); // de_at (German Austria)
         generate_DE_CH_Language(pack); // de_ch (German Switzerland)
         generate_NDS_DE_Language(pack); // nds_de (Nordic German)
+        generate_PT_BR_Language(pack); // pt_br (Portuguese Brazil)
+        generate_RU_RU_Language(pack); // ru_ru (Russian Russia)
     }
 
     /**
@@ -390,6 +391,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
+        provider.addTranslation(AITBlocks.CONSOLE_GENERATOR, "Console Generator");
         provider.addTranslation(AITItems.IRON_KEY, "Iron Key");
         provider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
         provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
@@ -409,6 +411,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.RADIO, "Radio");
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
         provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
+        provider.addTranslation(AITBlocks.MONITOR_BLOCK, "Monitor");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
@@ -456,9 +459,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
         provider.addTranslation("screen.ait.monitor.apply", "Apply");
         provider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
+        provider.addTranslation("screen.ait.monitor.traveltime", "Travel Time: ");
         provider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
         provider.addTranslation("screen.ait.interiorsettings.back", "> Back");
         provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
+        provider.addTranslation("screen.ait.interiorsettings.cacheconsole", "> Cache Console");
         provider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
         provider.addTranslation("screen.ait.interior.settings.coral", "Coral");
         provider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
@@ -739,6 +744,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         return aitLanguageProvider;
     }
+    public AITLanguageProvider addPortugueseTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+        AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
+        return provider;
+    }
 
     public void generate_DE_AT_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.DE_AT))); // de_at (German Austria)
@@ -814,5 +823,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
     public void generate_EN_NZ_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_NZ))); // en_nz (English New Zealand)
+    }
+    public void generate_PT_BR_Language(FabricDataGenerator.Pack pack) {
+        pack.addProvider(((output, registriesFuture) -> addPortugueseTranslations(output, registriesFuture, LanguageType.PT_BR))); // pt_br (Portuguese Brazil)
+    }
+    public void generate_RU_RU_Language(FabricDataGenerator.Pack pack) {
+        pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.RU_RU))); // ru_ru (Russian Russia)
     }
 }

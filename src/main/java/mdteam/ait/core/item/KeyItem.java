@@ -1,5 +1,6 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.api.tardis.LinkableItem;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
@@ -32,7 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-public class KeyItem extends Item {
+public class KeyItem extends LinkableItem {
     private final List<Protocols> protocols;
 
 
@@ -51,16 +52,6 @@ public class KeyItem extends Item {
         return this.protocols.contains(var);
     }
 
-    private void link(ItemStack stack, Tardis tardis) {
-        this.link(stack, tardis.getUuid());
-    }
-
-    private void link(ItemStack stack, UUID uuid) {
-        NbtCompound nbt = stack.getOrCreateNbt();
-
-        nbt.putString("tardis", uuid.toString());
-    }
-
     public static boolean isKeyInInventory(PlayerEntity player) {
         return getFirstKeyStackInInventory(player) != null;
     }
@@ -72,29 +63,12 @@ public class KeyItem extends Item {
     public static ItemStack getFirstKeyStackInInventory(PlayerEntity player) {
         // from playerinventory
 
-        Iterator it = player.getInventory().main.iterator();
-
-        while (it.hasNext()) {
-            ItemStack itemStack = (ItemStack) it.next();
+        for (ItemStack itemStack : player.getInventory().main) {
             if (!itemStack.isEmpty() && itemStack.getItem() instanceof KeyItem key) {
                 return itemStack;
             }
         }
         return null;
-    }
-
-    public static Tardis getTardis(ItemStack stack) {
-        NbtCompound nbt = stack.getOrCreateNbt();
-
-        if (!(nbt.contains("tardis"))) return null;
-
-        UUID uuid = UUID.fromString(nbt.getString("tardis"));
-
-        if (TardisUtil.isClient()) {
-            return ClientTardisManager.getInstance().getLookup().get(uuid);
-        }
-
-        return ServerTardisManager.getInstance().getTardis(uuid);
     }
 
     @Override
@@ -130,8 +104,8 @@ public class KeyItem extends Item {
 
             player.getItemCooldownManager().set(stack.getItem(), 60 * 20);
 
-            PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false); // should this just set the handbrake on instead?
-            PropertiesHandler.set(tardis, PropertiesHandler.PREVIOUSLY_LOCKED, false); // so you get SUCKED up
+            PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HAIL_MARY, false); // should this just set the handbrake on instead?
+            PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED, false); // so you get SUCKED up
 
             player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f); // like a sound to show its been called
             player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);

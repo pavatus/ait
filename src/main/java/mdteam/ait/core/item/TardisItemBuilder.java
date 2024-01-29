@@ -5,6 +5,7 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
+import mdteam.ait.tardis.AbstractTardisComponent;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
@@ -90,8 +91,7 @@ public class TardisItemBuilder extends Item {
             BlockEntity entity = world.getBlockEntity(context.getBlockPos());
 
             if (entity instanceof ConsoleBlockEntity consoleBlock) {
-
-                if (consoleBlock.getTardis().isEmpty()) return ActionResult.PASS;
+                if (consoleBlock.getTardis().isEmpty()) return ActionResult.FAIL;
 
                 TardisTravel.State state = consoleBlock.getTardis().get().getTravel().getState();
 

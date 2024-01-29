@@ -3,6 +3,7 @@ package mdteam.ait.tardis;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.client.util.ClientTardisUtil;
+import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
@@ -12,11 +13,16 @@ import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.util.TardisChunkUtil;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.*;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -169,10 +175,10 @@ public class Tardis {
         return hasGrowthExterior() || hasGrowthDesktop();
     }
     public boolean hasGrowthExterior() {
-        return getExterior().getVariant().equals(ExteriorVariantRegistry.CORAL_GROWTH);
+        return Objects.equals(getExterior().getVariant(), ExteriorVariantRegistry.CORAL_GROWTH);
     }
     public boolean hasGrowthDesktop() {
-        return getDesktop().getSchema().equals(DesktopRegistry.DEFAULT_CAVE);
+        return Objects.equals(getDesktop().getSchema(), DesktopRegistry.DEFAULT_CAVE);
     }
 
     public boolean hasPower() {
@@ -225,6 +231,23 @@ public class Tardis {
     public AbsoluteBlockPos.Directed destination() {
         return this.getTravel().getDestination();
     }
+    private void generateInteriorWithNetherStar() {
+        TardisUtil.getEntitiesInInterior(this, 50)
+                .stream()
+                .filter(entity -> (entity instanceof ItemEntity) &&
+                        ((ItemEntity) entity).getStack().getItem() == Items.NETHER_STAR &&
+                        entity.isTouchingWater()).forEach(entity -> {
+                    if (this.getExterior().getExteriorPos() == null) return;
+                    this.setFuelCount(8000);
+                    this.enablePower();
+                    entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
+                    entity.getWorld().playSound(null, this.getExterior().getExteriorPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
+                    this.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(this));
+                    if (this.getHandlers().getInteriorChanger().isGenerating()) {
+                        entity.discard();
+                    }
+                });
+    }
 
     /**
      * Called at the end of a servers tick
@@ -237,7 +260,16 @@ public class Tardis {
         //     this.getHandlers().tick(server);
 
         // @TODO if tnt explodes in the interior (near the console), then it should crash
-
+        if (this.isGrowth()) {
+            /*if (this.getHandlers().getInteriorChanger().isGenerating()) {
+                for (PlayerEntity player : TardisUtil.getPlayersInInterior(this)) {
+                    TardisUtil.teleportOutside(this, player);
+                }
+            } else {
+                this.generateInteriorWithNetherStar();
+            }*/
+            this.generateInteriorWithNetherStar();
+        }
         if (isGrowth() && getDoor().isBothClosed() && !getHandlers().getInteriorChanger().isGenerating())
             getDoor().openDoors();
         if (isGrowth() && getDoor().locked() && !getHandlers().getInteriorChanger().isGenerating())
@@ -263,7 +295,7 @@ public class Tardis {
         // fixme nuh uh i dont like it when it locks on land it makes me sadge, instead lock if it was locked - Loqor
 
         /*if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING) && !getHandlers().getDoor().locked()) {
-            DoorHandler.lockTardis(true, this, null, true);
+            DoorData.lockTardis(true, this, null, true);
         }*/
         if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
             DoorData.lockTardis(true, this, null, true);

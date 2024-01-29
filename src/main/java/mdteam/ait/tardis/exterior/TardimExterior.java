@@ -8,4 +8,9 @@ public class TardimExterior extends ExteriorSchema {
     public TardimExterior() {
         super(REFERENCE, "tardim");
     }
+
+    @Override
+    public boolean hasPortals() {
+        return true;
+    }
 }

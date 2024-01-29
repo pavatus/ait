@@ -1,6 +1,7 @@
 package mdteam.ait.client.models.consoles;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.TardisTravel;
@@ -12,8 +13,11 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+
+import static mdteam.ait.tardis.TardisTravel.State.*;
 
 // Made with Blockbench 4.9.2
 // Exported for Minecraft version 1.17+ for Yarn
@@ -801,7 +805,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 	int zDestination = 0;
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if(console.getTardis().isEmpty()) return;
+		if (console.getTardis().isEmpty()) return;
 		matrices.push();
 		matrices.translate(0.5f, -1.5f, -0.5f);
 		// matrices.scale(0.5f, 0.5f, 0.5f);

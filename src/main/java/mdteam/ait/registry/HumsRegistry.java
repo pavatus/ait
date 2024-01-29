@@ -2,9 +2,6 @@ package mdteam.ait.registry;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.tardis.console.BorealisConsole;
-import mdteam.ait.tardis.console.ConsoleSchema;
-import mdteam.ait.tardis.console.HartnellConsole;
 import mdteam.ait.tardis.sound.HumSound;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;

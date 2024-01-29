@@ -3,6 +3,9 @@ package mdteam.ait.tardis.data;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.TardisUtil;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundCategory;
 
@@ -44,7 +47,15 @@ public class ServerAlarmHandler extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
 
-        if (!isEnabled()) return;
+        // @TODO make a new control that makes it (by default) detect hostile entities in the interior plus a check when it's been cleared of all hostile entities - Loqor
+        if(!isEnabled() && getTardis().isPresent()) {
+            for (Entity entity : TardisUtil.getEntitiesInInterior(getTardis().get(), 200)) {
+                if (entity instanceof HostileEntity) {
+                    this.enable();
+                }
+            }
+            return;
+        }
 
         soundCounter++;
 

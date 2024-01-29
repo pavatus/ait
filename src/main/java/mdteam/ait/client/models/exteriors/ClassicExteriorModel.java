@@ -4,6 +4,7 @@ import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -89,8 +90,9 @@ public class ClassicExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if(exterior.getTardis().isEmpty()) return;
-		matrices.push();
+		if(exterior.getTardis().get() == null) return;
+		if (exterior.getTardis().isEmpty()) return;
+        matrices.push();
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5f, 0);
 
@@ -101,10 +103,31 @@ public class ClassicExteriorModel extends ExteriorModel {
 		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
-		if (DependencyChecker.hasPortals())
-			this.getPart().getChild("Doors").visible = exterior.getTardis().get().getDoor().getDoorState() == DoorData.DoorStateEnum.CLOSED;
+		//if (DependencyChecker.hasPortals())
+		//	this.getPart().getChild("Doors").visible = exterior.getTardis().get().getDoor().getDoorState() == DoorData.DoorStateEnum.CLOSED;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+		matrices.pop();
+	}
+
+	@Override
+	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+
+        matrices.push();
+		matrices.scale(0.64F, 0.64F, 0.64F);
+		matrices.translate(0, -1.5f, 0);
+
+		/*this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
+		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
+
+		DoorData door = realEntity.getTardis().getDoor();
+		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
+		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
+
+		//if (DependencyChecker.hasPortals())
+		//	this.getPart().getChild("Doors").visible = realEntity.getTardis().getDoor().getDoorState() == DoorData.DoorStateEnum.CLOSED;
+		super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 
 		matrices.pop();
 	}
@@ -121,7 +144,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		matrices.push();
+        matrices.push();
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5f, 0);
 

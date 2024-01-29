@@ -1,10 +1,12 @@
 package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.LinkableItem;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.link.Linkable;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -38,6 +40,11 @@ public class TelepathicControl extends Control {
             }*/
                 return true;
             }
+        }
+
+        if (player.getMainHandStack().getItem() instanceof LinkableItem linker) {
+            linker.link(player.getMainHandStack(), tardis);
+            return true;
         }
 
         BlockPos destinationPos = tardis.getTravel().getDestination();

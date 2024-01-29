@@ -303,6 +303,8 @@ public class TardisTravel extends TardisLink {
             return;
         }
 
+        if (this.getState() != State.FLIGHT) return;
+
         // Disable autopilot
         // PropertiesHandler.setAutoPilot(this.getTardis().get().getHandlers().getProperties(), false);
 
@@ -324,7 +326,7 @@ public class TardisTravel extends TardisLink {
         }
 
         // Lock the Tardis doors
-        DoorData.lockTardis(true, this.getTardis().get(), null, true);
+        // DoorData.lockTardis(true, this.getTardis().get(), null, true);
 
         // Set the Tardis state to materialize
         this.setState(State.MAT);
@@ -358,7 +360,7 @@ public class TardisTravel extends TardisLink {
     }
 
     public void dematerialise(boolean withRemat) {
-
+        if (this.getState() != State.LANDED) return;
         if(getTardis().isEmpty()) return;
 
         if (!getTardis().get().hasPower()) {
@@ -372,7 +374,7 @@ public class TardisTravel extends TardisLink {
 
         if (PropertiesHandler.willAutoPilot(getTardis().get().getHandlers().getProperties())) {
             // fufill all the prerequisites
-            // DoorHandler.lockTardis(true, tardis(), null, false);
+            // DoorData.lockTardis(true, tardis(), null, false);
             PropertiesHandler.set(getTardis().get(), PropertiesHandler.HANDBRAKE, false);
             this.getTardis().get().getDoor().closeDoors();
             getTardis().get().setRefueling(false);
@@ -390,7 +392,7 @@ public class TardisTravel extends TardisLink {
             return;
         }
 
-        DoorData.lockTardis(true, this.getTardis().get(), null, true);
+        // DoorData.lockTardis(true, this.getTardis().get(), null, true);
 
         this.setState(State.DEMAT);
 
@@ -652,15 +654,23 @@ public class TardisTravel extends TardisLink {
 
     @NotNull
     public SoundEvent getSoundForCurrentState() {
-        if (this.getTardis().isPresent())
+        if (this.getTardis().isPresent()) {
+            if (this.isCrashing()) {
+                return AITSounds.GHOST_MAT;
+            }
             return this.getTardis().get().getExterior().getVariant().getSound(this.getState()).sound();
+        }
         return SoundEvents.INTENTIONALLY_EMPTY;
     }
 
     public MatSound getMatSoundForCurrentState() {
-        if (this.getTardis().isPresent())
+        if (this.getTardis().isPresent()) {
+            if (this.isCrashing()) {
+                return AITSounds.GHOST_MAT_ANIM;
+            }
             return this.getTardis().get().getExterior().getVariant().getSound(this.getState());
-        return AITSounds.LANDED_ANIM; // COUUULD be LANDED_ANIM but null is better
+        }
+        return AITSounds.LANDED_ANIM;
     }
     public enum State {
         LANDED(true) {

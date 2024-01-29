@@ -1,17 +1,23 @@
 package mdteam.ait.client.models.consoles;
 
+import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.animation.console.coral.CoralAnimations;
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.console.CoralConsole;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+
+import static mdteam.ait.tardis.TardisTravel.State.DEMAT;
+import static mdteam.ait.tardis.TardisTravel.State.FLIGHT;
 
 public class CoralConsoleModel extends ConsoleModel {
 	public static final Animation EMPTY_ANIM = Animation.Builder.create(1).build(); // temporary animation bc rn we have none
@@ -1327,8 +1333,10 @@ public class CoralConsoleModel extends ConsoleModel {
 	}
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
+		/*System.out.println(state);*/
 		return switch (state) {
-			default -> HartnellAnimations.ROTOR;
+			default -> CoralAnimations.CORAL_CONSOLE_INFLIGHT_ANIMATION;
+			case MAT -> CoralAnimations.CORAL_CONSOLE_REMAT_ANIMATION;
 			case DEMAT -> CoralAnimations.CORAL_CONSOLE_DEMAT_ANIMATION;
 			case LANDED -> CoralAnimations.CONSOLE_CORAL_IDLE_ANIMATION;
 		};
@@ -1341,7 +1349,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if(console.getTardis().isEmpty()) return;
+		if (console.getTardis().isEmpty()) return;
 		matrices.push();
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
@@ -1387,7 +1395,7 @@ public class CoralConsoleModel extends ConsoleModel {
 		ModelPart incrementTwo = this.console.getChild("controls").getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("bone34");
 
 		increment.yaw = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? increment.yaw + 1.5f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
-		incrementTwo.pivotY =IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? incrementTwo.pivotY + 3f : incrementTwo.pivotY + 2f : incrementTwo.pivotY + 1f : incrementTwo.pivotY;
+		incrementTwo.pivotY = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? incrementTwo.pivotY + 3f : incrementTwo.pivotY + 2f : incrementTwo.pivotY + 1f : incrementTwo.pivotY;
 
 		// Refueler
 		ModelPart refueler = this.console.getChild("controls").getChild("p_ctrl_5").getChild("bone49").getChild("ring2").getChild("switch30");

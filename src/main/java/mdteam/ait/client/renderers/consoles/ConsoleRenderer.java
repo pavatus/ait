@@ -3,6 +3,7 @@ package mdteam.ait.client.renderers.consoles;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
+import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.client.MinecraftClient;
@@ -71,8 +72,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
             console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
 
             if (entity.getTardis().get().hasPower())
-                console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(variant.emission())), maxLight, overlay, 1, 1, 1, 1);
-        }
+                console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(variant.emission(), true)), maxLight, overlay, 1, 1, 1, 1);        }
         matrices.pop();
     }
 
