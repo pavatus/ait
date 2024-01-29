@@ -28,7 +28,7 @@ public class RealWorldCommand {
         BlockPos targetBlockPos = BlockPosArgumentType.getBlockPos(context, "position");
         BlockPos spawnBlockPos = BlockPosArgumentType.getBlockPos(context, "spawn-position");
         ServerPlayerEntity source = context.getSource().getPlayer();
-        assert source != null;
+        if (source == null) return 0;
         try {
             TardisRealEntity.testSpawnFromExteriorBlockEntity(source.getServerWorld(), targetBlockPos, spawnBlockPos);
             Text textResponse = Text.translatable("command.ait.realworld.response").append(Text.literal(" " + spawnBlockPos.getX() + ", " + spawnBlockPos.getY() + ", " + spawnBlockPos.getZ()));

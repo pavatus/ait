@@ -77,7 +77,7 @@ public class ClientCreakHandler extends SoundHandler {
 
     public void playRandomCreak() {
         CreakSound chosen = CreakRegistry.getRandomCreak();
-        if(chosen.equals(CreakRegistry.WHISPER) && ClientTardisUtil.getCurrentTardis().getDesktop().getConsolePos() != null) {
+        if(tardis().isSiegeMode() && chosen.equals(CreakRegistry.WHISPER) && ClientTardisUtil.getCurrentTardis().getDesktop().getConsolePos() != null) {
             startIfNotPlaying(new PositionedSoundInstance(chosen.sound(), SoundCategory.HOSTILE, 0.5f, 1.0f, net.minecraft.util.math.random.Random.create(), randomNearConsolePos(ClientTardisUtil.getCurrentTardis().getDesktop().getConsolePos())));
             return;
         }

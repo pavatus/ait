@@ -2,6 +2,8 @@ package mdteam.ait.client;
 
 import mc.craig.software.regen.fabric.handlers.ClientEvents;
 import mdteam.ait.AITMod;
+import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
+import mdteam.ait.client.renderers.monitors.MonitorRenderer;
 import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.core.*;
 import mdteam.ait.tardis.animation.ExteriorAnimation;

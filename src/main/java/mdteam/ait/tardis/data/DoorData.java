@@ -48,7 +48,7 @@ public class DoorData extends TardisLink {
     private void succ() {
         if(getTardis().isEmpty()) return;
         // Get all entities in the Tardis interior
-        TardisUtil.getEntitiesInInterior(getTardis().get())
+        TardisUtil.getLivingEntitiesInInterior(getTardis().get())
                 .stream()
                 .filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
                 .filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
@@ -64,8 +64,7 @@ public class DoorData extends TardisLink {
     }
     private boolean shouldSucc() {
         if(this.getTardis().isEmpty() || getDoorPos() == null) return false;
-        return TardisUtil.getTardisDimension().getBlockEntity(getTardis().get().getDesktop().getDoorPos()) instanceof DoorBlockEntity && (getTardis().get().getTravel().getState() == FLIGHT || getTardis().get().getTravel().getState() == CRASH) && this.isOpen();
-    }
+        return (getTardis().get().getTravel().getState() != LANDED) && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(getTardis().get().getDesktop().getDoorPos()) instanceof DoorBlockEntity;    }
 
     // Remember to this.sync() for these setters!!
     public void setLeftRot(boolean var) {

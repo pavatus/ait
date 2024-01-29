@@ -5,8 +5,10 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.client.ClientTardis;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -19,7 +21,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Position;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -44,7 +49,7 @@ public class SiegeTardisItem extends Item {
         }
 
         Tardis tardis = getTardis(stack);
-        assert tardis != null;
+        if (tardis == null) return;
 
         if (!tardis.isSiegeMode()) {
             tardis.setSiegeBeingHeld(null);
@@ -89,7 +94,7 @@ public class SiegeTardisItem extends Item {
         }
 
         Tardis tardis = getTardis(stack);
-        assert tardis != null;
+        if (tardis == null) return ActionResult.FAIL;
 
         if (!tardis.isSiegeMode()) {
             tardis.setSiegeBeingHeld(null);

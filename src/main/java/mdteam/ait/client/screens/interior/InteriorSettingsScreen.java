@@ -4,14 +4,18 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.screens.TardisScreen;
 import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.registry.HumsRegistry;
+import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.sound.HumSound;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -51,12 +55,18 @@ public class InteriorSettingsScreen extends TardisScreen {
 
         super.init();
     }
-
+    private void sendCachePacket() {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(this.tardis().getUuid());
+        ClientPlayNetworking.send(TardisDesktop.CACHE_CONSOLE, buf);
+        this.close();
+    }
     private void createButtons() {
         choicesCount = 0;
 
         createTextButton(Text.translatable("screen.ait.interiorsettings.back"),(button -> backToExteriorChangeScreen()));
         createTextButton(Text.translatable("screen.ait.interiorsettings.changeinterior"), (button -> toSelectInteriorScreen()));
+        createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole"), (button -> sendCachePacket()));
 
         this.addButton(
                 new PressableTextWidget(

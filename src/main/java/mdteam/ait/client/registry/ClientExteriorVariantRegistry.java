@@ -11,10 +11,14 @@ import mdteam.ait.client.registry.exterior.impl.classic.ClientClassicBoxDefiniti
 import mdteam.ait.client.registry.exterior.impl.classic.ClientClassicBoxPrimeVariant;
 import mdteam.ait.client.registry.exterior.impl.classic.ClientClassicBoxPtoredVariant;
 import mdteam.ait.client.registry.exterior.impl.classic.ClientClassicBoxYetiVariant;
+import mdteam.ait.client.registry.exterior.impl.doom.ClientDoomVariant;
 import mdteam.ait.client.registry.exterior.impl.easter_head.ClientEasterHeadDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.easter_head.ClientEasterHeadFireVariant;
 import mdteam.ait.client.registry.exterior.impl.easter_head.ClientEasterHeadSoulVariant;
 import mdteam.ait.client.registry.exterior.impl.growth.ClientGrowthVariant;
+import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthDefaultVariant;
+import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthFireVariant;
+import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthSoulVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimFireVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimSoulVariant;
@@ -65,12 +69,15 @@ public class ClientExteriorVariantRegistry {
     public static ClientExteriorVariantSchema BOOTH_SOUL;
     public static ClientExteriorVariantSchema BOOTH_VINTAGE;
     public static ClientExteriorVariantSchema BOOTH_BLUE;
-    public static ClientExteriorVariantSchema BOOTH_WHITE;
     public static ClientExteriorVariantSchema COOB; // dont use : (
     public static ClientExteriorVariantSchema HEAD_DEFAULT;
     public static ClientExteriorVariantSchema HEAD_SOUL;
     public static ClientExteriorVariantSchema HEAD_FIRE;
     public static ClientExteriorVariantSchema CORAL_GROWTH;
+    public static ClientExteriorVariantSchema DOOM;
+    public static ClientExteriorVariantSchema PLINTH_DEFAULT;
+    public static ClientExteriorVariantSchema PLINTH_SOUL;
+    public static ClientExteriorVariantSchema PLINTH_FIRE;
 
     // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
     public static void init() {
@@ -104,7 +111,6 @@ public class ClientExteriorVariantRegistry {
         BOOTH_SOUL = register(new ClientBoothSoulVariant());
         BOOTH_VINTAGE = register(new ClientBoothVintageVariant());
         BOOTH_BLUE = register(new ClientBoothBlueVariant());
-        BOOTH_WHITE = register(new ClientBoothWhiteVariant());
 
         // funny
         // COOB = register(new RedCoobVariant()); // fixme CUBE HAS BEEN REMOVED, REPEAT, CUBE HAS BEEN REMOVED. DO NOT PANIC!!
@@ -116,5 +122,13 @@ public class ClientExteriorVariantRegistry {
 
         // Coral
         CORAL_GROWTH = register(new ClientGrowthVariant());
+
+        // Doom
+        DOOM = register(new ClientDoomVariant());
+
+        // Plinth
+        PLINTH_DEFAULT = register(new ClientPlinthDefaultVariant());
+        PLINTH_SOUL = register(new ClientPlinthSoulVariant());
+        PLINTH_FIRE = register(new ClientPlinthFireVariant());
     }
 }

@@ -7,6 +7,7 @@ import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.DoorData;
@@ -44,34 +45,26 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static mdteam.ait.core.blocks.DoorBlock.rotateShape;
+
 public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final VoxelShape LEDGE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
-    public static final VoxelShape LEDGE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 11.0, 32.0, 16.0),
-            Block.createCuboidShape(0, 0, 0, 19.5,1, 16));
-    public static final VoxelShape LEDGE_SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 11.0),
-            Block.createCuboidShape(0, 0, 0, 16,1, 19.5));
-    public static final VoxelShape LEDGE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(5.0, 0.0, 0.0, 16.0, 32.0, 16.0),
-            Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
 
     public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
-    public static final VoxelShape CUBE_EAST_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 14.0, 32.0, 16.0),
-            Block.createCuboidShape(0, 0, 0, 19.5,1, 16));
-    public static final VoxelShape CUBE_SOUTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 14.0),
-            Block.createCuboidShape(0, 0, 0, 16,1, 19.5));
-    public static final VoxelShape CUBE_WEST_SHAPE = VoxelShapes.union(Block.createCuboidShape(2.0, 0.0, 0.0, 16.0, 32.0, 16.0),
-            Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
-
     public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
     public ExteriorBlock(Settings settings) {
         super(settings.nonOpaque());
 
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
-
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -125,7 +118,9 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
         if (((ExteriorBlockEntity) blockEntity).getTardis().get().isSiegeMode())
             return SIEGE_SHAPE;
-
+        if (((ExteriorBlockEntity) blockEntity).getTardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM)) {
+            return VoxelShapes.fullCube();
+        }
         // todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
         if (DependencyChecker.hasPortals())
             if (((ExteriorBlockEntity) blockEntity).getTardis().get().getDoor().isOpen() && ((ExteriorBlockEntity) blockEntity).getTardis().get().getExterior().getType().hasPortals()) // for some reason this check totally murders fps ??
@@ -142,14 +137,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         if ( world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.getTardis().isPresent() && exterior.getTardis().get().getExterior().getVariant().bounding(state.get(FACING)) != null)
             return exterior.getTardis().get().getExterior().getVariant().bounding(state.get(FACING));
 
-        return switch (state.get(FACING)) {
-            case NORTH -> CUBE_NORTH_SHAPE;
-            case EAST -> CUBE_EAST_SHAPE;
-            case SOUTH -> CUBE_SOUTH_SHAPE;
-            case WEST -> CUBE_WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
-        };
+        return rotateShape(Direction.NORTH, state.get(FACING), CUBE_NORTH_SHAPE);
     }
 
     public VoxelShape getLedgeShape(BlockState state, BlockView world, BlockPos pos) {
@@ -157,14 +145,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.getTardis().isPresent() && exterior.getTardis().get().getExterior().getVariant().bounding(state.get(FACING)) != null)
             return exterior.getTardis().get().getExterior().getVariant().bounding(state.get(FACING));
 
-        return switch (state.get(FACING)) {
-            case NORTH -> LEDGE_NORTH_SHAPE;
-            case EAST -> LEDGE_EAST_SHAPE;
-            case SOUTH -> LEDGE_SOUTH_SHAPE;
-            case WEST -> LEDGE_WEST_SHAPE;
-            default ->
-                    throw new RuntimeException("Invalid facing direction in " + this + ", //How did this happen? I messed up Plan A.");
-        };
+        return rotateShape(Direction.NORTH, state.get(FACING), CUBE_NORTH_SHAPE);
     }
 
     @Override

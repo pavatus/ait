@@ -8,7 +8,9 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 // Made with Blockbench 4.9.2
 // Exported for Minecraft version 1.17+ for Yarn
@@ -70,7 +72,7 @@ public class ClassicDoorModel extends DoorModel {
 	public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		/*this.classic.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
 		this.classic.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();*/
-		if(doorEntity.getTardis().isEmpty()) return;
+
 		matrices.push();
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5, 0.35);

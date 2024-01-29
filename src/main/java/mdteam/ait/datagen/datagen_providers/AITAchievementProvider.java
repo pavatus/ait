@@ -44,7 +44,7 @@ public class AITAchievementProvider extends FabricAdvancementProvider  {
                 .parent(placeCoral)
                 .display(
                         AITItems.TARDIS_ITEM,
-                        Text.literal("First Step of the Journey"),
+                        Text.literal("Barbara, What Are You Doing?"),
                         Text.literal("Enter the TARDIS for the first time"),
                         null,
                         AdvancementFrame.CHALLENGE,

@@ -1,5 +1,6 @@
 package mdteam.ait.client.models.doors;
 
+import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.tardis.data.DoorData;
@@ -31,8 +32,6 @@ public class EasterHeadDoorModel extends DoorModel {
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if(door.getTardis().isEmpty()) return;
-
 		matrices.push();
 
 		matrices.translate(0,-1.5f,0);

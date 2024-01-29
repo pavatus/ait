@@ -1,8 +1,10 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -33,7 +35,7 @@ public class SiegeModeModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		matrices.push();
+		if (exterior.getTardis().isEmpty()) return;
 		matrices.translate(0,-1.5,0);
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
@@ -41,8 +43,17 @@ public class SiegeModeModel extends ExteriorModel {
 	}
 
 	@Override
+	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        matrices.push();
+		matrices.translate(0,-1.5,0);
+
+		super.renderRealWorld(realEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+		matrices.pop();
+	}
+
+	@Override
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		matrices.push();
+        matrices.push();
 		matrices.translate(0,-1.5,0);
 
 		super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);

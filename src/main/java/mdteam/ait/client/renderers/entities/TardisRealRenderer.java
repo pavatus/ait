@@ -41,22 +41,26 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
         TardisExterior tardisExterior = entity.getTardis().getExterior();
         ClientExteriorVariantSchema exteriorVariantSchema = ClientExteriorVariantRegistry.withParent(tardisExterior.getVariant());
 
-        assert exteriorVariantSchema != null;
+        if (exteriorVariantSchema == null) return;
         Class<? extends ExteriorModel> modelClass = exteriorVariantSchema.model().getClass();
 
         if (model != null && !model.getClass().isInstance(modelClass)) model = null;
 
         matrices.push();
-        Vec3d rotationVector = entity.getRotationVector();
-        float pitch = (float) Math.toRadians(rotationVector.getX());
-        float yawE = (float) Math.toRadians(rotationVector.getY());
-        float roll = (float) Math.toRadians(rotationVector.getZ());
+        //Vec3d rotationVector = entity.getRotationVector();
+        //float pitch = (float) Math.toRadians(rotationVector.getX());
+        //float yawE = (float) Math.toRadians(rotationVector.getY());
+        //float roll = (float) Math.toRadians(rotationVector.getZ());
 
-        Quaternionf quaternion = new Quaternionf();
-        quaternion.rotationXYZ(pitch, yawE, roll);
-        matrices.multiply(quaternion);
-        matrices.scale(1.0f, 1.0f, -1.0f);
-        matrices.scale(1.0f, -1.0f, 1.0f);
+        //Quaternionf quaternion = new Quaternionf();
+        //quaternion.rotationXYZ(pitch, yawE, roll);
+        //matrices.multiply(quaternion);
+        //matrices.scale(1.0f, 1.0f, -1.0f);
+        //matrices.scale(1.0f, -1.0f, 1.0f);
+        if (getModel(entity) == null) return;
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(entity.getRotation(tickDelta)));
+        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(entity.getPitch()));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 
 
         if (getModel(entity) == null) return;
@@ -70,7 +74,7 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
     }
 
     private ExteriorModel getModel(TardisRealEntity entity) {
-        assert entity.getTardis() != null;
+        if (entity.getTardis() == null) return model;
         if (model == null) {
             model = Objects.requireNonNull(ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant())).model();
         }

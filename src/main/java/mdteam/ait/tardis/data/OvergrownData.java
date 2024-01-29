@@ -82,9 +82,9 @@ public class OvergrownData extends TardisLink {
 
         // We know the tardis is landed so we can start ticking away
         if (hasReachedMaxTicks()) {
-            this.setOvergrown(true);
-            this.setTicks(0);
-            this.getTardis().get().getDoor().closeDoors();
+            // this.setOvergrown(true);
+            // this.setTicks(0);
+            // this.getTardis().get().getDoor().closeDoors();
             return;
         }
 

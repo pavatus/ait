@@ -64,7 +64,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "client_ask_console");
 
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
-        super(AITBlockEntityTypes.DISPLAY_CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
+        super(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
     }
 
     @Override
@@ -266,7 +266,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         return list.get(idx + 1);
     }
     public static ConsoleVariantSchema nextVariant(ConsoleVariantSchema current) {
-        List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParent(current.parent()).stream().toList();
+        List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParent(current.parent());
 
         int idx = list.indexOf(current);
         if (idx < 0 || idx+1 == list.size()) return list.get(0);
@@ -280,7 +280,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 //        if (world != TardisUtil.getTardisDimension())
 //            return;
 
-        if (player.getMainHandStack().getItem() == Items.STICK) changeConsole(nextConsole(getConsoleSchema()));
+/*        if (player.getMainHandStack().getItem() == Items.STICK) changeConsole(nextConsole(getConsoleSchema()));
         if (player.getMainHandStack().getItem() == Items.BONE) setVariant(nextVariant(getVariant()));
         if (player.getMainHandStack().getItem() == Items.SHEARS) {
             world.breakBlock(pos, true);
@@ -289,9 +289,13 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
             }
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, new ItemStack(AITBlocks.CONSOLE)));
             markRemoved();
-        }
+        }*/
     }
-
+    @Override
+    public void markRemoved() {
+        this.killControls();
+        super.markRemoved();
+    }
     public void setDesktop(TardisDesktop desktop) {
         if (this.getWorld() == null || this.getWorld().isClient()) return;
 

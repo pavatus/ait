@@ -32,8 +32,9 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
     // Thanks craig for help w animation code
     public void animateTile(ConsoleBlockEntity console) {
         this.getPart().traverse().forEach(ModelPart::resetTransform);
-        if(console.getTardis().isEmpty()) return;
-        // System.out.println(getAnimationForState(console.getTardis().getTravel().getState()));
+        if (console.getTardis().isEmpty())
+            return;
+        // System.out.println(getAnimationForState(console.getTardis().get().getTravel().getState()));
 
         TardisTravel.State state = console.getTardis().get().getTravel().getState();
 
@@ -42,13 +43,13 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
         this.updateAnimation(console.ANIM_FLIGHT, getAnimationForState(state), console.animationTimer);
         /*if(console.getControlEntityFromName("direction") != null && console.getControlEntityFromName("direction").getControl() != null) {
             this.updateAnimation(console.getControlEntityFromName("direction")
-                            .getControl().getAnimationState(HartnellAnimations.animationFromDirection(console.getTardis().getTravel())),
-                    console.getControlEntityFromName("direction").getControl().getAnimation(HartnellAnimations.animationFromDirection(console.getTardis().getTravel())), console.animationTimer);
+                            .getControl().getAnimationState(HartnellAnimations.animationFromDirection(console.getTardis().get().getTravel())),
+                    console.getControlEntityFromName("direction").getControl().getAnimation(HartnellAnimations.animationFromDirection(console.getTardis().get().getTravel())), console.animationTimer);
         }*/
     }
 
     public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if(console.getTardis().isEmpty()) return;
+        if (console.getTardis().isEmpty()) return;
         root.render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
     }
 

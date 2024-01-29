@@ -38,13 +38,6 @@ public class ClientAlarmHandler extends SoundHandler {
         return handler;
     }
 
-    public void toggleShader(boolean on) {
-        ShaderUtils.enabled = on;
-        if(ShaderUtils.shader != null) {
-            ShaderUtils.shader.setupDimensions(MinecraftClient.getInstance().getWindow().getFramebufferWidth(), MinecraftClient.getInstance().getWindow().getFramebufferHeight());
-        }
-    }
-
     private void generate() {
         if (CLOISTER_INTERIOR == null) CLOISTER_INTERIOR = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 10f);
 
@@ -78,13 +71,8 @@ public class ClientAlarmHandler extends SoundHandler {
             this.startIfNotPlaying(getInteriorCloister());
 
             ClientShakeUtil.shake(0.15f);
-            /*if (client != null && client.getCameraEntity() != null) {
-                toggleShader(true);
-                ShaderUtils.load();
-            }*/
         } else {
             this.stopSounds();
-            /*toggleShader(false);*/
         }
     }
 }

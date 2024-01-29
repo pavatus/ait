@@ -2,6 +2,7 @@ package mdteam.ait.tardis.util;
 
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
@@ -26,6 +27,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,6 +50,7 @@ import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import qouteall.imm_ptl.core.api.PortalAPI;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -136,7 +139,7 @@ public class TardisUtil {
                     if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
                         if (!player.isSneaking()) {
                             if(!tardis.getDoor().locked()) {
-                            /*DoorHandler.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
+                            /*DoorData.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
                                     player);*/
                                 if (tardis.getDoor().isOpen()) tardis.getDoor().closeDoors();
                                 else tardis.getDoor().openDoors();
@@ -312,29 +315,41 @@ public class TardisUtil {
             case WEST -> new BlockPos.Mutable(pos.getX() - 0.0125, pos.getY(), pos.getZ() + 0.5);
         };
     }
-    public static void teleportOutside(Tardis tardis, ServerPlayerEntity player) {
+    public static void teleportOutside(Tardis tardis, Entity entity) {
         AbsoluteBlockPos.Directed pos = tardis.getTravel().getState() == TardisTravel.State.FLIGHT ? FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage()) : tardis.position();
-        TardisUtil.teleportWithDoorOffset(player, tardis.getDoor().getExteriorPos());
+        TardisUtil.teleportWithDoorOffset(entity, tardis.getDoor().getExteriorPos());
     }
 
-    public static void teleportInside(Tardis tardis, ServerPlayerEntity player) {
-        TardisUtil.teleportWithDoorOffset(player, tardis.getDoor().getDoorPos());
+    public static void teleportInside(Tardis tardis, Entity entity) {
+        TardisUtil.teleportWithDoorOffset(entity, tardis.getDoor().getDoorPos());
         TardisDesktop tardisDesktop = tardis.getDesktop();
         if(tardisDesktop.getConsolePos() != null) {
-            if(tardisDesktop.getConsolePos().getBlockEntity() != null) {
+            if(tardisDesktop.getConsolePos().getBlockEntity() instanceof ConsoleBlockEntity console) {
                 tardisDesktop.getConsolePos().getBlockEntity().markDirty();
-                ((ConsoleBlockEntity) tardisDesktop.getConsolePos().getBlockEntity()).sync(); // maybe force sync when a player enters the tardis
+                console.sync(); // maybe force sync when a player enters the tardis
             } else {
                 tardisDesktop.setConsolePos(null);
             }
         }
     }
 
-    private static void teleportWithDoorOffset(ServerPlayerEntity player, AbsoluteBlockPos.Directed pos) {
+    private static void teleportWithDoorOffset(Entity entity, AbsoluteBlockPos.Directed pos) {
         Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
         SERVER.execute(() -> {
-            WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
-            player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+            if(DependencyChecker.hasPortals()) {
+                PortalAPI.teleportEntity(entity, (ServerWorld) pos.getWorld(), vec);
+            } else {
+                if(entity instanceof ServerPlayerEntity player) {
+                    WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
+                    player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+                } else {
+                    if(entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
+                        entity.refreshPositionAndAngles(vec.x, vec.y, vec.z, pos.getDirection().asRotation(), entity.getPitch());
+                    } else {
+                        entity.teleport((ServerWorld) pos.getWorld(), vec.x, vec.y, vec.z, Set.of(), pos.getDirection().asRotation(), entity.getPitch());
+                    }
+                }
+            }
         });
     }
 
@@ -427,13 +442,17 @@ public class TardisUtil {
         return list;
     }
 
-    public static List<LivingEntity> getEntitiesInInterior(Tardis tardis, int area) {
+    public static List<LivingEntity> getLivingEntitiesInInterior(Tardis tardis, int area) {
         return getTardisDimension().getEntitiesByClass(LivingEntity.class, new Box(tardis.getDoor().getDoorPos().north(area).east(area).up(area), tardis.getDoor().getDoorPos().south(area).west(area).down(area)), (e) -> true);
     }
-    public static List<LivingEntity> getEntitiesInInterior(Tardis tardis) {
-        return getEntitiesInInterior(tardis, 20);
+
+    public static List<Entity> getEntitiesInInterior(Tardis tardis, int area) {
+        return getTardisDimension().getEntitiesByClass(Entity.class, new Box(tardis.getDoor().getDoorPos().north(area).east(area).up(area), tardis.getDoor().getDoorPos().south(area).west(area).down(area)), (e) -> true);
     }
 
+    public static List<LivingEntity> getLivingEntitiesInInterior(Tardis tardis) {
+        return getLivingEntitiesInInterior(tardis, 20);
+    }
     public static List<PlayerEntity> getPlayersInInterior(Corners corners) {
         List<PlayerEntity> list = List.of();
         for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {

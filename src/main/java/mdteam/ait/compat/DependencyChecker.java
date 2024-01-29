@@ -11,7 +11,7 @@ public class DependencyChecker {
     }
 
     public static boolean hasPortals() {
-        return doesClassExist("qouteall.imm_ptl.core.IPModMain");
+        return doesModExist("imm_ptl_core");
     }
 
     public static boolean hasRegeneration() {

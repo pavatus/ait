@@ -3,6 +3,7 @@ package mdteam.ait.client.models.exteriors;
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -51,8 +52,7 @@ public class TardimExteriorModel extends ExteriorModel {
 
     @Override
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if(exterior.getTardis().isEmpty()) return;
-
+        if (exterior.getTardis().isEmpty()) return;
         matrices.push();
         // matrices.scale(0.6F,0.6f,0.6f);
         matrices.translate(0, -1.5f, 0);
@@ -66,6 +66,25 @@ public class TardimExteriorModel extends ExteriorModel {
         this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+        matrices.pop();
+    }
+
+    @Override
+    public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        matrices.push();
+        // matrices.scale(0.6F,0.6f,0.6f);
+        matrices.translate(0, -1.5f, 0);
+
+        /*this.tardis.getChild("left_door").yaw = exterior.getRightDoor() ? 0 : -1.575f;
+        this.tardis.getChild("right_door").yaw = exterior.getLeftDoor() ? 0 : 1.575f;*/
+
+        DoorData handler = realEntity.getTardis().getDoor();
+
+        this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -1.575f : 0.0F;
+        this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;
+
+        super.renderRealWorld(realEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
         matrices.pop();
     }

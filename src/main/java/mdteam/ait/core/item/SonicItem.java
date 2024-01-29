@@ -1,5 +1,8 @@
 package mdteam.ait.core.item;
 
+import io.wispforest.owo.ops.WorldOps;
+import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.LinkableItem;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.ExteriorRegistry;
@@ -9,6 +12,7 @@ import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -20,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -35,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class SonicItem extends Item {
+public class SonicItem extends LinkableItem {
 
     public static final String MODE_KEY = "mode";
     public static final String INACTIVE = "inactive";
@@ -80,18 +85,19 @@ public class SonicItem extends Item {
                 Block block = world.getBlockState(pos).getBlock();
 
                 if (entity instanceof ExteriorBlockEntity exteriorBlock) {
-
-                    if(exteriorBlock.getTardis().isEmpty())
-                        return;
+                    if (exteriorBlock.getTardis().isEmpty()) return;
 
                     TardisTravel.State state = exteriorBlock.getTardis().get().getTravel().getState();
 
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
                         return;
                     }
+                    if (world.isClient()) return;
 
                     List<ExteriorSchema> list = ExteriorRegistry.REGISTRY.stream().toList();
                     exteriorBlock.getTardis().get().getExterior().setType(list.get((list.indexOf(exteriorBlock.getTardis().get().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.getTardis().get().getExterior().getType()) + 1));
+                    WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(tardis.getTravel().getPosition().getWorld().getRegistryKey()), tardis.getDoor().getExteriorPos());
+                    WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(TardisUtil.getTardisDimension().getRegistryKey()), tardis.getDoor().getDoorPos());
                 }
 
                 // fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor
@@ -114,7 +120,6 @@ public class SonicItem extends Item {
 
                 BlockEntity entity = world.getBlockEntity(pos);
                 if (entity instanceof ExteriorBlockEntity exteriorBlock) {
-                    if(exteriorBlock.getTardis().isEmpty()) return;
                     TardisTravel.State state = exteriorBlock.getTardis().get().getTravel().getState();
                     if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
                         return;
@@ -152,8 +157,8 @@ public class SonicItem extends Item {
 
                 if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
-                PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, false);
-                PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, true);
+                PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
+                PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, true);
                 if(tardis.getHandlers().getHADS().isInDanger()) {
                     tardis.setIsInDanger(false);
                 }
@@ -192,19 +197,6 @@ public class SonicItem extends Item {
 
         NbtCompound nbt = itemStack.getOrCreateNbt();
 
-        if (player.isSneaking()) {
-            if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock) {
-                if (consoleBlock.getTardis().isEmpty())
-                    return ActionResult.PASS;
-
-                link(consoleBlock.getTardis().get(), itemStack);
-                return ActionResult.SUCCESS;
-            }
-
-            // cycleMode(itemStack);
-            // return ActionResult.SUCCESS;
-        }
-
         if (!nbt.contains(MODE_KEY)) return ActionResult.FAIL;
 
         Tardis tardis = getTardis(itemStack);
@@ -224,12 +216,12 @@ public class SonicItem extends Item {
         return ServerTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")));
     }
 
-    public static void link(Tardis tardis, ItemStack item) {
-        NbtCompound nbt = item.getOrCreateNbt();
+    @Override
+    public void link(ItemStack stack, UUID uuid) {
+        super.link(stack, uuid);
 
-        if (tardis == null) return;
+        NbtCompound nbt = stack.getOrCreateNbt();
 
-        nbt.putString("tardis", tardis.getUuid().toString());
         nbt.putInt(MODE_KEY, 0);
         nbt.putBoolean(INACTIVE, true);
     }
@@ -294,6 +286,11 @@ public class SonicItem extends Item {
         NbtCompound tag = stack.getOrCreateNbt();
         String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
                 : Text.translatable("message.ait.sonic.none").getString();
+        String position = Text.translatable("message.ait.sonic.none").getString();
+        if(tag.contains("tardis")) {
+            Tardis tardis = ClientTardisManager.getInstance().getLookup().get(UUID.fromString(tag.getString("tardis")));
+            position = tardis.getTravel() == null || tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();
+        }
 
         if (tag.contains("tardis")) { // Adding the sonics mode
             tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
@@ -306,6 +303,8 @@ public class SonicItem extends Item {
 
         tooltip.add(Text.literal("TARDIS: ").formatted(Formatting.BLUE));
         tooltip.add(Text.literal("> " + text).formatted(Formatting.GRAY));
+        tooltip.add(Text.literal("Position: ").formatted(Formatting.BLUE));
+        tooltip.add(Text.literal("> " + position).formatted(Formatting.GRAY));
     }
 
     public Mode intToMode(int mode) {

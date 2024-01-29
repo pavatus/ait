@@ -363,6 +363,7 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
         } else {
             coral.getChild("seven").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
         }
+
         // super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
         matrices.pop();

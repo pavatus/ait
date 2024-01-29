@@ -2,6 +2,7 @@ package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -36,15 +37,28 @@ public class EasterHeadModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if(exterior.getTardis().isEmpty()) return;
-
-		matrices.push();
+		if (exterior.getTardis().isEmpty()) return;
+        matrices.push();
 
 		matrices.translate(0,-1.5f,0);
 
 		this.head.getChild("door").pitch = (exterior.getTardis().get().getDoor().isOpen()) ? -45f : 0f;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+		matrices.pop();
+	}
+
+	@Override
+	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+		if (realEntity.getTardis() == null) return;
+        matrices.push();
+
+		matrices.translate(0,-1.5f,0);
+
+		this.head.getChild("door").pitch = (realEntity.getTardis().getDoor().isOpen()) ? -45f : 0f;
+
+		super.renderRealWorld(realEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
 		matrices.pop();
 	}

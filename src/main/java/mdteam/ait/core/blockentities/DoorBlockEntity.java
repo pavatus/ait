@@ -54,7 +54,7 @@ public class DoorBlockEntity extends BlockEntity {
             door.checkAnimations();
         }
 
-        if (door.tardisId == null) door.getTardis();
+        if (door.tardisId == null) door.getTardis().get();
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
@@ -77,7 +77,7 @@ public class DoorBlockEntity extends BlockEntity {
             return;
         }
         DoorData.useDoor(this.getTardis().get(), (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
-        // fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
+        // fixme maybe this is required idk the DoorData already marks the tardis dirty || tardis().markDirty();
         if (sneaking)
             return;
     }
@@ -107,14 +107,15 @@ public class DoorBlockEntity extends BlockEntity {
     }
 
     public void onEntityCollision(Entity entity) {
-        if (!(entity instanceof ServerPlayerEntity player) || this.getWorld() != TardisUtil.getTardisDimension())
-            return;
-        if (this.getTardis().isPresent() && this.getTardis().get().getDoor().isOpen()) {
-            if (!this.getTardis().get().getLockedTardis() && !PropertiesHandler.getBool(getTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
-                if (!DependencyChecker.hasPortals() || !this.getTardis().get().getExterior().getType().hasPortals())
-                    TardisUtil.teleportOutside(this.getTardis().get(), player);
-            }
-        }
+        // so many ifs
+        if (this.getWorld() != TardisUtil.getTardisDimension()) return;
+        if (this.getTardis().isEmpty()) return;
+        if (this.getTardis().get().getDoor().isClosed()) return;
+        if (this.getTardis().get().getLockedTardis()) return;
+        if (PropertiesHandler.getBool(getTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) return;
+        if (DependencyChecker.hasPortals() && this.getTardis().get().getExterior().getType().hasPortals()) return;
+
+        TardisUtil.teleportOutside(this.getTardis().get(), entity);
     }
 
     public void checkAnimations() {

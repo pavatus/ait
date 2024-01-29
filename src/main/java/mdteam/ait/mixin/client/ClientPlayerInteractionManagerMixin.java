@@ -22,7 +22,7 @@ public class ClientPlayerInteractionManagerMixin {
     @Inject(method = "breakBlock", at = @At(value = "HEAD"), cancellable = true)
     public void breakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         World world = this.client.world;
-        assert world != null;
+        if (world == null) return;
         Block block = world.getBlockState(pos).getBlock();
         if (block instanceof ICantBreak cantBreak) {
             cantBreak.onTryBreak(world, pos, world.getBlockState(pos));
