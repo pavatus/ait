@@ -270,8 +270,8 @@ public class DoorData extends TardisLink {
             return false;
         }
 
-        if (tardis.getTravel().getState() == DEMAT || tardis.getTravel().getState() == MAT)
-            return false;
+        // if (tardis.getTravel().getState() == DEMAT || tardis.getTravel().getState() == MAT)
+        //     return false;
 
         DoorData door = tardis.getDoor();
 
