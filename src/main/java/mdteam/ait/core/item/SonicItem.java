@@ -84,7 +84,7 @@ public class SonicItem extends LinkableItem {
                 BlockEntity entity = world.getBlockEntity(pos);
                 Block block = world.getBlockState(pos).getBlock();
 
-                if (entity instanceof ExteriorBlockEntity exteriorBlock) {
+                /*if (entity instanceof ExteriorBlockEntity exteriorBlock) {
                     if (exteriorBlock.getTardis().isEmpty()) return;
 
                     TardisTravel.State state = exteriorBlock.getTardis().get().getTravel().getState();
@@ -98,7 +98,7 @@ public class SonicItem extends LinkableItem {
                     exteriorBlock.getTardis().get().getExterior().setType(list.get((list.indexOf(exteriorBlock.getTardis().get().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.getTardis().get().getExterior().getType()) + 1));
                     WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(tardis.getTravel().getPosition().getWorld().getRegistryKey()), tardis.getDoor().getExteriorPos());
                     WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(TardisUtil.getTardisDimension().getRegistryKey()), tardis.getDoor().getDoorPos());
-                }
+                }*/
 
                 // fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor
                 /*if(player.isSneaking() && block instanceof DispenserBlock dispenser) {
