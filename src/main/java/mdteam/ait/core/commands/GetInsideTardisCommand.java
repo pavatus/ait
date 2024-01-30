@@ -8,7 +8,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.FuelData;
-import mdteam.ait.tardis.data.FuelData;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.UuidArgumentType;
@@ -21,28 +21,20 @@ import java.util.UUID;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
-public class AddFuelCommand {
+public class GetInsideTardisCommand {
     public static final SuggestionProvider<ServerCommandSource> TARDIS_SUGGESTION = (context, builder) -> CommandSource.suggestMatching(ServerTardisManager.getInstance().getLookup().keySet().stream().map(UUID::toString), builder);
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("fuel").then(literal("add").requires(source -> source.hasPermissionLevel(2))
-                        .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-                                .then(argument("amount", DoubleArgumentType.doubleArg(0, FuelData.TARDIS_MAX_FUEL))
-                                        .executes(AddFuelCommand::runCommand))))));
+        dispatcher.register(literal(AITMod.MOD_ID).then(literal("get").then(literal("tardis_id").requires(source -> source.hasPermissionLevel(2))
+                                        .executes(GetInsideTardisCommand::runCommand))));
     }
 
     private static int runCommand(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity source = context.getSource().getPlayer();
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
-        if (tardis == null || source == null) return 0;
-        if (tardis.getFuel() >= FuelData.TARDIS_MAX_FUEL) {
-            source.sendMessage(Text.literal("TARDIS fuel is at max!"), true);
-            return 0;
-        }
-        double fuelAmount = DoubleArgumentType.getDouble(context, "amount");
-        tardis.addFuel(fuelAmount);
-        source.sendMessage(Text.literal("Added fuel for [" + tardis.getUuid() + "] to: [" + tardis.getFuel() + "au]"), true);
+        if(source == null) return 0;
+        Tardis tardis = TardisUtil.findTardisByInterior(source.getBlockPos(),true);
+        if (tardis == null) return 0;
+        source.sendMessage(Text.literal("TARDIS ID: " + tardis.getUuid()), false);
         return Command.SINGLE_SUCCESS;
     }
 

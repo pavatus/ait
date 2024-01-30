@@ -101,6 +101,7 @@ public class AITMod implements ModInitializer {
             SummonTardisCommand.register(dispatcher);
             SetLockedCommand.register(dispatcher);
             // SetHumCommand.register(dispatcher);
+            GetInsideTardisCommand.register(dispatcher);
             SetFuelCommand.register(dispatcher);
             AddFuelCommand.register(dispatcher);
             RemoveFuelCommand.register(dispatcher);
