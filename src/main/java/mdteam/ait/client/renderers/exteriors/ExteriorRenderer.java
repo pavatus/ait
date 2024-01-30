@@ -99,6 +99,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             emission = getEmissionForRotation(getTextureForRotation(wrappedDegrees, entity.getTardis().get()), entity.getTardis().get());
         }
 
+        // ternary is good an all but please seperate this loqor @TODO
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f :
                 MinecraftClient.getInstance().player.getHeadYaw() + ((wrappedDegrees > -135 && wrappedDegrees < 135) ? 180f : 0f)));
 
@@ -113,6 +114,11 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             siege.renderWithAnimations(entity, this.siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), maxLight, overlay, 1, 1, 1, 1);
             matrices.pop();
             return;
+        }
+
+        String name = entity.getTardis().get().getHandlers().getName().get();
+        if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
         }
 
         if (model != null) {
