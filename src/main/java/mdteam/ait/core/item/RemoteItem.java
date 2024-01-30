@@ -102,7 +102,7 @@ public class RemoteItem extends LinkableItem {
         super.appendTooltip(stack, world, tooltip, context);
 
         if (tag.contains("tardis")) {
-            Tardis tardis = ClientTardisManager.getInstance().getLookup().get(UUID.fromString(tag.getString("tardis")));
+            Tardis tardis = ClientTardisManager.getInstance().getTardis(UUID.fromString(tag.getString("tardis")));
             if (tardis == null) return;
             if (tardis.getTravel().getState() != LANDED)
                 tooltip.add(Text.literal("→ " + tardis.getHandlers().getFlight().getDurationAsPercentage() + "%").formatted(Formatting.GOLD));
