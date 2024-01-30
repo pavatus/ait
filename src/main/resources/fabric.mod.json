@@ -53,10 +53,13 @@
 		"minecraft": "${minecraft_version}",
 		"java": ">=17",
 		"fabric-api": "*",
-		"fabric-key-binding-api-v1": "*"
+		"fabric-key-binding-api-v1": "*",
+		"owo": ">=${owo_version}"
 	},
 	"suggests": {
-		"another-mod": "*"
+		"regeneration": "*",
+		"imm_ptl_core": ">=${ip_version}",
+		"k9mod": ">=${k9_version}"
 	},
 	"custom": {
 		"cardinal-components": [
