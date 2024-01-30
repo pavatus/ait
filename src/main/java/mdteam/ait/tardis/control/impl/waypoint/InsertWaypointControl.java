@@ -21,9 +21,8 @@ public class InsertWaypointControl extends Control {
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-
-        if (player.isSneaking()) {
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
+        if (leftClick) {
             tardis.getHandlers().getWaypoints().spawnItem();
             return true;
         }
