@@ -98,7 +98,10 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
 
     @Override
     public void setTardis(Tardis tardis) {
-        this.tardisId = tardis.getUuid();
+        this.setTardis(tardis.getUuid());
+    }
+    public void setTardis(UUID uuid) {
+        this.tardisId = uuid;
         markDirty();
     }
 }

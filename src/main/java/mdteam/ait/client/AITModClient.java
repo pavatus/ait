@@ -29,11 +29,13 @@ import mdteam.ait.core.item.WaypointItem;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.console.ConsoleSchema;
+import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -158,6 +160,13 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(DesktopRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
             DesktopRegistry.readFromServer(buf);
+        });
+
+        ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
+            if (block instanceof LinkableBlockEntity) {
+                if (((LinkableBlockEntity) block).getTardis().isEmpty()) return;
+                ClientTardisManager.getInstance().loadTardis(((LinkableBlockEntity) block).getTardis().get().getUuid(), (t) -> {});
+            }
         });
 
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
