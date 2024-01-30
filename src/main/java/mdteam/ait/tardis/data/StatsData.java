@@ -47,7 +47,7 @@ public class StatsData extends TardisLink {
 
     public void setName(String name) {
         if(getTardis().isEmpty()) return;
-        PropertiesHandler.set(getTardis().get().getHandlers().getProperties(), NAME_KEY, name);
+        PropertiesHandler.set(getTardis().get(), NAME_KEY, name);
     }
 
     public static String fixupName(String name) {
