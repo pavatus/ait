@@ -66,10 +66,13 @@ public class StatsData extends TardisLink {
     }
 
     public static boolean shouldGenerateNames() {
-        return NAME_CACHE == null || NAME_CACHE.isEmpty() && TardisUtil.getServer() != null;
+        return (NAME_CACHE == null
+                || NAME_CACHE.isEmpty())
+                && TardisUtil.getServer() != null;
     }
 
     private static void loadNames() {
+        if (TardisUtil.getServer() == null) return;
         if (NAME_CACHE == null) NAME_CACHE = new ArrayList<>();
 
         NAME_CACHE.clear();
