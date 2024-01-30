@@ -20,11 +20,11 @@ public abstract class PosControl extends Control {
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
         TardisTravel travel = tardis.getTravel();
         AbsoluteBlockPos.Directed destination = travel.getDestination();
 
-        BlockPos pos = this.type.add(destination, (player.isSneaking()) ? -IncrementManager.increment(tardis) : IncrementManager.increment(tardis), destination.getWorld());
+        BlockPos pos = this.type.add(destination, (leftClick) ? -IncrementManager.increment(tardis) : IncrementManager.increment(tardis), destination.getWorld());
         travel.setDestination(new AbsoluteBlockPos.Directed(pos,destination.getWorld(),destination.getDirection()), false);
 
         messagePlayerDestination(player, travel);

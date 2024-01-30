@@ -2,6 +2,7 @@ package mdteam.ait.tardis.data;
 
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.Entity;
@@ -56,6 +57,9 @@ public class ServerAlarmHandler extends TardisLink {
             }
             return;
         }
+
+        if (getTardis().isEmpty()) return;
+        if (getTardis().get().getTravel().getState() == TardisTravel.State.FLIGHT) return;
 
         soundCounter++;
 

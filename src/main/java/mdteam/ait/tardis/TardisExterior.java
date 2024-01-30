@@ -48,6 +48,8 @@ public class TardisExterior extends TardisLink {
         if (getTardis().isEmpty()) {
             getTardis().get().getDoor().closeDoors();
         }
+
+        this.sync();
     }
 
     public void setVariant(ExteriorVariantSchema variant) {
@@ -56,6 +58,7 @@ public class TardisExterior extends TardisLink {
         }
 
         this.variant = variant;
+        this.sync();
     }
 
     public Optional<ExteriorBlockEntity> findExteriorBlock() {
