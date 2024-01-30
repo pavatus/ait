@@ -36,7 +36,7 @@ public class FastReturnControl extends Control {
     public void messagePlayer(ServerPlayerEntity player, boolean isLastPosition) {
         Text last_position = Text.translatable("tardis.message.control.fast_return.last_position");
         Text current_position = Text.translatable("tardis.message.control.fast_return.current_position");
-        player.sendMessage((isLastPosition ? last_position : current_position), true);
+        player.sendMessage((!isLastPosition ? last_position : current_position), true);
     }
 
 }

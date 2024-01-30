@@ -64,7 +64,8 @@ public class DoorData extends TardisLink {
     }
     private boolean shouldSucc() {
         if(this.getTardis().isEmpty() || getDoorPos() == null) return false;
-        return (getTardis().get().getTravel().getState() != LANDED) && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(getTardis().get().getDesktop().getDoorPos()) instanceof DoorBlockEntity;    }
+        return (getTardis().get().getTravel().getState() != LANDED &&
+                getTardis().get().getTravel().getState() != MAT) && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(getTardis().get().getDesktop().getDoorPos()) instanceof DoorBlockEntity;    }
 
     // Remember to this.sync() for these setters!!
     public void setLeftRot(boolean var) {

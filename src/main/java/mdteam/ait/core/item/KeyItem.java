@@ -141,11 +141,6 @@ public class KeyItem extends LinkableItem {
             tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
             return;
         }
-
-        NbtCompound tag = stack.getOrCreateNbt();
-        String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
-                : Text.translatable("tooltip.ait.key.notardis").toString();
-
-        tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
+        super.appendTooltip(stack, world, tooltip, context);
     }
 }

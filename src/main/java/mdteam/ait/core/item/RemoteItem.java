@@ -98,10 +98,8 @@ public class RemoteItem extends LinkableItem {
         }
 
         NbtCompound tag = stack.getOrCreateNbt();
-        String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
-                : Text.translatable("tooltip.ait.remoteitem.notardis").getString();
 
-        tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
+        super.appendTooltip(stack, world, tooltip, context);
 
         if (tag.contains("tardis")) {
             Tardis tardis = ClientTardisManager.getInstance().getLookup().get(UUID.fromString(tag.getString("tardis")));

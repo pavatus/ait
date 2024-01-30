@@ -53,7 +53,9 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
     public static final VoxelShape LEDGE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
 
-    public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 2.0, 16.0, 32.0, 16.0),
+    public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16,1, 16);
+
+    public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
     public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
     public ExteriorBlock(Settings settings) {
@@ -119,7 +121,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         if (((ExteriorBlockEntity) blockEntity).getTardis().get().isSiegeMode())
             return SIEGE_SHAPE;
         if (((ExteriorBlockEntity) blockEntity).getTardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM)) {
-            return VoxelShapes.fullCube();
+            return LEDGE_DOOM;
         }
         // todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
         if (DependencyChecker.hasPortals())

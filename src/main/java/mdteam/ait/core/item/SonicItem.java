@@ -288,7 +288,7 @@ public class SonicItem extends LinkableItem {
                 : Text.translatable("message.ait.sonic.none").getString();
         String position = Text.translatable("message.ait.sonic.none").getString();
         if(tag.contains("tardis")) {
-            Tardis tardis = ClientTardisManager.getInstance().getLookup().get(UUID.fromString(tag.getString("tardis")));
+            Tardis tardis = ClientTardisManager.getInstance().getTardis(UUID.fromString(tag.getString("tardis")));
             if (tardis != null)
                 position = tardis.getTravel() == null || tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();
         }
@@ -302,8 +302,7 @@ public class SonicItem extends LinkableItem {
             tooltip.add(ScreenTexts.EMPTY);
         }
 
-        tooltip.add(Text.literal("TARDIS: ").formatted(Formatting.BLUE));
-        tooltip.add(Text.literal("> " + text).formatted(Formatting.GRAY));
+        super.appendTooltip(stack, world, tooltip, context);
         tooltip.add(Text.literal("Position: ").formatted(Formatting.BLUE));
         tooltip.add(Text.literal("> " + position).formatted(Formatting.GRAY));
     }
