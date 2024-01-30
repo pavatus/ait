@@ -139,11 +139,13 @@ public class TardisUtil {
                             TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
                     if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
                         if (!player.isSneaking()) {
-                            if(!tardis.getDoor().locked()) {
-                            /*DoorData.useDoor(tardis, server.getWorld(player.getWorld().getRegistryKey()), pos,
-                                    player);*/
-                                if (tardis.getDoor().isOpen()) tardis.getDoor().closeDoors();
-                                else tardis.getDoor().openDoors();
+                            // annoying bad code
+                            DoorData.DoorStateEnum state = tardis.getDoor().getDoorState();
+                            if (state == DoorData.DoorStateEnum.CLOSED || state == DoorData.DoorStateEnum.FIRST) {
+                                DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+                                DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+                            } else {
+                                DoorData.useDoor(tardis, player.getServerWorld(), null, player);
                             }
                         } else {
                             DoorData.toggleLock(tardis, player);
