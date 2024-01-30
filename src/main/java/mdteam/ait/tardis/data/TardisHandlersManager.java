@@ -27,6 +27,7 @@ public class TardisHandlersManager extends TardisLink {
     private FlightData flight;
     private SiegeData siege;
     private CloakData cloak;
+    private NameData name;
     // private final SequenceHandler sequence;
 
     public TardisHandlersManager(Tardis tardis) {
@@ -45,6 +46,7 @@ public class TardisHandlersManager extends TardisLink {
         this.flight = new FlightData(tardis);
         this.siege = new SiegeData(tardis);
         this.cloak = new CloakData(tardis);
+        this.name = new NameData(tardis);
         // this.sequence = new SequenceHandler(tardisId);
 
         generateTickables();
@@ -67,6 +69,7 @@ public class TardisHandlersManager extends TardisLink {
         addTickable(getHADS());
         addTickable(getFlight());
         addTickable(getSiege());
+        addTickable(getName());
         // addTickable(getSequencing()); // todo sequences
     }
 
@@ -222,8 +225,12 @@ public class TardisHandlersManager extends TardisLink {
         }
         return this.cloak;
     }
-    public void setCloak(CloakData cloak) {
-        this.cloak = cloak;
+    public NameData getName() {
+        if (this.name == null && getTardis().isPresent()) {
+            this.name = new NameData(this.getTardis().get());
+            addTickable(this.name);
+        }
+        return this.name;
     }
     // public SequenceHandler getSequencing() {return this.sequence;}
 }

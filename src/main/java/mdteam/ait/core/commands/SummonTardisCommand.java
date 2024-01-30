@@ -30,7 +30,7 @@ public class SummonTardisCommand {
                 .then(literal("summon").requires(source -> source.hasPermissionLevel(2))
                         .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION).executes(SummonTardisCommand::runCommand)
                                 .then(argument("pos", BlockPosArgumentType.blockPos()).executes(SummonTardisCommand::runCommandWithPos))
-                        )).then(argument("forced", BoolArgumentType.bool()).executes(SummonTardisCommand::runCommandWithForced))
+                        ).then(argument("forced", BoolArgumentType.bool()).executes(SummonTardisCommand::runCommandWithForced)))
         );
     }
 

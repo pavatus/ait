@@ -45,6 +45,7 @@ import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Random;
 import java.util.UUID;
 
 public class AITMod implements ModInitializer {
@@ -56,6 +57,7 @@ public class AITMod implements ModInitializer {
     public static final NeptuneItemGroup AIT_ITEM_GROUP = new NeptuneItemGroup(new Identifier(AITMod.MOD_ID, "item_group"), AITItems.TARDIS_ITEM.getDefaultStack());
     public static final ComponentKey<RadioNBTComponent> RADIONBT =
             ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "radionbt"), RadioNBTComponent.class);
+    public static final Random RANDOM = new Random();
 
     @Override
     public void onInitialize() {
@@ -107,6 +109,8 @@ public class AITMod implements ModInitializer {
             ToggleSiegeModeCommand.register(dispatcher);
             RiftChunkCommand.register(dispatcher);
             RealWorldCommand.register(dispatcher);
+            SetNameCommand.register(dispatcher);
+            GetNameCommand.register(dispatcher);
         }));
 
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {
