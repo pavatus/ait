@@ -88,8 +88,14 @@ public class PropertiesHandler { // todo move things out of properties
         }
 
         // because gson saves it weird
-        if (holder.getData().get(key) instanceof LinkedTreeMap map)
+        if (holder.getData().get(key) instanceof LinkedTreeMap map) {
+            if (map.get("namespace") == null || map.get("path") == null) {
+                AITMod.LOGGER.error("namespace/path was null! Panic - I'm giving back the default desktop id, lets hope this doesnt cause a crash..");
+                return DesktopRegistry.get(0).id();
+            }
+
             return Identifier.of((String) map.get("namespace"), (String) map.get("path"));
+        }
 
         return (Identifier) holder.getData().get(key);
     }
