@@ -2,6 +2,8 @@ package mdteam.ait.tardis.wrapper.server.manager;
 
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
+import mdteam.ait.compat.DependencyChecker;
+import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.core.util.AITConfig;
@@ -95,6 +97,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
                 }
 
                 tardis.getDoor().closeDoors();
+
+                if (DependencyChecker.hasPortals())
+                    PortalsHandler.removePortals(tardis);
             }
 
             this.reset();
