@@ -5,6 +5,7 @@ import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -37,10 +38,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static mdteam.ait.tardis.util.TardisUtil.findTardisByInterior;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
-public class DoorBlockEntity extends BlockEntity {
-    private UUID tardisId;
+public class DoorBlockEntity extends LinkableBlockEntity {
     public AnimationState DOOR_STATE = new AnimationState();
     public int animationTimer = 0;
 
@@ -90,22 +91,6 @@ public class DoorBlockEntity extends BlockEntity {
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
     }
-
-    @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        if (this.tardisId != null) // panick
-            nbt.putString("tardis", this.tardisId.toString());
-    }
-
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        if (nbt.contains("tardis")) {
-            this.setTardis(UUID.fromString(nbt.getString("tardis")));
-        }
-    }
-
     public void onEntityCollision(Entity entity) {
         // so many ifs
         if (this.getWorld() != TardisUtil.getTardisDimension()) return;
@@ -129,46 +114,18 @@ public class DoorBlockEntity extends BlockEntity {
         }
     }
 
-    // oh god.
+    @Override
     public Optional<Tardis> getTardis() {
-        if (this.tardisId == null)
-            this.findTardis();
-
-        if (TardisUtil.isClient()) { // todo replace deprecated check
-            if (!ClientTardisManager.getInstance().hasTardis(this.tardisId)) {
-                if (this.tardisId != null)
-                    ClientTardisManager.getInstance().loadTardis(this.tardisId, tardis -> {});
-                return Optional.empty();
-                // todo add of `ifPresent()` of `isEmpty()` checks
-                // eg if before it was PropertiesHandler.set(this.getTardis, ...)
-                // it should become:
-                // this.getTardis().ifPresent(tardis -> PropertiesHandler.set(tardis, ...))
-                // or
-                // if (this.getTardis().isEmpty()) return;
-                //  because i dont want to rewrite a lot of the code base rn. this needs replacing badly but i am desperate for this release to come out and idc.
-                // issues with doing it this way is that client will probably have to repeat things multiple times to get things to happen.
-            }
-            return Optional.of(ClientTardisManager.getInstance().getTardis(this.tardisId));
+        if (this.tardisId == null) {
+            Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
+            if (found != null)
+                this.setTardis(found);
         }
-        return Optional.ofNullable(ServerTardisManager.getInstance().getTardis(this.tardisId));
-    }
-
-    private void findTardis() {
-        this.setTardis(TardisUtil.findTardisByInterior(pos, !this.getWorld().isClient()));
-    }
-
-    public void setTardis(Tardis tardis) {
-        if (tardis == null) {
-            return;
-        }
-
-        this.tardisId = tardis.getUuid();
-        // force re-link a desktop if it's not null
-        this.linkDesktop();
+        return super.getTardis();
     }
 
     public void setTardis(UUID uuid) {
-        this.tardisId = uuid;
+        super.setTardis(uuid);
 
         this.linkDesktop();
     }
