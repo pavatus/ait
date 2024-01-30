@@ -165,6 +165,11 @@ public class FallingTardisEntity extends Entity {
         return !this.isRemoved();
     }
 
+    private boolean wouldBeKilled() {
+        return this.getBlockPos().down(2).getY() <= this.getWorld().getBottomY()
+                || this.getBlockPos().up(2).getY() >= this.getWorld().getTopY();
+    }
+
     public void tick() {
         if (this.block.isAir()) {
             this.discard();
@@ -173,6 +178,11 @@ public class FallingTardisEntity extends Entity {
             ++this.timeFalling;
             if (!this.hasNoGravity()) {
                 this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
+            }
+
+            if (this.wouldBeKilled()) {
+                this.stopFalling(true);
+                return;
             }
 
             this.move(MovementType.SELF, this.getVelocity());
