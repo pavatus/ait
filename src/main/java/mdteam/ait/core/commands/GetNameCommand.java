@@ -2,11 +2,9 @@ package mdteam.ait.core.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -34,7 +32,7 @@ public class GetNameCommand {
 
         if (tardis == null || source == null) return 0;
 
-        source.sendMessage(Text.literal(tardis.getHandlers().getName().get()), false);
+        source.sendMessage(Text.literal(tardis.getHandlers().getStats().getName()), false);
 
         return Command.SINGLE_SUCCESS;
     }

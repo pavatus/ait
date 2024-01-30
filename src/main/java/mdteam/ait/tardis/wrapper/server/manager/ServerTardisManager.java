@@ -188,6 +188,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         // todo this can be moved to init
         tardis.getTravel().placeExterior();
         tardis.getTravel().runAnimations();
+
+        tardis.getHandlers().getStats().markCreationDate();
+
         return tardis;
     }
 

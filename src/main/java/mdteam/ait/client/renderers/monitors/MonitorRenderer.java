@@ -2,10 +2,8 @@ package mdteam.ait.client.renderers.monitors;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.monitors.CRTMonitorModel;
-import mdteam.ait.core.blockentities.AITRadioBlockEntity;
 import mdteam.ait.core.blockentities.MonitorBlockEntity;
 import mdteam.ait.core.blocks.MonitorBlock;
-import mdteam.ait.core.blocks.RadioBlock;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -13,25 +11,18 @@ import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 import static mdteam.ait.tardis.data.FuelData.TARDIS_MAX_FUEL;
-import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 // Made with Blockbench 4.8.3
 // Exported for Minecraft version 1.17+ for Yarn
@@ -111,7 +102,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
         this.textRenderer.drawWithOutline(Text.of("⏳").asOrderedText(), 0, 92, 0x00FF0F,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(flightTimeText).asOrderedText(), 8, 92, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
 
-        String name = tardis.getHandlers().getName().get();
+        String name = tardis.getHandlers().getStats().getName();
 
         this.textRenderer.drawWithOutline(Text.of(name).asOrderedText(), 98 - (this.textRenderer.getWidth(name)), 90, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
 

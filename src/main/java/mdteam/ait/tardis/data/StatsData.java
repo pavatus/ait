@@ -2,7 +2,6 @@ package mdteam.ait.tardis.data;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
@@ -10,38 +9,43 @@ import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class NameData extends TardisLink {
+// is StatsData a good name for this class?
+public class StatsData extends TardisLink {
     private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
     private static final String NAME_KEY = "name";
     private static List<String> NAME_CACHE;
 
-    public NameData(Tardis tardis) {
-        super(tardis, "name");
+    private static final String DATE_KEY = "date";
+
+    public StatsData(Tardis tardis) {
+        super(tardis, "stats");
     }
 
-    public String get() {
+    public String getName() {
         if(getTardis().isEmpty()) return "";
 
         String name = (String) PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), NAME_KEY);
 
         if (name == null) {
             name = getRandomName();
-            this.set(name);
+            this.setName(name);
         }
 
         return name;
     }
 
-    public void set(String name) {
+    public void setName(String name) {
         if(getTardis().isEmpty()) return;
         PropertiesHandler.set(getTardis().get().getHandlers().getProperties(), NAME_KEY, name);
     }
@@ -91,5 +95,27 @@ public class NameData extends TardisLink {
             e.printStackTrace();
             return;
         }
+    }
+
+    public Date getCreationDate() {
+        if(getTardis().isEmpty()) return Date.from(Instant.now());
+
+        if (PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), DATE_KEY) == null) {
+            AITMod.LOGGER.error(getTardis().get().getUuid().toString() + " was missing creation date! Resetting to now");
+            markCreationDate();
+        }
+
+        try {
+            return DateFormat.getDateInstance().parse(PropertiesHandler.getString(getTardis().get().getHandlers().getProperties(), DATE_KEY));
+        } catch (Exception e) {
+            return Date.from(Instant.now());
+        }
+    }
+    public String getCreationString() {
+        return DateFormat.getDateInstance().format(getCreationDate());
+    }
+    public void markCreationDate() {
+        if(getTardis().isEmpty()) return;
+        PropertiesHandler.set(getTardis().get().getHandlers().getProperties(), DATE_KEY, Date.from(Instant.now()).toString());
     }
 }

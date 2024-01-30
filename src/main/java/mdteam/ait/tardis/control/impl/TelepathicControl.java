@@ -1,43 +1,27 @@
 package mdteam.ait.tardis.control.impl;
 
-import com.google.common.base.Stopwatch;
-import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
-import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.LinkableItem;
-import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.data.properties.PropertiesHandler;
-import mdteam.ait.tardis.link.Linkable;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.NameTagItem;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.registry.tag.StructureTags;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.structure.VillageGenerator;
 import net.minecraft.text.Text;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
-import org.apache.logging.log4j.core.jmx.Server;
-
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
 
 public class TelepathicControl extends Control {
     public TelepathicControl() {
@@ -56,7 +40,7 @@ public class TelepathicControl extends Control {
 
             if (!hand.hasCustomName()) return false;
 
-            tardis.getHandlers().getName().set(hand.getName().getString());
+            tardis.getHandlers().getStats().setName(hand.getName().getString());
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1F, 1.0F);
 
             if (!player.isCreative())

@@ -104,6 +104,17 @@ public class PropertiesHandler { // todo move things out of properties
         return (boolean) holder.getData().get(key);
     }
 
+    public static String getString(PropertiesHolder holder, String key) {
+        if (!holder.getData().containsKey(key)) return "";
+
+        if (!(holder.getData().get(key) instanceof String)) {
+            AITMod.LOGGER.warn("Tried to grab key " + key + " which was not a String!");
+            return "";
+        }
+
+        return (String) holder.getData().get(key);
+    }
+
     public static int getInt(PropertiesHolder holder, String key) {
         if (!holder.getData().containsKey(key)) return 0;
 

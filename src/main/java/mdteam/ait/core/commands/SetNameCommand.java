@@ -10,7 +10,6 @@ import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 
 import static mdteam.ait.core.commands.TeleportInteriorCommand.TARDIS_SUGGESTION;
 import static net.minecraft.server.command.CommandManager.argument;
@@ -35,7 +34,7 @@ public class SetNameCommand {
 
         if (tardis == null || source == null) return 0;
 
-        tardis.getHandlers().getName().set(name);
+        tardis.getHandlers().getStats().setName(name);
 
         return Command.SINGLE_SUCCESS;
     }
