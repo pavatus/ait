@@ -359,7 +359,7 @@ public class TardisTravel extends TardisLink {
         this.runAnimations(blockEntity);
     }
 
-    public void dematerialise(boolean withRemat) {
+    public void dematerialise(boolean withRemat, boolean ignoreChecks) {
         if (this.getState() != State.LANDED) return;
         if(getTardis().isEmpty()) return;
 
@@ -389,7 +389,7 @@ public class TardisTravel extends TardisLink {
         world.getChunk(this.getPosition());
 
 
-        if (TardisEvents.DEMAT.invoker().onDemat(getTardis().get())) {
+        if (!ignoreChecks && TardisEvents.DEMAT.invoker().onDemat(getTardis().get())) {
             failToTakeoff();
             return;
         }
@@ -405,6 +405,12 @@ public class TardisTravel extends TardisLink {
             }
 
         this.runAnimations();
+    }
+    public void dematerialise(boolean withRemat) {
+        this.dematerialise(withRemat, false);
+    }
+    public void dematerialise() {
+        this.dematerialise(false);
     }
 
     private void failToMaterialise() {
