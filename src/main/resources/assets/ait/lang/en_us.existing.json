@@ -9,6 +9,9 @@
   "text.config.aitconfig.option.ASK_DELAY": "Ask Delay",
   "text.config.aitconfig.option.ASK_DELAY.tooltip": "How many seconds a client should be on delay for before asking for another TARDIS\nHigher -> Better server performance\nLower -> Less client sync issues",
 
+  "text.config.aitconfig.option.force_sync_delay": "Force Sync Delay",
+  "text.config.aitconfig.option.force_sync_delay.tooltip": "How many seconds a client should be away from a tardis for before forcing a resync\nHigher -> Better server performance\nLower -> Less client sync issues",
+
   "text.config.aitconfig.section.Client": "Client",
 
   "text.config.aitconfig.option.INTERIOR_HUM_VOLUME": "Interior Hum Volume",

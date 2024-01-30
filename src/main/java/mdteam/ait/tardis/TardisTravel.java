@@ -524,6 +524,21 @@ public class TardisTravel extends TardisLink {
         return false;
     }
 
+    public static boolean isTardisExterior(AbsoluteBlockPos pos) {
+        ServerWorld world = (ServerWorld) pos.getWorld();
+
+        // bad code but its 4am i cba anymore
+        if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity) {
+            return true;
+        }
+
+        if (world.getBlockEntity(pos.down()) instanceof ExteriorBlockEntity) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Picks a random pos within the placed tardis interior and sets the destination
      *

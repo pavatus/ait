@@ -63,7 +63,7 @@ public class SiegeData extends TardisLink {
 
         getTardis().get().removeFuel(0.01 * FuelData.TARDIS_MAX_FUEL);
 
-        PropertiesHandler.set(getTardis().get(), PropertiesHandler.SIEGE_MODE, b, false);
+        PropertiesHandler.set(getTardis().get(), PropertiesHandler.SIEGE_MODE, b);
         this.sync();
     }
 

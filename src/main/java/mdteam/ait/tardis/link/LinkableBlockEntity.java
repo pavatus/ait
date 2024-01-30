@@ -12,6 +12,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -37,7 +38,7 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
         super.writeNbt(nbt);
 
         if(this.tardisId != null) {
-            nbt.putUuid("tardis", this.tardisId);
+            nbt.put("tardis", NbtHelper.fromUuid(this.tardisId));
         }
     }
 
@@ -49,7 +50,7 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
                 isServer = !nbt.getBoolean("client");
             }
 
-            TardisManager.getInstance(isServer).link(nbt.getUuid("tardis"), this);
+            this.tardisId = NbtHelper.toUuid(nbt.get("tardis"));
         }
     }
 

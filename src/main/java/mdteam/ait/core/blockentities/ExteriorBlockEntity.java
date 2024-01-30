@@ -101,8 +101,8 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        if (this.getAnimation() != null)
-            this.getAnimation().setAlpha(nbt.getFloat("alpha"));
+        //if (this.getAnimation() != null)
+        //    this.getAnimation().setAlpha(nbt.getFloat("alpha"));
     }
 
     public void onEntityCollision(Entity entity) {
