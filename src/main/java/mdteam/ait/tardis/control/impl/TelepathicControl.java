@@ -58,6 +58,10 @@ public class TelepathicControl extends Control {
 
             tardis.getHandlers().getName().set(hand.getName().getString());
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1F, 1.0F);
+
+            if (!player.isCreative())
+                hand.decrement(1);
+
             return true;
         }
 
