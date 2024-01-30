@@ -89,6 +89,8 @@ public class FlightUtil {
     }
 
     public static void playSoundAtConsole(Tardis tardis, SoundEvent sound, SoundCategory category, float volume, float pitch) {
+        if (tardis.getDesktop().getConsolePos() == null) return; // there seems to be frequent issues with this
+
         TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), sound, category, volume, pitch );
     }
     public static void playSoundAtConsole(Tardis tardis, SoundEvent sound, SoundCategory category) {
