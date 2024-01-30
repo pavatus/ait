@@ -225,6 +225,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.STRING), FabricRecipeProvider.conditionsFromItem(Items.STRING))
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_AXE), FabricRecipeProvider.conditionsFromItem(Items.IRON_AXE))
                     .criterion(FabricRecipeProvider.hasItem(Items.STICK), FabricRecipeProvider.conditionsFromItem(Items.STICK)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.MONITOR_BLOCK, 1)
+                    .pattern("III")
+                    .pattern("IBI")
+                    .pattern("III")
+                    .input('I', Items.IRON_INGOT)
+                    .input('B', Items.ENDER_EYE)
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE)));
+
             generateSmithingRecipes(provider);
             return provider;
         })));
