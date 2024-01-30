@@ -20,6 +20,7 @@ public class ConsoleRegistry {
     public static ConsoleSchema COPPER;
     public static ConsoleSchema TOYOTA;
     public static ConsoleSchema ALNICO;
+    public static ConsoleSchema STEAM;
 
     public static void init() {
         HARTNELL = register(new HartnellConsole());
@@ -27,5 +28,6 @@ public class ConsoleRegistry {
         COPPER = register(new CopperConsole());
         TOYOTA = register(new ToyotaConsole());
         ALNICO = register(new AlnicoConsole());
+        STEAM = register(new SteamConsole());
     }
 }

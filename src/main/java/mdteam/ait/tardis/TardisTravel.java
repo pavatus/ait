@@ -94,7 +94,7 @@ public class TardisTravel extends TardisLink {
         this.tickDemat();
         this.tickMat();
 
-        if (this.getSpeed() > 0 && this.getState() == State.LANDED && !(PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE))) {
+        if (this.getSpeed() > 0 && this.getState() == State.LANDED && !(PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE))/* && !this.getTardis().get().getDoor().isOpen()*/) {
             this.dematerialise(PropertiesHandler.willAutoPilot(this.getTardis().get().getHandlers().getProperties()));
         }
         if (this.getSpeed() == 0 && this.getState() == State.FLIGHT) {
@@ -260,7 +260,7 @@ public class TardisTravel extends TardisLink {
             }
         }
         this.getTardis().get().setLockedTardis(false);
-        this.getTardis().get().getHandlers().getDoor().openDoors();
+        //this.getTardis().get().getHandlers().getDoor().openDoors();
         // Load the chunk of the Tardis destination
         this.getDestination().getWorld().getChunk(this.getTardis().get().getTravel().getDestination());
         // Enable alarm and disable anti-mavity properties for Tardis
@@ -366,14 +366,16 @@ public class TardisTravel extends TardisLink {
         if (!getTardis().get().hasPower()) {
             return; // no flying for you if you have no powa :)
         }
+
         if (this.getPosition().getWorld().isClient())
             return;
 
         if (FlightUtil.isDematerialiseOnCooldown(getTardis().get()))
             return; // cancelled
 
+
         if (PropertiesHandler.willAutoPilot(getTardis().get().getHandlers().getProperties())) {
-            // fufill all the prerequisites
+            // fulfill all the prerequisites
             // DoorData.lockTardis(true, tardis(), null, false);
             PropertiesHandler.set(getTardis().get(), PropertiesHandler.HANDBRAKE, false);
             this.getTardis().get().getDoor().closeDoors();
@@ -633,6 +635,7 @@ public class TardisTravel extends TardisLink {
 
     public void setState(State state) {
         this.state = state;
+        this.sync();
     }
 
     public void placeExterior() {

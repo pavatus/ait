@@ -42,6 +42,7 @@ public class ClientConsoleVariantRegistry {
     public static ClientConsoleVariantSchema TOYOTA_BLUE;
     public static ClientConsoleVariantSchema TOYOTA_LEGACY;
     public static ClientConsoleVariantSchema ALNICO;
+    public static ClientConsoleVariantSchema STEAM;
 
     public static void init() {
         // Borealis variants
@@ -68,5 +69,8 @@ public class ClientConsoleVariantRegistry {
 
         // Alnico variants
         ALNICO = register(new ClientAlnicoVariant());
+
+        // Steam variants
+        STEAM = register(new ClientSteamVariant());
     }
 }

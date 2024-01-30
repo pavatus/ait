@@ -62,5 +62,6 @@ public class MonitorBlockEntity extends BlockEntity {
         if (found == null) return;
 
         this.tardisid = found.getUuid();
+        markDirty();
     }
 }

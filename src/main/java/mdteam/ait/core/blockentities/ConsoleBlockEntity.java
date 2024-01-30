@@ -89,7 +89,6 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
         spawnControls();
         markNeedsSyncing();
-        markDirty();
     }
 
     @Override
@@ -107,7 +106,6 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
             nbt.putString("variant", variant.toString());
         markNeedsControl();
         markNeedsSyncing();
-        markDirty();
         return nbt;
     }
 
@@ -180,6 +178,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
     public void setTardis(UUID uuid) {
         this.tardisId = uuid;
+        markDirty();
 
         this.linkDesktop();
     }

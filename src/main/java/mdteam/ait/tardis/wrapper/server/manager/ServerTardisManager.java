@@ -16,6 +16,7 @@ import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
@@ -23,6 +24,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
+import net.minecraft.world.WorldEvents;
+import net.minecraft.world.WorldSaveHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -95,6 +98,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
             this.reset();
         });
+
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> this.reset());
+
         // ServerLifecycleEvents.SERVER_STARTED.register(server -> this.loadTardises());
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             // fixme would this cause lag?
@@ -266,21 +272,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
     // TODO - yes this is much better than sending the entire tardis class, but it still sends the entire component class. If everything is saved in a PropertiesHolder then this is a non-issue though.
     public void sendToSubscribers(AbstractTardisComponent component) {
-//        if(component.getTardis().isEmpty()) return;
-//        if(!this.subscribers.containsKey(component.getTardis().get().getUuid())) return;
-//        UUID uuid = component.getTardis().get().getUuid();
-//
-//        MinecraftServer mc = TardisUtil.getServer();
-//
-//        // todo is this deep copy necessary
-//        Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);
-//        List<UUID> tardisSubscribers = new CopyOnWriteArrayList<>(subscribersCopy.getOrDefault(uuid, Collections.emptyList()));
-//
-//        for (UUID playerId : tardisSubscribers) {
-//            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
-//            if(player == null) continue;
-//            this.updateTardis(player, uuid, component);
-//        }
 
         if (component.getTardis().isEmpty()) return;
 
@@ -298,18 +289,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
      * @param value The new value to be synced to client
      */
     public void sendToSubscribers(UUID uuid, String key, String type, String value) {
-//        MinecraftServer mc = TardisUtil.getServer();
-//
-//        // todo is this deep copy necessary
-//        Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);
-//        List<UUID> tardisSubscribers = new CopyOnWriteArrayList<>(subscribersCopy.getOrDefault(uuid, Collections.emptyList()));
-//
-//        for (UUID playerId : tardisSubscribers) {
-//            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(playerId);
-//            if(player == null) continue;
-//            this.updateTardisProperty(player, uuid, key, type, value);
-//        }
-
         for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(this.getTardis(uuid))) {
             this.updateTardisProperty(player, uuid, key, type, value);
         }

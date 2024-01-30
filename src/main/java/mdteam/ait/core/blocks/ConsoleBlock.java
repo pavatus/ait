@@ -4,6 +4,7 @@ import mdteam.ait.api.ICantBreak;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITItems;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -23,6 +24,7 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -106,6 +108,9 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
             if (random.nextInt(1,3) == 1) {
                 is_z_negative = true;
             }
+
+            world.playSound(null, pos, AITSounds.CLOISTER, SoundCategory.BLOCKS, 4f, 1f);
+
             player.addVelocity(0.15f * x_random * (is_x_negative ? -1 : 1), 0.1f * y_random, 0.15f * z_random * (is_z_negative ? -1 : 1));
 
             for (int i = 0; i < 100; i++) {

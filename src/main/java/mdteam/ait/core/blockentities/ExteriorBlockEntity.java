@@ -184,6 +184,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
         if (found == null) return;
 
         this.tardisId = found.getUuid();
+        markDirty();
     }
 
     public ExteriorAnimation getAnimation() {

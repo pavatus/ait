@@ -12,6 +12,7 @@ import mdteam.ait.core.events.ServerLoadEvent;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.TardisItemBuilder;
+import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
@@ -115,7 +116,7 @@ public class TardisUtil {
                     }
 
                     if (tardis.isGrowth())
-                        tardis.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(tardis));
+                        tardis.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.get(new Identifier(AITMod.MOD_ID, "type_40")));
 
                     /*ExteriorEnum[] values = ExteriorEnum.values();
                     int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
