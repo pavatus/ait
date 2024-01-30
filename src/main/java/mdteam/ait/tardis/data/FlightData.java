@@ -20,12 +20,14 @@ public class FlightData extends TardisLink {
 
         // todo this doesnt seem to work.
         TardisEvents.LANDED.register((tardis -> {
+            if (this.getTardis().isEmpty()) return;
             if (!tardis.equals(this.getTardis().get())) return;
 
             flightTicks = 0;
             targetTicks = 0;
         }));
         TardisEvents.DEMAT.register((tardis -> {
+            if (this.getTardis().isEmpty()) return false;
             if (!tardis.equals(this.getTardis().get())) return false;
 
             flightTicks = 0;
