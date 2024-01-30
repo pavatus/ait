@@ -19,8 +19,11 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
@@ -37,11 +40,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ServerTardisManager extends TardisManager<ServerTardis> {
+public class ServerTardisManager extends TardisManager<ServerTardis> implements TardisTickable {
 
-    @Deprecated
     public static final Identifier SEND = new Identifier("ait", "send_tardis");
-    @Deprecated
     public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
     private static ServerTardisManager instance;
     // Changed from MultiMap to HashMap to fix some concurrent issues, maybe
@@ -107,17 +108,21 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
             for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
                 tardis.tick(server);
             }
+
+            tick(server);
         });
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             // fixme lag?
             for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
                 tardis.tick(world);
             }
+            tick(world);
         });
         ServerTickEvents.START_SERVER_TICK.register(server -> {
             for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
                 tardis.startTick(server);
             }
+            startTick(server);
         });
     }
 
@@ -200,28 +205,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         consumer.accept(this.loadTardis(uuid));
     }
 
-    private ServerTardis loadTardis(UUID uuid) {
-        File file = ServerTardisManager.getSavePath(uuid);
-        file.getParentFile().mkdirs();
-
-        try {
-            if (!file.exists())
-                throw new IOException("Tardis file " + file + " doesn't exist!");
-
-            String json = Files.readString(file.toPath());
-
-            ServerTardis tardis = this.gson.fromJson(json, ServerTardis.class);
-            tardis.init(true);
-            this.lookup.put(tardis.getUuid(), tardis);
-
-            return tardis;
-        } catch (IOException e) {
-            AITMod.LOGGER.warn("Failed to load tardis with uuid {}!", file);
-            AITMod.LOGGER.warn(e.getMessage());
-        }
-
-        return null;
-    }
 
     @Override
     public GsonBuilder getGsonBuilder(GsonBuilder builder) {
@@ -233,23 +216,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         instance = new ServerTardisManager();
     }
 
-    public void saveTardis() {
-        for (ServerTardis tardis : this.lookup.values()) {
-            this.saveTardis(tardis);
-        }
-    }
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void saveTardis(ServerTardis tardis) {
-        File savePath = ServerTardisManager.getSavePath(tardis);
-        savePath.getParentFile().mkdirs();
-
-        try {
-            Files.writeString(savePath.toPath(), this.gson.toJson(tardis, ServerTardis.class));
-        } catch (IOException e) {
-            AITMod.LOGGER.warn("Couldn't save Tardis {}", tardis.getUuid());
-            AITMod.LOGGER.warn(e.getMessage());
-        }
-    }
 
     public void sendToSubscribers(Tardis tardis) {
         // todo this likely needs refactoring
@@ -304,6 +270,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         data.writeString(value);
 
         ServerPlayNetworking.send(player, UPDATE, data);
+
+        checkForceSync(player, tardis);
     }
     private void updateTardis(@NotNull ServerPlayerEntity player, UUID uuid, AbstractTardisComponent component) {
         this.updateTardis(player, uuid, component.getId(), this.gson.toJson(component));
@@ -316,6 +284,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         data.writeString(json);
 
         ServerPlayNetworking.send(player, UPDATE, data);
+
+        checkForceSync(player, uuid);
     }
 
     private void sendTardis(@NotNull ServerPlayerEntity player, UUID uuid) {
@@ -336,7 +306,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         data.writeString(json);
 
         ServerPlayNetworking.send(player, SEND, data);
+
         createAskDelay(player);
+        createForceSyncDelay(player);
     }
 
     /**
@@ -349,6 +321,21 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
         return DeltaTimeManager.isStillWaitingOnDelay(player.getUuidAsString() + "-ask-delay");
     }
 
+    /**
+     * A delay to force resync the server when its been a while since theyve seen a tardis to fix sync issues
+     */
+    private void createForceSyncDelay(ServerPlayerEntity player) {
+        DeltaTimeManager.createDelay(player.getUuidAsString() + "-force-sync-delay", (long) ((AITMod.AIT_CONFIG.force_sync_delay()) * 1000L)); // A delay between asking for tardises to be synced
+    }
+    private boolean isForceSyncOnDelay(ServerPlayerEntity player) {
+        return DeltaTimeManager.isStillWaitingOnDelay(player.getUuidAsString() + "-force-sync-delay");
+    }
+    private void checkForceSync(ServerPlayerEntity player, UUID tardis) {
+        if (!isForceSyncOnDelay(player)) {
+            this.sendTardis(player, tardis);
+        }
+        createForceSyncDelay(player);
+    }
     public void onPlayerJoin(ServerPlayerEntity player) {
         if (player.getWorld().getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
             // if the player is a tardis already, sync the one at their location
@@ -400,6 +387,86 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
             UUID uuid = UUID.fromString(name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf(".")));
             this.loadTardis(uuid);
+            this.backupTardis(uuid);
         }
+    }
+    private ServerTardis loadTardis(UUID uuid) {
+        File file = ServerTardisManager.getSavePath(uuid);
+        file.getParentFile().mkdirs();
+
+        try {
+            if (!file.exists())
+                throw new IOException("Tardis file " + file + " doesn't exist!");
+
+            String json = Files.readString(file.toPath());
+
+            ServerTardis tardis = this.gson.fromJson(json, ServerTardis.class);
+            tardis.init(true);
+            this.lookup.put(tardis.getUuid(), tardis);
+
+            return tardis;
+        } catch (IOException e) {
+            AITMod.LOGGER.warn("Failed to load tardis with uuid {}!", file);
+            AITMod.LOGGER.warn(e.getMessage());
+        }
+
+        return null;
+    }
+    public void backupTardis(UUID uuid) {
+        File file = ServerTardisManager.getSavePath(uuid);
+        file.getParentFile().mkdirs();
+
+        File backup = new File(getSavePath(), uuid + ".old");
+        backup.getParentFile().mkdirs();
+
+        try {
+            if (!file.exists())
+                throw new IOException("Tardis file " + file + " doesn't exist!");
+
+            String json = Files.readString(file.toPath());
+
+            Files.writeString(backup.toPath(), json);
+        } catch (IOException e) {
+            AITMod.LOGGER.warn("Failed to backup tardis with uuid {}!", file);
+            AITMod.LOGGER.warn(e.getMessage());
+        }
+    }
+
+    public void saveTardis() {
+        for (ServerTardis tardis : this.lookup.values()) {
+            this.saveTardis(tardis);
+        }
+    }
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public void saveTardis(ServerTardis tardis) {
+        File savePath = ServerTardisManager.getSavePath(tardis);
+        savePath.getParentFile().mkdirs();
+
+        try {
+            Files.writeString(savePath.toPath(), this.gson.toJson(tardis, ServerTardis.class));
+        } catch (IOException e) {
+            AITMod.LOGGER.warn("Couldn't save Tardis {}", tardis.getUuid());
+            AITMod.LOGGER.warn(e.getMessage());
+        }
+    }
+
+    @Override
+    public void tick(MinecraftServer server) {
+
+    }
+
+    @Override
+    public void tick(ServerWorld world) {
+
+    }
+
+    @Override
+    public void tick(MinecraftClient client) {
+        // this will never be called
+    }
+
+    @Override
+    public void startTick(MinecraftServer server) {
+
     }
 }

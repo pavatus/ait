@@ -15,10 +15,10 @@ public class IncrementControl extends Control {
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
         TardisTravel travel = tardis.getTravel();
 
-        if (!player.isSneaking()) {
+        if (!leftClick) {
             IncrementManager.nextIncrement(tardis);
         } else {
             IncrementManager.prevIncrement(tardis);
@@ -28,6 +28,7 @@ public class IncrementControl extends Control {
 
         return true;
     }
+
 
     @Override
     public SoundEvent getSound() {

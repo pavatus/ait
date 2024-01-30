@@ -146,7 +146,7 @@ public abstract class TardisManager<T extends Tardis> {
         this.lookup.clear();
     }
 
-    @Deprecated
+    @Deprecated // only use if necessary, otherwise use loadTardis / getTardis etc
     public Map<UUID, T> getLookup() {
         return this.lookup;
     }

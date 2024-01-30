@@ -21,7 +21,7 @@ public class FuelData extends TardisLink {
     }
 
     private static void createFuelSyncData(Tardis tardis) {
-        DeltaTimeManager.createDelay(tardis.getUuid() + "-fuel-sync", 10 * 1000L);
+        DeltaTimeManager.createDelay(tardis.getUuid() + "-fuel-sync", 5 * 1000L);
     }
     private static boolean isSyncOnDelay(Tardis tardis) {
         return DeltaTimeManager.isStillWaitingOnDelay(tardis.getUuid() + "-fuel-sync");
