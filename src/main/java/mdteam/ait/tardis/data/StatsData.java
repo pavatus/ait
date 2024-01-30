@@ -60,9 +60,9 @@ public class StatsData extends TardisLink {
     }
 
     public static String getRandomName() {
-        if (NAME_CACHE == null) return "";
         if (shouldGenerateNames()) loadNames();
-        assert NAME_CACHE != null;
+        if (NAME_CACHE == null) return "";
+
         return NAME_CACHE.get(AITMod.RANDOM.nextInt(NAME_CACHE.size()));
     }
 
