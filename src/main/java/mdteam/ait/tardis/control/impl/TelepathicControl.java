@@ -11,6 +11,8 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.link.Linkable;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.NameTagItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -47,6 +49,15 @@ public class TelepathicControl extends Control {
         if (player.getMainHandStack().getItem() instanceof LinkableItem linker) {
             linker.link(player.getMainHandStack(), tardis);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            return true;
+        }
+        if (player.getMainHandStack().getItem() instanceof NameTagItem) {
+            ItemStack hand = player.getMainHandStack();
+
+            if (!hand.hasCustomName()) return false;
+
+            tardis.getHandlers().getName().set(hand.getName().getString());
+            world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1F, 1.0F);
             return true;
         }
 
