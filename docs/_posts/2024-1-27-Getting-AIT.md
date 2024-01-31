@@ -18,9 +18,9 @@ They will be in the announcements channel, [this is the latest public beta](http
 
 or found below:
 
-[Public Beta One](https://github.com/M-D-Team/ait-fabric-1.20.1/releases/download/1.1.9-1.20.1-beta/ait-1.1.9-1.20.1-beta.jar)
+[Public Beta Two](https://github.com/M-D-Team/ait-fabric-1.20.1/releases/download/1.2.6-1.20.1-beta/ait-1.2.8-1.20.1-beta.jar)
 
-~~[Public Beta Two]()~~ - Coming very very soon
+[Public Beta One](https://github.com/M-D-Team/ait-fabric-1.20.1/releases/download/1.1.9-1.20.1-beta/ait-1.1.9-1.20.1-beta.jar)
 
 ---
 
