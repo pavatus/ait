@@ -41,6 +41,7 @@ public abstract class LinkableItem extends Item {
             if (tardis != null) {
                 tooltip.add(Text.literal("TARDIS: ").formatted(Formatting.BLUE));
                 tooltip.add(Text.literal("> " + tardis.getHandlers().getStats().getName()));
+                tooltip.add(Text.literal("> " + tardis.getUuid().toString().substring(0, 8)).formatted(Formatting.DARK_GRAY));
             }
         }
         super.appendTooltip(stack, world, tooltip, context);
