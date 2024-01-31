@@ -48,6 +48,7 @@ import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -229,7 +230,7 @@ public class AITMod implements ModInitializer {
 
             for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
                 if (!tardis.isSiegeMode()) continue;
-                if (!tardis.getHandlers().getSiege().getHeldPlayerUUID().equals(player.getUuid())) continue;
+                if (!Objects.equals(tardis.getHandlers().getSiege().getHeldPlayerUUID(), player.getUuid())) continue;
 
                 SiegeTardisItem.placeTardis(tardis, SiegeTardisItem.fromEntity(player));
             }
