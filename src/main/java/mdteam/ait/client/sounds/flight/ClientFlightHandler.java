@@ -74,10 +74,10 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private boolean inFlight() {
-        return (isPlayerInATardis() && tardis().getTravel().getState() == TardisTravel.State.FLIGHT);
+        return (isPlayerInATardis() && tardis() != null && tardis().getTravel().getState() == TardisTravel.State.FLIGHT);
     }
     public boolean hasThrottleAndHandbrakeDown() {
-        return (isPlayerInATardis() && tardis().getTravel().getSpeed() > 0 && PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
+        return (isPlayerInATardis() && tardis() != null && tardis().getTravel().getSpeed() > 0 && PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
     }
 
     public void tick(MinecraftClient client) {
