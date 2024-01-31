@@ -54,12 +54,12 @@
 		"java": ">=17",
 		"fabric-api": "*",
 		"fabric-key-binding-api-v1": "*",
-		"owo": "*"
+		"owo-lib": "*"
 	},
 	"suggests": {
 		"regeneration": "*",
-		"imm_ptl_core": "*",
-		"k9mod": "*"
+		"immersiveportals": "*",
+		"k9-mod": "*"
 	},
 	"custom": {
 		"cardinal-components": [
