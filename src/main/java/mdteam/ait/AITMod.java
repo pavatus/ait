@@ -14,6 +14,7 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.commands.*;
 import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
+import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.registry.*;
@@ -26,8 +27,10 @@ import mdteam.ait.tardis.data.InteriorChangingHandler;
 import mdteam.ait.tardis.data.ServerHumHandler;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.sound.HumSound;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -219,6 +222,17 @@ public class AITMod implements ModInitializer {
                 if (tardis == null) return;
                 tardis.getDesktop().cacheConsole();
             });
+        });
+
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            ServerPlayerEntity player = handler.getPlayer();
+
+            for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
+                if (!tardis.isSiegeMode()) continue;
+                if (!tardis.getHandlers().getSiege().getHeldPlayerUUID().equals(player.getUuid())) continue;
+
+                SiegeTardisItem.placeTardis(tardis, SiegeTardisItem.fromEntity(player));
+            }
         });
 
         AIT_ITEM_GROUP.initialize();

@@ -28,6 +28,7 @@ import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -66,12 +67,14 @@ public class SiegeTardisItem extends Item {
 
         // todo this might be laggy
         if (entity instanceof ServerPlayerEntity player) {
-            if (heldId == null) {
-                tardis.getHandlers().getSiege().setSiegeBeingHeld(player.getUuid());
-                return;
+            if (tardis.getExterior().findExteriorBlock().isEmpty()) {
+                if (heldId == null) {
+                    tardis.getHandlers().getSiege().setSiegeBeingHeld(player.getUuid());
+                    return;
+                }
             }
 
-            if (!(player.getUuid().equals(heldId))) {
+            if (!(Objects.equals(player.getUuid(), heldId))) {
                 int found = findSlot(player, tardis);
                 player.getInventory().setStack(found, ItemStack.EMPTY);
                 return;
@@ -183,6 +186,7 @@ public class SiegeTardisItem extends Item {
         if(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE))
             return;
         tardis.getTravel().deleteExterior();
+        tardis.getHandlers().getSiege().setSiegeBeingHeld(player.getUuid());
         player.getInventory().insertStack(create(tardis));
         player.getInventory().markDirty();
     }
@@ -191,6 +195,7 @@ public class SiegeTardisItem extends Item {
         tardis.getTravel().placeExterior();
         tardis.setSiegeBeingHeld(null);
     }
+
 
     public static ItemStack create(Tardis tardis) {
         ItemStack stack = new ItemStack(AITItems.SIEGE_ITEM);

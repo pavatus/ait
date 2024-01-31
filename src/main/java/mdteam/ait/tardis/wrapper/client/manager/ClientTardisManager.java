@@ -64,6 +64,9 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
         data.writeUuid(uuid);
 
         ClientTardisManager.getInstance().subscribers.put(uuid, consumer);
+
+        if (MinecraftClient.getInstance().getNetworkHandler() == null) return;
+
         ClientPlayNetworking.send(ASK, data);
     }
 
