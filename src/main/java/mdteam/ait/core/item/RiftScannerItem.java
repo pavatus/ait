@@ -60,7 +60,7 @@ public class RiftScannerItem extends Item {
 
                     System.out.println(isRiftChunk(world, source));
 
-                    if (isRiftChunk(world, source)) {
+                    if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
                         return;
                     }
@@ -73,7 +73,7 @@ public class RiftScannerItem extends Item {
 
                     System.out.println(isRiftChunk(world, source));
 
-                    if (isRiftChunk(world, source)) {
+                    if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
                         return;
                     }
@@ -88,7 +88,7 @@ public class RiftScannerItem extends Item {
 
                     System.out.println(isRiftChunk(world, source));
 
-                    if (isRiftChunk(world, source)) {
+                    if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
                         return;
                     }
@@ -100,7 +100,7 @@ public class RiftScannerItem extends Item {
 
                     System.out.println(isRiftChunk(world, source));
 
-                    if (isRiftChunk(world, source)) {
+                    if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
                         return;
                     }
@@ -111,6 +111,9 @@ public class RiftScannerItem extends Item {
     }
     private static boolean isRiftChunk(ServerWorld world, ChunkPos pos) {
         return ((RiftChunk) world.getChunk(pos.x, pos.z)).isRiftChunk();
+    }
+    private static boolean hasSufficientFuel(ServerWorld world, ChunkPos pos) {
+        return ((RiftChunk) world.getChunk(pos.x, pos.z)).getArtronLevels() >= 250;
     }
     private static ChunkPos getChunkInDirection(ChunkPos pos, Direction dir) {
         return new ChunkPos(pos.x + (dir.getOffsetX()), pos.z + (dir.getOffsetZ()));
