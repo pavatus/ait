@@ -16,6 +16,12 @@ The public betas can be found in the [MDTeam Discord Server](https://discord.com
 
 They will be in the announcements channel, [this is the latest public beta](https://discord.com/channels/859856751070937098/1188969252028436491/1191191219917832264)
 
+or found below:
+
+[Public Beta One](https://github.com/M-D-Team/ait-fabric-1.20.1/releases/download/1.1.9-1.20.1-beta/ait-1.1.9-1.20.1-beta.jar)
+
+~~[Public Beta Two]()~~ - Coming very very soon
+
 ---
 
 ## How do I get AIT's early betas
