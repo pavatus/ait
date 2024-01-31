@@ -460,10 +460,11 @@ public class TardisTravel extends TardisLink {
 
         ServerWorld world = (ServerWorld) this.getDestination().getWorld(); // this cast is fine, we know its server
 
-        if (isDestinationTardisExterior()) { // fixme this portion of the code just deletes the other tardis' exterior!
+        if (isDestinationTardisExterior()) {
             ExteriorBlockEntity target = (ExteriorBlockEntity) world.getBlockEntity(this.getDestination()); // safe
 
-            if (getTardis().isEmpty() || target.getTardis().isEmpty()) return false;
+            if (getTardis().isEmpty() || target.getTardis().isEmpty() ||
+                    getTardis().get().getUuid().equals(target.getTardis().get().getUuid())) return false;
 
             setDestinationToTardisInterior(target.getTardis().get(), true, 256); // how many times should this be
 

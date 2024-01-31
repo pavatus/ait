@@ -45,11 +45,15 @@ public class RandomiserControl extends Control {
             pos = new BlockPos(x, dest.getY(), z);
 
             travel.setDestination(new AbsoluteBlockPos.Directed(pos, dest.getWorld(), dest.getDirection()), false);
-            if (world.getBiome(travel.getDestination()).isIn(BiomeTags.IS_OCEAN)) continue;
             if (travel.checkDestination()) return travel.getDestination();
         }
 
         return travel.getPosition();
+    }
+
+    @Override
+    public long getDelayLength() {
+        return 2000L;
     }
 
     private void messagePlayer(ServerPlayerEntity player, TardisTravel travel) {

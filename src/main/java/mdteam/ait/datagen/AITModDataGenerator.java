@@ -101,6 +101,23 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.AMETHYST_SHARD),
                             FabricRecipeProvider.conditionsFromItem(Items.AMETHYST_SHARD))
             );
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.ARTRON_COLLECTOR_BLOCK, 1)
+                    .pattern(" L ")
+                    .pattern(" R ")
+                    .pattern("SBS")
+                    .input('L', Items.LIGHTNING_ROD)
+                    .input('R', Items.IRON_INGOT)
+                    .input('S', Items.SMOOTH_STONE_SLAB)
+                    .input('B', Items.REDSTONE_BLOCK)
+                    .criterion(FabricRecipeProvider.hasItem(Items.LIGHTNING_ROD),
+                            FabricRecipeProvider.conditionsFromItem(Items.LIGHTNING_ROD))
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT),
+                            FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(FabricRecipeProvider.hasItem(Items.SMOOTH_STONE_SLAB),
+                            FabricRecipeProvider.conditionsFromItem(Items.SMOOTH_STONE_SLAB))
+                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK),
+                            FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK))
+            );
             /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.REMOTE_ITEM, 1)
                     .pattern(" R ")
                     .pattern("ICI")
@@ -356,6 +373,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CORAL_PLANT);
             aitModelProvider.registerDirectionalBlock(AITBlocks.MONITOR_BLOCK);
+            aitModelProvider.registerDirectionalBlock(AITBlocks.ARTRON_COLLECTOR_BLOCK);
 
             //falloutModelProvider.registerSimpleBlock(AITBlocks.DEEPSLATE_URANIUM_ORE);
             return aitModelProvider;
@@ -407,7 +425,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
         provider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
         provider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
-        provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector");
+        provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector Panel");
         provider.addTranslation(AITItems.RIFT_SCANNER, "Rift Scanner");
         provider.addTranslation(AITItems.SIEGE_ITEM, "TARDIS");
         provider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
@@ -422,6 +440,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
         provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
         provider.addTranslation(AITBlocks.MONITOR_BLOCK, "Monitor");
+        provider.addTranslation(AITBlocks.ARTRON_COLLECTOR_BLOCK, "Artron Collector");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");

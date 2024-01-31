@@ -152,7 +152,7 @@ public class AITMod implements ModInitializer {
             boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
 
             // Check if the destination is already occupied
-            boolean isDestinationOccupied = !tardis.getTravel().getPosition().equals(tardis.getTravel().getDestination()) && !tardis.getTravel().checkDestination();
+            boolean isDestinationOccupied = !tardis.getTravel().getDestination().equals(tardis.getExterior().getExteriorPos()) && !tardis.getTravel().checkDestination();
 
             System.out.println("$% " + isCooldown + " " + isDestinationOccupied);
 

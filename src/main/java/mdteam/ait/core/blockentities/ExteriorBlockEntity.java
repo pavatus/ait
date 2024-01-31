@@ -97,14 +97,11 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        nbt.putFloat("alpha", this.getAlpha());
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        //if (this.getAnimation() != null)
-        //    this.getAnimation().setAlpha(nbt.getFloat("alpha"));
     }
 
     public void onEntityCollision(Entity entity) {
@@ -124,12 +121,11 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 
         if(world.isClient()) {
             this.checkAnimations();
-        } else {
-            if(getTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
-            world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + random.nextFloat(-0.25f, 0.25f), pos.getY() + 2.5,
-                    pos.getZ() + random.nextFloat(-0.25f, 0.25f), random.nextFloat(-0.15f, 0.15f), 0.015, random.nextFloat(-0.15f, 0.15f));
-            }
         }
+        /*if(getTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
+        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX(), pos.getY() + 2.5,
+                pos.getZ(), random.nextFloat(-0.15f, 0.15f), 0.015, random.nextFloat(-0.15f, 0.15f));
+        }*/
 
         // Should be when tardis is set to landed / position is changed instead. fixme
         if (!world.isClient() && (blockState.getBlock() instanceof ExteriorBlock)) {

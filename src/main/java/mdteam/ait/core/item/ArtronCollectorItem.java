@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class ArtronCollectorItem extends Item {
-
     public static final String AU_LEVEL = "au_level";
     public static final String UUID_KEY = "uuid";
     public static final Integer COLLECTOR_MAX_FUEL = 1500;
@@ -39,25 +38,6 @@ public class ArtronCollectorItem extends Item {
         NbtCompound nbt = stack.getOrCreateNbt();
         nbt.putDouble(AU_LEVEL, 0);
         return super.getDefaultStack();
-    }
-
-    @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if(world.isClient()) return;
-        if (!(entity instanceof ServerPlayerEntity) || !selected) return;
-
-        RiftChunk riftChunk = (RiftChunk) world.getChunk(entity.getBlockPos());
-        if (riftChunk.isRiftChunk() && riftChunk.getArtronLevels() >= 5  && getFuel(stack) < COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelayId(stack)))) {
-            riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 5); // we shouldn't need to check how much it has because we can't even get here if don't have atleast five artron in the chunk
-            addFuel(stack, 5);
-            DeltaTimeManager.createDelay(getDelayId(stack), 500L);
-        }
-
-        super.inventoryTick(stack, world, entity, slot, selected);
-    }
-
-    public static String getDelayId(ItemStack stack) {
-        return "collector-" + getUuid(stack) + "-collectdelay";
     }
 
     public static UUID getUuid(ItemStack stack) {
@@ -75,12 +55,14 @@ public class ArtronCollectorItem extends Item {
         nbt.putDouble(AU_LEVEL, 0);
         return 0d;
     }
-    public static void addFuel(ItemStack stack, double fuel) {
+    public static double addFuel(ItemStack stack, double fuel) {
         NbtCompound nbt = stack.getOrCreateNbt();
-
-        nbt.putDouble(AU_LEVEL, getFuel(stack) + fuel);
-
+        double currentFuel = getFuel(stack);
+        nbt.putDouble(AU_LEVEL, getFuel(stack) <= COLLECTOR_MAX_FUEL ? getFuel(stack) + fuel : COLLECTOR_MAX_FUEL);
         if (getFuel(stack) > COLLECTOR_MAX_FUEL) nbt.putDouble(AU_LEVEL, COLLECTOR_MAX_FUEL);
+        if(getFuel(stack) == COLLECTOR_MAX_FUEL)
+            return fuel - (COLLECTOR_MAX_FUEL - currentFuel);
+        return 0;
     }
 
     @Override

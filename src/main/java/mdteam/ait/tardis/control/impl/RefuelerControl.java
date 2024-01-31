@@ -25,10 +25,6 @@ public class RefuelerControl extends Control {
             //if (TardisUtil.isRiftChunk((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getExteriorPos())) {
             Random random = new Random();
                 tardis.setRefueling(!tardis.isRefueling());
-                for (int i = 0; i < 20; i++) {
-                    world.addParticle(DustParticleEffect.DEFAULT, true, tardis.getDesktop().getConsolePos().getX() + random.nextFloat(-0.25f, 0.25f), tardis.getDesktop().getConsolePos().getY() + 1 + (i * 0.25f),
-                            tardis.getDesktop().getConsolePos().getZ() + random.nextFloat(-0.25f, 0.25f), random.nextFloat(-5, 5), random.nextFloat(-5, 5), random.nextFloat(-5, 5));
-                }
                 Text enabled = Text.translatable("tardis.message.control.refueler.enabled");
                 Text disabled = Text.translatable("tardis.message.control.refueler.disabled");
                 player.sendMessage((tardis.isRefueling()? enabled : disabled), true);

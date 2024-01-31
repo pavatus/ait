@@ -5,6 +5,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.LinkableItem;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
@@ -84,22 +85,6 @@ public class SonicItem extends LinkableItem {
                 BlockEntity entity = world.getBlockEntity(pos);
                 Block block = world.getBlockState(pos).getBlock();
 
-                /*if (entity instanceof ExteriorBlockEntity exteriorBlock) {
-                    if (exteriorBlock.getTardis().isEmpty()) return;
-
-                    TardisTravel.State state = exteriorBlock.getTardis().get().getTravel().getState();
-
-                    if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT)) {
-                        return;
-                    }
-                    if (world.isClient()) return;
-
-                    List<ExteriorSchema> list = ExteriorRegistry.REGISTRY.stream().toList();
-                    exteriorBlock.getTardis().get().getExterior().setType(list.get((list.indexOf(exteriorBlock.getTardis().get().getExterior().getType()) + 1 > list.size() - 1) ? 0 : list.indexOf(exteriorBlock.getTardis().get().getExterior().getType()) + 1));
-                    WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(tardis.getTravel().getPosition().getWorld().getRegistryKey()), tardis.getDoor().getExteriorPos());
-                    WorldOps.updateIfOnServer(TardisUtil.getServer().getWorld(TardisUtil.getTardisDimension().getRegistryKey()), tardis.getDoor().getDoorPos());
-                }*/
-
                 // fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor
                 /*if(player.isSneaking() && block instanceof DispenserBlock dispenser) {
                     world.setBlockState(pos, world.getBlockState(pos).with(Properties.TRIGGERED, true), Block.NO_REDRAW);
@@ -137,7 +122,9 @@ public class SonicItem extends LinkableItem {
                 } else if (world.getRegistryKey() == World.OVERWORLD && !world.isClient()) {
                     Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
                     Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
-                    player.sendMessage((TardisUtil.isRiftChunk((ServerWorld) world, pos) ? found : notfound));
+                    player.sendMessage((TardisUtil.isRiftChunk((ServerWorld) world, pos) ? found : notfound), true);
+                    if(TardisUtil.isRiftChunk((ServerWorld) world, pos))
+                                player.sendMessage(Text.literal("AU: " + ((RiftChunk) world.getChunk(pos)).getArtronLevels()).formatted(Formatting.GOLD));
                 }
             }
         },
@@ -248,7 +235,9 @@ public class SonicItem extends LinkableItem {
         if (user.isSneaking()) {
             cycleMode(itemStack);
         } else {
-            playSonicSounds(user);
+
+            if(intToMode(nbt.getInt(MODE_KEY)) != Mode.INACTIVE)
+                playSonicSounds(user);
 
             // @TODO idk we should make the sonic be usable not just on blocks, especially for scanning about looking for rifts - Loqor
 

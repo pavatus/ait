@@ -1,22 +1,15 @@
 package mdteam.ait.core;
 
 import com.neptunedevelopmentteam.neptunelib.core.blocksettings.NeptuneBlockSettings;
-import com.neptunedevelopmentteam.neptunelib.core.init_handlers.CustomName;
 import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneBlockInit;
 import com.neptunedevelopmentteam.neptunelib.core.itemsettings.NeptuneItemSettings;
 import mdteam.ait.AITMod;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
-import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
-import mdteam.ait.core.blockentities.*;
 import mdteam.ait.core.blocks.*;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.enums.Instrument;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.item.BlockItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +23,8 @@ public class AITBlocks implements NeptuneBlockInit {
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.COW_BELL));
     public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(NeptuneBlockSettings.create().nonOpaque().noBlockBreakParticles()
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.COW_BELL));
+    public static final Block ARTRON_COLLECTOR_BLOCK = new ArtronCollectorBlock(NeptuneBlockSettings.create().nonOpaque().noBlockBreakParticles()
+            .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.BANJO));
     public static final Block CORAL_PLANT = new CoralPlantBlock(NeptuneBlockSettings.create().ticksRandomly().nonOpaque().noCollision()
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).breakInstantly().sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
     public static final Block RADIO = new RadioBlock(NeptuneBlockSettings.create().nonOpaque().instrument(Instrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F).dropsNothing());
