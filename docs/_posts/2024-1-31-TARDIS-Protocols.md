@@ -3,8 +3,8 @@ layout: post
 comments: true
 categories: Tardis
 ---
-## TARDIS Protocals
-As you may know there has been some protocals in the TARDIS now by acivating these special
+## TARDIS Protocols
+As you may know there has been some protocols in the TARDIS now by acivating these special
 controls these things may happen depending on the number
 
 Protocol 1913 = Siege Mode (Nothing gets in, nothing gets out)
