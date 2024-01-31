@@ -55,7 +55,7 @@ public class ConsoleVariantRegistry {
         CORAL_WHITE = register(new WhiteCoralVariant());
 
         // Copper variants
-        COPPER = register(new CopperVariant());
+        //COPPER = register(new CopperVariant());
 
         // Toyota variants
         TOYOTA = register(new ToyotaVariant());

@@ -147,7 +147,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     private void renderDesktop(DrawContext context) {
         if(this.selectedDesktop == null) {
             this.selectedDesktop = DesktopRegistry.get(0);
-            System.out.println(DesktopRegistry.size());
+            AITMod.LOGGER.debug(DesktopRegistry.size());
         }
         if (Objects.equals(this.selectedDesktop, DesktopRegistry.DEFAULT_CAVE)) this.nextDesktop();
 
