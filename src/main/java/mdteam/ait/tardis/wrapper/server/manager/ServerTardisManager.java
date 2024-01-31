@@ -309,7 +309,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
     private void sendTardis(@NotNull ServerPlayerEntity player, UUID uuid, String json) {
         if (isAskOnDelay(player)) return;
 
-        System.out.println("SENDING TARDIS " + uuid + " TO " + player.getName().getString());
+        AITMod.LOGGER.info("SENDING TARDIS " + uuid + " TO " + player.getName().getString());
 
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(uuid);
@@ -350,7 +350,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         if (player.getWorld().getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
             // if the player is a tardis already, sync the one at their location
             Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), true);
-            System.out.println(found);
             if (found == null) return;
 
             this.sendTardis(player, found);

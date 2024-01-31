@@ -86,7 +86,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
         synchronized (this) {
             ClientTardisManager.getInstance().getLookup().put(uuid, tardis);
-            System.out.println("RECIEVED TARDIS: " + uuid);
+            AITMod.LOGGER.info("RECIEVED TARDIS: " + uuid);
 
             for (Consumer<ClientTardis> consumer : ClientTardisManager.getInstance().subscribers.removeAll(uuid)) {
                 consumer.accept(tardis);

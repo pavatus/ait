@@ -166,7 +166,6 @@ public class TardisDesktop extends TardisLink {
         }
         Box box = this.corners.getBox();
         for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemFrameEntity.class, box, (entity) -> true)) { // todo there seems to be issues with the "box" variable as it is what is causing these things to not work
-            System.out.println(entity);
             entity.discard();  // Kill any normal entities at that position.
         }
         for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemEntity.class, box, (entity) -> true)) {

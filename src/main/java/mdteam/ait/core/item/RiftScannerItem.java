@@ -58,8 +58,6 @@ public class RiftScannerItem extends Item {
 
                     source = getChunkInDirection(source, dir);
 
-                    System.out.println(isRiftChunk(world, source));
-
                     if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
                         return;
@@ -70,8 +68,6 @@ public class RiftScannerItem extends Item {
                     dir = Direction.SOUTH;
 
                     source = getChunkInDirection(source, dir);
-
-                    System.out.println(isRiftChunk(world, source));
 
                     if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
@@ -86,8 +82,6 @@ public class RiftScannerItem extends Item {
 
                     source = getChunkInDirection(source, dir);
 
-                    System.out.println(isRiftChunk(world, source));
-
                     if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
                         return;
@@ -97,8 +91,6 @@ public class RiftScannerItem extends Item {
                     dir = Direction.NORTH; // up
 
                     source = getChunkInDirection(source, dir);
-
-                    System.out.println(isRiftChunk(world, source));
 
                     if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
@@ -120,8 +112,6 @@ public class RiftScannerItem extends Item {
     }
     private static void setTarget(ItemStack stack, ChunkPos pos) {
         NbtCompound nbt = stack.getOrCreateNbt();
-
-        System.out.println(pos.getCenterAtY(75));
 
         nbt.putInt("X", pos.x);
         nbt.putInt("Z", pos.z);
