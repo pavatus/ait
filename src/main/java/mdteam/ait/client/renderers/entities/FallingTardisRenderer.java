@@ -40,29 +40,26 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
         if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.
             model = null;
 
-
-        int maxLight = 0xFFFFFF;
-        matrices.push();
-        // matrices.translate(0.5, 0, 0.5);
-        float f = entity.getBlockState().get(ExteriorBlock.FACING).asRotation();
         if(MinecraftClient.getInstance().player == null) return;
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
         if (getModel(entity) == null) return;
+
+        matrices.push();
+        float f = entity.getBlockState().get(ExteriorBlock.FACING).asRotation();
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
         if (entity.getTardis().isSiegeMode()) {
             model = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
             model.renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), light,1,1,1,1,1);
-            matrices.pop();
-            return;
-        }
+        } else {
 
-        getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light,1,1,1,1,1);
+        getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, 1, 1, 1, 1, 1);
 
         if (exteriorVariant.emission() != null)
-            getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), light,1,1,1,1,1);
+            getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), light, 1, 1, 1, 1, 1);
 
+        }
         matrices.pop();
     }
 
