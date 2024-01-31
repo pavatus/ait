@@ -446,6 +446,12 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         for (ServerTardis tardis : this.lookup.values()) {
             this.saveTardis(tardis);
         }
+
+        // this might fix server crash bugs
+        if (this.lookup.isEmpty()) {
+            this.loadTardises();
+            this.saveTardis();
+        }
     }
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void saveTardis(ServerTardis tardis) {
