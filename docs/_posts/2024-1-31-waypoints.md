@@ -3,7 +3,6 @@ layout: post
 comments: true
 categories: ["Specifics"]
 ---
-# Waypoints
 
 ## How to set a waypoint
 
