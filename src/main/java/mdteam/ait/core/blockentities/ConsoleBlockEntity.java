@@ -34,6 +34,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -368,6 +370,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
     @Override
     public void tick(World world, BlockPos pos, BlockState state, ConsoleBlockEntity blockEntity) {
+        Random random = new Random();
         if (this.needsControls) {
             spawnControls();
         }
@@ -385,6 +388,12 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         // idk
         if (world.isClient()) {
             this.checkAnimations();
+        } else {
+            if(this.getTardis().isEmpty()) return;
+            if (this.getTardis().get().getTravel().isCrashing()) {
+                world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + random.nextFloat(-0.25f, 0.25f), pos.getY() + 1,
+                        pos.getZ() + random.nextFloat(-0.25f, 0.25f), random.nextFloat(-0.1f, 0.1f), 0.01, random.nextFloat(-0.1f, 0.1f));
+            }
         }
     }
 
