@@ -47,7 +47,7 @@ public class MonitorScreen extends TardisScreen {
     public MonitorScreen(UUID tardis) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
         this.tardisId = tardis;
-        System.out.println("@#!@@!: " + tardis + " | " + ClientTardisManager.getInstance().getLookup());
+        //AITMod.LOGGER.debug("@#!@@!: " + tardis + " | " + ClientTardisManager.getInstance().getLookup());
     }
 
     @Override
@@ -152,10 +152,13 @@ public class MonitorScreen extends TardisScreen {
     }
 
     public void whichDirectionExterior(boolean direction) {
+
+        if(MinecraftClient.getInstance().player == null) return;
+
         if (direction) setCurrentModel(nextExterior());
         else setCurrentModel(previousExterior());
 
-        if (this.currentModel == ExteriorRegistry.CORAL_GROWTH) {
+        if (this.currentModel == ExteriorRegistry.CORAL_GROWTH || (!("Loqor".equalsIgnoreCase(MinecraftClient.getInstance().player.getName().getString())) && this.currentModel == ExteriorRegistry.DOOM)) {
             whichDirectionExterior(direction);
         }
     }
@@ -307,7 +310,7 @@ public class MonitorScreen extends TardisScreen {
         this.drawBackground(context, delta, mouseX, mouseY);
         /*float yClamping = MathHelper.clamp(mouseY, i + 60, i + 65);
         float xClamping = mouseX <= 196 && mouseX >= 156 ? MathHelper.clamp((mouseX + this.backgroundWidth / 2), j + 10, j + 50) : 176;
-        System.out.println((mouseX + this.backgroundWidth / 2) +  " min: " + (j + 10) + ", max: " + (j + 50) + ": is this clamped right = " + xClamping);*/
+        AITMod.LOGGER.debug((mouseX + this.backgroundWidth / 2) +  " min: " + (j + 10) + ", max: " + (j + 50) + ": is this clamped right = " + xClamping);*/
         // todo manually adjusting all these values are annoying me
         this.drawTardisExterior(context, (width / 2 - 91), (height / 2 - 19), 15f, 176);
         this.drawInformationText(context);

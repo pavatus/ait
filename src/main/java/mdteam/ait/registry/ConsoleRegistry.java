@@ -25,7 +25,7 @@ public class ConsoleRegistry {
     public static void init() {
         HARTNELL = register(new HartnellConsole());
         CORAL = register(new CoralConsole());
-        COPPER = register(new CopperConsole());
+        //COPPER = register(new CopperConsole());
         TOYOTA = register(new ToyotaConsole());
         ALNICO = register(new AlnicoConsole());
         STEAM = register(new SteamConsole());

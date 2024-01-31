@@ -60,7 +60,7 @@ public class ClientConsoleVariantRegistry {
         CORAL_WHITE = register(new ClientWhiteCoralVariant());
 
         // Copper variants
-        COPPER = register(new ClientCopperVariant());
+        //COPPER = register(new ClientCopperVariant());
 
         // Toyota variants
         TOYOTA = register(new ClientToyotaVariant());

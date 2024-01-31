@@ -33,7 +33,7 @@ import java.util.List;
 @Mixin(StructureTemplate.class)
 public abstract class StructureTemplateMixin {
 
-    @Shadow @Final private List<StructureTemplate.StructureEntityInfo> entities = Lists.newArrayList();
+    @Shadow @Final private final List<StructureTemplate.StructureEntityInfo> entities = Lists.newArrayList();
     @Redirect(method = "saveFromWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/structure/StructureTemplate;addEntitiesFromWorld(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;)V", ordinal = 0))
     private void something(StructureTemplate instance, World world, BlockPos firstCorner, BlockPos secondCorner) {
         List<Entity> list = world.getEntitiesByClass(Entity.class, new Box(firstCorner, secondCorner), (entityx) -> {

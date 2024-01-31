@@ -722,11 +722,11 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		ModelPartData keyboard = bone21.addChild("keyboard", ModelPartBuilder.create().uv(119, 101).cuboid(-1.0F, -1.0F, -3.0F, 1.0F, 2.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(1.0F, 12.0F, 0.0F));
 
-		ModelPartData switch26 = keyboard.addChild("switch26", ModelPartBuilder.create().uv(115, 9).cuboid(0.0F, -0.5F, -0.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-1.0F, 0.5F, 0.0F));
+		ModelPartData switch26 = keyboard.addChild("switch26", ModelPartBuilder.create().uv(115, 9).cuboid(0.0F, -0.5F, -0.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.001F)), ModelTransform.pivot(-1.0F, 0.5F, 0.0F));
 
-		ModelPartData switch27 = keyboard.addChild("switch27", ModelPartBuilder.create().uv(107, 113).cuboid(0.0F, -0.5F, -0.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-1.0F, 0.5F, -1.25F));
+		ModelPartData switch27 = keyboard.addChild("switch27", ModelPartBuilder.create().uv(107, 113).cuboid(0.0F, -0.5F, -0.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.001F)), ModelTransform.pivot(-1.0F, 0.5F, -1.25F));
 
-		ModelPartData switch28 = keyboard.addChild("switch28", ModelPartBuilder.create().uv(91, 113).cuboid(0.0F, -0.5F, -0.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-1.0F, 0.5F, 1.25F));
+		ModelPartData switch28 = keyboard.addChild("switch28", ModelPartBuilder.create().uv(91, 113).cuboid(0.0F, -0.5F, -0.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.001F)), ModelTransform.pivot(-1.0F, 0.5F, 1.25F));
 
 		ModelPartData tubes = bone21.addChild("tubes", ModelPartBuilder.create().uv(29, 38).cuboid(0.0F, -2.0F, 0.0F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F))
 				.uv(93, 19).cuboid(0.0F, -2.0F, -1.0F, 1.0F, 2.0F, 1.0F, new Dilation(-0.2F))
