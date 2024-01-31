@@ -105,7 +105,6 @@ public class MonitorScreen extends TardisScreen {
         int j = (this.height - this.backgroundHeight / 2);
         this.buttons.clear();
         // exterior change text button
-        // fixme i think we're overloading with packets because the client side of all the code kinda desperately needs a redo / if you spam the button everything slows OR you get kicked
         Text applyText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(new PressableTextWidget((width / 2 - 103), (height / 2 + 12),
                 this.textRenderer.getWidth(applyText), 10, applyText, button -> {

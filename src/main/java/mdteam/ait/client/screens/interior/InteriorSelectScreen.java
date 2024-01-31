@@ -53,7 +53,6 @@ public class InteriorSelectScreen extends TardisScreen {
         super.init();
     }
 
-    // todo this was unused, but it was nice to have yk
     // private static TardisDesktopSchema findFirstSchema() {
     //     return DesktopRegistry.get(0);
     // }

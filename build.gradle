@@ -84,14 +84,6 @@ dependencies {
 	annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
 	include "com.github.Neptune-Development-Group:neptunelib:${project.neptunelib_version}" // NeptuneLib is made by Creativious DM him on discord if you have a problem
 
-	// todo can i remove this?
-	include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_version}"
-	include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_version}"
-	include "dev.onyxstudios.cardinal-components-api:cardinal-components-level:${project.cardinal_version}"
-	include "dev.onyxstudios.cardinal-components-api:cardinal-components-item:${project.cardinal_version}"
-	include "dev.onyxstudios.cardinal-components-api:cardinal-components-block:${project.cardinal_version}"
-
-
 	include "io.wispforest:owo-sentinel:${project.owo_version}"
 
 	// change to modImplementation to play with ip, modCompileOnlyApi to not play with ip
