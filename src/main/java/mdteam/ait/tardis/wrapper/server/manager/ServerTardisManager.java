@@ -196,6 +196,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 
         tardis.getHandlers().getStats().markCreationDate();
 
+        this.saveTardis(tardis);
+
         return tardis;
     }
 
