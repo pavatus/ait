@@ -43,6 +43,8 @@ public class SiegeTardisItem extends Item {
 
         if (world.isClient()) return;
 
+        System.out.println(getTardis(stack));
+
         if (getTardis(stack) == null) {
             stack.setCount(0);
             return;
@@ -51,15 +53,25 @@ public class SiegeTardisItem extends Item {
         Tardis tardis = getTardis(stack);
         if (tardis == null) return;
 
+        System.out.println(tardis.isSiegeMode());
+        System.out.println(tardis.getHandlers().getSiege().getHeldPlayerUUID());
+
         if (!tardis.isSiegeMode()) {
             tardis.setSiegeBeingHeld(null);
             stack.setCount(0);
             return;
         }
 
+        UUID heldId = tardis.getHandlers().getSiege().getHeldPlayerUUID();
+
         // todo this might be laggy
         if (entity instanceof ServerPlayerEntity player) {
-            if (!(player.getUuid().equals(tardis.getHandlers().getSiege().getHeldPlayerUUID()))) {
+            if (heldId == null) {
+                tardis.getHandlers().getSiege().setSiegeBeingHeld(player.getUuid());
+                return;
+            }
+
+            if (!(player.getUuid().equals(heldId))) {
                 int found = findSlot(player, tardis);
                 player.getInventory().setStack(found, ItemStack.EMPTY);
                 return;

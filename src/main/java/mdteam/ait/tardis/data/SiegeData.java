@@ -14,7 +14,7 @@ import net.minecraft.sound.SoundCategory;
 import java.util.UUID;
 
 public class SiegeData extends TardisLink {
-    private UUID heldPlayer;
+    public static final String HELD_KEY = "siege_held_uuid";
 
     public SiegeData(Tardis tardis) {
         super(tardis, "siege");
@@ -25,12 +25,15 @@ public class SiegeData extends TardisLink {
         return PropertiesHandler.getBool(getTardis().get().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
     }
     public boolean isSiegeBeingHeld() {
-        return this.heldPlayer != null;
+        if (getTardis().isEmpty()) return false;
+        return getTardis().get().getHandlers().getProperties().getData().containsKey(HELD_KEY) &&
+                PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), HELD_KEY) != null;
     }
     public UUID getHeldPlayerUUID() {
         if (!isSiegeBeingHeld()) return null;
+        if (getTardis().isEmpty()) return null;
 
-        return this.heldPlayer;
+        return PropertiesHandler.getUUID(getTardis().get().getHandlers().getProperties(), HELD_KEY);
     }
     public ServerPlayerEntity getHeldPlayer() {
         if (isClient()) return null;
@@ -41,8 +44,7 @@ public class SiegeData extends TardisLink {
         if(getTardis().isEmpty()) return;
         if (playerId != null) getTardis().get().getHandlers().getAlarms().enable();
 
-        this.heldPlayer = playerId;
-        this.sync();
+        PropertiesHandler.set(getTardis().get(), HELD_KEY, playerId);
     }
     public int getTimeInSiegeMode() {
         if(getTardis().isEmpty()) return 0;
@@ -51,6 +53,7 @@ public class SiegeData extends TardisLink {
     // todo this is getting bloateed, merge some if statements together
     public void setSiegeMode(boolean b) {
         if(getTardis().isEmpty()) return;
+        System.out.println(getTardis().get().isSiegeBeingHeld());
         if (getTardis().get().getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL)) return; // The required amount of fuel to enable/disable siege mode
         if (b) getTardis().get().disablePower();
         if (!b) getTardis().get().getHandlers().getAlarms().disable();

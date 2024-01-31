@@ -12,6 +12,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.UUID;
 
 public class PropertiesHandler { // todo move things out of properties
@@ -51,7 +52,7 @@ public class PropertiesHandler { // todo move things out of properties
     }
     private static boolean hasChanged(PropertiesHolder holder, String key, Object newVal) {
         if (!holder.getData().containsKey(key)) return true;
-        return !holder.getData().get(key).equals(newVal);
+        return !Objects.equals(holder.getData().get(key), newVal);
     }
 
     public static void set(PropertiesHolder holder, String key, Object val) {
@@ -140,6 +141,17 @@ public class PropertiesHandler { // todo move things out of properties
         return (int) holder.getData().get(key);
     }
 
+    public static UUID getUUID(PropertiesHolder holder, String key) {
+        if (!holder.getData().containsKey(key)) return null;
+
+        if (!(holder.getData().get(key) instanceof UUID)) {
+            AITMod.LOGGER.error("Tried to grab key " + key + " which was not an UUID!");
+            return null;
+        }
+
+        return (UUID) holder.getData().get(key);
+    }
+
     public static void setSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema, boolean val) {
         set(holder, schema.id().getPath() + "_unlocked", val);
     }
@@ -171,25 +183,22 @@ public class PropertiesHandler { // todo move things out of properties
     public static void sync(PropertiesHolder holder, String key, UUID tardis) {
         if (TardisUtil.isClient()) return;
         Object val = holder.getData().get(key);
+
+        if (val == null) return;
+
         switch (val.getClass().getName()) {
-            case "java.lang.Integer":
-                ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "int", String.valueOf(val));
-                break;
-            case "java.lang.Double":
-                ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "double", String.valueOf(val));
-                break;
-            case "java.lang.Float":
-                ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "float", String.valueOf(val));
-                break;
-            case "java.lang.Boolean":
-                ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "boolean", String.valueOf(val));
-                break;
-            case "java.lang.String":
-                ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "string", String.valueOf(val));
-                break;
-            case "java.lang.Identifier":
-                ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "identifier", getIdentifier(holder, key).toString());
-                break;
+            case "java.lang.Integer" ->
+                    ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "int", String.valueOf(val));
+            case "java.lang.Double" ->
+                    ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "double", String.valueOf(val));
+            case "java.lang.Float" ->
+                    ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "float", String.valueOf(val));
+            case "java.lang.Boolean" ->
+                    ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "boolean", String.valueOf(val));
+            case "java.lang.String" ->
+                    ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "string", String.valueOf(val));
+            case "java.lang.Identifier" ->
+                    ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "identifier", getIdentifier(holder, key).toString());
         }
         /*if (val instanceof Integer) {
             ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "int", String.valueOf(val));
