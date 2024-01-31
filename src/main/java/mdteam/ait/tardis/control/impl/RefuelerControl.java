@@ -2,6 +2,8 @@ package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
@@ -9,6 +11,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+
+import java.util.Random;
 
 public class RefuelerControl extends Control {
     public RefuelerControl() {
@@ -19,7 +23,12 @@ public class RefuelerControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         if(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
             //if (TardisUtil.isRiftChunk((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getExteriorPos())) {
+            Random random = new Random();
                 tardis.setRefueling(!tardis.isRefueling());
+                for (int i = 0; i < 20; i++) {
+                    world.addParticle(DustParticleEffect.DEFAULT, true, tardis.getDesktop().getConsolePos().getX() + random.nextFloat(-0.25f, 0.25f), tardis.getDesktop().getConsolePos().getY() + 1 + (i * 0.25f),
+                            tardis.getDesktop().getConsolePos().getZ() + random.nextFloat(-0.25f, 0.25f), random.nextFloat(-5, 5), random.nextFloat(-5, 5), random.nextFloat(-5, 5));
+                }
                 Text enabled = Text.translatable("tardis.message.control.refueler.enabled");
                 Text disabled = Text.translatable("tardis.message.control.refueler.disabled");
                 player.sendMessage((tardis.isRefueling()? enabled : disabled), true);

@@ -29,6 +29,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -42,6 +43,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 import static mdteam.ait.tardis.TardisTravel.State.*;
@@ -116,11 +118,17 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
     @Override
     public void tick(World world, BlockPos pos, BlockState blockState, ExteriorBlockEntity blockEntity) {
         if(getTardis().isEmpty()) return;
+        Random random = new Random();
         if (this.animation != null && this.getTardis().get().getTravel().getState() != LANDED)
             this.getAnimation().tick();
 
         if(world.isClient()) {
             this.checkAnimations();
+        } else {
+            if(getTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
+            world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + random.nextFloat(-0.25f, 0.25f), pos.getY() + 2.5,
+                    pos.getZ() + random.nextFloat(-0.25f, 0.25f), random.nextFloat(-0.15f, 0.15f), 0.015, random.nextFloat(-0.15f, 0.15f));
+            }
         }
 
         // Should be when tardis is set to landed / position is changed instead. fixme
