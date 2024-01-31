@@ -884,7 +884,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		doorControl.yaw = doorControl.yaw + (console.getTardis().get().getDoor().isOpen() ? console.getTardis().get().getDoor().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
 
 		ModelPart cloak = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone46");
-		cloak.roll = cloak.roll - (PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_CLOAKED) ? 1.5708f : 0);
+		cloak.roll = cloak.roll - (console.getTardis().get().getHandlers().getCloak().isEnabled() ? 1.5708f : 0);
 
 		ModelPart doorLock = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone47");
 		doorLock.roll = doorLock.roll - (console.getTardis().get().getDoor().locked() ? 1.5708f : 0);
