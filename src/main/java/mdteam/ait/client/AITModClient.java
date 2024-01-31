@@ -5,6 +5,7 @@ import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import mdteam.ait.client.renderers.monitors.MonitorRenderer;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
+import mdteam.ait.core.item.RiftScannerItem;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
@@ -38,7 +39,6 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -198,7 +198,7 @@ public class AITModClient implements ClientModInitializer {
 
     // @TODO creativious this is the model predicate for the rift scanner, all you have to do is make the value being returned go from 0.0f to 0.75f in a circle to simulate a compass-like item.
     public void riftScannerPredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.RIFT_SCANNER, new Identifier("scanner"),new RiftClampBullshit((world, stack, entity) -> GlobalPos.create(entity.getWorld().getRegistryKey(), BlockPos.fromLong(stack.getOrCreateNbt().getLong("targetBlock")))));
+        ModelPredicateProviderRegistry.register(AITItems.RIFT_SCANNER, new Identifier("scanner"),new RiftTarget((world, stack, entity) -> GlobalPos.create(entity.getWorld().getRegistryKey(), RiftScannerItem.getTarget(stack).getCenterAtY(75))));
     }
 
     public void sonicModelPredicate() { // fixme lord give me strength - amen brother

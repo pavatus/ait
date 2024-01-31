@@ -3,7 +3,6 @@ package mdteam.ait.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.ClampedModelPredicateProvider;
-import net.minecraft.client.item.CompassAnglePredicateProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -15,13 +14,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
-public class RiftClampBullshit implements ClampedModelPredicateProvider {
+public class RiftTarget implements ClampedModelPredicateProvider {
     public static final int field_38798 = 0;
     private final AngleInterpolator aimedInterpolator = new AngleInterpolator();
     private final AngleInterpolator aimlessInterpolator = new AngleInterpolator();
     public final CompassTarget compassTarget;
 
-    public RiftClampBullshit(CompassTarget compassTarget) {
+    public RiftTarget(CompassTarget compassTarget) {
         this.compassTarget = compassTarget;
     }
 
