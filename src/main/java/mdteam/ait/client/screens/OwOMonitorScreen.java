@@ -88,9 +88,9 @@ public class OwOMonitorScreen extends BaseOwoScreen<FlowLayout> {
                                 .alignment(HorizontalAlignment.CENTER,VerticalAlignment.TOP)
                         /*.verticalAlignment(VerticalAlignment.TOP)
                         .horizontalAlignment(HorizontalAlignment.LEFT)*/, false));
-        Component left = Components.button(Text.literal("<"), buttonComponent -> AITMod.LOGGER.debug(this.tardisid)).sizing(Sizing.fixed(15))
+        Component left = Components.button(Text.literal("<"), buttonComponent -> AITMod.LOGGER.debug(String.valueOf(this.tardisid))).sizing(Sizing.fixed(15))
                 .positioning(Positioning.absolute(20, 20));
-        Component right = Components.button(Text.literal(">"), buttonComponent -> AITMod.LOGGER.debug(this.tardisid)).sizing(Sizing.fixed(15))
+        Component right = Components.button(Text.literal(">"), buttonComponent -> AITMod.LOGGER.debug(String.valueOf(this.tardisid))).sizing(Sizing.fixed(15))
                 .positioning(Positioning.absolute(25, 20));
 
         container.child(left);
