@@ -9,7 +9,7 @@ import mdteam.ait.tardis.control.impl.pos.YControl;
 import mdteam.ait.tardis.control.impl.pos.ZControl;
 import mdteam.ait.tardis.control.impl.waypoint.InsertWaypointControl;
 import mdteam.ait.tardis.control.impl.waypoint.LoadWaypointControl;
-import mdteam.ait.tardis.control.impl.waypoint.SetWaypointControl;
+import mdteam.ait.tardis.control.impl.waypoint.MarkWaypointControl;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
@@ -41,7 +41,7 @@ public class SteamConsole extends ConsoleSchema {
             new ControlTypes(new HADSControl(), EntityDimensions.changing(0.074999996f, 0.15f), new Vector3f(0.7781250039115548f, 0.44999980740249157f, 0.18984374683350325f)),
             new ControlTypes(new PowerControl(), EntityDimensions.changing(0.125f, 0.1375f), new Vector3f(-0.3109375163912773f, 0.4875005716457963f, -0.5468750149011612f)),
             new ControlTypes(new InsertWaypointControl(), EntityDimensions.changing(0.16250001f, 0.0875f), new Vector3f(-0.838281256146729f, 0.4000003784894943f, 0.0046874964609742165f)),
-            new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7125000134110451f, 0.47500038146972656f, 0.1789062386378646f)),
+            new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7125000134110451f, 0.47500038146972656f, 0.1789062386378646f)),
             new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.07499999f, 0.1f), new Vector3f(-0.7109374962747097f, 0.47500057239085436f, -0.17265624925494194f)),
     };
 

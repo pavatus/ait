@@ -9,7 +9,7 @@ import mdteam.ait.tardis.control.impl.pos.YControl;
 import mdteam.ait.tardis.control.impl.pos.ZControl;
 import mdteam.ait.tardis.control.impl.waypoint.LoadWaypointControl;
 import mdteam.ait.tardis.control.impl.waypoint.InsertWaypointControl;
-import mdteam.ait.tardis.control.impl.waypoint.SetWaypointControl;
+import mdteam.ait.tardis.control.impl.waypoint.MarkWaypointControl;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
@@ -39,7 +39,7 @@ public class CoralConsole extends ConsoleSchema {
             new ControlTypes(new PowerControl(), EntityDimensions.changing(0.15f, 0.16250001f), new Vector3f(-1.0218750229105353f, 0.5500002857297659f, -0.5851562647148967f)),
             new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.1125f, 0.29999998f), new Vector3f(-1.258593762293458f, 0.24999980442225933f, 0.5769531261175871f)),
             new ControlTypes(new HADSControl(), EntityDimensions.changing(0.125f, 0.125f), new Vector3f(-0.3843750134110451f, 0.5750000923871994f, -0.5351562639698386f)),
-            new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.074999996f), new Vector3f(0.80078125f, 0.537500761449337f, 0.07656250149011612f)),
+            new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.07499999f, 0.074999996f), new Vector3f(0.80078125f, 0.537500761449337f, 0.07656250149011612f)),
             new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.07499999f, 0.074999996f), new Vector3f(0.8007812770083547f, 0.5375005733221769f, -0.02343749813735485f)),
             new ControlTypes(new InsertWaypointControl(), EntityDimensions.changing(0.1375f, 0.1125f), new Vector3f(0.7257812488824129f, 0.5875006653368473f, 0.2390625039115548f)),
             new ControlTypes(new CloakControl(), EntityDimensions.changing(0.1375f, 0.1375f), new Vector3f(-0.3484375160187483f, 0.600000855512917f, 0.4757812535390258f)),

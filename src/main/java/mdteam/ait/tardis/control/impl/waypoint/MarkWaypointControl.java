@@ -7,9 +7,9 @@ import mdteam.ait.tardis.util.Waypoint;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
-public class SetWaypointControl extends Control {
-    public SetWaypointControl() {
-        super("set_waypoint");
+public class MarkWaypointControl extends Control {
+    public MarkWaypointControl() {
+        super("mark_waypoint");
     }
 
     @Override
@@ -17,6 +17,7 @@ public class SetWaypointControl extends Control {
         WaypointHandler handler = tardis.getHandlers().getWaypoints();
 
         handler.set(Waypoint.fromDirected(tardis.getTravel().getPosition()), false);
+        handler.spawnItem();
 
         return true;
     }

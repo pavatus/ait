@@ -9,7 +9,7 @@ import mdteam.ait.tardis.control.impl.pos.YControl;
 import mdteam.ait.tardis.control.impl.pos.ZControl;
 import mdteam.ait.tardis.control.impl.waypoint.InsertWaypointControl;
 import mdteam.ait.tardis.control.impl.waypoint.LoadWaypointControl;
-import mdteam.ait.tardis.control.impl.waypoint.SetWaypointControl;
+import mdteam.ait.tardis.control.impl.waypoint.MarkWaypointControl;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
@@ -39,7 +39,7 @@ public class CopperConsole extends ConsoleSchema {
             new ControlTypes(new PowerControl(), EntityDimensions.changing(0.15f, 0.16250001f), new Vector3f(-1.1609375020489097f, 0.5500001907348633f, 0.1640625111758709f)),
             new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.08749999f, 0.099999994f), new Vector3f(-0.1703124837949872f, 0.8250000085681677f, -0.634375018067658f)),
             new ControlTypes(new HADSControl(), EntityDimensions.changing(0.08749999f, 0.099999994f), new Vector3f(-0.020312494598329067f, 0.824999812990427f, -0.6312500014901161f)),
-            new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.125f, 0.1f), new Vector3f(-0.32421876676380634f, 0.6500003831461072f, 0.903125012293458f)),
+            new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.125f, 0.1f), new Vector3f(-0.32421876676380634f, 0.6500003831461072f, 0.903125012293458f)),
             new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.099999994f, 0.074999996f), new Vector3f(-0.4492187686264515f, 0.5500003816559911f, 1.0890625165775418f)),
             new ControlTypes(new InsertWaypointControl(), EntityDimensions.changing(0.15f, 0.1125f), new Vector3f(-0.01093751098960638f, 0.6125005725771189f, 0.8796875094994903f)),
             new ControlTypes(new CloakControl(), EntityDimensions.changing(0.099999994f, 0.1375f), new Vector3f(-0.4976562522351742f, 0.9625003868713975f, 0.2890624972060323f)),
