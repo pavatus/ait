@@ -7,8 +7,8 @@ import mdteam.ait.tardis.control.impl.pos.IncrementControl;
 import mdteam.ait.tardis.control.impl.pos.XControl;
 import mdteam.ait.tardis.control.impl.pos.YControl;
 import mdteam.ait.tardis.control.impl.pos.ZControl;
-import mdteam.ait.tardis.control.impl.waypoint.InsertWaypointControl;
 import mdteam.ait.tardis.control.impl.waypoint.LoadWaypointControl;
+import mdteam.ait.tardis.control.impl.waypoint.SetWaypointControl;
 import mdteam.ait.tardis.control.impl.waypoint.MarkWaypointControl;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.util.Identifier;
@@ -44,8 +44,8 @@ public class AlnicoConsole extends ConsoleSchema {
             new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.20000002f, 0.3749999f), new Vector3f(1.6171875046566129f, 0.3249999061226845f, 0.004687516950070858f)),
             new ControlTypes(new HADSControl(), EntityDimensions.changing(0.18750001f, 0.18750001f), new Vector3f(0.6902343910187483f, 0.49999980814754963f, 1.7648437842726707f)),
             new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.099999994f, 0.29999998f), new Vector3f(-1.0492187775671482f, 0.4625003803521395f, 0.5886718826368451f)),
-            new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.099999994f, 0.29999998f), new Vector3f(-1.1242187786847353f, 0.4625003803521395f, 0.45156250707805157f)),
-            new ControlTypes(new InsertWaypointControl(), EntityDimensions.changing(0.22500002f, 0.22500002f), new Vector3f(0.701562499627471f, 0.3625005688518286f, 1.2007812643423676f)),
+            new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.099999994f, 0.29999998f), new Vector3f(-1.1242187786847353f, 0.4625003803521395f, 0.45156250707805157f)),
+            new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.22500002f, 0.22500002f), new Vector3f(0.701562499627471f, 0.3625005688518286f, 1.2007812643423676f)),
             new ControlTypes(new CloakControl(), EntityDimensions.changing(0.15f, 0.15f), new Vector3f(0.7523437663912773f, 0.5250003803521395f, -0.9609375214204192f)),
     };
     public AlnicoConsole() {
