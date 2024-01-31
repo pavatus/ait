@@ -69,11 +69,10 @@ public class TelepathicControl extends Control {
     }
 
     public static BlockPos locateStructureOfInterest(ServerWorld world, BlockPos source) {
-        BlockPos found;
-        int radius = 5000;
+        // TODO - create a tag "TardisStructureLikesTag" to save on performance + to make this code simpler
 
-        found = getVillage(world, source, radius);
-        if (found != null) return found;
+        BlockPos found = null;
+        int radius = 500;
 
         if (world.getRegistryKey() == World.NETHER) {
 
@@ -88,6 +87,26 @@ public class TelepathicControl extends Control {
             found = getEndVillage(world, source, radius);
             if (found != null) return found;
 
+        } else if (world.getRegistryKey() == World.OVERWORLD) {
+
+            found = getVillage(world, source, radius);
+            if (found != null) return found;
+
+            found = getDesertPyramid(world, source, radius);
+            if (found != null) return found;
+
+            found = getJunglePyramid(world, source, radius);
+            if (found != null) return found;
+
+            found = getMineshaft(world, source, radius);
+            if (found != null) return found;
+
+            found = getSwampHut(world, source, radius);
+            if (found != null) return found;
+
+            found = getStronghold(world, source, radius);
+            if (found != null) return found;
+
         }
 
         return found;
@@ -95,6 +114,21 @@ public class TelepathicControl extends Control {
 
     public static BlockPos getVillage(ServerWorld world, BlockPos pos, int radius) {
         return world.locateStructure(StructureTags.VILLAGE, pos, radius, false);
+    }
+    public static BlockPos getStronghold(ServerWorld world, BlockPos pos, int radius) {
+        return getStructure(world, pos, radius, StructureKeys.STRONGHOLD);
+    }
+    public static BlockPos getMineshaft(ServerWorld world, BlockPos pos, int radius) {
+        return getStructure(world, pos, radius, StructureKeys.MINESHAFT);
+    }
+    public static BlockPos getDesertPyramid(ServerWorld world, BlockPos pos, int radius) {
+        return getStructure(world, pos, radius, StructureKeys.DESERT_PYRAMID);
+    }
+    public static BlockPos getJunglePyramid(ServerWorld world, BlockPos pos, int radius) {
+        return getStructure(world, pos, radius, StructureKeys.JUNGLE_PYRAMID);
+    }
+    public static BlockPos getSwampHut(ServerWorld world, BlockPos pos, int radius) {
+        return getStructure(world, pos, radius, StructureKeys.SWAMP_HUT);
     }
     public static BlockPos getFortress(ServerWorld world, BlockPos pos, int radius) {
         return getStructure(world, pos, radius, StructureKeys.FORTRESS);
