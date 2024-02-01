@@ -40,7 +40,7 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static mdteam.ait.AITMod.AIT_CONFIG;
+import static mdteam.ait.AITMod.AIT_CUSTOM_CONFIG;
 
 // todo this class is like a monopoly, im gonna slash it into little corporate pieces
 public class TardisTravel extends TardisLink {
@@ -49,7 +49,7 @@ public class TardisTravel extends TardisLink {
     private AbsoluteBlockPos.Directed destination;
     private AbsoluteBlockPos.Directed lastPosition;
     private boolean crashing = false;
-    private static final int CHECK_LIMIT = AIT_CONFIG.SEARCH_HEIGHT(); // todo move into a config
+    private static final int CHECK_LIMIT = AIT_CUSTOM_CONFIG.SERVER.SEARCH_HEIGHT;
     public static final int MAX_SPEED = 3;
     private static final Random random = new Random();
 

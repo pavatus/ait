@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static mdteam.ait.AITMod.AIT_CONFIG;
+import static mdteam.ait.AITMod.AIT_CUSTOM_CONFIG;
 
 // All this is CLIENT ONLY!!
 // Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
@@ -94,7 +94,7 @@ public class ClientHumHandler extends SoundHandler {
         List<LoopingSound> list = new ArrayList<>();
 
         for (HumSound sound : HumsRegistry.REGISTRY) {
-            list.add(new PlayerFollowingLoopingSound(sound.sound(), SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME()));
+            list.add(new PlayerFollowingLoopingSound(sound.sound(), SoundCategory.AMBIENT, AIT_CUSTOM_CONFIG.CLIENT.INTERIOR_HUM_VOLUME));
         }
 
         return list;
