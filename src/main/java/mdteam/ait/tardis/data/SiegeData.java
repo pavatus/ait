@@ -7,6 +7,8 @@ import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -69,6 +71,18 @@ public class SiegeData extends TardisLink {
         this.sync();
     }
 
+    private static boolean hasLeatherArmour(ServerPlayerEntity player) {
+        int count = 0;
+
+        for (ItemStack item : player.getArmorItems()) {
+            if (item.isOf(Items.LEATHER_HELMET) || item.isOf(Items.LEATHER_CHESTPLATE) || item.isOf(Items.LEATHER_LEGGINGS) || item.isOf(Items.LEATHER_BOOTS)) {
+                count++;
+            }
+        }
+
+        return count == 4;
+    }
+
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
@@ -85,8 +99,13 @@ public class SiegeData extends TardisLink {
         // todo add more downsides the longer you are in siege mode as it is meant to fail systems and kill you and that
         // for example, this starts to freeze the player (like we see in the episode) after a minute (change the length if too short) and only if its on the ground, to stop people from just slaughtering lol
         if (getTardis().get().getTimeInSiegeMode() > (60 * 20) && !getTardis().get().isSiegeBeingHeld()) {
-            for (PlayerEntity player : TardisUtil.getPlayersInInterior(getTardis().get())) {
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(getTardis().get())) {
                 if (!player.isAlive()) continue;
+                if (hasLeatherArmour(player)) {
+                    if (player.getFrozenTicks() > player.getMinFreezeDamageTicks())
+                        player.setFrozenTicks(0);
+                    continue;
+                }
                 if (player.getFrozenTicks() < player.getMinFreezeDamageTicks()) player.setFrozenTicks(player.getMinFreezeDamageTicks());
                 player.setFrozenTicks(player.getFrozenTicks() + 2);
             }
