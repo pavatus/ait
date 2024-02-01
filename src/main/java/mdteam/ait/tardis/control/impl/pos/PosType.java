@@ -15,6 +15,10 @@ public enum PosType implements StringIdentifiable {
     Y() {
         @Override
         public BlockPos add(BlockPos pos, int amount, World world) {
+            if (world.getRegistryKey() == World.NETHER) {
+                return pos.withY(MathHelper.clamp(pos.getY() + amount, world.getBottomY(), 120));
+            }
+
             return pos.withY(MathHelper.clamp(pos.getY() + amount, world.getBottomY(), world.getTopY() - 1)); // i hate you loqor
         }
 
