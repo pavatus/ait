@@ -27,7 +27,8 @@ public class FlightUtil {
      * @param pos
      */
     public static void travelTo(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-        PropertiesHandler.setAutoPilot(tardis.getHandlers().getProperties(), true);
+        PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, false);
+        PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, true);
         tardis.getTravel().setDestination(pos, true);
 
         if (tardis.getTravel().getState() == TardisTravel.State.LANDED) {
