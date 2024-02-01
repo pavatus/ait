@@ -137,6 +137,7 @@ public class TardisDesktop extends TardisLink {
 
     public void changeInterior(TardisDesktopSchema schema) {
         long currentTime = System.currentTimeMillis();
+        this.clearInteriorEntities();
         this.schema = schema;
         DesktopGenerator generator = new DesktopGenerator(this.schema);
         BlockPos doorPos = generator.place((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
@@ -150,10 +151,10 @@ public class TardisDesktop extends TardisLink {
     public void clearOldInterior(TardisDesktopSchema schema) {
         this.schema = schema;
         DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
-        this.clearExistingEntities();
+        this.clearInteriorEntities();
     }
 
-    private void clearExistingEntities() {
+    private void clearInteriorEntities() {
         this.forceLoadInterior();
 
         for (Direction direction : Direction.values()) {
