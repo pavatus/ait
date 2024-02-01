@@ -54,7 +54,8 @@ public abstract class BaseControlEntity extends MobEntity {
 
     public Tardis getTardis() {
         if (this.tardisId == null) {
-            AITMod.LOGGER.warn("Control Entity at " + this.getPos() + " is finding TARDIS!");
+            // Unnecessary; results in console spam. - Loqor
+            //AITMod.LOGGER.warn("Control Entity at " + this.getPos() + " is finding TARDIS!");
             this.findTardis();
         }
 

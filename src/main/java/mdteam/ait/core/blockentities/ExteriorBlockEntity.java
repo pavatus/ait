@@ -153,7 +153,9 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
             return;
 
         this.animation = this.getTardis().get().getExterior().getVariant().animation(this);
-        AITMod.LOGGER.warn("Created new ANIMATION for " + this);
+
+        // Removed because of unnecessary spam, again. - Loqor
+        //AITMod.LOGGER.warn("Created new ANIMATION for " + this);
         this.animation.setupAnimation(this.getTardis().get().getTravel().getState());
 
         if (this.getWorld() != null) {
