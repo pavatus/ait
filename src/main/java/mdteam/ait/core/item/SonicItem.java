@@ -3,6 +3,7 @@ package mdteam.ait.core.item;
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.LinkableItem;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.interfaces.RiftChunk;
@@ -197,7 +198,7 @@ public class SonicItem extends LinkableItem {
     }
 
     public static void playSonicSounds(PlayerEntity player) {
-        player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BEACON_AMBIENT, SoundCategory.PLAYERS, 1f, 2f);
+        player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, 1f);
     }
 
     public static void cycleMode(ItemStack stack) {
@@ -219,6 +220,7 @@ public class SonicItem extends LinkableItem {
         if (world.isClient()) return TypedActionResult.pass(itemStack);
 
         if (user.isSneaking()) {
+            world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
             cycleMode(itemStack);
         } else {
             if(intToMode(nbt.getInt(MODE_KEY)) != Mode.INACTIVE) {

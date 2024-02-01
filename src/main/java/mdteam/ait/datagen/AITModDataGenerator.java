@@ -352,6 +352,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addSound("tardis/secret/doom_door_open", AITSounds.DOOM_DOOR_OPEN);
             provider.addSound("tardis/secret/doom_door_close", AITSounds.DOOM_DOOR_CLOSE);
 
+            // Sonic
+            provider.addSound("sonic/use", AITSounds.SONIC_USE);
+            provider.addSound("sonic/switch", AITSounds.SONIC_SWITCH);
+
             // Other
             provider.addSound("tardis/cloister", AITSounds.CLOISTER);
 
