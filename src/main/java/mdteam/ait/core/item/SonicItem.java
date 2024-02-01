@@ -171,6 +171,10 @@ public class SonicItem extends LinkableItem {
 
         if (!nbt.contains(MODE_KEY)) return ActionResult.FAIL;
 
+        if(intToMode(nbt.getInt(MODE_KEY)) == Mode.INACTIVE) return ActionResult.FAIL;
+
+        playSonicSounds(player);
+
         Tardis tardis = getTardis(itemStack);
 
         Mode mode = intToMode(nbt.getInt(MODE_KEY));
