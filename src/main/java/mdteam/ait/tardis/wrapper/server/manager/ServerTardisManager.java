@@ -457,7 +457,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         // this might fix server crash bugs
         if (this.lookup.isEmpty()) {
             this.loadTardises();
-            this.saveTardis();
+
+            if (!this.lookup.isEmpty())
+                this.saveTardis();
         }
     }
     @SuppressWarnings("ResultOfMethodCallIgnored")
