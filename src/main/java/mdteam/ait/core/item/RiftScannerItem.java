@@ -33,7 +33,7 @@ public class RiftScannerItem extends Item {
         if (!isSearchOnDelay((ServerPlayerEntity) user)) {
             createSearchDelay((ServerPlayerEntity) user);
             createNewTarget((ServerWorld) world, new ChunkPos(user.getBlockPos()), user.getStackInHand(hand));
-            user.sendMessage(Text.literal("Rift found!"), true);
+            user.sendMessage(Text.literal("Tracking rift!"), true);
         } else {
             user.sendMessage(Text.literal("Rift search is on cooldown"), true);
         }
