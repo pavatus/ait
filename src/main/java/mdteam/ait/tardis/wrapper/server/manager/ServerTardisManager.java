@@ -49,6 +49,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
     private static ServerTardisManager instance;
     // Changed from MultiMap to HashMap to fix some concurrent issues, maybe
     private final ConcurrentHashMap<UUID, List<UUID>> subscribers = new ConcurrentHashMap<>(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
+    private final ConcurrentHashMap<UUID, List<UUID>> buffers = new ConcurrentHashMap<>(); // buffer for sending tardises
 
     public ServerTardisManager() {
         this.loadTardises();
@@ -307,9 +308,15 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
     }
 
     private void sendTardis(@NotNull ServerPlayerEntity player, UUID uuid, String json) {
-        if (isAskOnDelay(player)) return;
+        if (this.isInBuffer(player, uuid)) {
+            return;
+        }
+        if (isAskOnDelay(player)) {
+            this.addToBuffer(player, uuid);
+            return;
+        }
 
-        System.out.println("SENDING TARDIS " + uuid + " TO " + player.getName().getString());
+        AITMod.LOGGER.info("SENDING TARDIS " + uuid + " TO " + player.getName().getString());
 
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(uuid);
@@ -350,7 +357,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         if (player.getWorld().getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
             // if the player is a tardis already, sync the one at their location
             Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), true);
-            System.out.println(found);
             if (found == null) return;
 
             this.sendTardis(player, found);
@@ -466,9 +472,51 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         }
     }
 
+    private boolean isInBuffer(ServerPlayerEntity player, UUID tardis) {
+        if (!this.buffers.containsKey(player.getUuid())) return false;
+
+        return this.buffers.get(player.getUuid()).contains(tardis);
+    }
+
+    private void addToBuffer(ServerPlayerEntity player, UUID tardis) {
+        if (this.buffers.containsKey(player.getUuid())) {
+            this.buffers.get(player.getUuid()).add(tardis);
+            return;
+        }
+
+        this.buffers.put(player.getUuid(), new ArrayList<>(Collections.singletonList(tardis)));
+    }
+
+    private void tickBuffer(MinecraftServer server) {
+        if (this.buffers.isEmpty()) return;
+
+        for (Iterator<UUID> it = this.buffers.keys().asIterator(); it.hasNext(); ) {
+            UUID playerId = it.next();
+            ServerPlayerEntity player = server.getPlayerManager().getPlayer(playerId);
+
+            if (player == null
+                    || !this.buffers.containsKey(playerId)
+                    || isAskOnDelay(player)) continue;
+
+            List<UUID> tardisIds = this.buffers.get(playerId);
+
+            if (tardisIds == null || tardisIds.isEmpty()) continue;
+
+            List<UUID> copyOfTardisIds = new CopyOnWriteArrayList<>(tardisIds);
+
+            for (UUID tardisId : copyOfTardisIds) {
+                tardisIds.remove(tardisId);
+                this.sendTardis(player, tardisId);
+            }
+
+            if (tardisIds.isEmpty())
+                this.buffers.remove(playerId);
+        }
+    }
+
     @Override
     public void tick(MinecraftServer server) {
-
+        this.tickBuffer(server);
     }
 
     @Override

@@ -53,7 +53,6 @@ public class SiegeData extends TardisLink {
     // todo this is getting bloateed, merge some if statements together
     public void setSiegeMode(boolean b) {
         if(getTardis().isEmpty()) return;
-        System.out.println(getTardis().get().isSiegeBeingHeld());
         if (getTardis().get().getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL)) return; // The required amount of fuel to enable/disable siege mode
         if (b) getTardis().get().disablePower();
         if (!b) getTardis().get().getHandlers().getAlarms().disable();

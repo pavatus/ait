@@ -44,8 +44,6 @@ public class SiegeTardisItem extends Item {
 
         if (world.isClient()) return;
 
-        System.out.println(getTardis(stack));
-
         if (getTardis(stack) == null) {
             stack.setCount(0);
             return;
@@ -53,9 +51,6 @@ public class SiegeTardisItem extends Item {
 
         Tardis tardis = getTardis(stack);
         if (tardis == null) return;
-
-        System.out.println(tardis.isSiegeMode());
-        System.out.println(tardis.getHandlers().getSiege().getHeldPlayerUUID());
 
         if (!tardis.isSiegeMode()) {
             tardis.setSiegeBeingHeld(null);

@@ -48,6 +48,7 @@ import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -154,9 +155,7 @@ public class AITMod implements ModInitializer {
             // Check if the destination is already occupied
             boolean isDestinationOccupied = !tardis.getTravel().getDestination().equals(tardis.getExterior().getExteriorPos()) && !tardis.getTravel().checkDestination();
 
-            System.out.println("$% " + isCooldown + " " + isDestinationOccupied);
-
-            return /*!flightDone ||*/ isCooldown /*|| isDestinationOccupied*/;
+            return /*!flightDone ||*/ isCooldown || isDestinationOccupied;
         }));
 
         TardisEvents.CRASH.register((tardis -> {
@@ -229,7 +228,7 @@ public class AITMod implements ModInitializer {
 
             for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
                 if (!tardis.isSiegeMode()) continue;
-                if (!tardis.getHandlers().getSiege().getHeldPlayerUUID().equals(player.getUuid())) continue;
+                if (!Objects.equals(tardis.getHandlers().getSiege().getHeldPlayerUUID(), player.getUuid())) continue;
 
                 SiegeTardisItem.placeTardis(tardis, SiegeTardisItem.fromEntity(player));
             }

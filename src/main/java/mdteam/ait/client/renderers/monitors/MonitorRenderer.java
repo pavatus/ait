@@ -59,7 +59,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
         matrices.pop();
 
         if(entity.getTardisID() == null) return;
-        Tardis tardis = ClientTardisManager.getInstance().getLookup().get(entity.getTardisID());
+        Tardis tardis = ClientTardisManager.getInstance().getTardis(entity.getTardisID());
         if(tardis == null) return;
 
         matrices.push();
