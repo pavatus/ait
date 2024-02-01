@@ -11,7 +11,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 
 public class FlightData extends TardisLink {
-    private int flightTicks = 0; // todo, this shouldnt reaally be synced to client or be saved in PropertiesHolder because it'll spam packets when in flight.
+    private static final String FLIGHT_TICKS_KEY = "flight_ticks";
     private int targetTicks = 0;
 
     public FlightData(Tardis tardiz) {
@@ -23,14 +23,14 @@ public class FlightData extends TardisLink {
             if (this.getTardis().isEmpty()) return;
             if (!tardis.equals(this.getTardis().get())) return;
 
-            flightTicks = 0;
+            this.setFlightTicks(0);
             targetTicks = 0;
         }));
         TardisEvents.DEMAT.register((tardis -> {
             if (this.getTardis().isEmpty()) return false;
             if (!tardis.equals(this.getTardis().get())) return false;
 
-            flightTicks = 0;
+            this.setFlightTicks(0);
             targetTicks = FlightUtil.getFlightDuration(tardis.getTravel().getPosition(), tardis.getTravel().getDestination());
 
             return false;
@@ -49,11 +49,11 @@ public class FlightData extends TardisLink {
 
     public boolean hasFinishedFlight() {
         if(getTardis().isEmpty()) return false;
-        return flightTicks >= targetTicks || targetTicks == 0 || getTardis().get().getTravel().isCrashing();
+        return this.getFlightTicks() >= targetTicks || targetTicks == 0 || getTardis().get().getTravel().isCrashing();
     }
     private void onFlightFinished() {
         if(getTardis().isEmpty()) return;
-        this.flightTicks = 0;
+        this.setFlightTicks(0);
         this.targetTicks = 0;
         FlightUtil.playSoundAtConsole(getTardis().get(), SoundEvents.BLOCK_BEACON_POWER_SELECT); // temp sound
 
@@ -72,19 +72,34 @@ public class FlightData extends TardisLink {
 
     public int getDurationAsPercentage() {
         if(getTardis().isEmpty()) return 0;
-        if (this.targetTicks == 0 || this.flightTicks == 0) {
+        if (this.targetTicks == 0 || this.getFlightTicks() == 0) {
             if (this.getTardis().get().getTravel().getState() == TardisTravel.State.DEMAT) return 0;
             // if (this.tardis().getTravel().getState() == TardisTravel.State.MAT) return 100;
             return 100;
         }
 
-        return FlightUtil.getDurationAsPercentage(this.flightTicks, this.targetTicks);
+        return FlightUtil.getDurationAsPercentage(this.getFlightTicks(), this.targetTicks);
     }
 
     public void recalculate() {
         if(getTardis().isEmpty()) return;
         this.targetTicks = FlightUtil.getFlightDuration(getTardis().get().position(), getTardis().get().destination());
-        this.flightTicks = this.isInFlight() ? MathHelper.clamp(this.flightTicks, 0, this.targetTicks) : 0;
+        this.setFlightTicks(this.isInFlight() ? MathHelper.clamp(this.getFlightTicks(), 0, this.targetTicks) : 0);
+    }
+
+    public int getFlightTicks() {
+        if (this.getTardis().isEmpty()) return 0;
+
+        if (!this.getTardis().get().getHandlers().getProperties().getData().containsKey(FLIGHT_TICKS_KEY)) {
+            this.setFlightTicks(0);
+        }
+
+        return PropertiesHandler.getInt(this.getTardis().get().getHandlers().getProperties(), FLIGHT_TICKS_KEY);
+    }
+    private void setFlightTicks(int ticks) {
+       if (this.getTardis().isEmpty()) return;
+
+       PropertiesHandler.set(this.getTardis().get(), FLIGHT_TICKS_KEY, ticks);
     }
 
     @Override
@@ -92,11 +107,11 @@ public class FlightData extends TardisLink {
         super.tick(server);
         if(getTardis().isEmpty()) return;
 
-        if ((this.targetTicks > 0 || this.flightTicks > 0) && this.getTardis().get().getTravel().getState() == TardisTravel.State.LANDED) {
+        if ((this.targetTicks > 0 || this.getFlightTicks() > 0) && this.getTardis().get().getTravel().getState() == TardisTravel.State.LANDED) {
             this.recalculate();
         }
 
-        if (this.isInFlight() && !this.getTardis().get().getTravel().isCrashing() && !(this.flightTicks >= this.targetTicks) && this.targetTicks == 0) {
+        if (this.isInFlight() && !this.getTardis().get().getTravel().isCrashing() && !(this.getFlightTicks() >= this.targetTicks) && this.targetTicks == 0) {
             this.recalculate();
         }
 
@@ -105,7 +120,7 @@ public class FlightData extends TardisLink {
                 this.onFlightFinished();
             }
 
-            this.flightTicks = this.flightTicks + this.getTardis().get().getTravel().getSpeed();
+            this.setFlightTicks(this.getFlightTicks() + this.getTardis().get().getTravel().getSpeed());
         }
     }
 }
