@@ -1,4 +1,4 @@
-package mdteam.ait;
+package mdteam.ait.config;
 
 import com.neptunedevelopmentteam.neptunelib.config.ConfigComment;
 import com.neptunedevelopmentteam.neptunelib.config.NeptuneConfig;
@@ -9,18 +9,18 @@ public class AITCustomConfig extends NeptuneConfig {
 
     public AITServerConfig SERVER = new AITServerConfig();
     public AITClientConfig CLIENT = new AITClientConfig();
-    @CustomName("Tardis Resync Delay")
-    @ConfigComment("Delay in seconds between resyncing the tardis")
-    public double ASK_DELAY = 1.0;
-
-    @CustomName("Force Sync Delay")
-    @ConfigComment("Delay in seconds between forcing a resync")
-    public double FORCE_SYNC_DELAY = 10;
 
     public static class AITServerConfig implements NeptuneSubConfig {
         @CustomName("Search Height")
-        @ConfigComment("Height of the search area in the server")
+        @ConfigComment("How many blocks up and down a TARDIS should ground search for before giving up")
         public int SEARCH_HEIGHT = 64;
+        @CustomName("Ask Delay")
+        @ConfigComment("How many seconds a client should be on delay for before asking for another TARDIS\nHigher -> Better server performance\nLower -> Less client sync issues")
+        public double ASK_DELAY = 1.0;
+
+        @CustomName("Force Sync Delay")
+        @ConfigComment("How many seconds a client should be away from a tardis for before forcing a resync\nHigher -> Better server performance\nLower -> Less client sync issues")
+        public double FORCE_SYNC_DELAY = 10;
     }
 
     public static class AITClientConfig implements NeptuneSubConfig {
@@ -29,7 +29,7 @@ public class AITCustomConfig extends NeptuneConfig {
         public float INTERIOR_HUM_VOLUME = 0.2f;
 
         @CustomName("Allow Custom Menu")
-        @ConfigComment("Show the custom menu if true")
+        @ConfigComment("Whether the custom title screen should show")
         public boolean CUSTOM_MENU = true;
     }
 }
