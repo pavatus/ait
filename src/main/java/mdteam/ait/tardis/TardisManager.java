@@ -125,16 +125,25 @@ public abstract class TardisManager<T extends Tardis> {
     /**
      * Gets the ClientTardis if its in the lookup, should only be called if you are 100% sure the client has this tardis.
      * @param uuid
+     * @param performAsk Whether to ask for this tardis if we dont have it
      * @return
      */
-    public Tardis getTardis(UUID uuid) {
+    public Tardis getTardis(UUID uuid, boolean performAsk) {
         if (!this.hasTardis(uuid)) {
             AITMod.LOGGER.error("Called getTardis() on a tardis that hasnt been synced!");
+
+            if (performAsk)
+                this.getTardis(uuid, (t) -> {});
+
             return null;
         }
 
         return this.lookup.get(uuid);
     }
+    public Tardis getTardis(UUID uuid) {
+        return this.getTardis(uuid, false);
+    }
+
 
     public boolean hasTardis(UUID uuid) {
         return this.lookup.containsKey(uuid);

@@ -37,7 +37,7 @@ public abstract class LinkableItem extends Item {
         NbtCompound nbt = stack.getOrCreateNbt();
         if(!nbt.contains("tardis")) return;
         if(nbt.contains("tardis")) {
-            Tardis tardis = ClientTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")));
+            Tardis tardis = ClientTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")), true);
             if (tardis != null) {
                 tooltip.add(Text.literal("TARDIS: ").formatted(Formatting.BLUE));
                 tooltip.add(Text.literal("> " + tardis.getHandlers().getStats().getName()));
