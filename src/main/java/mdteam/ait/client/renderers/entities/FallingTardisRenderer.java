@@ -53,12 +53,9 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
             model = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
             model.renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), light,1,1,1,1,1);
         } else {
-
-        getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, 1, 1, 1, 1, 1);
-
-        if (exteriorVariant.emission() != null)
-            getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), light, 1, 1, 1, 1, 1);
-
+            getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, 1, 1, 1, 1, 1);
+            if (exteriorVariant.emission() != null)
+                getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), light, 1, 1, 1, 1, 1);
         }
         matrices.pop();
     }
