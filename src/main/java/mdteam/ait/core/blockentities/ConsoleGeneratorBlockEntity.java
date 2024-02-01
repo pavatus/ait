@@ -65,10 +65,6 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 
         if(stack.getItem() instanceof SonicItem) {
 
-            NbtCompound nbt = stack.getOrCreateNbt();
-
-            if(!nbt.contains("tardis")) return;
-
             this.createConsole();
 
             return;

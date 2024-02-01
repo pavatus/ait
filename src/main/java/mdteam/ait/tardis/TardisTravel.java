@@ -7,7 +7,6 @@ import mdteam.ait.core.AITMessages;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
-import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.util.FlightUtil;
@@ -499,9 +498,17 @@ public class TardisTravel extends TardisLink {
 
         BlockPos.Mutable temp = this.getDestination().mutableCopy(); // loqor told me mutables were better, is this true? fixme if not
 
+        BlockState current;
+        BlockState top;
+        BlockState ground;
+
         if (fullCheck) {
             for (int i = 0; i < limit; i++) {
-                if (world.getBlockState(temp).isReplaceable() && world.getBlockState(temp.up()).isReplaceable() && !world.getBlockState(temp.down()).isReplaceable()) { // check two blocks cus tardis is two blocks tall yk and check for groud
+                current = world.getBlockState(temp);
+                top = world.getBlockState(temp.up());
+                ground = world.getBlockState(temp.down());
+
+                if (isReplaceable(current, top) && !isReplaceable(ground)) { // check two blocks cus tardis is two blocks tall yk and check for groud
                     this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
                     return true;
                 }
@@ -512,7 +519,11 @@ public class TardisTravel extends TardisLink {
             temp = this.getDestination().mutableCopy();
 
             for (int i = 0; i < limit; i++) {
-                if (world.getBlockState(temp).isReplaceable() && world.getBlockState(temp.up()).isReplaceable() && !world.getBlockState(temp.down()).isReplaceable()) { // check two blocks cus tardis is two blocks tall yk and check for groud
+                current = world.getBlockState(temp);
+                top = world.getBlockState(temp.up());
+                ground = world.getBlockState(temp.down());
+
+                if (isReplaceable(current, top) && !isReplaceable(ground)) { // check two blocks cus tardis is two blocks tall yk and check for groud
                     this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
                     return true;
                 }
@@ -523,7 +534,27 @@ public class TardisTravel extends TardisLink {
 
         temp = this.getDestination().mutableCopy();
 
-        return (world.getBlockState(temp).isReplaceable()) && (world.getBlockState(temp.up()).isReplaceable());
+        current = world.getBlockState(temp);
+        top = world.getBlockState(temp.up());
+
+        return isReplaceable(current, top);
+    }
+
+    private static boolean isReplaceable(BlockState... states) {
+        for (BlockState state1 : states) {
+            if (!state1.isReplaceable()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private static boolean isLiquid(BlockState... states) {
+        for (BlockState state1 : states) {
+            if (!state1.isSolid() || state1.isLiquid()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean checkDestination() {
