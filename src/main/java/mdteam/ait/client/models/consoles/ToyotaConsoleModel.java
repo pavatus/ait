@@ -3,6 +3,7 @@ package mdteam.ait.client.models.consoles;
 
 import mdteam.ait.client.animation.console.toyota.ToyotaAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
@@ -820,6 +821,10 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+		if (console.getTardis().isEmpty()) return;
+
+		Tardis tardis = console.getTardis().get();
+
 		matrices.push();
 
 		matrices.translate(0.5f, -1.5f, -0.5f);
@@ -830,8 +835,8 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPart throttle = this.toyota.getChild("panel4").getChild("controls4").getChild("throttle");
 		ModelPart throttleLights = this.toyota.getChild("panel4").getChild("flightlights").getChild("flightlights2");
 
-		throttle.pitch = throttle.pitch + ((console.getTardis().get().getTravel().getSpeed() / (float) TardisTravel.MAX_SPEED) * 1.5f);
-		throttleLights.pivotY = !(console.getTardis().get().getTravel().getSpeed() > 0) ? throttleLights.pivotY + 1 : throttleLights.pivotY;
+		throttle.pitch = throttle.pitch + ((tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed()) * 1.5f);
+		throttleLights.pivotY = !(tardis.getTravel().getSpeed() > 0) ? throttleLights.pivotY + 1 : throttleLights.pivotY;
 
 		//Handbrake Control and Lights
 		ModelPart handbrake = this.toyota.getChild("panel4").getChild("controls4").getChild("handbrake").getChild("pivot");

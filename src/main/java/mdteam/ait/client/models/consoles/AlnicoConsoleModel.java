@@ -2,6 +2,7 @@ package mdteam.ait.client.models.consoles;
 
 import mdteam.ait.client.animation.console.alnico.AlnicoAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
@@ -812,12 +813,14 @@ public class AlnicoConsoleModel extends ConsoleModel {
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		if (console.getTardis().isEmpty()) return;
 
+		Tardis tardis = console.getTardis().get();
+
 		matrices.push();
 
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		ModelPart throttle = alnico.getChild("section1").getChild("controls").getChild("fliplever1").getChild("bone5");
-		throttle.pitch = throttle.pitch + ((console.getTardis().get().getTravel().getSpeed() / (float) TardisTravel.MAX_SPEED) * 1.5f);
+		throttle.pitch = throttle.pitch + ((tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed()) * 1.5f);
 
 		ModelPart handbrake = alnico.getChild("section1").getChild("controls").getChild("biglever").getChild("bone");
 		handbrake.pitch = !PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;

@@ -44,13 +44,14 @@ import static mdteam.ait.AITMod.AIT_CUSTOM_CONFIG;
 
 // todo this class is like a monopoly, im gonna slash it into little corporate pieces
 public class TardisTravel extends TardisLink {
+    private static final String MAX_SPEED_KEY = "max_speed";
+    private static final int DEFAULT_MAX_SPEED = 3;
     private State state = State.LANDED;
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;
     private AbsoluteBlockPos.Directed lastPosition;
     private boolean crashing = false;
     private static final int CHECK_LIMIT = AIT_CUSTOM_CONFIG.SERVER.SEARCH_HEIGHT;
-    public static final int MAX_SPEED = 3;
     private static final Random random = new Random();
 
     public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
@@ -115,7 +116,7 @@ public class TardisTravel extends TardisLink {
     }
 
     public void increaseSpeed() {
-        this.setSpeed(MathHelper.clamp(this.getSpeed() + 1,0, MAX_SPEED));
+        this.setSpeed(MathHelper.clamp(this.getSpeed() + 1,0, this.getMaxSpeed()));
     }
     public void decreaseSpeed() {
         if(this.getTardis().isEmpty()) return;
@@ -124,7 +125,7 @@ public class TardisTravel extends TardisLink {
             TardisUtil.getTardisDimension().playSound(null, this.getTardis().get().getDesktop().getConsolePos(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
         }
 
-        this.setSpeed(MathHelper.clamp(this.getSpeed() - 1,0, MAX_SPEED));
+        this.setSpeed(MathHelper.clamp(this.getSpeed() - 1,0, this.getMaxSpeed()));
     }
     public int getSpeed() {
         if(this.getTardis().isEmpty()) return 0;
@@ -134,6 +135,20 @@ public class TardisTravel extends TardisLink {
         if(this.getTardis().isEmpty()) return;
 
         PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.SPEED, speed);
+    }
+
+    public int getMaxSpeed() {
+        if(this.getTardis().isEmpty()) return DEFAULT_MAX_SPEED;
+
+        if (!this.getTardis().get().getHandlers().getProperties().getData().containsKey(MAX_SPEED_KEY)) {
+            setMaxSpeed(DEFAULT_MAX_SPEED);
+        }
+
+        return PropertiesHandler.getInt(this.getTardis().get().getHandlers().getProperties(), MAX_SPEED_KEY);
+    }
+    public void setMaxSpeed(int speed) {
+        if(this.getTardis().isEmpty()) return;
+        PropertiesHandler.set(this.getTardis().get(), MAX_SPEED_KEY, speed);
     }
 
     /**
@@ -201,6 +216,7 @@ public class TardisTravel extends TardisLink {
      */
     private void cancelDemat() {
         if (this.getState() != State.DEMAT || this.getTardis().isEmpty()) return; // rip
+        if (this.getPosition() == null || this.getTardis().get().getDesktop() == null || this.getTardis().get().getDesktop().getConsolePos() == null) return;
 
         this.forceLand();
         this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
