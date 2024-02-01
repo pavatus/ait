@@ -76,7 +76,7 @@ public class OvergrownData extends TardisLink {
             return;
         }
 
-        if (!this.getExteriorPos().getWorld().getBiome(this.getTardis().get().getTravel().getPosition()).isIn(BiomeTags.IS_FOREST)) return;
+        //if (!this.getExteriorPos().getWorld().getBiome(this.getTardis().get().getTravel().getPosition()).isIn(BiomeTags.IS_FOREST)) return;
 
         if (this.isOvergrown() || this.getTardis().get().getTravel().getState() != TardisTravel.State.LANDED) return;
 

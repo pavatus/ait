@@ -85,7 +85,9 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
             return;
         }
 
-        DoorData.useDoor(this.getTardis().get(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
+        if(getTardis().get().getTravel().getState() == LANDED || getTardis().get().getTravel().getState() == CRASH) {
+            DoorData.useDoor(this.getTardis().get(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
+        }
     }
 
     @Nullable

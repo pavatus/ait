@@ -42,6 +42,8 @@ Radio, Duzo
 ### Contributions:
 Bug1312, The24thDoctor, Poker, Vale, Ben
 
+## Thank You's:
+DocArcane, Craig (Suff), MagicMaan(?)
 
 ## Links
 [Wiki](https://m-d-team.github.io/ait-fabric-1.20.1/)
