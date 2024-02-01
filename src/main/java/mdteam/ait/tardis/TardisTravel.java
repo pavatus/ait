@@ -389,7 +389,7 @@ public class TardisTravel extends TardisLink {
         world.getChunk(this.getPosition());
 
 
-        if (!ignoreChecks && TardisEvents.DEMAT.invoker().onDemat(getTardis().get()) && this.getTardis().get().getDoor().isOpen()) {
+        if (!ignoreChecks && TardisEvents.DEMAT.invoker().onDemat(getTardis().get())) {
             failToTakeoff();
             return;
         }
