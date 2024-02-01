@@ -35,6 +35,7 @@ import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -56,8 +57,7 @@ public class AITMod implements ModInitializer {
     public static final String MOD_ID = "ait";
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
     public static final Boolean DEBUG = true;
-
-    public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad(); // if this doesnt exist for you run data gen
+    public static final AITCustomConfig AIT_CUSTOM_CONFIG = new AITCustomConfig();
     public static final NeptuneItemGroup AIT_ITEM_GROUP = new NeptuneItemGroup(new Identifier(AITMod.MOD_ID, "item_group"), AITItems.TARDIS_ITEM.getDefaultStack());
     public static final ComponentKey<RadioNBTComponent> RADIONBT =
             ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "radionbt"), RadioNBTComponent.class);
@@ -65,6 +65,7 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        AIT_CUSTOM_CONFIG.init(MOD_ID);
         ConsoleRegistry.init();
         DesktopRegistry.init();
         ExteriorRegistry.init();
@@ -232,6 +233,10 @@ public class AITMod implements ModInitializer {
 
                 SiegeTardisItem.placeTardis(tardis, SiegeTardisItem.fromEntity(player));
             }
+        });
+
+        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
+            AIT_CUSTOM_CONFIG.save();
         });
 
         AIT_ITEM_GROUP.initialize();

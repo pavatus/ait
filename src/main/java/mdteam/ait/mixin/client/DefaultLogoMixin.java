@@ -27,7 +27,7 @@ public class DefaultLogoMixin {
     @Redirect(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 0))
     private void injectedLogo(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
-        if (!AITMod.AIT_CONFIG.CUSTOM_MENU()) {
+        if (!AITMod.AIT_CUSTOM_CONFIG.CLIENT.CUSTOM_MENU) {
             instance.drawTexture(texture, x, y, u, v, width, height, textureWidth, textureHeight);
             return;
         }
@@ -41,7 +41,7 @@ public class DefaultLogoMixin {
     @Redirect(method = "Lnet/minecraft/client/gui/LogoDrawer;draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 1))
     private void injectedEdition(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
-        if (!AITMod.AIT_CONFIG.CUSTOM_MENU()) {
+        if (!AITMod.AIT_CUSTOM_CONFIG.CLIENT.CUSTOM_MENU) {
             instance.drawTexture(texture, x, y, u, v, width, height, textureWidth, textureHeight);
             return;
         }
