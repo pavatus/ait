@@ -316,7 +316,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
             return;
         }
 
-        AITMod.LOGGER.info("SENDING TARDIS " + uuid + " TO " + player.getName().getString());
+        // Is this really necessary? On servers it results in unnecessary console spam. - Loqor
+        //AITMod.LOGGER.info("SENDING TARDIS " + uuid + " TO " + player.getName().getString());
 
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(uuid);
