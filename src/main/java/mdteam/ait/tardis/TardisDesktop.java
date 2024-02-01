@@ -174,8 +174,8 @@ public class TardisDesktop extends TardisLink {
 
         if(getTardis().isEmpty()) return;
 
-        for (LivingEntity entity : TardisUtil.getLivingEntitiesInInterior(getTardis().get(), 100)) {
-            entity.kill();
+        for (LivingEntity entity : TardisUtil.getLivingEntitiesInInterior(getTardis().get(), 256)) {
+            entity.discard();
         }
 
         // for (LivingEntity entity : TardisUtil.getEntitiesInInterior(tardis)) {
