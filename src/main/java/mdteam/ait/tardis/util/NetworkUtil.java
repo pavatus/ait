@@ -45,7 +45,7 @@ public class NetworkUtil {
     public static Collection<ServerPlayerEntity> getNearbyTardisPlayers(Tardis tardis) {
         Collection<ServerPlayerEntity> found = getPlayersInInterior(tardis);
         found.addAll(getPlayersNearExterior(tardis));
-        found.addAll(getLinkedPlayers(tardis));
+        //found.addAll(getLinkedPlayers(tardis)); // todo fix issues
         return found;
     }
     public static void sendToInterior(Tardis tardis, Identifier id, PacketByteBuf buf) {
@@ -89,7 +89,7 @@ public class NetworkUtil {
     }
 
     /**
-     * TODO - this causes weird issues with the stacking
+     * TODO - this causes weird issues with the stacking, temporarily removed
      * Returns whether the player has an item linked to this tardis in their inventory
      * @param tardis
      * @param player
