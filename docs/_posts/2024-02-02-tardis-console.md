@@ -23,7 +23,7 @@ Place the Console Generator in the TARDIS interior to select any of the unlocked
 To use the Console Generator, follow this easy guide:
 1. Right click on the Console Generator to change the **type** of console.
 2. Right click *while crouching* on the Console Generator to change the **variant**.
-3. Confirm the console by using a linked [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-1-31-sonic %}).
+3. Confirm the console by using a linked [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-02-02-sonic %}).
 
 
 
@@ -31,7 +31,7 @@ To use the Console Generator, follow this easy guide:
 
 
 ## How do I use a TARDIS Console?
-If you're having a hard time finding the controls, you can use a [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-1-31-sonic %}). Alternatively, you're able to turn on debugging mode for viewing entity **hitboxes**, using F3+B which will toggle the debug **hitbox** mode.
+If you're having a hard time finding the controls, you can use a [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-02-02-sonic %}). Alternatively, you're able to turn on debugging mode for viewing entity **hitboxes**, using F3+B which will toggle the debug **hitbox** mode.
 
 Right or left click on any of the controls to activate them. Certain controls - like the **throttle** - need you to crouch to increment them fully up or fully down but will do normal increments while free-standing.
 
