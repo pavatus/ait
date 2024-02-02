@@ -37,7 +37,7 @@ Right or left click on any of the controls to activate them. Certain controls - 
 
 The **Increment Control** is a special control, however; it goes from 1-10-100-1000, and you can also crouch to decrease down instead of increasing up the scale.
 
-The **Coordinate System** (X, Y and Z) require you to right click to decrease the increment from the current position and require you to left cloick to increase the increment from the current position. 
+The **Coordinate System** (X, Y and Z) require you to right click to decrease the increment from the current position and require you to left click to increase the increment from the current position. 
 
 The **Dimension Control** will change the destination dimension from one dimension to another. Right click the control to change the dimension.
 
