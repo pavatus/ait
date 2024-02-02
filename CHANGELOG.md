@@ -1,4 +1,4 @@
-# 1.2.10
-- Renamed Waypoint Controls
-- Fixed some crashes and bugs
-- Added a buffer system to reduce sync issues
+# 1.2.16
+- Temporary removal of code causing critical lag/bugs
+- Made sonic TARDIS mode work up to 256 blocks
+- Made sonic TARDIS mode only set destination after radius

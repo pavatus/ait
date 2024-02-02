@@ -196,7 +196,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.CORAL_SONIC_SCREWDRIVER, 1)
                     .input(AITItems.MECHANICAL_SONIC_SCREWDRIVER)
                     .criterion(FabricRecipeProvider.hasItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER)));
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.CONSOLE, 1)
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.CONSOLE_GENERATOR, 1)
                     .pattern(" G ")
                     .pattern("CEC")
                     .pattern(" I ")
@@ -351,6 +351,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             // Secret
             provider.addSound("tardis/secret/doom_door_open", AITSounds.DOOM_DOOR_OPEN);
             provider.addSound("tardis/secret/doom_door_close", AITSounds.DOOM_DOOR_CLOSE);
+
+            // Sonic
+            provider.addSound("sonic/use", AITSounds.SONIC_USE);
+            provider.addSound("sonic/switch", AITSounds.SONIC_SWITCH);
 
             // Other
             provider.addSound("tardis/cloister", AITSounds.CLOISTER);

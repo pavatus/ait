@@ -96,7 +96,7 @@ public class ClientCreakHandler extends SoundHandler {
         }
 
         // theyre in a tardis and theres no power so play creaks boi
-        if (random.nextInt(256) == 32) {
+        if (random.nextInt(512) == 32) {
             this.playRandomCreak();
         }
     }

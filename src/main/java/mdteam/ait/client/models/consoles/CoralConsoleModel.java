@@ -5,6 +5,7 @@ import mdteam.ait.client.animation.console.coral.CoralAnimations;
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.ConsoleVariantRegistry;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.console.CoralConsole;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
@@ -1350,6 +1351,9 @@ public class CoralConsoleModel extends ConsoleModel {
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		if (console.getTardis().isEmpty()) return;
+
+		Tardis tardis = console.getTardis().get();
+
 		matrices.push();
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
@@ -1388,7 +1392,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Throttle
 		ModelPart throttle = this.console.getChild("controls").getChild("p_ctrl_5").getChild("bone49").getChild("lever3").getChild("bone52");
-		throttle.roll = throttle.roll  + (console.getTardis().get().getTravel().getSpeed() / (float) TardisTravel.MAX_SPEED);
+		throttle.roll = throttle.roll  + (tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed());
 
 		// Increment
 		ModelPart increment = this.console.getChild("controls").getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("crank2");

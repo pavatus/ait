@@ -8,6 +8,7 @@ import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.compat.regen.RegenHandler;
+import mdteam.ait.config.AITCustomConfig;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -16,7 +17,6 @@ import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.core.managers.RiftChunkManager;
-import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.registry.*;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
@@ -27,7 +27,6 @@ import mdteam.ait.tardis.data.InteriorChangingHandler;
 import mdteam.ait.tardis.data.ServerHumHandler;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.sound.HumSound;
-import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
@@ -117,6 +116,7 @@ public class AITMod implements ModInitializer {
             RealWorldCommand.register(dispatcher);
             SetNameCommand.register(dispatcher);
             GetNameCommand.register(dispatcher);
+            SetMaxSpeedCommand.register(dispatcher);
         }));
 
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {
@@ -137,8 +137,8 @@ public class AITMod implements ModInitializer {
             if (tardis.isGrowth() || tardis.getHandlers().getInteriorChanger().isGenerating() || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
                 return true; // cancelled
 
-//            if (tardis.getDoor().isOpen() /*|| !tardis.getDoor().locked()*/)
-//                return true;
+            if (tardis.getDoor().isOpen() /*|| !tardis.getDoor().locked()*/)
+                return true;
 
             for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
                 TardisCriterions.TAKEOFF.trigger((ServerPlayerEntity) player);

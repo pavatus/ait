@@ -114,12 +114,12 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
     private void updateProperties(ClientTardis tardis, String key, String type, String value) {
         AITMod.LOGGER.info("Updating Properties " + key + " to " + value); // remove this
         switch (type) {
-            case "string" -> PropertiesHandler.set(tardis, key, value);
-            case "boolean" -> PropertiesHandler.set(tardis, key, Boolean.parseBoolean(value));
-            case "int" -> PropertiesHandler.set(tardis, key, Integer.parseInt(value));
-            case "double" -> PropertiesHandler.set(tardis, key, Double.parseDouble(value));
-            case "float" -> PropertiesHandler.set(tardis, key, Float.parseFloat(value));
-            case "identifier" -> PropertiesHandler.set(tardis, key, new Identifier(value));
+            case "string" -> PropertiesHandler.set(tardis, key, value, false);
+            case "boolean" -> PropertiesHandler.set(tardis, key, Boolean.parseBoolean(value), false);
+            case "int" -> PropertiesHandler.set(tardis, key, Integer.parseInt(value), false);
+            case "double" -> PropertiesHandler.set(tardis, key, Double.parseDouble(value), false);
+            case "float" -> PropertiesHandler.set(tardis, key, Float.parseFloat(value), false);
+            case "identifier" -> PropertiesHandler.set(tardis, key, new Identifier(value), false);
         }
     }
 

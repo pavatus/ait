@@ -3,7 +3,6 @@ package mdteam.ait.core;
 import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneSoundEventInit;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.sounds.MatSound;
-import mdteam.ait.core.sounds.SoundRegistryContainer;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
@@ -54,6 +53,10 @@ public class AITSounds implements NeptuneSoundEventInit {
 
     // Tools
     public static final SoundEvent DING = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tools/goes_ding"));
+
+    // Sonic
+    public static final SoundEvent SONIC_USE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "sonic/use"));
+    public static final SoundEvent SONIC_SWITCH = SoundEvent.of(new Identifier(AITMod.MOD_ID, "sonic/switch"));
 
 
     // FIXME: move somwehre else + these values suck

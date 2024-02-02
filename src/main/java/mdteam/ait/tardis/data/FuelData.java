@@ -88,7 +88,7 @@ public class FuelData extends TardisLink {
         super.tick(server);
         if(getTardis().isEmpty()) return;
 
-        // creativious i moved your code here
+        // @TODO fix this because it seems that using any chunk references causes ticking to freak the hell out - Loqor
         RiftChunk riftChunk = (RiftChunk) this.getTardis().get().getTravel().getExteriorPos().getChunk();
         if (getTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && riftChunk.getArtronLevels() > 0 && this.getFuel() < FuelData.TARDIS_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getTardis().get().getUuid().toString() + "-refueldelay"))) {
             if(riftChunk.isRiftChunk()) {

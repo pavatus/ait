@@ -23,7 +23,7 @@ public class ThrottleControl extends Control {
 
         if (!leftClick) {
             if (player.isSneaking()) {
-                travel.setSpeed(TardisTravel.MAX_SPEED);
+                travel.setSpeed(travel.getMaxSpeed());
             } else {
                 travel.increaseSpeed();
             }

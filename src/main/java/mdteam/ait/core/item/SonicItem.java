@@ -3,15 +3,18 @@ package mdteam.ait.core.item;
 import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.LinkableItem;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -103,34 +106,20 @@ public class SonicItem extends LinkableItem {
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 // fixme temporary replacement for interior changing
 
-                BlockEntity entity = world.getBlockEntity(pos);
-                if (entity instanceof ExteriorBlockEntity exteriorBlock) {
-                    TardisTravel.State state = exteriorBlock.getTardis().get().getTravel().getState();
-                    if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
-                        return;
-                    /*tardis.markDirty();
-                    if (!tardis.getHandlers().getInteriorChanger().isGenerating())
-                        AITMod.openScreen((ServerPlayerEntity) player, 2, tardis.getUuid());*/
+                if (!(world.getRegistryKey() == World.OVERWORLD && !world.isClient())) return;
 
-                } else if (player.isSneaking() && world == TardisUtil.getTardisDimension()) {
-                    /*TardisTravel.State state = tardis.getTravel().getState();
-                    if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
-                        return;
-                    if (!tardis.getHandlers().getInteriorChanger().isGenerating())
-                        AITMod.openScreen((ServerPlayerEntity) player, 2, tardis.getUuid());*/
-
-                } else if (world.getRegistryKey() == World.OVERWORLD && !world.isClient()) {
-                    Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
-                    Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
-                    player.sendMessage((TardisUtil.isRiftChunk((ServerWorld) world, pos) ? found : notfound), true);
-                    if(TardisUtil.isRiftChunk((ServerWorld) world, pos))
-                                player.sendMessage(Text.literal("AU: " + ((RiftChunk) world.getChunk(pos)).getArtronLevels()).formatted(Formatting.GOLD));
-                }
+                Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
+                Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
+                player.sendMessage((TardisUtil.isRiftChunk((ServerWorld) world, pos) ? found : notfound), true);
+                if(TardisUtil.isRiftChunk((ServerWorld) world, pos))
+                    player.sendMessage(Text.literal("AU: " + ((RiftChunk) world.getChunk(pos)).getArtronLevels()).formatted(Formatting.GOLD));
             }
         },
         TARDIS(Formatting.BLUE) {
             @Override
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null) return;
+
                 if (world == TardisUtil.getTardisDimension()) {
                     world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                     player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
@@ -144,13 +133,14 @@ public class SonicItem extends LinkableItem {
 
                 if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
-                PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
-                PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, true);
-                if(tardis.getHandlers().getHADS().isInDanger()) {
-                    tardis.setIsInDanger(false);
+                AbsoluteBlockPos.Directed playerPos = new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection());
+
+                if (!ExteriorAnimation.isNearTardis(player, tardis, 256)) {
+                    travel.setDestination(playerPos, true);
+                    return;
                 }
 
-                travel.setDestination(new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()), true);
+                FlightUtil.travelTo(tardis, playerPos);
 
                 player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);
             }
@@ -162,7 +152,7 @@ public class SonicItem extends LinkableItem {
             this.format = format;
         }
 
-        public abstract void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack);
+        public abstract void run(@Nullable Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack);
 
         @Override
         public String asString() {
@@ -186,8 +176,11 @@ public class SonicItem extends LinkableItem {
 
         if (!nbt.contains(MODE_KEY)) return ActionResult.FAIL;
 
+        if(intToMode(nbt.getInt(MODE_KEY)) == Mode.INACTIVE) return ActionResult.FAIL;
+
+        playSonicSounds(player);
+
         Tardis tardis = getTardis(itemStack);
-        if (tardis == null) return ActionResult.FAIL;
 
         Mode mode = intToMode(nbt.getInt(MODE_KEY));
         mode.run(tardis, world, pos, player, itemStack);
@@ -214,13 +207,15 @@ public class SonicItem extends LinkableItem {
     }
 
     public static void playSonicSounds(PlayerEntity player) {
-        player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BEACON_AMBIENT, SoundCategory.PLAYERS, 1f, 2f);
+        player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, 1f);
     }
 
     public static void cycleMode(ItemStack stack) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        if (!(nbt.contains("tardis")) || !(nbt.contains(MODE_KEY))) return;
+        if (!(nbt.contains(MODE_KEY))) {
+            setMode(stack, 0);
+        }
 
         SonicItem.setMode(stack, nbt.getInt(MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(MODE_KEY) + 1 : 0);
     }
@@ -229,28 +224,30 @@ public class SonicItem extends LinkableItem {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         NbtCompound nbt = itemStack.getOrCreateNbt();
+        BlockPos pos = user.getBlockPos();
 
         if (world.isClient()) return TypedActionResult.pass(itemStack);
 
         if (user.isSneaking()) {
+            world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
             cycleMode(itemStack);
         } else {
-
-            if(intToMode(nbt.getInt(MODE_KEY)) != Mode.INACTIVE)
+            if(intToMode(nbt.getInt(MODE_KEY)) != Mode.INACTIVE) {
                 playSonicSounds(user);
 
-            // @TODO idk we should make the sonic be usable not just on blocks, especially for scanning about looking for rifts - Loqor
+                Tardis tardis = getTardis(itemStack);
 
-            /*Mode mode = intToMode(nbt.getInt(MODE_KEY));
-            mode.run(null, world, user.getBlockPos(), user, itemStack);*/
+                Mode mode = intToMode(nbt.getInt(MODE_KEY));
+                mode.run(tardis, world, pos, user, itemStack);
+            }
         }
 
         return TypedActionResult.pass(itemStack);
     }
 
     public static int findModeInt(ItemStack stack) {
-        NbtCompound nbtCompound = stack.getNbt();
-        if (nbtCompound == null || !nbtCompound.contains("tardis"))
+        NbtCompound nbtCompound = stack.getOrCreateNbt();
+        if (!nbtCompound.contains(MODE_KEY))
             return 0;
         return nbtCompound.getInt(MODE_KEY);
     }
@@ -282,21 +279,22 @@ public class SonicItem extends LinkableItem {
                 position = tardis.getTravel() == null || tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();
         }
 
+        tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
+
+        Mode mode = intToMode(tag.getInt(MODE_KEY));
+        tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
+
+        tooltip.add(ScreenTexts.EMPTY);
+
         if (tag.contains("tardis")) { // Adding the sonics mode
-            tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
-
-            Mode mode = intToMode(tag.getInt(MODE_KEY));
-            tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
-
-            tooltip.add(ScreenTexts.EMPTY);
+            tooltip.add(Text.literal("Position: ").formatted(Formatting.BLUE));
+            tooltip.add(Text.literal("> " + position).formatted(Formatting.GRAY));
         }
 
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(Text.literal("Position: ").formatted(Formatting.BLUE));
-        tooltip.add(Text.literal("> " + position).formatted(Formatting.GRAY));
     }
 
-    public Mode intToMode(int mode) {
+    public static Mode intToMode(int mode) {
         return Mode.values()[mode];
     }
 }

@@ -394,12 +394,10 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
             world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + 0.5f, pos.getY() + 1,
                     pos.getZ() + 0.5f, random.nextFloat(-0.1f, 0.1f), 0.01, random.nextFloat(-0.1f, 0.1f));
         }
-        /*if (this.getTardis().get().isRefueling()) {
-            for (int i = 0; i < 20; i++) {
-                world.addParticle(new DustParticleEffect(new Vector3f(0.5F, 0.5F, 0.5F), 1), true, pos.getX() + random.nextFloat(0f, 0.25f), pos.getY() + 1 + (i * 0.25f),
-                        pos.getZ() + random.nextFloat(0f, 0.25f), random.nextFloat(-5, 5), random.nextFloat(-5, 5), random.nextFloat(-5, 5));
-            }
-        }*/
+        if (this.getTardis().get().isRefueling()) {
+            world.addParticle(ParticleTypes.END_ROD, true, pos.getX() + 0.5f, pos.getY() + 1.25,
+                    pos.getZ() + 0.5f, random.nextFloat(-0.1f, 0.1f), 0.01, random.nextFloat(-0.1f, 0.1f));
+        }
     }
 
 }

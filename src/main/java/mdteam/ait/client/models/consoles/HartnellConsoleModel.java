@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
@@ -806,6 +807,9 @@ public class HartnellConsoleModel extends ConsoleModel {
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		if (console.getTardis().isEmpty()) return;
+
+		Tardis tardis = console.getTardis().get();
+
 		matrices.push();
 		matrices.translate(0.5f, -1.5f, -0.5f);
 		// matrices.scale(0.5f, 0.5f, 0.5f);
@@ -878,7 +882,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Throttle Control Movements
 		ModelPart throttle = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_1").getChild("bone45");
-		throttle.roll = throttle.roll + (console.getTardis().get().getTravel().getSpeed() / (float) TardisTravel.MAX_SPEED);
+		throttle.roll = throttle.roll + (tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed());
 
 		// Handbrake Control Movements
 		ModelPart handbrake = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_2").getChild("bone46");

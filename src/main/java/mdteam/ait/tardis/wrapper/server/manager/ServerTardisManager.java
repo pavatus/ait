@@ -316,7 +316,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
             return;
         }
 
-        AITMod.LOGGER.info("SENDING TARDIS " + uuid + " TO " + player.getName().getString());
+        // Is this really necessary? On servers it results in unnecessary console spam. - Loqor
+        //AITMod.LOGGER.info("SENDING TARDIS " + uuid + " TO " + player.getName().getString());
 
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(uuid);
@@ -332,7 +333,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
      * A delay to stop the client getting overloaded with tons of tardises all at once, splitting it up over a few seconds to save server performance.
      */
     private void createAskDelay(ServerPlayerEntity player) {
-        DeltaTimeManager.createDelay(player.getUuidAsString() + "-ask-delay", (long) ((AITMod.AIT_CUSTOM_CONFIG.ASK_DELAY) * 1000L)); // A delay between asking for tardises to be synced
+        DeltaTimeManager.createDelay(player.getUuidAsString() + "-ask-delay", (long) ((AITMod.AIT_CUSTOM_CONFIG.SERVER.ASK_DELAY) * 1000L)); // A delay between asking for tardises to be synced
     }
     private boolean isAskOnDelay(ServerPlayerEntity player) {
         return DeltaTimeManager.isStillWaitingOnDelay(player.getUuidAsString() + "-ask-delay");
@@ -342,7 +343,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
      * A delay to force resync the server when its been a while since theyve seen a tardis to fix sync issues
      */
     private void createForceSyncDelay(ServerPlayerEntity player) {
-        DeltaTimeManager.createDelay(player.getUuidAsString() + "-force-sync-delay", (long) ((AITMod.AIT_CUSTOM_CONFIG.FORCE_SYNC_DELAY) * 1000L)); // A delay between asking for tardises to be synced
+        DeltaTimeManager.createDelay(player.getUuidAsString() + "-force-sync-delay", (long) ((AITMod.AIT_CUSTOM_CONFIG.SERVER.FORCE_SYNC_DELAY) * 1000L)); // A delay between asking for tardises to be synced
     }
     private boolean isForceSyncOnDelay(ServerPlayerEntity player) {
         return DeltaTimeManager.isStillWaitingOnDelay(player.getUuidAsString() + "-force-sync-delay");
@@ -456,7 +457,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         // this might fix server crash bugs
         if (this.lookup.isEmpty()) {
             this.loadTardises();
-            this.saveTardis();
+
+            if (!this.lookup.isEmpty())
+                this.saveTardis();
         }
     }
     @SuppressWarnings("ResultOfMethodCallIgnored")

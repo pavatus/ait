@@ -150,11 +150,13 @@ public class TardisDesktop extends TardisLink {
     public void clearOldInterior(TardisDesktopSchema schema) {
         this.schema = schema;
         DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
-        this.clearExistingEntities();
+        this.clearInteriorEntities();
     }
 
-    private void clearExistingEntities() {
+    private void clearInteriorEntities() {
         this.forceLoadInterior();
+
+        if (this.doorPos == null) return;
 
         for (Direction direction : Direction.values()) {
             BlockPos pos = doorPos.add(direction.getVector()); // Get the position of each adjacent block in the interior.
@@ -174,8 +176,8 @@ public class TardisDesktop extends TardisLink {
 
         if(getTardis().isEmpty()) return;
 
-        for (LivingEntity entity : TardisUtil.getLivingEntitiesInInterior(getTardis().get(), 100)) {
-            entity.kill();
+        for (LivingEntity entity : TardisUtil.getLivingEntitiesInInterior(getTardis().get(), 256)) {
+            entity.discard();
         }
 
         // for (LivingEntity entity : TardisUtil.getEntitiesInInterior(tardis)) {

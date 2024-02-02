@@ -2,6 +2,7 @@ package mdteam.ait.client.models.consoles;
 
 import mdteam.ait.client.animation.console.steam.SteamAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
@@ -849,12 +850,14 @@ public class SteamConsoleModel extends ConsoleModel {
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		if(console.getTardis().isEmpty()) return;
 
+		Tardis tardis = console.getTardis().get();
+
 		matrices.push();
 
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		ModelPart throttle = steam.getChild("controls").getChild("panel_6").getChild("rot6").getChild("lever9").getChild("bone50");
-		throttle.roll = throttle.roll - ((console.getTardis().get().getTravel().getSpeed() / (float) TardisTravel.MAX_SPEED) * 1.5f);
+		throttle.roll = throttle.roll - ((tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed()) * 1.5f);
 
 		ModelPart increment = steam.getChild("controls").getChild("panel_6").getChild("rot6").getChild("lever10").getChild("bone54");
 		increment.roll = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? increment.roll + 1.5f : increment.roll + 1f : increment.roll + 0.5f : increment.roll;

@@ -26,6 +26,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.EndCrystalItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -58,28 +59,21 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
-        //if(world != TardisUtil.getTardisDimension()) return;
-        if(player.getMainHandStack().getItem() instanceof SonicItem) {
+        if(world != TardisUtil.getTardisDimension()) return;
 
-            NbtCompound nbt = player.getMainHandStack().getOrCreateNbt();
+        ItemStack stack = player.getMainHandStack();
 
-            if(!nbt.contains("tardis")) return;
+        if(stack.getItem() instanceof SonicItem) {
 
-            ConsoleBlockEntity consoleBlockEntity = new ConsoleBlockEntity(pos,AITBlocks.CONSOLE.getDefaultState());
+            this.createConsole();
 
-            consoleBlockEntity.setType(this.getConsoleSchema());
-            consoleBlockEntity.setVariant(this.getConsoleVariant());
+            return;
+        } else if (stack.isOf(Items.BLAZE_POWDER)) {
 
-            this.getWorld().setBlockState(this.pos, AITBlocks.CONSOLE.getDefaultState());
-            this.getWorld().addBlockEntity(consoleBlockEntity);
+            this.createConsole();
 
-            world.playSound(null, this.pos, SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 0.5f, 1.0f);
+            stack.decrement(1);
 
-            /*if(!player.isCreative()) {
-                player.getMainHandStack().decrement(1);
-                // ItemEntity item = new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), new ItemStack(AITBlocks.CONSOLE_GENERATOR));
-                // this.getWorld().spawnEntity(item);
-            }*/
             return;
         }
 
@@ -98,6 +92,18 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
             nbt.putString("console", this.type.toString());
         if (this.variant != null)
             nbt.putString("variant", this.variant.toString());
+    }
+
+    private void createConsole() {
+        ConsoleBlockEntity consoleBlockEntity = new ConsoleBlockEntity(pos,AITBlocks.CONSOLE.getDefaultState());
+
+        consoleBlockEntity.setType(this.getConsoleSchema());
+        consoleBlockEntity.setVariant(this.getConsoleVariant());
+
+        this.getWorld().setBlockState(this.pos, AITBlocks.CONSOLE.getDefaultState());
+        this.getWorld().addBlockEntity(consoleBlockEntity);
+
+        world.playSound(null, this.pos, SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 0.5f, 1.0f);
     }
 
     public ConsoleSchema getConsoleSchema() {
