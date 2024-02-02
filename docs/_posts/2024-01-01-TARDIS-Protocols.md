@@ -7,7 +7,7 @@ categories: Tardis
 Protocols are controls on the tardis console that function to make your playthrough easier, 
 here are them layed out for you to better understand what function they serve when activated.
 
-To locate where these controls are on the console, use the [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-1-31-sonic %})
+To locate where these controls are on the console, use the [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-02-02-sonic %})
 while in scanning mode.
 
 Hope this helps!
