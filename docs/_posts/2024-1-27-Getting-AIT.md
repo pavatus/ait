@@ -36,3 +36,5 @@ The betas can be found [on Github Releases](https://github.com/M-D-Team/ait-fabr
 ---
 
 ## Note - when you find any bugs / crashes, please create a [Github Issue](https://github.com/M-D-Team/ait-fabric-1.20.1/issues/new) or ask for help in the support channel in the discord.
+
+- Last updated Friday 1st February 2024

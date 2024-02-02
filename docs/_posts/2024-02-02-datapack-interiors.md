@@ -16,6 +16,8 @@ If my desktop was called **"war"**, I'd save it as **"war.png"**.
 ---
 
 ## Converting Your Beautiful Build To NBT
+Use a **Structure Block** to save your interior.
+
 First save your interior, and note down your namespace (before the colon) and desktop name (after the colon)
 The *.nbt* will be saved to ```.minecraft/saves/(WorldName)/generated/(namespace)/structures```.
 
