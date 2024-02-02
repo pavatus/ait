@@ -15,11 +15,11 @@ public class AITCustomConfig extends NeptuneConfig {
         @ConfigComment("How many blocks up and down a TARDIS should ground search for before giving up")
         public int SEARCH_HEIGHT = 64;
         @CustomName("Ask Delay")
-        @ConfigComment("How many seconds a client should be on delay for before asking for another TARDIS\nHigher -> Better server performance\nLower -> Less client sync issues")
+        @ConfigComment("How many seconds a client should be on delay for before asking for another TARDIS | Higher -> Better server performance | Lower -> Less client sync issues")
         public double ASK_DELAY = 1.0;
 
         @CustomName("Force Sync Delay")
-        @ConfigComment("How many seconds a client should be away from a tardis for before forcing a resync\nHigher -> Better server performance\nLower -> Less client sync issues")
+        @ConfigComment("How many seconds a client should be away from a tardis for before forcing a resync | Higher -> Better server performance | Lower -> Less client sync issues")
         public double FORCE_SYNC_DELAY = 10;
     }
 
