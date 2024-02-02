@@ -137,7 +137,6 @@ public class TardisDesktop extends TardisLink {
 
     public void changeInterior(TardisDesktopSchema schema) {
         long currentTime = System.currentTimeMillis();
-        this.clearInteriorEntities();
         this.schema = schema;
         DesktopGenerator generator = new DesktopGenerator(this.schema);
         BlockPos doorPos = generator.place((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
