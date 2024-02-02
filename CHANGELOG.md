@@ -1,9 +1,4 @@
-# 1.2.15
-- If wearing leather armour, you won't freeze in siege mode
-- Particles now show on the console while refueling
-- Added custom skybox for tardis interior
-- Added sounds when using the sonic
-- Added recipe for console generator
-- Removed recipe for console
-- Moved TargetTicks over to PropertiesHandler to fix a sync issue
-- Fixed siege mode always being frozen instead of taking a minute
+# 1.2.16
+- Temporary removal of code causing critical lag/bugs
+- Made sonic TARDIS mode work up to 256 blocks
+- Made sonic TARDIS mode only set destination after radius
