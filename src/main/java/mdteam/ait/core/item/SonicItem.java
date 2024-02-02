@@ -133,9 +133,14 @@ public class SonicItem extends LinkableItem {
 
                 if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
-                if (!ExteriorAnimation.isNearTardis(player, tardis, 100)) return;
+                AbsoluteBlockPos.Directed playerPos = new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection());
 
-                FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection()));
+                if (!ExteriorAnimation.isNearTardis(player, tardis, 256)) {
+                    travel.setDestination(playerPos, true);
+                    return;
+                }
+
+                FlightUtil.travelTo(tardis, playerPos);
 
                 player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);
             }

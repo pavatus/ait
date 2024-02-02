@@ -684,6 +684,9 @@ public class TardisTravel extends TardisLink {
             this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
         this.sync();
     }
+    public void setDestination(AbsoluteBlockPos.Directed pos) {
+        this.setDestination(pos, true);
+    }
 
     public AbsoluteBlockPos.Directed getDestination() {
         if (this.destination == null) {
