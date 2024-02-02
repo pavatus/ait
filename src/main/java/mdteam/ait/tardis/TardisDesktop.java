@@ -156,6 +156,8 @@ public class TardisDesktop extends TardisLink {
     private void clearInteriorEntities() {
         this.forceLoadInterior();
 
+        if (this.doorPos == null) return;
+
         for (Direction direction : Direction.values()) {
             BlockPos pos = doorPos.add(direction.getVector()); // Get the position of each adjacent block in the interior.
             BlockEntity blockEntity = TardisUtil.getTardisDimension().getBlockEntity(pos);

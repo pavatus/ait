@@ -10,6 +10,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -88,6 +89,7 @@ public class NetworkUtil {
     }
 
     /**
+     * TODO - this causes weird issues with the stacking
      * Returns whether the player has an item linked to this tardis in their inventory
      * @param tardis
      * @param player
