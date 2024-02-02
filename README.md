@@ -31,19 +31,17 @@
 
 ## Credits
 ### Developers:
-Loqor, Duzo, Creativious, Dr. Theo
+- Loqor (Head Developer, Builder, Sound Effects)
+- Duzo (Developer)
+- Creativious (Developer)
+- Dr. Theo (Developer)
 
-### Texture Artists/Modelers:
-Tright, b2bmrww2
-
-### Animators
-Monsterwaill
-
-### Builders
-Bababooey, b2bmrww2, Tright, Loqor
-
-### Sound Design:
-Radio, Duzo
+### Artists:
+- Tright (Head Modeller & Builder) 
+- b2bmrww2 (Moddeller & Builder)
+- Monsterwaill (Head Animator)
+- Bababooey (Head Builder)
+- RadioReapr (Sound effects)
 
 ### Contributions:
 Bug1312, The24thDoctor, Poker, Vale, Ben
