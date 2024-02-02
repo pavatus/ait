@@ -69,7 +69,7 @@ Adds the TARDIS from Doctor Who that you can interact with in a new plethora of 
 - DocArcane (Credit for the Steampunk console design)
 - Craig (Suff) (Help with code)
 - Bug1312 (Help with code)
-- MagicMan(?) (Help ith modeling)
+- MagicMan(?) (Help with modeling)
 
 ---
 
