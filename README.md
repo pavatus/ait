@@ -36,6 +36,12 @@ Loqor, Duzo, Creativious, Dr. Theo
 ### Texture Artists/Modelers:
 Tright, b2bmrww2
 
+### Animators
+Monsterwaill
+
+### Builders
+Bababooey, b2bmrww2, Tright, Loqor
+
 ### Sound Design:
 Radio, Duzo
 
@@ -43,7 +49,7 @@ Radio, Duzo
 Bug1312, The24thDoctor, Poker, Vale, Ben
 
 ## Thank You's:
-DocArcane, Craig (Suff), MagicMaan(?)
+DocArcane, Craig (Suff), MagicMaan
 
 ## Links
 [Wiki](https://m-d-team.github.io/ait-fabric-1.20.1/)

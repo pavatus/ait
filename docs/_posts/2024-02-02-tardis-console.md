@@ -37,9 +37,9 @@ Right or left click on any of the controls to activate them. Certain controls - 
 
 The **Increment Control** is a special control, however; it goes from 1-10-100-1000, and you can also crouch to decrease down instead of increasing up the scale.
 
-The **Coordinate System** (X, Y and Z) require you to crouch to decrease the increment from the current position and require you to free-stand to increase the increment from the current position. 
+The **Coordinate System** (X, Y and Z) require you to right click to decrease the increment from the current position and require you to left cloick to increase the increment from the current position. 
 
-The **Dimention Control** will change the destination dimention from one dimention to another. Right click the control to change the dimention.
+The **Dimension Control** will change the destination dimension from one dimension to another. Right click the control to change the dimension.
 
 The **Exterior Facing Control** will change which direction exterior faces next time you land ranging from North, East, South and West. Right click the control to change the facing clockwise.
 
