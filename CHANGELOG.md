@@ -1,3 +1,6 @@
+# 1.2.18
+- Updated neptunelib so that people can't be pinged anymore
+
 # 1.2.17
 - Updated neptunelib
 
