@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -93,9 +94,11 @@ public class NetworkUtil {
      * @return
      */
     public static boolean hasLinkedItem(Tardis tardis, ServerPlayerEntity player) {
+        PlayerInventory inventory = player.getInventory();
+
         for (int i = 0; i < 36; i++) {
-            if (LinkableItem.getTardis(player.getInventory().getStack(i)) == null) continue;
-            if (Objects.equals(LinkableItem.getTardis(player.getInventory().getStack(i)).getUuid(), tardis.getUuid())) {
+            if (LinkableItem.getTardis(inventory.getStack(i)) == null) continue;
+            if (Objects.equals(LinkableItem.getTardis(inventory.getStack(i)).getUuid(), tardis.getUuid())) {
                 return true;
             }
         }
