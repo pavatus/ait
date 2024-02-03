@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockPos;
 public class PositionedLoopingSound extends LoopingSound {
     public PositionedLoopingSound(SoundEvent soundEvent, SoundCategory soundCategory, BlockPos pos, float volume, float pitch) {
         super(soundEvent, soundCategory);
-
         this.x = pos.getX();
         this.y = pos.getY();
         this.z = pos.getZ();

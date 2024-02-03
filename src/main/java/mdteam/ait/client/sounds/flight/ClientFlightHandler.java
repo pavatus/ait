@@ -23,6 +23,7 @@ public class ClientFlightHandler extends SoundHandler {
     protected ClientFlightHandler() {}
 
     public LoopingSound getFlightLoop() {
+        if (tardis().getDesktop().getConsolePos() == null) return null;
         if (FLIGHT == null) FLIGHT = new FlightSound(AITSounds.FLIGHT_LOOP, SoundCategory.BLOCKS, tardis().getDesktop().getConsolePos(), 2.5f); // should this be positioned at the console pos or global?
 
         return FLIGHT;

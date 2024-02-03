@@ -1,3 +1,6 @@
+# 1.2.22
+- fixed crash for flight sound
+
 # 1.2.21
 - Fixed more getChunk methods, they were in tardis flight code, should help with the performance
 
