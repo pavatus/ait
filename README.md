@@ -19,9 +19,11 @@
 ## What does this mod do?
 Adventures In Time add the TARDIS from Doctor Who that you can interact with in a new plethora of ways, these include flying to different dimensions, hiding from friends using the cloak mode and a variety of other fun features for you to explore! 
 
-
-
 Recently updated for Fabric 1.20.1. 
+
+Recommended to play with 8GB of RAM **minimum** singleplayer.
+
+Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 
 ## Compatability
 
