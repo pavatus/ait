@@ -1,4 +1,7 @@
 # 1.2.22
+- fixed crash for flight sound again
+
+# 1.2.22
 - fixed crash for flight sound
 
 # 1.2.21

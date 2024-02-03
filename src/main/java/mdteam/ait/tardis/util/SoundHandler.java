@@ -51,6 +51,7 @@ public class SoundHandler {
         MinecraftClient.getInstance().getSoundManager().play(sound);
     }
     public void startSound(SoundInstance sound) {
+        if (sound == null) return;
         MinecraftClient.getInstance().getSoundManager().play(sound);
     }
     public void stopSound(SoundEvent event) {
