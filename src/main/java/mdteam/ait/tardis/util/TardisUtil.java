@@ -9,9 +9,7 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.events.ServerLoadEvent;
-import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.item.KeyItem;
-import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
@@ -210,17 +208,6 @@ public class TardisUtil {
             }
         }*/
         return TARDIS_DIMENSION;
-    }
-
-    public static boolean isRiftChunk(ServerWorld world,BlockPos pos) {
-        return ((RiftChunk)world.getChunk(pos)).isRiftChunk();
-    }
-    public static int getArtronLevelsOfChunk(ServerWorld world, BlockPos pos) {
-        return ((RiftChunk)world.getChunk(pos)).getArtronLevels();
-    }
-
-    public static void setArtronLevelsOfChunk(ServerWorld world, BlockPos pos, Integer artron) {
-        ((RiftChunk)world.getChunk(pos)).setArtronLevels(artron);
     }
 
     public static AbsoluteBlockPos.Directed createFromPlayer(PlayerEntity player) {

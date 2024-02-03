@@ -1,3 +1,6 @@
+# 1.2.20
+- Fixed FuelData and rift chunks to reduce lag
+
 # 1.2.19
 - Update neptunelib to hopefully fix some lag
 

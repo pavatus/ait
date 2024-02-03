@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import mdteam.ait.AITMod;
+import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -36,7 +37,7 @@ public class RiftChunkCommand {
         BlockPos targetBlockPos = BlockPosArgumentType.getBlockPos(context, "position");
         ServerPlayerEntity source = context.getSource().getPlayer();
         if (source == null) return 0;
-        boolean isARiftChunk = TardisUtil.isRiftChunk(source.getServerWorld(), targetBlockPos);
+        boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
         Text is_a_rift_chunk = Text.translatable("command.ait.riftchunk.isariftchunk");
         Text not_a_rift_chunk = Text.translatable("command.ait.riftchunk.notariftchunk");
         source.sendMessage((isARiftChunk ? is_a_rift_chunk : not_a_rift_chunk));
@@ -48,12 +49,12 @@ public class RiftChunkCommand {
         BlockPos targetBlockPos = BlockPosArgumentType.getBlockPos(context, "position");
         ServerPlayerEntity source = context.getSource().getPlayer();
         if (source == null) return 0;
-        boolean isARiftChunk = TardisUtil.isRiftChunk(source.getServerWorld(), targetBlockPos);
+        boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
         Text message;
         if (!isARiftChunk) {
             message = Text.literal("This chunk is not a rift chunk, so you can't set the artron levels of it");
         } else {
-            message = Text.literal("The artron levels in this chunk are: " + TardisUtil.getArtronLevelsOfChunk(source.getServerWorld(), targetBlockPos));
+            message = Text.literal("The artron levels in this chunk are: " + RiftChunkManager.getArtronLevels(source.getWorld(), targetBlockPos));
         }
         source.sendMessage(message);
 
@@ -64,13 +65,13 @@ public class RiftChunkCommand {
         BlockPos targetBlockPos = BlockPosArgumentType.getBlockPos(context, "position");
         ServerPlayerEntity source = context.getSource().getPlayer();
         if (source == null) return 0;
-        boolean isARiftChunk = TardisUtil.isRiftChunk(source.getServerWorld(), targetBlockPos);
+        boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
         Text message;
         if (!isARiftChunk) {
             message = Text.literal("This chunk is not a rift chunk, so you can't get the artron levels of it");
         } else {
             Integer artron_levels = IntegerArgumentType.getInteger(context, "artron-levels");
-            TardisUtil.setArtronLevelsOfChunk(source.getServerWorld(), targetBlockPos, artron_levels);
+            RiftChunkManager.setArtronLevels(source.getServerWorld(), targetBlockPos, artron_levels);
             message = Text.literal("You set the artron levels in this chunk to: " + artron_levels);
         }
         source.sendMessage(message);

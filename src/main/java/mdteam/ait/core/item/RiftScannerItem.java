@@ -1,8 +1,7 @@
 package mdteam.ait.core.item;
 
-import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
-import net.minecraft.entity.Entity;
+import mdteam.ait.core.managers.RiftChunkManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,12 +11,9 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-
-import java.util.Arrays;
 
 public class RiftScannerItem extends Item {
     private static final int MAX_ITERATIONS = 32;
@@ -58,7 +54,7 @@ public class RiftScannerItem extends Item {
 
                     source = getChunkInDirection(source, dir);
 
-                    if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
+                    if (isRiftChunk(source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
                         return;
                     }
@@ -69,7 +65,7 @@ public class RiftScannerItem extends Item {
 
                     source = getChunkInDirection(source, dir);
 
-                    if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
+                    if (isRiftChunk(source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
                         return;
                     }
@@ -82,7 +78,7 @@ public class RiftScannerItem extends Item {
 
                     source = getChunkInDirection(source, dir);
 
-                    if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
+                    if (isRiftChunk(source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
                         return;
                     }
@@ -92,7 +88,7 @@ public class RiftScannerItem extends Item {
 
                     source = getChunkInDirection(source, dir);
 
-                    if (isRiftChunk(world, source) && hasSufficientFuel(world, source)) {
+                    if (isRiftChunk(source) && hasSufficientFuel(world, source)) {
                         setTarget(stack, source);
                         return;
                     }
@@ -101,11 +97,11 @@ public class RiftScannerItem extends Item {
             }
         }
     }
-    private static boolean isRiftChunk(ServerWorld world, ChunkPos pos) {
-        return ((RiftChunk) world.getChunk(pos.x, pos.z)).isRiftChunk();
+    private static boolean isRiftChunk(ChunkPos pos) {
+        return RiftChunkManager.isRiftChunk(pos);
     }
     private static boolean hasSufficientFuel(ServerWorld world, ChunkPos pos) {
-        return ((RiftChunk) world.getChunk(pos.x, pos.z)).getArtronLevels() >= 250;
+        return RiftChunkManager.getArtronLevels(world, pos) >= 250;
     }
     private static ChunkPos getChunkInDirection(ChunkPos pos, Direction dir) {
         return new ChunkPos(pos.x + (dir.getOffsetX()), pos.z + (dir.getOffsetZ()));

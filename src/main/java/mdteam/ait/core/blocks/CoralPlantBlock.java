@@ -7,6 +7,7 @@ import mdteam.ait.core.AITDamageTypes;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.CoralBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
+import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
@@ -126,7 +127,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         super.onPlaced(world, pos, state, placer, itemStack);
 
         if (!(world instanceof ServerWorld)) return;
-        if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) || (!TardisUtil.isRiftChunk((ServerWorld) world,pos) && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
+        if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) || (!RiftChunkManager.isRiftChunk(pos) && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
             // GET IT OUTTA HERE!!!
             world.breakBlock(pos, true);
             return;

@@ -1,9 +1,9 @@
 package mdteam.ait.core.blockentities;
 
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.item.ArtronCollectorItem;
 import mdteam.ait.core.managers.DeltaTimeManager;
+import mdteam.ait.core.managers.RiftChunkManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -81,9 +81,9 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
     @Override
     public void tick(World world, BlockPos pos, BlockState state, ArtronCollectorBlockEntity blockEntity) {
         if(world.isClient()) return;
-        RiftChunk riftChunk = (RiftChunk) world.getChunk(pos);
-        if (riftChunk.isRiftChunk() && riftChunk.getArtronLevels() >= 3  && this.getArtronAmount() < ArtronCollectorItem.COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()))) {
-            riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 3);
+
+        if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) >= 3  && this.getArtronAmount() < ArtronCollectorItem.COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()))) {
+            RiftChunkManager.setArtronLevels(world, pos,RiftChunkManager.getArtronLevels(world, pos) - 3);
             this.addArtron( 3);
             this.updateListeners();
             DeltaTimeManager.createDelay(getDelay(), 500L);

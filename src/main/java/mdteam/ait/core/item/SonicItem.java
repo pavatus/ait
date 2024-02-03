@@ -1,18 +1,11 @@
 package mdteam.ait.core.item;
 
-import io.wispforest.owo.ops.WorldOps;
-import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.LinkableItem;
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.interfaces.RiftChunk;
-import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
-import mdteam.ait.tardis.exterior.ExteriorSchema;
-import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -23,13 +16,10 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
@@ -110,9 +100,9 @@ public class SonicItem extends LinkableItem {
 
                 Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
                 Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
-                player.sendMessage((TardisUtil.isRiftChunk((ServerWorld) world, pos) ? found : notfound), true);
-                if(TardisUtil.isRiftChunk((ServerWorld) world, pos))
-                    player.sendMessage(Text.literal("AU: " + ((RiftChunk) world.getChunk(pos)).getArtronLevels()).formatted(Formatting.GOLD));
+                player.sendMessage((RiftChunkManager.isRiftChunk(pos) ? found : notfound), true);
+                if(RiftChunkManager.isRiftChunk(pos))
+                    player.sendMessage(Text.literal("AU: " + (RiftChunkManager.getArtronLevels(world, pos))).formatted(Formatting.GOLD));
             }
         },
         TARDIS(Formatting.BLUE) {

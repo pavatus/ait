@@ -2,13 +2,15 @@ package mdteam.ait.tardis.data;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
-import mdteam.ait.core.interfaces.RiftChunk;
 import mdteam.ait.core.managers.DeltaTimeManager;
+import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class FuelData extends TardisLink {
     @Exclude
@@ -89,10 +91,11 @@ public class FuelData extends TardisLink {
         if(getTardis().isEmpty()) return;
 
         // @TODO fix this because it seems that using any chunk references causes ticking to freak the hell out - Loqor
-        RiftChunk riftChunk = (RiftChunk) this.getTardis().get().getTravel().getExteriorPos().getChunk();
-        if (getTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && riftChunk.getArtronLevels() > 0 && this.getFuel() < FuelData.TARDIS_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getTardis().get().getUuid().toString() + "-refueldelay"))) {
-            if(riftChunk.isRiftChunk()) {
-                riftChunk.setArtronLevels(riftChunk.getArtronLevels() - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
+        BlockPos pos = this.getTardis().get().getTravel().getExteriorPos();
+        World world = this.getTardis().get().getTravel().getExteriorPos().getWorld();
+        if (getTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && RiftChunkManager.getArtronLevels(world, pos) > 0 && this.getFuel() < FuelData.TARDIS_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getTardis().get().getUuid().toString() + "-refueldelay"))) {
+            if(RiftChunkManager.isRiftChunk(pos)) {
+                RiftChunkManager.setArtronLevels(world, pos, RiftChunkManager.getArtronLevels(world, pos) - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
                 addFuel(5);
             } else {
                 addFuel(1);
