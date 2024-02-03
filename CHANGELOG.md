@@ -1,3 +1,6 @@
+# 1.2.21
+- Fixed more getChunk methods, they were in tardis flight code, should help with the performance
+
 # 1.2.20
 - Fixed FuelData and rift chunks to reduce lag
 

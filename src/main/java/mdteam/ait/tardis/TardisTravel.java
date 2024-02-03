@@ -323,10 +323,6 @@ public class TardisTravel extends TardisLink {
         // Disable autopilot
         // PropertiesHandler.setAutoPilot(this.getTardis().get().getHandlers().getProperties(), false);
 
-        // Get the server world of the destination
-        ServerWorld world = (ServerWorld) this.getDestination().getWorld();
-        world.getChunk(this.getDestination());
-
         this.setDestination(FlightUtil.getPositionFromPercentage(this.getTardis().get().position(), this.getTardis().get().destination(), this.getTardis().get().getHandlers().getFlight().getDurationAsPercentage()), true);
 
         // Check if materialization is on cooldown and return if it is
@@ -348,7 +344,6 @@ public class TardisTravel extends TardisLink {
 
         // Get the server world of the destination
         ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
-        destWorld.getChunk(this.getDestination());
 
         // Play materialize sound at the destination
         this.getDestination().getWorld().playSound(null, this.getDestination(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
@@ -401,8 +396,6 @@ public class TardisTravel extends TardisLink {
         PropertiesHandler.setAutoPilot(this.getTardis().get().getHandlers().getProperties(), withRemat);
 
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
-        world.getChunk(this.getPosition());
-
 
         if (!ignoreChecks && TardisEvents.DEMAT.invoker().onDemat(getTardis().get())) {
             failToTakeoff();
