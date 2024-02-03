@@ -1,3 +1,6 @@
+# 1.2.19
+- Update neptunelib to hopefully fix some lag
+
 # 1.2.18
 - Updated neptunelib so that people can't be pinged anymore
 
