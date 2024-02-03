@@ -31,7 +31,7 @@ while Siege Mode is activated to prevent such an event occuring.
 Cloak Mode is a function on your TARDIS console designed to keep the TARDIS hidden when the chamelion circuit is faulty. Cloak Mode 
 will render your TARDIS exterior invisible to the naked eye, and will reveal itself only when a pilot holding a TARDIS key linked to the console.
 When a pilot, holding a key, is within 5 metres of the exterior the exterior will start to reveal itself. The closer the pilot approaches the exterior
-the more the TARDIS will reveal itself.
+the more the TARDIS will reveal itself. have changed
 
 Cloak Mode requires [Artron energy]({{ site.baseurl }}{% post_url 2024-01-26-artron-energy %}) to operate, make sure you have a heafty supply before
 you activate this emergency protocol!
