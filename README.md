@@ -17,13 +17,16 @@
 **Apparatus Vivi. Living machine. TARDIS from Doctor Who. Whatever you call it, it grows with you. It learns with you, and flies the way you fly. Sure, you might be the pilot, but despite that, it does with that what it may.**
 
 ## What does this mod do?
-Adds the TARDIS from Doctor Who that you can interact with in a new plethora of ways. Updated for Fabric 1.20.1.
+Adventures In Time add the TARDIS from Doctor Who that you can interact with in a new plethora of ways, these include flying to different dimensions, hiding from friends using the cloak mode and a variety of other fun features for you to explore! 
+
+
+
+Recently updated for Fabric 1.20.1. 
 
 ## Compatability
 
----
-
 ### If you have [Regeneration](https://modrinth.com/mod/regeneration)
+
 - Adds special functionality when you regenerate inside a tardis
 - Your TARDIS will panic, crashing and flying randomly.
 - Your TARDIS may randomly change interior or exterior
@@ -32,8 +35,6 @@ Adds the TARDIS from Doctor Who that you can interact with in a new plethora of 
 - When you open the doors from the exterior you will be able to see the interior and vice versa
 
 ## Credits
-
----
 
 ### Developers:
 - Loqor (Owner, Developer)
@@ -71,7 +72,6 @@ Adds the TARDIS from Doctor Who that you can interact with in a new plethora of 
 - Bug1312 (Help with code)
 - MagicMan(?) (Help with modeling)
 
----
 
 ## Links
 [Wiki](https://m-d-team.github.io/ait-fabric-1.20.1/)
