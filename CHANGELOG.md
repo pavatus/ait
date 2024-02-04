@@ -2,6 +2,7 @@
 - Autopilot now only works on lowest speed
 - Flipping the handbrake with autopilot enabled now forces you to land instead of crashing
 - Updated monitor screen
+- Monitor can now be rotated freely
 - Added eighth doctor hum
 - Made a different particle show when refueling in a RiftChunk
 - Added four new creak sounds

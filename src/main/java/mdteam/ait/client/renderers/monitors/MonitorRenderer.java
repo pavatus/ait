@@ -9,6 +9,8 @@ import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SkullBlock;
+import net.minecraft.block.WallSkullBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
@@ -20,6 +22,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.RotationPropertyHelper;
 
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 import static mdteam.ait.tardis.data.FuelData.TARDIS_MAX_FUEL;
@@ -43,13 +46,14 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 
         BlockState blockState = entity.getCachedState();
 
-        float f = blockState.get(MonitorBlock.FACING).asRotation();
+        int k = blockState.get(SkullBlock.ROTATION);
+        float h = RotationPropertyHelper.toDegrees(k);
 
         matrices.push();
 
         matrices.translate(0.5f, 1.5f, 0.5f);
 
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(h));
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
@@ -64,7 +68,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
         matrices.push();
         matrices.translate(0.5, 0.75, 0.5);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(blockState.get(MonitorBlock.FACING) == Direction.EAST || blockState.get(MonitorBlock.FACING) == Direction.WEST ? f + 180 : f));
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180 - h));
         matrices.scale(0.005f, 0.005f, 0.005f);
         matrices.translate(-50f, 0, -80);
 

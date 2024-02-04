@@ -7,6 +7,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.RotationAxis;
 
 public class CRTMonitorModel extends SinglePartEntityModel {
 	private final ModelPart crt;
@@ -30,7 +31,12 @@ public class CRTMonitorModel extends SinglePartEntityModel {
 	}
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+		matrices.push();
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180));
+
 		crt.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+
+		matrices.pop();
 	}
 
 	@Override
