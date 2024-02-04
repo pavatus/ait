@@ -10,6 +10,7 @@
 - Flight sounds no longer play when out of power
 - Fixed being unable to turn off antigravs at max world height
 - Fixed issues with Siege Mode
+- Added a temporary command to force tardises out of siege mode
 - Created ArtronHolder interface
 - Renamed "ExteriorSchema" to "ExteriorCategory"
 - Moved "hasPortals" method into the individual variants
