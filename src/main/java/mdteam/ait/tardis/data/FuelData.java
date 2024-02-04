@@ -9,6 +9,7 @@ import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -96,8 +97,8 @@ public class FuelData extends TardisLink implements ArtronHolder {
         // @TODO fix this because it seems that using any chunk references causes ticking to freak the hell out - Loqor
         
         ServerTardis tardis = (ServerTardis) this.getTardis().get();
-        BlockPos pos = tardis.getTravel().getExteriorPos();
-        World world = tardis.getTravel().getExteriorPos().getWorld();
+        AbsoluteBlockPos pos = tardis.getTravel().getExteriorPos();
+        World world = pos.getWorld();
         TardisTravel.State state = tardis.getTravel().getState();
         
         
