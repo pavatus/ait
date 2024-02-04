@@ -382,7 +382,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             aitModelProvider.registerDirectionalBlock(AITBlocks.EXTERIOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CORAL_PLANT);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.MONITOR_BLOCK);
+            //aitModelProvider.registerDirectionalBlock(AITBlocks.MONITOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.ARTRON_COLLECTOR_BLOCK);
 
             //falloutModelProvider.registerSimpleBlock(AITBlocks.DEEPSLATE_URANIUM_ORE);
