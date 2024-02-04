@@ -58,7 +58,7 @@ public class SiegeData extends TardisLink {
         if (getTardis().get().getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL)) return; // The required amount of fuel to enable/disable siege mode
         if (b) getTardis().get().disablePower();
         if (!b) getTardis().get().getHandlers().getAlarms().disable();
-        if (getTardis().get().isSiegeBeingHeld()) return;
+        // if (getTardis().get().isSiegeBeingHeld()) return;
         if (!b && getTardis().get().getExterior().findExteriorBlock().isEmpty())
             getTardis().get().getTravel().placeExterior();
         if (b) TardisUtil.giveEffectToInteriorPlayers(getTardis().get(), new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
