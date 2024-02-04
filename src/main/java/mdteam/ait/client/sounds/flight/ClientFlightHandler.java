@@ -58,8 +58,7 @@ public class ClientFlightHandler extends SoundHandler {
     public Tardis tardis() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null) return null;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-        return found;
+        return TardisUtil.findTardisByInterior(player.getBlockPos(), false);
     }
 
     private void playFlightSound() {
@@ -71,7 +70,7 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private boolean shouldPlaySounds() {
-        return inFlight() || hasThrottleAndHandbrakeDown();
+        return (inFlight() || hasThrottleAndHandbrakeDown()) && tardis().hasPower();
     }
 
     private boolean inFlight() {

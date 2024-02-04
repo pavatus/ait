@@ -6,6 +6,7 @@
 - Made a different particle show when refueling in a RiftChunk
 - Added four new creak sounds
 - Failing to takeoff/land no longer sends a message to the pilot
+- Flight sounds no longer play when out of power
 - Created ArtronHolder interface
 - Renamed "ExteriorSchema" to "ExteriorCategory"
 - Moved "hasPortals" method into the individual variants
