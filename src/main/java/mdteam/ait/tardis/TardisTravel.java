@@ -15,6 +15,7 @@ import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -94,11 +95,21 @@ public class TardisTravel extends TardisLink {
         this.tickDemat();
         this.tickMat();
 
-        if (this.getSpeed() > 0 && this.getState() == State.LANDED && !(PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE))/* && !this.getTardis().get().getDoor().isOpen()*/) {
-            this.dematerialise(PropertiesHandler.willAutoPilot(this.getTardis().get().getHandlers().getProperties()));
+        ServerTardis tardis = (ServerTardis) this.getTardis().get();
+        int speed = this.getSpeed();
+        State state = this.getState();
+        boolean handbrake = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE);
+        boolean autopilot = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND);
+
+        if (speed > 0 && state == State.LANDED && !handbrake) {
+            this.dematerialise(autopilot);
         }
-        if (this.getSpeed() == 0 && this.getState() == State.FLIGHT) {
+        if (speed == 0 && state == State.FLIGHT) {
             this.materialise();
+        }
+        // Should we just disable autopilot if the speed goes above 1?
+        if (speed > 1 && state == State.FLIGHT && autopilot) {
+            this.setSpeed(speed - 1);
         }
 
         // fixme this is a mess
@@ -115,6 +126,14 @@ public class TardisTravel extends TardisLink {
     }
 
     public void increaseSpeed() {
+        // Stop speed from going above 1 if autopilot is enabled and we're in flight
+        if (this.getSpeed() + 1 > 1
+                && this.getState() == State.FLIGHT
+                && this.getTardis().isPresent()
+                && PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND)) {
+            return;
+        }
+
         this.setSpeed(MathHelper.clamp(this.getSpeed() + 1,0, this.getMaxSpeed()));
     }
     public void decreaseSpeed() {
