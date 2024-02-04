@@ -126,9 +126,9 @@ public class MonitorScreen extends TardisScreen {
                 this.textRenderer.getWidth(">"), 10, Text.literal(">").formatted(Formatting.LIGHT_PURPLE), button -> {
             whichDirectionVariant(true);
         }, this.textRenderer));
-        Text desktopSettingsText = Text.translatable("screen.ait.monitor.desktop_settings");
-        this.addButton(new PressableTextWidget((width / 2 - 28), (height / 2 + 42),
-                this.textRenderer.getWidth(desktopSettingsText), 10, Text.translatable("screen.ait.monitor.desktop_settings").formatted(Formatting.AQUA), button -> toInteriorSettingsScreen(), this.textRenderer));
+        Text desktopSettingsText = Text.literal("⚙");
+        this.addButton(new PressableTextWidget((width / 2 + 84), (height / 2 - 47),
+                this.textRenderer.getWidth(desktopSettingsText), 10, Text.literal("⚙").formatted(Formatting.WHITE), button -> toInteriorSettingsScreen(), this.textRenderer));
         this.buttons.forEach(buttons -> {
             // buttons.visible = false;
             buttons.active = true;
@@ -289,17 +289,17 @@ public class MonitorScreen extends TardisScreen {
         context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 64), (height / 2 - 16), 0xFFFFFF, true);
 
         // destination
-        context.drawText(this.textRenderer, Text.literal("Destination"), (width / 2 - 64), (height / 2 - 6), 5636095, true);
-        context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 64), (height / 2 + 4), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(dDimensionText), (width / 2 - 64), (height / 2 + 14), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 - 64), (height / 2 + 24), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal("Destination"), (width / 2 - 64), (height / 2 + 14), 5636095, true);
+        context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 64), (height / 2 + 24), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(dDimensionText), (width / 2 - 64), (height / 2 + 34), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 - 64), (height / 2 + 44), 0xFFFFFF, true);
 
         // fuel
         context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.fuel"), (width / 2 - 102), (height / 2 + 28), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(fuelText + "%"), (width / 2 - 108), (height / 2 + 38), 0xFFFFFF, true);
         // percentage of travel time to destination
-        context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.traveltime"), (width / 2 + 30), (height / 2 - 9), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(flightTimeText + "%"), (width / 2 + 40), (height / 2 + 1), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.traveltime"), (width / 2 + 34), (height / 2 + 28), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(flightTimeText + "%"), (width / 2 + 46), (height / 2 + 38), 0xFFFFFF, true);
     }
 
     @Override
