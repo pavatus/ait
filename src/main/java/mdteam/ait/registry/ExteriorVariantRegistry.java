@@ -34,6 +34,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+// TODO - Move this over to a datapack compatible state like DesktopRegistry and then add datapack support
+/*
+    Example of json layout
+    {
+        "category": "ait:police_box",
+        "texture": "ait:exterior/coral.png",
+        "emission": "ait:exterior/coral_emission.png",
+        "parent": "ait:toyota" // this will be what portal placement and the model of the variant
+    }
+ */
 public class ExteriorVariantRegistry {
     public static final SimpleRegistry<ExteriorVariantSchema> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<ExteriorVariantSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "exterior_variant"))).buildAndRegister();
     public static ExteriorVariantSchema register(ExteriorVariantSchema schema) {
