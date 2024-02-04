@@ -6,10 +6,8 @@ import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.managers.DeltaTimeManager;
-import mdteam.ait.core.util.AITConfig;
-import mdteam.ait.core.util.AITConfigModel;
 import mdteam.ait.tardis.*;
-import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.exterior.ExteriorCategory;
 import mdteam.ait.tardis.util.NetworkUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -18,7 +16,6 @@ import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
@@ -29,8 +26,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
-import net.minecraft.world.WorldEvents;
-import net.minecraft.world.WorldSaveHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -183,7 +178,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         this.subscribers.replace(tardisUUID, new CopyOnWriteArrayList<>());
     }
 
-    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorSchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
+    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorCategory exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
         UUID uuid = UUID.randomUUID();
 
         ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked); // todo removed "locked" param

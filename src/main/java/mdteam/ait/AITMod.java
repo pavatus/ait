@@ -67,7 +67,7 @@ public class AITMod implements ModInitializer {
         AIT_CUSTOM_CONFIG.init(MOD_ID);
         ConsoleRegistry.init();
         DesktopRegistry.init();
-        ExteriorRegistry.init();
+        CategoryRegistry.init();
         HumsRegistry.init();
         CreakRegistry.init();
         SequenceRegistry.init();

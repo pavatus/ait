@@ -6,7 +6,7 @@ import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
-import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
@@ -15,7 +15,6 @@ import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -125,7 +124,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         }
         // todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
         if (DependencyChecker.hasPortals())
-            if (((ExteriorBlockEntity) blockEntity).getTardis().get().getDoor().isOpen() && ((ExteriorBlockEntity) blockEntity).getTardis().get().getExterior().getType().hasPortals()) // for some reason this check totally murders fps ??
+            if (((ExteriorBlockEntity) blockEntity).getTardis().get().getDoor().isOpen() && ((ExteriorBlockEntity) blockEntity).getTardis().get().getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
                 return getLedgeShape(state, world, pos);
 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).getTardis().get().getTravel().getState();
@@ -237,7 +236,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
                 && findTardis(world, pos) != null
                 && !PropertiesHandler.getBool(findTardis(world, pos).getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)
                 && findTardis(world, pos).getTravel().getState() == TardisTravel.State.LANDED
-                && findTardis(world, pos).getExterior().getType() != ExteriorRegistry.CORAL_GROWTH) {
+                && findTardis(world, pos).getExterior().getCategory() != CategoryRegistry.CORAL_GROWTH) {
             FallingTardisEntity falling = FallingTardisEntity.spawnFromBlock(world, pos, state);
             // OH SHIT WE FALLING
             this.configureFallingTardis(falling, world, pos);

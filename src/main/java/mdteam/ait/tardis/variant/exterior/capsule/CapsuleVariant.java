@@ -5,7 +5,7 @@ import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.tardis.animation.PulsatingAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
-import mdteam.ait.tardis.exterior.CapsuleExterior;
+import mdteam.ait.tardis.exterior.CapsuleCategory;
 import mdteam.ait.tardis.variant.door.CapsuleDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -19,7 +19,7 @@ public abstract class CapsuleVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/capsule/capsule_";
 
     protected CapsuleVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-        super(CapsuleExterior.REFERENCE, new Identifier(modId, "exterior/capsule/" + name));
+        super(CapsuleCategory.REFERENCE, new Identifier(modId, "exterior/capsule/" + name));
 
         this.name = name;
     }
@@ -35,6 +35,11 @@ public abstract class CapsuleVariant extends ExteriorVariantSchema {
     @Override
     public DoorSchema door() {
         return DoorRegistry.REGISTRY.get(CapsuleDoorVariant.REFERENCE);
+    }
+
+    @Override
+    public boolean hasPortals() {
+        return true;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package mdteam.ait.core.blockentities;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
@@ -10,8 +9,6 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.data.DoorData;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.AnimationState;
@@ -39,7 +36,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static mdteam.ait.tardis.util.TardisUtil.findTardisByInterior;
-import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class DoorBlockEntity extends LinkableBlockEntity {
     public AnimationState DOOR_STATE = new AnimationState();
@@ -98,7 +94,7 @@ public class DoorBlockEntity extends LinkableBlockEntity {
         if (this.getTardis().get().getDoor().isClosed()) return;
         if (this.getTardis().get().getLockedTardis()) return;
         if (PropertiesHandler.getBool(getTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) return;
-        if (DependencyChecker.hasPortals() && this.getTardis().get().getExterior().getType().hasPortals()) return;
+        if (DependencyChecker.hasPortals() && this.getTardis().get().getExterior().getVariant().hasPortals()) return;
 
         TardisUtil.teleportOutside(this.getTardis().get(), entity);
     }

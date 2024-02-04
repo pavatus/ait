@@ -5,7 +5,7 @@ import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.tardis.animation.PulsatingAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
-import mdteam.ait.tardis.exterior.EasterHeadExterior;
+import mdteam.ait.tardis.exterior.EasterHeadCategory;
 import mdteam.ait.tardis.variant.door.ClassicDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -28,7 +28,7 @@ public abstract class CubeVariant extends ExteriorVariantSchema {
             Block.createCuboidShape(-3.5, 0, 0, 16,1, 16));
 
     protected CubeVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-        super(EasterHeadExterior.REFERENCE, new Identifier(modId, "exterior/cube/" + name));
+        super(EasterHeadCategory.REFERENCE, new Identifier(modId, "exterior/cube/" + name));
 
         this.name = name;
     }
@@ -56,5 +56,10 @@ public abstract class CubeVariant extends ExteriorVariantSchema {
             default ->
                     throw new RuntimeException("Invalid facing direction in " + this + ", // duzo put a funny coment here : )");
         };
+    }
+
+    @Override
+    public boolean hasPortals() {
+        return false;
     }
 }

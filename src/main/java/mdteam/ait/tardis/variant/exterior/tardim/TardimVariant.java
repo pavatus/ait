@@ -5,7 +5,7 @@ import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.tardis.animation.PulsatingAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
-import mdteam.ait.tardis.exterior.TardimExterior;
+import mdteam.ait.tardis.exterior.TardimCategory;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.door.TardimDoorVariant;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -19,7 +19,7 @@ public abstract class TardimVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/tardim/tardim_";
 
     protected TardimVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-        super(TardimExterior.REFERENCE, new Identifier(modId, "exterior/tardim/" + name));
+        super(TardimCategory.REFERENCE, new Identifier(modId, "exterior/tardim/" + name));
 
         this.name = name;
     }
@@ -35,6 +35,11 @@ public abstract class TardimVariant extends ExteriorVariantSchema {
     @Override
     public DoorSchema door() {
         return DoorRegistry.REGISTRY.get(TardimDoorVariant.REFERENCE);
+    }
+
+    @Override
+    public boolean hasPortals() {
+        return true;
     }
 
     @Override

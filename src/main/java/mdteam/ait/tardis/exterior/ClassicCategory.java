@@ -3,9 +3,9 @@ package mdteam.ait.tardis.exterior;
 import mdteam.ait.AITMod;
 import net.minecraft.util.Identifier;
 
-public class ClassicExterior extends ExteriorSchema {
+public class ClassicCategory extends ExteriorCategory {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/classic");
-    public ClassicExterior() {
+    public ClassicCategory() {
         super(REFERENCE, "classic");
     }
 

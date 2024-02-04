@@ -11,7 +11,7 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.events.ServerLoadEvent;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.registry.DesktopRegistry;
-import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
@@ -102,7 +102,7 @@ public class TardisUtil {
                     String variantValue = buf.readString();
                     Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-                    tardis.getExterior().setType(ExteriorRegistry.REGISTRY.get(exteriorValue));
+                    tardis.getExterior().setType(CategoryRegistry.REGISTRY.get(exteriorValue));
                     WorldOps.updateIfOnServer(server.getWorld(tardis
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             tardis.getDoor().getExteriorPos());

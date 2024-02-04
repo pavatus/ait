@@ -5,9 +5,7 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.tardis.animation.PulsatingAnimation;
-import mdteam.ait.tardis.exterior.CapsuleExterior;
-import mdteam.ait.tardis.exterior.PlinthExterior;
-import mdteam.ait.tardis.variant.door.CapsuleDoorVariant;
+import mdteam.ait.tardis.exterior.PlinthCategory;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.door.PlinthDoorVariant;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -21,7 +19,7 @@ public abstract class PlinthVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/plinth/plinth_";
 
     protected PlinthVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-        super(PlinthExterior.REFERENCE, new Identifier(modId, "exterior/plinth/" + name));
+        super(PlinthCategory.REFERENCE, new Identifier(modId, "exterior/plinth/" + name));
 
         this.name = name;
     }
@@ -37,6 +35,11 @@ public abstract class PlinthVariant extends ExteriorVariantSchema {
     @Override
     public DoorSchema door() {
         return DoorRegistry.REGISTRY.get(PlinthDoorVariant.REFERENCE);
+    }
+
+    @Override
+    public boolean hasPortals() {
+        return true;
     }
 
     @Override

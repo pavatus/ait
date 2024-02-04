@@ -5,7 +5,7 @@ import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.tardis.animation.PulsatingAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
-import mdteam.ait.tardis.exterior.GrowthExterior;
+import mdteam.ait.tardis.exterior.GrowthCategory;
 import mdteam.ait.tardis.variant.door.CoralGrowthDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -17,7 +17,7 @@ public class CoralGrowthVariant extends ExteriorVariantSchema {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/coral_growth");
 
     public CoralGrowthVariant() {
-        super(GrowthExterior.REFERENCE, REFERENCE);
+        super(GrowthCategory.REFERENCE, REFERENCE);
     }
     @Override
     public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
@@ -27,6 +27,11 @@ public class CoralGrowthVariant extends ExteriorVariantSchema {
     @Override
     public DoorSchema door() {
         return DoorRegistry.REGISTRY.get(CoralGrowthDoorVariant.REFERENCE);
+    }
+
+    @Override
+    public boolean hasPortals() {
+        return true;
     }
 
     @Override

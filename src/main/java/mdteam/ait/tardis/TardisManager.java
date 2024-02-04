@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.events.BlockEntityPreLoadEvent;
 import mdteam.ait.tardis.console.ConsoleSchema;
-import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.exterior.ExteriorCategory;
 import mdteam.ait.tardis.link.Linkable;
 import mdteam.ait.tardis.util.Corners;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -52,7 +52,7 @@ public abstract class TardisManager<T extends Tardis> {
                 }).registerTypeAdapter(TardisDesktopSchema.class, TardisDesktopSchema.serializer())
                 .registerTypeAdapter(ExteriorVariantSchema.class, ExteriorVariantSchema.serializer())
                 .registerTypeAdapter(DoorSchema.class, DoorSchema.serializer())
-                .registerTypeAdapter(ExteriorSchema.class, ExteriorSchema.serializer())
+                .registerTypeAdapter(ExteriorCategory.class, ExteriorCategory.serializer())
                 .registerTypeAdapter(ConsoleSchema.class, ConsoleSchema.serializer())
                 .registerTypeAdapter(ConsoleVariantSchema.class, ConsoleVariantSchema.serializer())
                 .registerTypeAdapter(Corners.class, Corners.serializer());

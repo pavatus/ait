@@ -1,42 +1,33 @@
 package mdteam.ait.core.blocks;
 
-import mdteam.ait.AITMod;
-import mdteam.ait.client.models.coral.CoralGrowthExteriorModel;
 import mdteam.ait.core.AITBlocks;
-import mdteam.ait.core.AITDamageTypes;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.blockentities.CoralBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.registry.DesktopRegistry;
-import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.advancement.TardisCriterions;
-import mdteam.ait.tardis.exterior.CapsuleExterior;
-import mdteam.ait.tardis.exterior.GrowthExterior;
+import mdteam.ait.tardis.exterior.GrowthCategory;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.exterior.growth.CoralGrowthVariant;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.RavagerEntity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -44,8 +35,6 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class CoralPlantBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
@@ -113,7 +102,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
     private void createTardis(ServerWorld world, BlockPos pos) {
         // Create a new tardis
-        ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), ExteriorRegistry.REGISTRY.get(GrowthExterior.REFERENCE), ExteriorVariantRegistry.REGISTRY.get(CoralGrowthVariant.REFERENCE), DesktopRegistry.DEFAULT_CAVE, false);
+        ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), CategoryRegistry.REGISTRY.get(GrowthCategory.REFERENCE), ExteriorVariantRegistry.REGISTRY.get(CoralGrowthVariant.REFERENCE), DesktopRegistry.DEFAULT_CAVE, false);
         created.getHandlers().getFuel().setFuelCount(0);
         // created.getHandlers().getOvergrown().setOvergrown(true); //fixme created.getEnvironmentHandler().setCoralCovered(true);
 

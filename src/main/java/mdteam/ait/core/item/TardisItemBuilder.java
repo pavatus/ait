@@ -3,14 +3,13 @@ package mdteam.ait.core.item;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.DesktopRegistry;
-import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
-import mdteam.ait.tardis.AbstractTardisComponent;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.exterior.CapsuleExterior;
-import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.exterior.CapsuleCategory;
+import mdteam.ait.tardis.exterior.ExteriorCategory;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.block.entity.BlockEntity;
@@ -29,7 +28,7 @@ import java.util.Random;
 public class TardisItemBuilder extends Item {
 
     public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "coral"); //new Identifier(AITMod.MOD_ID, "war");
-    public static final Identifier DEFAULT_EXTERIOR = CapsuleExterior.REFERENCE;
+    public static final Identifier DEFAULT_EXTERIOR = CapsuleCategory.REFERENCE;
 
     private final Identifier exterior;
     private final Identifier desktop;
@@ -49,7 +48,7 @@ public class TardisItemBuilder extends Item {
         this(settings, DEFAULT_EXTERIOR);
     }
 
-    public static ExteriorVariantSchema findRandomVariant(ExteriorSchema exterior) {
+    public static ExteriorVariantSchema findRandomVariant(ExteriorCategory exterior) {
         Random rnd = new Random();
         if (ExteriorVariantRegistry.withParent(exterior).size() == 0) {
             AITMod.LOGGER.error("Variants for " + exterior + " are empty! Panicking!!!!");
@@ -58,10 +57,10 @@ public class TardisItemBuilder extends Item {
         int randomized = rnd.nextInt(Math.abs(ExteriorVariantRegistry.withParent(exterior).size()));
         return (ExteriorVariantSchema) ExteriorVariantRegistry.withParent(exterior).toArray()[randomized];
     }
-    public static ExteriorSchema findRandomExterior() {
+    public static ExteriorCategory findRandomExterior() {
         Random rnd = new Random();
-        int randomized = rnd.nextInt(Math.abs(ExteriorRegistry.REGISTRY.size()));
-        return (ExteriorSchema) ExteriorRegistry.REGISTRY.stream().toArray()[randomized] == ExteriorRegistry.CORAL_GROWTH ? ExteriorRegistry.TARDIM : (ExteriorSchema) ExteriorRegistry.REGISTRY.stream().toArray()[randomized];
+        int randomized = rnd.nextInt(Math.abs(CategoryRegistry.REGISTRY.size()));
+        return (ExteriorCategory) CategoryRegistry.REGISTRY.stream().toArray()[randomized] == CategoryRegistry.CORAL_GROWTH ? CategoryRegistry.TARDIM : (ExteriorCategory) CategoryRegistry.REGISTRY.stream().toArray()[randomized];
     }
 
     public static TardisDesktopSchema findRandomDesktop() {
@@ -107,7 +106,7 @@ public class TardisItemBuilder extends Item {
 
             //System.out.println(this.exterior);
 
-            ServerTardisManager.getInstance().create(pos, ExteriorRegistry.REGISTRY.get(this.exterior), findRandomVariant(ExteriorRegistry.REGISTRY.get(this.exterior)) , DesktopRegistry.get(this.desktop), false);
+            ServerTardisManager.getInstance().create(pos, CategoryRegistry.REGISTRY.get(this.exterior), findRandomVariant(CategoryRegistry.REGISTRY.get(this.exterior)) , DesktopRegistry.get(this.desktop), false);
             context.getStack().decrement(1);
         }
 

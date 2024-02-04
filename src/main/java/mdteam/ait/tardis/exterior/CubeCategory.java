@@ -3,9 +3,9 @@ package mdteam.ait.tardis.exterior;
 import mdteam.ait.AITMod;
 import net.minecraft.util.Identifier;
 
-public class CubeExterior extends ExteriorSchema {
+public class CubeCategory extends ExteriorCategory {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/cube");
-    public CubeExterior() {
+    public CubeCategory() {
         super(REFERENCE, "cube");
     }
 }

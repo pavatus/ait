@@ -1,14 +1,13 @@
 package mdteam.ait.core.blockentities;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.item.SiegeTardisItem;
-import mdteam.ait.registry.ExteriorRegistry;
-import mdteam.ait.tardis.exterior.CapsuleExterior;
-import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.registry.CategoryRegistry;
+import mdteam.ait.tardis.exterior.CapsuleCategory;
+import mdteam.ait.tardis.exterior.ExteriorCategory;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -16,10 +15,7 @@ import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
@@ -29,7 +25,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -44,11 +39,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
-import java.util.UUID;
 
 import static mdteam.ait.tardis.TardisTravel.State.*;
 import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
-import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ExteriorBlockEntity> { // fixme copy tardishandler and refactor to use uuids instead, this is incredibly inefficient and the main cause of lag.
     public int animationTimer = 0;
@@ -109,7 +102,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
     public void onEntityCollision(Entity entity) {
         if (this.getTardis().isPresent() && this.getTardis().get().getDoor().isOpen()) {
             if (!this.getTardis().get().getLockedTardis())
-                if (!DependencyChecker.hasPortals() || !getTardis().get().getExterior().getType().hasPortals())
+                if (!DependencyChecker.hasPortals() || !getTardis().get().getExterior().getVariant().hasPortals())
                     TardisUtil.teleportInside(this.getTardis().get(), entity);
         }
     }
@@ -201,9 +194,9 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
         return this.animation;
     }
 
-    public ExteriorSchema getExteriorType() {
-        if(getTardis().isEmpty()) return ExteriorRegistry.REGISTRY.get(CapsuleExterior.REFERENCE);
-        return this.getTardis().get().getExterior().getType();
+    public ExteriorCategory getExteriorType() {
+        if(getTardis().isEmpty()) return CategoryRegistry.REGISTRY.get(CapsuleCategory.REFERENCE);
+        return this.getTardis().get().getExterior().getCategory();
     }
 
     public float getAlpha() {

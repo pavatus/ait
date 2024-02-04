@@ -1,20 +1,18 @@
 package mdteam.ait.registry.owo;
 
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
-import mdteam.ait.registry.DoorRegistry;
-import mdteam.ait.registry.ExteriorRegistry;
-import mdteam.ait.tardis.exterior.ExteriorSchema;
-import mdteam.ait.tardis.variant.door.DoorSchema;
+import mdteam.ait.registry.CategoryRegistry;
+import mdteam.ait.tardis.exterior.ExteriorCategory;
 import net.minecraft.registry.Registry;
 
-public interface ExteriorRegistryContainer extends AutoRegistryContainer<ExteriorSchema> {
+public interface ExteriorRegistryContainer extends AutoRegistryContainer<ExteriorCategory> {
     @Override
-    default Registry<ExteriorSchema> getRegistry() {
-        return ExteriorRegistry.REGISTRY;
+    default Registry<ExteriorCategory> getRegistry() {
+        return CategoryRegistry.REGISTRY;
     }
 
     @Override
-    default Class<ExteriorSchema> getTargetFieldType() {
-        return ExteriorSchema.class;
+    default Class<ExteriorCategory> getTargetFieldType() {
+        return ExteriorCategory.class;
     }
 }

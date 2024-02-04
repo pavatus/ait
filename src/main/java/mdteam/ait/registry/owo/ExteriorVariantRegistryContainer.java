@@ -1,9 +1,7 @@
 package mdteam.ait.registry.owo;
 
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
-import mdteam.ait.registry.ExteriorRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
-import mdteam.ait.tardis.exterior.ExteriorSchema;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.registry.Registry;
 

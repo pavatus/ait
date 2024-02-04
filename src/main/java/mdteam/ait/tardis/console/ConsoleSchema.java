@@ -1,13 +1,9 @@
 package mdteam.ait.tardis.console;
 
 import com.google.gson.*;
-import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.registry.ConsoleRegistry;
-import mdteam.ait.registry.ExteriorRegistry;
-import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.ControlTypes;
-import mdteam.ait.tardis.exterior.CapsuleExterior;
+import mdteam.ait.tardis.exterior.CapsuleCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
@@ -59,7 +55,7 @@ public abstract class ConsoleSchema {
             try {
                 id = new Identifier(json.getAsJsonPrimitive().getAsString());
             } catch (InvalidIdentifierException e) {
-                id = CapsuleExterior.REFERENCE;
+                id = CapsuleCategory.REFERENCE;
             }
 
             return ConsoleRegistry.REGISTRY.get(id);

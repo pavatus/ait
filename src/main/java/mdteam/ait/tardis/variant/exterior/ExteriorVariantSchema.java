@@ -7,9 +7,9 @@ import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
-import mdteam.ait.tardis.exterior.ExteriorSchema;
+import mdteam.ait.tardis.exterior.ExteriorCategory;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;
@@ -23,7 +23,7 @@ import net.minecraft.world.BlockView;
 import java.lang.reflect.Type;
 
 /**
- * A variant for a {@link ExteriorSchema} which provides a model, texture, emission, {@link ExteriorAnimation} and {@link DoorSchema}
+ * A variant for a {@link ExteriorCategory} which provides a model, texture, emission, {@link ExteriorAnimation} and {@link DoorSchema}
  * <br><br>
  * This should be registered in {@link ExteriorVariantRegistry#REGISTRY}
  * <br><br>
@@ -61,7 +61,7 @@ public abstract class ExteriorVariantSchema {
         };
     }
 
-    public ExteriorSchema parent() { return ExteriorRegistry.REGISTRY.get(this.parent); }
+    public ExteriorCategory category() { return CategoryRegistry.REGISTRY.get(this.parent); }
     public Identifier id() { return id; }
 
     /**
@@ -73,6 +73,7 @@ public abstract class ExteriorVariantSchema {
     public abstract ExteriorAnimation animation(ExteriorBlockEntity exterior);
     public abstract DoorSchema door();
 
+    public boolean hasPortals() { return this.category().hasPortals(); }
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
         return pos; // just cus some dont have portals
     }

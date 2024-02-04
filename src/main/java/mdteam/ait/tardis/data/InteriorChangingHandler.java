@@ -5,7 +5,7 @@ import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.registry.DesktopRegistry;
-import mdteam.ait.registry.ExteriorRegistry;
+import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
@@ -93,8 +93,8 @@ public class InteriorChangingHandler extends TardisLink {
         if(getTardis().get().hasGrowthExterior()) {
             PropertiesHandler.set(getTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
             PropertiesHandler.set(getTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, true);
-            getTardis().get().getExterior().setType(ExteriorRegistry.CAPSULE);
-            getTardis().get().getExterior().setVariant(TardisItemBuilder.findRandomVariant(ExteriorRegistry.CAPSULE));
+            getTardis().get().getExterior().setType(CategoryRegistry.CAPSULE);
+            getTardis().get().getExterior().setVariant(TardisItemBuilder.findRandomVariant(CategoryRegistry.CAPSULE));
             getTardis().get().getExterior().getExteriorPos().getWorld().playSound(null, getTardis().get().getExterior().getExteriorPos(), AITSounds.MAT, SoundCategory.BLOCKS, 5f, 1f);
             getTardis().get().getTravel().setState(TardisTravel.State.MAT);
         }

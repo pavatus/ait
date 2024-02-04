@@ -5,7 +5,7 @@ import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.tardis.animation.PulsatingAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
-import mdteam.ait.tardis.exterior.EasterHeadExterior;
+import mdteam.ait.tardis.exterior.EasterHeadCategory;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.variant.door.EasterHeadDoorVariant;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
@@ -17,7 +17,7 @@ public abstract class EasterHeadVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/easter_head/easter_head_";
 
     protected EasterHeadVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-        super(EasterHeadExterior.REFERENCE, new Identifier(modId, "exterior/easter_head/" + name));
+        super(EasterHeadCategory.REFERENCE, new Identifier(modId, "exterior/easter_head/" + name));
 
         this.name = name;
     }
@@ -35,4 +35,8 @@ public abstract class EasterHeadVariant extends ExteriorVariantSchema {
         return DoorRegistry.REGISTRY.get(EasterHeadDoorVariant.REFERENCE);
     }
 
+    @Override
+    public boolean hasPortals() {
+        return false;
+    }
 }
