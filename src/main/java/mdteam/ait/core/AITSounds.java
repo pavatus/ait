@@ -42,6 +42,7 @@ public class AITSounds implements NeptuneSoundEventInit {
     // Hums
     public static final SoundEvent TOYOTA_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/toyota_hum"));
     public static final SoundEvent CORAL_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/coral_hum"));
+    public static final SoundEvent EIGHT_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/eight_hum"));
 
     public static final SoundEvent CLOISTER = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/cloister"));
 

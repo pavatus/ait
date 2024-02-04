@@ -17,9 +17,11 @@ public class HumsRegistry {
 
     public static HumSound TOYOTA;
     public static HumSound CORAL;
+    public static HumSound EIGHT;
 
     public static void init() {
         TOYOTA = register(HumSound.create(AITMod.MOD_ID, "toyota", AITSounds.TOYOTA_HUM));
         CORAL = register(HumSound.create(AITMod.MOD_ID, "coral", AITSounds.CORAL_HUM));
+        EIGHT = register(HumSound.create(AITMod.MOD_ID, "eight", AITSounds.EIGHT_HUM));
     }
 }
