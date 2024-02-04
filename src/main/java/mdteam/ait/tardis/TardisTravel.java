@@ -434,7 +434,7 @@ public class TardisTravel extends TardisLink {
         }
 
         // Send error message to the pilot
-        TardisUtil.sendMessageToPilot(this.getTardis().get(), Text.literal("Unable to land!"));
+        // TardisUtil.sendMessageToPilot(this.getTardis().get(), Text.literal("Unable to land!"));
 
         // Create materialization delay and return
         FlightUtil.createMaterialiseDelay(this.getTardis().get());
@@ -452,7 +452,7 @@ public class TardisTravel extends TardisLink {
             if(this.getTardis().get().getDesktop().getConsolePos() != null)
                 TardisUtil.getTardisDimension().playSound(null, this.getTardis().get().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
 
-        TardisUtil.sendMessageToPilot(this.getTardis().get(), Text.literal("Unable to takeoff!")); // fixme translatable
+        // TardisUtil.sendMessageToPilot(this.getTardis().get(), Text.literal("Unable to takeoff!")); // fixme translatable
         FlightUtil.createDematerialiseDelay(this.getTardis().get());
     }
 
