@@ -50,6 +50,10 @@ public class AITSounds implements NeptuneSoundEventInit {
     public static final SoundEvent CREAK_ONE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_one"));
     public static final SoundEvent CREAK_TWO = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_two"));
     public static final SoundEvent CREAK_THREE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_three"));
+    public static final SoundEvent CREAK_FOUR = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_four"));
+    public static final SoundEvent CREAK_FIVE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_five"));
+    public static final SoundEvent CREAK_SIX = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_six"));
+    public static final SoundEvent CREAK_SEVEN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_seven"));
     public static final SoundEvent WHISPER = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/whisper"));
 
     // Tools
