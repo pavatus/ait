@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 public class FuelData extends TardisLink {
     @Exclude
-    public static final double TARDIS_MAX_FUEL = 25000;
+    public static final double TARDIS_MAX_FUEL = 35000;
     public static final String FUEL_COUNT = "fuel_count"; // todo this gets synced too much, needs changing.
     public static final String REFUELING = "refueling";
 
@@ -93,8 +93,8 @@ public class FuelData extends TardisLink {
         // @TODO fix this because it seems that using any chunk references causes ticking to freak the hell out - Loqor
         BlockPos pos = this.getTardis().get().getTravel().getExteriorPos();
         World world = this.getTardis().get().getTravel().getExteriorPos().getWorld();
-        if (getTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && RiftChunkManager.getArtronLevels(world, pos) > 0 && this.getFuel() < FuelData.TARDIS_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getTardis().get().getUuid().toString() + "-refueldelay"))) {
-            if(RiftChunkManager.isRiftChunk(pos)) {
+        if (getTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && this.getFuel() < FuelData.TARDIS_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getTardis().get().getUuid().toString() + "-refueldelay"))) {
+            if(RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) > 0) {
                 RiftChunkManager.setArtronLevels(world, pos, RiftChunkManager.getArtronLevels(world, pos) - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
                 addFuel(5);
             } else {

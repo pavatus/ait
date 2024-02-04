@@ -94,7 +94,7 @@ public class RiftChunkManager {
         Random random = new Random();
         if (!riftChunkData.containsKey(world.getRegistryKey())) {
             HashMap<ChunkPos, Integer> temp = new HashMap<>();
-            temp.put(chunkPos, random.nextInt(100, 800));
+            temp.put(chunkPos, random.nextInt(300, 1000));
             riftChunkData.put(world.getRegistryKey(), temp);
             return;
         }

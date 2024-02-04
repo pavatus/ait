@@ -1,4 +1,10 @@
-# 1.2.22
+#  1.2.24
+- Fixed not being able to refuel in non rift chunks
+- Updated neptune lib with a few bug fixes and an update to the discord integration
+- Buffed rift chunks 300 to 1000 AU in a chunk
+- Alarms don't go off for hostile named entities
+
+# 1.2.23
 - fixed crash for flight sound again
 
 # 1.2.22

@@ -51,7 +51,7 @@ public class ServerAlarmHandler extends TardisLink {
         // @TODO make a new control that makes it (by default) detect hostile entities in the interior plus a check when it's been cleared of all hostile entities - Loqor
         if(!isEnabled() && getTardis().isPresent()) {
             for (Entity entity : TardisUtil.getEntitiesInInterior(getTardis().get(), 200)) {
-                if (entity instanceof HostileEntity) {
+                if (entity instanceof HostileEntity && !entity.hasCustomName()) {
                     this.enable();
                 }
             }
