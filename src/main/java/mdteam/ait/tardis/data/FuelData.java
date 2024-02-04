@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.data;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.api.tardis.ArtronHolder;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.core.managers.RiftChunkManager;
@@ -8,11 +9,12 @@ import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class FuelData extends TardisLink {
+public class FuelData extends TardisLink implements ArtronHolder {
     @Exclude
     public static final double TARDIS_MAX_FUEL = 35000;
     public static final String FUEL_COUNT = "fuel_count"; // todo this gets synced too much, needs changing.
@@ -22,34 +24,46 @@ public class FuelData extends TardisLink {
         super(tardis, "fuel");
     }
 
-    private static void createFuelSyncData(Tardis tardis) {
+    private static void createFuelSyncDelay(Tardis tardis) {
         DeltaTimeManager.createDelay(tardis.getUuid() + "-fuel-sync", 5 * 1000L);
     }
     private static boolean isSyncOnDelay(Tardis tardis) {
         return DeltaTimeManager.isStillWaitingOnDelay(tardis.getUuid() + "-fuel-sync");
     }
 
+    private static void createRefuelDelay(Tardis tardis) {
+        DeltaTimeManager.createDelay("tardis-" + tardis.getUuid().toString() + "-refueldelay", 250L);
+    }
+    private static boolean isRefuelOnDelay(Tardis tardis) {
+        return DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis.getUuid().toString() + "-refueldelay");
+    }
+
+    private static void createDrainDelay(Tardis tardis) {
+        DeltaTimeManager.createDelay("tardis-" + tardis.getUuid().toString() + "-fueldraindelay", 500L);
+    }
+    private static boolean isDrainOnDelay(Tardis tardis) {
+        return DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis.getUuid().toString() + "-fueldraindelay");
+    }
+
+    @Override
     public double getFuel() {
         if(getTardis().isEmpty()) return 0;
         if (PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), FUEL_COUNT) == null) {
             AITMod.LOGGER.warn("Fuel count was null, setting to 0");
-            this.setFuelCount(0);
+            this.setFuel(0);
         }
         return (double) PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), FUEL_COUNT);
     }
 
-    public boolean isOutOfFuel() {
-        return getFuel() <= 0;
-    }
-
-    public void setFuelCount(double fuel) {
+    @Override
+    public void setFuel(double fuel) {
         if(getTardis().isEmpty()) return;
         double prev = getFuel();
 
         PropertiesHandler.set(getTardis().get(), FUEL_COUNT, fuel, !isSyncOnDelay(getTardis().get()));
 
         if (!isSyncOnDelay(getTardis().get())) {
-            createFuelSyncData(getTardis().get());
+            createFuelSyncDelay(getTardis().get());
         }
 
         // fire the event if ran out of fuel
@@ -59,20 +73,9 @@ public class FuelData extends TardisLink {
         }
     }
 
-    public double addFuel(double fuel) {
-        double currentFuel = this.getFuel();
-        this.setFuelCount(this.getFuel() <= TARDIS_MAX_FUEL ? this.getFuel() + fuel : TARDIS_MAX_FUEL);
-        if(this.getFuel() == TARDIS_MAX_FUEL)
-            return fuel - (TARDIS_MAX_FUEL - currentFuel);
-        return 0;
-    }
-
-    public void removeFuel(double fuel) {
-        if (this.getFuel() - fuel < 0) {
-            this.setFuelCount(0);
-            return;
-        }
-        this.setFuelCount(getFuel() - fuel);
+    @Override
+    public double getMaxFuel() {
+        return TARDIS_MAX_FUEL;
     }
 
     public void setRefueling(boolean var) {
@@ -91,30 +94,35 @@ public class FuelData extends TardisLink {
         if(getTardis().isEmpty()) return;
 
         // @TODO fix this because it seems that using any chunk references causes ticking to freak the hell out - Loqor
-        BlockPos pos = this.getTardis().get().getTravel().getExteriorPos();
-        World world = this.getTardis().get().getTravel().getExteriorPos().getWorld();
-        if (getTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.isRefueling() && this.getFuel() < FuelData.TARDIS_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getTardis().get().getUuid().toString() + "-refueldelay"))) {
+        
+        ServerTardis tardis = (ServerTardis) this.getTardis().get();
+        BlockPos pos = tardis.getTravel().getExteriorPos();
+        World world = tardis.getTravel().getExteriorPos().getWorld();
+        TardisTravel.State state = tardis.getTravel().getState();
+        
+        
+        if (state == TardisTravel.State.LANDED && this.isRefueling() && this.getFuel() < FuelData.TARDIS_MAX_FUEL && (!isRefuelOnDelay(tardis))) {
             if(RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) > 0) {
                 RiftChunkManager.setArtronLevels(world, pos, RiftChunkManager.getArtronLevels(world, pos) - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
                 addFuel(5);
             } else {
                 addFuel(1);
             }
-            DeltaTimeManager.createDelay("tardis-" + getTardis().get().getUuid().toString() + "-refueldelay", 250L);
+            createRefuelDelay(tardis);
         }
-        if ((getTardis().get().getTravel().getState() == TardisTravel.State.DEMAT || getTardis().get().getTravel().getState() == TardisTravel.State.MAT) && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getTardis().get().getUuid().toString() + "-fueldraindelay")) {
-            DeltaTimeManager.createDelay("tardis-" + getTardis().get().getUuid().toString() + "-fueldraindelay", 500L);
+        if ((state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT) && !isDrainOnDelay(tardis)) {
+            createDrainDelay(tardis);
             removeFuel(5);
         }
-        if (getTardis().get().getTravel().getState() == TardisTravel.State.FLIGHT && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getTardis().get().getUuid().toString() + "-fueldraindelay")) {
-            DeltaTimeManager.createDelay("tardis-" + getTardis().get().getUuid().toString() + "-fueldraindelay", 500L);
-            removeFuel(4^(this.getTardis().get().getTravel().getSpeed()));
+        if (state == TardisTravel.State.FLIGHT && !isDrainOnDelay(tardis)) {
+            createDrainDelay(tardis);
+            removeFuel(4^(tardis.getTravel().getSpeed()));
         }
-        if (getTardis().get().getTravel().getState() == TardisTravel.State.LANDED && !isRefueling() && !DeltaTimeManager.isStillWaitingOnDelay("tardis-" + getTardis().get().getUuid().toString() + "-fueldraindelay")) {
-            DeltaTimeManager.createDelay("tardis-" + getTardis().get().getUuid().toString() + "-fueldraindelay", 500L);
+        if (state == TardisTravel.State.LANDED && !isRefueling() && !isDrainOnDelay(tardis)) {
+            createDrainDelay(tardis);
             removeFuel(0.25);
         }
-        if (getTardis().get().getTravel().getState() == TardisTravel.State.FLIGHT && !this.getTardis().get().hasPower()) {
+        if (state == TardisTravel.State.FLIGHT && !tardis.hasPower()) {
             getTardis().get().getTravel().crash(); // hehe force land if you don't have enough fuel
         }
     }

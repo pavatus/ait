@@ -1,5 +1,6 @@
 package mdteam.ait.core.blockentities;
 
+import mdteam.ait.api.tardis.ArtronHolder;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.item.ArtronCollectorItem;
 import mdteam.ait.core.managers.DeltaTimeManager;
@@ -20,7 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEntityTicker<ArtronCollectorBlockEntity> {
+public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEntityTicker<ArtronCollectorBlockEntity>, ArtronHolder {
     public double artronAmount = 0;
     public ArtronCollectorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -35,34 +36,35 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
     @Override
     public void readNbt(NbtCompound nbt) {
         if(nbt.contains("artronAmount"))
-            this.setArtronAmount(nbt.getDouble("artronAmount"));
+            this.setFuel(nbt.getDouble("artronAmount"));
         super.readNbt(nbt);
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
         if(!world.isClient()) {
-            player.sendMessage(Text.literal(this.getArtronAmount() + "/" + ArtronCollectorItem.COLLECTOR_MAX_FUEL).formatted(Formatting.GOLD));
+            player.sendMessage(Text.literal(this.getFuel() + "/" + ArtronCollectorItem.COLLECTOR_MAX_FUEL).formatted(Formatting.GOLD));
             ItemStack stack = player.getMainHandStack();
             if (stack.getItem() instanceof ArtronCollectorItem) {
-                double residual = ArtronCollectorItem.addFuel(stack, this.getArtronAmount());
-                this.setArtronAmount(residual);
+                double residual = ArtronCollectorItem.addFuel(stack, this.getFuel());
+                this.setFuel(residual);
             }
         }
     }
 
-    public void setArtronAmount(double artronAmount) {
+    @Override
+    public void setFuel(double artronAmount) {
         this.artronAmount = artronAmount;
         markDirty();
     }
 
-    public double getArtronAmount() {
-        return this.artronAmount;
+    @Override
+    public double getMaxFuel() {
+        return ArtronCollectorItem.COLLECTOR_MAX_FUEL;
     }
 
-    public void addArtron(int artronAmount) {
-        this.setArtronAmount(this.getArtronAmount() + artronAmount);
-
-        if (this.getArtronAmount() > ArtronCollectorItem.COLLECTOR_MAX_FUEL) this.setArtronAmount(ArtronCollectorItem.COLLECTOR_MAX_FUEL);
+    @Override
+    public double getFuel() {
+        return this.artronAmount;
     }
 
     @Nullable
@@ -82,9 +84,9 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
     public void tick(World world, BlockPos pos, BlockState state, ArtronCollectorBlockEntity blockEntity) {
         if(world.isClient()) return;
 
-        if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) >= 3  && this.getArtronAmount() < ArtronCollectorItem.COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()))) {
+        if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) >= 3  && this.getFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()))) {
             RiftChunkManager.setArtronLevels(world, pos,RiftChunkManager.getArtronLevels(world, pos) - 3);
-            this.addArtron( 3);
+            this.addFuel( 3);
             this.updateListeners();
             DeltaTimeManager.createDelay(getDelay(), 500L);
         }

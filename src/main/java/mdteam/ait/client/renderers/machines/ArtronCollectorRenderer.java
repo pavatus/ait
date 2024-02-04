@@ -2,31 +2,18 @@ package mdteam.ait.client.renderers.machines;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.machines.ArtronCollectorModel;
-import mdteam.ait.client.models.monitors.CRTMonitorModel;
 import mdteam.ait.core.blockentities.ArtronCollectorBlockEntity;
-import mdteam.ait.core.blockentities.MonitorBlockEntity;
 import mdteam.ait.core.blocks.ArtronCollectorBlock;
-import mdteam.ait.core.blocks.MonitorBlock;
-import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
-
-import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
-import static mdteam.ait.tardis.data.FuelData.TARDIS_MAX_FUEL;
 
 // Made with Blockbench 4.8.3
 // Exported for Minecraft version 1.17+ for Yarn
@@ -61,14 +48,14 @@ public class ArtronCollectorRenderer<T extends ArtronCollectorBlockEntity> imple
         ModelPart batteryLevels = artronCollectorModel.collector.getChild("battery_levels");
 
         artronCollectorModel.collector.getChild("spinner").yaw =
-                entity.getArtronAmount() > 0 ? ((float) MinecraftClient.getInstance().world.getTime() / 12000L) * 180.0f : 0;
+                entity.getFuel() > 0 ? ((float) MinecraftClient.getInstance().world.getTime() / 12000L) * 180.0f : 0;
 
-        batteryLevels.getChild("b_1").visible = entity.getArtronAmount() > 250 && entity.getArtronAmount() < 500;
-        batteryLevels.getChild("b_2").visible = entity.getArtronAmount() > 500 && entity.getArtronAmount() < 750;
-        batteryLevels.getChild("b_3").visible = entity.getArtronAmount() > 750 && entity.getArtronAmount() < 1000;
-        batteryLevels.getChild("b_4").visible = entity.getArtronAmount() > 1000 && entity.getArtronAmount() < 1250;
-        batteryLevels.getChild("b_5").visible = entity.getArtronAmount() > 1250 && entity.getArtronAmount() < 1500;
-        batteryLevels.getChild("b_6").visible = entity.getArtronAmount() == 1500;
+        batteryLevels.getChild("b_1").visible = entity.getFuel() > 250 && entity.getFuel() < 500;
+        batteryLevels.getChild("b_2").visible = entity.getFuel() > 500 && entity.getFuel() < 750;
+        batteryLevels.getChild("b_3").visible = entity.getFuel() > 750 && entity.getFuel() < 1000;
+        batteryLevels.getChild("b_4").visible = entity.getFuel() > 1000 && entity.getFuel() < 1250;
+        batteryLevels.getChild("b_5").visible = entity.getFuel() > 1250 && entity.getFuel() < 1500;
+        batteryLevels.getChild("b_6").visible = entity.getFuel() == 1500;
 
         this.artronCollectorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(COLLECTOR_TEXTURE)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
         this.artronCollectorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(EMISSIVE_COLLECTOR_TEXTURE)), 0xF000F00, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
