@@ -7,6 +7,7 @@ import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.ConsoleControlEntity;
+import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.console.ConsoleSchema;
@@ -16,6 +17,7 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -390,12 +392,17 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
             this.checkAnimations();
         }
         if(this.getTardis().isEmpty()) return;
-        if (this.getTardis().get().getTravel().isCrashing()) {
+
+        ServerTardis tardis = (ServerTardis) this.getTardis().get();
+
+        boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.getExterior().getExteriorPos());
+
+        if (tardis.getTravel().isCrashing()) {
             world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + 0.5f, pos.getY() + 1,
                     pos.getZ() + 0.5f, random.nextFloat(-0.1f, 0.1f), 0.01, random.nextFloat(-0.1f, 0.1f));
         }
-        if (this.getTardis().get().isRefueling()) {
-            world.addParticle(ParticleTypes.END_ROD, true, pos.getX() + 0.5f, pos.getY() + 1.25,
+        if (tardis.isRefueling()) {
+            world.addParticle((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD, true, pos.getX() + 0.5f, pos.getY() + 1.25,
                     pos.getZ() + 0.5f, random.nextFloat(-0.1f, 0.1f), 0.01, random.nextFloat(-0.1f, 0.1f));
         }
     }
