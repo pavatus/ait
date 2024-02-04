@@ -27,8 +27,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-// todo move all packets / identifiers to here for easier reading imo
-// todo instead of sending updates to everyone, only send updates to "tracking" !! ( especially for animation stuff )
+// REPLACE WITH NetworkUtil
+@Deprecated
 public class AITMessages {
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 

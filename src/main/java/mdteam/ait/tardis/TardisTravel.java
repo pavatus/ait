@@ -34,6 +34,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Random;
@@ -237,10 +238,13 @@ public class TardisTravel extends TardisLink {
         if (this.getPosition() == null || this.getTardis().get().getDesktop() == null || this.getTardis().get().getDesktop().getConsolePos() == null) return;
 
         this.forceLand();
+        this.playThudSound();
+        AITMessages.sendToInterior(this.getTardis().get(), AITMessages.CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
+    }
+    public void playThudSound() {
+        if (this.getTardis().isEmpty()) return;
         this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
         TardisUtil.getTardisDimension().playSound(null, this.getTardis().get().getDesktop().getConsolePos(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
-        AITMessages.sendToInterior(this.getTardis().get(), AITMessages.CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
-
     }
     /**
      * Performs a crash for the Tardis.
@@ -634,7 +638,7 @@ public class TardisTravel extends TardisLink {
         this.deleteExterior();
     }
 
-    public void forceLand(ExteriorBlockEntity blockEntity) {
+    public void forceLand(@Nullable ExteriorBlockEntity blockEntity) {
         if (this.getTardis().isEmpty())
             return;
 
@@ -647,8 +651,33 @@ public class TardisTravel extends TardisLink {
         }
 
         this.setState(TardisTravel.State.LANDED);
-        if (blockEntity != null)
-            this.runAnimations(blockEntity);
+
+        if (blockEntity == null) {
+            ServerWorld world = (ServerWorld) this.getPosition().getWorld();
+            BlockEntity found = world.getBlockEntity(this.getPosition());
+
+            System.out.println(found);
+
+            // If there is already a matching exterior at this position
+            if (found instanceof ExteriorBlockEntity exterior
+                    && exterior.getTardis().isPresent()
+                    && Objects.equals(exterior.getTardis().get(), this.getTardis().get())) {
+                blockEntity = exterior;
+            } else {
+                ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
+                BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, this.getPosition().getDirection());
+                world.setBlockState(this.getPosition(), state);
+
+                ExteriorBlockEntity newEntity = new ExteriorBlockEntity(this.getPosition(), state);
+                world.addBlockEntity(newEntity);
+                newEntity.setTardis(this.getTardis().get());
+                blockEntity = newEntity;
+            }
+
+        }
+
+        this.runAnimations(blockEntity);
+
         if (DoorData.isClient()) return;
         DoorData.lockTardis(PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis().get(), null, false);
 
@@ -700,6 +729,26 @@ public class TardisTravel extends TardisLink {
         this.setDestination(pos, true);
     }
 
+    /**
+     * Sets the position of the tardis based off the flight's progress to the destination
+     * @param source Where this tardis originally took off from
+     */
+    public void setPositionToProgress(AbsoluteBlockPos.Directed source) {
+        if (this.getState() != State.FLIGHT) return;
+        if (this.getTardis().isEmpty()) return;
+
+        AbsoluteBlockPos.Directed pos = FlightUtil.getPositionFromPercentage(
+                source,
+                this.getDestination(),
+                this.getTardis().get().getHandlers().getFlight().getDurationAsPercentage()
+        );
+
+        this.setPosition(pos);
+    }
+    public void setPositionToProgress() {
+        this.setPositionToProgress(this.getPosition());
+    }
+
     public AbsoluteBlockPos.Directed getDestination() {
         if (this.destination == null) {
             if (this.getPosition() != null)
@@ -712,6 +761,7 @@ public class TardisTravel extends TardisLink {
 
         return destination;
     }
+
 
     public State getState() {
         return state;

@@ -23,16 +23,31 @@ public class HandBrakeControl extends Control {
         if(tardis.isInDanger())
             return false;
 
-        PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
+        boolean handbrake = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE);
+
+        PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, !handbrake);
         if(tardis.isRefueling())
             tardis.setRefueling(false);
 
-        this.soundEvent = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
+        handbrake = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE);
 
-        messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
+        this.soundEvent = handbrake ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
+
+        messagePlayer(player, handbrake);
+
+        boolean autopilot = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND);
+        TardisTravel travel = tardis.getTravel();
 
         // if (tardis.getTravel().getState() == TardisTravel.State.DEMAT) tardis.getTravel().toFlight();
-        if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) tardis.getTravel().crash();
+        if (handbrake && travel.getState() == TardisTravel.State.FLIGHT) {
+            if (autopilot) {
+                travel.setPositionToProgress();
+                travel.forceLand();
+                travel.playThudSound();
+            } else {
+                travel.crash();
+            }
+        }
 
         return true;
     }
