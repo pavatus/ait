@@ -8,6 +8,7 @@
 - Added four new creak sounds
 - Failing to takeoff/land no longer sends a message to the pilot
 - Flight sounds no longer play when out of power
+- Fixed being unable to turn off antigravs at max world height
 - Created ArtronHolder interface
 - Renamed "ExteriorSchema" to "ExteriorCategory"
 - Moved "hasPortals" method into the individual variants

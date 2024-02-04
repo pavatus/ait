@@ -167,7 +167,7 @@ public class FallingTardisEntity extends Entity {
 
     private boolean wouldBeKilled() {
         return this.getBlockPos().down(2).getY() <= this.getWorld().getBottomY()
-                || this.getBlockPos().up().getY() >= this.getWorld().getTopY();
+                || (this.getBlockPos().up(2).getY() >= this.getWorld().getTopY() && this.getVelocity().y > 0.0);
     }
 
     public void tick() {
