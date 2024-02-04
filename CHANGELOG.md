@@ -1,3 +1,6 @@
+# 1.2.25
+- Fixed a crash
+
 #  1.2.24
 - Fixed not being able to refuel in non rift chunks
 - Updated neptune lib with a few bug fixes and an update to the discord integration

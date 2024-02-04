@@ -429,7 +429,7 @@ public class TardisTravel extends TardisLink {
         this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
         // Play failure sound at the Tardis console position if the interior is not empty
-        if (TardisUtil.isInteriorNotEmpty(getTardis().get())) {
+        if (TardisUtil.isInteriorNotEmpty(getTardis().get()) && this.getTardis().get().getDesktop().getConsolePos() != null) {
             TardisUtil.getTardisDimension().playSound(null, this.getTardis().get().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
         }
 
