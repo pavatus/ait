@@ -4,6 +4,7 @@ import com.google.gson.*;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.sounds.MatSound;
+import mdteam.ait.registry.datapack.Identifiable;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -33,12 +34,12 @@ import java.lang.reflect.Type;
  * @see ExteriorVariantRegistry#REGISTRY
  * @author duzo
  */
-public abstract class ExteriorVariantSchema {
-    private final Identifier parent;
+public abstract class ExteriorVariantSchema implements Identifiable {
+    private final Identifier category;
     private final Identifier id;
 
-    protected ExteriorVariantSchema(Identifier parent, Identifier id) {
-        this.parent = parent;
+    protected ExteriorVariantSchema(Identifier category, Identifier id) {
+        this.category = category;
         this.id = id;
     }
 
@@ -61,7 +62,9 @@ public abstract class ExteriorVariantSchema {
         };
     }
 
-    public ExteriorCategory category() { return CategoryRegistry.REGISTRY.get(this.parent); }
+    protected Identifier categoryId() { return this.category; }
+
+    public ExteriorCategory category() { return CategoryRegistry.REGISTRY.get(this.categoryId()); }
     public Identifier id() { return id; }
 
     /**
@@ -96,7 +99,7 @@ public abstract class ExteriorVariantSchema {
                 id = new Identifier(AITMod.MOD_ID, "capsule_default");
             }
 
-            return ExteriorVariantRegistry.REGISTRY.get(id);
+            return ExteriorVariantRegistry.getInstance().get(id);
         }
 
         @Override

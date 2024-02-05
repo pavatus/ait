@@ -56,23 +56,23 @@ public class CloakData extends TardisLink {
         }
 
         if(this.getTardis().get().getExterior().getExteriorPos() == null) return;
-        List<PlayerEntity> players = this.getTardis().get().getTravel().getPosition().getWorld().getEntitiesByClass(PlayerEntity.class,
-                new Box(getTardis().get().getExterior().getExteriorPos()).expand(3), EntityPredicates.EXCEPT_SPECTATOR);
-        for (PlayerEntity player : players) {
-            ItemStack stack = KeyItem.getFirstKeyStackInInventory(player);
-            if (stack != null && stack.getItem() instanceof KeyItem) {
-                NbtCompound tag = stack.getOrCreateNbt();
-                if (!tag.contains("tardis")) {
-                    return;
-                }
-                if(UUID.fromString(tag.getString("tardis")).equals(this.getTardis().get().getUuid())) {
-                    //this.setAlphaBasedOnDistance(0.45f);
-                    return;
-                }/* else {
-                    this.setAlphaBasedOnDistance(0.105f);
-                }*/
-            }
-        }
+//        List<PlayerEntity> players = this.getTardis().get().getTravel().getPosition().getWorld().getEntitiesByClass(PlayerEntity.class,
+//                new Box(getTardis().get().getExterior().getExteriorPos()).expand(3), EntityPredicates.EXCEPT_SPECTATOR);
+//        for (PlayerEntity player : players) {
+//            ItemStack stack = KeyItem.getFirstKeyStackInInventory(player);
+//            if (stack != null && stack.getItem() instanceof KeyItem) {
+//                NbtCompound tag = stack.getOrCreateNbt();
+//                if (!tag.contains("tardis")) {
+//                    return;
+//                }
+//                if(UUID.fromString(tag.getString("tardis")).equals(this.getTardis().get().getUuid())) {
+//                    //this.setAlphaBasedOnDistance(0.45f);
+//                    return;
+//                }/* else {
+//                    this.setAlphaBasedOnDistance(0.105f);
+//                }*/
+//            }
+//        }
 
         if (!this.isEnabled()) return;
 

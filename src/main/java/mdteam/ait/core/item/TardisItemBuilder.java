@@ -65,8 +65,8 @@ public class TardisItemBuilder extends Item {
 
     public static TardisDesktopSchema findRandomDesktop() {
         Random rnd = new Random();
-        int randomized = rnd.nextInt(Math.abs(DesktopRegistry.size()));
-        return DesktopRegistry.toArrayList().get(randomized);
+        int randomized = rnd.nextInt(Math.abs(DesktopRegistry.getInstance().size()));
+        return DesktopRegistry.getInstance().toArrayList().get(randomized);
     }
     public static TardisDesktopSchema findRandomDesktop(Tardis tardis) { // todo this may cause looping crashes
         TardisDesktopSchema found = findRandomDesktop();
@@ -106,7 +106,7 @@ public class TardisItemBuilder extends Item {
 
             //System.out.println(this.exterior);
 
-            ServerTardisManager.getInstance().create(pos, CategoryRegistry.REGISTRY.get(this.exterior), findRandomVariant(CategoryRegistry.REGISTRY.get(this.exterior)) , DesktopRegistry.get(this.desktop), false);
+            ServerTardisManager.getInstance().create(pos, CategoryRegistry.REGISTRY.get(this.exterior), findRandomVariant(CategoryRegistry.REGISTRY.get(this.exterior)) , DesktopRegistry.getInstance().get(this.desktop), false);
             context.getStack().decrement(1);
         }
 

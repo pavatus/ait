@@ -48,6 +48,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import qouteall.imm_ptl.core.api.PortalAPI;
 
@@ -107,14 +108,14 @@ public class TardisUtil {
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             tardis.getDoor().getExteriorPos());
                     if (variantChange) {
-                        tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(Identifier.tryParse(variantValue)));
+                        tardis.getExterior().setVariant(ExteriorVariantRegistry.getInstance().get(Identifier.tryParse(variantValue)));
                         WorldOps.updateIfOnServer(server.getWorld(tardis
                                         .getTravel().getPosition().getWorld().getRegistryKey()),
                                 tardis.getDoor().getExteriorPos());
                     }
 
                     if (tardis.isGrowth())
-                        tardis.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.get(new Identifier(AITMod.MOD_ID, "type_40")));
+                        tardis.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.getInstance().get(new Identifier(AITMod.MOD_ID, "type_40")));
 
                     /*ExteriorEnum[] values = ExteriorEnum.values();
                     int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
@@ -347,6 +348,13 @@ public class TardisUtil {
     }
 
     public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
+        if (TardisManager.getInstance(isServer) == null) {
+            AITMod.LOGGER.error("TardisManager is NULL in findTardisByInterior");
+            AITMod.LOGGER.error("Called server side? " + isServer);
+
+            return null;
+        }
+
         for (Tardis tardis : TardisManager.getInstance(isServer).getLookup().values()) {
             // System.out.println(pos);
             // System.out.println(tardis.getDesktop().getCorners());
@@ -550,17 +558,15 @@ public class TardisUtil {
         return corners.getFirst().add(size.getX(), size.getY() / 2, size.getZ());
     }
 
-    @Nullable
-    public static List<PlayerEntity> findPlayerByTardisKey(ServerWorld world, Tardis tardis) {
+    public static @NotNull List<PlayerEntity> findPlayerByTardisKey(ServerWorld world, Tardis tardis) {
         List<PlayerEntity> newList = new ArrayList<>();
         for(PlayerEntity player : world.getServer().getPlayerManager().getPlayerList()) {
             if(KeyItem.isKeyInInventory(player)) {
-                ItemStack key = KeyItem.getFirstKeyStackInInventory(player);
-                if(key == null) return null;
-                NbtCompound tag = key.getOrCreateNbt();
-                if (!tag.contains("tardis")) return null;
-                if (UUID.fromString(tag.getString("tardis")).equals(tardis.getUuid())) {
-                    newList.add(player);
+                ItemStack[] keys = KeyItem.getKeysInInventory(player);
+                for (ItemStack key : keys) {
+                    if (KeyItem.getTardis(key) == tardis) {
+                        newList.add(player);
+                    }
                 }
             }
         }

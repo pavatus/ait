@@ -7,6 +7,7 @@ import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.data.CloakData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -58,20 +59,20 @@ public class SecurityControl extends Control {
         }
     }
 
+
+
     public static boolean hasMatchingKey(ServerPlayerEntity player, Tardis tardis) {
-        ItemStack stack = KeyItem.getFirstKeyStackInInventory(player);
+        if (player.hasPermissionLevel(2)) return true;
+        if (!KeyItem.isKeyInInventory(player)) return false;
+        ItemStack[] keys = KeyItem.getKeysInInventory(player);
 
-        if (stack == null) {
-            return false;
+        for (ItemStack stack : keys) {
+            if (stack == null) continue;
+            Tardis found = KeyItem.getTardis(stack);
+            if (found == null) continue;
+            if (found == tardis) return true;
         }
-
-        Tardis found = KeyItem.getTardis(stack);
-
-        if (found == null) {
-            return false;
-        }
-
-        return found.equals(tardis);
+        return false;
     }
 
     @Override
@@ -82,10 +83,5 @@ public class SecurityControl extends Control {
     @Override
     public long getDelayLength() {
         return (long) (2.5 * 1000L);
-    }
-
-    @Override
-    public boolean ignoresSecurity() {
-        return true;
     }
 }

@@ -61,7 +61,7 @@ public class InteriorChangingHandler extends TardisLink {
     }
     public TardisDesktopSchema getQueuedInterior() {
         if (this.getTardis().isEmpty()) return null;
-        return DesktopRegistry.get(PropertiesHandler.getIdentifier(this.getTardis().get().getHandlers().getProperties(), QUEUED_INTERIOR));
+        return DesktopRegistry.getInstance().get(PropertiesHandler.getIdentifier(this.getTardis().get().getHandlers().getProperties(), QUEUED_INTERIOR));
     }
 
     public void queueInteriorChange(TardisDesktopSchema schema) {

@@ -1,4 +1,3 @@
-# 1.2.29
-- Items and Players now get saved if they fall into the TARDIS void
-- Made cloak combine alpha when taking off / landing
-- Fixed particles not showing
+# 1.2.30
+- Cloak now shows tooltip when changing value
+- You can only see through the cloak if you have a valid key now
