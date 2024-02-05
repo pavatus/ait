@@ -16,11 +16,11 @@ categories: ["Tardis", "Specifics", "Datapacks", "Exteriors"]
 
 2. Create a new **.json** file in the path
 
-```data/(namespace)/exterior/(exterior_texture_name).json```
+> `data/(namespace)/exterior/(exterior_texture_name).json`
 
 3. Inside this new .json file, paste
 
-```"id": "(namespace):(exterior_texture_name)"```
+ > `"id": "(namespace):(exterior_texture_name)"`
 
 4. replacing the **namespace** and the **exterior_texture_name** with your own from earlier
 
@@ -31,13 +31,13 @@ categories: ["Tardis", "Specifics", "Datapacks", "Exteriors"]
 
 1. Place your **.png** exterior texture in this path
 
-```data/(namespace)/exterior/(exterior_texture_name).png```
+> `data/(namespace)/exterior/(exterior_texture_name).png`
 
-3. Place your .**png** exterior texture emission in the same path
+2. Place your .**png** exterior texture emission in the same path
 
-```data/(namespace)/exterior/(exterior_texture_name)_emission.png```
+> `data/(namespace)/exterior/(exterior_texture_name)_emission.png`
 
-2. If you want people to be able to see your exterior texture variant, they will need this **resource pack**.
+3. If you want people to be able to see your exterior texture variant, they will need this **resource pack**.
 
 ## Example Reference That's Easy to Follow :)
 > This is just an example, do not use the ID "(namespace)" and make sure you're not using any parentheses. Those are just there for making sure you replace (namespace) with your own ID and (exterior_texture_name) with your texture's name.
