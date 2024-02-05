@@ -8,6 +8,7 @@ import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.console.CoralConsole;
+import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
@@ -1421,6 +1422,10 @@ public class CoralConsoleModel extends ConsoleModel {
 		ModelPart autopilot = this.console.getChild("controls").getChild("ctrl_4").getChild("bone15").getChild("switch24").getChild("bone19");
 
 		autopilot.pivotY = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? autopilot.pivotY + 1 : autopilot.pivotY;
+
+		ModelPart security = this.console.getChild("controls").getChild("ctrl_4").getChild("bone15").getChild("switch25").getChild("bone20");
+
+		security.pivotY = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY) ? security.pivotY + 1 : security.pivotY;
 
 		// Ground Searching
 		ModelPart groundSearch = this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("bow").getChild("bone68");
