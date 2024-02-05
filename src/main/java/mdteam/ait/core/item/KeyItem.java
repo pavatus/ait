@@ -77,6 +77,18 @@ public class KeyItem extends LinkableItem {
         return items.toArray(new ItemStack[0]);
     }
 
+    public static boolean hasMatchingKeyInInventory(PlayerEntity player, Tardis tardis) {
+        ItemStack[] keys = getKeysInInventory(player);
+
+        for (ItemStack stack : keys) {
+            if (stack == null) continue;
+            Tardis found = KeyItem.getTardis(stack);
+            if (found == null) continue;
+            if (found == tardis) return true;
+        }
+        return false;
+    }
+
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);

@@ -3,6 +3,7 @@ package mdteam.ait.client.models.exteriors;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.core.entities.TardisRealEntity;
+import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.MinecraftClient;
@@ -62,6 +63,11 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         float alpha = exterior.getAlpha();
 
         if (exterior.getTardis().get().getHandlers().getCloak().isEnabled()) {
+            if (!KeyItem.hasMatchingKeyInInventory(MinecraftClient.getInstance().player, exterior.getTardis().get())) {
+                alpha = 0f;
+                root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+                return;
+            }
             if (isNearTardis(MinecraftClient.getInstance().player, exterior.getTardis().get(), MAX_CLOAK_DISTANCE)) {
                 alpha =  1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, exterior.getTardis().get()) / MAX_CLOAK_DISTANCE);
                 if (exterior.getAlpha() != 0.105f)

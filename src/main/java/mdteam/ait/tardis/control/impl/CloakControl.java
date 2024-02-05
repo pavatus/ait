@@ -9,6 +9,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 
 public class CloakControl extends Control {
 
@@ -22,10 +23,12 @@ public class CloakControl extends Control {
         CloakData cloak = tardis.getHandlers().getCloak();
 
         cloak.toggle();
-
+        // @TODO: Add translations
         if (cloak.isEnabled()) {
+            player.sendMessage(Text.literal("CLOAK: ON (TODO add translations for this)"), true);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING, SoundCategory.BLOCKS, 1.0F, 1.0F);
         } else {
+            player.sendMessage(Text.literal("CLOAK: OFF (TODO add translations for this)"), true);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING_STOP, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
 
