@@ -559,7 +559,7 @@ public class TardisUtil {
                 if(key == null) return null;
                 NbtCompound tag = key.getOrCreateNbt();
                 if (!tag.contains("tardis")) return null;
-                if (UUID.fromString(tag.getString("tardis")) == tardis.getUuid()) {
+                if (UUID.fromString(tag.getString("tardis")).equals(tardis.getUuid())) {
                     newList.add(player);
                 }
             }

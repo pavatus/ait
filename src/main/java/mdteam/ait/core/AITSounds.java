@@ -38,6 +38,7 @@ public class AITSounds implements NeptuneSoundEventInit {
     public static final SoundEvent CRANK = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/crank"));
     public static final SoundEvent KNOCK = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/knock"));
     public static final SoundEvent SNAP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/snap"));
+    public static final SoundEvent BWEEP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/bweep"));
 
     // Hums
     public static final SoundEvent TOYOTA_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/toyota_hum"));

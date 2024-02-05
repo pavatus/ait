@@ -7,6 +7,7 @@ import mdteam.ait.core.AITMessages;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.util.FlightUtil;
@@ -637,6 +638,12 @@ public class TardisTravel extends TardisLink {
         this.setLastPosition(this.getPosition());
         this.setState(TardisTravel.State.FLIGHT);
         this.deleteExterior();
+
+        if (this.getTardis().isEmpty()) return;
+        boolean security = PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
+        if (security) {
+            SecurityControl.runSecurityProtocols(this.getTardis().get());
+        }
     }
 
     public void forceLand(@Nullable ExteriorBlockEntity blockEntity) {

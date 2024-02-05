@@ -335,6 +335,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addSound("controls/crank", AITSounds.CRANK);
             provider.addSound("controls/knock", AITSounds.KNOCK);
             provider.addSound("controls/snap", AITSounds.SNAP);
+            provider.addSound("controls/bweep", AITSounds.BWEEP);
 
             // Tools
             provider.addSound("tools/goes_ding", AITSounds.DING);
