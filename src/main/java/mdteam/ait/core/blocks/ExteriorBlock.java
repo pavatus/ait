@@ -49,12 +49,10 @@ import static mdteam.ait.core.blocks.DoorBlock.rotateShape;
 public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final VoxelShape LEDGE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
-            Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
-
     public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16,1, 16);
-
     public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
+            Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
+    public static final VoxelShape PORTALS_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 10.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
     public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
     public ExteriorBlock(Settings settings) {
@@ -96,6 +94,10 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
             return getNormalShape(state, world, pos);
 
+        if(DependencyChecker.hasPortals()) {
+            return PORTALS_SHAPE;
+        }
+
         return VoxelShapes.empty();
     }
 
@@ -131,6 +133,10 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
             return getNormalShape(state, world, pos);
 
+        if(DependencyChecker.hasPortals()) {
+            return PORTALS_SHAPE;
+        }
+
         return VoxelShapes.empty();
     }
 
@@ -158,6 +164,14 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).getTardis().get().getTravel().getState();
         if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
             return getNormalShape(state, world, pos);
+
+        if (((ExteriorBlockEntity) blockEntity).getTardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM)) {
+            return LEDGE_DOOM;
+        }
+
+        if(DependencyChecker.hasPortals()) {
+            return PORTALS_SHAPE;
+        }
 
         return VoxelShapes.empty();
     }

@@ -2,9 +2,11 @@ package mdteam.ait.compat.immersive;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.injection.At;
@@ -56,6 +58,14 @@ public class TardisPortal extends Portal {
             entity.setBoundingBox(entity.getBoundingBox().shrink(0, -0.75f, 0));
         }
         return super.getPassengersDeep();
+    }
+
+    @Override
+    public boolean isInteractableBy(PlayerEntity player) {
+        if(player.distanceTo(this) > 2) {
+            return false;
+        }
+        return super.isInteractableBy(player);
     }
 
     @Override
