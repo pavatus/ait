@@ -8,7 +8,7 @@ categories: ["Tardis", "Specifics", "Datapacks", "Exteriors"]
 1. In the same directory as the other .**json** files for your exterior, make a new one called (id).json and do the syntax as follows:
 ```json
 {
-  "id": "(id):(custom_category_name)",
+  "id": "(namespace):(custom_category_name)",
   "name": "Custom Category Name"
 }
 ```
