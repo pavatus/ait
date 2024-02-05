@@ -29,6 +29,8 @@ public class AlnicoConsole extends ConsoleSchema {
             // extra monitor entity because he's a special lil guy
             new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.42499986f, 0.39999992f), new Vector3f(-0.0015625115483999252f, 1.1000016266480088f, -0.8890625201165676f)),
 
+            new ControlTypes(new SecurityControl(), EntityDimensions.changing(0.07499999f, 0.21250002f), new Vector3f(0.1414062585681677f, 0.18749975133687258f, 1.689453142695129f)),
+
             new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.17500004f, 0.43749985f), new Vector3f(0.9625000189989805f, 0.4124998087063432f, -0.5523437457159162f)),
             new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.1375f, 0.1375f), new Vector3f(-0.1847656387835741f, 0.4525001486763358f, 0.9207031447440386f)),
             new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.07499999f, 0.29999998f), new Vector3f(-1.4000000208616257f, 0.11250056512653828f, -0.9734375337138772f)),

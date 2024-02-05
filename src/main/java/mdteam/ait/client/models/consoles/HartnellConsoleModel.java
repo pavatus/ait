@@ -6,6 +6,7 @@ import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
@@ -946,11 +947,14 @@ public class HartnellConsoleModel extends ConsoleModel {
 			hadsAlarmsLightsOne.pivotY = hadsAlarmsLightsOne.pivotY;
 			hadsAlarmsLightsTwo.pivotY = hadsAlarmsLightsTwo.pivotY;
 		}
-		else if(!PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)){
+		else {
 			hadsAlarms.roll = hadsAlarms.roll;
 			hadsAlarmsLightsOne.pivotY = hadsAlarmsLightsOne.pivotY + 1;
 			hadsAlarmsLightsTwo.pivotY = hadsAlarmsLightsTwo.pivotY + 1;
 		}
+
+		ModelPart security = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("s_lever_7").getChild("bone144");
+		security.roll = (PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY)) ? security.roll + 1.75f : security.roll;
 
 		// Increment Control Movements
 		ModelPart increment = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_crank_3").getChild("bone74");

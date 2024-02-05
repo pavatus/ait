@@ -4,6 +4,7 @@ import mdteam.ait.client.animation.console.alnico.AlnicoAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
@@ -830,6 +831,9 @@ public class AlnicoConsoleModel extends ConsoleModel {
 
 		ModelPart autoPilot = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch1");
 		autoPilot.pitch = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? autoPilot.pitch + 0.5f : autoPilot.pitch;
+
+		ModelPart security = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch4");
+		security.pitch = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY) ? security.pitch + 0.5f : security.pitch;
 
 		ModelPart siegeMode = alnico.getChild("section3").getChild("controls3").getChild("siegemode").getChild("lever");
 		siegeMode.pitch = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE) ? siegeMode.pitch + 0.9f : siegeMode.pitch;
