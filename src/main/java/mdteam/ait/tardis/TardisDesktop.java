@@ -150,7 +150,7 @@ public class TardisDesktop extends TardisLink {
     public void clearOldInterior(TardisDesktopSchema schema) {
         this.schema = schema;
         DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
-        this.clearInteriorEntities();
+//        this.clearInteriorEntities();
     }
 
     private void clearInteriorEntities() {
