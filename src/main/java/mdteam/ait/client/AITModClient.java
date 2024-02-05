@@ -323,13 +323,15 @@ public class AITModClient implements ClientModInitializer {
                 if (keyBinding.isPressed()) {
                     if (!keyHeldDown) {
                         keyHeldDown = true;
-                        ItemStack stack = KeyItem.getFirstKeyStackInInventory(player);
-                        if (stack != null && stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
-                            NbtCompound tag = stack.getOrCreateNbt();
-                            if (!tag.contains("tardis")) {
-                                return;
+                        ItemStack[] keys = KeyItem.getKeysInInventory(player);
+                        for (ItemStack stack : keys) {
+                            if (stack != null && stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
+                                NbtCompound tag = stack.getOrCreateNbt();
+                                if (!tag.contains("tardis")) {
+                                    return;
+                                }
+                                ClientTardisUtil.snapToOpenDoors(UUID.fromString(tag.getString("tardis")));
                             }
-                            ClientTardisUtil.snapToOpenDoors(UUID.fromString(tag.getString("tardis")));
                         }
                     }
                 } else {

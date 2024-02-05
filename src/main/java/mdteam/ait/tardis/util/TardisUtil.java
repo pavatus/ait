@@ -48,6 +48,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import qouteall.imm_ptl.core.api.PortalAPI;
 
@@ -550,17 +551,15 @@ public class TardisUtil {
         return corners.getFirst().add(size.getX(), size.getY() / 2, size.getZ());
     }
 
-    @Nullable
-    public static List<PlayerEntity> findPlayerByTardisKey(ServerWorld world, Tardis tardis) {
+    public static @NotNull List<PlayerEntity> findPlayerByTardisKey(ServerWorld world, Tardis tardis) {
         List<PlayerEntity> newList = new ArrayList<>();
         for(PlayerEntity player : world.getServer().getPlayerManager().getPlayerList()) {
             if(KeyItem.isKeyInInventory(player)) {
-                ItemStack key = KeyItem.getFirstKeyStackInInventory(player);
-                if(key == null) return null;
-                NbtCompound tag = key.getOrCreateNbt();
-                if (!tag.contains("tardis")) return null;
-                if (UUID.fromString(tag.getString("tardis")).equals(tardis.getUuid())) {
-                    newList.add(player);
+                ItemStack[] keys = KeyItem.getKeysInInventory(player);
+                for (ItemStack key : keys) {
+                    if (KeyItem.getTardis(key) == tardis) {
+                        newList.add(player);
+                    }
                 }
             }
         }

@@ -56,10 +56,6 @@ public class KeyItem extends LinkableItem {
         return getFirstKeyStackInInventory(player) != null;
     }
 
-    public static KeyItem getFirstKeyInInventory(PlayerEntity player) {
-        return (KeyItem) getFirstKeyStackInInventory(player).getItem();
-    }
-
     public static ItemStack getFirstKeyStackInInventory(PlayerEntity player) {
         // from playerinventory
 
@@ -69,6 +65,16 @@ public class KeyItem extends LinkableItem {
             }
         }
         return null;
+    }
+
+    public static ItemStack[] getKeysInInventory(PlayerEntity player) {
+        List<ItemStack> items = new ArrayList<>();
+        for (ItemStack itemStack : player.getInventory().main) {
+            if (!itemStack.isEmpty() && itemStack.getItem() instanceof KeyItem key) {
+                items.add(itemStack);
+            }
+        }
+        return items.toArray(new ItemStack[0]);
     }
 
     @Override
