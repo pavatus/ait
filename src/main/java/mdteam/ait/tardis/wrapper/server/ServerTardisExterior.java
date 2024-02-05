@@ -1,8 +1,8 @@
 package mdteam.ait.tardis.wrapper.server;
 
 import mdteam.ait.tardis.TardisTickable;
-import mdteam.ait.tardis.exterior.ExteriorCategory;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisExterior;
 import net.minecraft.client.MinecraftClient;

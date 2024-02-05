@@ -11,12 +11,12 @@ import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.exterior.BoothCategory;
-import mdteam.ait.tardis.exterior.ClassicCategory;
-import mdteam.ait.tardis.exterior.ExteriorCategory;
-import mdteam.ait.tardis.exterior.PoliceBoxCategory;
+import mdteam.ait.tardis.exterior.category.BoothCategory;
+import mdteam.ait.tardis.exterior.category.ClassicCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.PoliceBoxCategory;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.*;
@@ -161,14 +161,14 @@ public class MonitorScreen extends TardisScreen {
         }
     }
     public ExteriorCategory nextExterior() {
-        List<ExteriorCategory> list = CategoryRegistry.REGISTRY.stream().toList();
+        List<ExteriorCategory> list = CategoryRegistry.getInstance().toList();
 
         int idx = list.indexOf(getCurrentModel());
         if (idx < 0 || idx+1 == list.size()) return list.get(0);
         return list.get(idx + 1);
     }
     public ExteriorCategory previousExterior() {
-        List<ExteriorCategory> list = CategoryRegistry.REGISTRY.stream().toList();
+        List<ExteriorCategory> list = CategoryRegistry.getInstance().toList();
 
         int idx = list.indexOf(getCurrentModel());
         if (idx <= 0) return list.get(list.size() - 1);
@@ -247,9 +247,9 @@ public class MonitorScreen extends TardisScreen {
             MatrixStack stack = context.getMatrices();
             // fixme is bad
             stack.push();
-            stack.translate(x, this.getCurrentModel() == CategoryRegistry.REGISTRY.get(PoliceBoxCategory.REFERENCE) || this.getCurrentModel() == CategoryRegistry.REGISTRY.get(ClassicCategory.REFERENCE) ? y + 8 : y, 100f);
-            if (this.getCurrentModel() == CategoryRegistry.REGISTRY.get(PoliceBoxCategory.REFERENCE) || this.getCurrentModel() == CategoryRegistry.REGISTRY.get(ClassicCategory.REFERENCE)) stack.scale(-10, 10, 10);
-            else if (this.getCurrentModel() == CategoryRegistry.REGISTRY.get(BoothCategory.REFERENCE)) stack.scale(-scale, scale, scale);
+            stack.translate(x, this.getCurrentModel() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCurrentModel() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 8 : y, 100f);
+            if (this.getCurrentModel() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCurrentModel() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE)) stack.scale(-10, 10, 10);
+            else if (this.getCurrentModel() == CategoryRegistry.getInstance().get(BoothCategory.REFERENCE)) stack.scale(-scale, scale, scale);
             else stack.scale(-scale, scale, scale);
             //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
             stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(mouseX));

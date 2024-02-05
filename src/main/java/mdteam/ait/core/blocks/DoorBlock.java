@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
-    public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 13.1, 16.0, 32.0, 16.0);
+    public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 12.1, 16.0, 32.0, 16.0);
 
     public DoorBlock(Settings settings) {
         super(settings);

@@ -5,7 +5,8 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.registry.datapack.Identifiable;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
@@ -14,7 +15,7 @@ import net.minecraft.util.InvalidIdentifierException;
 import java.lang.reflect.Type;
 
 @Environment(EnvType.CLIENT)
-public abstract class ClientExteriorVariantSchema {
+public abstract class ClientExteriorVariantSchema implements Identifiable {
     private final Identifier parent;
     private final Identifier id;
 
@@ -36,7 +37,7 @@ public abstract class ClientExteriorVariantSchema {
         return id.equals(that.id);
     }
 
-    public ExteriorVariantSchema parent() { return ExteriorVariantRegistry.REGISTRY.get(this.parent); }
+    public ExteriorVariantSchema parent() { return ExteriorVariantRegistry.getInstance().get(this.parent); }
     public Identifier id() { return id; }
     public abstract Identifier texture();
     public abstract Identifier emission();
@@ -58,7 +59,7 @@ public abstract class ClientExteriorVariantSchema {
                 id = new Identifier(AITMod.MOD_ID, "capsule_default");
             }
 
-            return ClientExteriorVariantRegistry.REGISTRY.get(id);
+            return ClientExteriorVariantRegistry.getInstance().get(id);
         }
 
         @Override

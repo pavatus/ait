@@ -1,11 +1,8 @@
 package mdteam.ait.tardis.variant.door;
 
 import com.google.gson.*;
-import mdteam.ait.client.models.doors.DoorModel;
 import mdteam.ait.registry.DoorRegistry;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;

@@ -103,19 +103,19 @@ public class TardisUtil {
                     String variantValue = buf.readString();
                     Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-                    tardis.getExterior().setType(CategoryRegistry.REGISTRY.get(exteriorValue));
+                    tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
                     WorldOps.updateIfOnServer(server.getWorld(tardis
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             tardis.getDoor().getExteriorPos());
                     if (variantChange) {
-                        tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(Identifier.tryParse(variantValue)));
+                        tardis.getExterior().setVariant(ExteriorVariantRegistry.getInstance().get(Identifier.tryParse(variantValue)));
                         WorldOps.updateIfOnServer(server.getWorld(tardis
                                         .getTravel().getPosition().getWorld().getRegistryKey()),
                                 tardis.getDoor().getExteriorPos());
                     }
 
                     if (tardis.isGrowth())
-                        tardis.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.get(new Identifier(AITMod.MOD_ID, "type_40")));
+                        tardis.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.getInstance().get(new Identifier(AITMod.MOD_ID, "type_40")));
 
                     /*ExteriorEnum[] values = ExteriorEnum.values();
                     int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
@@ -348,6 +348,13 @@ public class TardisUtil {
     }
 
     public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
+        if (TardisManager.getInstance(isServer) == null) {
+            AITMod.LOGGER.error("TardisManager is NULL in findTardisByInterior");
+            AITMod.LOGGER.error("Called server side? " + isServer);
+
+            return null;
+        }
+
         for (Tardis tardis : TardisManager.getInstance(isServer).getLookup().values()) {
             // System.out.println(pos);
             // System.out.println(tardis.getDesktop().getCorners());

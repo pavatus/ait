@@ -2,9 +2,9 @@ package mdteam.ait.tardis.wrapper.client;
 
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.data.DoorData;
-import mdteam.ait.tardis.exterior.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategory;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 
 import java.util.UUID;
 

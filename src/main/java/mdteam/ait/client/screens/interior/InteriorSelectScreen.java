@@ -125,7 +125,7 @@ public class InteriorSelectScreen extends TardisScreen {
     }
 
     private static TardisDesktopSchema nextDesktop(TardisDesktopSchema current) {
-        List<TardisDesktopSchema> list = DesktopRegistry.toList();
+        List<TardisDesktopSchema> list = DesktopRegistry.getInstance().toList();
 
         int idx = list.indexOf(current);
         if (idx < 0 || idx + 1 == list.size()) return list.get(0);
@@ -139,7 +139,7 @@ public class InteriorSelectScreen extends TardisScreen {
     }
 
     private static TardisDesktopSchema previousDesktop(TardisDesktopSchema current) {
-        List<TardisDesktopSchema> list = DesktopRegistry.toList();
+        List<TardisDesktopSchema> list = DesktopRegistry.getInstance().toList();
 
         int idx = list.indexOf(current);
         if (idx <= 0) return list.get(list.size() - 1);

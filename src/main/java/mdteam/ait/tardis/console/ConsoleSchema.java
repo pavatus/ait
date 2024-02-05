@@ -3,7 +3,7 @@ package mdteam.ait.tardis.console;
 import com.google.gson.*;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.tardis.control.ControlTypes;
-import mdteam.ait.tardis.exterior.CapsuleCategory;
+import mdteam.ait.tardis.exterior.category.CapsuleCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 

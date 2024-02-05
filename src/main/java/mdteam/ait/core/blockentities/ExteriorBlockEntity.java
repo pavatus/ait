@@ -6,8 +6,8 @@ import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.registry.CategoryRegistry;
-import mdteam.ait.tardis.exterior.CapsuleCategory;
-import mdteam.ait.tardis.exterior.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.CapsuleCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategory;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -195,7 +195,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
     }
 
     public ExteriorCategory getExteriorType() {
-        if(getTardis().isEmpty()) return CategoryRegistry.REGISTRY.get(CapsuleCategory.REFERENCE);
+        if(getTardis().isEmpty()) return CategoryRegistry.getInstance().get(CapsuleCategory.REFERENCE);
         return this.getTardis().get().getExterior().getCategory();
     }
 
