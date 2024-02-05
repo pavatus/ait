@@ -122,6 +122,11 @@ public class RiftChunkManager {
     }
 
     public static boolean isRiftChunk(ChunkPos chunkPos) {
+        if (TardisUtil.getServer() == null) {
+            AITMod.LOGGER.error("TARDIS UTIL SERVER IS NULL, RETURNING FALSE");
+            return false;
+        }
+
         return ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, TardisUtil.getServer().getOverworld().getSeed(), 987234910L).nextInt(8) == 0;
     }
 
