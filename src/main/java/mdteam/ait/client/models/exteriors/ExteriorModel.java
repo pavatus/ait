@@ -61,9 +61,11 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
         float alpha = exterior.getAlpha();
 
-        if (exterior.getTardis().get().getTravel().getState() == TardisTravel.State.LANDED && exterior.getTardis().get().getHandlers().getCloak().isEnabled()) {
+        if (exterior.getTardis().get().getHandlers().getCloak().isEnabled()) {
             if (isNearTardis(MinecraftClient.getInstance().player, exterior.getTardis().get(), MAX_CLOAK_DISTANCE)) {
                 alpha =  1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, exterior.getTardis().get()) / MAX_CLOAK_DISTANCE);
+                if (exterior.getAlpha() != 0.105f)
+                    alpha = alpha * exterior.getAlpha();
             } else {
                 alpha = 0f;
             }
