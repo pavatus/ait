@@ -118,6 +118,7 @@ public class AITMod implements ModInitializer {
             GetNameCommand.register(dispatcher);
             SetMaxSpeedCommand.register(dispatcher);
             SetSiegeCommand.register(dispatcher);
+            LinkCommand.register(dispatcher);
         }));
 
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {

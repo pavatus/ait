@@ -8,6 +8,8 @@ import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.control.ControlTypes;
+import mdteam.ait.tardis.control.impl.SecurityControl;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -216,25 +218,35 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
             //DeltaTimeManager.createDelay(getDelayId(this.getTardis()), 500L);
 
-            control.runAnimation(getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world);
+            Tardis tardis = this.getTardis(world);
 
-            if (this.getTardis(world) == null) {
+            if (tardis == null) {
                 this.discard();
                 AITMod.LOGGER.warn("Discarding invalid control entity at " + this.getPos());
                 return false;
             }
 
-            if (control.shouldFailOnNoPower() && !this.getTardis(world).hasPower()) {
+            control.runAnimation(tardis, (ServerPlayerEntity) player, (ServerWorld) world);
+
+            if (control.shouldFailOnNoPower() && !tardis.hasPower()) {
                 return false;
             }
+
             if (this.isOnDelay()) return false;
+
             if (this.control.shouldHaveDelay() && !this.isOnDelay()) {
                 this.createDelay(this.control.getDelayLength());
             }
 
+            boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
+            if (!this.control.ignoresSecurity() && security) {
+                if (!SecurityControl.hasMatchingKey((ServerPlayerEntity) player, tardis)) {
+                    return false;
+                }
+            }
             // this.getTardis(world).getHandlers().getSequencing().add(this.control);
 
-            return this.control.runServer(this.getTardis(world), (ServerPlayerEntity) player, (ServerWorld) world, leftClick); // i dont gotta check these cus i know its server
+            return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, leftClick); // i dont gotta check these cus i know its server
         }
         return false;
     }

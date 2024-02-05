@@ -83,4 +83,9 @@ public class SecurityControl extends Control {
     public long getDelayLength() {
         return (long) (2.5 * 1000L);
     }
+
+    @Override
+    public boolean ignoresSecurity() {
+        return true;
+    }
 }

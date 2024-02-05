@@ -75,6 +75,9 @@ public class Control {
     public boolean shouldHaveDelay() {
         return true;
     }
+    public boolean ignoresSecurity() {
+        return false;
+    }
 
     @Override
     public boolean equals(Object o) {
