@@ -1,4 +1,4 @@
-<footer class="">
+<footer id="footer" class="">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -20,6 +20,18 @@
           <span><a class="newpost" href="javascript:;">New page</a></span>
           <span class="point"> · </span>
           <span><a href="http://jekyllthemes.org/themes/cool-concise-high-end/">Jekyll Theme Source</a></span>
+        <script>
+              var prevScrollpos = window.pageYOffset;
+              window.onscroll = function() {
+              var currentScrollPos = window.pageYOffset;
+                if (prevScrollpos > currentScrollPos) {
+                  document.getElementById("footer").style.bottom = "0";
+                } else {
+                  document.getElementById("footer").style.bottom = "-50px";
+                }
+                prevScrollpos = currentScrollPos;
+              }
+        </script>
       </div>
     </div>
   </div>
