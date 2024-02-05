@@ -25,7 +25,6 @@ import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
 
 public class MonitorBlockEntity extends LinkableBlockEntity {
 
-
     public MonitorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.MONITOR_BLOCK_ENTITY_TYPE, pos, state);
     }

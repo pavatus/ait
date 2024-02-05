@@ -11,8 +11,8 @@ import net.minecraft.item.Item;
 
 public class AITItems implements NeptuneItemInit {
     // TARDIS
-    public static final Item TARDIS_ITEM = new TardisItemBuilder(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
-    public static final Item SIEGE_ITEM = new SiegeTardisItem(new NeptuneItemSettings());
+    public static final Item TARDIS_ITEM = new TardisItemBuilder(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).fireproof().maxCount(1));
+    public static final Item SIEGE_ITEM = new SiegeTardisItem(new NeptuneItemSettings().fireproof());
     // Functional Items
     public static final Item REMOTE_ITEM = new RemoteItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item ARTRON_COLLECTOR = new ArtronCollectorItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
@@ -21,7 +21,7 @@ public class AITItems implements NeptuneItemInit {
     // Keys/Key Templates
     public static final Item IRON_KEY = new KeyItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP));
     public static final Item GOLD_KEY = new KeyItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SNAP);
-    public static final Item NETHERITE_KEY = new KeyItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SNAP, KeyItem.Protocols.HAIL);
+    public static final Item NETHERITE_KEY = new KeyItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).fireproof(), KeyItem.Protocols.SNAP, KeyItem.Protocols.HAIL);
     public static final Item CLASSIC_KEY = new KeyItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SNAP, KeyItem.Protocols.HAIL);
     public static final Item GOLD_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP), "Gold Key", "Gold Nugget");
     public static final Item NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP), "Netherite Key", "Netherite Scrap");
