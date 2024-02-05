@@ -82,10 +82,6 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 
     public static ClientExteriorVariantSchema convertDatapack(DatapackVariant variant) {
         if (!variant.wasDatapack()) return convertNonDatapack(variant);
-
-        System.out.println(variant.getParentId());
-        System.out.println(getInstance().get(variant.getParentId()));
-
         return new ClientExteriorVariantSchema(variant.id()) {
             @Override
             public Identifier texture() {

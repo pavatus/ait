@@ -91,10 +91,7 @@ public class DatapackVariant extends ExteriorVariantSchema {
 
     @Override
     public DoorSchema door() {
-        System.out.println(this.getParent().id());
-        return DoorRegistry.BOX;
-
-        //return this.getParent().door();
+        return this.getParent().door();
     }
 
     @Override

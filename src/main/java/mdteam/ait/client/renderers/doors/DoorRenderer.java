@@ -37,7 +37,6 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             return;
 
         ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.getTardis().get().getExterior().getVariant());
-        System.out.println(entity.getTardis().get().getExterior().getVariant().id());
         ClientDoorSchema variant = ClientDoorRegistry.withParent(exteriorVariant.parent().door());
         Class<? extends DoorModel> modelClass = variant.model().getClass();
 
