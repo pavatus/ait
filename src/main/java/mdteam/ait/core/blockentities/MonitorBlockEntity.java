@@ -3,6 +3,8 @@ package mdteam.ait.core.blockentities;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.control.impl.SecurityControl;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -30,6 +32,12 @@ public class MonitorBlockEntity extends LinkableBlockEntity {
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
         if (world.isClient() || this.getTardis().isEmpty()) return;
+        boolean security = PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
+        if (security) {
+            if (!SecurityControl.hasMatchingKey((ServerPlayerEntity) player, this.getTardis().get())) {
+                return;
+            }
+        }
         AITMod.openScreen((ServerPlayerEntity) player, 0, this.getTardis().get().getUuid()); // we can cast because we know its on server :p
     }
 
