@@ -6,6 +6,7 @@
   "mixins": [
     "server.ItemEntityMixin",
     "server.ServerPlayerInteractionManagerMixin",
+    "server.ServerPlayerMixin",
     "server.StructureTemplateMixin"
   ],
   "client": [

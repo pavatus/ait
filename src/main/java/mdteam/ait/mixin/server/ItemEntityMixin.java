@@ -1,8 +1,10 @@
 package mdteam.ait.mixin.server;
 
+import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.util.FlightUtil;
+import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,6 +29,13 @@ public abstract class ItemEntityMixin {
             // kill ourselves and place down the exterior
             SiegeTardisItem.placeTardis(found, SiegeTardisItem.fromEntity(entity));
             entity.kill();
+        }
+        // if entity is in tardis and y is less than -100 save them
+        if (entity.getY() <= -100 && entity.getWorld().getRegistryKey().equals(AITDimensions.TARDIS_DIM_WORLD)) {
+            Tardis found = TardisUtil.findTardisByInterior(entity.getBlockPos(), true);
+
+            if (found == null) return;
+            TardisUtil.teleportInside(found, entity);
         }
     }
 }
