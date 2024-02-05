@@ -1,5 +1,7 @@
 # 1.2.26
-- Added Security - If enabled those without linked keys will be left behind
+- Added Security 
+- - Those without linked keys will be left behind on demat
+- - Those without linked keys cannot use the console
 - Autopilot now only works on lowest speed
 - Flipping the handbrake with autopilot enabled now forces you to land instead of crashing
 - Crashing now causes an explosion
