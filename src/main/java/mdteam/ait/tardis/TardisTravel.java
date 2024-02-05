@@ -633,6 +633,7 @@ public class TardisTravel extends TardisLink {
     }
 
     public void toFlight() {
+        this.setCrashing(false);
         this.setLastPosition(this.getPosition());
         this.setState(TardisTravel.State.FLIGHT);
         this.deleteExterior();
@@ -641,8 +642,6 @@ public class TardisTravel extends TardisLink {
     public void forceLand(@Nullable ExteriorBlockEntity blockEntity) {
         if (this.getTardis().isEmpty())
             return;
-
-        this.setCrashing(false);
 
         if (PropertiesHandler.willAutoPilot(this.getTardis().get().getHandlers().getProperties())) {
             if (this.getSpeed() > 0) {
@@ -684,7 +683,7 @@ public class TardisTravel extends TardisLink {
         TardisEvents.LANDED.invoker().onLanded(getTardis().get());
     }
 
-    private void setCrashing(boolean crashing) {
+    public void setCrashing(boolean crashing) {
         this.crashing = crashing;
         this.sync();
     }

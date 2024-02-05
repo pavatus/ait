@@ -218,62 +218,17 @@ public class FallingTardisEntity extends Entity {
                         this.stopFalling();
                     }
                 } else {
-                    BlockState blockState = this.getWorld().getBlockState(blockPos);
-                    this.setVelocity(this.getVelocity().multiply(0.7, -0.5, 0.7));
-                    if (!blockState.isOf(Blocks.MOVING_PISTON)) {
-                        if (!this.destroyedOnLanding) {
-                            boolean bl3 = blockState.canReplace(new AutomaticItemPlacementContext(this.getWorld(), blockPos, Direction.DOWN, ItemStack.EMPTY, Direction.UP));
-                            boolean bl4 = FallingBlock.canFallThrough(this.getWorld().getBlockState(blockPos.down())) && (!bl || !bl2);
-                            boolean bl5 = this.block.canPlaceAt(this.getWorld(), blockPos) && !bl4;
-                            if (bl3 && bl5) {
-                                if (this.block.contains(Properties.WATERLOGGED) && this.getWorld().getFluidState(blockPos).getFluid() == Fluids.WATER) {
-                                    this.block = (BlockState)this.block.with(Properties.WATERLOGGED, true);
-                                }
+                    // This is when the tardis lands on its own
 
-                                if (this.getWorld().setBlockState(blockPos, this.block, 3)) {
-                                    ((ServerWorld)this.getWorld()).getChunkManager().threadedAnvilChunkStorage.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, this.getWorld().getBlockState(blockPos)));
-                                    this.discard();
-                                    if (block instanceof ExteriorBlock exteriorBlock) {
-                                        exteriorBlock.onLanding(this.getWorld(), blockPos, this.block, blockState, this);
-                                    }
+                    boolean crashing = this.getTardis().getTravel().isCrashing();
 
-                                    if (this.blockEntityData != null && this.block.hasBlockEntity()) {
-                                        BlockEntity blockEntity = this.getWorld().getBlockEntity(blockPos);
-                                        if (blockEntity != null) {
-                                            NbtCompound nbtCompound = blockEntity.createNbt();
-                                            Iterator var13 = this.blockEntityData.getKeys().iterator();
-
-                                            while(var13.hasNext()) {
-                                                String string = (String)var13.next();
-                                                nbtCompound.put(string, this.blockEntityData.get(string).copy());
-                                            }
-
-                                            try {
-                                                blockEntity.readNbt(nbtCompound);
-                                            } catch (Exception var15) {
-                                                LOGGER.error("Failed to load block entity from falling block", var15);
-                                            }
-
-                                            blockEntity.markDirty();
-                                        }
-                                    }
-                                } else if (this.dropItem && this.getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                                    this.stopFalling();
-                                    this.onDestroyedOnLanding(block, blockPos);
-                                    this.dropItem(block);
-                                }
-                            } else {
-                                this.stopFalling();
-                                if (this.dropItem && this.getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-                                    this.onDestroyedOnLanding(block, blockPos);
-                                    this.dropItem(block);
-                                }
-                            }
-                        } else {
-                            this.stopFalling();
-                            this.onDestroyedOnLanding(block, blockPos);
-                        }
+                    if (crashing) {
+                        World world = this.getWorld();
+                        BlockPos pos = this.getBlockPos();
+                        world.createExplosion(this, pos.getX(), pos.getY(), pos.getZ(), 10, true, World.ExplosionSourceType.MOB);
                     }
+
+                    this.stopFalling(false);
                 }
             }
 
@@ -289,6 +244,8 @@ public class FallingTardisEntity extends Entity {
         if (antigravs) {
             PropertiesHandler.set(getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
         }
+        getTardis().getTravel().setCrashing(false);
+
         Block block = this.block.getBlock();
         BlockPos blockPos = this.getBlockPos();
         boolean bl = this.block.getBlock() instanceof ConcretePowderBlock;
