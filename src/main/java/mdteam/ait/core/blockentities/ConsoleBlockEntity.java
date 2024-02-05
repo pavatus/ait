@@ -43,6 +43,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import mdteam.ait.tardis.Tardis;
@@ -393,7 +394,9 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         }
         if(this.getTardis().isEmpty()) return;
 
-        Tardis tardis = this.getTardis().get();
+        if (world.isClient()) return;
+
+        ServerTardis tardis = (ServerTardis) this.getTardis().get();
 
         boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.getExterior().getExteriorPos());
 
