@@ -1,6 +1,6 @@
 ---
 layout: post
-comments: true
+comments: false
 categories: Tardis
 ---
 # Protocols
