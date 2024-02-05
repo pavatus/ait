@@ -67,7 +67,7 @@ public class AITMod implements ModInitializer {
         AIT_CUSTOM_CONFIG.init(MOD_ID);
         ConsoleRegistry.init();
         DesktopRegistry.getInstance().init(); // this may cause init to be called twice
-        CategoryRegistry.init();
+        CategoryRegistry.getInstance().init(); // this may cause init to be called twice
         HumsRegistry.init();
         CreakRegistry.init();
         SequenceRegistry.init();
@@ -214,6 +214,7 @@ public class AITMod implements ModInitializer {
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             DesktopRegistry.getInstance().syncToClient(handler.getPlayer());
+            CategoryRegistry.getInstance().syncToClient(handler.getPlayer());
             ExteriorVariantRegistry.getInstance().syncToClient(handler.getPlayer());
 
             ServerTardisManager.getInstance().onPlayerJoin(handler.getPlayer());

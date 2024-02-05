@@ -9,9 +9,9 @@ import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.advancement.TardisCriterions;
-import mdteam.ait.tardis.exterior.GrowthCategory;
+import mdteam.ait.tardis.exterior.category.GrowthCategory;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.variant.exterior.growth.CoralGrowthVariant;
+import mdteam.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
@@ -102,7 +102,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
     private void createTardis(ServerWorld world, BlockPos pos) {
         // Create a new tardis
-        ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), CategoryRegistry.REGISTRY.get(GrowthCategory.REFERENCE), ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE), DesktopRegistry.DEFAULT_CAVE, false);
+        ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), CategoryRegistry.getInstance().get(GrowthCategory.REFERENCE), ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE), DesktopRegistry.DEFAULT_CAVE, false);
         created.getHandlers().getFuel().setFuel(0);
         // created.getHandlers().getOvergrown().setOvergrown(true); //fixme created.getEnvironmentHandler().setCoralCovered(true);
 

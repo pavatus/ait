@@ -24,9 +24,8 @@ import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimDefaultVarian
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimFireVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimSoulVariant;
 import mdteam.ait.registry.DatapackRegistry;
-import mdteam.ait.registry.ExteriorVariantRegistry;
-import mdteam.ait.tardis.variant.exterior.DatapackVariant;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.tardis.exterior.variant.DatapackVariant;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;

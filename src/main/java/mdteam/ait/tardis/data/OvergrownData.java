@@ -4,7 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
-import mdteam.ait.tardis.exterior.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategory;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
