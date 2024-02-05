@@ -1,7 +1,9 @@
 package mdteam.ait.tardis.util;
 
 import mdteam.ait.api.tardis.LinkableItem;
+import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.link.Linkable;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -45,7 +47,7 @@ public class NetworkUtil {
     public static Collection<ServerPlayerEntity> getNearbyTardisPlayers(Tardis tardis) {
         Collection<ServerPlayerEntity> found = getPlayersInInterior(tardis);
         found.addAll(getPlayersNearExterior(tardis));
-        //found.addAll(getLinkedPlayers(tardis)); // todo fix issues
+        found.addAll(getLinkedPlayers(tardis)); // todo fix issues - remove if they come back
         return found;
     }
     public static void sendToInterior(Tardis tardis, Identifier id, PacketByteBuf buf) {
@@ -96,15 +98,13 @@ public class NetworkUtil {
      * @return
      */
     public static boolean hasLinkedItem(Tardis tardis, ServerPlayerEntity player) {
-        PlayerInventory inventory = player.getInventory();
-
-        for (int i = 0; i < 36; i++) {
-            if (LinkableItem.getTardis(inventory.getStack(i)) == null) continue;
-            if (Objects.equals(LinkableItem.getTardis(inventory.getStack(i)).getUuid(), tardis.getUuid())) {
-                return true;
+        for (ItemStack stack : player.getInventory().main) {
+            if (!stack.isEmpty() && stack.getItem() instanceof LinkableItem) {
+                if (Objects.equals(tardis, LinkableItem.getTardis(stack))) {
+                    return true;
+                }
             }
         }
-
         return false;
     }
     public static void sendToTracking(AbsoluteBlockPos target, Identifier id, PacketByteBuf buf) {

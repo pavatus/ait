@@ -15,3 +15,4 @@
 - Created ArtronHolder interface
 - Renamed "ExteriorSchema" to "ExteriorCategory"
 - Moved "hasPortals" method into the individual variants
+- Readded syncing if you have a linked item - NEEDS TESTING MAY CAUSE STACKING ISSUES
