@@ -3,9 +3,9 @@ package mdteam.ait.tardis;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.TardisItemBuilder;
-import mdteam.ait.tardis.exterior.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategory;
 import mdteam.ait.tardis.data.TardisLink;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.block.entity.BlockEntity;
 
 import java.util.Optional;

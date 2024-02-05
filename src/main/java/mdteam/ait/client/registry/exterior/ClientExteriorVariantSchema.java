@@ -6,7 +6,7 @@ import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.registry.datapack.Identifiable;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;

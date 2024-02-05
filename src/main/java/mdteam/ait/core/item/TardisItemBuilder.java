@@ -8,10 +8,10 @@ import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.exterior.CapsuleCategory;
-import mdteam.ait.tardis.exterior.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.CapsuleCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategory;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -59,8 +59,8 @@ public class TardisItemBuilder extends Item {
     }
     public static ExteriorCategory findRandomExterior() {
         Random rnd = new Random();
-        int randomized = rnd.nextInt(Math.abs(CategoryRegistry.REGISTRY.size()));
-        return (ExteriorCategory) CategoryRegistry.REGISTRY.stream().toArray()[randomized] == CategoryRegistry.CORAL_GROWTH ? CategoryRegistry.TARDIM : (ExteriorCategory) CategoryRegistry.REGISTRY.stream().toArray()[randomized];
+        int randomized = rnd.nextInt(Math.abs(CategoryRegistry.getInstance().size()));
+        return CategoryRegistry.getInstance().toArrayList().get(randomized) == CategoryRegistry.CORAL_GROWTH ? CategoryRegistry.TARDIM : CategoryRegistry.getInstance().toArrayList().get(randomized);
     }
 
     public static TardisDesktopSchema findRandomDesktop() {
@@ -106,7 +106,7 @@ public class TardisItemBuilder extends Item {
 
             //System.out.println(this.exterior);
 
-            ServerTardisManager.getInstance().create(pos, CategoryRegistry.REGISTRY.get(this.exterior), findRandomVariant(CategoryRegistry.REGISTRY.get(this.exterior)) , DesktopRegistry.getInstance().get(this.desktop), false);
+            ServerTardisManager.getInstance().create(pos, CategoryRegistry.getInstance().get(this.exterior), findRandomVariant(CategoryRegistry.getInstance().get(this.exterior)) , DesktopRegistry.getInstance().get(this.desktop), false);
             context.getStack().decrement(1);
         }
 

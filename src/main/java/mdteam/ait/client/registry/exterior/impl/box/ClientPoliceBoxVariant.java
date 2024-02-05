@@ -1,11 +1,9 @@
 package mdteam.ait.client.registry.exterior.impl.box;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.models.exteriors.BoothExteriorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.PoliceBoxModel;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
-import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
 
 // a useful class for creating tardim variants as they all have the same filepath you know

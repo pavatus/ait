@@ -8,6 +8,7 @@ import mdteam.ait.client.renderers.monitors.MonitorRenderer;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import mdteam.ait.core.item.RiftScannerItem;
+import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
@@ -172,6 +173,10 @@ public class AITModClient implements ClientModInitializer {
 
             ClientExteriorVariantRegistry.getInstance().readFromServer(buf);
             ExteriorVariantRegistry.getInstance().readFromServer(copy);
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(CategoryRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
+           CategoryRegistry.getInstance().readFromServer(buf);
         });
 
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {

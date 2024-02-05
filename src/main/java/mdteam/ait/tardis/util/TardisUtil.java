@@ -103,7 +103,7 @@ public class TardisUtil {
                     String variantValue = buf.readString();
                     Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-                    tardis.getExterior().setType(CategoryRegistry.REGISTRY.get(exteriorValue));
+                    tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
                     WorldOps.updateIfOnServer(server.getWorld(tardis
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             tardis.getDoor().getExteriorPos());
