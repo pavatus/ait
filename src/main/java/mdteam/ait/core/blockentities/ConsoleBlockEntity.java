@@ -401,12 +401,12 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.getExterior().getExteriorPos());
 
         if (tardis.getTravel().isCrashing()) {
-            world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + 0.5f, pos.getY() + 1,
-                    pos.getZ() + 0.5f, random.nextFloat(-0.1f, 0.1f), 0.01, random.nextFloat(-0.1f, 0.1f));
+            ((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
+                    pos.getZ() + 0.5f, 1, 0,0,0, 0.025f);
         }
         if (tardis.isRefueling()) {
-            world.addParticle((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD, true, pos.getX() + 0.5f, pos.getY() + 1.25,
-                    pos.getZ() + 0.5f, random.nextFloat(-0.1f, 0.1f), 0.01, random.nextFloat(-0.1f, 0.1f));
+            ((ServerWorld) world).spawnParticles((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD, pos.getX() + 0.5f, pos.getY() + 1.25,
+                    pos.getZ() + 0.5f, 1, 0,0,0, (isRiftChunk) ? 0.05f : 0.025f);
         }
     }
 

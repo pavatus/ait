@@ -113,8 +113,10 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 
             player.addVelocity(0.15f * x_random * (is_x_negative ? -1 : 1), 0.1f * y_random, 0.15f * z_random * (is_z_negative ? -1 : 1));
 
-            for (int i = 0; i < 100; i++) {
-                world.addParticle(ParticleTypes.ANGRY_VILLAGER, true, pos.getX() + random.nextFloat(-2, 3), pos.getY() + random.nextFloat(2), pos.getZ() + random.nextFloat(-2, 3), random.nextFloat(-5, 5), random.nextFloat(-5, 5), random.nextFloat(-5, 5));
+            if (player instanceof ServerPlayerEntity) {
+                for (int i = 0; i < 100; i++) {
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.ANGRY_VILLAGER, pos.getX() + random.nextFloat(-2, 3), pos.getY() + random.nextFloat(2), pos.getZ() + random.nextFloat(-2, 3), 1, random.nextFloat(-5, 5), random.nextFloat(-5, 5), random.nextFloat(-5, 5), 1f);
+                }
             }
         }
         super.onSteppedOn(world, pos, state, entity);
