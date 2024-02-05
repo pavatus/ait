@@ -74,7 +74,7 @@ public class AITMod implements ModInitializer {
 
         // These 3 have client registries which also need registering to.
         ConsoleVariantRegistry.init();
-        ExteriorVariantRegistry.init();
+        ExteriorVariantRegistry.getInstance().init(); // this may cause init to be called twice
         DoorRegistry.init();
 
         NeptuneInitHandler.register(AITItems.class, MOD_ID);
@@ -214,6 +214,7 @@ public class AITMod implements ModInitializer {
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             DesktopRegistry.getInstance().syncToClient(handler.getPlayer());
+            ExteriorVariantRegistry.getInstance().syncToClient(handler.getPlayer());
 
             ServerTardisManager.getInstance().onPlayerJoin(handler.getPlayer());
         });

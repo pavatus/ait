@@ -1,5 +1,6 @@
 package mdteam.ait.client;
 
+import io.netty.buffer.ByteBuf;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import mdteam.ait.client.renderers.machines.ArtronCollectorRenderer;
@@ -8,6 +9,7 @@ import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import mdteam.ait.core.item.RiftScannerItem;
 import mdteam.ait.registry.DesktopRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.ClientDoorRegistry;
@@ -84,7 +86,7 @@ public class AITModClient implements ClientModInitializer {
         waypointPredicate();
         setKeyBinding();
 
-        ClientExteriorVariantRegistry.init();
+        ClientExteriorVariantRegistry.getInstance().init(); // this may cause init to be called twice
         ClientConsoleVariantRegistry.init();
         ClientDoorRegistry.init();
 
@@ -163,6 +165,13 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(DesktopRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
             DesktopRegistry.getInstance().readFromServer(buf);
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ExteriorVariantRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
+            PacketByteBuf copy = PacketByteBufs.copy(buf);
+
+            ClientExteriorVariantRegistry.getInstance().readFromServer(buf);
+            ExteriorVariantRegistry.getInstance().readFromServer(copy);
         });
 
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {

@@ -108,7 +108,7 @@ public class TardisUtil {
                                     .getTravel().getPosition().getWorld().getRegistryKey()),
                             tardis.getDoor().getExteriorPos());
                     if (variantChange) {
-                        tardis.getExterior().setVariant(ExteriorVariantRegistry.REGISTRY.get(Identifier.tryParse(variantValue)));
+                        tardis.getExterior().setVariant(ExteriorVariantRegistry.getInstance().get(Identifier.tryParse(variantValue)));
                         WorldOps.updateIfOnServer(server.getWorld(tardis
                                         .getTravel().getPosition().getWorld().getRegistryKey()),
                                 tardis.getDoor().getExteriorPos());
@@ -348,6 +348,13 @@ public class TardisUtil {
     }
 
     public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
+        if (TardisManager.getInstance(isServer) == null) {
+            AITMod.LOGGER.error("TardisManager is NULL in findTardisByInterior");
+            AITMod.LOGGER.error("Called server side? " + isServer);
+
+            return null;
+        }
+
         for (Tardis tardis : TardisManager.getInstance(isServer).getLookup().values()) {
             // System.out.println(pos);
             // System.out.println(tardis.getDesktop().getCorners());

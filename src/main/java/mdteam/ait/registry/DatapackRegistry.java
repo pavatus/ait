@@ -18,7 +18,7 @@ public abstract class DatapackRegistry<T extends Identifiable> {
     protected final HashMap<Identifier, T> REGISTRY = new HashMap<>();
 
     public DatapackRegistry() {
-        this.init();
+        // this.init();
     }
     public T register(T schema) {
         return register(schema, schema.id());

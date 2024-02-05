@@ -1,6 +1,7 @@
 package mdteam.ait.client.registry;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.registry.exterior.impl.booth.*;
 import mdteam.ait.client.registry.exterior.impl.box.*;
@@ -22,17 +23,29 @@ import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthSoulVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimFireVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimSoulVariant;
+import mdteam.ait.registry.DatapackRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
+import mdteam.ait.tardis.variant.exterior.DatapackVariant;
 import mdteam.ait.tardis.variant.exterior.ExteriorVariantSchema;
-import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.SimpleRegistry;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class ClientExteriorVariantRegistry {
-    public static final SimpleRegistry<ClientExteriorVariantSchema> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<ClientExteriorVariantSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "client_exterior_variant"))).buildAndRegister();
-    public static ClientExteriorVariantSchema register(ClientExteriorVariantSchema schema) {
-        return Registry.register(REGISTRY, schema.id(), schema);
+public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteriorVariantSchema> {
+    private static ClientExteriorVariantRegistry INSTANCE;
+
+    public static ClientExteriorVariantSchema registerStatic(ClientExteriorVariantSchema schema) {
+        return getInstance().register(schema);
+    }
+
+    public static DatapackRegistry<ClientExteriorVariantSchema> getInstance() {
+        if (INSTANCE == null) {
+            AITMod.LOGGER.info("ClientExteriorVariantRegistry was not initialized, Creating a new instance");
+            INSTANCE = new ClientExteriorVariantRegistry();
+            INSTANCE.init();
+        }
+
+        return INSTANCE;
     }
 
     /**
@@ -41,11 +54,59 @@ public class ClientExteriorVariantRegistry {
      * @return the first variant found as there should only be one client version
      */
     public static ClientExteriorVariantSchema withParent(ExteriorVariantSchema parent) {
-        for (ClientExteriorVariantSchema schema : REGISTRY) {
-            if (schema.parent().equals(parent)) return schema;
+        for (ClientExteriorVariantSchema schema : getInstance().toArrayList()) {
+            if (schema.parent().id().equals(parent.id())) return schema;
         }
 
         return null;
+    }
+
+    /**
+     * Do not call
+     */
+    @Override
+    public void syncToClient(ServerPlayerEntity player) {
+
+    }
+
+    @Override
+    public void readFromServer(PacketByteBuf buf) {
+        int size = buf.readInt();
+
+        for (int i = 0; i < size; i++) {
+            this.register(convertDatapack(buf.decodeAsJson(DatapackVariant.CODEC)));
+        }
+
+        AITMod.LOGGER.info("Read {} variants from server", size);
+    }
+
+    public static ClientExteriorVariantSchema convertDatapack(DatapackVariant variant) {
+        if (!variant.wasDatapack()) return convertNonDatapack(variant);
+
+        System.out.println(variant.getParentId());
+        System.out.println(getInstance().get(variant.getParentId()));
+
+        return new ClientExteriorVariantSchema(variant.id()) {
+            @Override
+            public Identifier texture() {
+                return variant.texture();
+            }
+
+            @Override
+            public Identifier emission() {
+                return variant.emission();
+            }
+
+            @Override
+            public ExteriorModel model() {
+                return getInstance().get(variant.getParentId()).model();
+            }
+        };
+    }
+    private static ClientExteriorVariantSchema convertNonDatapack(DatapackVariant variant) {
+        if (variant.wasDatapack()) return convertDatapack(variant);
+
+        return getInstance().get(variant.id());
     }
 
     public static ClientExteriorVariantSchema TARDIM_DEFAULT;
@@ -80,55 +141,55 @@ public class ClientExteriorVariantRegistry {
     public static ClientExteriorVariantSchema PLINTH_FIRE;
 
     // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
-    public static void init() {
+    public void init() {
         // TARDIM
-        TARDIM_DEFAULT = register(new ClientTardimDefaultVariant());
-        TARDIM_FIRE = register(new ClientTardimFireVariant());
-        TARDIM_SOUL = register(new ClientTardimSoulVariant());
+        TARDIM_DEFAULT = registerStatic(new ClientTardimDefaultVariant());
+        TARDIM_FIRE = registerStatic(new ClientTardimFireVariant());
+        TARDIM_SOUL = registerStatic(new ClientTardimSoulVariant());
 
         // Police Box
-        BOX_DEFAULT = register(new ClientPoliceBoxDefaultVariant());
-        BOX_SOUL = register(new ClientPoliceBoxSoulVariant());
-        BOX_FIRE = register(new ClientPoliceBoxFireVariant());
-        BOX_FUTURE = register(new ClientPoliceBoxFuturisticVariant());
-        BOX_CORAL = register(new ClientPoliceBoxCoralVariant());
-        BOX_TOKAMAK = register(new ClientPoliceBoxTokamakVariant());
+        BOX_DEFAULT = registerStatic(new ClientPoliceBoxDefaultVariant());
+        BOX_SOUL = registerStatic(new ClientPoliceBoxSoulVariant());
+        BOX_FIRE = registerStatic(new ClientPoliceBoxFireVariant());
+        BOX_FUTURE = registerStatic(new ClientPoliceBoxFuturisticVariant());
+        BOX_CORAL = registerStatic(new ClientPoliceBoxCoralVariant());
+        BOX_TOKAMAK = registerStatic(new ClientPoliceBoxTokamakVariant());
 
         // Classic Box
-        PRIME = register(new ClientClassicBoxPrimeVariant());
-        YETI = register(new ClientClassicBoxYetiVariant());
-        DEFINITIVE = register(new ClientClassicBoxDefinitiveVariant());
-        PTORED = register(new ClientClassicBoxPtoredVariant());
+        PRIME = registerStatic(new ClientClassicBoxPrimeVariant());
+        YETI = registerStatic(new ClientClassicBoxYetiVariant());
+        DEFINITIVE = registerStatic(new ClientClassicBoxDefinitiveVariant());
+        PTORED = registerStatic(new ClientClassicBoxPtoredVariant());
 
         // Capsule
-        CAPSULE_DEFAULT = register(new ClientCapsuleDefaultVariant());
-        CAPSULE_SOUL = register(new ClientCapsuleSoulVariant());
-        CAPSULE_FIRE = register(new ClientCapsuleFireVariant());
+        CAPSULE_DEFAULT = registerStatic(new ClientCapsuleDefaultVariant());
+        CAPSULE_SOUL = registerStatic(new ClientCapsuleSoulVariant());
+        CAPSULE_FIRE = registerStatic(new ClientCapsuleFireVariant());
 
         // Booth
-        BOOTH_DEFAULT = register(new ClientBoothDefaultVariant());
-        BOOTH_FIRE = register(new ClientBoothFireVariant());
-        BOOTH_SOUL = register(new ClientBoothSoulVariant());
-        BOOTH_VINTAGE = register(new ClientBoothVintageVariant());
-        BOOTH_BLUE = register(new ClientBoothBlueVariant());
+        BOOTH_DEFAULT = registerStatic(new ClientBoothDefaultVariant());
+        BOOTH_FIRE = registerStatic(new ClientBoothFireVariant());
+        BOOTH_SOUL = registerStatic(new ClientBoothSoulVariant());
+        BOOTH_VINTAGE = registerStatic(new ClientBoothVintageVariant());
+        BOOTH_BLUE = registerStatic(new ClientBoothBlueVariant());
 
         // funny
         // COOB = register(new RedCoobVariant()); // fixme CUBE HAS BEEN REMOVED, REPEAT, CUBE HAS BEEN REMOVED. DO NOT PANIC!!
 
         // Easter Head
-        HEAD_DEFAULT = register(new ClientEasterHeadDefaultVariant());
-        HEAD_SOUL = register(new ClientEasterHeadSoulVariant());
-        HEAD_FIRE = register(new ClientEasterHeadFireVariant());
+        HEAD_DEFAULT = registerStatic(new ClientEasterHeadDefaultVariant());
+        HEAD_SOUL = registerStatic(new ClientEasterHeadSoulVariant());
+        HEAD_FIRE = registerStatic(new ClientEasterHeadFireVariant());
 
         // Coral
-        CORAL_GROWTH = register(new ClientGrowthVariant());
+        CORAL_GROWTH = registerStatic(new ClientGrowthVariant());
 
         // Doom
-        DOOM = register(new ClientDoomVariant());
+        DOOM = registerStatic(new ClientDoomVariant());
 
         // Plinth
-        PLINTH_DEFAULT = register(new ClientPlinthDefaultVariant());
-        PLINTH_SOUL = register(new ClientPlinthSoulVariant());
-        PLINTH_FIRE = register(new ClientPlinthFireVariant());
+        PLINTH_DEFAULT = registerStatic(new ClientPlinthDefaultVariant());
+        PLINTH_SOUL = registerStatic(new ClientPlinthSoulVariant());
+        PLINTH_FIRE = registerStatic(new ClientPlinthFireVariant());
     }
 }
