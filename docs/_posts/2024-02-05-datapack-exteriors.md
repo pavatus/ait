@@ -29,7 +29,7 @@ categories: ["Tardis", "Specifics", "Datapacks", "Exteriors"]
 >   "emission": "(namespace):textures/(exterior_texture_name)_emission.png"
 > }
 > ```
->> Note: If you have a custom category, instead of something like `"category": "ait:exterior/police_box"` it would be `"category": "(namespace):exterior/(custom_category)"`.
+>> Note: If you have a custom category, instead of something like `"category": "ait:exterior/police_box"` it would be `"category": "(namespace):(custom_category)"`.
 
 - replacing the **namespace** and the **exterior_texture_name** with your own from earlier
 
