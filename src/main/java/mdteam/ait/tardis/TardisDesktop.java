@@ -213,7 +213,7 @@ public class TardisDesktop extends TardisLink {
 
         this.setConsolePos(null);
     }
-    private void forceLoadInterior() {
+    public void forceLoadInterior() {
         World world = TardisUtil.getTardisDimension();
         if (world == null) return;
 
@@ -221,7 +221,7 @@ public class TardisDesktop extends TardisLink {
             ForcedChunkUtil.keepChunkLoaded((ServerWorld) world, pos);
         }
     }
-    private void stopForceInterior() {
+    public void stopForceInterior() {
         World world = TardisUtil.getTardisDimension();
         if (world == null) return;
 

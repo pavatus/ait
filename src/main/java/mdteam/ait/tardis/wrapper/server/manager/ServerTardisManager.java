@@ -8,10 +8,7 @@ import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.managers.DeltaTimeManager;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.exterior.category.ExteriorCategory;
-import mdteam.ait.tardis.util.NetworkUtil;
-import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.util.SerialDimension;
+import mdteam.ait.tardis.util.*;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -82,24 +79,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
                 }
         );
 
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
-            // todo clean up this
-            // force all dematting to go flight and all matting to go land
-            for (Tardis tardis : this.getLookup().values()) {
-                if (tardis.getTravel().getState() == TardisTravel.State.DEMAT) {
-                    tardis.getTravel().toFlight();
-                } else if (tardis.getTravel().getState() == TardisTravel.State.MAT) {
-                    tardis.getTravel().forceLand();
-                }
-
-                tardis.getDoor().closeDoors();
-
-                if (DependencyChecker.hasPortals())
-                    PortalsHandler.removePortals(tardis);
-            }
-
-            this.reset();
-        });
+        ServerLifecycleEvents.SERVER_STOPPING.register(this::onShutdown);
 
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> this.reset());
 
@@ -530,5 +510,29 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
     @Override
     public void startTick(MinecraftServer server) {
 
+    }
+
+    public void onShutdown(MinecraftServer server) {
+        // todo clean up this
+
+        // force all dematting to go flight and all matting to go land
+        for (Tardis tardis : this.getLookup().values()) {
+            // stop forcing all chunks
+            TardisChunkUtil.stopForceExteriorChunk(tardis);
+            tardis.getDesktop().stopForceInterior();
+
+            if (tardis.getTravel().getState() == TardisTravel.State.DEMAT) {
+                tardis.getTravel().toFlight();
+            } else if (tardis.getTravel().getState() == TardisTravel.State.MAT) {
+                tardis.getTravel().forceLand();
+            }
+
+            tardis.getDoor().closeDoors();
+
+            if (DependencyChecker.hasPortals())
+                PortalsHandler.removePortals(tardis);
+        }
+
+        this.reset();
     }
 }
