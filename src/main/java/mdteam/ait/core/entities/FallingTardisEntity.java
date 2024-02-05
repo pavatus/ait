@@ -228,6 +228,8 @@ public class FallingTardisEntity extends Entity {
                         world.createExplosion(this, pos.getX(), pos.getY(), pos.getZ(), 10, true, World.ExplosionSourceType.MOB);
                     }
 
+                    this.getTardis().getDoor().setLocked(crashing);
+
                     this.stopFalling(false);
                 }
             }

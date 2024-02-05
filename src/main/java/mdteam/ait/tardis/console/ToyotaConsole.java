@@ -33,6 +33,8 @@ public class ToyotaConsole extends ConsoleSchema {
             // Siege mode extra thingy
             //new ControlTypes(new ShowSiegeModeLeverControl(), EntityDimensions.changing(0f, 0f), new Vector3f(0f, 0f, 0f)),
 
+            new ControlTypes(new SecurityControl(), EntityDimensions.changing(0.07499999f, 0.16250001f), new Vector3f(0.19140625931322575f, 0.7749997600913048f, 0.7519531287252903f)),
+
             new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.79999954f, 0.18750001f), new Vector3f(0.925000018440187f, 0.5624998109415174f, 0.5390625204890966f)),
             new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.16250001f, 0.15f), new Vector3f(-0.39921876695007086f, 0.6775001520290971f, -1.0687500098720193f)),
             new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.1125f, 0.1f), new Vector3f(-0.8875000132247806f, 0.6500005731359124f, -0.773437530733645f)),

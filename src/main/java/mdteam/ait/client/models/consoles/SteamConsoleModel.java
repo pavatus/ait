@@ -4,6 +4,7 @@ import mdteam.ait.client.animation.console.steam.SteamAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
@@ -864,6 +865,9 @@ public class SteamConsoleModel extends ConsoleModel {
 
 		ModelPart alarms = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever4").getChild("bone22");
 		alarms.roll = (PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED) ? 0.4363F : -0.5672F);
+
+		ModelPart security = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever2").getChild("bone20");
+		security.roll = (PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY) ? 0.4363F : -0.5672F);
 
 		ModelPart antigrav = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever3").getChild("bone19");
 		antigrav.roll = (PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? 0.4363F : -0.5672F);

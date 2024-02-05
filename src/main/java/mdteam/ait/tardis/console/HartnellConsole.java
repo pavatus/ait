@@ -31,6 +31,9 @@ public class HartnellConsole extends ConsoleSchema {
             new ControlTypes(new ZControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7750000171363354f, 0.5125000961124897f, -0.5113281467929482f)), // 12
             new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.06249999f, 0.125f), new Vector3f(-0.9531250046566129f, 0.4624999985098839f, -0.3609375013038516f)), // 13
             new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.1f, 0.1f), new Vector3f(-1.1007812544703484f, 0.4750000946223736f, 0.150390625f)), // 14
+
+            new ControlTypes(new SecurityControl(), EntityDimensions.changing(0.07499999f, 0.1f), new Vector3f(0.5539062647148967f, 0.5749997571110725f, 0.3144531222060323f)),
+
             new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.07499999f, 0.1f), new Vector3f(-0.7218750026077032f, 0.5749999508261681f, 0.10117187909781933f)), // 15
             new ControlTypes(new CloakControl(), EntityDimensions.changing(0.1125f, 0.1f), new Vector3f(-0.03515623975545168f, 0.4750000908970833f, -1.0359375169500709f)),
             new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.112500004f, 0.0875f), new Vector3f(-0.43515624571591616f, 0.5749998092651367f, 0.5015625059604645f)), // 15

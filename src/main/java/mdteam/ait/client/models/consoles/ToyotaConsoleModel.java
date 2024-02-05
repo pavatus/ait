@@ -5,6 +5,7 @@ import mdteam.ait.client.animation.console.toyota.ToyotaAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
@@ -870,7 +871,8 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		alarmsLight.pivotY = (console.getTardis().get().getHandlers().getAlarms().isEnabled()) ? alarmsLight.pivotY : alarmsLight.pivotY + 1;
 		alarms.pitch = console.getTardis().get().getHandlers().getAlarms().isEnabled() ? alarms.pitch + 1f : alarms.pitch;
 
-
+		ModelPart security = this.toyota.getChild("panel4").getChild("controls4").getChild("coloredlever5");
+		security.pitch = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY) ? security.pitch + 1f : security.pitch;
 
 		//Auto Pilot Control
 		ModelPart autopilot = this.toyota.getChild("panel4").getChild("controls4").getChild("tinyswitch2");

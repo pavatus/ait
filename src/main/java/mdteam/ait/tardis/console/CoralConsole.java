@@ -25,6 +25,9 @@ public class CoralConsole extends ConsoleSchema {
             new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.099999994f, 0.09999998f), new Vector3f(-1.1023437762632966f, 0.5499996189028025f, 0.5757812689989805f)),
             new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.17500001f, 0.16250001f), new Vector3f(1.026562513783574f, 0.5625001918524504f, 0.5898437444120646f)),
             new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.36249992f, 0.31249997f), new Vector3f(0.3859374951571226f, 0.8250013394281268f, 0.6128906365483999f)),
+
+            new ControlTypes(new SecurityControl(), EntityDimensions.changing(0.06249999f, 0.1f), new Vector3f(-0.7960937554016709f, 0.537499756552279f, 0.27695312164723873f)),
+
             new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.17500004f, 0.15f), new Vector3f(-0.3125000046566129f, 0.45000019017606974f, -0.8390625016763806f)),
             new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.23750003f, 0.099999994f), new Vector3f(0.7398437662050128f, 0.7150001563131809f, -0.40507811680436134f)),
             new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.1125f, 0.112500004f), new Vector3f(-7.812399417161942E-4f, 0.5875001922249794f, 1.2890625316649675f)),
