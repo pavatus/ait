@@ -1,22 +1,2 @@
-# 1.2.26
-- Added Security 
-- - Those without linked keys will be left behind on demat
-- - Those without linked keys cannot use the console
-- Autopilot now only works on lowest speed
-- Flipping the handbrake with autopilot enabled now forces you to land instead of crashing
-- Crashing now causes an explosion
-- Monitor can now be rotated freely
-- Added eighth doctor hum
-- Made a different particle show when refueling in a RiftChunk
-- Updated monitor screen
-- Added four new creak sounds
-- Added a LinkCommand
-- Failing to takeoff/land no longer sends a message to the pilot
-- Flight sounds no longer play when out of power
-- Fixed being unable to turn off antigravs at max world height
-- Fixed issues with Siege Mode
-- Added a temporary command to force tardises out of siege mode
-- Created ArtronHolder interface
-- Renamed "ExteriorSchema" to "ExteriorCategory"
-- Moved "hasPortals" method into the individual variants
-- Readded syncing if you have a linked item - NEEDS TESTING MAY CAUSE STACKING ISSUES
+# 1.2.7
+- Hot fix crash

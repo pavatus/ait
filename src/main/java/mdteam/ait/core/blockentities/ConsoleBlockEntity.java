@@ -393,7 +393,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         }
         if(this.getTardis().isEmpty()) return;
 
-        ServerTardis tardis = (ServerTardis) this.getTardis().get();
+        Tardis tardis = this.getTardis().get();
 
         boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.getExterior().getExteriorPos());
 
