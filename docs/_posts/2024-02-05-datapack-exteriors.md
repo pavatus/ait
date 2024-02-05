@@ -20,7 +20,15 @@ categories: ["Tardis", "Specifics", "Datapacks", "Exteriors"]
 
 3. Inside this new .json file, paste
 
- > `"id": "(namespace):(exterior_texture_name)"`
+> ```json
+> {
+>   "id": "(namespace):(exterior_texture_name)",
+>   "category": "(namespace):exterior/(refer to example below)",
+>   "parent": "(namespace):exterior/(refer to example below)",
+>   "texture": "(namespace):textures/(exterior_texture_name).png",
+>   "emission": "(namespace):textures/(exterior_texture_name)_emission.png"
+> }
+> ```
 
 4. replacing the **namespace** and the **exterior_texture_name** with your own from earlier
 
