@@ -23,12 +23,13 @@ categories: ["Tardis", "Specifics", "Datapacks", "Exteriors"]
 > ```json
 > {
 >   "id": "(namespace):(exterior_texture_name)",
->   "category": "(namespace):exterior/(refer to example below)",
->   "parent": "(namespace):exterior/(refer to example below)",
+>   "category": "ait:exterior/(refer to example below)",
+>   "parent": "ait:exterior/(refer to example below)",
 >   "texture": "(namespace):textures/(exterior_texture_name).png",
 >   "emission": "(namespace):textures/(exterior_texture_name)_emission.png"
 > }
 > ```
+>> Note: If you have a custom category, instead of something like `"category": "ait:exterior/police_box"` it would be `"category": "(namespace):exterior/(custom_category)"`.
 
 4. replacing the **namespace** and the **exterior_texture_name** with your own from earlier
 
@@ -55,8 +56,8 @@ Once you're finished, the json file should look like this:
 ```json
 {
   "id": "(namespace):my_exterior",
-  "category": "(namespace):exterior/police_box",
-  "parent": "(namespace):exterior/police_box/default",
+  "category": "ait:exterior/police_box",
+  "parent": "ait:exterior/police_box/default",
   "texture": "(namespace):textures/(exterior_texture_name).png",
   "emission": "(namespace):textures/(exterior_texture_name)_emission.png"
 }
