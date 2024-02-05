@@ -8,6 +8,7 @@
 - Made a different particle show when refueling in a RiftChunk
 - Updated monitor screen
 - Added four new creak sounds
+- Added a LinkCommand
 - Failing to takeoff/land no longer sends a message to the pilot
 - Flight sounds no longer play when out of power
 - Fixed being unable to turn off antigravs at max world height
