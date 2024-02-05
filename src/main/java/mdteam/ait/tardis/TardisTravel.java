@@ -301,7 +301,6 @@ public class TardisTravel extends TardisLink {
         this.getTardis().get().setLockedTardis(false);
         //this.getTardis().get().getHandlers().getDoor().openDoors();
         // Load the chunk of the Tardis destination
-        this.getDestination().getWorld().getChunk(this.getTardis().get().getTravel().getDestination());
         // Enable alarm and disable anti-mavity properties for Tardis
         PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.ALARM_ENABLED, true);
         PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
@@ -701,7 +700,6 @@ public class TardisTravel extends TardisLink {
 
     public void runAnimations() {
         ServerWorld level = (ServerWorld) this.getPosition().getWorld();
-        level.getChunk(this.getPosition());
         BlockEntity entity = level.getBlockEntity(this.getPosition());
         if (entity instanceof ExteriorBlockEntity exterior) {
             if (exterior.getAnimation() == null) return;
@@ -791,7 +789,6 @@ public class TardisTravel extends TardisLink {
     }
 
     public void deleteExterior() {
-        this.getPosition().getWorld().getChunk(this.getPosition());
         this.getPosition().getWorld().removeBlock(this.getPosition(), false);
     }
 
