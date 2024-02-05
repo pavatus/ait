@@ -73,10 +73,10 @@ public class PropertiesHandler { // todo move things out of properties
     public static TardisDesktopSchema getDesktop(PropertiesHolder holder, String key) {
         if (!holder.getData().containsKey(key)) {
             AITMod.LOGGER.error(key + " did not have a schema! Resetting to default..");
-            setDesktop(holder,key, DesktopRegistry.get(new Identifier(AITMod.MOD_ID, "cave")));
+            setDesktop(holder,key, DesktopRegistry.getInstance().get(new Identifier(AITMod.MOD_ID, "cave")));
         }
 
-        return DesktopRegistry.get(getIdentifier(holder,key));
+        return DesktopRegistry.getInstance().get(getIdentifier(holder,key));
     }
     public static void setDesktop(PropertiesHolder holder, String key, TardisDesktopSchema val) {
         set(holder, key, val.id());
@@ -92,7 +92,7 @@ public class PropertiesHandler { // todo move things out of properties
         if (holder.getData().get(key) instanceof LinkedTreeMap map) {
             if (map.get("namespace") == null || map.get("path") == null) {
                 AITMod.LOGGER.error("namespace/path was null! Panic - I'm giving back the default desktop id, lets hope this doesnt cause a crash..");
-                return DesktopRegistry.get(0).id();
+                return DesktopRegistry.getInstance().get(0).id();
             }
 
             return Identifier.of((String) map.get("namespace"), (String) map.get("path"));
@@ -169,7 +169,7 @@ public class PropertiesHandler { // todo move things out of properties
         return getBool(holder, AUTO_LAND);
     }
     private static void unlockAllFreebies(HashMap<String, Object> map) {
-        for (Iterator<TardisDesktopSchema> it = DesktopRegistry.iterator(); it.hasNext(); ) {
+        for (Iterator<TardisDesktopSchema> it = DesktopRegistry.getInstance().iterator(); it.hasNext(); ) {
             TardisDesktopSchema schema = it.next();
 
             map.put(schema.id().getPath() + "_unlocked", schema.freebie());

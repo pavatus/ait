@@ -115,7 +115,7 @@ public class TardisUtil {
                     }
 
                     if (tardis.isGrowth())
-                        tardis.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.get(new Identifier(AITMod.MOD_ID, "type_40")));
+                        tardis.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.getInstance().get(new Identifier(AITMod.MOD_ID, "type_40")));
 
                     /*ExteriorEnum[] values = ExteriorEnum.values();
                     int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;

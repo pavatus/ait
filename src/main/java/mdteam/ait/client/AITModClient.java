@@ -162,7 +162,7 @@ public class AITModClient implements ClientModInitializer {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(DesktopRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
-            DesktopRegistry.readFromServer(buf);
+            DesktopRegistry.getInstance().readFromServer(buf);
         });
 
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
