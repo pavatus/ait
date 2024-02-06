@@ -39,7 +39,7 @@ import static mdteam.ait.tardis.data.FuelData.TARDIS_MAX_FUEL;
 public class MonitorScreen extends TardisScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
-    private ExteriorCategory currentModel;
+    private ExteriorCategory category;
     private ClientExteriorVariantSchema currentVariant;
     int backgroundHeight = 121;//101;
     int backgroundWidth = 220;//200;
@@ -65,25 +65,26 @@ public class MonitorScreen extends TardisScreen {
         this.createButtons();
     }
 
-    public ExteriorCategory getCurrentModel() {
-        return currentModel == null ? getFromUUID(tardisId).getExterior().getCategory() : currentModel;
+    public ExteriorCategory getCategory() {
+        return category == null ? getFromUUID(tardisId).getExterior().getCategory() : category;
     }
 
-    public void setCurrentModel(ExteriorCategory currentModel) {
-        this.currentModel = currentModel;
+    public void setCategory(ExteriorCategory category) {
+        this.category = category;
 
         if (currentVariant == null) return;
-        if (this.currentVariant.parent().category() != currentModel) {
+        if (this.currentVariant.parent().category() != category) {
             currentVariant = null;
         }
     }
 
     public ClientExteriorVariantSchema getCurrentVariant() {
-        if (Objects.equals(currentVariant, ClientExteriorVariantRegistry.CORAL_GROWTH)) whichDirectionExterior(true);
+        if (Objects.equals(currentVariant, ClientExteriorVariantRegistry.CORAL_GROWTH)) changeCategory(true);
 
         if (currentVariant == null)
-            if(getFromUUID(tardisId).getExterior().getCategory() != getCurrentModel()) {
-                setCurrentVariant(ExteriorVariantRegistry.withParentToList(getCurrentModel()).get(0));
+            if(!getFromUUID(tardisId).getExterior().getCategory().equals(getCategory())) {
+                // todo issues with the exteriors not being in the order they are registered, likely because its done static (?)
+                setCurrentVariant(ExteriorVariantRegistry.withParentToList(getCategory()).get(0));
             } else {
                 setCurrentVariant(getFromUUID(tardisId).getExterior().getVariant());
             }
@@ -111,11 +112,11 @@ public class MonitorScreen extends TardisScreen {
         }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 - 110), (height / 2 - 24),
                 this.textRenderer.getWidth("<"), 10, Text.literal("<"), button -> {
-            whichDirectionExterior(false);
+            changeCategory(false);
         }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 - 76), (height / 2 - 24),
                 this.textRenderer.getWidth(">"), 10, Text.literal(">"), button -> {
-            whichDirectionExterior(true);
+            changeCategory(true);
         }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 - 110), (height / 2 - 14),
                 this.textRenderer.getWidth("<"), 10, Text.literal("<").formatted(Formatting.LIGHT_PURPLE), button -> {
@@ -136,9 +137,9 @@ public class MonitorScreen extends TardisScreen {
 
     public void sendExteriorPacket() {
         if (getFromUUID(tardisId) != null) {
-            if (this.getCurrentModel() != getFromUUID(tardisId).getExterior().getCategory() || this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant()) {
+            if (this.getCategory() != getFromUUID(tardisId).getExterior().getCategory() || this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant()) {
                 ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
-                        this.getCurrentModel().id().toString(), this.getCurrentVariant().id().toString(),
+                        this.getCategory().id().toString(), this.getCurrentVariant().id().toString(),
                         this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant());
             }
         }
@@ -149,28 +150,28 @@ public class MonitorScreen extends TardisScreen {
         MinecraftClient.getInstance().setScreenAndRender(new InteriorSettingsScreen(this.tardisId, this));
     }
 
-    public void whichDirectionExterior(boolean direction) {
+    public void changeCategory(boolean direction) {
 
         if(MinecraftClient.getInstance().player == null) return;
 
-        if (direction) setCurrentModel(nextExterior());
-        else setCurrentModel(previousExterior());
+        if (direction) setCategory(nextCategory());
+        else setCategory(previousCategory());
 
-        if (this.currentModel == CategoryRegistry.CORAL_GROWTH || (!("Loqor".equalsIgnoreCase(MinecraftClient.getInstance().player.getName().getString())) && this.currentModel == CategoryRegistry.DOOM)) {
-            whichDirectionExterior(direction);
+        if (CategoryRegistry.CORAL_GROWTH.equals(this.category) || (!("Loqor".equalsIgnoreCase(MinecraftClient.getInstance().player.getName().getString())) && CategoryRegistry.DOOM.equals(this.category))) {
+            changeCategory(direction);
         }
     }
-    public ExteriorCategory nextExterior() {
+    public ExteriorCategory nextCategory() {
         List<ExteriorCategory> list = CategoryRegistry.getInstance().toList();
 
-        int idx = list.indexOf(getCurrentModel());
+        int idx = list.indexOf(getCategory());
         if (idx < 0 || idx+1 == list.size()) return list.get(0);
         return list.get(idx + 1);
     }
-    public ExteriorCategory previousExterior() {
+    public ExteriorCategory previousCategory() {
         List<ExteriorCategory> list = CategoryRegistry.getInstance().toList();
 
-        int idx = list.indexOf(getCurrentModel());
+        int idx = list.indexOf(getCategory());
         if (idx <= 0) return list.get(list.size() - 1);
         return list.get(idx - 1);
     }
@@ -242,14 +243,14 @@ public class MonitorScreen extends TardisScreen {
     protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX) {
         // testing @todo
         if (getFromUUID(tardisId) != null) {
-            if (this.getCurrentModel() == null || this.getCurrentVariant() == null) return;
+            if (this.getCategory() == null || this.getCurrentVariant() == null) return;
             ExteriorModel model = this.getCurrentVariant().model();
             MatrixStack stack = context.getMatrices();
             // fixme is bad
             stack.push();
-            stack.translate(x, this.getCurrentModel() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCurrentModel() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 8 : y, 100f);
-            if (this.getCurrentModel() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCurrentModel() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE)) stack.scale(-10, 10, 10);
-            else if (this.getCurrentModel() == CategoryRegistry.getInstance().get(BoothCategory.REFERENCE)) stack.scale(-scale, scale, scale);
+            stack.translate(x, this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 8 : y, 100f);
+            if (this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE)) stack.scale(-10, 10, 10);
+            else if (this.getCategory() == CategoryRegistry.getInstance().get(BoothCategory.REFERENCE)) stack.scale(-scale, scale, scale);
             else stack.scale(-scale, scale, scale);
             //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
             stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(mouseX));
