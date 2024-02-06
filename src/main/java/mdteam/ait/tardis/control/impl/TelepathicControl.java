@@ -2,6 +2,7 @@ package mdteam.ait.tardis.control.impl;
 
 import com.mojang.datafixers.util.Pair;
 import mdteam.ait.api.tardis.LinkableItem;
+import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -30,6 +31,7 @@ public class TelepathicControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+        if (!KeyItem.hasMatchingKeyInInventory(player, tardis)) return false;
         if (player.getMainHandStack().getItem() instanceof LinkableItem linker) {
             linker.link(player.getMainHandStack(), tardis);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);

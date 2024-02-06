@@ -11,6 +11,7 @@ import net.minecraft.text.Text;
 
 public class AutoPilotControl extends Control {
     public AutoPilotControl() {
+        // ☸ ?
         super("protocol_116");
     }
 

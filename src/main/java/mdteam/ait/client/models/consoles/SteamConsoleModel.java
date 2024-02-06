@@ -907,7 +907,8 @@ public class SteamConsoleModel extends ConsoleModel {
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
 		return switch(state) {
-			case FLIGHT, MAT, DEMAT -> SteamAnimations.CONSOLE_STEAM_FLIGHT;
+			case LANDED -> SteamAnimations.CONSOLE_STEAM_IDLE;
+			case FLIGHT, MAT, DEMAT, CRASH -> SteamAnimations.CONSOLE_STEAM_FLIGHT;
 			default -> Animation.Builder.create(0).build();
 		};
 	}

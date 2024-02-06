@@ -70,7 +70,7 @@ public class AITRadioRenderer<T extends AITRadioBlockEntity> implements BlockEnt
         OrderedText vol = Text.literal("Volume").asOrderedText();
         OrderedText tuner = Text.literal("Tuning").asOrderedText();
         OrderedText volNum = Text.literal("" + ((int) (Math.nextUp(entity.getTickRot("volume") * (180 / Math.PI) * 11) / 360) + 1)).asOrderedText();
-        String _stationname = "B.O. LLC";
+        String _stationname = "MDTEAM CO.";
         OrderedText stationName = Text.literal(_stationname).setStyle(Style.EMPTY.withBold(true)).asOrderedText();
         OrderedText frequency = Text.literal("108.8").asOrderedText();
         OrderedText fm = Text.literal("  FM").asOrderedText();
@@ -92,7 +92,7 @@ public class AITRadioRenderer<T extends AITRadioBlockEntity> implements BlockEnt
         matrices.push();
         matrices.translate(-0.001, 1, 0);
         if (renderOnThings)
-            this.radio.getChild("vu_module").render(matrices, vertexConsumers.getBuffer(RenderLayer.getTextSeeThrough(EMISSIVE_RADIO_TEXTURE)), maxLight, overlay, 1, 1, 1, 1);
+            this.radio.getChild("vu_module").render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(EMISSIVE_RADIO_TEXTURE, true)), maxLight, overlay, 1, 1, 1, 1);
         else
             this.radio.getChild("vu_module").render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(EMISSIVE_RADIO_TEXTURE)), light, overlay, 1, 1, 1, 1);
         matrices.pop();

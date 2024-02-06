@@ -28,7 +28,9 @@ public class ServerPlayerMixin {
             Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), true);
 
             if (found == null) return;
+            player.setVelocity(0, 0, 0);
             TardisUtil.teleportInside(found, player);
+            player.setVelocity(0, 0, 0);
             this.joinInvulnerabilityTicks = 60;
         }
     }
