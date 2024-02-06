@@ -3,6 +3,7 @@ package mdteam.ait.registry;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.exterior.category.ExteriorCategory;
 import mdteam.ait.tardis.exterior.variant.*;
+import mdteam.ait.tardis.exterior.variant.box.*;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.exterior.variant.booth.*;
 import mdteam.ait.tardis.exterior.variant.capsule.CapsuleDefaultVariant;
