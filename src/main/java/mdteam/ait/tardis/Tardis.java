@@ -350,7 +350,13 @@ public class Tardis {
         }
     }
 
+    // todo move these up
+
     public boolean isInDanger() {
         return this.getHandlers().getHADS().isInDanger();
+    }
+
+    public boolean inFlight() {
+        return this.getTravel().getState() != TardisTravel.State.LANDED;
     }
 }
