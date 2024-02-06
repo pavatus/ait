@@ -5,3 +5,4 @@
 - Fixed issues with monitor exterior selection
 - Fixed alarm fog being crazy fast
 - Made creak 6 & 7 louder
+- Fixed unnecessary chunk loading causing memory and performance issues

@@ -7,6 +7,7 @@ import mdteam.ait.core.AITMessages;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.data.TardisLink;
@@ -790,6 +791,10 @@ public class TardisTravel extends TardisLink {
 
     public void deleteExterior() {
         this.getPosition().getWorld().removeBlock(this.getPosition(), false);
+        if (TardisUtil.isServer()) {
+            ForcedChunkUtil.stopForceLoading((ServerWorld) this.getPosition().getWorld(), this.getPosition());
+        }
+
     }
 
     @NotNull

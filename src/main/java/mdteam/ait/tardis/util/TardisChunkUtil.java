@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.util;
 
+import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
@@ -25,10 +26,13 @@ public class TardisChunkUtil {
 
     public static boolean shouldExteriorChunkBeForced(Tardis tardis) {
         if (!(tardis.getTravel().getPosition().getWorld() instanceof ServerWorld)) return false;
-
+        if (DependencyChecker.hasPortals()) {
+            return (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
+                    || (tardis.getTravel().getState() == TardisTravel.State.DEMAT)
+                    || (tardis.getTravel().getState() == TardisTravel.State.MAT) || (!TardisUtil.getPlayersInInterior(tardis).isEmpty());
+        }
         return (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
                 || (tardis.getTravel().getState() == TardisTravel.State.DEMAT)
-                || (tardis.getTravel().getState() == TardisTravel.State.MAT)
-                || (!TardisUtil.getPlayersInInterior(tardis).isEmpty());
+                || (tardis.getTravel().getState() == TardisTravel.State.MAT);
     }
 }
