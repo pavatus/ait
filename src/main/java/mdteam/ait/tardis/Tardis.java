@@ -322,8 +322,10 @@ public class Tardis {
             ClientShakeUtil.shakeFromConsole();
         }
 
-        ClientTardisUtil.tickPowerDelta();
-        ClientTardisUtil.tickAlarmDelta();
+        if (this.equals(ClientTardisUtil.getCurrentTardis())) {
+            ClientTardisUtil.tickPowerDelta();
+            ClientTardisUtil.tickAlarmDelta();
+        }
     }
 
     public boolean isDirty() {

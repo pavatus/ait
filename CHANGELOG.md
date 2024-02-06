@@ -2,3 +2,4 @@
 - TARDIS no longer shakes during flight if autopilot is enabled
 - Fixed telepathic circuit ignoring security
 - Fixed issues with monitor exterior selection
+- Fixed alarm fog being crazy fast
