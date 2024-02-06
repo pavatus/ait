@@ -318,10 +318,7 @@ public class Tardis {
      */
     public void tick(MinecraftClient client) { // fixme should likely be in ClientTardis instead, same with  other server-only things should be in ServerTardis
         // referencing client stuff where it COULD be server causes problems
-        if(client.player != null &&
-                ClientTardisUtil.isPlayerInATardis() && ClientTardisUtil.getCurrentTardis().equals(this) &&
-                this.getTravel() != null && this.getTravel().getState() != TardisTravel.State.LANDED) {
-            /*if (ClientShakeUtil.shouldShake(this)) */
+        if(ClientShakeUtil.shouldShake(this)) {
             ClientShakeUtil.shakeFromConsole();
         }
 

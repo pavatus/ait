@@ -2,6 +2,7 @@ package mdteam.ait.client.util;
 
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.MathHelper;
 
@@ -10,23 +11,21 @@ import java.util.Objects;
 public class ClientShakeUtil {
     private static final float SHAKE_CLAMP = 45.0f; // Adjust this value to set the maximum shake angle
     private static final float SHAKE_INTENSITY = 0.5f; // Adjust this value to control the intensity of the shake
-    private static final int MAX_DISTANCE = 5; // The radius from the console where the player will feel the shake
+    private static final int MAX_DISTANCE = 16; // The radius from the console where the player will feel the shake
 
     public static boolean shouldShake(Tardis tardis) {
         return Objects.equals(ClientTardisUtil.getCurrentTardis(), tardis)
                 && tardis.getTravel() != null
                 && tardis.getTravel().getState() != TardisTravel.State.LANDED
-                && ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE;
+                && ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE
+                && !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND);
     }
 
     /**
-     * Shakes based off the distance of the gpu fixme how high was i when i wrong "distance of the gpu" - fixme how high was duzo when he wrote gpu and wrong???
+     * Shakes based off the distance of the player from the console
      */
     public static void shakeFromConsole() {
-        if(ClientTardisUtil.distanceFromConsole() <= MAX_DISTANCE)
-            shake(1f - (float) (ClientTardisUtil.distanceFromConsole() / MAX_DISTANCE));
-        else if (ClientTardisUtil.distanceFromConsole() <= MAX_DISTANCE * 6)
-            shake(0.5f);
+        shake(1f - (float) (ClientTardisUtil.distanceFromConsole() / MAX_DISTANCE));
     }
 
     public static void shake(float scale) {
