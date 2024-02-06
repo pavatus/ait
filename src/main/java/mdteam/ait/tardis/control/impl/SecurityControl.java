@@ -23,6 +23,7 @@ public class SecurityControl extends Control {
     public static final String SECURITY_KEY = "security";
 
     public SecurityControl() {
+        // ⨷ ?
         super("protocol_19");
     }
 

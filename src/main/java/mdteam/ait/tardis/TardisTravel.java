@@ -47,7 +47,7 @@ import static mdteam.ait.AITMod.AIT_CUSTOM_CONFIG;
 // todo this class is like a monopoly, im gonna slash it into little corporate pieces
 public class TardisTravel extends TardisLink {
     private static final String MAX_SPEED_KEY = "max_speed";
-    private static final int DEFAULT_MAX_SPEED = 3;
+    private static final int DEFAULT_MAX_SPEED = 7;
     private State state = State.LANDED;
     private AbsoluteBlockPos.Directed position;
     private AbsoluteBlockPos.Directed destination;

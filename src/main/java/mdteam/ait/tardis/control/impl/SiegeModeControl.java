@@ -11,6 +11,7 @@ import net.minecraft.text.Text;
 
 public class SiegeModeControl extends Control {
     public SiegeModeControl() {
+        // Ⓢ ?
         super("protocol_1913");
     }
 

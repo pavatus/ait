@@ -9,6 +9,7 @@ import net.minecraft.text.Text;
 
 public class HailMaryControl extends Control {
     public HailMaryControl() {
+        // ♡ ?
         super("protocol_813");
     }
 

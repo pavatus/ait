@@ -14,6 +14,7 @@ import net.minecraft.text.Text;
 public class CloakControl extends Control {
 
     public CloakControl() {
+        // ⬚ ?
         super("protocol_3");
     }
 
