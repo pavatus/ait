@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class FuelData extends TardisLink implements ArtronHolder {
     @Exclude
-    public static final double TARDIS_MAX_FUEL = 35000;
+    public static final double TARDIS_MAX_FUEL = 50000;
     public static final String FUEL_COUNT = "fuel_count"; // todo this gets synced too much, needs changing.
     public static final String REFUELING = "refueling";
 
