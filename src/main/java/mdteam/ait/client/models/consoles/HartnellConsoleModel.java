@@ -830,12 +830,8 @@ public class HartnellConsoleModel extends ConsoleModel {
 		if (console.getTardis().get().getTravel().getDestination().getX() != xDestination) {
 			xControl.roll = xControl.roll + 1.575f;
 			xControlLight.pivotY = xControlLight.pivotY + 1;
-
-			//ddd
-
 			xControl.roll = xControl.roll;
 			xControlLight.pivotY = xControlLight.pivotY;
-			//PUT A DELAY HERE LOQOR
 			xDestination = destination.getX();
 		}
 
@@ -958,7 +954,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Increment Control Movements
 		ModelPart increment = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_crank_3").getChild("bone74");
-		increment.yaw = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? increment.yaw + 1.5f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
+		increment.yaw = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? IncrementManager.increment(console.getTardis().get()) >= 10000 ? increment.yaw + 2f : increment.yaw + 1.5f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
 
 		// Direction Control Movements
 		ModelPart direction = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("s_crank_1").getChild("bone59");

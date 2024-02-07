@@ -905,7 +905,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		// Increment Control
 		ModelPart increment = this.toyota.getChild("panel2").getChild("controls3").getChild("gears").getChild("largegear2").getChild("pivot5");
-		increment.yaw = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? increment.yaw + 1.5f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
+		increment.yaw = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? IncrementManager.increment(console.getTardis().get()) >= 10000 ? increment.yaw + 1.5f : increment.yaw + 1.25f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
 
 		// Refuel Light
 		ModelPart refuelLight = this.toyota.getChild("panel4").getChild("yellow6");

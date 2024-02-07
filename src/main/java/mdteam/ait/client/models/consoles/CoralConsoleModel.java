@@ -1399,8 +1399,8 @@ public class CoralConsoleModel extends ConsoleModel {
 		ModelPart increment = this.console.getChild("controls").getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("crank2");
 		ModelPart incrementTwo = this.console.getChild("controls").getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("bone34");
 
-		increment.yaw = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? increment.yaw + 1.5f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
-		incrementTwo.pivotY = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? incrementTwo.pivotY + 3f : incrementTwo.pivotY + 2f : incrementTwo.pivotY + 1f : incrementTwo.pivotY;
+		increment.yaw = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? IncrementManager.increment(console.getTardis().get()) >= 10000 ? increment.yaw + 1.5f : increment.yaw + 1.25f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
+		incrementTwo.pivotY = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? IncrementManager.increment(console.getTardis().get()) >= 10000 ? incrementTwo.pivotY + 3f : incrementTwo.pivotY + 2f : incrementTwo.pivotY + 1f : incrementTwo.pivotY + 0.5f : incrementTwo.pivotY;
 
 		// Refueler
 		ModelPart refueler = this.console.getChild("controls").getChild("p_ctrl_5").getChild("bone49").getChild("ring2").getChild("switch30");

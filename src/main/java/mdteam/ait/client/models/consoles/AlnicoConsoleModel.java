@@ -845,7 +845,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		fuelGauge.roll = (float) (((console.getTardis().get().getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
 
 		ModelPart increment = alnico.getChild("section5").getChild("controls5").getChild("multiswitchpanel2").getChild("longswitch5");
-		increment.pitch = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? increment.pitch + 1.5f : increment.pitch + 1f : increment.pitch + 0.5f : increment.pitch;
+		increment.pitch = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? IncrementManager.increment(console.getTardis().get()) >= 10000 ? increment.pitch + 1.5f : increment.pitch + 1.25f : increment.pitch + 1f : increment.pitch + 0.5f : increment.pitch;
 
 		ModelPart landtype = alnico.getChild("section1").getChild("controls").getChild("tinyswitch2").getChild("bone2");
 		landtype.yaw = landtype.yaw + (PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? 1.5708f : 0);

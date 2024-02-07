@@ -10,7 +10,8 @@ public class IncrementManager { // todo can likely be moved into the properties 
             1,
             10,
             100,
-            1000
+            1000,
+            10000
     };
 
     public static int increment(Tardis tardis) {

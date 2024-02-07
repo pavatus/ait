@@ -41,6 +41,7 @@ public class ConsoleVariantRegistry {
     public static ConsoleVariantSchema TOYOTA_LEGACY;
     public static ConsoleVariantSchema ALNICO;
     public static ConsoleVariantSchema STEAM;
+    public static ConsoleVariantSchema STEAM_CHERRY;
 
     public static void init() {
 
@@ -67,5 +68,6 @@ public class ConsoleVariantRegistry {
 
         // Steam variants
         STEAM = register(new SteamVariant());
+        STEAM_CHERRY = register(new SteamCherryVariant());
     }
 }

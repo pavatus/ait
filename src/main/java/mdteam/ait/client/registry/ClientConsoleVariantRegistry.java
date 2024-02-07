@@ -43,6 +43,7 @@ public class ClientConsoleVariantRegistry {
     public static ClientConsoleVariantSchema TOYOTA_LEGACY;
     public static ClientConsoleVariantSchema ALNICO;
     public static ClientConsoleVariantSchema STEAM;
+    public static ClientConsoleVariantSchema STEAM_CHERRY;
 
     public static void init() {
         // Borealis variants
@@ -72,5 +73,6 @@ public class ClientConsoleVariantRegistry {
 
         // Steam variants
         STEAM = register(new ClientSteamVariant());
+        STEAM_CHERRY = register(new ClientSteamCherryVariant());
     }
 }
