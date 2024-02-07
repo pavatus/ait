@@ -1,4 +1,4 @@
-package mdteam.ait.tardis.exterior.variant;
+package mdteam.ait.tardis.exterior.variant.box;
 
 import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.variant.door.DoorSchema;

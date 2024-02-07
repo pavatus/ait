@@ -1,2 +1,1 @@
-# 1.2.32
-- Fixed telepathic circuit ignoring security
+# 1.2.33

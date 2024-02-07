@@ -3,6 +3,7 @@ package mdteam.ait.registry;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.exterior.category.ExteriorCategory;
 import mdteam.ait.tardis.exterior.variant.*;
+import mdteam.ait.tardis.exterior.variant.box.*;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.exterior.variant.booth.*;
 import mdteam.ait.tardis.exterior.variant.capsule.CapsuleDefaultVariant;
@@ -71,6 +72,11 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
         for (ExteriorVariantSchema schema : REGISTRY.values()) {
             if (schema instanceof DatapackVariant variant) {
                 buf.encodeAsJson(DatapackVariant.CODEC, variant);
+                continue;
+            }
+            if (schema.category() == null) {
+                AITMod.LOGGER.error("Exterior variant " + schema.id() + " has null category!");
+                AITMod.LOGGER.error("Temporarily returning, fix this code!!!"); // todo
                 continue;
             }
             buf.encodeAsJson(DatapackVariant.CODEC, new DatapackVariant(schema.id(), schema.category().id(), schema.id(), DatapackVariant.DEFAULT_TEXTURE, DatapackVariant.DEFAULT_TEXTURE, false));
@@ -156,6 +162,8 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
     public static ExteriorVariantSchema PLINTH_FIRE;
 
     private static void registerDefaults() {
+        // todo make this not static
+
         // TARDIM
         TARDIM_DEFAULT = registerStatic(new TardimDefaultVariant());
         TARDIM_FIRE = registerStatic(new TardimFireVariant());

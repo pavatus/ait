@@ -1,4 +1,4 @@
-package mdteam.ait.tardis.exterior.variant;
+package mdteam.ait.tardis.exterior.variant.box;
 
 public class PoliceBoxDefaultVariant extends PoliceBoxVariant {
     public PoliceBoxDefaultVariant() {

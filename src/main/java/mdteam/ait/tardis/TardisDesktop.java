@@ -152,40 +152,6 @@ public class TardisDesktop extends TardisLink {
         DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
 //        this.clearInteriorEntities();
     }
-
-    private void clearInteriorEntities() {
-        this.forceLoadInterior();
-
-        if (this.doorPos == null) return;
-
-        for (Direction direction : Direction.values()) {
-            BlockPos pos = doorPos.add(direction.getVector()); // Get the position of each adjacent block in the interior.
-            BlockEntity blockEntity = TardisUtil.getTardisDimension().getBlockEntity(pos);
-            if (blockEntity instanceof DoorBlockEntity) {
-                continue;
-            }
-            TardisUtil.getTardisDimension().removeBlockEntity(pos);  // Remove any existing block entity at that position.
-        }
-        Box box = this.corners.getBox();
-        for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemFrameEntity.class, box, (entity) -> true)) { // todo there seems to be issues with the "box" variable as it is what is causing these things to not work
-            entity.discard();  // Kill any normal entities at that position.
-        }
-        for (Entity entity : TardisUtil.getTardisDimension().getEntitiesByClass(ItemEntity.class, box, (entity) -> true)) {
-            entity.discard();  // Kill any normal entities at that position.
-        }
-
-        if(getTardis().isEmpty()) return;
-
-        for (LivingEntity entity : TardisUtil.getLivingEntitiesInInterior(getTardis().get(), 256)) {
-            entity.discard();
-        }
-
-        // for (LivingEntity entity : TardisUtil.getEntitiesInInterior(tardis)) {
-        //     entity.discard();
-        // }
-
-        this.stopForceInterior();
-    }
     public void cacheConsole() {
         if(this.getConsolePos() == null) return;
         ServerWorld dim = (ServerWorld) TardisUtil.getTardisDimension();
@@ -213,43 +179,7 @@ public class TardisDesktop extends TardisLink {
 
         this.setConsolePos(null);
     }
-    public void forceLoadInterior() {
-        World world = TardisUtil.getTardisDimension();
-        if (world == null) return;
 
-        for (BlockPos pos : this.iterateOverInterior()) {
-            ForcedChunkUtil.keepChunkLoaded((ServerWorld) world, pos);
-        }
-    }
-    public void stopForceInterior() {
-        World world = TardisUtil.getTardisDimension();
-        if (world == null) return;
-
-        for (BlockPos pos : this.iterateOverInterior()) {
-            ForcedChunkUtil.stopForceLoading((ServerWorld) world, pos);
-        }
-    }
-
-    private void forceLoadChunks(List<BlockPos> blockPosList) {
-        World world = TardisUtil.getTardisDimension();
-        if (world == null) return;
-        MinecraftServer server = world.getServer();
-        if (server == null) return;
-        for (BlockPos blockPos: blockPosList) {
-            ForcedChunkUtil.keepChunkLoaded((ServerWorld) world, blockPos);
-        }
-
-    }
-
-    private void unforceLoadChunks(List<BlockPos> blockPosList) {
-        World world = TardisUtil.getTardisDimension();
-        if (world == null) return;
-        MinecraftServer server = world.getServer();
-        if (server == null) return;
-        for (BlockPos blockPos: blockPosList) {
-            ForcedChunkUtil.stopForceLoading((ServerWorld) world, blockPos);
-        }
-    }
 
     private List<BlockPos> getBlockPosListFromCorners() {
         List<BlockPos> blockPosList = new ArrayList<>();

@@ -519,7 +519,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         for (Tardis tardis : this.getLookup().values()) {
             // stop forcing all chunks
             TardisChunkUtil.stopForceExteriorChunk(tardis);
-            tardis.getDesktop().stopForceInterior();
 
             if (tardis.getTravel().getState() == TardisTravel.State.DEMAT) {
                 tardis.getTravel().toFlight();
