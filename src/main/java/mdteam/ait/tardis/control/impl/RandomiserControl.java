@@ -22,7 +22,7 @@ public class RandomiserControl extends Control {
         TardisTravel travel = tardis.getTravel();
 
         randomiseDestination(tardis, 10);
-        tardis.removeFuel(0.1d * IncrementManager.increment(tardis));
+        tardis.removeFuel((0.1d * IncrementManager.increment(tardis)) * (tardis.tardisHammerAnnoyance + 1));
 
         messagePlayer(player, travel);
 

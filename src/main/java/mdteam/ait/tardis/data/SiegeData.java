@@ -65,7 +65,7 @@ public class SiegeData extends TardisLink {
         if (b) TardisUtil.getTardisDimension().playSound(null, getTardis().get().getDesktop().getConsolePos(), AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 3f, 1f);
         if (!b) TardisUtil.getTardisDimension().playSound(null, getTardis().get().getDesktop().getConsolePos(), AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 3f, 1f);
 
-        getTardis().get().removeFuel(0.01 * FuelData.TARDIS_MAX_FUEL);
+        getTardis().get().removeFuel((0.01 * FuelData.TARDIS_MAX_FUEL) * (this.getTardis().get().tardisHammerAnnoyance + 1));
 
         PropertiesHandler.set(getTardis().get(), PropertiesHandler.SIEGE_MODE, b);
         this.sync();

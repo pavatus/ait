@@ -1,5 +1,8 @@
 package mdteam.ait.tardis;
 
+import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
+import com.neptunedevelopmentteam.neptunelib.utils.TimeUtil;
+import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.client.util.ClientTardisUtil;
@@ -39,8 +42,11 @@ public class Tardis {
     protected TardisHandlersManager handlers;
     private boolean dirty = false;
 
+    public int tardisHammerAnnoyance = 0;
+
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorCategory exteriorType, ExteriorVariantSchema variant) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), false);
+        tardisHammerAnnoyance = 0;
     }
 
     protected Tardis(UUID uuid, Function<Tardis, TardisTravel> travel, Function<Tardis, TardisDesktop> desktop, Function<Tardis, TardisExterior> exterior, boolean locked) {
@@ -48,6 +54,7 @@ public class Tardis {
         this.travel = travel.apply(this);
         this.desktop = desktop.apply(this);
         this.exterior = exterior.apply(this);
+        tardisHammerAnnoyance = 0;
     }
 
     public UUID getUuid() {
@@ -258,7 +265,10 @@ public class Tardis {
         // most of the logic is in the handlers, so we can just disable them if we're a growth
         // if (!isGrowth())
         //     this.getHandlers().tick(server);
-
+        if (tardisHammerAnnoyance > 0 && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay")) {
+            tardisHammerAnnoyance--;
+            DeltaTimeManager.createDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay", (long) TimeUtil.secondsToMilliseconds(10));
+        }
         // @TODO if tnt explodes in the interior (near the console), then it should crash
         if (this.isGrowth()) {
             /*if (this.getHandlers().getInteriorChanger().isGenerating()) {

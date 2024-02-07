@@ -76,6 +76,6 @@ public class CloakData extends TardisLink {
 
         if (!this.isEnabled()) return;
 
-        this.getTardis().get().removeFuel(2); // idle drain of 2 fuel per tick
+        this.getTardis().get().removeFuel(2 * (this.getTardis().get().tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick
     }
 }

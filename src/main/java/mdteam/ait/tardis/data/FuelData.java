@@ -112,15 +112,15 @@ public class FuelData extends TardisLink implements ArtronHolder {
         }
         if ((state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT) && !isDrainOnDelay(tardis)) {
             createDrainDelay(tardis);
-            removeFuel(5);
+            removeFuel(5 * (tardis.tardisHammerAnnoyance + 1));
         }
         if (state == TardisTravel.State.FLIGHT && !isDrainOnDelay(tardis)) {
             createDrainDelay(tardis);
-            removeFuel(4^(tardis.getTravel().getSpeed()));
+            removeFuel((4^(tardis.getTravel().getSpeed())) * (tardis.tardisHammerAnnoyance + 1));
         }
         if (state == TardisTravel.State.LANDED && !isRefueling() && !isDrainOnDelay(tardis)) {
             createDrainDelay(tardis);
-            removeFuel(0.25);
+            removeFuel(0.25 * (tardis.tardisHammerAnnoyance + 1));
         }
         if (state == TardisTravel.State.FLIGHT && !tardis.hasPower()) {
             getTardis().get().getTravel().crash(); // hehe force land if you don't have enough fuel

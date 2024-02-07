@@ -80,7 +80,7 @@ public class InteriorChangingHandler extends TardisLink {
         getTardis().get().getHandlers().getAlarms().enable();
         getTardis().get().getDesktop().setConsolePos(null);
         if (!(getTardis().get().hasGrowthDesktop()))
-            getTardis().get().removeFuel(5000);
+            getTardis().get().removeFuel(5000 * (this.getTardis().get().tardisHammerAnnoyance + 1));
     }
 
     private void onCompletion() {
