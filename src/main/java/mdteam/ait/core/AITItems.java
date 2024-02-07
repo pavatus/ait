@@ -17,7 +17,7 @@ public class AITItems implements NeptuneItemInit {
     public static final Item REMOTE_ITEM = new RemoteItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item ARTRON_COLLECTOR = new ArtronCollectorItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item RIFT_SCANNER = new RiftScannerItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
-    public static final Item HAMMER = new Item(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
+    public static final Item HAMMER = new HammerItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
     // Keys/Key Templates
     public static final Item IRON_KEY = new KeyItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP));
     public static final Item GOLD_KEY = new KeyItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SNAP);

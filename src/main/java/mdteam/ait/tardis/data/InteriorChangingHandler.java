@@ -67,7 +67,7 @@ public class InteriorChangingHandler extends TardisLink {
     public void queueInteriorChange(TardisDesktopSchema schema) {
         if(getTardis().isEmpty()) return;
         if (!getTardis().get().isGrowth() && !getTardis().get().hasPower()) return;
-        if (getTardis().get().getHandlers().getFuel().getFuel() < 5000 && !(getTardis().get().isGrowth() && getTardis().get().hasGrowthDesktop())) {
+        if (getTardis().get().getHandlers().getFuel().getCurrentFuel() < 5000 && !(getTardis().get().isGrowth() && getTardis().get().hasGrowthDesktop())) {
             for (PlayerEntity player : TardisUtil.getPlayersInInterior(getTardis().get())) {
                 player.sendMessage(Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED), true);
                 return;

@@ -48,14 +48,14 @@ public class ArtronCollectorRenderer<T extends ArtronCollectorBlockEntity> imple
         ModelPart batteryLevels = artronCollectorModel.collector.getChild("battery_levels");
 
         artronCollectorModel.collector.getChild("spinner").yaw =
-                entity.getFuel() > 0 ? ((float) MinecraftClient.getInstance().world.getTime() / 12000L) * 180.0f : 0;
+                entity.getCurrentFuel() > 0 ? ((float) MinecraftClient.getInstance().world.getTime() / 12000L) * 180.0f : 0;
 
-        batteryLevels.getChild("b_1").visible = entity.getFuel() > 250 && entity.getFuel() < 500;
-        batteryLevels.getChild("b_2").visible = entity.getFuel() > 500 && entity.getFuel() < 750;
-        batteryLevels.getChild("b_3").visible = entity.getFuel() > 750 && entity.getFuel() < 1000;
-        batteryLevels.getChild("b_4").visible = entity.getFuel() > 1000 && entity.getFuel() < 1250;
-        batteryLevels.getChild("b_5").visible = entity.getFuel() > 1250 && entity.getFuel() < 1500;
-        batteryLevels.getChild("b_6").visible = entity.getFuel() == 1500;
+        batteryLevels.getChild("b_1").visible = entity.getCurrentFuel() > 250 && entity.getCurrentFuel() < 500;
+        batteryLevels.getChild("b_2").visible = entity.getCurrentFuel() > 500 && entity.getCurrentFuel() < 750;
+        batteryLevels.getChild("b_3").visible = entity.getCurrentFuel() > 750 && entity.getCurrentFuel() < 1000;
+        batteryLevels.getChild("b_4").visible = entity.getCurrentFuel() > 1000 && entity.getCurrentFuel() < 1250;
+        batteryLevels.getChild("b_5").visible = entity.getCurrentFuel() > 1250 && entity.getCurrentFuel() < 1500;
+        batteryLevels.getChild("b_6").visible = entity.getCurrentFuel() == 1500;
 
         this.artronCollectorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(COLLECTOR_TEXTURE)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
         this.artronCollectorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(EMISSIVE_COLLECTOR_TEXTURE)), 0xF000F00, overlay, 1.0F, 1.0F, 1.0F, 1.0F);

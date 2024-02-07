@@ -12,7 +12,6 @@ import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class FuelData extends TardisLink implements ArtronHolder {
@@ -47,19 +46,19 @@ public class FuelData extends TardisLink implements ArtronHolder {
     }
 
     @Override
-    public double getFuel() {
+    public double getCurrentFuel() {
         if(getTardis().isEmpty()) return 0;
         if (PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), FUEL_COUNT) == null) {
             AITMod.LOGGER.warn("Fuel count was null, setting to 0");
-            this.setFuel(0);
+            this.setCurrentFuel(0);
         }
         return (double) PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), FUEL_COUNT);
     }
 
     @Override
-    public void setFuel(double fuel) {
+    public void setCurrentFuel(double fuel) {
         if(getTardis().isEmpty()) return;
-        double prev = getFuel();
+        double prev = getCurrentFuel();
 
         PropertiesHandler.set(getTardis().get(), FUEL_COUNT, fuel, !isSyncOnDelay(getTardis().get()));
 
@@ -102,7 +101,7 @@ public class FuelData extends TardisLink implements ArtronHolder {
         TardisTravel.State state = tardis.getTravel().getState();
         
         
-        if (state == TardisTravel.State.LANDED && this.isRefueling() && this.getFuel() < FuelData.TARDIS_MAX_FUEL && (!isRefuelOnDelay(tardis))) {
+        if (state == TardisTravel.State.LANDED && this.isRefueling() && this.getCurrentFuel() < FuelData.TARDIS_MAX_FUEL && (!isRefuelOnDelay(tardis))) {
             if(RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) > 0) {
                 RiftChunkManager.setArtronLevels(world, pos, RiftChunkManager.getArtronLevels(world, pos) - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
                 addFuel(5);

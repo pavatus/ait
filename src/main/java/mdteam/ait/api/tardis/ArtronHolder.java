@@ -1,25 +1,25 @@
 package mdteam.ait.api.tardis;
 
 public interface ArtronHolder {
-    double getFuel();
-    void setFuel(double var);
+    double getCurrentFuel();
+    void setCurrentFuel(double var);
     default double addFuel(double var) {
-        double currentFuel = this.getFuel();
-        this.setFuel(this.getFuel() <= this.getMaxFuel() ? this.getFuel() + var : this.getMaxFuel());
-        if(this.getFuel() == this.getMaxFuel())
+        double currentFuel = this.getCurrentFuel();
+        this.setCurrentFuel(this.getCurrentFuel() <= this.getMaxFuel() ? this.getCurrentFuel() + var : this.getMaxFuel());
+        if(this.getCurrentFuel() == this.getMaxFuel())
             return var - (this.getMaxFuel() - currentFuel);
         return 0;
     }
     default void removeFuel(double var) {
-        if (this.getFuel() - var < 0) {
-            this.setFuel(0);
+        if (this.getCurrentFuel() - var < 0) {
+            this.setCurrentFuel(0);
             return;
         }
-        this.setFuel(this.getFuel() - var);
+        this.setCurrentFuel(this.getCurrentFuel() - var);
     }
     double getMaxFuel();
     default boolean isOutOfFuel() {
-        return this.getFuel() <= 0;
+        return this.getCurrentFuel() <= 0;
     }
 
     // boolean isRefueling();

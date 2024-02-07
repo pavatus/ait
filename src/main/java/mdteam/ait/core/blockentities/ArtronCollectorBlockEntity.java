@@ -36,23 +36,23 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
     @Override
     public void readNbt(NbtCompound nbt) {
         if(nbt.contains("artronAmount"))
-            this.setFuel(nbt.getDouble("artronAmount"));
+            this.setCurrentFuel(nbt.getDouble("artronAmount"));
         super.readNbt(nbt);
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
         if(!world.isClient()) {
-            player.sendMessage(Text.literal(this.getFuel() + "/" + ArtronCollectorItem.COLLECTOR_MAX_FUEL).formatted(Formatting.GOLD));
+            player.sendMessage(Text.literal(this.getCurrentFuel() + "/" + ArtronCollectorItem.COLLECTOR_MAX_FUEL).formatted(Formatting.GOLD));
             ItemStack stack = player.getMainHandStack();
             if (stack.getItem() instanceof ArtronCollectorItem) {
-                double residual = ArtronCollectorItem.addFuel(stack, this.getFuel());
-                this.setFuel(residual);
+                double residual = ArtronCollectorItem.addFuel(stack, this.getCurrentFuel());
+                this.setCurrentFuel(residual);
             }
         }
     }
 
     @Override
-    public void setFuel(double artronAmount) {
+    public void setCurrentFuel(double artronAmount) {
         this.artronAmount = artronAmount;
         markDirty();
     }
@@ -63,7 +63,7 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
     }
 
     @Override
-    public double getFuel() {
+    public double getCurrentFuel() {
         return this.artronAmount;
     }
 
@@ -84,7 +84,7 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
     public void tick(World world, BlockPos pos, BlockState state, ArtronCollectorBlockEntity blockEntity) {
         if(world.isClient()) return;
 
-        if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) >= 3  && this.getFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()))) {
+        if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) >= 3  && this.getCurrentFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()))) {
             RiftChunkManager.setArtronLevels(world, pos,RiftChunkManager.getArtronLevels(world, pos) - 3);
             this.addFuel( 3);
             this.updateListeners();

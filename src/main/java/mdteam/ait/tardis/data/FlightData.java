@@ -96,7 +96,7 @@ public class FlightData extends TardisLink {
 
         return PropertiesHandler.getInt(this.getTardis().get().getHandlers().getProperties(), FLIGHT_TICKS_KEY);
     }
-    private void setFlightTicks(int ticks) {
+    public void setFlightTicks(int ticks) {
        if (this.getTardis().isEmpty()) return;
 
        PropertiesHandler.set(this.getTardis().get(), FLIGHT_TICKS_KEY, ticks);
