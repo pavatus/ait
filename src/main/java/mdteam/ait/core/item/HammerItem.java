@@ -53,7 +53,7 @@ public class HammerItem extends Item {
             }
             tardis.getHandlers().getFuel().setCurrentFuel(current_fuel + estimated_fuel_cost_for_hit);
             tardis.tardisHammerAnnoyance ++;
-            if (tardis.tardisHammerAnnoyance >= 10) {
+            if (tardis.tardisHammerAnnoyance >= 7) {
                 tardis.getTravel().crash();
             }
 
