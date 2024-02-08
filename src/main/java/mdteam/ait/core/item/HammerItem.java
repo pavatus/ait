@@ -30,7 +30,7 @@ public class HammerItem extends Item {
             FlightData flightData = tardis.getHandlers().getFlight();
             int targetTicks = flightData.getTargetTicks();
             int current_flight_ticks = flightData.getFlightTicks();
-            int added_flight_ticks = 150 * tardis.getTravel().getSpeed() ;
+            int added_flight_ticks = 500 * tardis.getTravel().getSpeed();
             double current_fuel = tardis.getHandlers().getFuel().getCurrentFuel();
             double max_fuel = tardis.getHandlers().getFuel().getMaxFuel();
             if (tardis.tardisHammerAnnoyance > 0) {
@@ -51,7 +51,7 @@ public class HammerItem extends Item {
             else {
                 flightData.setFlightTicks(targetTicks);
             }
-            tardis.getHandlers().getFuel().setCurrentFuel(current_fuel + estimated_fuel_cost_for_hit);
+            tardis.getHandlers().getFuel().setCurrentFuel(current_fuel - estimated_fuel_cost_for_hit);
             tardis.tardisHammerAnnoyance ++;
             if (tardis.tardisHammerAnnoyance >= 7) {
                 tardis.getTravel().crash();

@@ -264,6 +264,7 @@ public class TardisTravel extends TardisLink {
         // RandomiserControl.randomiseDestination(this.getTardis().get(), 10);
         // Play explosion sound and create explosion at console position if available
         if (this.getTardis().get().getDesktop().getConsolePos() != null) {
+            if (TardisUtil.getTardisDimension() == null) return;
             TardisUtil.getTardisDimension().playSound(
                     null,
                     this.getTardis().get().getDesktop().getConsolePos(),
@@ -277,7 +278,7 @@ public class TardisTravel extends TardisLink {
                     null,
                     null,
                     this.getTardis().get().getDesktop().getConsolePos().toCenterPos(),
-                    3f,
+                    3f * (getTardis().get().tardisHammerAnnoyance + 1),
                     false,
                     World.ExplosionSourceType.TNT
             );
@@ -295,7 +296,7 @@ public class TardisTravel extends TardisLink {
                 if (random.nextInt(1,3) == 1) {
                     is_z_negative = true;
                 }
-                int crash_intensity = getTardis().get().tardisHammerAnnoyance;
+                int crash_intensity = getTardis().get().tardisHammerAnnoyance + 1;
                 player.addVelocity(0.5f * x_random * (is_x_negative ? -1 : 1) * crash_intensity, 0.25f * y_random * crash_intensity, 0.5f * z_random * (is_z_negative ? -1 : 1) * crash_intensity);
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
             }
