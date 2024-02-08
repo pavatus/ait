@@ -157,7 +157,7 @@ public class MonitorScreen extends TardisScreen {
         if (direction) setCategory(nextCategory());
         else setCategory(previousCategory());
 
-        if (CategoryRegistry.CORAL_GROWTH.equals(this.category) || (!("Loqor".equalsIgnoreCase(MinecraftClient.getInstance().player.getName().getString())) && CategoryRegistry.DOOM.equals(this.category))) {
+        if (CategoryRegistry.CORAL_GROWTH.equals(this.category) || (!("ad504e7c-22a0-4b3f-94e3-5b6ad5514cb6".equalsIgnoreCase(MinecraftClient.getInstance().player.getUuidAsString())) && CategoryRegistry.DOOM.equals(this.category))) {
             changeCategory(direction);
         }
     }
