@@ -8,6 +8,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -45,17 +49,21 @@ public class HammerItem extends Item {
                 tardis.getHandlers().getFuel().setCurrentFuel(0.0);
                 return ActionResult.SUCCESS;
             }
-            if (current_flight_ticks + added_flight_ticks < targetTicks) {
-                flightData.setFlightTicks(current_flight_ticks + added_flight_ticks);
-            }
-            else {
-                flightData.setFlightTicks(targetTicks);
-            }
+            flightData.setFlightTicks(Math.min(current_flight_ticks + added_flight_ticks, targetTicks));
             tardis.getHandlers().getFuel().setCurrentFuel(current_fuel - estimated_fuel_cost_for_hit);
             tardis.tardisHammerAnnoyance ++;
             if (tardis.tardisHammerAnnoyance >= 7) {
                 tardis.getTravel().crash();
+            } else {
+                world.playSound(null, consoleBlockEntity.getPos(),
+                        SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.25f * tardis.tardisHammerAnnoyance, 1.0f);
             }
+
+            ((ServerWorld) world).spawnParticles(ParticleTypes.ELECTRIC_SPARK, pos.getX() + 0.5f, pos.getY() + 1.25,
+                    pos.getZ() + 0.5f, tardis.tardisHammerAnnoyance, 0,0,0, 0.025f);
+
+            world.playSound(null, consoleBlockEntity.getPos(),
+                    SoundEvents.ENTITY_GLOW_ITEM_FRAME_BREAK, SoundCategory.BLOCKS, 0.25f * tardis.tardisHammerAnnoyance, 1.0f);
 
             return ActionResult.SUCCESS;
         }

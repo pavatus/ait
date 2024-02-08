@@ -388,6 +388,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         if (tardis.getTravel().isCrashing()) {
             ((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
                     pos.getZ() + 0.5f, 1, 0,0,0, 0.025f);
+            ((ServerWorld) world).spawnParticles(ParticleTypes.ELECTRIC_SPARK, pos.getX() + 0.5f, pos.getY() + 1.25,
+                    pos.getZ() + 0.5f, 1, 0,0,0, 0.025f);
         }
         if (tardis.isRefueling()) {
             ((ServerWorld) world).spawnParticles((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD, pos.getX() + 0.5f, pos.getY() + 1.25,
