@@ -21,6 +21,9 @@ import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,6 +38,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionBehavior;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -273,14 +278,14 @@ public class TardisTravel extends TardisLink {
                     3f,
                     1f
             );
-            TardisUtil.getTardisDimension().createExplosion(
+            Explosion exp = TardisUtil.getTardisDimension().createExplosion(
                     null,
                     null,
                     null,
                     this.getTardis().get().getDesktop().getConsolePos().toCenterPos(),
                     3f * (getTardis().get().tardisHammerAnnoyance + 1),
                     false,
-                    World.ExplosionSourceType.TNT
+                    World.ExplosionSourceType.NONE
             );
             Random random = new Random();
             for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.getTardis().get())) {
@@ -299,6 +304,8 @@ public class TardisTravel extends TardisLink {
                 int crash_intensity = getTardis().get().tardisHammerAnnoyance + 1;
                 player.addVelocity(0.5f * x_random * (is_x_negative ? -1 : 1) * crash_intensity, 0.25f * y_random * crash_intensity, 0.5f * z_random * (is_z_negative ? -1 : 1) * crash_intensity);
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
+                int damage_to_do_to_player = 3 + crash_intensity * 2;
+                player.damage(TardisUtil.getTardisDimension().getDamageSources().explosion(exp), damage_to_do_to_player);
             }
         }
         this.getTardis().get().setLockedTardis(false);

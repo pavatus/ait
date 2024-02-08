@@ -43,6 +43,7 @@ public class Tardis {
     private boolean dirty = false;
 
     public int tardisHammerAnnoyance = 0;
+    private int tardisVersion = 1;
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorCategory exteriorType, ExteriorVariantSchema variant) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), false);
