@@ -5,6 +5,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
+import mdteam.ait.registry.datapack.Identifiable;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,7 +26,7 @@ import java.lang.reflect.Type;
  * @see ConsoleVariantRegistry#REGISTRY
  * @author duzo
  */
-public abstract class ConsoleVariantSchema {
+public abstract class ConsoleVariantSchema implements Identifiable {
     private final Identifier parent;
     private final Identifier id;
 
@@ -46,7 +47,6 @@ public abstract class ConsoleVariantSchema {
 
     public ConsoleSchema parent() { return ConsoleRegistry.REGISTRY.get(this.parent); }
     public Identifier id() { return id; }
-    public Identifier clientId() { return id().withPath(id().getPath() + "_client"); }
 
     public static Object serializer() {
         return new Serializer();
