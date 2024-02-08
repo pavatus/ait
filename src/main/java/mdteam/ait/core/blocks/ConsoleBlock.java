@@ -7,6 +7,7 @@ import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
+import mdteam.ait.core.item.HammerItem;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -20,6 +21,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -58,8 +60,14 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof ConsoleBlockEntity consoleBlockEntity)
+        if (blockEntity instanceof ConsoleBlockEntity consoleBlockEntity) {
             consoleBlockEntity.useOn(world, player.isSneaking(), player);
+            ItemStack itemStack = player.getStackInHand(hand);
+            if (itemStack.getItem() instanceof HammerItem) {
+                itemStack.getItem().useOnBlock(new ItemUsageContext(world, player, hand, itemStack, hit));
+            }
+        }
+
 
         return ActionResult.SUCCESS;
     }

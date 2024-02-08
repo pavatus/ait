@@ -667,7 +667,6 @@ public class TardisTravel extends TardisLink {
             ServerWorld world = (ServerWorld) this.getPosition().getWorld();
             BlockEntity found = world.getBlockEntity(this.getPosition());
 
-            System.out.println(found);
 
             // If there is already a matching exterior at this position
             if (found instanceof ExteriorBlockEntity exterior
