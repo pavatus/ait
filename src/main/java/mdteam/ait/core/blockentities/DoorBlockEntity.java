@@ -43,6 +43,9 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
+        if(!this.hasWorld()) return;
+        if(this.getTardis().isEmpty()) return;
+        this.linkDesktop();
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T tDoor) {

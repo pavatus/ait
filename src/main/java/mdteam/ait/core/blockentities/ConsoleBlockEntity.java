@@ -2,7 +2,6 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
@@ -10,48 +9,42 @@ import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
-import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.TardisDesktop;
 
 import java.util.*;
 
-import static mdteam.ait.tardis.util.TardisUtil.*;
+import static mdteam.ait.tardis.util.TardisUtil.findTardisByInterior;
+import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
     public final AnimationState ANIM_FLIGHT = new AnimationState();
@@ -62,7 +55,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     private Identifier type;
     private Identifier variant;
     private boolean wasPowered = false;
-    private boolean needsReloading = true; // this is to ensure we get properly synced when reloaded yup ( does not work for multipalery : (
+    private boolean needsReloading = true;
 
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
     public static final Identifier SYNC_VARIANT = new Identifier(AITMod.MOD_ID, "sync_console_variant");
@@ -70,6 +63,9 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
+        if(!this.hasWorld()) return;
+        if(this.getTardis().isEmpty()) return;
+        this.linkDesktop();
     }
 
     @Override
@@ -388,8 +384,11 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         if (tardis.getTravel().isCrashing()) {
             ((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
                     pos.getZ() + 0.5f, 1, 0,0,0, 0.025f);
-            ((ServerWorld) world).spawnParticles(ParticleTypes.ELECTRIC_SPARK, pos.getX() + 0.5f, pos.getY() + 1.25,
-                    pos.getZ() + 0.5f, 1, 0,0,0, 0.025f);
+            ((ServerWorld) world).spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX() + 0.5f, pos.getY() + 1.25,
+                    pos.getZ() + 0.5f, 20, 0,0,0, 0.01f);
+            ((ServerWorld) world).spawnParticles(new DustColorTransitionParticleEffect(
+                            new Vector3f(0.75f, 0.75f, 0.75f), new Vector3f(0.1f, 0.1f, 0.1f), 1), pos.getX() + 0.5f, pos.getY() + 1.25,
+                    pos.getZ() + 0.5f, 20, 0,0,0, 0.01f);
         }
         if (tardis.isRefueling()) {
             ((ServerWorld) world).spawnParticles((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD, pos.getX() + 0.5f, pos.getY() + 1.25,
