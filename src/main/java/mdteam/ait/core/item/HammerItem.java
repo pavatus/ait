@@ -19,6 +19,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import java.util.Random;
+
 public class HammerItem extends Item {
     public HammerItem(Settings settings) {
         super(settings);
@@ -34,13 +36,9 @@ public class HammerItem extends Item {
             if (consoleBlockEntity.getTardis().isEmpty()) return ActionResult.PASS;
             Tardis tardis = consoleBlockEntity.getTardis().get();
             if (!(tardis.getTravel().getState() == TardisTravel.State.FLIGHT)) {
-                if(tardis.getTravel().isCrashing()) {
-                    tardis.getTravel().setCrashing(false);
-                    world.playSound(null, consoleBlockEntity.getPos(),
-                            SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS, 1f, 1.0f);
-                    return ActionResult.SUCCESS;
-                }
-                return ActionResult.PASS;
+                world.playSound(null, consoleBlockEntity.getPos(),
+                        SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS, 1f, 1.0f);
+                return ActionResult.SUCCESS;
             }
             FlightData flightData = tardis.getHandlers().getFlight();
             int targetTicks = flightData.getTargetTicks();
@@ -68,7 +66,7 @@ public class HammerItem extends Item {
             }
             tardis.getHandlers().getFuel().setCurrentFuel(current_fuel - estimated_fuel_cost_for_hit);
             tardis.tardisHammerAnnoyance ++;
-            if (tardis.tardisHammerAnnoyance >= 7) {
+            if (shouldCrashTardis(tardis.tardisHammerAnnoyance)) {
                 tardis.getTravel().crash();
             } else {
                 world.playSound(null, consoleBlockEntity.getPos(),
@@ -89,5 +87,18 @@ public class HammerItem extends Item {
             return ActionResult.SUCCESS;
         }
         return ActionResult.PASS;
+    }
+
+    public boolean shouldCrashTardis(int annoyance) {
+        java.util.Random random = new Random();
+        if (annoyance <= 3) {
+            return false;
+        }
+        for (int i = 0; i < annoyance; i++) {
+            if (random.nextInt(0, 10) == 1) {
+                return true;
+            }
+        }
+        return false;
     }
 }
