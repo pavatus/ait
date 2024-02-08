@@ -306,8 +306,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider((((output, registriesFuture) -> {
             AITSoundProvider provider = new AITSoundProvider(output);
 
-            provider.addSound("secret_music", AITSounds.SECRET_MUSIC);
-            provider.addSound("even_more_secret_music", AITSounds.EVEN_MORE_SECRET_MUSIC);
+            // MUSIC
+            provider.addSound("music/secret_music", AITSounds.SECRET_MUSIC);
+            provider.addSound("music/even_more_secret_music", AITSounds.EVEN_MORE_SECRET_MUSIC);
+            provider.addSound("music/drifting_by_radio", AITSounds.DRIFTING_MUSIC);
+
 
             // TARDIS
             provider.addSound("tardis/demat", AITSounds.DEMAT);
