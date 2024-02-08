@@ -2,6 +2,7 @@ package mdteam.ait.tardis.console;
 
 import com.google.gson.*;
 import mdteam.ait.registry.ConsoleRegistry;
+import mdteam.ait.registry.datapack.Identifiable;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.exterior.category.CapsuleCategory;
 import net.minecraft.util.Identifier;
@@ -9,7 +10,7 @@ import net.minecraft.util.InvalidIdentifierException;
 
 import java.lang.reflect.Type;
 
-public abstract class ConsoleSchema {
+public abstract class ConsoleSchema implements Identifiable {
     private final Identifier id;
     private final String name;
 
