@@ -29,9 +29,9 @@ public class ServerPlayerMixin {
 
             if (found == null) return;
             player.setVelocity(0, 0, 0);
+            this.joinInvulnerabilityTicks = 60;
             TardisUtil.teleportInside(found, player);
             player.setVelocity(0, 0, 0);
-            this.joinInvulnerabilityTicks = 60;
         }
     }
 }

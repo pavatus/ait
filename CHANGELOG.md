@@ -2,3 +2,4 @@
 - Fixed hammer giving infinite fuel
 - Fixed crash with hammer
 - Buffed hammer
+- Fixed void saving
