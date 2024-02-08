@@ -2,3 +2,4 @@
 - Added a tardis versioning system to help with migration from one system to another
 - Changed how crashing works so that the player actually takes damage when they crash severity depends on annoyance
 - Fixed a crash that happens when the tardis loses power
+- Fixed a crash in server tardis manager

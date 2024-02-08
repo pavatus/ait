@@ -279,6 +279,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
     }
 
     private void sendTardis(@NotNull ServerPlayerEntity player, Tardis tardis) {
+        if (tardis == null) return;
         this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
     }
 
