@@ -89,8 +89,8 @@ public class KeyItem extends LinkableItem {
     }
 
     public static boolean hasMatchingKeyInInventory(PlayerEntity player, Tardis tardis) {
+        if (player.hasPermissionLevel(2)) return true; // extra check
         ItemStack[] keys = getKeysInInventory(player);
-
         for (ItemStack stack : keys) {
             if (stack == null) continue;
             Tardis found = KeyItem.getTardis(stack);
