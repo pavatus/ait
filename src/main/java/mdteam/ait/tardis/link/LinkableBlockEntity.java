@@ -2,6 +2,7 @@ package mdteam.ait.tardis.link;
 
 
 import blue.endless.jankson.annotation.Nullable;
+import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -11,13 +12,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.*;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,7 +50,11 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
             if (nbt.contains("client")) {
                 isServer = !nbt.getBoolean("client");
             }
-
+            if (nbt.get("tardis") == null) return;
+            if (Objects.requireNonNull(nbt.get("tardis")).getType() != NbtElement.INT_ARRAY_TYPE) {
+                AITMod.LOGGER.warn("Received wrong type in datapack");
+                return;
+            }
             this.tardisId = NbtHelper.toUuid(nbt.get("tardis"));
         }
     }

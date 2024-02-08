@@ -54,6 +54,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
      */
     public static ClientExteriorVariantSchema withParent(ExteriorVariantSchema parent) {
         for (ClientExteriorVariantSchema schema : getInstance().toArrayList()) {
+            if (schema.parent() == null) continue;
             if (schema.parent().id().equals(parent.id())) return schema;
         }
 
