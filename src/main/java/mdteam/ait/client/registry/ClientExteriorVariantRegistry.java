@@ -20,6 +20,8 @@ import mdteam.ait.client.registry.exterior.impl.growth.ClientGrowthVariant;
 import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthFireVariant;
 import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthSoulVariant;
+import mdteam.ait.client.registry.exterior.impl.renegade.ClientRenegadeDefaultVariant;
+import mdteam.ait.client.registry.exterior.impl.renegade.ClientRenegadeVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimFireVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimSoulVariant;
@@ -137,6 +139,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema PLINTH_DEFAULT;
     public static ClientExteriorVariantSchema PLINTH_SOUL;
     public static ClientExteriorVariantSchema PLINTH_FIRE;
+    public static ClientExteriorVariantSchema RENEGADE_DEFAULT;
 
     // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
     public void init() {
@@ -189,5 +192,8 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         PLINTH_DEFAULT = registerStatic(new ClientPlinthDefaultVariant());
         PLINTH_SOUL = registerStatic(new ClientPlinthSoulVariant());
         PLINTH_FIRE = registerStatic(new ClientPlinthFireVariant());
+
+        // Renegade
+        RENEGADE_DEFAULT = registerStatic(new ClientRenegadeDefaultVariant());
     }
 }
