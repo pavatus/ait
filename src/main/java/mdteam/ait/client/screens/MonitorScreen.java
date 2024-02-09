@@ -28,21 +28,24 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.world.chunk.light.LightingProvider;
+import net.minecraft.world.chunk.light.LightingView;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import static mdteam.ait.tardis.TardisTravel.State.FLIGHT;
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 import static mdteam.ait.tardis.data.FuelData.TARDIS_MAX_FUEL;
 
 public class MonitorScreen extends ConsoleScreen {
-    private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
+    private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/monitor_gui.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     private ExteriorCategory category;
     private ClientExteriorVariantSchema currentVariant;
-    int backgroundHeight = 121;//101;
-    int backgroundWidth = 220;//200;
+    int backgroundHeight = 150;
+    int backgroundWidth = 208;
     public MonitorScreen(UUID tardis, UUID console) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis, console);
         this.tardisId = tardis;
@@ -105,30 +108,30 @@ public class MonitorScreen extends ConsoleScreen {
         int j = (this.height - this.backgroundHeight / 2);
         this.buttons.clear();
         // exterior change text button
-        Text applyText = Text.translatable("screen.ait.monitor.apply");
-        this.addButton(new PressableTextWidget((width / 2 - 103), (height / 2 + 12),
-                this.textRenderer.getWidth(applyText), 10, applyText, button -> {
+        Text applyText = Text.literal("Apply");
+        this.addButton(new PressableTextWidget((width / 2 - 67), (height / 2 + 41),
+                this.textRenderer.getWidth(applyText), 10, Text.literal(""), button -> {
             sendExteriorPacket();
         }, this.textRenderer));
-        this.addButton(new PressableTextWidget((width / 2 - 110), (height / 2 - 24),
-                this.textRenderer.getWidth("<"), 10, Text.literal("<"), button -> {
+        this.addButton(new PressableTextWidget((width / 2 - 99), (height / 2 + 37),
+                this.textRenderer.getWidth("<"), 10, Text.literal(""), button -> {
             changeCategory(false);
         }, this.textRenderer));
-        this.addButton(new PressableTextWidget((width / 2 - 76), (height / 2 - 24),
-                this.textRenderer.getWidth(">"), 10, Text.literal(">"), button -> {
+        this.addButton(new PressableTextWidget((width / 2 - 12), (height / 2 + 37),
+                this.textRenderer.getWidth(">"), 10, Text.literal(""), button -> {
             changeCategory(true);
         }, this.textRenderer));
-        this.addButton(new PressableTextWidget((width / 2 - 110), (height / 2 - 14),
-                this.textRenderer.getWidth("<"), 10, Text.literal("<").formatted(Formatting.LIGHT_PURPLE), button -> {
+        this.addButton(new PressableTextWidget((width / 2 - 99), (height / 2 - 37),
+                this.textRenderer.getWidth("<"), 10, Text.literal("").formatted(Formatting.LIGHT_PURPLE), button -> {
             whichDirectionVariant(false);
         }, this.textRenderer));
-        this.addButton(new PressableTextWidget((width / 2 - 76), (height / 2 - 14),
-                this.textRenderer.getWidth(">"), 10, Text.literal(">").formatted(Formatting.LIGHT_PURPLE), button -> {
+        this.addButton(new PressableTextWidget((width / 2 - 12), (height / 2 - 37),
+                this.textRenderer.getWidth(">"), 10, Text.literal("").formatted(Formatting.LIGHT_PURPLE), button -> {
             whichDirectionVariant(true);
         }, this.textRenderer));
-        Text desktopSettingsText = Text.literal("⚙");
-        this.addButton(new PressableTextWidget((width / 2 + 84), (height / 2 - 47),
-                this.textRenderer.getWidth(desktopSettingsText), 10, Text.literal("⚙").formatted(Formatting.WHITE), button -> toInteriorSettingsScreen(), this.textRenderer));
+        Text desktopSettingsText = Text.literal("Settings");
+        this.addButton(new PressableTextWidget((width / 2 - 105), (height / 2 - 66),
+                this.textRenderer.getWidth(desktopSettingsText), 10, Text.literal("Settings").formatted(Formatting.WHITE), button -> toInteriorSettingsScreen(), this.textRenderer));
         this.buttons.forEach(buttons -> {
             // buttons.visible = false;
             buttons.active = true;
@@ -226,37 +229,85 @@ public class MonitorScreen extends ConsoleScreen {
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
+    final int UV_BASE = 159;
+    final int UV_INCREMENT = 17;
+
+    int calculateUvOffsetForRange(int progress) {
+        int rangeProgress = progress % 20;
+        return (rangeProgress / 5) * UV_INCREMENT;
+    }
+
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         int i = (this.width - this.backgroundWidth) / 2;
         int j = ((this.height) - this.backgroundHeight) / 2;
-        context.drawTexture(TEXTURE, i - 8, j + 4, 0, 12, this.backgroundWidth, this.backgroundHeight);
+        context.drawTexture(TEXTURE, i - 8, j + 4, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        // @TODO ive gotta move this to a OwO screen and fix the rendering for the new monitor stuff with the gallifreyan - Loqor
+        // background behind the tardis and gallifreyan text
+        context.getMatrices().push();
+        context.getMatrices().translate(0, 0, -100f);
+        context.drawTexture(TEXTURE, i + 4, j + 32, 80, 180, 93, 76);
+        context.getMatrices().pop();
 
-        /*context.push();
-        context.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(delta * 10), i + 41.5f, j + 41.5f, 0);
-        context.drawTexture(TEXTURE, i, j, 0, 101, 83, 83);
-        context.pop();*/
-        //context.drawTexture(TEXTURE, i + 18, j + 67, 1, 87, 25, 8);
+        // apply button
+        if(!this.buttons.get(0).isHovered()) context.drawTexture(TEXTURE, i + 22, j + 114, 0, 227, 57, 12);
+
+        // around the battery
+        context.drawTexture(TEXTURE, i + 1, j + 129, 0, 150, 99, 15);
+
+        // triangle buttons
+        if(!this.buttons.get(1).isHovered()) context.drawTexture(TEXTURE, i + 3, j + 96, 0, 197, 15, 30);
+        if(!this.buttons.get(2).isHovered()) context.drawTexture(TEXTURE, i + 83, j + 96, 30, 197, 15, 30);
+        if(!this.buttons.get(3).isHovered()) context.drawTexture(TEXTURE, i + 3, j + 31, 45, 197, 15, 30);
+        if(!this.buttons.get(4).isHovered()) context.drawTexture(TEXTURE, i + 83, j + 31, 15, 197, 15, 30);
+
+        // fuel markers @TODO come back and actually do the rest of it with the halves and the red parts too
+        for(int p = 0; p < Math.round((getFromUUID(tardisId).getFuel() / TARDIS_MAX_FUEL) * 12); ++p) {
+            context.drawTexture(TEXTURE, i + 3 + (8 * p), j + 131, 99, 150, 7, 11);
+        }
+
+        // just this whole thing is for the flight
+        if (getFromUUID(tardisId) == null) return;
+
+        int progress = tardis().getHandlers().getFlight().getDurationAsPercentage();
+
+        for (int index = 0; index < 5; index++) {
+            int rangeStart = index * 20;
+            int rangeEnd = (index + 1) * 20;
+
+            int uvOffset;
+            if (progress >= rangeStart && progress <= rangeEnd) {
+                uvOffset = calculateUvOffsetForRange(progress);
+            } else if (progress >= rangeEnd) {
+                uvOffset = 68;
+            } else {
+                uvOffset = UV_BASE;
+            }
+
+            context.drawTexture(TEXTURE, i + 101 + (index * 18), j + 78, tardis().getTravel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
+        }
     }
 
-    protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX) {
+    protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX, float delta) {
         // testing @todo
         if (getFromUUID(tardisId) != null) {
             if (this.getCategory() == null || this.getCurrentVariant() == null) return;
             ExteriorModel model = this.getCurrentVariant().model();
             MatrixStack stack = context.getMatrices();
-            // fixme is bad
+            // @TODO definitely make better in the near future, especially the weird shadow stuff with the exterior
             stack.push();
-            stack.translate(x, this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 8 : y, 100f);
-            if (this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE)) stack.scale(-10, 10, 10);
+            stack.translate(x, this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 11 : y, 100f);
+            if (this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE)) stack.scale(-12, 12, 12);
             else if (this.getCategory() == CategoryRegistry.getInstance().get(BoothCategory.REFERENCE)) stack.scale(-scale, scale, scale);
             else stack.scale(-scale, scale, scale);
-            //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
-            stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(mouseX));
+            stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) MinecraftClient.getInstance().world.getTime() / 300L) * 360.0f));
             DiffuseLighting.disableGuiDepthLighting();
             model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
             DiffuseLighting.enableGuiDepthLighting();
+            stack.pop();
+            stack.push();
+            stack.translate(0, 0, -50f);
+            stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) MinecraftClient.getInstance().world.getTime() / 400L) * 360.0f), x, y, 0);
+            context.drawTexture(TEXTURE, x - 41, y - 41, 173, 173, 83, 83);
             stack.pop();
         }
     }
@@ -274,32 +325,32 @@ public class MonitorScreen extends ConsoleScreen {
         AbsoluteBlockPos.Directed dabpd = getFromUUID(tardisId).getTravel().getDestination();
         if(abpd == null) return;
         if(abpd.getDimension() == null) return;
-        String positionText = "> " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
-        String dimensionText = "> " + convertWorldValueToModified(abpd.getDimension().getValue());
-        String directionText = "> " + abpd.getDirection().toString().toUpperCase();
-        String destinationText = "> " + dabpd.getX() + ", " + dabpd.getY() + ", " + dabpd.getZ();
-        String dDimensionText = "> " + convertWorldValueToModified(dabpd.getDimension().getValue());
-        String dDirectionText = "> " + dabpd.getDirection().toString().toUpperCase();
-        String fuelText = "> " + Math.round((getFromUUID(tardisId).getFuel() / TARDIS_MAX_FUEL) * 100);
-        String flightTimeText = "> " + (tardis().getTravel().getState() == TardisTravel.State.LANDED ? "0" : tardis().getHandlers().getFlight().getDurationAsPercentage());
+        String positionText =  abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
+        String dimensionText = convertWorldValueToModified(abpd.getDimension().getValue());
+        String directionText = abpd.getDirection().toString().toUpperCase();
+        String destinationText = dabpd.getX() + ", " + dabpd.getY() + ", " + dabpd.getZ();
+        String dDimensionText = convertWorldValueToModified(dabpd.getDimension().getValue());
+        String dDirectionText = dabpd.getDirection().toString().toUpperCase();
+        String fuelText = String.valueOf(Math.round((getFromUUID(tardisId).getFuel() / TARDIS_MAX_FUEL) * 100));
+        String flightTimeText = (tardis().getTravel().getState() == TardisTravel.State.LANDED ? "0" : String.valueOf(tardis().getHandlers().getFlight().getDurationAsPercentage()));
         // position
-        context.drawText(this.textRenderer, Text.literal("Position"), (width / 2 - 64), (height / 2 - 46), 5636095, true);
-        context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 - 64), (height / 2 - 36), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(dimensionText), (width / 2 - 64), (height / 2 - 26), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 64), (height / 2 - 16), 0xFFFFFF, true);
+        //context.drawText(this.textRenderer, Text.literal("Position"), (width / 2 - 64), (height / 2 - 46), 5636095, true);
+        context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 + 7), (height / 2 - 36), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(dimensionText), (width / 2 + 7), (height / 2 - 26), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 + 14), (height / 2 - 16), 0xFFFFFF, true);
 
         // destination
-        context.drawText(this.textRenderer, Text.literal("Destination"), (width / 2 - 64), (height / 2 + 14), 5636095, true);
-        context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 64), (height / 2 + 24), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(dDimensionText), (width / 2 - 64), (height / 2 + 34), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 - 64), (height / 2 + 44), 0xFFFFFF, true);
+        //context.drawText(this.textRenderer, Text.literal("Destination"), (width / 2 - 64), (height / 2 + 14), 5636095, true);
+        context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 + 7), (height / 2 + 31), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(dDimensionText), (width / 2 + 7), (height / 2 + 41), 0xFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 + 14), (height / 2 + 51), 0xFFFFFF, true);
 
         // fuel
-        context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.fuel"), (width / 2 - 102), (height / 2 + 28), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(fuelText + "%"), (width / 2 - 108), (height / 2 + 38), 0xFFFFFF, true);
+        //context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.fuel"), (width / 2 - 102), (height / 2 + 28), 0xFFFFFF, true);
+        //context.drawText(this.textRenderer, Text.literal(fuelText + "%"), (width / 2 - 108), (height / 2 + 38), 0xFFFFFF, true);
         // percentage of travel time to destination
-        context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.traveltime"), (width / 2 + 34), (height / 2 + 28), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(flightTimeText + "%"), (width / 2 + 46), (height / 2 + 38), 0xFFFFFF, true);
+        //context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.traveltime"), (width / 2 + 34), (height / 2 + 28), 0xFFFFFF, true);
+        //context.drawText(this.textRenderer, Text.literal(flightTimeText + "%"), (width / 2 + 46), (height / 2 + 38), 0xFFFFFF, true);
     }
 
     @Override
@@ -311,7 +362,7 @@ public class MonitorScreen extends ConsoleScreen {
         float xClamping = mouseX <= 196 && mouseX >= 156 ? MathHelper.clamp((mouseX + this.backgroundWidth / 2), j + 10, j + 50) : 176;
         AITMod.LOGGER.debug((mouseX + this.backgroundWidth / 2) +  " min: " + (j + 10) + ", max: " + (j + 50) + ": is this clamped right = " + xClamping);*/
         // todo manually adjusting all these values are annoying me
-        this.drawTardisExterior(context, (width / 2 - 91), (height / 2 - 19), 15f, 176);
+        this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f, 176, delta);
         this.drawInformationText(context);
         super.render(context, mouseX, mouseY, delta);
     }

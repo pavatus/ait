@@ -47,7 +47,7 @@ public class ToyotaType extends ConsoleTypeSchema {
             new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.1125f, 0.1125f), new Vector3f(0.9117187727242708f, 0.5950000789016485f, -1.1015625288709998f)),
             new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.099999994f, 0.1125f), new Vector3f(-1.5000000223517418f, 0.5749998092651367f, -0.30468748696148396f)),
             new ControlTypes(new PowerControl(), EntityDimensions.changing(0.17500001f, 0.17500001f), new Vector3f(0.37656252086162567f, 0.5875001912936568f, -1.385937511920929f)),
-            new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.20000002f, 0.22500002f), new Vector3f(-1.3062499994412065f, 0.13750028610229492f, -0.7611328354105353f)),
+            new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.20000002f, 0.22500002f), new Vector3f(-0.004687480628490448f, 0.13750028610229492f, 1.5132812839001417f)),
             new ControlTypes(new HADSControl(), EntityDimensions.changing(0.07499999f, 0.17500001f), new Vector3f(-0.09531249571591616f, 0.7624998120591044f, 0.7687500193715096f)),
             new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.07499999f, 0.0875f), new Vector3f(0.18828124087303877f, 0.5750003820285201f, -1.4593750229105353f)),
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.06249999f, 0.112500004f), new Vector3f(0.15078124031424522f, 0.7000003838911653f, -1.0609375154599547f)),
