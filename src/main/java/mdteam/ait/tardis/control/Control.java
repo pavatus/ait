@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.control;
 
+import mdteam.ait.tardis.TardisConsole;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import mdteam.ait.tardis.Tardis;
@@ -52,6 +53,9 @@ public class Control {
     }
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
         return runServer(tardis, player, world);
+    }
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick, TardisConsole console) {
+        return runServer(tardis, player, world, leftClick);
     }
 
     public SoundEvent getSound() {

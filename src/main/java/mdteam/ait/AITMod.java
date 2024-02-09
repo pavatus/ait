@@ -240,9 +240,10 @@ public class AITMod implements ModInitializer {
 
         ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
             Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+            UUID console = buf.readUuid();
             TardisUtil.getServer().execute(() -> {
                 if (tardis == null) return;
-                tardis.getDesktop().cacheConsole();
+                tardis.getDesktop().cacheConsole(console);
             });
         });
 
@@ -268,12 +269,26 @@ public class AITMod implements ModInitializer {
         FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createControlAttributes());
     }
 
-    public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis"); // fixes "AITModClient in env type SERVER"
+    public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
+    public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
+    public static final Identifier OPEN_SCREEN_CONSOLE = new Identifier(AITMod.MOD_ID, "open_screen_console");
 
+    public static void openScreen(ServerPlayerEntity player, int id) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(id);
+        ServerPlayNetworking.send(player, OPEN_SCREEN, buf);
+    }
     public static void openScreen(ServerPlayerEntity player, int id, UUID tardis) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeInt(id);
         buf.writeUuid(tardis);
         ServerPlayNetworking.send(player, OPEN_SCREEN_TARDIS, buf);
+    }
+    public static void openScreen(ServerPlayerEntity player, int id, UUID tardis, UUID console) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(id);
+        buf.writeUuid(tardis);
+        buf.writeUuid(console);
+        ServerPlayNetworking.send(player, OPEN_SCREEN_CONSOLE, buf);
     }
 }

@@ -5,11 +5,13 @@ import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
+import mdteam.ait.tardis.TardisConsole;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -38,6 +40,7 @@ import org.joml.Vector3f;
 import mdteam.ait.tardis.Tardis;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class ConsoleControlEntity extends BaseControlEntity {
@@ -220,7 +223,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
             Tardis tardis = this.getTardis(world);
 
-            if (tardis == null) {
+            if (tardis == null || this.findConsole().isEmpty()) {
                 this.discard();
                 AITMod.LOGGER.warn("Discarding invalid control entity at " + this.getPos());
                 return false;
@@ -246,7 +249,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
             }
             // this.getTardis(world).getHandlers().getSequencing().add(this.control);
 
-            return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, leftClick); // i dont gotta check these cus i know its server
+            return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, leftClick, this.findConsole().get()); // i dont gotta check these cus i know its server
         }
         return false;
     }
@@ -342,6 +345,17 @@ public class ConsoleControlEntity extends BaseControlEntity {
     @Override
     public boolean shouldRenderName() {
         return true;
+    }
+
+    protected @Nullable ConsoleBlockEntity getConsoleBlock() {
+        if (this.consoleBlockPos == null || !(this.getWorld() instanceof ServerWorld world)) return null;
+
+        BlockEntity found = world.getBlockEntity(this.consoleBlockPos);
+
+        return found instanceof ConsoleBlockEntity ? (ConsoleBlockEntity) found : null;
+    }
+    protected Optional<TardisConsole> findConsole() {
+        return (this.getConsoleBlock() == null) ? Optional.empty() : this.getConsoleBlock().findParent();
     }
 
     public void controlEditorHandler(PlayerEntity player) {

@@ -16,7 +16,7 @@ import java.util.UUID;
  */
 public abstract class AbstractTardisComponent {
 
-    private UUID tardisId; // I know Theo would prefer this to be a Tardis class but i dont know how to get it working..
+    protected UUID tardisId; // I know Theo would prefer this to be a Tardis class but i dont know how to get it working..
     private final String id;
 
     public AbstractTardisComponent(Tardis tardis, String id) {

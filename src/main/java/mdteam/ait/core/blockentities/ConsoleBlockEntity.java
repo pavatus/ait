@@ -10,6 +10,7 @@ import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisConsole;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.console.ConsoleSchema;
 import mdteam.ait.tardis.control.ControlTypes;
@@ -27,6 +28,7 @@ import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
@@ -56,9 +58,11 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     private Identifier variant;
     private boolean wasPowered = false;
     private boolean needsReloading = true;
+    private UUID parent;
 
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
     public static final Identifier SYNC_VARIANT = new Identifier(AITMod.MOD_ID, "sync_console_variant");
+    public static final Identifier SYNC_PARENT = new Identifier(AITMod.MOD_ID, "sync_console_parent");
     public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "client_ask_console");
 
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
@@ -74,6 +78,9 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
             nbt.putString("type", type.toString());
         if (variant != null)
             nbt.putString("variant", variant.toString());
+        if (parent != null) {
+            nbt.put("parent", NbtHelper.fromUuid(parent));
+        }
 
         super.writeNbt(nbt);
     }
@@ -86,6 +93,9 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
             setType(Identifier.tryParse(nbt.getString("type")));
         if (nbt.contains("variant")) {
             setVariant(Identifier.tryParse(nbt.getString("variant")));
+        }
+        if (nbt.contains("parent")) {
+            setParent(NbtHelper.toUuid(nbt.getCompound("parent")));
         }
 
         spawnControls();
@@ -137,6 +147,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         if (isClient()) return;
         syncType();
         syncVariant();
+        this.syncParent();
         needsSync = false;
     }
 
@@ -236,6 +247,42 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     }
     public void setVariant(ConsoleVariantSchema schema) {
         setVariant(schema.id());
+    }
+
+    public void setParent(UUID uuid) {
+        this.parent = uuid;
+
+        this.syncParent();
+    }
+    private void syncParent() {
+        if (!hasWorld() || world.isClient() || this.findParent().isEmpty()) return;
+
+        PacketByteBuf buf = PacketByteBufs.create();
+
+        buf.writeUuid(this.parent);
+        buf.writeBlockPos(getPos());
+
+        for (PlayerEntity player : world.getPlayers()) {
+            ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_PARENT, buf); // safe cast as we know its server
+        }
+    }
+    public Optional<TardisConsole> findParent() {
+        if (this.getTardis().isEmpty()) return Optional.empty();
+
+        TardisDesktop desktop = this.getDesktop();
+
+        if (this.parent == null) {
+            TardisConsole found = desktop.findConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
+
+            if (found == null) {
+                found = new TardisConsole(this.getTardis().get(), new AbsoluteBlockPos(this.getPos(), this.getWorld()));
+                desktop.addConsole(found);
+            }
+
+            this.setParent(found.uuid());
+        }
+
+        return Optional.ofNullable(desktop.findConsole(this.parent));
     }
 
     /**

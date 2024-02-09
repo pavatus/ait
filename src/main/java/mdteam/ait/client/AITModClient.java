@@ -64,9 +64,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.UUID;
+
+import static mdteam.ait.AITMod.*;
 
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
@@ -74,8 +77,6 @@ public class AITModClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
 
     private final Identifier PORTAL_EFFECT_SHADER = new Identifier(AITMod.MOD_ID, "shaders/core/portal_effect.json");
-    public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
-    public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
 
     @Override
     public void onInitializeClient() {
@@ -107,7 +108,17 @@ public class AITModClient implements ClientModInitializer {
                     Screen screen = screenFromId(id, uuid);
                     if (screen == null) return;
                     MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
-                });
+        });
+        ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN_CONSOLE, (client, handler, buf, responseSender) -> {
+            int id = buf.readInt();
+            UUID tardis = buf.readUuid();
+            UUID console = buf.readUuid();
+
+            Screen screen = screenFromId(id, tardis, console);
+            if (screen == null) return;
+
+            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
+        });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
             if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
@@ -123,6 +134,13 @@ public class AITModClient implements ClientModInitializer {
             Identifier id = Identifier.tryParse(buf.readString());
             BlockPos consolePos = buf.readBlockPos();
             if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setVariant(id);
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_PARENT, (client, handler, buf, responseSender) -> {
+            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+            UUID uuid = buf.readUuid();
+            BlockPos consolePos = buf.readBlockPos();
+            if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setParent(uuid);
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
@@ -200,15 +218,18 @@ public class AITModClient implements ClientModInitializer {
      * This is for screens without a tardis
      */
     public static Screen screenFromId(int id) {
-        return screenFromId(id, null);
+        return screenFromId(id, null, null);
     }
 
-    public static Screen screenFromId(int id, UUID tardis) {
+    public static Screen screenFromId(int id, @Nullable UUID tardis) {
+        return screenFromId(id, tardis, null);
+    }
+    public static Screen screenFromId(int id, @Nullable UUID tardis, @Nullable UUID console) {
         return switch (id) {
             default -> null;
-            case 0 -> new MonitorScreen(tardis); // todo new OwoMonitorScreen(tardis); god rest ye merry gentlemen
+            case 0 -> new MonitorScreen(tardis, console); // todo new OwoMonitorScreen(tardis); god rest ye merry gentlemen
             case 1 -> null;
-            case 2 -> new OwOInteriorSelectScreen(tardis, new MonitorScreen(tardis));
+            case 2 -> new OwOInteriorSelectScreen(tardis, new MonitorScreen(tardis, console));
         };
     }
 

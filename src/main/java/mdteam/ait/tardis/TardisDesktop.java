@@ -27,15 +27,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TardisDesktop extends TardisLink {
     public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
     private TardisDesktopSchema schema;
     private AbsoluteBlockPos.Directed doorPos;
     private AbsoluteBlockPos.Directed consolePos;
+    private List<TardisConsole> consoles;
     private final Corners corners;
 
     public TardisDesktop(Tardis tardis, TardisDesktopSchema schema) {
@@ -100,11 +103,46 @@ public class TardisDesktop extends TardisLink {
         }
     }
 
+    @Deprecated(forRemoval = true)
     public AbsoluteBlockPos.Directed getConsolePos() {
         if (consolePos == null && this.getTardis().isPresent()) linkToInteriorBlocks();
 
         return consolePos;
     }
+
+    public List<TardisConsole> getConsoles() {
+        if (this.consoles == null) {
+            this.consoles = new ArrayList<>();
+        }
+
+        return this.consoles;
+    }
+    public void addConsole(TardisConsole console) {
+        this.consoles.add(console);
+        this.sync();
+    }
+    public void removeConsole(TardisConsole console) {
+        this.consoles.remove(console);
+        this.sync();
+    }
+
+    public @Nullable TardisConsole findConsole(AbsoluteBlockPos position) {
+        for (TardisConsole console : getConsoles()) {
+            if (console.position().equals(position)) {
+                return console;
+            }
+        }
+        return null;
+    }
+    public @Nullable TardisConsole findConsole(UUID uuid) {
+        for (TardisConsole console : getConsoles()) {
+            if (console.uuid().equals(uuid)) {
+                return console;
+            }
+        }
+        return null;
+    }
+
     public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
         // before we do this we need to make sure to delete the old portals, but how?! by registering to this event
         if(getTardis().isPresent())
@@ -113,6 +151,7 @@ public class TardisDesktop extends TardisLink {
         this.doorPos = pos;
     }
 
+    @Deprecated(forRemoval = true)
     public void setConsolePos(AbsoluteBlockPos.Directed pos) {
         this.consolePos = pos;
         this.sync();
@@ -152,17 +191,23 @@ public class TardisDesktop extends TardisLink {
         DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
 //        this.clearInteriorEntities();
     }
-    public void cacheConsole() {
-        if(this.getConsolePos() == null) return;
+    public void cacheConsole(UUID consoleId) {
+        if(this.getConsoles().isEmpty()) return;
         ServerWorld dim = (ServerWorld) TardisUtil.getTardisDimension();
 
-        dim.playSound(null, this.getConsolePos(), SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.BLOCKS, 0.5f, 1.0f);
+        TardisConsole console = this.findConsole(consoleId);
 
-        ConsoleGeneratorBlockEntity generator = new ConsoleGeneratorBlockEntity(this.getConsolePos(), AITBlocks.CONSOLE_GENERATOR.getDefaultState());
+        if (console == null) return;
+
+        AbsoluteBlockPos consolePos = console.position();
+
+        dim.playSound(null, consolePos, SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.BLOCKS, 0.5f, 1.0f);
+
+        ConsoleGeneratorBlockEntity generator = new ConsoleGeneratorBlockEntity(consolePos, AITBlocks.CONSOLE_GENERATOR.getDefaultState());
 
         // todo the console is always null
-        if(dim.getBlockEntity(this.getConsolePos()) instanceof ConsoleBlockEntity console) {
-            console.killControls();
+        if(dim.getBlockEntity(consolePos) instanceof ConsoleBlockEntity entity) {
+            entity.killControls();
 
             // todo this doesnt send to client or something
             // generator.changeConsole(console.getVariant());
@@ -170,14 +215,14 @@ public class TardisDesktop extends TardisLink {
             // generator.markDirty();
         }
 
-        dim.removeBlock(this.getConsolePos(), false);
-        dim.removeBlockEntity(this.getConsolePos());
+        dim.removeBlock(consolePos, false);
+        dim.removeBlockEntity(consolePos);
 
 
-        dim.setBlockState(this.getConsolePos(), AITBlocks.CONSOLE_GENERATOR.getDefaultState(), Block.NOTIFY_ALL);
+        dim.setBlockState(consolePos, AITBlocks.CONSOLE_GENERATOR.getDefaultState(), Block.NOTIFY_ALL);
         dim.addBlockEntity(generator);
 
-        this.setConsolePos(null);
+        this.removeConsole(console);
     }
 
 

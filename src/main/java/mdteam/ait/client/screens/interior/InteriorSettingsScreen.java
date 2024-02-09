@@ -1,6 +1,7 @@
 package mdteam.ait.client.screens.interior;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.screens.ConsoleScreen;
 import mdteam.ait.client.screens.TardisScreen;
 import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.registry.HumsRegistry;
@@ -22,7 +23,7 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 import java.util.UUID;
 
-public class InteriorSettingsScreen extends TardisScreen {
+public class InteriorSettingsScreen extends ConsoleScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/interior_settings.png");
     int bgHeight = 166;
     int bgWidth = 256;
@@ -34,8 +35,8 @@ public class InteriorSettingsScreen extends TardisScreen {
     private TardisDesktopSchema selectedDesktop;
 
     // loqor DONT rewrite with owo lib : (
-    public InteriorSettingsScreen(UUID tardis, Screen parent) {
-        super(Text.translatable("screen.ait.interiorsettings.title"), tardis);
+    public InteriorSettingsScreen(UUID tardis, UUID console, Screen parent) {
+        super(Text.translatable("screen.ait.interiorsettings.title"), tardis, console);
         this.parent = parent;
         updateTardis();
     }
@@ -57,7 +58,10 @@ public class InteriorSettingsScreen extends TardisScreen {
     }
     private void sendCachePacket() {
         PacketByteBuf buf = PacketByteBufs.create();
+
         buf.writeUuid(this.tardis().getUuid());
+        buf.writeUuid(this.findConsole().uuid());
+
         ClientPlayNetworking.send(TardisDesktop.CACHE_CONSOLE, buf);
         this.close();
     }

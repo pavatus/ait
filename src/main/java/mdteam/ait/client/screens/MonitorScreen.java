@@ -36,15 +36,15 @@ import java.util.UUID;
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 import static mdteam.ait.tardis.data.FuelData.TARDIS_MAX_FUEL;
 
-public class MonitorScreen extends TardisScreen {
+public class MonitorScreen extends ConsoleScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     private ExteriorCategory category;
     private ClientExteriorVariantSchema currentVariant;
     int backgroundHeight = 121;//101;
     int backgroundWidth = 220;//200;
-    public MonitorScreen(UUID tardis) {
-        super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis);
+    public MonitorScreen(UUID tardis, UUID console) {
+        super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis, console);
         this.tardisId = tardis;
         //AITMod.LOGGER.debug("@#!@@!: " + tardis + " | " + ClientTardisManager.getInstance().getLookup());
     }
@@ -147,7 +147,7 @@ public class MonitorScreen extends TardisScreen {
 
     public void toInteriorSettingsScreen() {
         if (tardis() == null || tardis().isGrowth()) return;
-        MinecraftClient.getInstance().setScreenAndRender(new InteriorSettingsScreen(this.tardisId, this));
+        MinecraftClient.getInstance().setScreenAndRender(new InteriorSettingsScreen(this.tardisId, this.console, this));
     }
 
     public void changeCategory(boolean direction) {

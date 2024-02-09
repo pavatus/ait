@@ -24,7 +24,7 @@ public abstract class TardisScreen extends Screen {
     }
 
     protected Tardis updateTardis() {
-        ClientTardisManager.getInstance().ask(this.tardisId);
+        ClientTardisManager.getInstance().loadTardis(this.tardisId, (t) -> {});
         return tardis();
     }
 }
