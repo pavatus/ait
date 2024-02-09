@@ -7,9 +7,7 @@ import mdteam.ait.client.renderers.monitors.MonitorRenderer;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import mdteam.ait.core.item.RiftScannerItem;
-import mdteam.ait.registry.CategoryRegistry;
-import mdteam.ait.registry.DesktopRegistry;
-import mdteam.ait.registry.ExteriorVariantRegistry;
+import mdteam.ait.registry.*;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.ClientDoorRegistry;
@@ -30,9 +28,8 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.core.item.WaypointItem;
-import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.console.ConsoleSchema;
+import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.api.ClientModInitializer;
@@ -85,8 +82,8 @@ public class AITModClient implements ClientModInitializer {
         waypointPredicate();
         setKeyBinding();
 
-        ClientExteriorVariantRegistry.getInstance().init(); // this may cause init to be called twice
-        ClientConsoleVariantRegistry.init();
+        ClientExteriorVariantRegistry.getInstance().init();
+        ClientConsoleVariantRegistry.getInstance().init();
         ClientDoorRegistry.init();
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
@@ -121,7 +118,7 @@ public class AITModClient implements ClientModInitializer {
             if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
 
             String id = buf.readString();
-            ConsoleSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
+            ConsoleTypeSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
             BlockPos consolePos = buf.readBlockPos();
             if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setType(type);
         });
@@ -144,7 +141,7 @@ public class AITModClient implements ClientModInitializer {
             if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
 
             String id = buf.readString();
-            ConsoleSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
+            ConsoleTypeSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
             BlockPos consolePos = buf.readBlockPos();
             if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console) console.setConsoleSchema(type.id());
         });
@@ -188,6 +185,13 @@ public class AITModClient implements ClientModInitializer {
 
             ClientExteriorVariantRegistry.getInstance().readFromServer(buf);
             ExteriorVariantRegistry.getInstance().readFromServer(copy);
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ConsoleVariantRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
+            PacketByteBuf copy = PacketByteBufs.copy(buf);
+
+            ClientConsoleVariantRegistry.getInstance().readFromServer(buf);
+            ConsoleVariantRegistry.getInstance().readFromServer(copy);
         });
 
         ClientPlayNetworking.registerGlobalReceiver(CategoryRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {

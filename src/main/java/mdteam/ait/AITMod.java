@@ -75,15 +75,15 @@ public class AITMod implements ModInitializer {
     public void onInitialize() {
         AIT_CUSTOM_CONFIG.init(MOD_ID);
         ConsoleRegistry.init();
-        DesktopRegistry.getInstance().init(); // this may cause init to be called twice
-        CategoryRegistry.getInstance().init(); // this may cause init to be called twice
+        DesktopRegistry.getInstance().init();
+        CategoryRegistry.getInstance().init();
         HumsRegistry.init();
         CreakRegistry.init();
         SequenceRegistry.init();
 
         // These 3 have client registries which also need registering to.
-        ConsoleVariantRegistry.init();
-        ExteriorVariantRegistry.getInstance().init(); // this may cause init to be called twice
+        ConsoleVariantRegistry.getInstance().init();
+        ExteriorVariantRegistry.getInstance().init();
         DoorRegistry.init();
 
         NeptuneInitHandler.register(AITItems.class, MOD_ID);
@@ -233,6 +233,7 @@ public class AITMod implements ModInitializer {
             DesktopRegistry.getInstance().syncToClient(handler.getPlayer());
             CategoryRegistry.getInstance().syncToClient(handler.getPlayer());
             ExteriorVariantRegistry.getInstance().syncToClient(handler.getPlayer());
+            ConsoleVariantRegistry.getInstance().syncToClient(handler.getPlayer());
 
             ServerTardisManager.getInstance().onPlayerJoin(handler.getPlayer());
         });

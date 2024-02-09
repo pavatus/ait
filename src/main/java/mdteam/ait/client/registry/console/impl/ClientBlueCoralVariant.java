@@ -4,8 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.CoralConsoleModel;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
-import mdteam.ait.tardis.variant.console.BlueCoralVariant;
-import mdteam.ait.tardis.variant.console.HartnellVariant;
+import mdteam.ait.tardis.console.variant.coral.BlueCoralVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientBlueCoralVariant extends ClientConsoleVariantSchema {

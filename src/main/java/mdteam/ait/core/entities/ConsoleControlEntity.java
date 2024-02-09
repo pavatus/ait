@@ -6,7 +6,7 @@ import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
 import mdteam.ait.tardis.TardisConsole;
-import mdteam.ait.tardis.console.ConsoleSchema;
+import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.control.impl.SecurityControl;
@@ -282,7 +282,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
             return super.getName();
     }
 
-    public void setControlData(ConsoleSchema consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
+    public void setControlData(ConsoleTypeSchema consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
         this.consoleBlockPos = consoleBlockPosition;
         this.control = type.getControl();
         // System.out.println(type);

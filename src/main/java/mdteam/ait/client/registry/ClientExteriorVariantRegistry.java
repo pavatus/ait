@@ -24,7 +24,7 @@ import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimDefaultVarian
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimFireVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimSoulVariant;
 import mdteam.ait.registry.DatapackRegistry;
-import mdteam.ait.tardis.exterior.variant.DatapackVariant;
+import mdteam.ait.tardis.exterior.variant.DatapackExterior;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -76,13 +76,13 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         if (size == 0) return;
 
         for (int i = 0; i < size; i++) {
-            this.register(convertDatapack(buf.decodeAsJson(DatapackVariant.CODEC)));
+            this.register(convertDatapack(buf.decodeAsJson(DatapackExterior.CODEC)));
         }
 
-        AITMod.LOGGER.info("Read {} variants from server", size);
+        AITMod.LOGGER.info("Read {} exterior variants from server", size);
     }
 
-    public static ClientExteriorVariantSchema convertDatapack(DatapackVariant variant) {
+    public static ClientExteriorVariantSchema convertDatapack(DatapackExterior variant) {
         if (!variant.wasDatapack()) return convertNonDatapack(variant);
         return new ClientExteriorVariantSchema(variant.id()) {
             @Override
@@ -101,7 +101,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
             }
         };
     }
-    private static ClientExteriorVariantSchema convertNonDatapack(DatapackVariant variant) {
+    private static ClientExteriorVariantSchema convertNonDatapack(DatapackExterior variant) {
         if (variant.wasDatapack()) return convertDatapack(variant);
 
         return getInstance().get(variant.id());

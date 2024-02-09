@@ -1,32 +1,111 @@
 package mdteam.ait.client.registry;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.models.consoles.ConsoleModel;
+import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
 import mdteam.ait.client.registry.console.impl.*;
-import mdteam.ait.tardis.variant.console.*;
+import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
+import mdteam.ait.registry.DatapackRegistry;
+import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
+import mdteam.ait.tardis.console.variant.DatapackConsole;
+import mdteam.ait.tardis.exterior.variant.DatapackExterior;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class ClientConsoleVariantRegistry {
-    public static final SimpleRegistry<ClientConsoleVariantSchema> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<ClientConsoleVariantSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "client_console_variant"))).buildAndRegister();
-    public static ClientConsoleVariantSchema register(ClientConsoleVariantSchema schema) {
-        return Registry.register(REGISTRY, schema.id(), schema);
+public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsoleVariantSchema> {
+    private static ClientConsoleVariantRegistry INSTANCE;
+
+    public static ClientConsoleVariantSchema registerStatic(ClientConsoleVariantSchema schema) {
+        return getInstance().register(schema);
+    }
+
+    public static DatapackRegistry<ClientConsoleVariantSchema> getInstance() {
+        if (INSTANCE == null) {
+            AITMod.LOGGER.info("ClientConsoleVariantRegistry was not initialized, Creating a new instance");
+            INSTANCE = new ClientConsoleVariantRegistry();
+            INSTANCE.init();
+        }
+
+        return INSTANCE;
     }
 
     /**
-     * Will return the clients version of a servers console variant
+     * Will return the clients version of a servers door variant
      * @param parent
      * @return the first variant found as there should only be one client version
      */
     public static ClientConsoleVariantSchema withParent(ConsoleVariantSchema parent) {
-        for (ClientConsoleVariantSchema schema : REGISTRY) {
-            if (schema.parent().equals(parent)) return schema;
+        for (ClientConsoleVariantSchema schema : getInstance().toArrayList()) {
+            if (schema.parent() == null) continue;
+            if (schema.parent().id().equals(parent.id())) return schema;
         }
 
         return null;
+    }
+
+    public static ClientConsoleVariantSchema withSameParent(ClientConsoleVariantSchema schema) {
+        for (ClientConsoleVariantSchema s : getInstance().toArrayList()) {
+            if (s.parent() == null) continue;
+            if (schema.equals(s)) continue;
+            if (s.parent().parent().id().equals(schema.parent().parent().id())) return s;
+        }
+
+        return null;
+    }
+
+    /**
+     * Do not call
+     */
+    @Override
+    public void syncToClient(ServerPlayerEntity player) {
+
+    }
+
+    @Override
+    public void readFromServer(PacketByteBuf buf) {
+        int size = buf.readInt();
+
+        if (size == 0) return;
+
+        for (int i = 0; i < size; i++) {
+            this.register(convertDatapack(buf.decodeAsJson(DatapackConsole.CODEC)));
+        }
+
+        AITMod.LOGGER.info("Read {} console variants from server", size);
+
+        getInstance().toList().forEach(s -> System.out.println(s.texture()));
+    }
+
+    public static ClientConsoleVariantSchema convertDatapack(DatapackConsole variant) {
+        if (!variant.wasDatapack()) return convertNonDatapack(variant);
+        return new ClientConsoleVariantSchema(variant.id()) {
+            @Override
+            public Identifier texture() {
+                return variant.texture();
+            }
+
+            @Override
+            public Identifier emission() {
+                return variant.emission();
+            }
+
+            @Override
+            public ConsoleModel model() {
+                return withSameParent(this).model();
+            }
+        };
+    }
+    private static ClientConsoleVariantSchema convertNonDatapack(DatapackConsole variant) {
+        if (variant.wasDatapack()) return convertDatapack(variant);
+
+        return getInstance().get(variant.id());
     }
 
     //public static ClientConsoleVariantSchema BOREALIS;
@@ -45,7 +124,7 @@ public class ClientConsoleVariantRegistry {
     public static ClientConsoleVariantSchema STEAM;
     public static ClientConsoleVariantSchema STEAM_CHERRY;
 
-    public static void init() {
+    public void init() {
         // Borealis variants
         //BOREALIS = register(new ClientBorealisVariant());
         //AUTUMN = register(new ClientAutumnVariant());

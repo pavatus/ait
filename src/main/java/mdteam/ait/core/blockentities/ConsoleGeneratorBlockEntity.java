@@ -3,28 +3,18 @@ package mdteam.ait.core.blockentities;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITBlocks;
-import mdteam.ait.core.blocks.ConsoleGeneratorBlock;
-import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
-import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.TardisDesktop;
-import mdteam.ait.tardis.console.ConsoleSchema;
-import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.EndCrystalItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -40,12 +30,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.UUID;
-
 import static mdteam.ait.core.blockentities.ConsoleBlockEntity.nextConsole;
 import static mdteam.ait.core.blockentities.ConsoleBlockEntity.nextVariant;
-import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class ConsoleGeneratorBlockEntity extends BlockEntity {
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_gen_type");
@@ -106,7 +92,7 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
         world.playSound(null, this.pos, SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 0.5f, 1.0f);
     }
 
-    public ConsoleSchema getConsoleSchema() {
+    public ConsoleTypeSchema getConsoleSchema() {
         if (type == null) {
             this.setConsoleSchema(ConsoleRegistry.HARTNELL.id());
         }
@@ -124,10 +110,10 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 
     public ConsoleVariantSchema getConsoleVariant() {
         if (variant == null) {
-            this.variant = ConsoleVariantRegistry.withParent(this.getConsoleSchema()).get(0).id();
+            this.variant = ConsoleVariantRegistry.withParentToList(this.getConsoleSchema()).get(0).id();
         }
 
-        return ConsoleVariantRegistry.REGISTRY.get(this.variant);
+        return ConsoleVariantRegistry.getInstance().get(this.variant);
     }
     public void setVariant(Identifier variant) {
         this.variant = variant;
@@ -137,9 +123,9 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
         this.getWorld().updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
     }
 
-    public void changeConsole(ConsoleSchema schema) {
+    public void changeConsole(ConsoleTypeSchema schema) {
         this.setConsoleSchema(schema.id());
-        this.setVariant(ConsoleVariantRegistry.withParent(schema).get(0).id());
+        this.setVariant(ConsoleVariantRegistry.withParentToList(schema).get(0).id());
     }
     public void changeConsole(ConsoleVariantSchema schema) {
         this.setConsoleSchema(schema.parent().id());

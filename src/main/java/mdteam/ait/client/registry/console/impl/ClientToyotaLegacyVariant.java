@@ -4,8 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.ToyotaConsoleModel;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
-import mdteam.ait.tardis.variant.console.ToyotaBlueVariant;
-import mdteam.ait.tardis.variant.console.ToyotaLegacyVariant;
+import mdteam.ait.tardis.console.variant.toyota.ToyotaLegacyVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientToyotaLegacyVariant extends ClientConsoleVariantSchema {

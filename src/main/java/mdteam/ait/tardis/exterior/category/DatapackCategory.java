@@ -6,8 +6,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mdteam.ait.AITMod;
-import mdteam.ait.tardis.exterior.variant.DatapackVariant;
-import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;

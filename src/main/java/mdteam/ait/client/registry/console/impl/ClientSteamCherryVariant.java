@@ -4,8 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.SteamConsoleModel;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
-import mdteam.ait.tardis.variant.console.SteamCherryVariant;
-import mdteam.ait.tardis.variant.console.SteamVariant;
+import mdteam.ait.tardis.console.variant.steam.SteamCherryVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientSteamCherryVariant extends ClientConsoleVariantSchema {

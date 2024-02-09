@@ -6,12 +6,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.events.BlockEntityPreLoadEvent;
-import mdteam.ait.tardis.console.ConsoleSchema;
+import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import mdteam.ait.tardis.exterior.category.ExteriorCategory;
 import mdteam.ait.tardis.link.Linkable;
 import mdteam.ait.tardis.util.Corners;
 import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
+import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -53,7 +53,7 @@ public abstract class TardisManager<T extends Tardis> {
                 .registerTypeAdapter(ExteriorVariantSchema.class, ExteriorVariantSchema.serializer())
                 .registerTypeAdapter(DoorSchema.class, DoorSchema.serializer())
                 .registerTypeAdapter(ExteriorCategory.class, ExteriorCategory.serializer())
-                .registerTypeAdapter(ConsoleSchema.class, ConsoleSchema.serializer())
+                .registerTypeAdapter(ConsoleTypeSchema.class, ConsoleTypeSchema.serializer())
                 .registerTypeAdapter(ConsoleVariantSchema.class, ConsoleVariantSchema.serializer())
                 .registerTypeAdapter(Corners.class, Corners.serializer());
         builder = this.getGsonBuilder(builder);

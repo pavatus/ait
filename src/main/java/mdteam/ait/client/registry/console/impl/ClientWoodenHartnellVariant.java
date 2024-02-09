@@ -4,7 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.HartnellConsoleModel;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
-import mdteam.ait.tardis.variant.console.WoodenHartnellVariant;
+import mdteam.ait.tardis.console.variant.hartnell.WoodenHartnellVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientWoodenHartnellVariant extends ClientConsoleVariantSchema {

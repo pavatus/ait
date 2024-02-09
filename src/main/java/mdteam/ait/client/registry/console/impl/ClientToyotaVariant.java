@@ -2,11 +2,9 @@ package mdteam.ait.client.registry.console.impl;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ConsoleModel;
-import mdteam.ait.client.models.consoles.CopperConsoleModel;
 import mdteam.ait.client.models.consoles.ToyotaConsoleModel;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
-import mdteam.ait.tardis.variant.console.CopperVariant;
-import mdteam.ait.tardis.variant.console.ToyotaVariant;
+import mdteam.ait.tardis.console.variant.toyota.ToyotaVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientToyotaVariant extends ClientConsoleVariantSchema {

@@ -3,9 +3,12 @@ package mdteam.ait.tardis;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.TardisItemBuilder;
+import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.tardis.exterior.category.ExteriorCategory;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import mdteam.ait.tardis.wrapper.client.ClientTardis;
+import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.entity.BlockEntity;
 
 import java.util.Optional;
@@ -24,6 +27,10 @@ public class TardisExterior extends TardisLink {
         if (exterior == null) {
             AITMod.LOGGER.error("Exterior Category was null! Changing to a random one.."); // AHH PANIC AGAIN
             setType(TardisItemBuilder.findRandomExterior());
+
+            //if (this.findTardis().isPresent() && this.findTardis().get() instanceof ClientTardis) {
+            //    ClientTardisManager.getInstance().loadTardis(this.findTardis().get().getUuid(), t -> {});
+            //}
         }
 
         return exterior;

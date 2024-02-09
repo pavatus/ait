@@ -2,19 +2,17 @@ package mdteam.ait.registry.owo;
 
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import mdteam.ait.registry.ConsoleRegistry;
-import mdteam.ait.tardis.console.ConsoleSchema;
-import net.minecraft.registry.Registries;
+import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundEvent;
 
-public interface ConsoleRegistryContainer extends AutoRegistryContainer<ConsoleSchema> {
+public interface ConsoleRegistryContainer extends AutoRegistryContainer<ConsoleTypeSchema> {
     @Override
-    default Registry<ConsoleSchema> getRegistry() {
+    default Registry<ConsoleTypeSchema> getRegistry() {
         return ConsoleRegistry.REGISTRY;
     }
 
     @Override
-    default Class<ConsoleSchema> getTargetFieldType() {
-        return ConsoleSchema.class;
+    default Class<ConsoleTypeSchema> getTargetFieldType() {
+        return ConsoleTypeSchema.class;
     }
 }

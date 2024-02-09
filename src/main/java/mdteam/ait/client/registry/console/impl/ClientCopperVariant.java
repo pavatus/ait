@@ -3,10 +3,8 @@ package mdteam.ait.client.registry.console.impl;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.CopperConsoleModel;
-import mdteam.ait.client.models.consoles.HartnellConsoleModel;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
-import mdteam.ait.tardis.variant.console.CopperVariant;
-import mdteam.ait.tardis.variant.console.HartnellVariant;
+import mdteam.ait.tardis.console.variant.copper.CopperVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientCopperVariant extends ClientConsoleVariantSchema {

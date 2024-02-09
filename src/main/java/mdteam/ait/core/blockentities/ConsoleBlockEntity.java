@@ -11,12 +11,12 @@ import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisConsole;
 import mdteam.ait.tardis.TardisDesktop;
-import mdteam.ait.tardis.console.ConsoleSchema;
+import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
+import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -205,7 +205,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         return this.findTardis().get().getDesktop();
     }
 
-    public ConsoleSchema getConsoleSchema() {
+    public ConsoleTypeSchema getConsoleSchema() {
         if (type == null) setType(ConsoleRegistry.HARTNELL);
 
         return ConsoleRegistry.REGISTRY.get(type);
@@ -217,7 +217,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         syncType();
         markDirty();
     }
-    public void setType(ConsoleSchema schema) {
+    public void setType(ConsoleTypeSchema schema) {
         setType(schema.id());
     }
 
@@ -229,7 +229,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
             setVariant(ConsoleVariantRegistry.withParent(getConsoleSchema()).stream().findAny().get());
         }
 
-        return ConsoleVariantRegistry.REGISTRY.get(variant);
+        return ConsoleVariantRegistry.getInstance().get(variant);
     }
     public void setVariant(Identifier var) {
         variant = var;
@@ -285,13 +285,13 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     }
 
     /**
-     * Sets the new {@link ConsoleSchema} and refreshes the console entities
+     * Sets the new {@link ConsoleTypeSchema} and refreshes the console entities
      */
-    private void changeConsole(ConsoleSchema var) {
+    private void changeConsole(ConsoleTypeSchema var) {
         changeConsole(var, ConsoleVariantRegistry.withParent(var).stream().findAny().get());
     }
 
-    private void changeConsole(ConsoleSchema var, ConsoleVariantSchema variant) {
+    private void changeConsole(ConsoleTypeSchema var, ConsoleVariantSchema variant) {
         setType(var);
         setVariant(variant);
 
@@ -304,15 +304,15 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         markNeedsControl();
     }
 
-    public static ConsoleSchema nextConsole(ConsoleSchema current) {
-        List<ConsoleSchema> list = ConsoleRegistry.REGISTRY.stream().toList();
+    public static ConsoleTypeSchema nextConsole(ConsoleTypeSchema current) {
+        List<ConsoleTypeSchema> list = ConsoleRegistry.REGISTRY.stream().toList();
 
         int idx = list.indexOf(current);
         if (idx < 0 || idx+1 == list.size()) return list.get(0);
         return list.get(idx + 1);
     }
     public static ConsoleVariantSchema nextVariant(ConsoleVariantSchema current) {
-        List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParent(current.parent());
+        List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParentToList(current.parent());
 
         int idx = list.indexOf(current);
         if (idx < 0 || idx+1 == list.size()) return list.get(0);
@@ -368,7 +368,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
             return;
 
         killControls();
-        ConsoleSchema consoleType = getConsoleSchema();
+        ConsoleTypeSchema consoleType = getConsoleSchema();
         ControlTypes[] controls = consoleType.getControlTypes();
         Arrays.stream(controls).toList().forEach(control -> {
 

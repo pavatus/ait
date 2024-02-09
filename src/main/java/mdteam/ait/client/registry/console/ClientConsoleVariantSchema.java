@@ -4,8 +4,9 @@ import com.google.gson.*;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
-import mdteam.ait.tardis.variant.console.ConsoleVariantSchema;
-import mdteam.ait.tardis.variant.console.HartnellVariant;
+import mdteam.ait.registry.datapack.Identifiable;
+import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
+import mdteam.ait.tardis.console.variant.hartnell.HartnellVariant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
@@ -14,7 +15,7 @@ import net.minecraft.util.InvalidIdentifierException;
 import java.lang.reflect.Type;
 
 @Environment(EnvType.CLIENT)
-public abstract class ClientConsoleVariantSchema {
+public abstract class ClientConsoleVariantSchema implements Identifiable {
     private final Identifier parent;
     private final Identifier id;
 
@@ -37,7 +38,7 @@ public abstract class ClientConsoleVariantSchema {
         return id.equals(that.id);
     }
 
-    public ConsoleVariantSchema parent() { return ConsoleVariantRegistry.REGISTRY.get(this.parent); }
+    public ConsoleVariantSchema parent() { return ConsoleVariantRegistry.getInstance().get(this.parent); }
     public Identifier id() { return id; }
     public abstract Identifier texture();
     public abstract Identifier emission();
@@ -60,7 +61,7 @@ public abstract class ClientConsoleVariantSchema {
                 id = HartnellVariant.REFERENCE;
             }
 
-            return ClientConsoleVariantRegistry.REGISTRY.get(id);
+            return ClientConsoleVariantRegistry.getInstance().get(id);
         }
 
         @Override

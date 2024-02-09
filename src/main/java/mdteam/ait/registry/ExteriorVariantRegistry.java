@@ -70,8 +70,8 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeInt(REGISTRY.size());
         for (ExteriorVariantSchema schema : REGISTRY.values()) {
-            if (schema instanceof DatapackVariant variant) {
-                buf.encodeAsJson(DatapackVariant.CODEC, variant);
+            if (schema instanceof DatapackExterior variant) {
+                buf.encodeAsJson(DatapackExterior.CODEC, variant);
                 continue;
             }
             if (schema.category() == null) {
@@ -79,7 +79,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
                 AITMod.LOGGER.error("Temporarily returning, fix this code!!!"); // todo
                 continue;
             }
-            buf.encodeAsJson(DatapackVariant.CODEC, new DatapackVariant(schema.id(), schema.category().id(), schema.id(), DatapackVariant.DEFAULT_TEXTURE, DatapackVariant.DEFAULT_TEXTURE, false));
+            buf.encodeAsJson(DatapackExterior.CODEC, new DatapackExterior(schema.id(), schema.category().id(), schema.id(), DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, false));
         }
         ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
     }
@@ -89,15 +89,15 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
         registerDefaults();
         int size = buf.readInt();
 
-        DatapackVariant variant;
+        DatapackExterior variant;
 
         for (int i = 0; i < size; i++) {
-            variant = buf.decodeAsJson(DatapackVariant.CODEC);
+            variant = buf.decodeAsJson(DatapackExterior.CODEC);
             if (!variant.wasDatapack()) continue;
             register(variant);
         }
 
-        AITMod.LOGGER.info("Read {} variants from server", size);
+        AITMod.LOGGER.info("Read {} exterior variants from server", size);
     }
 
     public static DatapackRegistry<ExteriorVariantSchema> getInstance() {
@@ -233,7 +233,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 
                 for(Identifier id : manager.findResources("exterior", filename -> filename.getPath().endsWith(".json")).keySet()) {
                     try(InputStream stream = manager.getResource(id).get().getInputStream()) {
-                        ExteriorVariantSchema created = DatapackVariant.fromInputStream(stream);
+                        ExteriorVariantSchema created = DatapackExterior.fromInputStream(stream);
 
                         if (created == null) {
                             stream.close();

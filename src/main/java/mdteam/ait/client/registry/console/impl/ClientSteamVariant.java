@@ -1,12 +1,10 @@
 package mdteam.ait.client.registry.console.impl;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.models.consoles.AlnicoConsoleModel;
 import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.SteamConsoleModel;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
-import mdteam.ait.tardis.variant.console.AlnicoVariant;
-import mdteam.ait.tardis.variant.console.SteamVariant;
+import mdteam.ait.tardis.console.variant.steam.SteamVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientSteamVariant extends ClientConsoleVariantSchema {
