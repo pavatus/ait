@@ -25,6 +25,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -256,26 +257,17 @@ public class TardisTravel extends TardisLink {
      * If the Tardis is not in flight state, the crash will not be executed.
      */
     public void crash() {
-        // Check if Tardis is in flight state
-        if (this.getState() != TardisTravel.State.FLIGHT) {
-            return;
-        }
+        if (this.getState() != State.FLIGHT || findTardis().isEmpty() || this.isCrashing() || TardisUtil.getTardisDimension() == null || TardisUtil.isClient()) return;
+        Tardis tardis = findTardis().get();
 
-        // If already crashing, return
-        if (this.findTardis().isEmpty() || this.crashing) return;
-
-        Tardis tardis = this.findTardis().get();
-
-        // RandomiserControl.randomiseDestination(this.getTardis().get(), 10);
-        // Play explosion sound and create explosion at console position if available
-        if (TardisUtil.getTardisDimension() == null) return;
+        int crash_intensity = getSpeed() + tardis.tardisHammerAnnoyance + 1;
 
         FlightUtil.playSoundAtConsole(tardis,
                 SoundEvents.ENTITY_GENERIC_EXPLODE,
                 SoundCategory.BLOCKS,
                 3f,
-                1f
-        );
+                1f);
+
         List<Explosion> explosions = new ArrayList<>();
 
         tardis.getDesktop().getConsoles().forEach(console -> {
@@ -284,67 +276,50 @@ public class TardisTravel extends TardisLink {
                     null,
                     null,
                     console.position().toCenterPos(),
-                    3f * (findTardis().get().tardisHammerAnnoyance + 1),
+                    3f * crash_intensity,
                     false,
-                    World.ExplosionSourceType.NONE
+                    null
             );
-
             explosions.add(explosion);
         });
 
         Random random = new Random();
-        for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.findTardis().get())) {
-            int x_random = random.nextInt(1, 10);
-            int y_random = random.nextInt(1, 10);
-            int z_random = random.nextInt(1, 10);
-
-            boolean is_x_negative = false;
-            boolean is_z_negative = false;
-            if (random.nextInt(1,3) == 1) {
-                is_x_negative = true;
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+            float random_X_velocity = random.nextFloat(-2f, 3f);
+            float random_Y_velocity = random.nextFloat(-1f, 2f);
+            float random_Z_velocity = random.nextFloat(-2f, 3f);
+            player.setVelocity(random_X_velocity * crash_intensity, random_Y_velocity * crash_intensity, random_Z_velocity * crash_intensity);
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 20 * crash_intensity, (int) Math.round(0.25 * crash_intensity), true, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 20 * crash_intensity, 1, true, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 20 * crash_intensity, (int) Math.round(0.25 * crash_intensity), true, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 20 * crash_intensity, (int) Math.round(0.25 * crash_intensity), true, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20 * crash_intensity, (int) Math.round(0.25 * crash_intensity), true, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 20 * crash_intensity, (int) Math.round(0.75 * crash_intensity), true, false, false));
+            int damage_to_player = (int) Math.round(0.5 * crash_intensity);
+            if (!explosions.isEmpty()) {
+                player.damage(TardisUtil.getTardisDimension().getDamageSources().explosion(explosions.get(0)), damage_to_player);
+            } else {
+                player.damage(null, damage_to_player);
             }
-            if (random.nextInt(1,3) == 1) {
-                is_z_negative = true;
-            }
-            int crash_intensity = findTardis().get().tardisHammerAnnoyance + 1;
-            player.addVelocity(0.5f * x_random * (is_x_negative ? -1 : 1) * crash_intensity, 0.25f * y_random * crash_intensity, 0.5f * z_random * (is_z_negative ? -1 : 1) * crash_intensity);
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
-            int damage_to_do_to_player = 3 + crash_intensity * 2;
-
-            if (!explosions.isEmpty())
-                player.damage(TardisUtil.getTardisDimension().getDamageSources().explosion(explosions.get(0)), damage_to_do_to_player);
         }
-        this.findTardis().get().setLockedTardis(false);
-        //this.getTardis().get().getHandlers().getDoor().openDoors();
-        // Load the chunk of the Tardis destination
-        // Enable alarm and disable anti-mavity properties for Tardis
-        PropertiesHandler.set(this.findTardis().get(), PropertiesHandler.ALARM_ENABLED, true);
-        PropertiesHandler.set(this.findTardis().get(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
-        // Set the destination position at the topmost block of the world at the X and Z coordinates of the destination
-        this.setDestination(
-                new AbsoluteBlockPos.Directed(
-                        this.findTardis().get().getTravel().getDestination().getX(),
-                        this.getDestination().getWorld().getTopY() - 1,
-                        this.getDestination().getZ(),
-                        this.getDestination().getWorld(),
-                        this.getDestination().getDirection()
-                ),
-                true
-        );
-        this.setCrashing(true);
-        // Set speed to 0
+        tardis.setLockedTardis(false);
+        PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
+        PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
         this.setSpeed(0);
-        // Sync the tardis
-        // Remove fuel from Tardis
-        this.findTardis().get().removeFuel(80);
-        if (this.findTardis().get().tardisHammerAnnoyance > 0) {
-            this.findTardis().get().removeFuel(1000 * this.findTardis().get().tardisHammerAnnoyance);
+        tardis.removeFuel(100 * crash_intensity);
+        tardis.tardisHammerAnnoyance = 0;
+        int random_int = random.nextInt(0, 2);
+        int up_or_down = random_int == 0 ? 1 : -1;
+        int random_change = random.nextInt(10, 1000) * crash_intensity * up_or_down;
+        int new_x = getDestination().getX() + random_change;
+        int new_y = getDestination().getWorld().getTopY() - 1;
+        int new_z = getDestination().getZ() + random_change;
+        this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getDirection()));
+        if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
+            this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
         }
-        // Materialize the Tardis
         this.materialise();
-        // Invoke the crash event
-        this.findTardis().get().tardisHammerAnnoyance = 0;
-        TardisEvents.CRASH.invoker().onCrash(this.findTardis().get());
+        TardisEvents.CRASH.invoker().onCrash(tardis);
     }
 
     public void materialise() {

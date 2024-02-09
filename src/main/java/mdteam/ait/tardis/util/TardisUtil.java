@@ -189,12 +189,10 @@ public class TardisUtil {
         return SAVE_PATH;
     }
 
-    @Deprecated
     public static boolean isClient() {
         return !TardisUtil.isServer();
     }
 
-    @Deprecated
     public static boolean isServer() {
         return SERVER != null;
     }

@@ -6,3 +6,5 @@
 - Updated drifting music disc texture
 - Overhauled the entire default monitor screen
 - Update drifting audio file so that it's louder and more up to date
+- Removed depreciation on some functions because I like using them deal with it 😝 - Creativious
+- Changed how crashing works
