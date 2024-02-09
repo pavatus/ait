@@ -40,11 +40,11 @@ categories: ["Tardis", "Specifics", "Datapacks", "Exteriors"]
 
 - Place your **.png** exterior texture in this path
 
-`data/(namespace)/exterior/(exterior_texture_name).png`
+`assets/(namespace)/exterior/(exterior_texture_name).png`
 
 - Place your .**png** exterior texture emission in the same path
 
-`data/(namespace)/exterior/(exterior_texture_name)_emission.png`
+`assets/(namespace)/exterior/(exterior_texture_name)_emission.png`
 
 - If you want people to be able to see your exterior texture variant, they will need this **resource pack**.
 

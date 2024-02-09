@@ -37,11 +37,11 @@ categories: ["Tardis", "Specifics", "Datapacks", "Consoles"]
 
 - Place your **.png** console texture in this path
 
-`data/(namespace)/console/(console_texture_name).png`
+`assets/(namespace)/console/(console_texture_name).png`
 
 - Place your .**png** console texture emission in the same path
 
-`data/(namespace)/console/(console_texture_name)_emission.png`
+`assets/(namespace)/console/(console_texture_name)_emission.png`
 
 - If you want people to be able to see your console texture variant, they will need this **resource pack**.
 
