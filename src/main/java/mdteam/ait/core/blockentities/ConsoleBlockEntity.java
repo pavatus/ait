@@ -226,7 +226,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         if (variant == null) {
             // oh no : (
             // lets just pick any
-            setVariant(ConsoleVariantRegistry.withParent(getConsoleSchema()).stream().findAny().get());
+            setVariant(this.getConsoleSchema().getDefaultVariant());
         }
 
         return ConsoleVariantRegistry.getInstance().get(variant);

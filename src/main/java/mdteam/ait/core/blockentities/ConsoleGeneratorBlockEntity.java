@@ -110,7 +110,7 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 
     public ConsoleVariantSchema getConsoleVariant() {
         if (variant == null) {
-            this.variant = ConsoleVariantRegistry.withParentToList(this.getConsoleSchema()).get(0).id();
+            this.variant = this.getConsoleSchema().getDefaultVariant().id();
         }
 
         return ConsoleVariantRegistry.getInstance().get(this.variant);
@@ -125,7 +125,7 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 
     public void changeConsole(ConsoleTypeSchema schema) {
         this.setConsoleSchema(schema.id());
-        this.setVariant(ConsoleVariantRegistry.withParentToList(schema).get(0).id());
+        this.setVariant(schema.getDefaultVariant().id());
     }
     public void changeConsole(ConsoleVariantSchema schema) {
         this.setConsoleSchema(schema.parent().id());

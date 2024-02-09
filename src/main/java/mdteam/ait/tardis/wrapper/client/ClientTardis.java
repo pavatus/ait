@@ -2,7 +2,7 @@ package mdteam.ait.tardis.wrapper.client;
 
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.data.DoorData;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 // Things saved here will likely get overwritten.
 public class ClientTardis extends Tardis {
-    public ClientTardis(UUID uuid, AbsoluteBlockPos.Client pos, TardisDesktopSchema schema, ExteriorCategory exteriorType, ExteriorVariantSchema variantType, boolean locked) {
+    public ClientTardis(UUID uuid, AbsoluteBlockPos.Client pos, TardisDesktopSchema schema, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType, boolean locked) {
         super(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), tardis -> new ClientTardisExterior(tardis, exteriorType, variantType), locked);
     }
 

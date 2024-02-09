@@ -10,7 +10,7 @@ import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.data.FuelData;
 import mdteam.ait.tardis.data.TardisHandlersManager;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
@@ -21,7 +21,6 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.server.*;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.SoundManager;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
@@ -50,7 +49,7 @@ public class Tardis {
     public int tardisHammerAnnoyance = 0;
     private int tardisVersion = 1;
 
-    public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorCategory exteriorType, ExteriorVariantSchema variant) {
+    public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variant) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), false);
         tardisHammerAnnoyance = 0;
     }

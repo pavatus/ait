@@ -12,11 +12,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class DatapackCategory extends ExteriorCategory {
-    public static final Codec<ExteriorCategory> CODEC = RecordCodecBuilder.create(
+public class DatapackCategory extends ExteriorCategorySchema {
+    public static final Codec<ExteriorCategorySchema> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                    Identifier.CODEC.fieldOf("id").forGetter(ExteriorCategory::id),
-                    Codec.STRING.fieldOf("name").forGetter(ExteriorCategory::name)
+                    Identifier.CODEC.fieldOf("id").forGetter(ExteriorCategorySchema::id),
+                    Codec.STRING.fieldOf("name").forGetter(ExteriorCategorySchema::name)
             ).apply(instance, DatapackCategory::new));
 
     public DatapackCategory(Identifier id, String name) {

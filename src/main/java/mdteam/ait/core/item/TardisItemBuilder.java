@@ -9,7 +9,7 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.category.CapsuleCategory;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.block.entity.BlockEntity;
@@ -48,7 +48,7 @@ public class TardisItemBuilder extends Item {
         this(settings, DEFAULT_EXTERIOR);
     }
 
-    public static ExteriorVariantSchema findRandomVariant(ExteriorCategory exterior) {
+    public static ExteriorVariantSchema findRandomVariant(ExteriorCategorySchema exterior) {
         Random rnd = new Random();
         if (ExteriorVariantRegistry.withParent(exterior).size() == 0) {
             AITMod.LOGGER.error("Variants for " + exterior + " are empty! Panicking!!!!");
@@ -57,7 +57,7 @@ public class TardisItemBuilder extends Item {
         int randomized = rnd.nextInt(Math.abs(ExteriorVariantRegistry.withParent(exterior).size()));
         return (ExteriorVariantSchema) ExteriorVariantRegistry.withParent(exterior).toArray()[randomized];
     }
-    public static ExteriorCategory findRandomExterior() {
+    public static ExteriorCategorySchema findRandomExterior() {
         Random rnd = new Random();
         int randomized = rnd.nextInt(Math.abs(CategoryRegistry.getInstance().size()));
         return CategoryRegistry.getInstance().toArrayList().get(randomized) == CategoryRegistry.CORAL_GROWTH ? CategoryRegistry.TARDIM : CategoryRegistry.getInstance().toArrayList().get(randomized);

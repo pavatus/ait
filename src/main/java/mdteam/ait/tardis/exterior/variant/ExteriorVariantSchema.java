@@ -10,7 +10,7 @@ import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;
@@ -24,7 +24,7 @@ import net.minecraft.world.BlockView;
 import java.lang.reflect.Type;
 
 /**
- * A variant for a {@link ExteriorCategory} which provides a model, texture, emission, {@link ExteriorAnimation} and {@link DoorSchema}
+ * A variant for a {@link ExteriorCategorySchema} which provides a model, texture, emission, {@link ExteriorAnimation} and {@link DoorSchema}
  * <br><br>
  * This should be registered in {@link ExteriorVariantRegistry#REGISTRY}
  * <br><br>
@@ -64,7 +64,7 @@ public abstract class ExteriorVariantSchema implements Identifiable {
 
     protected Identifier categoryId() { return this.category; }
 
-    public ExteriorCategory category() { return CategoryRegistry.getInstance().get(this.categoryId()); }
+    public ExteriorCategorySchema category() { return CategoryRegistry.getInstance().get(this.categoryId()); }
     public Identifier id() { return id; }
 
     /**

@@ -7,7 +7,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.LivingEntity;
@@ -43,7 +43,7 @@ public class RegenHandler implements Acting {
         tardis.getHandlers().getFlight().increaseFlightTime(regen.transitionType().getAnimationLength());
     }
     private static void changeToRandomExterior(Tardis tardis) {
-        ExteriorCategory exteriorType = TardisItemBuilder.findRandomExterior();
+        ExteriorCategorySchema exteriorType = TardisItemBuilder.findRandomExterior();
         tardis.getExterior().setType(exteriorType);
         tardis.getExterior().setVariant(TardisItemBuilder.findRandomVariant(exteriorType));
     }

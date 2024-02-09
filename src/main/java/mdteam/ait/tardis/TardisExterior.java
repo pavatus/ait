@@ -3,27 +3,24 @@ package mdteam.ait.tardis;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.item.TardisItemBuilder;
-import mdteam.ait.registry.CategoryRegistry;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
-import mdteam.ait.tardis.wrapper.client.ClientTardis;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.entity.BlockEntity;
 
 import java.util.Optional;
 
 public class TardisExterior extends TardisLink {
-    private ExteriorCategory exterior;
+    private ExteriorCategorySchema exterior;
     private ExteriorVariantSchema variant;
 
-    public TardisExterior(Tardis tardis, ExteriorCategory exterior, ExteriorVariantSchema variant) {
+    public TardisExterior(Tardis tardis, ExteriorCategorySchema exterior, ExteriorVariantSchema variant) {
         super(tardis, "exterior");
         this.exterior = exterior;
         this.variant = variant;
     }
 
-    public ExteriorCategory getCategory() {
+    public ExteriorCategorySchema getCategory() {
         if (exterior == null) {
             AITMod.LOGGER.error("Exterior Category was null! Changing to a random one.."); // AHH PANIC AGAIN
             setType(TardisItemBuilder.findRandomExterior());
@@ -45,7 +42,7 @@ public class TardisExterior extends TardisLink {
         return variant;
     }
 
-    public void setType(ExteriorCategory exterior) {
+    public void setType(ExteriorCategorySchema exterior) {
         this.exterior = exterior;
 
         if (exterior != getVariant().category()) {

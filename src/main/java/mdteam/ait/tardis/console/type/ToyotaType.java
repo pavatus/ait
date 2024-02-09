@@ -1,6 +1,8 @@
 package mdteam.ait.tardis.console.type;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.registry.ConsoleVariantRegistry;
+import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.control.impl.*;
 import mdteam.ait.tardis.control.impl.pos.IncrementControl;
@@ -61,5 +63,10 @@ public class ToyotaType extends ConsoleTypeSchema {
     @Override
     public ControlTypes[] getControlTypes() {
         return TYPES;
+    }
+
+    @Override
+    public ConsoleVariantSchema getDefaultVariant() {
+        return ConsoleVariantRegistry.TOYOTA;
     }
 }

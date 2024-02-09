@@ -13,7 +13,7 @@ import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.exterior.category.BoothCategory;
 import mdteam.ait.tardis.exterior.category.ClassicCategory;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.exterior.category.PoliceBoxCategory;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
@@ -28,8 +28,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.world.chunk.light.LightingProvider;
-import net.minecraft.world.chunk.light.LightingView;
 
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +40,7 @@ import static mdteam.ait.tardis.data.FuelData.TARDIS_MAX_FUEL;
 public class MonitorScreen extends ConsoleScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/monitor_gui.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
-    private ExteriorCategory category;
+    private ExteriorCategorySchema category;
     private ClientExteriorVariantSchema currentVariant;
     int backgroundHeight = 150;
     int backgroundWidth = 208;
@@ -68,11 +66,11 @@ public class MonitorScreen extends ConsoleScreen {
         this.createButtons();
     }
 
-    public ExteriorCategory getCategory() {
+    public ExteriorCategorySchema getCategory() {
         return category == null ? getFromUUID(tardisId).getExterior().getCategory() : category;
     }
 
-    public void setCategory(ExteriorCategory category) {
+    public void setCategory(ExteriorCategorySchema category) {
         this.category = category;
 
         if (currentVariant == null) return;
@@ -86,8 +84,7 @@ public class MonitorScreen extends ConsoleScreen {
 
         if (currentVariant == null)
             if(!getFromUUID(tardisId).getExterior().getCategory().equals(getCategory())) {
-                // todo issues with the exteriors not being in the order they are registered, likely because its done static (?)
-                setCurrentVariant(ExteriorVariantRegistry.withParentToList(getCategory()).get(0));
+                setCurrentVariant(this.getCategory().getDefaultVariant());
             } else {
                 setCurrentVariant(getFromUUID(tardisId).getExterior().getVariant());
             }
@@ -164,15 +161,15 @@ public class MonitorScreen extends ConsoleScreen {
             changeCategory(direction);
         }
     }
-    public ExteriorCategory nextCategory() {
-        List<ExteriorCategory> list = CategoryRegistry.getInstance().toList();
+    public ExteriorCategorySchema nextCategory() {
+        List<ExteriorCategorySchema> list = CategoryRegistry.getInstance().toList();
 
         int idx = list.indexOf(getCategory());
         if (idx < 0 || idx+1 == list.size()) return list.get(0);
         return list.get(idx + 1);
     }
-    public ExteriorCategory previousCategory() {
-        List<ExteriorCategory> list = CategoryRegistry.getInstance().toList();
+    public ExteriorCategorySchema previousCategory() {
+        List<ExteriorCategorySchema> list = CategoryRegistry.getInstance().toList();
 
         int idx = list.indexOf(getCategory());
         if (idx <= 0) return list.get(list.size() - 1);

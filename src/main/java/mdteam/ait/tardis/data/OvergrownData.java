@@ -4,7 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
@@ -50,7 +50,7 @@ public class OvergrownData extends TardisLink {
 
     public Identifier getOvergrownTexture() {
         if(findTardis().isEmpty()) return null;
-        ExteriorCategory exterior = this.findTardis().get().getExterior().getCategory();
+        ExteriorCategorySchema exterior = this.findTardis().get().getExterior().getCategory();
 
         return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + exterior.toString().toLowerCase() + "/" + exterior.toString().toLowerCase() + "_" + "overgrown" + ".png");
     }

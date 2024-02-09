@@ -8,7 +8,7 @@ import io.wispforest.owo.ui.container.ScrollContainer;
 import io.wispforest.owo.ui.core.*;
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.text.Text;
@@ -22,7 +22,7 @@ import java.util.UUID;
 public class OwOMonitorScreen extends BaseOwoScreen<FlowLayout> {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
     private final UUID tardisid;
-    private ExteriorCategory currentModel;
+    private ExteriorCategorySchema currentModel;
     private ExteriorVariantSchema currentVariant;
 
     public OwOMonitorScreen(UUID tardisid) {
@@ -39,11 +39,11 @@ public class OwOMonitorScreen extends BaseOwoScreen<FlowLayout> {
         return tardis();
     }
 
-    public ExteriorCategory getCurrentModel() {
+    public ExteriorCategorySchema getCurrentModel() {
         return currentModel == null ? tardis().getExterior().getCategory() : currentModel;
     }
 
-    public void setCurrentModel(ExteriorCategory currentModel) {
+    public void setCurrentModel(ExteriorCategorySchema currentModel) {
         this.currentModel = currentModel;
     }
 

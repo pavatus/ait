@@ -7,7 +7,7 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.tardis.exterior.category.CapsuleCategory;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -194,7 +194,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
         return this.animation;
     }
 
-    public ExteriorCategory getExteriorType() {
+    public ExteriorCategorySchema getExteriorType() {
         if(findTardis().isEmpty()) return CategoryRegistry.getInstance().get(CapsuleCategory.REFERENCE);
         return this.findTardis().get().getExterior().getCategory();
     }

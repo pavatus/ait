@@ -2,9 +2,13 @@ package mdteam.ait.tardis.console.type;
 
 import com.google.gson.*;
 import mdteam.ait.registry.ConsoleRegistry;
+import mdteam.ait.registry.ConsoleVariantRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.registry.datapack.Identifiable;
+import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.exterior.category.CapsuleCategory;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
@@ -42,6 +46,13 @@ public abstract class ConsoleTypeSchema implements Identifiable {
     //@TODO protocol abstraction with numbered letters
 
     public abstract ControlTypes[] getControlTypes(); // fixme this kinda sucks idk
+
+    /**
+     * The default console for this category
+     */
+    public ConsoleVariantSchema getDefaultVariant() {
+        return ConsoleVariantRegistry.withParentToList(this).get(0);
+    }
 
     public static Object serializer() {
         return new Serializer();

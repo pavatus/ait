@@ -1,7 +1,7 @@
 package mdteam.ait.registry;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.exterior.variant.*;
 import mdteam.ait.tardis.exterior.variant.box.*;
 import mdteam.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
@@ -110,7 +110,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
         return INSTANCE;
     }
 
-    public static Collection<ExteriorVariantSchema> withParent(ExteriorCategory parent) {
+    public static Collection<ExteriorVariantSchema> withParent(ExteriorCategorySchema parent) {
         List<ExteriorVariantSchema> list = new ArrayList<>();
 
         for (ExteriorVariantSchema schema : ExteriorVariantRegistry.getInstance().REGISTRY.values()) {
@@ -121,7 +121,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 
         return list;
     }
-    public static List<ExteriorVariantSchema> withParentToList(ExteriorCategory parent) {
+    public static List<ExteriorVariantSchema> withParentToList(ExteriorCategorySchema parent) {
         List<ExteriorVariantSchema> list = new ArrayList<>();
 
         for (ExteriorVariantSchema schema : ExteriorVariantRegistry.getInstance().REGISTRY.values()) {
@@ -163,61 +163,63 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
     public static ExteriorVariantSchema PLINTH_FIRE;
     public static ExteriorVariantSchema RENEGADE_DEFAULT;
 
-    private static void registerDefaults() {
+    private void registerDefaults() {
         // todo make this not static
 
         // TARDIM
-        TARDIM_DEFAULT = registerStatic(new TardimDefaultVariant());
-        TARDIM_FIRE = registerStatic(new TardimFireVariant());
-        TARDIM_SOUL = registerStatic(new TardimSoulVariant());
+        TARDIM_DEFAULT = register(new TardimDefaultVariant());
+        TARDIM_FIRE = register(new TardimFireVariant());
+        TARDIM_SOUL = register(new TardimSoulVariant());
 
         // Police Box
-        BOX_DEFAULT = registerStatic(new PoliceBoxDefaultVariant());
-        BOX_SOUL = registerStatic(new PoliceBoxSoulVariant());
-        BOX_FIRE = registerStatic(new PoliceBoxFireVariant());
-        BOX_FUTURE = registerStatic(new PoliceBoxFuturisticVariant());
-        BOX_CORAL = registerStatic(new PoliceBoxCoralVariant());
-        BOX_TOKAMAK = registerStatic(new PoliceBoxTokamakVariant());
+        BOX_DEFAULT = register(new PoliceBoxDefaultVariant());
+        BOX_SOUL = register(new PoliceBoxSoulVariant());
+        BOX_FIRE = register(new PoliceBoxFireVariant());
+        BOX_FUTURE = register(new PoliceBoxFuturisticVariant());
+        BOX_CORAL = register(new PoliceBoxCoralVariant());
+        BOX_TOKAMAK = register(new PoliceBoxTokamakVariant());
 
         // Classic Box
-        PRIME = registerStatic(new ClassicBoxPrimeVariant());
-        YETI = registerStatic(new ClassicBoxYetiVariant());
-        DEFINITIVE = registerStatic(new ClassicBoxDefinitiveVariant());
-        PTORED = registerStatic(new ClassicBoxPtoredVariant());
+        PRIME = register(new ClassicBoxPrimeVariant());
+        YETI = register(new ClassicBoxYetiVariant());
+        DEFINITIVE = register(new ClassicBoxDefinitiveVariant());
+        PTORED = register(new ClassicBoxPtoredVariant());
 
         // Capsule
-        CAPSULE_DEFAULT = registerStatic(new CapsuleDefaultVariant());
-        CAPSULE_SOUL = registerStatic(new CapsuleSoulVariant());
-        CAPSULE_FIRE = registerStatic(new CapsuleFireVariant());
+        CAPSULE_DEFAULT = register(new CapsuleDefaultVariant());
+        CAPSULE_SOUL = register(new CapsuleSoulVariant());
+        CAPSULE_FIRE = register(new CapsuleFireVariant());
 
         // Booth
-        BOOTH_DEFAULT = registerStatic(new BoothDefaultVariant());
-        BOOTH_FIRE = registerStatic(new BoothFireVariant());
-        BOOTH_SOUL = registerStatic(new BoothSoulVariant());
-        BOOTH_VINTAGE = registerStatic(new BoothVintageVariant());
-        BOOTH_BLUE = registerStatic(new BoothBlueVariant());
+        BOOTH_DEFAULT = register(new BoothDefaultVariant());
+        BOOTH_FIRE = register(new BoothFireVariant());
+        BOOTH_SOUL = register(new BoothSoulVariant());
+        BOOTH_VINTAGE = register(new BoothVintageVariant());
+        BOOTH_BLUE = register(new BoothBlueVariant());
 
         // funny
         // COOB = register(new RedCoobVariant()); // fixme CUBE HAS BEEN REMOVED, REPEAT, CUBE HAS BEEN REMOVED. DO NOT PANIC!!
 
         // Easter Head
-        HEAD_DEFAULT = registerStatic(new EasterHeadDefaultVariant());
-        HEAD_SOUL = registerStatic(new EasterHeadSoulVariant());
-        HEAD_FIRE = registerStatic(new EasterHeadFireVariant());
+        HEAD_DEFAULT = register(new EasterHeadDefaultVariant());
+        HEAD_SOUL = register(new EasterHeadSoulVariant());
+        HEAD_FIRE = register(new EasterHeadFireVariant());
 
         // Coral Growth
-        CORAL_GROWTH = registerStatic(new CoralGrowthVariant());
+        CORAL_GROWTH = register(new CoralGrowthVariant());
 
         // Doom
-        DOOM = registerStatic(new DoomVariant());
+        DOOM = register(new DoomVariant());
 
         // Plinth
-        PLINTH_DEFAULT = registerStatic(new PlinthDefaultVariant());
-        PLINTH_SOUL = registerStatic(new PlinthSoulVariant());
-        PLINTH_FIRE = registerStatic(new PlinthFireVariant());
+        PLINTH_DEFAULT = register(new PlinthDefaultVariant());
+        PLINTH_SOUL = register(new PlinthSoulVariant());
+        PLINTH_FIRE = register(new PlinthFireVariant());
 
         // Renegade
-        RENEGADE_DEFAULT = registerStatic(new RenegadeDefaultVariant());
+        RENEGADE_DEFAULT = register(new RenegadeDefaultVariant());
+
+        System.out.println(this.toList());
     }
 
     // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE

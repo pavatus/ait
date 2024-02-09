@@ -1,7 +1,7 @@
 package mdteam.ait.tardis.wrapper.server;
 
 import mdteam.ait.tardis.TardisTickable;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisExterior;
@@ -11,12 +11,12 @@ import net.minecraft.server.world.ServerWorld;
 
 public class ServerTardisExterior extends TardisExterior implements TardisTickable {
 
-    public ServerTardisExterior(Tardis tardis, ExteriorCategory exterior, ExteriorVariantSchema variant) {
+    public ServerTardisExterior(Tardis tardis, ExteriorCategorySchema exterior, ExteriorVariantSchema variant) {
         super(tardis, exterior, variant);
     }
 
     @Override
-    public void setType(ExteriorCategory exterior) {
+    public void setType(ExteriorCategorySchema exterior) {
         super.setType(exterior);
         this.sync();
     }

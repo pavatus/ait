@@ -7,7 +7,7 @@ import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.core.AITDimensions;
 import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
 import mdteam.ait.tardis.*;
-import mdteam.ait.tardis.exterior.category.ExteriorCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.util.*;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -158,7 +158,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         this.subscribers.replace(tardisUUID, new CopyOnWriteArrayList<>());
     }
 
-    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorCategory exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
+    public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
         UUID uuid = UUID.randomUUID();
 
         ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked); // todo removed "locked" param

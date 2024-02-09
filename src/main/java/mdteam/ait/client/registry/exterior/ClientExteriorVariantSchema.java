@@ -43,6 +43,13 @@ public abstract class ClientExteriorVariantSchema implements Identifiable {
     public abstract Identifier emission();
     public abstract ExteriorModel model();
 
+    /**
+     * The default exterior for this category
+     */
+    public ExteriorVariantSchema getDefaultVariant() {
+        return ExteriorVariantRegistry.getInstance().get(this.parent().id()).category().getDefaultVariant();
+    }
+
     public static Object serializer() {
         return new Serializer();
     }
