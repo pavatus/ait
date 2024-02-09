@@ -8,6 +8,7 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
@@ -268,7 +269,7 @@ public class FallingTardisEntity extends Entity {
                     this.block = (BlockState)this.block.with(Properties.WATERLOGGED, true);
                 }
 
-                if (this.getWorld().setBlockState(blockPos, this.block, 3)) {
+                if (this.getWorld().setBlockState(blockPos, this.block, 3) && TardisUtil.isServer()) {
                     ((ServerWorld)this.getWorld()).getChunkManager().threadedAnvilChunkStorage.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, this.getWorld().getBlockState(blockPos)));
                     this.discard();
                     if (block instanceof ExteriorBlock) {

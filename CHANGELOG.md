@@ -1,13 +1,2 @@
-# 1.2.36
-- Added a tardis versioning system to help with migration from one system to another
-- Changed how crashing works so that the player actually takes damage when they crash severity depends on annoyance
-- Fixed a crash that happens when the tardis loses power
-- Fixed a crash in server tardis manager
-- Add a music section for sounds
-- Added drifting song by radio (I'll update with the new version when he adds that)
-- Added a music disc for drifting
-- Starts playing drifting a random amount of time after the tardis power turns off
-- Fixed a crash with exterior renderer with sodium
-- Made it so that drifting starts playing a random amount of time after power is shut off in a tardis
-- Replaced DeltaTimeManager with the one from neptunelib
-- Added drifting music disc to dungeon loot tables
+# 1.2.37
+- Fixed crash from throwing siege mode tardis into void
