@@ -2,6 +2,7 @@ package mdteam.ait.tardis.control.impl;
 
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.FlightUtil;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,8 +30,8 @@ public class RefuelerControl extends Control {
                 Text enabled = Text.translatable("tardis.message.control.refueler.enabled");
                 Text disabled = Text.translatable("tardis.message.control.refueler.disabled");
                 player.sendMessage((tardis.isRefueling()? enabled : disabled), true);
-                if (tardis.getDesktop().getConsolePos() != null && tardis.isRefueling()) {
-                    world.playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_CANDLE_EXTINGUISH, SoundCategory.BLOCKS, 10, 1);
+                if (tardis.isRefueling()) {
+                    FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_CANDLE_EXTINGUISH, SoundCategory.BLOCKS, 10, 1);
                 }
                 //return true;
             //}

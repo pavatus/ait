@@ -2,6 +2,7 @@ package mdteam.ait.client.sounds.flight;
 
 import mdteam.ait.client.sounds.LoopingSound;
 import mdteam.ait.client.sounds.PositionedLoopingSound;
+import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
@@ -9,24 +10,32 @@ import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.SoundHandler;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 // All this is CLIENT ONLY!!
 // Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
 // todo create a ServerFlightHandler if necessary eg in future when we do more of the stuff on the trello to do with flight sounds.
+// todo this is not positioned at the console anymore, as checking to see if an individual sound is playing at each console doesnt appear to be possible (?)
 public class ClientFlightHandler extends SoundHandler {
-    public static LoopingSound FLIGHT;
+    public static ConcurrentLinkedQueue<LoopingSound> FLIGHTS;
     protected ClientFlightHandler() {}
 
-    public LoopingSound getFlightLoop() {
-        if (tardis().getDesktop().getConsolePos() == null) return null;
-        if (FLIGHT == null) FLIGHT = new FlightSound(AITSounds.FLIGHT_LOOP, SoundCategory.BLOCKS, tardis().getDesktop().getConsolePos(), 2.5f); // should this be positioned at the console pos or global?
+    public ConcurrentLinkedQueue<LoopingSound> getFlightLoops() {
+        if (FLIGHTS == null) FLIGHTS = new ConcurrentLinkedQueue<>();
+        if (FLIGHTS.isEmpty()) this.generate();
 
-        return FLIGHT;
+        return FLIGHTS;
+    }
+    private LoopingSound createFlightSound(BlockPos pos) {
+        return new FlightSound(AITSounds.FLIGHT_LOOP, SoundCategory.BLOCKS, pos, 2.5f);
     }
     public static ClientFlightHandler create() {
         if (MinecraftClient.getInstance().player == null) return null;
@@ -37,13 +46,19 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private void generate() {
-        if (tardis() == null || tardis().getDesktop().getConsolePos() == null) return;
+        if (tardis() == null) return;
 
-        if (FLIGHT == null) FLIGHT = new FlightSound(AITSounds.FLIGHT_LOOP, SoundCategory.BLOCKS, tardis().getDesktop().getConsolePos(), 2.5f);
+        if (FLIGHTS == null) FLIGHTS = new ConcurrentLinkedQueue<>();
+
+        if (FLIGHTS.isEmpty()) {
+            tardis().getDesktop().getConsoles().forEach(console -> {
+                FLIGHTS.add(createFlightSound(console.position()));
+            });
+        }
 
         this.sounds = new ArrayList<>();
-        this.sounds.add(
-                FLIGHT
+        this.sounds.addAll(
+                FLIGHTS
         );
     }
 
@@ -62,15 +77,11 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private void playFlightSound() {
-        if (!isPlaying(getFlightLoop()) && tardis().getDesktop().getConsolePos() != null) {
-            // ensures it plays at the right place
-            ((PositionedLoopingSound) getFlightLoop()).setPosition(tardis().getDesktop().getConsolePos());
-        }
-        this.startIfNotPlaying(this.getFlightLoop());
+        this.getFlightLoops().forEach(this::startIfNotPlaying);
     }
 
     private boolean shouldPlaySounds() {
-        return (inFlight() || hasThrottleAndHandbrakeDown()) && tardis().hasPower();
+        return (ClientTardisUtil.distanceFromConsole() < 5) && (inFlight() || hasThrottleAndHandbrakeDown()) && tardis().hasPower();
     }
 
     private boolean inFlight() {

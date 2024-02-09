@@ -3,14 +3,11 @@ package mdteam.ait.client.renderers.monitors;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.monitors.CRTMonitorModel;
 import mdteam.ait.core.blockentities.MonitorBlockEntity;
-import mdteam.ait.core.blocks.MonitorBlock;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SkullBlock;
-import net.minecraft.block.WallSkullBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
@@ -20,7 +17,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
 
@@ -62,8 +58,8 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 
         matrices.pop();
 
-        if(entity.getTardis().isEmpty()) return;
-        Tardis tardis = entity.getTardis().get();
+        if(entity.findTardis().isEmpty()) return;
+        Tardis tardis = entity.findTardis().get();
 
         matrices.push();
         matrices.translate(0.5, 0.75, 0.5);

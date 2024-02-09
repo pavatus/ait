@@ -1,7 +1,6 @@
 package mdteam.ait.tardis.animation;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
@@ -14,12 +13,12 @@ public class ClassicAnimation extends ExteriorAnimation {
 
     @Override
     public void tick() {
-        if(exterior.getTardis().isEmpty()) return;
+        if(exterior.findTardis().isEmpty()) return;
 
-        TardisTravel.State state = exterior.getTardis().get().getTravel().getState();
+        TardisTravel.State state = exterior.findTardis().get().getTravel().getState();
 
         if (this.timeLeft < 0)
-            this.setupAnimation(exterior.getTardis().get().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+            this.setupAnimation(exterior.findTardis().get().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 
         if (state == TardisTravel.State.DEMAT) {
             this.alpha = (float) this.timeLeft / (this.startTime);
@@ -39,12 +38,12 @@ public class ClassicAnimation extends ExteriorAnimation {
 
     @Override
     public void setupAnimation(TardisTravel.State state) {
-        if(exterior.getTardis().isEmpty()) {
+        if(exterior.findTardis().isEmpty()) {
             AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
             alpha = 0f; // just make me vanish.
             return;
         }
-        MatSound sound = exterior.getTardis().get().getExterior().getVariant().getSound(state);
+        MatSound sound = exterior.findTardis().get().getExterior().getVariant().getSound(state);
 
         this.timeLeft = sound.timeLeft();
         this.maxTime = sound.maxTime();

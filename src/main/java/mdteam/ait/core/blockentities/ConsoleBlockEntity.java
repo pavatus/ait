@@ -4,7 +4,6 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITEntityTypes;
-import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.registry.ConsoleRegistry;
@@ -68,7 +67,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     public ConsoleBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
         if(!this.hasWorld()) return;
-        if(this.getTardis().isEmpty()) return;
+        if(this.findTardis().isEmpty()) return;
         this.linkDesktop();
     }
 
@@ -95,7 +94,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
             setVariant(Identifier.tryParse(nbt.getString("variant")));
         }
         if (nbt.contains("parent")) {
-            setParent(NbtHelper.toUuid(nbt.getCompound("parent")));
+            setParent(NbtHelper.toUuid(nbt.get("parent")));
         }
 
         spawnControls();
@@ -121,13 +120,13 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     }
 
     @Override
-    public Optional<Tardis> getTardis() {
+    public Optional<Tardis> findTardis() {
         if(this.tardisId == null) {
             Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
             if (found != null)
                 this.setTardis(found);
         }
-        return super.getTardis();
+        return super.findTardis();
     }
 
     @Nullable
@@ -196,14 +195,14 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     }
 
     public void linkDesktop() {
-        if (this.getTardis().isEmpty())
+        if (this.findTardis().isEmpty())
             return;
         this.setDesktop(this.getDesktop());
     }
 
     public TardisDesktop getDesktop() {
-        if(this.getTardis().isEmpty()) return null;
-        return this.getTardis().get().getDesktop();
+        if(this.findTardis().isEmpty()) return null;
+        return this.findTardis().get().getDesktop();
     }
 
     public ConsoleSchema getConsoleSchema() {
@@ -267,7 +266,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         }
     }
     public Optional<TardisConsole> findParent() {
-        if (this.getTardis().isEmpty()) return Optional.empty();
+        if (this.findTardis().isEmpty()) return Optional.empty();
 
         TardisDesktop desktop = this.getDesktop();
 
@@ -275,7 +274,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
             TardisConsole found = desktop.findConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
 
             if (found == null) {
-                found = new TardisConsole(this.getTardis().get(), new AbsoluteBlockPos(this.getPos(), this.getWorld()));
+                found = new TardisConsole(this.findTardis().get(), new AbsoluteBlockPos(this.getPos(), this.getWorld()));
                 desktop.addConsole(found);
             }
 
@@ -331,16 +330,14 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     public void setDesktop(TardisDesktop desktop) {
         if (this.getWorld() == null || this.getWorld().isClient()) return;
 
-        AITMod.LOGGER.info("Linking destkop " + this.getTardis().get().getUuid());
+        AITMod.LOGGER.info("Linking destkop " + this.findTardis().get().getUuid());
 
-        desktop.setConsolePos(new AbsoluteBlockPos.Directed(
-                this.pos, TardisUtil.getTardisDimension(), this.getCachedState().get(HorizontalDirectionalBlock.FACING))
-        );
+        this.findParent();
     }
 
     public boolean wasPowered() {
-        if(this.getTardis().isEmpty()) return false;
-        return this.wasPowered ^ this.getTardis().get().hasPower();
+        if(this.findTardis().isEmpty()) return false;
+        return this.wasPowered ^ this.findTardis().get().hasPower();
     }
 
     public void checkAnimations() {
@@ -420,11 +417,11 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         if (world.isClient()) {
             this.checkAnimations();
         }
-        if(this.getTardis().isEmpty()) return;
+        if(this.findTardis().isEmpty()) return;
 
         if (world.isClient()) return;
 
-        ServerTardis tardis = (ServerTardis) this.getTardis().get();
+        ServerTardis tardis = (ServerTardis) this.findTardis().get();
 
         boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.getExterior().getExteriorPos());
 

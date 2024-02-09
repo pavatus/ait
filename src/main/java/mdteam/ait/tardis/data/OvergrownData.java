@@ -36,12 +36,12 @@ public class OvergrownData extends TardisLink {
     }
 
     public boolean isOvergrown() {
-        if(getTardis().isEmpty()) return false;
-        return PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), IS_OVERGROWN);
+        if(findTardis().isEmpty()) return false;
+        return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), IS_OVERGROWN);
     }
     public void setOvergrown(boolean var) {
-        if(getTardis().isEmpty()) return;
-        PropertiesHandler.set(this.getTardis().get(), IS_OVERGROWN, var);
+        if(findTardis().isEmpty()) return;
+        PropertiesHandler.set(this.findTardis().get(), IS_OVERGROWN, var);
     }
     public void removeVegetation() {
         this.setOvergrown(false);
@@ -49,8 +49,8 @@ public class OvergrownData extends TardisLink {
     }
 
     public Identifier getOvergrownTexture() {
-        if(getTardis().isEmpty()) return null;
-        ExteriorCategory exterior = this.getTardis().get().getExterior().getCategory();
+        if(findTardis().isEmpty()) return null;
+        ExteriorCategory exterior = this.findTardis().get().getExterior().getCategory();
 
         return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + exterior.toString().toLowerCase() + "/" + exterior.toString().toLowerCase() + "_" + "overgrown" + ".png");
     }
@@ -65,11 +65,11 @@ public class OvergrownData extends TardisLink {
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
-        if(getTardis().isEmpty()) return;
+        if(findTardis().isEmpty()) return;
 
-        if (getTardis().get().isGrowth()) return;
+        if (findTardis().get().isGrowth()) return;
 
-        if (this.isOvergrown() && (this.getTardis().get().getTravel().getState() == TardisTravel.State.FLIGHT || this.getTardis().get().getTravel().getState() == TardisTravel.State.MAT)) {
+        if (this.isOvergrown() && (this.findTardis().get().getTravel().getState() == TardisTravel.State.FLIGHT || this.findTardis().get().getTravel().getState() == TardisTravel.State.MAT)) {
             this.setOvergrown(false);
             this.setTicks(0);
             return;
@@ -77,7 +77,7 @@ public class OvergrownData extends TardisLink {
 
         //if (!this.getExteriorPos().getWorld().getBiome(this.getTardis().get().getTravel().getPosition()).isIn(BiomeTags.IS_FOREST)) return;
 
-        if (this.isOvergrown() || this.getTardis().get().getTravel().getState() != TardisTravel.State.LANDED) return;
+        if (this.isOvergrown() || this.findTardis().get().getTravel().getState() != TardisTravel.State.LANDED) return;
 
         // We know the tardis is landed so we can start ticking away
         if (hasReachedMaxTicks()) {

@@ -1,6 +1,5 @@
 package mdteam.ait.client.models.doors;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.tardis.data.DoorData;
@@ -9,10 +8,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
 
 public class PoliceBoxDoorModel extends DoorModel {
     private final ModelPart TARDIS;
@@ -66,7 +62,7 @@ public class PoliceBoxDoorModel extends DoorModel {
         /*this.TARDIS.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
         this.TARDIS.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();*/
 
-        DoorData door = doorEntity.getTardis().get().getDoor();
+        DoorData door = doorEntity.findTardis().get().getDoor();
 
         this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
         this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;

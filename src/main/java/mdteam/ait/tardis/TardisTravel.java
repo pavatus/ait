@@ -21,9 +21,6 @@ import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageSources;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,16 +30,16 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -98,12 +95,12 @@ public class TardisTravel extends TardisLink {
 
     public void tick(MinecraftServer server) {
 
-        if(this.getTardis().isEmpty()) return;
+        if(this.findTardis().isEmpty()) return;
 
         this.tickDemat();
         this.tickMat();
 
-        ServerTardis tardis = (ServerTardis) this.getTardis().get();
+        ServerTardis tardis = (ServerTardis) this.findTardis().get();
         int speed = this.getSpeed();
         State state = this.getState();
         boolean handbrake = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE);
@@ -137,44 +134,44 @@ public class TardisTravel extends TardisLink {
         // Stop speed from going above 1 if autopilot is enabled and we're in flight
         if (this.getSpeed() + 1 > 1
                 && this.getState() == State.FLIGHT
-                && this.getTardis().isPresent()
-                && PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND)) {
+                && this.findTardis().isPresent()
+                && PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND)) {
             return;
         }
 
         this.setSpeed(MathHelper.clamp(this.getSpeed() + 1,0, this.getMaxSpeed()));
     }
     public void decreaseSpeed() {
-        if(this.getTardis().isEmpty()) return;
+        if(this.findTardis().isEmpty()) return;
 
         if (this.getState() == State.LANDED && this.getSpeed() == 1) {
-            TardisUtil.getTardisDimension().playSound(null, this.getTardis().get().getDesktop().getConsolePos(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+            FlightUtil.playSoundAtConsole(this.findTardis().get(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
         }
 
         this.setSpeed(MathHelper.clamp(this.getSpeed() - 1,0, this.getMaxSpeed()));
     }
     public int getSpeed() {
-        if(this.getTardis().isEmpty()) return 0;
-        return PropertiesHandler.getInt(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.SPEED);
+        if(this.findTardis().isEmpty()) return 0;
+        return PropertiesHandler.getInt(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.SPEED);
     }
     public void setSpeed(int speed) {
-        if(this.getTardis().isEmpty()) return;
+        if(this.findTardis().isEmpty()) return;
 
-        PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.SPEED, speed);
+        PropertiesHandler.set(this.findTardis().get(), PropertiesHandler.SPEED, speed);
     }
 
     public int getMaxSpeed() {
-        if(this.getTardis().isEmpty()) return DEFAULT_MAX_SPEED;
+        if(this.findTardis().isEmpty()) return DEFAULT_MAX_SPEED;
 
-        if (!this.getTardis().get().getHandlers().getProperties().getData().containsKey(MAX_SPEED_KEY)) {
+        if (!this.findTardis().get().getHandlers().getProperties().getData().containsKey(MAX_SPEED_KEY)) {
             setMaxSpeed(DEFAULT_MAX_SPEED);
         }
 
-        return PropertiesHandler.getInt(this.getTardis().get().getHandlers().getProperties(), MAX_SPEED_KEY);
+        return PropertiesHandler.getInt(this.findTardis().get().getHandlers().getProperties(), MAX_SPEED_KEY);
     }
     public void setMaxSpeed(int speed) {
-        if(this.getTardis().isEmpty()) return;
-        PropertiesHandler.set(this.getTardis().get(), MAX_SPEED_KEY, speed);
+        if(this.findTardis().isEmpty()) return;
+        PropertiesHandler.set(this.findTardis().get(), MAX_SPEED_KEY, speed);
     }
 
     /**
@@ -182,13 +179,13 @@ public class TardisTravel extends TardisLink {
      * @return ticks
      */
     public int getMatTicks() {
-        if(this.getTardis().isEmpty()) return 0;
-        return PropertiesHandler.getInt(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.MAT_TICKS);
+        if(this.findTardis().isEmpty()) return 0;
+        return PropertiesHandler.getInt(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.MAT_TICKS);
     }
     private void setMatTicks(int ticks) {
-        if(this.getTardis().isEmpty()) return;
+        if(this.findTardis().isEmpty()) return;
 
-        PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.MAT_TICKS, ticks, false);
+        PropertiesHandler.set(this.findTardis().get(), PropertiesHandler.MAT_TICKS, ticks, false);
     }
     private void tickMat() {
         if (this.getState() != State.MAT) {
@@ -208,14 +205,14 @@ public class TardisTravel extends TardisLink {
      * @return ticks
      */
     public int getDematTicks() {
-        if(this.getTardis().isEmpty()) return 0;
+        if(this.findTardis().isEmpty()) return 0;
 
-        return PropertiesHandler.getInt(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.DEMAT_TICKS);
+        return PropertiesHandler.getInt(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.DEMAT_TICKS);
     }
     private void setDematTicks(int ticks) {
-        if(this.getTardis().isEmpty()) return;
+        if(this.findTardis().isEmpty()) return;
 
-        PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.DEMAT_TICKS, ticks, false);
+        PropertiesHandler.set(this.findTardis().get(), PropertiesHandler.DEMAT_TICKS, ticks, false);
     }
     private void tickDemat() {
         if (this.getState() != State.DEMAT) {
@@ -225,7 +222,7 @@ public class TardisTravel extends TardisLink {
 
         setDematTicks(getDematTicks() + 1);
 
-        if (PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
+        if (PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
             // cancel materialise
             this.cancelDemat();
             return;
@@ -241,17 +238,18 @@ public class TardisTravel extends TardisLink {
      * Stops demat while its happening - then plays a boom sound to signify
      */
     private void cancelDemat() {
-        if (this.getState() != State.DEMAT || this.getTardis().isEmpty()) return; // rip
-        if (this.getPosition() == null || this.getTardis().get().getDesktop() == null || this.getTardis().get().getDesktop().getConsolePos() == null) return;
+        if (this.getState() != State.DEMAT || this.findTardis().isEmpty()) return; // rip
+        if (this.getPosition() == null || this.findTardis().get().getDesktop() == null) return;
 
         this.forceLand();
         this.playThudSound();
-        AITMessages.sendToInterior(this.getTardis().get(), AITMessages.CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
+        AITMessages.sendToInterior(this.findTardis().get(), AITMessages.CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
     }
     public void playThudSound() {
-        if (this.getTardis().isEmpty()) return;
+        if (this.findTardis().isEmpty()) return;
         this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
-        TardisUtil.getTardisDimension().playSound(null, this.getTardis().get().getDesktop().getConsolePos(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+
+        FlightUtil.playSoundAtConsole(this.findTardis().get(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
     }
     /**
      * Performs a crash for the Tardis.
@@ -264,60 +262,68 @@ public class TardisTravel extends TardisLink {
         }
 
         // If already crashing, return
-        if (this.getTardis().isEmpty() || this.crashing) return;
+        if (this.findTardis().isEmpty() || this.crashing) return;
+
+        Tardis tardis = this.findTardis().get();
 
         // RandomiserControl.randomiseDestination(this.getTardis().get(), 10);
         // Play explosion sound and create explosion at console position if available
-        if (this.getTardis().get().getDesktop().getConsolePos() != null) {
-            if (TardisUtil.getTardisDimension() == null) return;
-            TardisUtil.getTardisDimension().playSound(
+        if (TardisUtil.getTardisDimension() == null) return;
+
+        FlightUtil.playSoundAtConsole(tardis,
+                SoundEvents.ENTITY_GENERIC_EXPLODE,
+                SoundCategory.BLOCKS,
+                3f,
+                1f
+        );
+        List<Explosion> explosions = new ArrayList<>();
+
+        tardis.getDesktop().getConsoles().forEach(console -> {
+            Explosion explosion = TardisUtil.getTardisDimension().createExplosion(
                     null,
-                    this.getTardis().get().getDesktop().getConsolePos(),
-                    SoundEvents.ENTITY_GENERIC_EXPLODE,
-                    SoundCategory.BLOCKS,
-                    3f,
-                    1f
-            );
-            Explosion exp = TardisUtil.getTardisDimension().createExplosion(
                     null,
                     null,
-                    null,
-                    this.getTardis().get().getDesktop().getConsolePos().toCenterPos(),
-                    3f * (getTardis().get().tardisHammerAnnoyance + 1),
+                    console.position().toCenterPos(),
+                    3f * (findTardis().get().tardisHammerAnnoyance + 1),
                     false,
                     World.ExplosionSourceType.NONE
             );
-            Random random = new Random();
-            for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.getTardis().get())) {
-                int x_random = random.nextInt(1, 10);
-                int y_random = random.nextInt(1, 10);
-                int z_random = random.nextInt(1, 10);
 
-                boolean is_x_negative = false;
-                boolean is_z_negative = false;
-                if (random.nextInt(1,3) == 1) {
-                    is_x_negative = true;
-                }
-                if (random.nextInt(1,3) == 1) {
-                    is_z_negative = true;
-                }
-                int crash_intensity = getTardis().get().tardisHammerAnnoyance + 1;
-                player.addVelocity(0.5f * x_random * (is_x_negative ? -1 : 1) * crash_intensity, 0.25f * y_random * crash_intensity, 0.5f * z_random * (is_z_negative ? -1 : 1) * crash_intensity);
-                player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
-                int damage_to_do_to_player = 3 + crash_intensity * 2;
-                player.damage(TardisUtil.getTardisDimension().getDamageSources().explosion(exp), damage_to_do_to_player);
+            explosions.add(explosion);
+        });
+
+        Random random = new Random();
+        for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.findTardis().get())) {
+            int x_random = random.nextInt(1, 10);
+            int y_random = random.nextInt(1, 10);
+            int z_random = random.nextInt(1, 10);
+
+            boolean is_x_negative = false;
+            boolean is_z_negative = false;
+            if (random.nextInt(1,3) == 1) {
+                is_x_negative = true;
             }
+            if (random.nextInt(1,3) == 1) {
+                is_z_negative = true;
+            }
+            int crash_intensity = findTardis().get().tardisHammerAnnoyance + 1;
+            player.addVelocity(0.5f * x_random * (is_x_negative ? -1 : 1) * crash_intensity, 0.25f * y_random * crash_intensity, 0.5f * z_random * (is_z_negative ? -1 : 1) * crash_intensity);
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0 , false, false));
+            int damage_to_do_to_player = 3 + crash_intensity * 2;
+
+            if (!explosions.isEmpty())
+                player.damage(TardisUtil.getTardisDimension().getDamageSources().explosion(explosions.get(0)), damage_to_do_to_player);
         }
-        this.getTardis().get().setLockedTardis(false);
+        this.findTardis().get().setLockedTardis(false);
         //this.getTardis().get().getHandlers().getDoor().openDoors();
         // Load the chunk of the Tardis destination
         // Enable alarm and disable anti-mavity properties for Tardis
-        PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.ALARM_ENABLED, true);
-        PropertiesHandler.set(this.getTardis().get(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
+        PropertiesHandler.set(this.findTardis().get(), PropertiesHandler.ALARM_ENABLED, true);
+        PropertiesHandler.set(this.findTardis().get(), PropertiesHandler.ANTIGRAVS_ENABLED, false);
         // Set the destination position at the topmost block of the world at the X and Z coordinates of the destination
         this.setDestination(
                 new AbsoluteBlockPos.Directed(
-                        this.getTardis().get().getTravel().getDestination().getX(),
+                        this.findTardis().get().getTravel().getDestination().getX(),
                         this.getDestination().getWorld().getTopY() - 1,
                         this.getDestination().getZ(),
                         this.getDestination().getWorld(),
@@ -330,15 +336,15 @@ public class TardisTravel extends TardisLink {
         this.setSpeed(0);
         // Sync the tardis
         // Remove fuel from Tardis
-        this.getTardis().get().removeFuel(80);
-        if (this.getTardis().get().tardisHammerAnnoyance > 0) {
-            this.getTardis().get().removeFuel(1000 * this.getTardis().get().tardisHammerAnnoyance);
+        this.findTardis().get().removeFuel(80);
+        if (this.findTardis().get().tardisHammerAnnoyance > 0) {
+            this.findTardis().get().removeFuel(1000 * this.findTardis().get().tardisHammerAnnoyance);
         }
         // Materialize the Tardis
         this.materialise();
         // Invoke the crash event
-        this.getTardis().get().tardisHammerAnnoyance = 0;
-        TardisEvents.CRASH.invoker().onCrash(this.getTardis().get());
+        this.findTardis().get().tardisHammerAnnoyance = 0;
+        TardisEvents.CRASH.invoker().onCrash(this.findTardis().get());
     }
 
     public void materialise() {
@@ -351,7 +357,7 @@ public class TardisTravel extends TardisLink {
      */
     public void materialise(boolean ignoreChecks) {
         // Check if running on the client side, and if so, return early
-        if (this.getDestination().getWorld().isClient() || getTardis().isEmpty()) {
+        if (this.getDestination().getWorld().isClient() || findTardis().isEmpty()) {
             return;
         }
 
@@ -360,15 +366,15 @@ public class TardisTravel extends TardisLink {
         // Disable autopilot
         // PropertiesHandler.setAutoPilot(this.getTardis().get().getHandlers().getProperties(), false);
 
-        this.setDestination(FlightUtil.getPositionFromPercentage(this.getTardis().get().position(), this.getTardis().get().destination(), this.getTardis().get().getHandlers().getFlight().getDurationAsPercentage()), true);
+        this.setDestination(FlightUtil.getPositionFromPercentage(this.findTardis().get().position(), this.findTardis().get().destination(), this.findTardis().get().getHandlers().getFlight().getDurationAsPercentage()), true);
 
         // Check if materialization is on cooldown and return if it is
-        if (!ignoreChecks && FlightUtil.isMaterialiseOnCooldown(getTardis().get())) {
+        if (!ignoreChecks && FlightUtil.isMaterialiseOnCooldown(findTardis().get())) {
             return;
         }
 
         // Check if the Tardis materialization is prevented by event listeners
-        if (!ignoreChecks && TardisEvents.MAT.invoker().onMat(getTardis().get())) {
+        if (!ignoreChecks && TardisEvents.MAT.invoker().onMat(findTardis().get())) {
             failToMaterialise();
             return;
         }
@@ -386,8 +392,8 @@ public class TardisTravel extends TardisLink {
         this.getDestination().getWorld().playSound(null, this.getDestination(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
 
         // Play materialize sound at the Tardis console position if it exists
-        if (this.getTardis().isPresent() && this.getTardis().get().getDesktop().getConsolePos() != null) {
-            TardisUtil.getTardisDimension().playSound(null, this.getTardis().get().getDesktop().getConsolePos(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
+        if (this.findTardis().isPresent()) {
+            FlightUtil.playSoundAtConsole(this.findTardis().get(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
         }
 
         // Set the destination block to the Tardis exterior block
@@ -408,33 +414,33 @@ public class TardisTravel extends TardisLink {
 
     public void dematerialise(boolean withRemat, boolean ignoreChecks) {
         if (this.getState() != State.LANDED) return;
-        if(getTardis().isEmpty()) return;
+        if(findTardis().isEmpty()) return;
 
-        if (!getTardis().get().hasPower()) {
+        if (!findTardis().get().hasPower()) {
             return; // no flying for you if you have no powa :)
         }
 
         if (this.getPosition().getWorld().isClient())
             return;
 
-        if (FlightUtil.isDematerialiseOnCooldown(getTardis().get()))
+        if (FlightUtil.isDematerialiseOnCooldown(findTardis().get()))
             return; // cancelled
 
 
-        if (PropertiesHandler.willAutoPilot(getTardis().get().getHandlers().getProperties())) {
+        if (PropertiesHandler.willAutoPilot(findTardis().get().getHandlers().getProperties())) {
             // fulfill all the prerequisites
             // DoorData.lockTardis(true, tardis(), null, false);
-            PropertiesHandler.set(getTardis().get(), PropertiesHandler.HANDBRAKE, false);
-            this.getTardis().get().getDoor().closeDoors();
-            getTardis().get().setRefueling(false);
+            PropertiesHandler.set(findTardis().get(), PropertiesHandler.HANDBRAKE, false);
+            this.findTardis().get().getDoor().closeDoors();
+            findTardis().get().setRefueling(false);
             if (this.getSpeed() == 0) this.increaseSpeed();
         }
 
-        PropertiesHandler.setAutoPilot(this.getTardis().get().getHandlers().getProperties(), withRemat);
+        PropertiesHandler.setAutoPilot(this.findTardis().get().getHandlers().getProperties(), withRemat);
 
         ServerWorld world = (ServerWorld) this.getPosition().getWorld();
 
-        if (!ignoreChecks && TardisEvents.DEMAT.invoker().onDemat(getTardis().get())) {
+        if (!ignoreChecks && TardisEvents.DEMAT.invoker().onDemat(findTardis().get())) {
             failToTakeoff();
             return;
         }
@@ -444,10 +450,8 @@ public class TardisTravel extends TardisLink {
         this.setState(State.DEMAT);
 
         world.playSound(null, this.getPosition(), this.getSoundForCurrentState(), SoundCategory.BLOCKS);
-        if (this.getTardis().isPresent())
-            if (this.getTardis().get().getDesktop().getConsolePos() != null) {
-                TardisUtil.getTardisDimension().playSound(null, this.getTardis().get().getDesktop().getConsolePos(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 10f, 1f);
-            }
+        if (this.findTardis().isPresent())
+            FlightUtil.playSoundAtConsole(this.findTardis().get(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 10f, 1f);
 
         this.runAnimations();
     }
@@ -460,37 +464,34 @@ public class TardisTravel extends TardisLink {
 
     private void failToMaterialise() {
 
-        if(getTardis().isEmpty()) return;
+        if(findTardis().isEmpty()) return;
 
         // Play failure sound at the current position
         this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
         // Play failure sound at the Tardis console position if the interior is not empty
-        if (TardisUtil.isInteriorNotEmpty(getTardis().get()) && this.getTardis().get().getDesktop().getConsolePos() != null) {
-            TardisUtil.getTardisDimension().playSound(null, this.getTardis().get().getDesktop().getConsolePos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
-        }
+        FlightUtil.playSoundAtConsole(this.findTardis().get(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
         // Send error message to the pilot
         // TardisUtil.sendMessageToPilot(this.getTardis().get(), Text.literal("Unable to land!"));
 
         // Create materialization delay and return
-        FlightUtil.createMaterialiseDelay(this.getTardis().get());
+        FlightUtil.createMaterialiseDelay(this.findTardis().get());
         return;
     }
 
     private void failToTakeoff() {
         // dont do anything if out of fuel, make it sad :(
-        if (getTardis().isEmpty() || !getTardis().get().hasPower()) return;
+        if (findTardis().isEmpty() || !findTardis().get().hasPower()) return;
 
         // demat will be cancelled
         this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
-        if (TardisUtil.isInteriorNotEmpty(getTardis().get()))
-            if(this.getTardis().get().getDesktop().getConsolePos() != null)
-                TardisUtil.getTardisDimension().playSound(null, this.getTardis().get().getDesktop().getConsolePos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
+        if (TardisUtil.isInteriorNotEmpty(findTardis().get()))
+            FlightUtil.playSoundAtConsole(this.findTardis().get(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
 
         // TardisUtil.sendMessageToPilot(this.getTardis().get(), Text.literal("Unable to takeoff!")); // fixme translatable
-        FlightUtil.createDematerialiseDelay(this.getTardis().get());
+        FlightUtil.createDematerialiseDelay(this.findTardis().get());
     }
 
     /**
@@ -508,12 +509,12 @@ public class TardisTravel extends TardisLink {
         if (isDestinationTardisExterior()) {
             ExteriorBlockEntity target = (ExteriorBlockEntity) world.getBlockEntity(this.getDestination()); // safe
 
-            if (getTardis().isEmpty() || target.getTardis().isEmpty() ||
-                    getTardis().get().getUuid().equals(target.getTardis().get().getUuid())) return false;
+            if (findTardis().isEmpty() || target.findTardis().isEmpty() ||
+                    findTardis().get().getUuid().equals(target.findTardis().get().getUuid())) return false;
 
-            setDestinationToTardisInterior(target.getTardis().get(), true, 256); // how many times should this be
+            setDestinationToTardisInterior(target.findTardis().get(), true, 256); // how many times should this be
 
-            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(getTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
+            return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
         }
 
         // is long line
@@ -588,8 +589,8 @@ public class TardisTravel extends TardisLink {
     }
 
     public boolean checkDestination() {
-        if (this.getTardis().isEmpty()) return false;
-        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
+        if (this.findTardis().isEmpty()) return false;
+        return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
     }
 
     private boolean isDestinationTardisExterior() {
@@ -652,18 +653,18 @@ public class TardisTravel extends TardisLink {
         this.setState(TardisTravel.State.FLIGHT);
         this.deleteExterior();
 
-        if (this.getTardis().isEmpty()) return;
-        boolean security = PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
+        if (this.findTardis().isEmpty()) return;
+        boolean security = PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
         if (security) {
-            SecurityControl.runSecurityProtocols(this.getTardis().get());
+            SecurityControl.runSecurityProtocols(this.findTardis().get());
         }
     }
 
     public void forceLand(@Nullable ExteriorBlockEntity blockEntity) {
-        if (this.getTardis().isEmpty())
+        if (this.findTardis().isEmpty())
             return;
 
-        if (PropertiesHandler.willAutoPilot(this.getTardis().get().getHandlers().getProperties())) {
+        if (PropertiesHandler.willAutoPilot(this.findTardis().get().getHandlers().getProperties())) {
             if (this.getSpeed() > 0) {
                 this.setSpeed(0);
             }
@@ -678,8 +679,8 @@ public class TardisTravel extends TardisLink {
 
             // If there is already a matching exterior at this position
             if (found instanceof ExteriorBlockEntity exterior
-                    && exterior.getTardis().isPresent()
-                    && Objects.equals(exterior.getTardis().get(), this.getTardis().get())) {
+                    && exterior.findTardis().isPresent()
+                    && Objects.equals(exterior.findTardis().get(), this.findTardis().get())) {
                 blockEntity = exterior;
             } else {
                 ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
@@ -688,7 +689,7 @@ public class TardisTravel extends TardisLink {
 
                 ExteriorBlockEntity newEntity = new ExteriorBlockEntity(this.getPosition(), state);
                 world.addBlockEntity(newEntity);
-                newEntity.setTardis(this.getTardis().get());
+                newEntity.setTardis(this.findTardis().get());
                 blockEntity = newEntity;
             }
 
@@ -697,9 +698,9 @@ public class TardisTravel extends TardisLink {
         this.runAnimations(blockEntity);
 
         if (DoorData.isClient()) return;
-        DoorData.lockTardis(PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.getTardis().get(), null, false);
+        DoorData.lockTardis(PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.findTardis().get(), null, false);
 
-        TardisEvents.LANDED.invoker().onLanded(getTardis().get());
+        TardisEvents.LANDED.invoker().onLanded(findTardis().get());
     }
 
     public void setCrashing(boolean crashing) {
@@ -730,16 +731,16 @@ public class TardisTravel extends TardisLink {
     }
 
     public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
-        if(this.getTardis().isEmpty()) return;
+        if(this.findTardis().isEmpty()) return;
 
         if (Objects.equals(this.destination, pos)) return;
 
 
         this.destination = pos;
-        this.getTardis().get().getHandlers().getFlight().recalculate();
+        this.findTardis().get().getHandlers().getFlight().recalculate();
 
         if (withChecks)
-            this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
+            this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND));
         this.sync();
     }
     public void setDestination(AbsoluteBlockPos.Directed pos) {
@@ -752,12 +753,12 @@ public class TardisTravel extends TardisLink {
      */
     public void setPositionToProgress(AbsoluteBlockPos.Directed source) {
         if (this.getState() != State.FLIGHT) return;
-        if (this.getTardis().isEmpty()) return;
+        if (this.findTardis().isEmpty()) return;
 
         AbsoluteBlockPos.Directed pos = FlightUtil.getPositionFromPercentage(
                 source,
                 this.getDestination(),
-                this.getTardis().get().getHandlers().getFlight().getDurationAsPercentage()
+                this.findTardis().get().getHandlers().getFlight().getDurationAsPercentage()
         );
 
         this.setPosition(pos);
@@ -791,13 +792,13 @@ public class TardisTravel extends TardisLink {
 
     public void placeExterior() {
 
-        if(this.getTardis().isEmpty()) return;
+        if(this.findTardis().isEmpty()) return;
 
         this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(ExteriorBlock.FACING, this.position.getDirection()));
         ExteriorBlockEntity exterior = new ExteriorBlockEntity(
                 this.position, this.position.getBlockState()
         );
-        exterior.setTardis(this.getTardis().get());
+        exterior.setTardis(this.findTardis().get());
         this.position.addBlockEntity(exterior);
     }
 
@@ -811,21 +812,21 @@ public class TardisTravel extends TardisLink {
 
     @NotNull
     public SoundEvent getSoundForCurrentState() {
-        if (this.getTardis().isPresent()) {
+        if (this.findTardis().isPresent()) {
             if (this.isCrashing()) {
                 return AITSounds.GHOST_MAT;
             }
-            return this.getTardis().get().getExterior().getVariant().getSound(this.getState()).sound();
+            return this.findTardis().get().getExterior().getVariant().getSound(this.getState()).sound();
         }
         return SoundEvents.INTENTIONALLY_EMPTY;
     }
 
     public MatSound getMatSoundForCurrentState() {
-        if (this.getTardis().isPresent()) {
+        if (this.findTardis().isPresent()) {
             if (this.isCrashing()) {
                 return AITSounds.GHOST_MAT_ANIM;
             }
-            return this.getTardis().get().getExterior().getVariant().getSound(this.getState());
+            return this.findTardis().get().getExterior().getVariant().getSound(this.getState());
         }
         return AITSounds.LANDED_ANIM;
     }

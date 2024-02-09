@@ -38,7 +38,7 @@ public class PlinthDoorModel extends DoorModel {
 
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f));
 
-		plinth.getChild("door").yaw = door.getTardis().get().getHandlers().getDoor().isOpen() ? -1.75f : 0f;
+		plinth.getChild("door").yaw = door.findTardis().get().getHandlers().getDoor().isOpen() ? -1.75f : 0f;
 
 		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

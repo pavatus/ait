@@ -324,7 +324,9 @@ public class Tardis {
         if (PropertiesHandler.getBool(getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
             DoorData.lockTardis(true, this, null, true);
         }
+
         this.getTravel().tick(server);
+        this.getDesktop().tick(server);
     }
 
     /**

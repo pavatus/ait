@@ -46,9 +46,9 @@ public class DoorData extends TardisLink {
      * Moves entities in the Tardis interior towards the door.
      */
     private void succ() {
-        if(getTardis().isEmpty()) return;
+        if(findTardis().isEmpty()) return;
         // Get all entities in the Tardis interior
-        TardisUtil.getLivingEntitiesInInterior(getTardis().get())
+        TardisUtil.getLivingEntitiesInInterior(findTardis().get())
                 .stream()
                 .filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
                 .filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
@@ -63,9 +63,9 @@ public class DoorData extends TardisLink {
                 });
     }
     private boolean shouldSucc() {
-        if(this.getTardis().isEmpty() || getDoorPos() == null) return false;
-        return (getTardis().get().getTravel().getState() != LANDED &&
-                getTardis().get().getTravel().getState() != MAT) && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(getTardis().get().getDesktop().getDoorPos()) instanceof DoorBlockEntity;    }
+        if(this.findTardis().isEmpty() || getDoorPos() == null) return false;
+        return (findTardis().get().getTravel().getState() != LANDED &&
+                findTardis().get().getTravel().getState() != MAT) && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(findTardis().get().getDesktop().getDoorPos()) instanceof DoorBlockEntity;    }
 
     // Remember to this.sync() for these setters!!
     public void setLeftRot(boolean var) {
@@ -107,8 +107,8 @@ public class DoorData extends TardisLink {
     }
 
     public boolean isDoubleDoor() {
-        if(getTardis().isEmpty()) return false;
-        return getTardis().get().getExterior().getVariant().door().isDouble();
+        if(findTardis().isEmpty()) return false;
+        return findTardis().get().getExterior().getVariant().door().isDouble();
     }
 
     // fixme all these open methods are terrible
@@ -148,18 +148,18 @@ public class DoorData extends TardisLink {
     }
 
     public void setDoorState(DoorStateEnum var) {
-        if(getTardis().isEmpty()) return;
+        if(findTardis().isEmpty()) return;
         if (var != doorState) {
             tempExteriorState = this.doorState;
             tempInteriorState = this.doorState;
 
             // if the last state ( doorState ) was closed and the new state ( var ) is open, fire the event
             if (doorState == DoorStateEnum.CLOSED) {
-                TardisEvents.DOOR_OPEN.invoker().onOpen(getTardis().get());
+                TardisEvents.DOOR_OPEN.invoker().onOpen(findTardis().get());
             }
             // if the last state was open and the new state is closed, fire the event
             if (doorState != DoorStateEnum.CLOSED && var == DoorStateEnum.CLOSED) {
-                TardisEvents.DOOR_CLOSE.invoker().onClose(getTardis().get());
+                TardisEvents.DOOR_CLOSE.invoker().onClose(findTardis().get());
             }
         }
 

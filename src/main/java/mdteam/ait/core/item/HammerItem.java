@@ -6,10 +6,8 @@ import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.FlightData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -33,8 +31,8 @@ public class HammerItem extends Item {
         PlayerEntity player = context.getPlayer();
         if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
             if (player == null) return ActionResult.PASS;
-            if (consoleBlockEntity.getTardis().isEmpty()) return ActionResult.PASS;
-            Tardis tardis = consoleBlockEntity.getTardis().get();
+            if (consoleBlockEntity.findTardis().isEmpty()) return ActionResult.PASS;
+            Tardis tardis = consoleBlockEntity.findTardis().get();
             if (!(tardis.getTravel().getState() == TardisTravel.State.FLIGHT)) {
                 world.playSound(null, consoleBlockEntity.getPos(),
                         SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS, 1f, 1.0f);

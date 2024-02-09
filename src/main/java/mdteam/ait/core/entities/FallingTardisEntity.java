@@ -34,8 +34,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.crash.CrashReportSection;
@@ -112,10 +110,10 @@ public class FallingTardisEntity extends Entity {
         FallingTardisEntity fallingBlockEntity = new FallingTardisEntity(world, (double)pos.getX() + 0.5, (double)pos.getY(), (double)pos.getZ() + 0.5, state.contains(Properties.WATERLOGGED) ? (BlockState)state.with(Properties.WATERLOGGED, false) : state);
 
         if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
-            if(exterior.getTardis().isEmpty()) return null;
-            fallingBlockEntity.setTardisId(exterior.getTardis().get().getUuid());
+            if(exterior.findTardis().isEmpty()) return null;
+            fallingBlockEntity.setTardisId(exterior.findTardis().get().getUuid());
 
-            PropertiesHandler.set(exterior.getTardis().get(), PropertiesHandler.IS_FALLING, true);
+            PropertiesHandler.set(exterior.findTardis().get(), PropertiesHandler.IS_FALLING, true);
         }
         world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
         world.spawnEntity(fallingBlockEntity);

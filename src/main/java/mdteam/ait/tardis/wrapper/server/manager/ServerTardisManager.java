@@ -225,10 +225,10 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
     // TODO - yes this is much better than sending the entire tardis class, but it still sends the entire component class. If everything is saved in a PropertiesHolder then this is a non-issue though.
     public void sendToSubscribers(AbstractTardisComponent component) {
 
-        if (component.getTardis().isEmpty()) return;
+        if (component.findTardis().isEmpty()) return;
 
-        for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(this.getTardis(component.getTardis().get().getUuid()))) {
-            this.updateTardis(player, component.getTardis().get().getUuid(), component);
+        for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(this.getTardis(component.findTardis().get().getUuid()))) {
+            this.updateTardis(player, component.findTardis().get().getUuid(), component);
         }
     }
 

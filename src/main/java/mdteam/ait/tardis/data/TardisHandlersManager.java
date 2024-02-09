@@ -110,8 +110,8 @@ public class TardisHandlersManager extends TardisLink {
     }
 
     public PropertiesHolder getProperties() {
-        if (this.properties == null && getTardis().isPresent()) {
-            this.properties = new PropertiesHolder(this.getTardis().get());
+        if (this.properties == null && findTardis().isPresent()) {
+            this.properties = new PropertiesHolder(this.findTardis().get());
         }
         return properties;
     }
@@ -121,8 +121,8 @@ public class TardisHandlersManager extends TardisLink {
     }
 
     public WaypointHandler getWaypoints() {
-        if (this.waypoints == null && getTardis().isPresent()) {
-            this.waypoints = new WaypointHandler(this.getTardis().get());
+        if (this.waypoints == null && findTardis().isPresent()) {
+            this.waypoints = new WaypointHandler(this.findTardis().get());
         }
         return waypoints;
     }
@@ -131,8 +131,8 @@ public class TardisHandlersManager extends TardisLink {
     }
 
     public LoyaltyHandler getLoyalties() {
-        if (this.loyalties == null && getTardis().isPresent()) {
-            this.loyalties = new LoyaltyHandler(this.getTardis().get());
+        if (this.loyalties == null && findTardis().isPresent()) {
+            this.loyalties = new LoyaltyHandler(this.findTardis().get());
         }
         return loyalties;
     }
@@ -140,8 +140,8 @@ public class TardisHandlersManager extends TardisLink {
         this.loyalties = loyalties;
     }
     public DoorData getDoor() {
-        if (this.door == null && getTardis().isPresent()) {
-            this.door = new DoorData(this.getTardis().get());
+        if (this.door == null && findTardis().isPresent()) {
+            this.door = new DoorData(this.findTardis().get());
         }
         return door;
     }
@@ -149,8 +149,8 @@ public class TardisHandlersManager extends TardisLink {
         this.door = door;
     }
     public OvergrownData getOvergrown() {
-        if (this.overgrown == null && getTardis().isPresent()) {
-            this.overgrown = new OvergrownData(this.getTardis().get());
+        if (this.overgrown == null && findTardis().isPresent()) {
+            this.overgrown = new OvergrownData(this.findTardis().get());
         }
         return overgrown;
     }
@@ -158,16 +158,16 @@ public class TardisHandlersManager extends TardisLink {
         this.overgrown = overgrown;
     }
     public ServerHumHandler getHum() {
-        if (this.hum == null && getTardis().isPresent()) {
-            this.hum = new ServerHumHandler(this.getTardis().get());
+        if (this.hum == null && findTardis().isPresent()) {
+            this.hum = new ServerHumHandler(this.findTardis().get());
         }
 
         return this.hum;
     }
 
     public ServerAlarmHandler getAlarms() {
-        if (this.alarms == null && getTardis().isPresent()) {
-            this.alarms = new ServerAlarmHandler(this.getTardis().get());
+        if (this.alarms == null && findTardis().isPresent()) {
+            this.alarms = new ServerAlarmHandler(this.findTardis().get());
         }
         return alarms;
     }
@@ -175,15 +175,15 @@ public class TardisHandlersManager extends TardisLink {
         this.alarms = alarms;
     }
     public InteriorChangingHandler getInteriorChanger() {
-        if (this.interior == null && getTardis().isPresent()) {
-            this.interior = new InteriorChangingHandler(this.getTardis().get());
+        if (this.interior == null && findTardis().isPresent()) {
+            this.interior = new InteriorChangingHandler(this.findTardis().get());
         }
         return interior;
     }
 
     public FuelData getFuel() {
-        if (this.fuel == null && getTardis().isPresent()) {
-            this.fuel = new FuelData(this.getTardis().get());
+        if (this.fuel == null && findTardis().isPresent()) {
+            this.fuel = new FuelData(this.findTardis().get());
         }
         return fuel;
     }
@@ -192,8 +192,8 @@ public class TardisHandlersManager extends TardisLink {
     }
 
     public HADSData getHADS() {
-        if (this.hads == null && getTardis().isPresent()) {
-            this.hads = new HADSData(this.getTardis().get());
+        if (this.hads == null && findTardis().isPresent()) {
+            this.hads = new HADSData(this.findTardis().get());
         }
         return hads;
     }
@@ -201,8 +201,8 @@ public class TardisHandlersManager extends TardisLink {
         this.hads = hads;
     }
     public FlightData getFlight() {
-        if (this.flight == null && getTardis().isPresent()) {
-            this.flight = new FlightData(this.getTardis().get());
+        if (this.flight == null && findTardis().isPresent()) {
+            this.flight = new FlightData(this.findTardis().get());
         }
 
         return flight;
@@ -211,8 +211,8 @@ public class TardisHandlersManager extends TardisLink {
         this.flight = flight;
     }
     public SiegeData getSiege() {
-        if (this.siege == null && getTardis().isPresent()) {
-            this.siege = new SiegeData(this.getTardis().get());
+        if (this.siege == null && findTardis().isPresent()) {
+            this.siege = new SiegeData(this.findTardis().get());
         }
         return this.siege;
     }
@@ -220,14 +220,14 @@ public class TardisHandlersManager extends TardisLink {
         this.siege = siege;
     }
     public CloakData getCloak() {
-        if (this.cloak == null && getTardis().isPresent()) {
-            this.cloak = new CloakData(this.getTardis().get());
+        if (this.cloak == null && findTardis().isPresent()) {
+            this.cloak = new CloakData(this.findTardis().get());
         }
         return this.cloak;
     }
     public StatsData getStats() {
-        if (this.stats == null && getTardis().isPresent()) {
-            this.stats = new StatsData(this.getTardis().get());
+        if (this.stats == null && findTardis().isPresent()) {
+            this.stats = new StatsData(this.findTardis().get());
             addTickable(this.stats);
         }
         return this.stats;

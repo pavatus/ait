@@ -1,25 +1,18 @@
 package mdteam.ait.client.models.consoles;
 
-import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.animation.console.coral.CoralAnimations;
-import mdteam.ait.client.animation.console.hartnell.HartnellAnimations;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.registry.ConsoleVariantRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.console.CoralConsole;
 import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
-import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-
-import static mdteam.ait.tardis.TardisTravel.State.DEMAT;
-import static mdteam.ait.tardis.TardisTravel.State.FLIGHT;
 
 public class CoralConsoleModel extends ConsoleModel {
 	public static final Animation EMPTY_ANIM = Animation.Builder.create(1).build(); // temporary animation bc rn we have none
@@ -1351,9 +1344,9 @@ public class CoralConsoleModel extends ConsoleModel {
 
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (console.getTardis().isEmpty()) return;
+		if (console.findTardis().isEmpty()) return;
 
-		Tardis tardis = console.getTardis().get();
+		Tardis tardis = console.findTardis().get();
 
 		matrices.push();
 		matrices.translate(0.5f, -1.5f, -0.5f);
@@ -1362,23 +1355,23 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Fuel Gauge
 		this.console.getChild("controls").getChild("ctrl_1").getChild("bone13").getChild("compass").getChild("needle").pitch =
-				-(float) (((console.getTardis().get().getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
+				-(float) (((console.findTardis().get().getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
 
 		ModelPart fuelLowWarningLight = this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("light").getChild("bone45");
 		// Low Fuel Light
-		fuelLowWarningLight.visible = (console.getTardis().get().getFuel() <= (FuelData.TARDIS_MAX_FUEL / 10));
+		fuelLowWarningLight.visible = (console.findTardis().get().getFuel() <= (FuelData.TARDIS_MAX_FUEL / 10));
 
 		// Anti-gravs Lever
-		this.console.getChild("controls").getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll = !PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ?
+		this.console.getChild("controls").getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll = !PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ?
 				this.console.getChild("controls").getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll : this.console.getChild("controls").getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll - 1.5f;
 
 		// Door Control
 		ModelPart doorControl = this.console.getChild("controls").getChild("p_ctrl_1").getChild("bone29").getChild("crank").getChild("bone32");
 
-		if(console.getTardis().get().getDoor().isLeftOpen()) {
+		if(console.findTardis().get().getDoor().isLeftOpen()) {
 			doorControl.pitch = doorControl.pitch - 0.8f;
 		}
-		else if(console.getTardis().get().getDoor().isRightOpen()){
+		else if(console.findTardis().get().getDoor().isRightOpen()){
 			doorControl.pitch = doorControl.pitch - 1.5f;
 		}
 		else {
@@ -1386,9 +1379,9 @@ public class CoralConsoleModel extends ConsoleModel {
 		}
 
 		// Power Lever
-		this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ?
+		this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ?
 				this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll : this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll - 1.5f;
-		this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ?
+		this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ?
 				this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll : this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll + 0.5f;
 
 		// Throttle
@@ -1399,38 +1392,38 @@ public class CoralConsoleModel extends ConsoleModel {
 		ModelPart increment = this.console.getChild("controls").getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("crank2");
 		ModelPart incrementTwo = this.console.getChild("controls").getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("bone34");
 
-		increment.yaw = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? IncrementManager.increment(console.getTardis().get()) >= 10000 ? increment.yaw + 1.5f : increment.yaw + 1.25f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
-		incrementTwo.pivotY = IncrementManager.increment(console.getTardis().get()) >= 10 ? IncrementManager.increment(console.getTardis().get()) >= 100 ? IncrementManager.increment(console.getTardis().get()) >= 1000 ? IncrementManager.increment(console.getTardis().get()) >= 10000 ? incrementTwo.pivotY + 3f : incrementTwo.pivotY + 2f : incrementTwo.pivotY + 1f : incrementTwo.pivotY + 0.5f : incrementTwo.pivotY;
+		increment.yaw = IncrementManager.increment(console.findTardis().get()) >= 10 ? IncrementManager.increment(console.findTardis().get()) >= 100 ? IncrementManager.increment(console.findTardis().get()) >= 1000 ? IncrementManager.increment(console.findTardis().get()) >= 10000 ? increment.yaw + 1.5f : increment.yaw + 1.25f : increment.yaw + 1f : increment.yaw + 0.5f : increment.yaw;
+		incrementTwo.pivotY = IncrementManager.increment(console.findTardis().get()) >= 10 ? IncrementManager.increment(console.findTardis().get()) >= 100 ? IncrementManager.increment(console.findTardis().get()) >= 1000 ? IncrementManager.increment(console.findTardis().get()) >= 10000 ? incrementTwo.pivotY + 3f : incrementTwo.pivotY + 2f : incrementTwo.pivotY + 1f : incrementTwo.pivotY + 0.5f : incrementTwo.pivotY;
 
 		// Refueler
 		ModelPart refueler = this.console.getChild("controls").getChild("p_ctrl_5").getChild("bone49").getChild("ring2").getChild("switch30");
 
-		refueler.pivotY = console.getTardis().get().isRefueling() ? refueler.pivotY + 1 : refueler.pivotY;
+		refueler.pivotY = console.findTardis().get().isRefueling() ? refueler.pivotY + 1 : refueler.pivotY;
 
 		// Waypoint
-		this.console.getChild("controls").getChild("ctrl_1").getChild("bone13").getChild("insert").getChild("bone96").visible = console.getTardis().get().getHandlers().getWaypoints().hasCartridge();
+		this.console.getChild("controls").getChild("ctrl_1").getChild("bone13").getChild("insert").getChild("bone96").visible = console.findTardis().get().getHandlers().getWaypoints().hasCartridge();
 
 		// Handbrake
-		this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw = !PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw : this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw + 0.75f;
+		this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw = !PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw : this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw + 0.75f;
 
 		// Siege Mode
 		ModelPart siege = this.console.getChild("controls").getChild("p_ctrl_3").getChild("bone36").getChild("handbrake");
 
-		siege.roll = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE) ? siege.roll + 0.45f : siege.roll;
+		siege.roll = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE) ? siege.roll + 0.45f : siege.roll;
 
 		// Autopilot
 		ModelPart autopilot = this.console.getChild("controls").getChild("ctrl_4").getChild("bone15").getChild("switch24").getChild("bone19");
 
-		autopilot.pivotY = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? autopilot.pivotY + 1 : autopilot.pivotY;
+		autopilot.pivotY = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? autopilot.pivotY + 1 : autopilot.pivotY;
 
 		ModelPart security = this.console.getChild("controls").getChild("ctrl_4").getChild("bone15").getChild("switch25").getChild("bone20");
 
-		security.pivotY = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY) ? security.pivotY + 1 : security.pivotY;
+		security.pivotY = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY) ? security.pivotY + 1 : security.pivotY;
 
 		// Ground Searching
 		ModelPart groundSearch = this.console.getChild("controls").getChild("p_ctrl_6").getChild("bone62").getChild("bow").getChild("bone68");
 
-		groundSearch.pitch = PropertiesHandler.getBool(console.getTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch - 0.5f : groundSearch.pitch;
+		groundSearch.pitch = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch - 0.5f : groundSearch.pitch;
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();

@@ -1,6 +1,5 @@
 package mdteam.ait.client.models.doors;
 
-import mdteam.ait.client.animation.exterior.door.DoorAnimations;
 import mdteam.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.tardis.data.DoorData;
@@ -36,7 +35,7 @@ public class EasterHeadDoorModel extends DoorModel {
 
 		matrices.translate(0,-1.5f,0);
 
-		if (door.getTardis().get().getDoor().isOpen())
+		if (door.findTardis().get().getDoor().isOpen())
 			this.bottom.translate(new Vector3f(0,-30,0));
 
 		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);

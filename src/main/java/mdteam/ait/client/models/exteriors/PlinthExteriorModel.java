@@ -35,12 +35,12 @@ public class PlinthExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (exterior.getTardis().isEmpty()) return;
+		if (exterior.findTardis().isEmpty()) return;
         matrices.push();
 
 		matrices.translate(0, -1.5f, 0);
 
-		plinth.getChild("door").yaw = exterior.getTardis().get().getHandlers().getDoor().isOpen() ? -1.75f : 0f;
+		plinth.getChild("door").yaw = exterior.findTardis().get().getHandlers().getDoor().isOpen() ? -1.75f : 0f;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

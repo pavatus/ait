@@ -1,6 +1,5 @@
 package mdteam.ait.client.models.exteriors;
 
-import mdteam.ait.AITMod;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
@@ -8,7 +7,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 
 public class CoobExteriorModel extends ExteriorModel {
 
@@ -31,7 +29,7 @@ public class CoobExteriorModel extends ExteriorModel {
 
     @Override
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (exterior.getTardis().isEmpty()) return;
+        if (exterior.findTardis().isEmpty()) return;
         matrices.push();
 
         matrices.translate(0,-1.5f,0);

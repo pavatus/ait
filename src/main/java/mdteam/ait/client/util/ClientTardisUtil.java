@@ -6,6 +6,7 @@ import mdteam.ait.client.registry.ClientDoorRegistry;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisConsole;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -75,12 +76,16 @@ public class ClientTardisUtil {
         if (player == null) return 0;
 
         Tardis tardis = getCurrentTardis();
-        BlockPos console = tardis.getDesktop().getConsolePos();
         BlockPos pos = player.getBlockPos();
 
-        if (console == null) console = pos;
+        double highest = 1;
 
-        return Math.sqrt(pos.getSquaredDistance(console));
+        for (TardisConsole console : tardis.getDesktop().getConsoles()) {
+            double distance = Math.sqrt(pos.getSquaredDistance(console.position()));
+            if (distance > highest) highest = distance;
+        }
+
+        return highest;
     }
 
     public static ExteriorModel getExteriorModel(Tardis tardis) {

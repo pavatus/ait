@@ -37,9 +37,9 @@ public class ServerHumHandler extends TardisLink {
     private void updateClientHum() {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeIdentifier(this.current.sound().getId());
-        if(this.getTardis().isEmpty()) return;
+        if(this.findTardis().isEmpty()) return;
 
-        for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.getTardis().get())) { // is bad? fixme
+        for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.findTardis().get())) { // is bad? fixme
             ServerPlayNetworking.send((ServerPlayerEntity) player, SEND, buf);
         }
     }

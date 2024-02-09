@@ -66,7 +66,7 @@ public class ClientCreakHandler extends SoundHandler {
         return found != null;
     }
 
-    public BlockPos randomNearConsolePos(AbsoluteBlockPos.Directed consolePos) {
+    public BlockPos randomNearConsolePos(AbsoluteBlockPos consolePos) {
         return consolePos.add(random.nextInt(8) - 1, 0, random.nextInt(8) - 1);
     }
 
@@ -83,8 +83,12 @@ public class ClientCreakHandler extends SoundHandler {
 
         assert current != null; // we cant get here if we're not in a tardis
 
-        if(current.isSiegeMode() && chosen.equals(CreakRegistry.WHISPER) && current.getDesktop().getConsolePos() != null) {
-            startIfNotPlaying(new PositionedSoundInstance(chosen.sound(), SoundCategory.HOSTILE, 0.5f, 1.0f, net.minecraft.util.math.random.Random.create(), randomNearConsolePos(ClientTardisUtil.getCurrentTardis().getDesktop().getConsolePos())));
+        if(current.isSiegeMode() && chosen.equals(CreakRegistry.WHISPER)) {
+
+            current.getDesktop().getConsoles().forEach(console -> {
+                startIfNotPlaying(new PositionedSoundInstance(chosen.sound(), SoundCategory.HOSTILE, 0.5f, 1.0f, net.minecraft.util.math.random.Random.create(), randomNearConsolePos(console.position())));
+            });
+
             return;
         } else if (chosen.equals(CreakRegistry.WHISPER)) {
             return;

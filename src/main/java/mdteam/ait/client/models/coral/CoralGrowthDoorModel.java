@@ -7,7 +7,6 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.RotationAxis;
 
 public class CoralGrowthDoorModel extends DoorModel {
 	private final ModelPart coral;
@@ -80,7 +79,7 @@ public class CoralGrowthDoorModel extends DoorModel {
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (door.getTardis().get() == null) return;
+		if (door.findTardis().get() == null) return;
 		matrices.push();
 		matrices.translate(0, -1.5f, 0);
 

@@ -52,7 +52,7 @@ public class TardimExteriorModel extends ExteriorModel {
 
     @Override
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (exterior.getTardis().isEmpty()) return;
+        if (exterior.findTardis().isEmpty()) return;
         matrices.push();
         // matrices.scale(0.6F,0.6f,0.6f);
         matrices.translate(0, -1.5f, 0);
@@ -60,7 +60,7 @@ public class TardimExteriorModel extends ExteriorModel {
         /*this.tardis.getChild("left_door").yaw = exterior.getRightDoor() ? 0 : -1.575f;
         this.tardis.getChild("right_door").yaw = exterior.getLeftDoor() ? 0 : 1.575f;*/
 
-        DoorData handler = exterior.getTardis().get().getDoor();
+        DoorData handler = exterior.findTardis().get().getDoor();
 
         this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -1.575f : 0.0F;
         this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;

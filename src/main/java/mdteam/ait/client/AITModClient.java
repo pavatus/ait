@@ -1,6 +1,5 @@
 package mdteam.ait.client;
 
-import io.netty.buffer.ByteBuf;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import mdteam.ait.client.renderers.machines.ArtronCollectorRenderer;
@@ -44,7 +43,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -55,7 +53,6 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -199,8 +196,8 @@ public class AITModClient implements ClientModInitializer {
 
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
             if (block instanceof LinkableBlockEntity) {
-                if (((LinkableBlockEntity) block).getTardis().isEmpty()) return;
-                ClientTardisManager.getInstance().loadTardis(((LinkableBlockEntity) block).getTardis().get().getUuid(), (t) -> {});
+                if (((LinkableBlockEntity) block).findTardis().isEmpty()) return;
+                ClientTardisManager.getInstance().loadTardis(((LinkableBlockEntity) block).findTardis().get().getUuid(), (t) -> {});
             }
         });
 

@@ -6,7 +6,6 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.util.desktop.structures.DesktopGenerator;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -14,31 +13,24 @@ import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.Corners;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TardisDesktop extends TardisLink {
     public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
     private TardisDesktopSchema schema;
     private AbsoluteBlockPos.Directed doorPos;
     private AbsoluteBlockPos.Directed consolePos;
-    private List<TardisConsole> consoles;
+    private ConcurrentLinkedQueue<TardisConsole> consoles; // TODO - this may cause concurrent modification exceptions, needs tests and fixes.
     private final Corners corners;
 
     public TardisDesktop(Tardis tardis, TardisDesktopSchema schema) {
@@ -77,7 +69,7 @@ public class TardisDesktop extends TardisLink {
     }
 
     public AbsoluteBlockPos.Directed getInteriorDoorPos() {
-        if (this.doorPos == null && this.getTardis().isPresent()) {
+        if (this.doorPos == null && this.findTardis().isPresent()) {
             linkToInteriorBlocks();
         }
 
@@ -93,11 +85,11 @@ public class TardisDesktop extends TardisLink {
             entity = TardisUtil.getTardisDimension().getBlockEntity(pos);
             if (entity == null) continue;
             if (doorPos == null && entity instanceof DoorBlockEntity door) {
-                door.setTardis(this.getTardis().get());
+                door.setTardis(this.findTardis().get());
                 continue;
             }
             if (consolePos == null && entity instanceof ConsoleBlockEntity console) {
-                console.setTardis(this.getTardis().get());
+                console.setTardis(this.findTardis().get());
                 continue;
             }
         }
@@ -105,14 +97,14 @@ public class TardisDesktop extends TardisLink {
 
     @Deprecated(forRemoval = true)
     public AbsoluteBlockPos.Directed getConsolePos() {
-        if (consolePos == null && this.getTardis().isPresent()) linkToInteriorBlocks();
+        if (consolePos == null && this.findTardis().isPresent()) linkToInteriorBlocks();
 
         return consolePos;
     }
 
-    public List<TardisConsole> getConsoles() {
+    public ConcurrentLinkedQueue<TardisConsole> getConsoles() {
         if (this.consoles == null) {
-            this.consoles = new ArrayList<>();
+            this.consoles = new ConcurrentLinkedQueue<>();
         }
 
         return this.consoles;
@@ -125,9 +117,21 @@ public class TardisDesktop extends TardisLink {
         this.consoles.remove(console);
         this.sync();
     }
+    public void clearConsoles() {
+        this.consoles = new ConcurrentLinkedQueue<>();
+    }
+
+    @Override
+    public void tick(MinecraftServer server) {
+        super.tick(server);
+
+        for (TardisConsole console : this.getConsoles()) {
+            console.tick(server);
+        }
+    }
 
     public @Nullable TardisConsole findConsole(AbsoluteBlockPos position) {
-        for (TardisConsole console : getConsoles()) {
+        for (TardisConsole console : this.getConsoles()) {
             if (console.position().equals(position)) {
                 return console;
             }
@@ -135,7 +139,7 @@ public class TardisDesktop extends TardisLink {
         return null;
     }
     public @Nullable TardisConsole findConsole(UUID uuid) {
-        for (TardisConsole console : getConsoles()) {
+        for (TardisConsole console : this.getConsoles()) {
             if (console.uuid().equals(uuid)) {
                 return console;
             }
@@ -143,10 +147,19 @@ public class TardisDesktop extends TardisLink {
         return null;
     }
 
+    public Optional<TardisConsole> findCurrentConsole() {
+        for (TardisConsole console : this.getConsoles()) {
+            if (console.inUse()) {
+                return Optional.of(console);
+            }
+        }
+        return Optional.empty();
+    }
+
     public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
         // before we do this we need to make sure to delete the old portals, but how?! by registering to this event
-        if(getTardis().isPresent())
-            TardisEvents.DOOR_MOVE.invoker().onMove(getTardis().get(), pos);
+        if(findTardis().isPresent())
+            TardisEvents.DOOR_MOVE.invoker().onMove(findTardis().get(), pos);
 
         this.doorPos = pos;
     }
@@ -169,9 +182,9 @@ public class TardisDesktop extends TardisLink {
 
         // this is needed for door and console initialization. when we call #setTardis(ITardis) the desktop field is still null.
         door.setDesktop(this);
-        if(getTardis().isEmpty()) return;
+        if(findTardis().isEmpty()) return;
         //console.setDesktop(this);
-        door.setTardis(getTardis().get());
+        door.setTardis(findTardis().get());
     }
 
     public void changeInterior(TardisDesktopSchema schema) {

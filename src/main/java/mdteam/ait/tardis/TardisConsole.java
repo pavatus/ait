@@ -5,7 +5,10 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.Box;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -14,8 +17,13 @@ import static mdteam.ait.tardis.util.TardisUtil.findTardisByInterior;
 
 // TODO - move variant and type over to here
 public class TardisConsole extends TardisLink {
+    private static final int VALIDATE_TICK = 4 * 20;
+
     private final UUID uuid;
-    private AbsoluteBlockPos position;
+    private final AbsoluteBlockPos position;
+
+    @Exclude
+    private int ticks = 0;
 
     protected TardisConsole(Tardis tardis, AbsoluteBlockPos pos, UUID uuid) {
         super(tardis, "console");
@@ -26,6 +34,27 @@ public class TardisConsole extends TardisLink {
         this(tardis, pos, UUID.randomUUID());
     }
 
+    public boolean inUse() {
+        if (this.findEntity().isEmpty()) return false;
+
+        ConsoleBlockEntity entity = this.findEntity().get();
+
+        if (!entity.hasWorld()) return false;
+
+        assert entity.getWorld() != null;
+
+        int radius = 3;
+
+        return !entity.getWorld().getEntitiesByClass(
+            ServerPlayerEntity.class,
+            new Box(
+                    entity.getPos().up(radius).north(radius).west(radius),
+                    entity.getPos().down(radius).south(radius).east(radius)
+            ),
+            player -> !player.isSpectator()
+        ).isEmpty();
+    }
+
     public AbsoluteBlockPos position() {
         return this.position;
     }
@@ -33,20 +62,22 @@ public class TardisConsole extends TardisLink {
         return this.uuid;
     }
 
-    public @Nullable ConsoleBlockEntity getEntity() {
-        return (ConsoleBlockEntity) TardisUtil.getTardisDimension().getBlockEntity(this.position);
+    public Optional<ConsoleBlockEntity> findEntity() {
+        BlockEntity found = TardisUtil.getTardisDimension().getBlockEntity(this.position);
+
+        return (found instanceof ConsoleBlockEntity) ? Optional.of((ConsoleBlockEntity) found) : Optional.empty();
     }
 
     @Override
-    public Optional<Tardis> getTardis() {
+    public Optional<Tardis> findTardis() {
         if(this.tardisId == null) {
             if (!this.validate()) return Optional.empty();
 
-            Tardis found = findTardisByInterior(this.position(), !this.getEntity().getWorld().isClient());
+            Tardis found = findTardisByInterior(this.position(), !this.findEntity().get().getWorld().isClient());
             if (found != null)
                 this.setTardis(found);
         }
-        return super.getTardis();
+        return super.findTardis();
     }
 
     public boolean validate() {
@@ -59,12 +90,24 @@ public class TardisConsole extends TardisLink {
         return true;
     }
     private boolean shouldRemove() {
-        return this.getEntity() == null;
+        return this.findEntity().isEmpty();
     }
     private void remove() {
-        if (this.getTardis().isEmpty()) return;
+        if (this.findTardis().isEmpty()) return;
 
-        Tardis tardis = this.getTardis().get();
+        Tardis tardis = this.findTardis().get();
         tardis.getDesktop().removeConsole(this);
+    }
+
+    @Override
+    public void tick(MinecraftServer server) {
+        super.tick(server);
+
+        ticks++;
+
+        if (ticks >= VALIDATE_TICK) {
+            ticks = 0;
+            this.validate();
+        }
     }
 }

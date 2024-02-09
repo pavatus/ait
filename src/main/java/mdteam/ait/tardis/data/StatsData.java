@@ -33,9 +33,9 @@ public class StatsData extends TardisLink {
     }
 
     public String getName() {
-        if(getTardis().isEmpty()) return "";
+        if(findTardis().isEmpty()) return "";
 
-        String name = (String) PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), NAME_KEY);
+        String name = (String) PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), NAME_KEY);
 
         if (name == null) {
             name = getRandomName();
@@ -46,8 +46,8 @@ public class StatsData extends TardisLink {
     }
 
     public void setName(String name) {
-        if(getTardis().isEmpty()) return;
-        PropertiesHandler.set(getTardis().get(), NAME_KEY, name);
+        if(findTardis().isEmpty()) return;
+        PropertiesHandler.set(findTardis().get(), NAME_KEY, name);
     }
 
     public static String fixupName(String name) {
@@ -102,15 +102,15 @@ public class StatsData extends TardisLink {
     }
 
     public Date getCreationDate() {
-        if(getTardis().isEmpty()) return Date.from(Instant.now());
+        if(findTardis().isEmpty()) return Date.from(Instant.now());
 
-        if (PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), DATE_KEY) == null) {
-            AITMod.LOGGER.error(getTardis().get().getUuid().toString() + " was missing creation date! Resetting to now");
+        if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), DATE_KEY) == null) {
+            AITMod.LOGGER.error(findTardis().get().getUuid().toString() + " was missing creation date! Resetting to now");
             markCreationDate();
         }
 
         try {
-            return DateFormat.getDateInstance().parse(PropertiesHandler.getString(getTardis().get().getHandlers().getProperties(), DATE_KEY));
+            return DateFormat.getDateInstance().parse(PropertiesHandler.getString(findTardis().get().getHandlers().getProperties(), DATE_KEY));
         } catch (Exception e) {
             return Date.from(Instant.now());
         }
@@ -119,7 +119,7 @@ public class StatsData extends TardisLink {
         return DateFormat.getDateInstance().format(getCreationDate());
     }
     public void markCreationDate() {
-        if(getTardis().isEmpty()) return;
-        PropertiesHandler.set(getTardis().get().getHandlers().getProperties(), DATE_KEY, Date.from(Instant.now()).toString());
+        if(findTardis().isEmpty()) return;
+        PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), DATE_KEY, Date.from(Instant.now()).toString());
     }
 }

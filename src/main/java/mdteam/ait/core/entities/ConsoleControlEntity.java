@@ -263,9 +263,9 @@ public class ConsoleControlEntity extends BaseControlEntity {
         if (!(this.consoleBlockPos != null && this.control != null && world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))
             return null;
 
-        if(console.getTardis().isEmpty()) return null;
+        if(console.findTardis().isEmpty()) return null;
 
-        return console.getTardis().get();
+        return console.findTardis().get();
     }
 
     public void setScaleAndCalculate(float width, float height) {

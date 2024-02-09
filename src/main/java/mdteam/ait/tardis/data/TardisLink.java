@@ -12,8 +12,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import java.util.Optional;
-
 // todo move everything over to TardisComponent
 public abstract class TardisLink extends AbstractTardisComponent implements TardisTickable {
     public TardisLink(Tardis tardis, String id) {
@@ -41,16 +39,16 @@ public abstract class TardisLink extends AbstractTardisComponent implements Tard
     }
 
     public AbsoluteBlockPos.Directed getDoorPos() {
-        if(getTardis().isEmpty()) return new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
-        Tardis tardis = getTardis().get();
+        if(findTardis().isEmpty()) return new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
+        Tardis tardis = findTardis().get();
         return tardis.getDesktop() != null && tardis.getDesktop().getInteriorDoorPos() != null ?
                 tardis.getDesktop().getInteriorDoorPos() :
                 new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
     }
 
     public AbsoluteBlockPos.Directed getExteriorPos() {
-        if(getTardis().isEmpty()) return null;
-        Tardis tardis = getTardis().get();
+        if(findTardis().isEmpty()) return null;
+        Tardis tardis = findTardis().get();
         return tardis.getTravel() != null ?
                 tardis.getTravel().getPosition() :
                 new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);

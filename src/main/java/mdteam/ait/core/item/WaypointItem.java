@@ -2,7 +2,6 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.Waypoint;
 import net.minecraft.client.gui.screen.Screen;
@@ -13,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -54,13 +52,13 @@ public class WaypointItem extends Item {
         if (hand != Hand.MAIN_HAND) return ActionResult.FAIL;
         if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity console)) return ActionResult.FAIL;
 
-        if (console.getTardis().isEmpty() || console.getTardis().get().getTravel().getPosition() == null)
+        if (console.findTardis().isEmpty() || console.findTardis().get().getTravel().getPosition() == null)
             return ActionResult.PASS;
 
-        if (getPos(itemStack) == null) setPos(itemStack, console.getTardis().get().getTravel().getPosition());
+        if (getPos(itemStack) == null) setPos(itemStack, console.findTardis().get().getTravel().getPosition());
 
-        console.getTardis().get().getHandlers().getWaypoints().markHasCartridge();
-        console.getTardis().get().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
+        console.findTardis().get().getHandlers().getWaypoints().markHasCartridge();
+        console.findTardis().get().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
         player.setStackInHand(hand, ItemStack.EMPTY);
 
         world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);

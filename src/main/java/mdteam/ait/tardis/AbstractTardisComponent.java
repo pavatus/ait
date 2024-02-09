@@ -4,8 +4,6 @@ package mdteam.ait.tardis;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import org.apache.logging.log4j.core.jmx.Server;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -40,7 +38,7 @@ public abstract class AbstractTardisComponent {
         return Init.ALWAYS;
     }
 
-    public Optional<Tardis> getTardis() {
+    public Optional<Tardis> findTardis() {
         if (TardisUtil.isClient()) { // todo replace deprecated check
             if (!ClientTardisManager.getInstance().hasTardis(this.tardisId)) {
                 if (this.tardisId != null)

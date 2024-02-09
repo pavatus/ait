@@ -1,17 +1,8 @@
 package mdteam.ait.tardis.data;
 
-import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.Box;
-
-import java.util.List;
-import java.util.UUID;
 
 public class CloakData extends TardisLink {
     public static String CLOAKED = "is_cloaked";
@@ -24,21 +15,21 @@ public class CloakData extends TardisLink {
     }
 
     public void enable() {
-        if (this.getTardis().isEmpty()) return;
+        if (this.findTardis().isEmpty()) return;
 
-        PropertiesHandler.set(this.getTardis().get(), CLOAKED, true);
+        PropertiesHandler.set(this.findTardis().get(), CLOAKED, true);
     }
 
     public void disable() {
-        if (this.getTardis().isEmpty()) return;
+        if (this.findTardis().isEmpty()) return;
 
-        PropertiesHandler.set(this.getTardis().get(), CLOAKED, false);
+        PropertiesHandler.set(this.findTardis().get(), CLOAKED, false);
     }
 
     public boolean isEnabled() {
-        if (this.getTardis().isEmpty()) return false;
+        if (this.findTardis().isEmpty()) return false;
 
-        return PropertiesHandler.getBool(this.getTardis().get().getHandlers().getProperties(), CLOAKED);
+        return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), CLOAKED);
     }
 
     public void toggle() {
@@ -50,12 +41,12 @@ public class CloakData extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
 
-        if (getTardis().isEmpty() || this.isEnabled() && !getTardis().get().hasPower()) {
+        if (findTardis().isEmpty() || this.isEnabled() && !findTardis().get().hasPower()) {
             this.disable();
             return;
         }
 
-        if(this.getTardis().get().getExterior().getExteriorPos() == null) return;
+        if(this.findTardis().get().getExterior().getExteriorPos() == null) return;
 //        List<PlayerEntity> players = this.getTardis().get().getTravel().getPosition().getWorld().getEntitiesByClass(PlayerEntity.class,
 //                new Box(getTardis().get().getExterior().getExteriorPos()).expand(3), EntityPredicates.EXCEPT_SPECTATOR);
 //        for (PlayerEntity player : players) {
@@ -76,6 +67,6 @@ public class CloakData extends TardisLink {
 
         if (!this.isEnabled()) return;
 
-        this.getTardis().get().removeFuel(2 * (this.getTardis().get().tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick
+        this.findTardis().get().removeFuel(2 * (this.findTardis().get().tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick
     }
 }

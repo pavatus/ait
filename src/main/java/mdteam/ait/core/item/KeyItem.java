@@ -6,18 +6,14 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -29,9 +25,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 public class KeyItem extends LinkableItem {
     private final List<Protocols> protocols;
@@ -153,10 +147,10 @@ public class KeyItem extends LinkableItem {
 
         if (player.isSneaking()) {
             if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock) {
-                if (consoleBlock.getTardis().isEmpty())
+                if (consoleBlock.findTardis().isEmpty())
                     return ActionResult.FAIL;
 
-                this.link(itemStack, consoleBlock.getTardis().get());
+                this.link(itemStack, consoleBlock.findTardis().get());
                 return ActionResult.SUCCESS;
             }
         }

@@ -57,13 +57,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.getTardis().isEmpty()) {
+        if (entity.findTardis().isEmpty()) {
             return;
         }
 
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-        ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.getTardis().get().getExterior().getVariant());
-        TardisExterior tardisExterior = entity.getTardis().get().getExterior();
+        ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.findTardis().get().getExterior().getVariant());
+        TardisExterior tardisExterior = entity.findTardis().get().getExterior();
 
         if (tardisExterior == null) return;
 
@@ -89,12 +89,12 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         Identifier emission = exteriorVariant.emission();
 
         float wrappedDegrees = MathHelper.wrapDegrees(MinecraftClient.getInstance().player.getHeadYaw() +
-                (entity.getTardis().get().getHandlers().getExteriorPos().getDirection() == Direction.NORTH ||
-                        entity.getTardis().get().getHandlers().getExteriorPos().getDirection() == Direction.SOUTH ? f + 180f : f));
+                (entity.findTardis().get().getHandlers().getExteriorPos().getDirection() == Direction.NORTH ||
+                        entity.findTardis().get().getHandlers().getExteriorPos().getDirection() == Direction.SOUTH ? f + 180f : f));
 
         if(exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM)) {
-            texture = getTextureForRotation(wrappedDegrees, entity.getTardis().get());
-            emission = getEmissionForRotation(getTextureForRotation(wrappedDegrees, entity.getTardis().get()), entity.getTardis().get());
+            texture = getTextureForRotation(wrappedDegrees, entity.findTardis().get());
+            emission = getEmissionForRotation(getTextureForRotation(wrappedDegrees, entity.findTardis().get()), entity.findTardis().get());
         }
 
         // ternary is good an all but please seperate this loqor @TODO
@@ -107,7 +107,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         try {
-            if (entity.getTardis().get().isSiegeMode()) {
+            if (entity.findTardis().get().isSiegeMode()) {
                 if (siege == null) siege = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
                 siege.renderWithAnimations(entity, this.siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), maxLight, overlay, 1, 1, 1, 1);
                 matrices.pop();
@@ -118,7 +118,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         }
 
 
-        String name = entity.getTardis().get().getHandlers().getStats().getName();
+        String name = entity.findTardis().get().getHandlers().getStats().getName();
         if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
         }
@@ -126,11 +126,11 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         if (model != null) {
             model.animateTile(entity);
             model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
-            if (entity.getTardis().get().getHandlers().getOvergrown().isOvergrown()) {
-                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.getTardis().get().getHandlers().getOvergrown().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+            if (entity.findTardis().get().getHandlers().getOvergrown().isOvergrown()) {
+                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.findTardis().get().getHandlers().getOvergrown().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
             }
-            if (emission != null && entity.getTardis().get().hasPower()) {
-                boolean alarms = PropertiesHandler.getBool(entity.getTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
+            if (emission != null && entity.findTardis().get().hasPower()) {
+                boolean alarms = PropertiesHandler.getBool(entity.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
 
                 model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(emission, true)), maxLight, overlay, 1, alarms ? 0.3f : 1 , alarms ? 0.3f : 1, 1);
             }

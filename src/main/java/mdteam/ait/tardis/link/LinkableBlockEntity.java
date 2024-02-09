@@ -81,7 +81,8 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
     }
 
     // lord save us.
-    public Optional<Tardis> getTardis() {
+    @Override
+    public Optional<Tardis> findTardis() {
         if (TardisUtil.isClient()) { // todo replace deprecated check
             if (!ClientTardisManager.getInstance().hasTardis(this.tardisId)) {
                 if (this.tardisId != null)

@@ -48,6 +48,7 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
@@ -186,8 +187,8 @@ public class AITMod implements ModInitializer {
 
         TardisEvents.OUT_OF_FUEL.register(Tardis::disablePower);
         TardisEvents.LOSE_POWER.register((tardis -> {
-            if (tardis.getDesktop().getConsolePos() != null && TardisUtil.getTardisDimension() != null) {
-                TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+            if (TardisUtil.getTardisDimension() != null) {
+                FlightUtil.playSoundAtConsole(tardis, AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
             }
 
 
@@ -198,9 +199,7 @@ public class AITMod implements ModInitializer {
             PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
         }));
         TardisEvents.REGAIN_POWER.register((tardis -> {
-            if (tardis.getDesktop().getConsolePos() != null) {
-                TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
-            }
+            FlightUtil.playSoundAtConsole(tardis, AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
         }));
 
         ServerPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.ASK, ((server, player, handler, buf, responseSender) -> {

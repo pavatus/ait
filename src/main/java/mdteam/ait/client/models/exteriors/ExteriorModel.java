@@ -4,7 +4,6 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.core.item.KeyItem;
-import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
@@ -47,7 +46,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     private void checkAnimationTimer(ExteriorBlockEntity exterior) {
-        DoorData.DoorStateEnum state = exterior.getTardis().get().getDoor().getDoorState();
+        DoorData.DoorStateEnum state = exterior.findTardis().get().getDoor().getDoorState();
         Animation anim = getAnimationForDoorState(state);
 
 
@@ -58,18 +57,18 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (exterior.getTardis().isEmpty()) return;
+        if (exterior.findTardis().isEmpty()) return;
 
         float alpha = exterior.getAlpha();
 
-        if (exterior.getTardis().get().getHandlers().getCloak().isEnabled()) {
-            if (!KeyItem.hasMatchingKeyInInventory(MinecraftClient.getInstance().player, exterior.getTardis().get())) {
+        if (exterior.findTardis().get().getHandlers().getCloak().isEnabled()) {
+            if (!KeyItem.hasMatchingKeyInInventory(MinecraftClient.getInstance().player, exterior.findTardis().get())) {
                 alpha = 0f;
                 root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
                 return;
             }
-            if (isNearTardis(MinecraftClient.getInstance().player, exterior.getTardis().get(), MAX_CLOAK_DISTANCE)) {
-                alpha =  1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, exterior.getTardis().get()) / MAX_CLOAK_DISTANCE);
+            if (isNearTardis(MinecraftClient.getInstance().player, exterior.findTardis().get(), MAX_CLOAK_DISTANCE)) {
+                alpha =  1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, exterior.findTardis().get()) / MAX_CLOAK_DISTANCE);
                 if (exterior.getAlpha() != 0.105f)
                     alpha = alpha * exterior.getAlpha();
             } else {

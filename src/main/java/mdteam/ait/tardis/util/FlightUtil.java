@@ -1,10 +1,12 @@
 package mdteam.ait.tardis.util;
 
 import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -90,9 +92,8 @@ public class FlightUtil {
     }
 
     public static void playSoundAtConsole(Tardis tardis, SoundEvent sound, SoundCategory category, float volume, float pitch) {
-        if (tardis.getDesktop().getConsolePos() == null) return; // there seems to be frequent issues with this
-
-        TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), sound, category, volume, pitch );
+        ServerWorld dim = (ServerWorld) TardisUtil.getTardisDimension();
+        tardis.getDesktop().getConsoles().forEach(console -> dim.playSound(null, console.position(), sound, category, volume, pitch));
     }
     public static void playSoundAtConsole(Tardis tardis, SoundEvent sound, SoundCategory category) {
         playSoundAtConsole(tardis, sound, category, 1f, 1f);

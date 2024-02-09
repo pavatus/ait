@@ -47,29 +47,29 @@ public class FuelData extends TardisLink implements ArtronHolder {
 
     @Override
     public double getCurrentFuel() {
-        if(getTardis().isEmpty()) return 0;
-        if (PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), FUEL_COUNT) == null) {
+        if(findTardis().isEmpty()) return 0;
+        if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), FUEL_COUNT) == null) {
             AITMod.LOGGER.warn("Fuel count was null, setting to 0");
             this.setCurrentFuel(0);
         }
-        return (double) PropertiesHandler.get(getTardis().get().getHandlers().getProperties(), FUEL_COUNT);
+        return (double) PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), FUEL_COUNT);
     }
 
     @Override
     public void setCurrentFuel(double fuel) {
-        if(getTardis().isEmpty()) return;
+        if(findTardis().isEmpty()) return;
         double prev = getCurrentFuel();
 
-        PropertiesHandler.set(getTardis().get(), FUEL_COUNT, fuel, !isSyncOnDelay(getTardis().get()));
+        PropertiesHandler.set(findTardis().get(), FUEL_COUNT, fuel, !isSyncOnDelay(findTardis().get()));
 
-        if (!isSyncOnDelay(getTardis().get())) {
-            createFuelSyncDelay(getTardis().get());
+        if (!isSyncOnDelay(findTardis().get())) {
+            createFuelSyncDelay(findTardis().get());
         }
 
         // fire the event if ran out of fuel
         // this may get ran multiple times though for some reason
         if (isOutOfFuel() && prev != 0) {
-            TardisEvents.OUT_OF_FUEL.invoker().onNoFuel(getTardis().get());
+            TardisEvents.OUT_OF_FUEL.invoker().onNoFuel(findTardis().get());
         }
     }
 
@@ -79,23 +79,23 @@ public class FuelData extends TardisLink implements ArtronHolder {
     }
 
     public void setRefueling(boolean var) {
-        if(getTardis().isEmpty()) return;
-        PropertiesHandler.set(getTardis().get(), REFUELING, var);
+        if(findTardis().isEmpty()) return;
+        PropertiesHandler.set(findTardis().get(), REFUELING, var);
     }
 
     public boolean isRefueling() {
-        if(getTardis().isEmpty()) return false;
-        return PropertiesHandler.getBool(getTardis().get().getHandlers().getProperties(), REFUELING);
+        if(findTardis().isEmpty()) return false;
+        return PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), REFUELING);
     }
 
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
-        if(getTardis().isEmpty()) return;
+        if(findTardis().isEmpty()) return;
 
         // @TODO fix this because it seems that using any chunk references causes ticking to freak the hell out - Loqor
         
-        ServerTardis tardis = (ServerTardis) this.getTardis().get();
+        ServerTardis tardis = (ServerTardis) this.findTardis().get();
         AbsoluteBlockPos pos = tardis.getTravel().getExteriorPos();
         World world = pos.getWorld();
         TardisTravel.State state = tardis.getTravel().getState();
@@ -123,7 +123,7 @@ public class FuelData extends TardisLink implements ArtronHolder {
             removeFuel(0.25 * (tardis.tardisHammerAnnoyance + 1));
         }
         if (state == TardisTravel.State.FLIGHT && !tardis.hasPower()) {
-            getTardis().get().getTravel().crash(); // hehe force land if you don't have enough fuel
+            findTardis().get().getTravel().crash(); // hehe force land if you don't have enough fuel
         }
     }
 }

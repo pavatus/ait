@@ -1,7 +1,6 @@
 package mdteam.ait.client.models.exteriors;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.core.entities.TardisRealEntity;
@@ -35,7 +34,7 @@ public class SiegeModeModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (exterior.getTardis().isEmpty()) return;
+		if (exterior.findTardis().isEmpty()) return;
 		matrices.push();
 		matrices.translate(0,-1.5,0);
 

@@ -130,7 +130,7 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
         /*this.TARDIS.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
         this.TARDIS.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();*/
 
-        DoorData door = doorEntity.getTardis().get().getDoor();
+        DoorData door = doorEntity.findTardis().get().getDoor();
 
         this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
         this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;

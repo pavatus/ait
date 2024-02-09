@@ -5,7 +5,6 @@ import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
@@ -21,7 +20,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
     public ConsoleRenderer(BlockEntityRendererFactory.Context ctx) {}
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.getTardis().isEmpty()) return;
+        if (entity.findTardis().isEmpty()) return;
 
         ClientConsoleVariantSchema variant = ClientConsoleVariantRegistry.withParent(entity.getVariant());
 
@@ -40,11 +39,11 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         //matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         if (console != null) {
-            if (entity.getTardis().isEmpty()) return; // for some it forgets the tardis can be null, fucking weird
+            if (entity.findTardis().isEmpty()) return; // for some it forgets the tardis can be null, fucking weird
             console.animateTile(entity);
             console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
 
-            if (entity.getTardis().get().hasPower())
+            if (entity.findTardis().get().hasPower())
                 console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(variant.emission(), true)), maxLight, overlay, 1, 1, 1, 1);        }
         matrices.pop();
     }

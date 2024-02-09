@@ -26,12 +26,12 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -161,9 +161,8 @@ public class TardisUtil {
                     UUID playerUuid = buf.readUuid();
                     Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisId);
                     ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(playerUuid);
-                    if(tardis.getDesktop().getConsolePos() == null) return;
                     if(serverPlayer == null) {
-                        TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
+                        FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
                         return;
                     }
                     tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
@@ -173,7 +172,7 @@ public class TardisUtil {
                                     serverPlayer.getWorld(),
                                     serverPlayer.getMovementDirection()),
                             PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND));
-                    TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
+                    FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
                 }
         );
     }
@@ -317,14 +316,14 @@ public class TardisUtil {
     public static void teleportInside(Tardis tardis, Entity entity) {
         TardisUtil.teleportWithDoorOffset(entity, tardis.getDoor().getDoorPos());
         TardisDesktop tardisDesktop = tardis.getDesktop();
-        if(tardisDesktop.getConsolePos() != null) {
-            if(tardisDesktop.getConsolePos().getBlockEntity() instanceof ConsoleBlockEntity console) {
-                tardisDesktop.getConsolePos().getBlockEntity().markDirty();
-                console.sync(); // maybe force sync when a player enters the tardis
-            } else {
-                tardisDesktop.setConsolePos(null);
-            }
-        }
+
+        // todo laggy?
+        tardis.getDesktop().getConsoles().forEach(console -> {
+            console.findEntity().ifPresent(block -> {
+                block.markDirty();
+                block.sync();
+            });
+        });
     }
 
     private static void teleportWithDoorOffset(Entity entity, AbsoluteBlockPos.Directed pos) {

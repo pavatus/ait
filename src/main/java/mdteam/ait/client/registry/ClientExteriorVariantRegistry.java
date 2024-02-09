@@ -73,6 +73,8 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public void readFromServer(PacketByteBuf buf) {
         int size = buf.readInt();
 
+        if (size == 0) return;
+
         for (int i = 0; i < size; i++) {
             this.register(convertDatapack(buf.decodeAsJson(DatapackVariant.CODEC)));
         }

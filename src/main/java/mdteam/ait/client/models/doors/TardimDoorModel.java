@@ -1,9 +1,7 @@
 package mdteam.ait.client.models.doors;
 
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
-import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -66,7 +64,7 @@ public class TardimDoorModel extends DoorModel {
         /*this.tardis.getChild("left_door").yaw = door.getLeftDoorRotation() == 0 ? 0 : -1.575f;
         this.tardis.getChild("right_door").yaw = door.getRightDoorRotation() == 0 ? 0 : 1.575f;*/
 
-        DoorData handler = door.getTardis().get().getDoor();
+        DoorData handler = door.findTardis().get().getDoor();
 
         this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -1.575f : 0.0F;
         this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;

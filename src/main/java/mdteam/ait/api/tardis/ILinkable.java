@@ -7,6 +7,7 @@ import mdteam.ait.tardis.TardisTravel;
 
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
+@Deprecated
 public interface ILinkable {
     Tardis getTardis();
 

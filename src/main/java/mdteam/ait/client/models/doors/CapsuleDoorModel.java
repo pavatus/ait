@@ -1,7 +1,6 @@
 package mdteam.ait.client.models.doors;
 
 import mdteam.ait.client.animation.exterior.door.DoorAnimations;
-import mdteam.ait.client.models.doors.DoorModel;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.tardis.data.DoorData;
@@ -10,9 +9,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
 
 // Made with Blockbench 4.9.1
 // Exported for Minecraft version 1.17+ for Yarn
@@ -97,7 +94,7 @@ public class CapsuleDoorModel extends DoorModel {
         /*this.body.getChild("doors").getChild("left_door").yaw = door.getLeftDoorRotation();
         this.body.getChild("doors").getChild("right_door").yaw = -door.getRightDoorRotation();*/
 
-        DoorData handler = door.getTardis().get().getDoor();
+        DoorData handler = door.findTardis().get().getDoor();
 
         this.body.getChild("doors").getChild("door_left").yaw = (handler.isLeftOpen() || handler.isOpen())  ? -5F : 0.0F;
         this.body.getChild("doors").getChild("door_right").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;

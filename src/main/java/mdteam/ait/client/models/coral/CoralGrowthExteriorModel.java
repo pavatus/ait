@@ -356,9 +356,9 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
         matrices.push();
         // matrices.translate(0, -1.5, 0);
 
-        if(exterior.getTardis().isEmpty()) return;
+        if(exterior.findTardis().isEmpty()) return;
 
-        if(exterior.getTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
+        if(exterior.findTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
             coral.getChild("six").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
         } else {
             coral.getChild("seven").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);

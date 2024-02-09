@@ -20,7 +20,7 @@ public class DoorControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         this.soundEvent = !tardis.getDoor().isOpen() ? SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON : SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF;
-        return useDoor(tardis, world, tardis.getDesktop().getConsolePos(), player);
+        return useDoor(tardis, world, player.getBlockPos(), player);
     }
 
     @Override
