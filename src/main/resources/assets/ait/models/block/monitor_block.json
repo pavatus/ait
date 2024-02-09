@@ -1,5 +1,5 @@
 {
   "textures": {
-    "particle": "ait:block/crt_monitor"
+    "particle": "minecraft:item/barrier"
   }
 }
