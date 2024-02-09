@@ -5,3 +5,4 @@
 - Repositioned siege mode control on the Toyota console
 - Updated drifting music disc texture
 - Overhauled the entire default monitor screen
+- Update drifting audio file so that it's louder and more up to date
