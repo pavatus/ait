@@ -1,6 +1,6 @@
 package mdteam.ait.core.item;
 
-import mdteam.ait.core.managers.DeltaTimeManager;
+import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
 import mdteam.ait.core.managers.RiftChunkManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

@@ -442,6 +442,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector Panel");
         provider.addTranslation(AITItems.RIFT_SCANNER, "Rift Scanner");
         provider.addTranslation(AITItems.SIEGE_ITEM, "TARDIS");
+        provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC, "Music Disc");
+        provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Drifting - Radio");
         provider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
         provider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
         provider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");

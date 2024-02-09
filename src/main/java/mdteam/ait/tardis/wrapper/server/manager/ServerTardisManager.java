@@ -5,7 +5,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.core.AITDimensions;
-import mdteam.ait.core.managers.DeltaTimeManager;
+import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.exterior.category.ExteriorCategory;
 import mdteam.ait.tardis.util.*;

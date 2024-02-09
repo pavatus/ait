@@ -3,7 +3,7 @@ package mdteam.ait.tardis.data;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.ArtronHolder;
 import mdteam.ait.api.tardis.TardisEvents;
-import mdteam.ait.core.managers.DeltaTimeManager;
+import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;

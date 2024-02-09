@@ -2,6 +2,8 @@ package mdteam.ait;
 
 import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneInitHandler;
 import com.neptunedevelopmentteam.neptunelib.core.itemgroup.NeptuneItemGroup;
+import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
+import com.neptunedevelopmentteam.neptunelib.utils.TimeUtil;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import mdteam.ait.api.tardis.TardisEvents;
@@ -48,6 +50,7 @@ import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
@@ -172,6 +175,8 @@ public class AITMod implements ModInitializer {
             if (tardis.getDesktop().getConsolePos() != null && TardisUtil.getTardisDimension() != null) {
                 TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
             }
+            DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1,10)));
+
 
             // disabling protocols
             PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, false);

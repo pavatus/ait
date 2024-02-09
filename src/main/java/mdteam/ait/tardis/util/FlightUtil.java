@@ -1,6 +1,6 @@
 package mdteam.ait.tardis.util;
 
-import mdteam.ait.core.managers.DeltaTimeManager;
+import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;

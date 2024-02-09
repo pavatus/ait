@@ -3,11 +3,11 @@ package mdteam.ait.core;
 import com.neptunedevelopmentteam.neptunelib.core.init_handlers.CustomName;
 import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneItemInit;
 import com.neptunedevelopmentteam.neptunelib.core.itemsettings.NeptuneItemSettings;
-import io.wispforest.owo.registration.annotations.AssignedName;
-import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.item.*;
 import net.minecraft.item.Item;
+import net.minecraft.item.MusicDiscItem;
+import net.minecraft.util.Rarity;
 
 public class AITItems implements NeptuneItemInit {
     // TARDIS
@@ -36,4 +36,5 @@ public class AITItems implements NeptuneItemInit {
 
     // Waypoint-related
     public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1));
+    public static final Item DRIFTING_MUSIC_DISC = new MusicDiscItem(1, AITSounds.DRIFTING_MUSIC, new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 169);
 }

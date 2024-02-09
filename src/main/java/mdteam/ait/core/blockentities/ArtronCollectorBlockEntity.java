@@ -3,7 +3,7 @@ package mdteam.ait.core.blockentities;
 import mdteam.ait.api.tardis.ArtronHolder;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.item.ArtronCollectorItem;
-import mdteam.ait.core.managers.DeltaTimeManager;
+import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
 import mdteam.ait.core.managers.RiftChunkManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

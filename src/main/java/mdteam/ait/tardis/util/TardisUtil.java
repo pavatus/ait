@@ -428,6 +428,15 @@ public class TardisUtil {
         return null;
     }
 
+    public static List<PlayerEntity> getPlayersInsideInterior(Tardis tardis) {
+        List<PlayerEntity> list = new ArrayList<>();
+        for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
+            if (TardisUtil.inBox(tardis.getDesktop().getCorners(), player.getBlockPos()))
+                list.add(player);
+        }
+        return list;
+    }
+
     public static List<ServerPlayerEntity> getPlayersInInterior(Tardis tardis) {
         Tardis found;
         List<ServerPlayerEntity> list = new ArrayList<>();

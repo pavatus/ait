@@ -3,7 +3,7 @@ package mdteam.ait.tardis.data;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.item.TardisItemBuilder;
-import mdteam.ait.core.managers.DeltaTimeManager;
+import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.tardis.Tardis;
