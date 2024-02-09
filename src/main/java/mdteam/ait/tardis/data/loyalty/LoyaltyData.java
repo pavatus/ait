@@ -7,15 +7,15 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class LoyaltyHandler extends TardisLink { // todo currently will be useless as will only be finished when all features have been added.
+public class LoyaltyData extends TardisLink {
     private HashMap<UUID, Loyalty> data;
 
-    public LoyaltyHandler(Tardis tardisId, HashMap<UUID, Loyalty> data) {
+    public LoyaltyData(Tardis tardisId, HashMap<UUID, Loyalty> data) {
         super(tardisId, "loyalty");
         this.data = data;
     }
 
-    public LoyaltyHandler(Tardis tardis) {
+    public LoyaltyData(Tardis tardis) {
         this(tardis, new HashMap<>());
     }
 

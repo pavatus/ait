@@ -3,7 +3,7 @@ package mdteam.ait.tardis.data;
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTickable;
-import mdteam.ait.tardis.data.loyalty.LoyaltyHandler;
+import mdteam.ait.tardis.data.loyalty.LoyaltyData;
 import mdteam.ait.tardis.data.properties.PropertiesHolder;
 import net.minecraft.server.MinecraftServer;
 
@@ -17,7 +17,7 @@ public class TardisHandlersManager extends TardisLink {
     private DoorData door;
     private PropertiesHolder properties;
     private WaypointHandler waypoints;
-    private LoyaltyHandler loyalties;
+    private LoyaltyData loyalties;
     private OvergrownData overgrown;
     private ServerHumHandler hum = null;
     private ServerAlarmHandler alarms;
@@ -36,7 +36,7 @@ public class TardisHandlersManager extends TardisLink {
         this.door = new DoorData(tardis);
         this.properties = new PropertiesHolder(tardis);
         this.waypoints = new WaypointHandler(tardis);
-        this.loyalties = new LoyaltyHandler(tardis);
+        this.loyalties = new LoyaltyData(tardis);
         this.overgrown = new OvergrownData(tardis);
         this.hum = new ServerHumHandler(tardis);
         alarms = new ServerAlarmHandler(tardis);
@@ -130,13 +130,13 @@ public class TardisHandlersManager extends TardisLink {
         this.waypoints = waypoints;
     }
 
-    public LoyaltyHandler getLoyalties() {
+    public LoyaltyData getLoyalties() {
         if (this.loyalties == null && findTardis().isPresent()) {
-            this.loyalties = new LoyaltyHandler(this.findTardis().get());
+            this.loyalties = new LoyaltyData(this.findTardis().get());
         }
         return loyalties;
     }
-    public void setLoyalties(LoyaltyHandler loyalties) {
+    public void setLoyalties(LoyaltyData loyalties) {
         this.loyalties = loyalties;
     }
     public DoorData getDoor() {
