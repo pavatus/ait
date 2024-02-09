@@ -199,7 +199,7 @@ public class Tardis {
     }
     public void disablePower() {
         if (!hasPower()) return;
-        DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1,10)));
+        DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1,360)));
 
         //PropertiesHandler.set(this, PropertiesHandler.POWER_DELTA, MAX_POWER_DELTA_TICKS);
         PropertiesHandler.set(this, PropertiesHandler.HAS_POWER, false);
@@ -277,7 +277,7 @@ public class Tardis {
             for (PlayerEntity player : playerEntities) {
                 player.playSound(AITSounds.DRIFTING_MUSIC, SoundCategory.MUSIC, 1, 1);
             }
-            DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.minutesToMilliseconds(7));
+            DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.minutesToMilliseconds(new Random().nextInt(7,9)));
         }
         if (tardisHammerAnnoyance > 0 && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay")) {
             tardisHammerAnnoyance--;
