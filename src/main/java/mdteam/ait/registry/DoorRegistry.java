@@ -25,6 +25,7 @@ public class DoorRegistry {
     public static DoorSchema GROWTH;
     public static DoorSchema DOOM;
     public static DoorSchema PLINTH;
+    public static DoorSchema RENEGADE;
 
     public static void init() {
         TARDIM = register(new TardimDoorVariant());
@@ -38,5 +39,6 @@ public class DoorRegistry {
         GROWTH = register(new CoralGrowthDoorVariant());
         DOOM = register(new DoomDoorVariant());
         PLINTH = register(new PlinthDoorVariant());
+        RENEGADE = register(new RenegadeDoorVariant());
     }
 }

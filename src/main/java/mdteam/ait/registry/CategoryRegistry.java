@@ -77,6 +77,7 @@ public class CategoryRegistry extends DatapackRegistry<ExteriorCategory> {
     public static ExteriorCategory CORAL_GROWTH;
     public static ExteriorCategory DOOM;
     public static ExteriorCategory PLINTH;
+    public static ExteriorCategory RENEGADE;
 
     private static void registerDefaults() {
         CLASSIC = registerStatic(new ClassicCategory());
@@ -89,6 +90,7 @@ public class CategoryRegistry extends DatapackRegistry<ExteriorCategory> {
         CORAL_GROWTH = registerStatic(new GrowthCategory());
         DOOM = registerStatic(new DoomCategory());
         PLINTH = registerStatic(new PlinthCategory());
+        RENEGADE = registerStatic(new RenegadeCategory());
     }
 
     public void init() {

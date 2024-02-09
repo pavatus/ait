@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.tardis.exterior.category.ExteriorCategory;
 import mdteam.ait.tardis.exterior.variant.*;
 import mdteam.ait.tardis.exterior.variant.box.*;
+import mdteam.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.exterior.variant.booth.*;
 import mdteam.ait.tardis.exterior.variant.capsule.CapsuleDefaultVariant;
@@ -160,6 +161,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
     public static ExteriorVariantSchema PLINTH_DEFAULT;
     public static ExteriorVariantSchema PLINTH_SOUL;
     public static ExteriorVariantSchema PLINTH_FIRE;
+    public static ExteriorVariantSchema RENEGADE_DEFAULT;
 
     private static void registerDefaults() {
         // todo make this not static
@@ -213,6 +215,9 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
         PLINTH_DEFAULT = registerStatic(new PlinthDefaultVariant());
         PLINTH_SOUL = registerStatic(new PlinthSoulVariant());
         PLINTH_FIRE = registerStatic(new PlinthFireVariant());
+
+        // Renegade
+        RENEGADE_DEFAULT = registerStatic(new RenegadeDefaultVariant());
     }
 
     // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
