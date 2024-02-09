@@ -32,6 +32,7 @@ import net.minecraft.sound.SoundEvents;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -198,6 +199,7 @@ public class Tardis {
     }
     public void disablePower() {
         if (!hasPower()) return;
+        DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1,10)));
 
         //PropertiesHandler.set(this, PropertiesHandler.POWER_DELTA, MAX_POWER_DELTA_TICKS);
         PropertiesHandler.set(this, PropertiesHandler.HAS_POWER, false);

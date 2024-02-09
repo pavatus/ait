@@ -10,3 +10,4 @@
 - Fixed a crash with exterior renderer with sodium
 - Made it so that drifting starts playing a random amount of time after power is shut off in a tardis
 - Replaced DeltaTimeManager with the one from neptunelib
+- Added drifting music disc to dungeon loot tables

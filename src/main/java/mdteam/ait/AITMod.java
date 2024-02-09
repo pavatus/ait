@@ -37,15 +37,20 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTables;
+import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +91,15 @@ public class AITMod implements ModInitializer {
         NeptuneInitHandler.register(AITBlockEntityTypes.class, MOD_ID);
         NeptuneInitHandler.register(AITEntityTypes.class, MOD_ID);
 
+        LootTableEvents.MODIFY.register(((resourceManager, lootManager, id, tableBuilder, source) -> {
+            List<Identifier> lootTableIds = List.of(LootTables.ABANDONED_MINESHAFT_CHEST, LootTables.ANCIENT_CITY_CHEST, LootTables.ANCIENT_CITY_ICE_BOX_CHEST, LootTables.DESERT_PYRAMID_CHEST, LootTables.SIMPLE_DUNGEON_CHEST, LootTables.CAT_MORNING_GIFT_GAMEPLAY, LootTables.IGLOO_CHEST_CHEST, LootTables.BASTION_BRIDGE_CHEST);
+            if (source.isBuiltin() && lootTableIds.contains(id)) {
+                LootPool.Builder poolBuilder = LootPool.builder()
+                        .with(ItemEntry.builder(AITItems.DRIFTING_MUSIC_DISC));
+
+                tableBuilder.pool(poolBuilder);
+            }
+        }));
 
         TardisUtil.init();
         TardisManager.getInstance();
@@ -175,7 +189,6 @@ public class AITMod implements ModInitializer {
             if (tardis.getDesktop().getConsolePos() != null && TardisUtil.getTardisDimension() != null) {
                 TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().getConsolePos(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
             }
-            DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1,10)));
 
 
             // disabling protocols
