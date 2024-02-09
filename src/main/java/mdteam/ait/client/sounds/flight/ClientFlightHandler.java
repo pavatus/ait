@@ -1,7 +1,7 @@
 package mdteam.ait.client.sounds.flight;
 
 import mdteam.ait.client.sounds.LoopingSound;
-import mdteam.ait.client.sounds.PositionedLoopingSound;
+import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
@@ -10,32 +10,31 @@ import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.SoundHandler;
 import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
+
+import static mdteam.ait.AITMod.AIT_CUSTOM_CONFIG;
 
 // All this is CLIENT ONLY!!
 // Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
-// todo create a ServerFlightHandler if necessary eg in future when we do more of the stuff on the trello to do with flight sounds.
+
 // todo this is not positioned at the console anymore, as checking to see if an individual sound is playing at each console doesnt appear to be possible (?)
+// todo or just make it play from the closest console ( do this one )
 public class ClientFlightHandler extends SoundHandler {
-    public static ConcurrentLinkedQueue<LoopingSound> FLIGHTS;
+    public static double MAX_DISTANCE = 16; // distance from console before the sound stops
+    public static LoopingSound FLIGHT;
     protected ClientFlightHandler() {}
 
-    public ConcurrentLinkedQueue<LoopingSound> getFlightLoops() {
-        if (FLIGHTS == null) FLIGHTS = new ConcurrentLinkedQueue<>();
-        if (FLIGHTS.isEmpty()) this.generate();
+    public LoopingSound getFlightLoop() {
+        if (FLIGHT == null) FLIGHT = createFlightSound();
 
-        return FLIGHTS;
+        return FLIGHT;
     }
-    private LoopingSound createFlightSound(BlockPos pos) {
-        return new FlightSound(AITSounds.FLIGHT_LOOP, SoundCategory.BLOCKS, pos, 2.5f);
+    private LoopingSound createFlightSound() {
+        return new FlightSound(AITSounds.FLIGHT_LOOP, SoundCategory.BLOCKS, 1f);
     }
     public static ClientFlightHandler create() {
         if (MinecraftClient.getInstance().player == null) return null;
@@ -48,17 +47,11 @@ public class ClientFlightHandler extends SoundHandler {
     private void generate() {
         if (tardis() == null) return;
 
-        if (FLIGHTS == null) FLIGHTS = new ConcurrentLinkedQueue<>();
-
-        if (FLIGHTS.isEmpty()) {
-            tardis().getDesktop().getConsoles().forEach(console -> {
-                FLIGHTS.add(createFlightSound(console.position()));
-            });
-        }
+        if (FLIGHT == null) FLIGHT = createFlightSound();
 
         this.sounds = new ArrayList<>();
-        this.sounds.addAll(
-                FLIGHTS
+        this.sounds.add(
+                FLIGHT
         );
     }
 
@@ -77,11 +70,12 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private void playFlightSound() {
-        this.getFlightLoops().forEach(this::startIfNotPlaying);
+        this.startIfNotPlaying(this.getFlightLoop());
+        this.getFlightLoop().tick();
     }
 
     private boolean shouldPlaySounds() {
-        return (ClientTardisUtil.distanceFromConsole() < 5) && (inFlight() || hasThrottleAndHandbrakeDown()) && tardis().hasPower();
+        return (ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE) && (inFlight() || hasThrottleAndHandbrakeDown()) && tardis().hasPower();
     }
 
     private boolean inFlight() {

@@ -78,14 +78,14 @@ public class ClientTardisUtil {
         Tardis tardis = getCurrentTardis();
         BlockPos pos = player.getBlockPos();
 
-        double highest = 1;
+        double lowest = Double.MAX_VALUE;
 
         for (TardisConsole console : tardis.getDesktop().getConsoles()) {
             double distance = Math.sqrt(pos.getSquaredDistance(console.position()));
-            if (distance > highest) highest = distance;
+            if (distance < lowest) lowest = distance;
         }
 
-        return highest;
+        return lowest;
     }
 
     public static ExteriorModel getExteriorModel(Tardis tardis) {
