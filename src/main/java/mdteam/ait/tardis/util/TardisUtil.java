@@ -315,12 +315,8 @@ public class TardisUtil {
         TardisUtil.teleportWithDoorOffset(entity, tardis.getDoor().getDoorPos());
         TardisDesktop tardisDesktop = tardis.getDesktop();
 
-        // todo laggy?
         tardis.getDesktop().getConsoles().forEach(console -> {
-            console.findEntity().ifPresent(block -> {
-                block.markDirty();
-                block.sync();
-            });
+            console.findEntity().ifPresent(ConsoleBlockEntity::sync);
         });
     }
 
