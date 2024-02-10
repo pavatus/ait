@@ -116,7 +116,8 @@ public class SonicItem extends LinkableItem {
                     int repairticksleft = tardis.getHandlers().getCrashData().getRepairTicks();
                     int repairminutes = repairticksleft / 20 / 60;
                     if (repairticksleft == 0) {
-                        player.sendMessage(Text.literal("You tardis is not damaged"));
+                        player.sendMessage(Text.literal("You tardis is not damaged").formatted(Formatting.GOLD), true);
+                        return;
                     }
                     player.sendMessage(Text.literal("You have " + repairminutes + " minutes of repair left.").formatted(Formatting.GOLD), true);
                     return;

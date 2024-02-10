@@ -121,7 +121,9 @@ public class FlightData extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
         if(findTardis().isEmpty()) return;
-        findTardis().get().getHandlers().getCrashData().addRepairTicks(2 * findTardis().get().getTravel().getSpeed());
+        if (findTardis().get().getHandlers().getCrashData().getState() != TardisCrashData.State.NORMAL) {
+            findTardis().get().getHandlers().getCrashData().addRepairTicks(2 * findTardis().get().getTravel().getSpeed());
+        }
         if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && this.findTardis().get().getTravel().getState() == TardisTravel.State.LANDED) {
             this.recalculate();
         }

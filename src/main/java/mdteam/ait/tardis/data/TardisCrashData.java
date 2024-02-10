@@ -49,15 +49,15 @@ public class TardisCrashData extends TardisLink{
         }
         if (getRepairTicks() == 0 && State.NORMAL == getState()) return;
         ServerTardis tardis = (ServerTardis) this.findTardis().get();
-        if (getState() != State.NORMAL) {
-
-            tardis.getHandlers().getAlarms().enable();
-        }
         if (getRepairTicks() == 0) {
             setState(State.NORMAL);
             tardis.getHandlers().getAlarms().disable();
+            return;
         }
-        if (getRepairTicks() < UNSTABLE_TICK_START_THRESHOLD && State.UNSTABLE != getState()) {
+        if (getState() != State.NORMAL) {
+            tardis.getHandlers().getAlarms().enable();
+        }
+        if (getRepairTicks() < UNSTABLE_TICK_START_THRESHOLD && State.UNSTABLE != getState() && getRepairTicks() > 0) {
             setState(State.UNSTABLE);
             tardis.getHandlers().getAlarms().disable();
         }
@@ -88,27 +88,6 @@ public class TardisCrashData extends TardisLink{
             serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 5, true, false, false));
         }
         DeltaTimeManager.createDelay(DELAY_ID_START + tardis.getUuid().toString(), (long) TimeUtil.secondsToMilliseconds(2));
-    }
-
-    @Override
-    public void tick(MinecraftClient client) {
-        super.tick(client);
-        if (this.findTardis().isEmpty()) return;
-        if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE) == null) {
-            PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE, State.NORMAL);
-        }
-        AbsoluteBlockPos.Directed exteriorPosition = findTardis().get().getTravel().getExteriorPos();
-        ServerWorld exteriorWorld = (ServerWorld) exteriorPosition.getWorld();
-        exteriorWorld.spawnParticles(ParticleTypes.LARGE_SMOKE,
-                exteriorPosition.getX(), exteriorPosition.getY(), exteriorPosition.getZ(),
-                5,
-                exteriorPosition.getDirection().getVector().getX(), 0.25D, exteriorPosition.getDirection().getVector().getZ(), 0.08D
-        );
-        exteriorWorld.spawnParticles(new DustColorTransitionParticleEffect(
-                        new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 2),
-                exteriorPosition.getX(), exteriorPosition.getY(), exteriorPosition.getZ(),
-                10,
-                exteriorPosition.getDirection().getVector().getX(), 0.25D, exteriorPosition.getDirection().getVector().getZ(), 0.08D);
     }
 
     public TardisCrashData(Tardis tardis) {
