@@ -118,7 +118,7 @@ public class SonicItem extends LinkableItem {
                         player.sendMessage(Text.literal("Your tardis is not damaged").formatted(Formatting.GOLD), true);
                         return;
                     }
-                    player.sendMessage(Text.literal("You have " + repairminutes + " minutes of repair left.").formatted(Formatting.GOLD), true);
+                    player.sendMessage(Text.literal("You have " + repairminutes + (repairminutes == 1 ? " minute" : " minutes") + " of repair left.").formatted(Formatting.GOLD), true);
                     return;
                 }
                 if (world == TardisUtil.getTardisDimension()) {
