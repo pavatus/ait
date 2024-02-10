@@ -1,5 +1,6 @@
 package mdteam.ait.core.blockentities;
 
+import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITBlocks;
@@ -105,7 +106,7 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
         markDirty();
         this.syncType();
         if(this.getWorld() == null) return;
-        this.getWorld().updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        WorldOps.updateIfOnServer(this.getWorld(), this.pos);
     }
 
     public ConsoleVariantSchema getConsoleVariant() {
@@ -120,7 +121,7 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
         markDirty();
         this.syncVariant();
         if(this.getWorld() == null) return;
-        this.getWorld().updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        WorldOps.updateIfOnServer(this.getWorld(), this.pos);
     }
 
     public void changeConsole(ConsoleTypeSchema schema) {
