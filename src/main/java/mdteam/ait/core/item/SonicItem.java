@@ -2,6 +2,7 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.api.tardis.LinkableItem;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
@@ -109,7 +110,14 @@ public class SonicItem extends LinkableItem {
             @Override
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
-
+                if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exteriorBlockEntity) {
+                    if (exteriorBlockEntity.findTardis().isEmpty()) return;
+                    if (!(exteriorBlockEntity.findTardis().get() == tardis)) return;
+                    int repairticksleft = tardis.getHandlers().getCrashData().getRepairTicks();
+                    int repairminutes = repairticksleft / 20 / 60;
+                    player.sendMessage(Text.literal("You have " + repairminutes + " minutes of repair left.").formatted(Formatting.GOLD), true);
+                    return;
+                }
                 if (world == TardisUtil.getTardisDimension()) {
                     world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                     player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
