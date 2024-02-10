@@ -6,6 +6,7 @@ import mdteam.ait.tardis.animation.PulsatingAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.registry.DoorRegistry;
 import mdteam.ait.tardis.exterior.category.ClassicCategory;
+import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.variant.door.ClassicDoorVariant;
 import mdteam.ait.tardis.variant.door.DoorSchema;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
@@ -18,7 +19,7 @@ public abstract class ClassicBoxVariant extends ExteriorVariantSchema {
     private final String name;
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/classic/classic_";
 
-    protected ClassicBoxVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
+    protected ClassicBoxVariant(String name, String modId) {
         super(ClassicCategory.REFERENCE, new Identifier(modId, "exterior/classic/" + name));
 
         this.name = name;

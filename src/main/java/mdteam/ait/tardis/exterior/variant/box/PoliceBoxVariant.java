@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.exterior.variant.box;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.tardis.animation.ClassicAnimation;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.tardis.animation.PulsatingAnimation;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;

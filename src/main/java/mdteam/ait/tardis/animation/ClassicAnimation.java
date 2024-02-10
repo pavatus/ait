@@ -5,59 +5,70 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.tardis.TardisTravel;
 
-@Deprecated
 public class ClassicAnimation extends ExteriorAnimation {
+
     public ClassicAnimation(ExteriorBlockEntity exterior) {
         super(exterior);
     }
 
     @Override
     public void tick() {
-        if(exterior.findTardis().isEmpty()) return;
+        if (exterior.findTardis().isEmpty())
+            return;
 
         TardisTravel.State state = exterior.findTardis().get().getTravel().getState();
+
 
         if (this.timeLeft < 0)
             this.setupAnimation(exterior.findTardis().get().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 
         if (state == TardisTravel.State.DEMAT) {
-            this.alpha = (float) this.timeLeft / (this.startTime);
-            this.timeLeft--;
+            timeLeft--;
+            this.setAlpha(getFadingAlpha());
 
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.MAT) {
-            // Maybe this will fix the class animation taking too long
-            this.alpha = ((float) this.timeLeft / (this.startTime) - 1) * -1;
-            this.timeLeft--;
-            this.setAlpha(this.alpha);
+            timeLeft++;
+            System.out.println(timeLeft);
+
+            if (timeLeft > 680) {
+                this.setAlpha(((float) timeLeft - 680) / (860 - 620));
+            } else {
+                this.setAlpha(0f);
+            }
+
             runAlphaChecks(state);
         } else if (state == TardisTravel.State.LANDED/* && alpha != 1f*/) {
             this.setAlpha(1f);
         }
     }
 
+    public float getFadingAlpha() {
+        return (float) (timeLeft) / (maxTime);
+    }
+
     @Override
     public void setupAnimation(TardisTravel.State state) {
-        if(exterior.findTardis().isEmpty()) {
+        if (exterior.findTardis().isEmpty() || exterior.findTardis().get().getExterior().getCategory() == null) {
             AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
             alpha = 0f; // just make me vanish.
             return;
         }
+
         MatSound sound = exterior.findTardis().get().getExterior().getVariant().getSound(state);
 
-        this.timeLeft = sound.timeLeft();
-        this.maxTime = sound.maxTime();
-        this.startTime = sound.startTime();
+        this.tellClientsToSetup(state);
+
+        timeLeft = sound.timeLeft();
+        maxTime = sound.maxTime();
+        startTime = sound.startTime();
 
         if (state == TardisTravel.State.DEMAT) {
-            this.timeLeft = 390;
-            this.maxTime = 390;
-            this.startTime = 390;
-            this.alpha = 1f;
+            alpha = 1f;
         } else if (state == TardisTravel.State.MAT) {
-            this.alpha = 0f;
+            alpha = 0f;
         } else if (state == TardisTravel.State.LANDED) {
-            this.alpha = 1f;
+            alpha = 1f;
         }
     }
 }
