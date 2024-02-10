@@ -56,21 +56,24 @@ public class TardisCrashData extends TardisLink{
             setState(State.UNSTABLE);
             tardis.getHandlers().getAlarms().disable();
         }
-        if (!(getState() == State.TOXIC)) return;
-        if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
         AbsoluteBlockPos.Directed exteriorPosition = tardis.getTravel().getExteriorPos();
         ServerWorld exteriorWorld = (ServerWorld) exteriorPosition.getWorld();
-        exteriorWorld.spawnParticles(ParticleTypes.LARGE_SMOKE,
-                exteriorPosition.getX(), exteriorPosition.getY(), exteriorPosition.getZ(),
-                5,
-                exteriorPosition.getDirection().getVector().getX(), 0.25D, exteriorPosition.getDirection().getVector().getZ(), 0.08D
-                );
+        if(tardis.getDoor().isOpen() && this.getState() != State.NORMAL) {
+            exteriorWorld.spawnParticles(ParticleTypes.LARGE_SMOKE,
+                    exteriorPosition.getX(), exteriorPosition.getY(), exteriorPosition.getZ(),
+                    20,
+                    exteriorPosition.getDirection().getVector().getX(), 0.25D, exteriorPosition.getDirection().getVector().getZ(), 0.08D
+            );
+        }
+        if (!(getState() == State.TOXIC)) return;
+        if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
         exteriorWorld.spawnParticles(new DustColorTransitionParticleEffect(
                         new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 2),
                 exteriorPosition.getX(), exteriorPosition.getY(), exteriorPosition.getZ(),
-                10,
-                exteriorPosition.getDirection().getVector().getX(), 0.25D, exteriorPosition.getDirection().getVector().getZ(), 0.08D
+                25,
+                exteriorPosition.getDirection().getVector().getX(), 0.05f, exteriorPosition.getDirection().getVector().getZ(), 0.08D
         );
+        if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
         if (!TardisUtil.isInteriorNotEmpty(tardis)) return;
         for (ServerPlayerEntity serverPlayerEntity : TardisUtil.getPlayersInInterior(tardis)) {
             serverPlayerEntity.playSound(AITSounds.CLOISTER, 1f, 1f);
