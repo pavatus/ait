@@ -1,3 +1,2 @@
-# 1.2.45
-- stuff
-- fixed the sodium rendering bug
+# 1.2.46
+- Performance stuff

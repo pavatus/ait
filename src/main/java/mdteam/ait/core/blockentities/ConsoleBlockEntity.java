@@ -453,7 +453,4 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
                     pos.getZ() + 0.5f, 1, 0,0,0, (isRiftChunk) ? 0.05f : 0.025f);
         }
     }
-
-
-
 }
