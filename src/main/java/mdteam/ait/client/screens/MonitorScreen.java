@@ -221,7 +221,8 @@ public class MonitorScreen extends ConsoleScreen {
         if(!this.buttons.get(0).isHovered()) context.drawTexture(TEXTURE, i + 22, j + 114, 0, 227, 57, 12);
 
         // around the battery
-        context.drawTexture(TEXTURE, i + 1, j + 129, 0, 150, 99, 15);
+        context.drawTexture(TEXTURE, i + 1, j + 129, 0, getFromUUID(tardisId).getFuel() > 250 ? 150 : 165, 99, 15);
+
 
         // triangle buttons
         if(!this.buttons.get(1).isHovered()) context.drawTexture(TEXTURE, i + 3, j + 96, 0, 197, 15, 30);
@@ -260,11 +261,18 @@ public class MonitorScreen extends ConsoleScreen {
         // testing @todo
         if (getFromUUID(tardisId) != null) {
             if (this.getCategory() == null || this.getCurrentVariant() == null) return;
+            context.getMatrices().push();
+            context.getMatrices().translate(0, 0, 50f);
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    convertCategoryNameToProper(this.getCategory().name()), (width / 2 - 54), (height / 2 + 41),
+                    5636095);
+            context.getMatrices().pop();
             ExteriorModel model = this.getCurrentVariant().model();
             MatrixStack stack = context.getMatrices();
             // @TODO definitely make better in the near future, especially the weird shadow stuff with the exterior
             stack.push();
-            stack.translate(x, this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 11 : y, 100f);
+            stack.translate(x, this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 11 : y, 0f);
             if (this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE)) stack.scale(-12, 12, 12);
             else if (this.getCategory() == CategoryRegistry.getInstance().get(BoothCategory.REFERENCE)) stack.scale(-scale, scale, scale);
             else stack.scale(-scale, scale, scale);
@@ -309,7 +317,6 @@ public class MonitorScreen extends ConsoleScreen {
         context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 + 14), (height / 2 - 16), 0xFFFFFF, true);
 
         // destination
-        //context.drawText(this.textRenderer, Text.literal("Destination"), (width / 2 - 64), (height / 2 + 14), 5636095, true);
         context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 + 7), (height / 2 + 31), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(dDimensionText), (width / 2 + 7), (height / 2 + 41), 0xFFFFFF, true);
         context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 + 14), (height / 2 + 51), 0xFFFFFF, true);
@@ -334,5 +341,19 @@ public class MonitorScreen extends ConsoleScreen {
         this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f, 176, delta);
         this.drawInformationText(context);
         super.render(context, mouseX, mouseY, delta);
+    }
+
+    public String convertCategoryNameToProper(String string) {
+        return switch (string) {
+            case "easter_head" -> "Moyai";
+            case "police_box" -> "Police";
+            case "classic" -> "Classic";
+            case "plinth" -> "Plinth";
+            case "tardim" -> "TARDIM";
+            case "booth" -> "K2 Booth";
+            case "capsule" -> "Capsule";
+            case "renegade" -> "Renegade";
+            default -> "TARDIS";
+        };
     }
 }

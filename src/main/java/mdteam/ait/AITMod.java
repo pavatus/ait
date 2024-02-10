@@ -127,12 +127,13 @@ public class AITMod implements ModInitializer {
             SetFuelCommand.register(dispatcher);
             AddFuelCommand.register(dispatcher);
             RemoveFuelCommand.register(dispatcher);
-            RemoveTardisCommand.register(dispatcher); // @TODO make sure this works idk bro
+            //RemoveTardisCommand.register(dispatcher); // @TODO make sure this works idk bro
+            SetRepairTicksCommand.register(dispatcher);
             ToggleHumCommand.register(dispatcher);
             ToggleAlarmCommand.register(dispatcher);
-            ToggleSiegeModeCommand.register(dispatcher);
+            //ToggleSiegeModeCommand.register(dispatcher);
             RiftChunkCommand.register(dispatcher);
-            RealWorldCommand.register(dispatcher);
+            //RealWorldCommand.register(dispatcher);
             SetNameCommand.register(dispatcher);
             GetNameCommand.register(dispatcher);
             SetMaxSpeedCommand.register(dispatcher);
