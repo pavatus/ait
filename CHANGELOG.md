@@ -1,2 +1,2 @@
-# 1.2.40
-- loqor broke something, it's fixed now
+# 1.2.41
+- Fixed tardis flight being bugged

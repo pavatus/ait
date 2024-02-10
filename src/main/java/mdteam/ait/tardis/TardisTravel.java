@@ -112,15 +112,17 @@ public class TardisTravel extends TardisLink {
             this.dematerialise(autopilot);
         }
         if (speed == 0 && state == State.FLIGHT) {
-            int random_int = random.nextInt(0, 2);
-            int up_or_down = random_int == 0 ? 1 : -1;
-            int random_change = random.nextInt(1, 10) * up_or_down;
-            int new_x = getDestination().getX() + random_change;
-            int new_y = getDestination().getWorld().getTopY() - 1;
-            int new_z = getDestination().getZ() + random_change;
-            this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getDirection()));
-            if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
-                this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
+            if (tardis.getHandlers().getCrashData().getState() == TardisCrashData.State.UNSTABLE) {
+                int random_int = random.nextInt(0, 2);
+                int up_or_down = random_int == 0 ? 1 : -1;
+                int random_change = random.nextInt(1, 10) * up_or_down;
+                int new_x = getDestination().getX() + random_change;
+                int new_y = getDestination().getWorld().getTopY() - 1;
+                int new_z = getDestination().getZ() + random_change;
+                this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getDirection()));
+                if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
+                    this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
+                }
             }
             this.materialise();
         }
