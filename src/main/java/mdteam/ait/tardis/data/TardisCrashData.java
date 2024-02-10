@@ -56,7 +56,7 @@ public class TardisCrashData extends TardisLink{
                 );
         ServerWorld tardisWorld = (ServerWorld) TardisUtil.getTardisDimension();
         tardis.getDesktop().getConsoles().forEach(console -> {
-            exteriorWorld.spawnParticles(ParticleTypes.CLOUD,
+            tardisWorld.spawnParticles(ParticleTypes.CLOUD,
                     console.position().getX(), console.position().getY(), console.position().getZ(),
                     10,
                     1.0D, 0.0D, 1.0D, 0.5D
