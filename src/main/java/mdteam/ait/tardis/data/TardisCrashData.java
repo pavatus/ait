@@ -44,11 +44,16 @@ public class TardisCrashData extends TardisLink{
             PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE, State.NORMAL);
             return;
         }
+
         if (getRepairTicks() > 0) {
             setRepairTicks(getRepairTicks() - 1);
         }
         if (getRepairTicks() == 0 && State.NORMAL == getState()) return;
         ServerTardis tardis = (ServerTardis) this.findTardis().get();
+        if (getState() != State.NORMAL) {
+
+            tardis.getHandlers().getAlarms().enable();
+        }
         if (getRepairTicks() == 0) {
             setState(State.NORMAL);
             tardis.getHandlers().getAlarms().disable();
