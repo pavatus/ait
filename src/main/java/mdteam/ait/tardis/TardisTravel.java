@@ -1,5 +1,6 @@
 package mdteam.ait.tardis;
 
+import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.core.AITBlocks;
@@ -10,6 +11,7 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.PosType;
+import mdteam.ait.tardis.data.TardisCrashData;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -23,7 +25,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -111,6 +112,16 @@ public class TardisTravel extends TardisLink {
             this.dematerialise(autopilot);
         }
         if (speed == 0 && state == State.FLIGHT) {
+            int random_int = random.nextInt(0, 2);
+            int up_or_down = random_int == 0 ? 1 : -1;
+            int random_change = random.nextInt(1, 10) * up_or_down;
+            int new_x = getDestination().getX() + random_change;
+            int new_y = getDestination().getWorld().getTopY() - 1;
+            int new_z = getDestination().getZ() + random_change;
+            this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getDirection()));
+            if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
+                this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
+            }
             this.materialise();
         }
         // Should we just disable autopilot if the speed goes above 1?
@@ -220,6 +231,7 @@ public class TardisTravel extends TardisLink {
             if (getDematTicks() != 0) setDematTicks(0);
             return;
         }
+        if (this.findTardis().isEmpty()) return;
 
         setDematTicks(getDematTicks() + 1);
 
@@ -278,7 +290,7 @@ public class TardisTravel extends TardisLink {
                     console.position().toCenterPos(),
                     3f * crash_intensity,
                     false,
-                    null
+                    World.ExplosionSourceType.MOB
             );
             explosions.add(explosion);
         });
@@ -302,28 +314,56 @@ public class TardisTravel extends TardisLink {
                 player.damage(null, damage_to_player);
             }
         }
-        tardis.setLockedTardis(false);
+        tardis.setLockedTardis(true);
         PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
         PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
         this.setSpeed(0);
-        tardis.removeFuel(100 * crash_intensity);
+        tardis.removeFuel(500 * crash_intensity);
         tardis.tardisHammerAnnoyance = 0;
         int random_int = random.nextInt(0, 2);
         int up_or_down = random_int == 0 ? 1 : -1;
-        int random_change = random.nextInt(10, 1000) * crash_intensity * up_or_down;
+        int random_change = random.nextInt(10, 100) * crash_intensity * up_or_down;
         int new_x = getDestination().getX() + random_change;
         int new_y = getDestination().getWorld().getTopY() - 1;
         int new_z = getDestination().getZ() + random_change;
+        this.setCrashing(true);
         this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getDirection()));
         if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
             this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
         }
-        this.materialise();
+        this.crash_materialize();
+        int repair_ticks = 1000 * crash_intensity;
+        tardis.getHandlers().getCrashData().setRepairTicks(repair_ticks);
+        if (repair_ticks > TardisCrashData.UNSTABLE_TICK_START_THRESHOLD) {
+            tardis.getHandlers().getCrashData().setState(TardisCrashData.State.TOXIC);
+        } else {
+            tardis.getHandlers().getCrashData().setState(TardisCrashData.State.UNSTABLE);
+        }
         TardisEvents.CRASH.invoker().onCrash(tardis);
     }
 
     public void materialise() {
         this.materialise(false);
+    }
+
+    public void crash_materialize() {
+        if (this.getDestination().getWorld().isClient() || findTardis().isEmpty() || this.getState() != State.FLIGHT) {
+            return;
+        }
+        this.setState(State.MAT);
+        ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
+        ForcedChunkUtil.keepChunkLoaded(destWorld, this.getDestination());
+        ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
+        BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, this.getDestination().getDirection());
+        destWorld.setBlockState(this.getDestination(), state);
+
+        // Create and add the exterior block entity at the destination
+        ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(this.getDestination(), state);
+        destWorld.addBlockEntity(blockEntity);
+
+        // Set the position of the Tardis to the destination
+        this.setPosition(this.getDestination());
+        WorldOps.updateIfOnServer(destWorld, this.getDestination());
     }
 
     /**

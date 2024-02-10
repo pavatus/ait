@@ -1,10 +1,13 @@
 package mdteam.ait.core.entities;
 
 import com.mojang.logging.LogUtils;
+import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.core.AITDamageTypes;
 import mdteam.ait.core.AITEntityTypes;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
+import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -34,6 +37,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.crash.CrashReportSection;
@@ -233,10 +237,16 @@ public class FallingTardisEntity extends Entity {
                     this.getTardis().getDoor().setLocked(crashing);
 
                     this.stopFalling(false);
+
                 }
             }
 
-            this.setVelocity(this.getVelocity().multiply(0.98));
+            if (this.getTardis().getTravel().isCrashing()) {
+                this.setVelocity(this.getVelocity().multiply(1.5));
+            } else {
+                this.setVelocity(this.getVelocity().multiply(0.98));
+            }
+
         }
     }
 
@@ -247,8 +257,29 @@ public class FallingTardisEntity extends Entity {
     public void stopFalling(boolean antigravs) {
         if (antigravs) {
             PropertiesHandler.set(getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
+        }TardisUtil.getPlayersInInterior(getTardis()).forEach(player -> {
+            if (getTardis().getTravel().isCrashing()) {
+                player.playSound(SoundEvents.ENTITY_GENERIC_EXPLODE, 1.0F, 1.0F);
+                if (TardisUtil.isClient()) {
+                    ClientShakeUtil.shake(3.0f);
+                }
+            } else {
+                player.playSound(AITSounds.LAND_THUD, 3.0f, 1.0f);
+                if (TardisUtil.isClient()) {
+                    ClientShakeUtil.shake(0.5f);
+                }
+            }
+        });
+        if (TardisUtil.isServer()) {
+            if (ForcedChunkUtil.isChunkForced((ServerWorld) this.getWorld(), this.getBlockPos())) {
+                ForcedChunkUtil.stopForceLoading((ServerWorld) this.getWorld(), this.getBlockPos());
+            }
+        }
+        if (getTardis().getTravel().isCrashing()) {
+            getTardis().setLockedTardis(false);
         }
         getTardis().getTravel().setCrashing(false);
+
 
         Block block = this.block.getBlock();
         BlockPos blockPos = this.getBlockPos();

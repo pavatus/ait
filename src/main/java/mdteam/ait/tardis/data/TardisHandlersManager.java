@@ -28,6 +28,7 @@ public class TardisHandlersManager extends TardisLink {
     private SiegeData siege;
     private CloakData cloak;
     private StatsData stats;
+    private TardisCrashData crashData;
     // private final SequenceHandler sequence;
 
     public TardisHandlersManager(Tardis tardis) {
@@ -47,6 +48,7 @@ public class TardisHandlersManager extends TardisLink {
         this.siege = new SiegeData(tardis);
         this.cloak = new CloakData(tardis);
         this.stats = new StatsData(tardis);
+        this.crashData = new TardisCrashData(tardis);
         // this.sequence = new SequenceHandler(tardisId);
 
         generateTickables();
@@ -70,6 +72,7 @@ public class TardisHandlersManager extends TardisLink {
         addTickable(getFlight());
         addTickable(getSiege());
         addTickable(getStats());
+        addTickable(getCrashData());
         // addTickable(getSequencing()); // todo sequences
     }
 
@@ -231,6 +234,17 @@ public class TardisHandlersManager extends TardisLink {
             addTickable(this.stats);
         }
         return this.stats;
+    }
+
+    public void setCrashData(TardisCrashData crashData) {
+        this.crashData = crashData;
+    }
+
+    public TardisCrashData getCrashData() {
+        if (this.crashData == null && this.findTardis().isPresent()) {
+            this.crashData = new TardisCrashData(this.findTardis().get());
+        }
+        return this.crashData;
     }
     // public SequenceHandler getSequencing() {return this.sequence;}
 }
