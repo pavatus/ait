@@ -112,8 +112,7 @@ public class SonicItem extends LinkableItem {
                 if (tardis == null) return;
                 if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exteriorBlockEntity) {
                     if (exteriorBlockEntity.findTardis().isEmpty()) return;
-                    if (!(exteriorBlockEntity.findTardis().get() == tardis)) return;
-                    int repairticksleft = tardis.getHandlers().getCrashData().getRepairTicks();
+                    int repairticksleft = exteriorBlockEntity.findTardis().get().getHandlers().getCrashData().getRepairTicks();
                     int repairminutes = repairticksleft / 20 / 60;
                     if (repairticksleft == 0) {
                         player.sendMessage(Text.literal("Your tardis is not damaged").formatted(Formatting.GOLD), true);
