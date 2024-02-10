@@ -198,34 +198,6 @@ public class MonitorScreen extends ConsoleScreen {
         return list.get(idx - 1);
     }
 
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        /*if (this.scrollbarClicked) {
-            int j = ((this.height - this.backgroundHeight) / 2) + 13;
-            int k = j + 56;
-            this.scrollPosition = ((float)mouseY - (float)j - 7.5f) / ((float)(k - j) - 15.0f);
-            this.scrollPosition = MathHelper.clamp(this.scrollPosition, 0.0f, 1.0f);
-            this.visibleTopRow = Math.max((int)((double)(this.scrollPosition * (float)2) + 0.5), 0);
-            return true;
-        }*/
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        /*float f = (float)amount / (float)2;
-        this.scrollPosition = MathHelper.clamp(this.scrollPosition - f, 0.0f, 1.0f);
-        this.visibleTopRow = Math.max((int)(this.scrollPosition * (float)2 + 0.5f), 0);
-        return true;*/
-        return super.mouseScrolled(mouseX, mouseY, amount);
-    }
-
     final int UV_BASE = 159;
     final int UV_INCREMENT = 17;
 
