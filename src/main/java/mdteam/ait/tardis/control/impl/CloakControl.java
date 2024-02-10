@@ -26,10 +26,10 @@ public class CloakControl extends Control {
         cloak.toggle();
         // @TODO: Add translations
         if (cloak.isEnabled()) {
-            player.sendMessage(Text.literal("CLOAK: ON (TODO add translations for this)"), true);
+            player.sendMessage(Text.literal("CLOAK: ON"), true);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING, SoundCategory.BLOCKS, 1.0F, 1.0F);
         } else {
-            player.sendMessage(Text.literal("CLOAK: OFF (TODO add translations for this)"), true);
+            player.sendMessage(Text.literal("CLOAK: OFF"), true);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING_STOP, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
 
