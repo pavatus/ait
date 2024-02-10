@@ -60,6 +60,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         PacketByteBuf buf = PacketByteBufs.create();
 
         buf.writeUuid(this.tardis().getUuid());
+        if(this.findConsole() == null) return;
         buf.writeUuid(this.findConsole().uuid());
 
         ClientPlayNetworking.send(TardisDesktop.CACHE_CONSOLE, buf);
