@@ -9,6 +9,7 @@ import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
@@ -39,17 +40,20 @@ public class TardisCrashData extends TardisLink{
     public void tick(MinecraftServer server) {
         super.tick(server);
         if (this.findTardis().isEmpty()) return;
+        if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE) == null) {
+            PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE, State.NORMAL);
+        }
         if (getRepairTicks() > 0) {
             setRepairTicks(getRepairTicks() - 1);
         }
         if (getRepairTicks() == 0 && State.NORMAL == getState()) return;
         ServerTardis tardis = (ServerTardis) this.findTardis().get();
-        if (getRepairTicks() < UNSTABLE_TICK_START_THRESHOLD && State.UNSTABLE != getState()) {
-            setState(State.UNSTABLE);
-            tardis.getHandlers().getAlarms().disable();
-        }
         if (getRepairTicks() == 0) {
             setState(State.NORMAL);
+            tardis.getHandlers().getAlarms().disable();
+        }
+        if (getRepairTicks() < UNSTABLE_TICK_START_THRESHOLD && State.UNSTABLE != getState()) {
+            setState(State.UNSTABLE);
             tardis.getHandlers().getAlarms().disable();
         }
         if (!(getState() == State.TOXIC)) return;
@@ -70,7 +74,7 @@ public class TardisCrashData extends TardisLink{
         if (!TardisUtil.isInteriorNotEmpty(tardis)) return;
         for (ServerPlayerEntity serverPlayerEntity : TardisUtil.getPlayersInInterior(tardis)) {
             serverPlayerEntity.playSound(AITSounds.CLOISTER, 1f, 1f);
-            serverPlayerEntity.damage(exteriorWorld.getDamageSources().magic(), 2f);
+            serverPlayerEntity.damage(exteriorWorld.getDamageSources().magic(), 3f);
             serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 5, true, false, false));
             serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 100, 3, true, false, false));
             serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 5, true, false, false));
@@ -78,8 +82,34 @@ public class TardisCrashData extends TardisLink{
         DeltaTimeManager.createDelay(DELAY_ID_START + tardis.getUuid().toString(), (long) TimeUtil.secondsToMilliseconds(2));
     }
 
+    @Override
+    public void tick(MinecraftClient client) {
+        super.tick(client);
+        if (this.findTardis().isEmpty()) return;
+        if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE) == null) {
+            PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE, State.NORMAL);
+        }
+        AbsoluteBlockPos.Directed exteriorPosition = findTardis().get().getTravel().getExteriorPos();
+        ServerWorld exteriorWorld = (ServerWorld) exteriorPosition.getWorld();
+        exteriorWorld.spawnParticles(ParticleTypes.LARGE_SMOKE,
+                exteriorPosition.getX(), exteriorPosition.getY(), exteriorPosition.getZ(),
+                5,
+                exteriorPosition.getDirection().getVector().getX(), 0.25D, exteriorPosition.getDirection().getVector().getZ(), 0.08D
+        );
+        exteriorWorld.spawnParticles(new DustColorTransitionParticleEffect(
+                        new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 2),
+                exteriorPosition.getX(), exteriorPosition.getY(), exteriorPosition.getZ(),
+                10,
+                exteriorPosition.getDirection().getVector().getX(), 0.25D, exteriorPosition.getDirection().getVector().getZ(), 0.08D);
+    }
+
     public TardisCrashData(Tardis tardis) {
         super(tardis, "crash");
+
+        if (findTardis().isEmpty()) return;
+        if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE) == null) {
+            PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE, State.NORMAL);
+        }
     }
 
     public State getState() {
