@@ -5,6 +5,7 @@ import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.exterior.variant.*;
 import mdteam.ait.tardis.exterior.variant.box.*;
 import mdteam.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
+import mdteam.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.exterior.variant.booth.*;
 import mdteam.ait.tardis.exterior.variant.capsule.CapsuleDefaultVariant;
@@ -162,6 +163,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
     public static ExteriorVariantSchema PLINTH_SOUL;
     public static ExteriorVariantSchema PLINTH_FIRE;
     public static ExteriorVariantSchema RENEGADE_DEFAULT;
+    public static ExteriorVariantSchema RENEGADE_TRON;
 
     private void registerDefaults() {
         // todo make this not static
@@ -218,6 +220,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 
         // Renegade
         RENEGADE_DEFAULT = register(new RenegadeDefaultVariant());
+        RENEGADE_TRON = register(new RenegadeTronVariant());
 
         System.out.println(this.toList());
     }

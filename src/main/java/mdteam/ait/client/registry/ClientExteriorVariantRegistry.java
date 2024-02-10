@@ -21,6 +21,7 @@ import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthDefaultVarian
 import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthFireVariant;
 import mdteam.ait.client.registry.exterior.impl.plinth.ClientPlinthSoulVariant;
 import mdteam.ait.client.registry.exterior.impl.renegade.ClientRenegadeDefaultVariant;
+import mdteam.ait.client.registry.exterior.impl.renegade.ClientRenegadeTronVariant;
 import mdteam.ait.client.registry.exterior.impl.renegade.ClientRenegadeVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.tardim.ClientTardimFireVariant;
@@ -140,6 +141,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema PLINTH_SOUL;
     public static ClientExteriorVariantSchema PLINTH_FIRE;
     public static ClientExteriorVariantSchema RENEGADE_DEFAULT;
+    public static ClientExteriorVariantSchema RENEGADE_TRON;
 
     // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
     public void init() {
@@ -195,5 +197,6 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 
         // Renegade
         RENEGADE_DEFAULT = registerStatic(new ClientRenegadeDefaultVariant());
+        RENEGADE_TRON = registerStatic(new ClientRenegadeTronVariant());
     }
 }
