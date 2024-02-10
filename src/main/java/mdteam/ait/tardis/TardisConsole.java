@@ -105,9 +105,9 @@ public class TardisConsole extends TardisLink {
 
         ticks++;
 
-        if (ticks >= VALIDATE_TICK) {
-            ticks = 0;
-            this.validate();
-        }
+//        if (ticks >= VALIDATE_TICK) {
+//            ticks = 0;
+//            this.validate();
+//        }
     }
 }
