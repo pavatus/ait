@@ -54,7 +54,7 @@ public class TardisCrashData extends TardisLink{
         }
         if (getRepairTicks() < UNSTABLE_TICK_START_THRESHOLD && State.UNSTABLE != getState()) {
             setState(State.UNSTABLE);
-            tardis.getHandlers().getAlarms().disable();
+            tardis.getHandlers().getAlarms().enable(); // alarms on aaa
         }
         if (!(getState() == State.TOXIC)) return;
         if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
