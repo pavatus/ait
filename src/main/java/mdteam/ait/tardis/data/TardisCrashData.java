@@ -42,6 +42,7 @@ public class TardisCrashData extends TardisLink{
         if (this.findTardis().isEmpty()) return;
         if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE) == null) {
             PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE, State.NORMAL);
+            return;
         }
         if (getRepairTicks() > 0) {
             setRepairTicks(getRepairTicks() - 1);
