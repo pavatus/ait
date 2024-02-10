@@ -17,7 +17,7 @@ import static mdteam.ait.tardis.util.TardisUtil.findTardisByInterior;
 
 // TODO - move variant and type over to here
 public class TardisConsole extends TardisLink {
-    private static final int VALIDATE_TICK = 4 * 20;
+    private static final int VALIDATE_TICK = 30 * 20;
 
     private final UUID uuid;
     private final AbsoluteBlockPos position;
@@ -105,9 +105,9 @@ public class TardisConsole extends TardisLink {
 
         ticks++;
 
-//        if (ticks >= VALIDATE_TICK) {
-//            ticks = 0;
-//            this.validate();
-//        }
+        if (ticks >= VALIDATE_TICK) {
+            ticks = 0;
+            this.validate();
+        }
     }
 }
