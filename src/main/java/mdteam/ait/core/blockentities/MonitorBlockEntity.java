@@ -9,6 +9,7 @@ import mdteam.ait.tardis.link.LinkableBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -31,6 +32,7 @@ public class MonitorBlockEntity extends LinkableBlockEntity {
                 return;
             }
         }
+        player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F, 1.0F);
         AITMod.openScreen((ServerPlayerEntity) player, 0, this.findTardis().get().getUuid()); // we can cast because we know its on server :p
     }
 
