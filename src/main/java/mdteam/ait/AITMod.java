@@ -127,6 +127,7 @@ public class AITMod implements ModInitializer {
             SetFuelCommand.register(dispatcher);
             AddFuelCommand.register(dispatcher);
             RemoveFuelCommand.register(dispatcher);
+            RemoveTardisCommand.register(dispatcher); // @TODO make sure this works idk bro
             ToggleHumCommand.register(dispatcher);
             ToggleAlarmCommand.register(dispatcher);
             ToggleSiegeModeCommand.register(dispatcher);
