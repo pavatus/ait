@@ -1,12 +1,2 @@
-# 1.2.37
-- Added **datapack support** for CONSOLE VARIANTS!! view the wiki
-- Implemented proper support for multiple consoles, fixes many bugs and crashes
-- Fixed crash from throwing siege mode tardis into void
-- Repositioned siege mode control on the Toyota console
-- Updated drifting music disc texture
-- Overhauled the entire default monitor screen
-- Update drifting audio file so that it's louder and more up to date
-- Removed depreciation on some functions because I like using them deal with it 😝 - Creativious
-- Changed how crashing works (Crashing overhaul)
-- Tardis is now toxic to be in after crashing for a certain amount of time
-- Tardis now won't land correctly and damages itself if you try to fly it while it's unstable
+# 1.2.38
+- quick hotfix boot crash on old worlds

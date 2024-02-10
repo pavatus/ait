@@ -83,7 +83,7 @@ public class TardisCrashData extends TardisLink{
     }
 
     public State getState() {
-        if (findTardis().isEmpty()) return State.NORMAL;
+        if (findTardis().isEmpty() || PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE) == null) return State.NORMAL;
         return State.valueOf((String) PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE));
     }
 
