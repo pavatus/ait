@@ -24,7 +24,7 @@ public class LoyaltyData extends TardisLink {
     }
 
     public void add(ServerPlayerEntity player) {
-        this.add(player, Loyalty.NONE);
+        this.add(player, Loyalty.TOLERATED);
     }
 
     public void add(ServerPlayerEntity player, Loyalty loyalty) {
