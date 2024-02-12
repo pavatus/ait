@@ -34,15 +34,6 @@ public abstract class DoorModel extends SinglePartEntityModel {
 
     @Override
     public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-
-    }
-
-    public void animateTile(DoorBlockEntity interiorDoor) {
-        // this.getPart().traverse().forEach(ModelPart::resetTransform);
-        // if (interiordoor.getTardis().get() == null)
-        //     return;
-        // DoorData.DoorStateEnum state = interiordoor.getTardis().get().getDoor().getDoorState();
-        // updateAnimation(interiorDoor.DOOR_STATE, getAnimationForDoorState(state), interiorDoor.animationTimer);
     }
 
     public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);

@@ -2,6 +2,8 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.blocks.DoorBlock;
+import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
@@ -14,6 +16,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -55,6 +58,13 @@ public class DoorBlockEntity extends LinkableBlockEntity {
         }
 
         if (door.tardisId == null) door.findTardis();
+
+        if (door.findTardis().isEmpty()) return;
+        if(!world.isClient() && door.findTardis().get().getTravel().getExteriorPos() != null) {
+            if(world.getBlockState(door.findTardis().get().getTravel().getExteriorPos()).getBlock() instanceof ExteriorBlock) {
+                blockState.with(DoorBlock.WATERLOGGED, ExteriorBlock.isWaterlogged(door.findTardis().get().getTravel().getExteriorPos().getBlockState()) && door.findTardis().get().getDoor().isOpen());
+            }
+        }
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {

@@ -5,6 +5,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
+import net.minecraft.client.render.entity.animation.CamelAnimations;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
@@ -23,6 +24,18 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
 
     public ConsoleModel(Function<Identifier, RenderLayer> function) {
         super(function);
+    }
+
+    public void animateBlockEntity(ConsoleBlockEntity console) {
+        // fyi, this is directly referencing camel animation code, its just specific according to the block entity that is being used
+        // to detect different states. - Loqor
+        this.getPart().traverse().forEach(ModelPart::resetTransform);
+            if(console.findTardis().isEmpty())
+                return;
+
+            TardisTravel.State state = console.findTardis().get().getTravel().getState();
+
+            this.updateAnimation(console.ANIM_STATE, getAnimationForState(state), console.age);
     }
 
     public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {

@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "ait:block/console_room_port_block",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "ait:block/console_room_port_block",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "ait:block/console_room_port_block",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "ait:block/console_room_port_block",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "ait:block/console_room_port_block"
+    },
+    "facing=west": {
+      "model": "ait:block/console_room_port_block",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

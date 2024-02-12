@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "ait:block/console_room_port_block_sides",
+    "side": "ait:block/console_room_port_block_sides",
+    "top": "ait:block/console_room_port_block"
+  }
+}

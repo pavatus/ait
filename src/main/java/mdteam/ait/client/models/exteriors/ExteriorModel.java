@@ -31,16 +31,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         super(function);
     }
 
-    // Thanks craig for help w animation code @TODO more craig thank yous
-    public void animateTile(ExteriorBlockEntity exterior) {
-        // this.getPart().traverse().forEach(ModelPart::resetTransform);
-        // if (exterior.tardis() == null)
-        //     return;
-        // DoorData.DoorStateEnum state = exterior.tardis().getDoor().getDoorState();
-        // // checkAnimationTimer(exterior);
-        // updateAnimation(exterior.DOOR_STATE, getAnimationForDoorState(state), exterior.animationTimer);
-    }
-
     private static float getAnimationLengthInTicks(Animation anim) {
         return anim.lengthInSeconds() * 20;
     }

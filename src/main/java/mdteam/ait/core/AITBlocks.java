@@ -30,6 +30,12 @@ public class AITBlocks implements NeptuneBlockInit {
     public static final Block RADIO = new RadioBlock(NeptuneBlockSettings.create().nonOpaque().instrument(Instrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F).dropsNothing());
     public static final Block MONITOR_BLOCK = new MonitorBlock(NeptuneBlockSettings.create().nonOpaque()
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
+    public static final Block CONSOLE_ROOM_PORT_BLOCK = new ConsoleRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
+            .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F, 6.0F));
+    public static final Block ENGINE_ROOM_PORT_BLOCK = new EngineRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
+            .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F, 6.0F));
+    public static final Block CABLE_BLOCK = new CableBlock(NeptuneBlockSettings.create().nonOpaque()
+            .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.GUITAR).strength(1.5F, 6.0F));
 
     public static List<Block> getBlocks() {
         List<Block> list = new ArrayList<>();

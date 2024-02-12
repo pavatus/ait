@@ -40,7 +40,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         if (console != null) {
             if (entity.findTardis().isEmpty()) return; // for some it forgets the tardis can be null, fucking weird
-            console.animateTile(entity);
+            console.animateBlockEntity(entity);
             console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
 
             if (entity.findTardis().get().hasPower())

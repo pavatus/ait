@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -48,6 +49,8 @@ import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
     public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
+    public final AnimationState ANIM_STATE = new AnimationState();
+    public int age;
     private boolean needsControls = true;
     private boolean needsSync = true;
     private Identifier type;
@@ -378,6 +381,11 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         //System.out.println("SpawnControls(): I'm getting run :) somewhere..");
     }
 
+    public void tickAge() {
+        age++;
+        ANIM_STATE.startIfNotRunning(age);
+    }
+
     public void markNeedsControl() {
         this.needsControls = true;
     }
@@ -404,7 +412,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
         // idk
         if (world.isClient()) {
-
+            this.tickAge();
         }
         if(this.findTardis().isEmpty()) return;
 

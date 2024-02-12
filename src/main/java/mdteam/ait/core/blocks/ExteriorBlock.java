@@ -23,13 +23,17 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.util.ParticleUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -47,9 +51,10 @@ import org.jetbrains.annotations.Nullable;
 
 import static mdteam.ait.core.blocks.DoorBlock.rotateShape;
 
-public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak {
+public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak, Waterloggable {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+    public static final BooleanProperty WATERLOGGED;
     public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16,1, 16);
     public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
             Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
@@ -59,7 +64,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
     public ExteriorBlock(Settings settings) {
         super(settings.nonOpaque());
 
-        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
     }
     @Override
     public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
@@ -68,12 +73,18 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite()).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+    }
+
+    public static boolean isWaterlogged(BlockState state) {
+        FluidState fluidState = state.getFluidState();
+        return state.get(Properties.WATERLOGGED) && fluidState.getFluid() == Fluids.WATER;
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, WATERLOGGED);
     }
 
     @Override
@@ -81,6 +92,13 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
         return AITItems.TARDIS_ITEM.getDefaultStack();
     }
 
+    public FluidState getFluidState(BlockState state) {
+        return (Boolean)state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
+    public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
+        return !(Boolean)state.get(WATERLOGGED);
+    }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -254,8 +272,19 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
                 && findTardis(world, pos).getExterior().getCategory() != CategoryRegistry.CORAL_GROWTH) {
             FallingTardisEntity falling = FallingTardisEntity.spawnFromBlock(world, pos, state);
             // OH SHIT WE FALLING
+            if(state.get(WATERLOGGED)) {
+                state.with(WATERLOGGED, false);
+            }
             this.configureFallingTardis(falling, world, pos);
         }
+    }
+
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     private Tardis findTardis(ServerWorld world, BlockPos pos) {
@@ -294,5 +323,9 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
     @Override
     public void onTryBreak(World world, BlockPos pos, BlockState state) {
 
+    }
+
+    static {
+        WATERLOGGED = Properties.WATERLOGGED;
     }
 }
