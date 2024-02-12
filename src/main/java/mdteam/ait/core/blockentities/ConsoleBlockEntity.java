@@ -23,7 +23,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -48,8 +47,6 @@ import static mdteam.ait.tardis.util.TardisUtil.findTardisByInterior;
 import static mdteam.ait.tardis.util.TardisUtil.isClient;
 
 public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
-    public final AnimationState ANIM_FLIGHT = new AnimationState();
-    public int animationTimer = 0;
     public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
     private boolean needsControls = true;
     private boolean needsSync = true;
@@ -340,14 +337,6 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         return this.wasPowered ^ this.findTardis().get().hasPower();
     }
 
-    public void checkAnimations() {
-        // DO NOT RUN THIS ON SERVER!!
-
-        animationTimer++;
-
-        ANIM_FLIGHT.startIfNotRunning(animationTimer);
-    }
-
 
     public void onBroken() {
         this.killControls();
@@ -415,7 +404,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
         // idk
         if (world.isClient()) {
-            this.checkAnimations();
+
         }
         if(this.findTardis().isEmpty()) return;
 

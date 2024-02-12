@@ -25,25 +25,6 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
         super(function);
     }
 
-    // Thanks craig for help w animation code
-    public void animateTile(ConsoleBlockEntity console) {
-        this.getPart().traverse().forEach(ModelPart::resetTransform);
-        if (console.findTardis().isEmpty())
-            return;
-        // System.out.println(getAnimationForState(console.getTardis().get().getTravel().getState()));
-
-        TardisTravel.State state = console.findTardis().get().getTravel().getState();
-
-        if (!console.findTardis().get().hasPower()) return;
-
-        this.updateAnimation(console.ANIM_FLIGHT, getAnimationForState(state), console.animationTimer);
-        /*if(console.getControlEntityFromName("direction") != null && console.getControlEntityFromName("direction").getControl() != null) {
-            this.updateAnimation(console.getControlEntityFromName("direction")
-                            .getControl().getAnimationState(HartnellAnimations.animationFromDirection(console.getTardis().get().getTravel())),
-                    console.getControlEntityFromName("direction").getControl().getAnimation(HartnellAnimations.animationFromDirection(console.getTardis().get().getTravel())), console.animationTimer);
-        }*/
-    }
-
     public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         if (console.findTardis().isEmpty()) return;
         root.render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
