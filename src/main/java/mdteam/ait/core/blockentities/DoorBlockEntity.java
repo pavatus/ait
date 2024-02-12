@@ -11,6 +11,7 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.data.DoorData;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.AnimationState;
@@ -26,12 +27,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -60,10 +63,13 @@ public class DoorBlockEntity extends LinkableBlockEntity {
         if (door.tardisId == null) door.findTardis();
 
         if (door.findTardis().isEmpty()) return;
-        if(!world.isClient() && door.findTardis().get().getTravel().getExteriorPos() != null) {
-            if(world.getBlockState(door.findTardis().get().getTravel().getExteriorPos()).getBlock() instanceof ExteriorBlock) {
-                blockState.with(DoorBlock.WATERLOGGED, ExteriorBlock.isWaterlogged(door.findTardis().get().getTravel().getExteriorPos().getBlockState()) && door.findTardis().get().getDoor().isOpen());
-            }
+        if(!world.isClient() && door.findTardis().get().getTravel().getExteriorPos() == null) return;
+        World exteriorWorld = door.findTardis().get().getTravel().getExteriorPos().getWorld();
+        BlockState exteriorBlockState = exteriorWorld.getBlockState(door.findTardis().get().getTravel().getExteriorPos());
+        if(exteriorBlockState.getBlock() instanceof ExteriorBlock) {
+            world.setBlockState(pos, blockState.with(Properties.WATERLOGGED, exteriorBlockState.get(Properties.WATERLOGGED) && door.findTardis().get().getDoor().isOpen()), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+            world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
+            world.scheduleFluidTick(pos, blockState.getFluidState().getFluid(), blockState.getFluidState().getFluid().getTickRate(world));
         }
     }
 

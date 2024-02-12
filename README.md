@@ -61,8 +61,6 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ---
 
 ### Contributions:
-- The24thDoctor (Sound Design for K9)
-- Poker (Silly)
 - TheVale (Co-Founder)
 - Tryzo (Ben) (Original Founder)
 

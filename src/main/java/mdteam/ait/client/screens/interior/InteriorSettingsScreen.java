@@ -39,6 +39,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
     int bgHeight = 166;
     int bgWidth = 256;
     int left, top;
+    private int tickForSpin = 0;
     int choicesCount = 0;
     private HumSound hum;
     private final Screen parent;
@@ -230,6 +231,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
     }
 
     private void renderDesktop(DrawContext context) {
+        tickForSpin++;
         context.drawCenteredTextWithShadow(
                 this.textRenderer,
                 this.selectedDesktop.name(),
@@ -254,7 +256,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         int x = (left + 79);
         int y = (top + 59);
         context.getMatrices().translate(0, 0, 0f);
-        context.getMatrices().multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) MinecraftClient.getInstance().world.getTime() / 400L) * 360.0f), x, y, 0);
+        context.getMatrices().multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
         context.drawTexture(BACKGROUND,x - 41, y - 41, 173, 173, 83, 83);
         context.getMatrices().pop();
     }

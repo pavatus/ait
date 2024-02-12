@@ -3,10 +3,7 @@ package mdteam.ait.core.blocks;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
 import mdteam.ait.core.AITBlockEntityTypes;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -32,7 +29,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
-public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
+public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, Waterloggable {
 
     public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 12.1, 16.0, 32.0, 16.0);
 

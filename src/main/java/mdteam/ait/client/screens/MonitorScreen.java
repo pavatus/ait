@@ -11,6 +11,7 @@ import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.control.impl.DimensionControl;
 import mdteam.ait.tardis.exterior.category.BoothCategory;
 import mdteam.ait.tardis.exterior.category.ClassicCategory;
 import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
@@ -29,6 +30,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -44,6 +46,7 @@ public class MonitorScreen extends ConsoleScreen {
     private ClientExteriorVariantSchema currentVariant;
     int backgroundHeight = 150;
     int backgroundWidth = 208;
+    private int tickForSpin = 0;
     public MonitorScreen(UUID tardis, UUID console) {
         super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis, console);
         this.tardisId = tardis;
@@ -259,6 +262,7 @@ public class MonitorScreen extends ConsoleScreen {
 
     protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX, float delta) {
         // testing @todo
+        tickForSpin++;
         if (getFromUUID(tardisId) != null) {
             if (this.getCategory() == null || this.getCurrentVariant() == null) return;
             context.getMatrices().push();
@@ -267,6 +271,12 @@ public class MonitorScreen extends ConsoleScreen {
                     this.textRenderer,
                     convertCategoryNameToProper(this.getCategory().name()), (width / 2 - 54), (height / 2 + 41),
                     5636095);
+            List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParentToList(this.getCategory());
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    (list.indexOf(this.getCurrentVariant().parent()) + 1) + "/" + ExteriorVariantRegistry.withParentToList(this.getCategory()).size(),
+                    (width / 2 - 29), (height / 2 + 26),
+                    0x00ffb3);
             context.getMatrices().pop();
             ExteriorModel model = this.getCurrentVariant().model();
             MatrixStack stack = context.getMatrices();
@@ -276,14 +286,14 @@ public class MonitorScreen extends ConsoleScreen {
             if (this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE)) stack.scale(-12, 12, 12);
             else if (this.getCategory() == CategoryRegistry.getInstance().get(BoothCategory.REFERENCE)) stack.scale(-scale, scale, scale);
             else stack.scale(-scale, scale, scale);
-            stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) MinecraftClient.getInstance().world.getTime() / 300L) * 360.0f));
+            stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) tickForSpin / 1200L) * 360.0f));
             DiffuseLighting.disableGuiDepthLighting();
             model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
             DiffuseLighting.enableGuiDepthLighting();
             stack.pop();
             stack.push();
             stack.translate(0, 0, -50f);
-            stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) MinecraftClient.getInstance().world.getTime() / 400L) * 360.0f), x, y, 0);
+            stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
             context.drawTexture(TEXTURE, x - 41, y - 41, 173, 173, 83, 83);
             stack.pop();
         }
@@ -348,12 +358,13 @@ public class MonitorScreen extends ConsoleScreen {
             case "easter_head" -> "Moyai";
             case "police_box" -> "Police";
             case "classic" -> "Classic";
+            case "doom" -> "Doom";
             case "plinth" -> "Plinth";
             case "tardim" -> "TARDIM";
             case "booth" -> "K2 Booth";
             case "capsule" -> "Capsule";
             case "renegade" -> "Renegade";
-            default -> "TARDIS";
+            default -> DimensionControl.convertWorldValueToModified(string);
         };
     }
 }

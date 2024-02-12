@@ -1,6 +1,8 @@
 package mdteam.ait.tardis.exterior.category;
 
 import com.google.gson.*;
+import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
+import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.registry.datapack.Identifiable;

@@ -78,8 +78,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
     }
 
     public static boolean isWaterlogged(BlockState state) {
-        FluidState fluidState = state.getFluidState();
-        return state.get(Properties.WATERLOGGED) && fluidState.getFluid() == Fluids.WATER;
+        return state.get(Properties.WATERLOGGED);
     }
 
     @Override
@@ -265,7 +264,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
     }
 
     public void tryFall(BlockState state, ServerWorld world, BlockPos pos) {
-        if (canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY()
+        if (canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= (world.getBottomY() + 1)
                 && findTardis(world, pos) != null
                 && !PropertiesHandler.getBool(findTardis(world, pos).getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)
                 && findTardis(world, pos).getTravel().getState() == TardisTravel.State.LANDED
