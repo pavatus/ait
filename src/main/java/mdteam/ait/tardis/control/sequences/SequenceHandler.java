@@ -52,9 +52,9 @@ public class SequenceHandler extends TardisLink {
     public void setActiveSequence(@Nullable Sequence sequence, boolean setTicksTo0) {
         if(setTicksTo0) ticks = 0;
         this.activeSequence = sequence;
-        sync();
         if(findTardis().isEmpty() || this.activeSequence == null) return;
         this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(findTardis().get()));
+        sync();
     }
 
     public void triggerRandomSequence(boolean setTicksTo0) {
@@ -62,12 +62,11 @@ public class SequenceHandler extends TardisLink {
         int rand = Random.create().nextBetween(0, SequenceRegistry.REGISTRY.size());
         Sequence sequence = SequenceRegistry.REGISTRY.get(rand);
         if(sequence == null) return;
-        this.activeSequence = Objects.equals(sequence,
-                SequenceRegistry.FORCED_MAT) ? SequenceRegistry.FORCED_MAT : sequence;
-        sync();
+        this.activeSequence = sequence == SequenceRegistry.FORCED_MAT ? SequenceRegistry.ENERGY_DRAIN : sequence;
         if(findTardis().isEmpty() || this.activeSequence == null) return;
         FlightUtil.playSoundAtConsole(findTardis().get(), SoundEvents.BLOCK_BEACON_POWER_SELECT);
         this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(findTardis().get()));
+        sync();
     }
 
     @Nullable
@@ -85,11 +84,13 @@ public class SequenceHandler extends TardisLink {
                 recent.clear();
                 FlightUtil.playSoundAtConsole(this.findTardis().get(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP);
                 this.setActiveSequence(null, true);
+                break;
             } else if (sequence.wasMissed(this.recent, ticks)) {
                 sequence.executeMissed(this.findTardis().get());
                 missedControlEffects(this.findTardis().get());
                 recent.clear();
                 this.setActiveSequence(null, true);
+                break;
             }
         }
     }

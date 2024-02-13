@@ -58,20 +58,23 @@ public class SequenceRegistry {
             missedTardis.removeFuel(-random.nextBetween(45, 125));
             missedTardis.getDoor().openDoors();
             //missedTardis.getTravel().crash();
-        }), 100L, Text.literal("Debris incoming!").formatted(Formatting.ITALIC, Formatting.YELLOW), new DirectionControl(), new RandomiserControl()));
+        }), 100L, Text.literal("Debris incoming!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                new DirectionControl(), new RandomiserControl()));
 
         DIMENSIONAL_BREACH = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_breach"), (finishedTardis -> {
             finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
         }), (missedTardis -> {
             missedTardis.getDoor().openDoors();
-        }), 80L, Text.literal("DIMENSION BREACH: SECURE DOORS").formatted(Formatting.ITALIC, Formatting.YELLOW), new DimensionControl(), new DoorControl()));
+        }), 80L, Text.literal("DIMENSION BREACH: SECURE DOORS").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                new DimensionControl(), new DoorControl()));
 
         ENERGY_DRAIN = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "energy_drain"), (finishedTardis -> {
             finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
             finishedTardis.addFuel(random.nextBetween(45, 125));
         }), (missedTardis -> {
             missedTardis.removeFuel(random.nextBetween(45, 125));
-        }),  80L, Text.literal("Artron drain detected!").formatted(Formatting.ITALIC, Formatting.YELLOW), new RefuelerControl()));
+        }),  80L, Text.literal("Artron drain detected!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                new RefuelerControl()));
 
         POWER_DRAIN_IMMINENT = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "power_drain_imminent"), (finishedTardis -> {
             finishedTardis.getHandlers().getFlight().decreaseFlightTime(120);
@@ -79,14 +82,16 @@ public class SequenceRegistry {
         }), (missedTardis -> {
             missedTardis.removeFuel(random.nextBetween(45, 125));
             missedTardis.disablePower();
-        }),  110L, Text.literal("Power drain imminent!").formatted(Formatting.ITALIC, Formatting.YELLOW), new PowerControl(), new RefuelerControl(), new RandomiserControl()));
+        }),  110L, Text.literal("Power drain imminent!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                new PowerControl(), new RefuelerControl(), new RandomiserControl()));
 
         ANTI_GRAVITY_ERROR = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "anti_gravity_error"), (finishedTardis -> {
             finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
         }), (missedTardis -> {
             missedTardis.removeFuel(random.nextBetween(45, 125));
             PropertiesHandler.set(missedTardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
-        }),  80L, Text.literal("Anti-gravity error detected!").formatted(Formatting.ITALIC, Formatting.YELLOW), new AntiGravsControl()));
+        }),  80L, Text.literal("Anti-gravity error detected!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                new AntiGravsControl()));
 
         DIMENSIONAL_DRIFT_X = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_drift_x"), (finishedTardis -> {
             finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
@@ -97,7 +102,8 @@ public class SequenceRegistry {
                     pos.getY(),
                     random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
                     pos.getDirection()));
-        }),  100L, Text.literal("Drifting off course X!").formatted(Formatting.ITALIC, Formatting.YELLOW), new DimensionControl(), new XControl()));
+        }),  100L, Text.literal("Drifting off course X!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                new DimensionControl(), new XControl()));
 
         DIMENSIONAL_DRIFT_Y = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_drift_y"), (finishedTardis -> {
             finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
@@ -108,7 +114,8 @@ public class SequenceRegistry {
                     pos.getY(),
                     random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
                     pos.getDirection()));
-        }),  100L, Text.literal("Drifting off course Y!").formatted(Formatting.ITALIC, Formatting.YELLOW), new DimensionControl(), new YControl()));
+        }),  100L, Text.literal("Drifting off course Y!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                new DimensionControl(), new YControl()));
 
         DIMENSIONAL_DRIFT_Z = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_drift_z"), (finishedTardis -> {
             finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
@@ -119,7 +126,8 @@ public class SequenceRegistry {
                     pos.getY(),
                     random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
                     pos.getDirection()));
-        }),  100L, Text.literal("Drifting off course Z!").formatted(Formatting.ITALIC, Formatting.YELLOW), new DimensionControl(), new ZControl()));
+        }),  100L, Text.literal("Drifting off course Z!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                new DimensionControl(), new ZControl()));
 
         FORCED_MAT = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "forced_materialisation"), (finishedTardis -> {
             AbsoluteBlockPos.Directed pos = finishedTardis.destination();
@@ -133,7 +141,8 @@ public class SequenceRegistry {
             }
         }), (missedTardis -> {
             missedTardis.getHandlers().getAlarms().enable();
-        }),  80L, Text.literal("Materialisation forced!").formatted(Formatting.ITALIC, Formatting.YELLOW), new DirectionControl(), new XControl(), new ZControl()));
+        }),  80L, Text.literal("Materialisation forced!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                new DirectionControl(), new XControl(), new ZControl()));
 
         CLOAK_TO_AVOID_VORTEX_TRAPPED_MOBS = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "cloak_to_avoid_vortex_trapped_mobs"), (finishedTardis -> {
             finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
@@ -150,6 +159,7 @@ public class SequenceRegistry {
             ZombieEntity zombieEntity = new ZombieEntity(EntityType.ZOMBIE, TardisUtil.getTardisDimension());
             PhantomEntity phantomEntity = new PhantomEntity(EntityType.PHANTOM, TardisUtil.getTardisDimension());
             TardisUtil.getTardisDimension().spawnEntity(random.nextBoolean() ? zombieEntity : phantomEntity);*/
-        }), 80L, Text.literal("Immediate cloaking necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW), new CloakControl(), new RandomiserControl()));
+        }), 80L, Text.literal("Immediate cloaking necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                new CloakControl(), new RandomiserControl()));
     }
 }
