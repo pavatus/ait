@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/wall_inventory",
+  "parent": "ait:block/cable_block_piping_center",
   "textures": {
-    "wall": "minecraft:block/copper_block"
+    "wall": "ait:block/piping"
   }
 }

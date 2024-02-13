@@ -2,7 +2,7 @@
   "multipart": [
     {
       "apply": {
-        "model": "ait:block/cable_block_post"
+        "model": "ait:block/cable_block_piping_center"
       },
       "when": {
         "up": "true"
@@ -10,7 +10,7 @@
     },
     {
       "apply": {
-        "model": "ait:block/cable_block_side",
+        "model": "ait:block/cable_block_piping_side",
         "uvlock": true
       },
       "when": {
@@ -19,7 +19,7 @@
     },
     {
       "apply": {
-        "model": "ait:block/cable_block_side",
+        "model": "ait:block/cable_block_piping_side",
         "uvlock": true,
         "y": 90
       },
@@ -29,7 +29,7 @@
     },
     {
       "apply": {
-        "model": "ait:block/cable_block_side",
+        "model": "ait:block/cable_block_piping_side",
         "uvlock": true,
         "y": 180
       },
@@ -39,7 +39,7 @@
     },
     {
       "apply": {
-        "model": "ait:block/cable_block_side",
+        "model": "ait:block/cable_block_piping_side",
         "uvlock": true,
         "y": 270
       },
@@ -49,7 +49,7 @@
     },
     {
       "apply": {
-        "model": "ait:block/cable_block_side_tall",
+        "model": "ait:block/cable_block_piping_side_tall",
         "uvlock": true
       },
       "when": {
@@ -58,7 +58,7 @@
     },
     {
       "apply": {
-        "model": "ait:block/cable_block_side_tall",
+        "model": "ait:block/cable_block_piping_side_tall",
         "uvlock": true,
         "y": 90
       },
@@ -68,7 +68,7 @@
     },
     {
       "apply": {
-        "model": "ait:block/cable_block_side_tall",
+        "model": "ait:block/cable_block_piping_side_tall",
         "uvlock": true,
         "y": 180
       },
@@ -78,7 +78,7 @@
     },
     {
       "apply": {
-        "model": "ait:block/cable_block_side_tall",
+        "model": "ait:block/cable_block_piping_side_tall",
         "uvlock": true,
         "y": 270
       },

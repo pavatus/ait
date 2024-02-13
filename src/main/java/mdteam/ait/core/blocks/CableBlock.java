@@ -51,15 +51,15 @@ public class CableBlock extends Block implements Waterloggable{
     public CableBlock(AbstractBlock.Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(UP, true).with(NORTH_SHAPE, WallShape.NONE).with(EAST_SHAPE, WallShape.NONE).with(SOUTH_SHAPE, WallShape.NONE).with(WEST_SHAPE, WallShape.NONE).with(WATERLOGGED, false));
-        this.shapeMap = this.getShapeMap(4.0F, 3.0F, 16.0F, 0.0F, 14.0F, 16.0F);
-        this.collisionShapeMap = this.getShapeMap(4.0F, 3.0F, 24.0F, 0.0F, 24.0F, 24.0F);
+        this.shapeMap = this.getShapeMap(3.0F, 3.0F, 11.0F, 5.0F, 9.0F, 16.0F);
+        this.collisionShapeMap = this.getShapeMap(3.0F, 3.0F, 24.0F, 0.0F, 24.0F, 19.0F);
     }
 
-    private static VoxelShape getVoxelShape(VoxelShape base, WallShape wallShape, VoxelShape tall, VoxelShape low) {
+    private static VoxelShape getVoxelShape(VoxelShape base, WallShape wallShape, VoxelShape low, VoxelShape tall) {
         if (wallShape == WallShape.TALL) {
-            return VoxelShapes.union(base, low);
+            return VoxelShapes.union(base, tall);
         } else {
-            return wallShape == WallShape.LOW ? VoxelShapes.union(base, tall) : base;
+            return wallShape == WallShape.LOW ? VoxelShapes.union(base, low) : base;
         }
     }
 
@@ -68,15 +68,12 @@ public class CableBlock extends Block implements Waterloggable{
         float m = 8.0F + f;
         float n = 8.0F - g;
         float o = 8.0F + g;
-        VoxelShape voxelShape = Block.createCuboidShape(l, 0.0, l, m, h, m);
-        VoxelShape voxelShape2 = Block.createCuboidShape(n, i, 0.0, o, j, o);
-        VoxelShape voxelShape3 = Block.createCuboidShape(n, i, n, o, j, 16.0);
-        VoxelShape voxelShape4 = Block.createCuboidShape(0.0, i, n, o, j, o);
-        VoxelShape voxelShape5 = Block.createCuboidShape(n, i, n, 16.0, j, o);
-        VoxelShape voxelShape6 = Block.createCuboidShape(n, i, 0.0, o, k, o);
-        VoxelShape voxelShape7 = Block.createCuboidShape(n, i, n, o, k, 16.0);
-        VoxelShape voxelShape8 = Block.createCuboidShape(0.0, i, n, o, k, o);
-        VoxelShape voxelShape9 = Block.createCuboidShape(n, i, n, 16.0, k, o);
+        VoxelShape voxelShape = Block.createCuboidShape(l, 5.0F, l, m, h, m);
+        VoxelShape voxelShape2 = Block.createCuboidShape(n, i, 0.0, o,h, o);
+        VoxelShape voxelShape3 = Block.createCuboidShape(n, i, n, o, h, 16.0);
+        VoxelShape voxelShape4 = Block.createCuboidShape(0.0, i, n, o, h, o);
+        VoxelShape voxelShape5 = Block.createCuboidShape(n, i, n, 16.0, h, o);
+        VoxelShape tall = Block.createCuboidShape(l, i, l, m, k, m);
         ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
         Iterator var21 = UP.getValues().iterator();
 
@@ -99,10 +96,10 @@ public class CableBlock extends Block implements Waterloggable{
                         while(var29.hasNext()) {
                             WallShape wallShape4 = (WallShape)var29.next();
                             VoxelShape voxelShape10 = VoxelShapes.empty();
-                            voxelShape10 = getVoxelShape(voxelShape10, wallShape, voxelShape5, voxelShape9);
-                            voxelShape10 = getVoxelShape(voxelShape10, wallShape3, voxelShape4, voxelShape8);
-                            voxelShape10 = getVoxelShape(voxelShape10, wallShape2, voxelShape2, voxelShape6);
-                            voxelShape10 = getVoxelShape(voxelShape10, wallShape4, voxelShape3, voxelShape7);
+                            voxelShape10 = getVoxelShape(voxelShape10, wallShape, voxelShape5, tall);
+                            voxelShape10 = getVoxelShape(voxelShape10, wallShape3, voxelShape4, tall);
+                            voxelShape10 = getVoxelShape(voxelShape10, wallShape2, voxelShape2, tall);
+                            voxelShape10 = getVoxelShape(voxelShape10, wallShape4, voxelShape3, tall);
                             if (boolean_) {
                                 voxelShape10 = VoxelShapes.union(voxelShape10, voxelShape);
                             }
@@ -120,11 +117,11 @@ public class CableBlock extends Block implements Waterloggable{
     }
 
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return (VoxelShape)this.shapeMap.get(state);
+        return this.shapeMap.get(state);
     }
 
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return (VoxelShape)this.collisionShapeMap.get(state);
+        return this.collisionShapeMap.get(state);
     }
 
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
@@ -193,26 +190,29 @@ public class CableBlock extends Block implements Waterloggable{
         boolean bl2 = direction == Direction.EAST ? this.shouldConnectTo(neighborState, neighborState.isSideSolidFullSquare(world, neighborPos, direction2), direction2) : isConnected(state, EAST_SHAPE);
         boolean bl3 = direction == Direction.SOUTH ? this.shouldConnectTo(neighborState, neighborState.isSideSolidFullSquare(world, neighborPos, direction2), direction2) : isConnected(state, SOUTH_SHAPE);
         boolean bl4 = direction == Direction.WEST ? this.shouldConnectTo(neighborState, neighborState.isSideSolidFullSquare(world, neighborPos, direction2), direction2) : isConnected(state, WEST_SHAPE);
-        BlockPos blockPos = pos.up();
-        BlockState blockState = world.getBlockState(blockPos);
-        return this.getStateWith(world, state, blockPos, blockState, bl, bl2, bl3, bl4);
+        BlockPos blockPosUp = pos.up();
+        BlockState blockStateUp = world.getBlockState(blockPosUp);
+        BlockPos blockPosBelow = pos.down();
+        BlockState blockStateBelow = world.getBlockState(blockPosBelow);
+        return this.getStateWith(world, state, blockPosUp, blockStateUp, bl, bl2, bl3, bl4);
     }
 
-    private BlockState getStateWith(WorldView world, BlockState state, BlockPos pos, BlockState aboveState, boolean north, boolean east, boolean south, boolean west) {
-        VoxelShape voxelShape = aboveState.getCollisionShape(world, pos).getFace(Direction.DOWN);
-        BlockState blockState = this.getStateWith(state, north, east, south, west, voxelShape);
-        return (BlockState)blockState.with(UP, this.shouldHavePost(blockState, aboveState, voxelShape));
+    private BlockState getStateWith(WorldView world, BlockState state, BlockPos posUp, BlockState aboveState, boolean north, boolean east, boolean south, boolean west) {
+        VoxelShape voxelShapeUp = aboveState.getCollisionShape(world, posUp).getFace(Direction.DOWN);
+        VoxelShape voxelShapeBelow = aboveState.getCollisionShape(world, posBelow).getFace(Direction.UP);
+        BlockState blockState = this.getStateWith(state, north, east, south, west, voxelShapeUp);
+        return blockState.with(UP, this.shouldHavePost(blockState, aboveState, voxelShapeUp));
     }
 
     private boolean shouldHavePost(BlockState state, BlockState aboveState, VoxelShape aboveShape) {
-        boolean bl = aboveState.getBlock() instanceof CableBlock && (Boolean)aboveState.get(UP);
+        boolean bl = aboveState.getBlock() instanceof CableBlock && aboveState.get(UP);
         if (bl) {
             return true;
         } else {
-            WallShape wallShape = (WallShape)state.get(NORTH_SHAPE);
-            WallShape wallShape2 = (WallShape)state.get(SOUTH_SHAPE);
-            WallShape wallShape3 = (WallShape)state.get(EAST_SHAPE);
-            WallShape wallShape4 = (WallShape)state.get(WEST_SHAPE);
+            WallShape wallShape = state.get(NORTH_SHAPE);
+            WallShape wallShape2 = state.get(SOUTH_SHAPE);
+            WallShape wallShape3 = state.get(EAST_SHAPE);
+            WallShape wallShape4 = state.get(WEST_SHAPE);
             boolean bl2 = wallShape2 == WallShape.NONE;
             boolean bl3 = wallShape4 == WallShape.NONE;
             boolean bl4 = wallShape3 == WallShape.NONE;
@@ -232,7 +232,7 @@ public class CableBlock extends Block implements Waterloggable{
     }
 
     private BlockState getStateWith(BlockState state, boolean north, boolean east, boolean south, boolean west, VoxelShape aboveShape) {
-        return (BlockState)((BlockState)((BlockState)((BlockState)state.with(NORTH_SHAPE, this.getWallShape(north, aboveShape, TALL_NORTH_SHAPE))).with(EAST_SHAPE, this.getWallShape(east, aboveShape, TALL_EAST_SHAPE))).with(SOUTH_SHAPE, this.getWallShape(south, aboveShape, TALL_SOUTH_SHAPE))).with(WEST_SHAPE, this.getWallShape(west, aboveShape, TALL_WEST_SHAPE));
+        return state.with(NORTH_SHAPE, this.getWallShape(north, aboveShape, TALL_NORTH_SHAPE)).with(EAST_SHAPE, this.getWallShape(east, aboveShape, TALL_EAST_SHAPE)).with(SOUTH_SHAPE, this.getWallShape(south, aboveShape, TALL_SOUTH_SHAPE)).with(WEST_SHAPE, this.getWallShape(west, aboveShape, TALL_WEST_SHAPE));
     }
 
     private WallShape getWallShape(boolean connected, VoxelShape aboveShape, VoxelShape tallShape) {
@@ -258,11 +258,11 @@ public class CableBlock extends Block implements Waterloggable{
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         switch (rotation) {
             case CLOCKWISE_180:
-                return (BlockState)((BlockState)((BlockState)((BlockState)state.with(NORTH_SHAPE, (WallShape)state.get(SOUTH_SHAPE))).with(EAST_SHAPE, (WallShape)state.get(WEST_SHAPE))).with(SOUTH_SHAPE, (WallShape)state.get(NORTH_SHAPE))).with(WEST_SHAPE, (WallShape)state.get(EAST_SHAPE));
+                return state.with(NORTH_SHAPE, (WallShape)state.get(SOUTH_SHAPE)).with(EAST_SHAPE, (WallShape)state.get(WEST_SHAPE)).with(SOUTH_SHAPE, (WallShape)state.get(NORTH_SHAPE)).with(WEST_SHAPE, (WallShape)state.get(EAST_SHAPE));
             case COUNTERCLOCKWISE_90:
-                return (BlockState)((BlockState)((BlockState)((BlockState)state.with(NORTH_SHAPE, (WallShape)state.get(EAST_SHAPE))).with(EAST_SHAPE, (WallShape)state.get(SOUTH_SHAPE))).with(SOUTH_SHAPE, (WallShape)state.get(WEST_SHAPE))).with(WEST_SHAPE, (WallShape)state.get(NORTH_SHAPE));
+                return state.with(NORTH_SHAPE, (WallShape)state.get(EAST_SHAPE)).with(EAST_SHAPE, (WallShape)state.get(SOUTH_SHAPE)).with(SOUTH_SHAPE, (WallShape)state.get(WEST_SHAPE)).with(WEST_SHAPE, (WallShape)state.get(NORTH_SHAPE));
             case CLOCKWISE_90:
-                return (BlockState)((BlockState)((BlockState)((BlockState)state.with(NORTH_SHAPE, (WallShape)state.get(WEST_SHAPE))).with(EAST_SHAPE, (WallShape)state.get(NORTH_SHAPE))).with(SOUTH_SHAPE, (WallShape)state.get(EAST_SHAPE))).with(WEST_SHAPE, (WallShape)state.get(SOUTH_SHAPE));
+                return state.with(NORTH_SHAPE, (WallShape)state.get(WEST_SHAPE)).with(EAST_SHAPE, (WallShape)state.get(NORTH_SHAPE)).with(SOUTH_SHAPE, (WallShape)state.get(EAST_SHAPE)).with(WEST_SHAPE, (WallShape)state.get(SOUTH_SHAPE));
             default:
                 return state;
         }
@@ -271,9 +271,9 @@ public class CableBlock extends Block implements Waterloggable{
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         switch (mirror) {
             case LEFT_RIGHT:
-                return (BlockState)((BlockState)state.with(NORTH_SHAPE, (WallShape)state.get(SOUTH_SHAPE))).with(SOUTH_SHAPE, (WallShape)state.get(NORTH_SHAPE));
+                return state.with(NORTH_SHAPE, (WallShape)state.get(SOUTH_SHAPE)).with(SOUTH_SHAPE, (WallShape)state.get(NORTH_SHAPE));
             case FRONT_BACK:
-                return (BlockState)((BlockState)state.with(EAST_SHAPE, (WallShape)state.get(WEST_SHAPE))).with(WEST_SHAPE, (WallShape)state.get(EAST_SHAPE));
+                return ((BlockState)state.with(EAST_SHAPE, (WallShape)state.get(WEST_SHAPE))).with(WEST_SHAPE, (WallShape)state.get(EAST_SHAPE));
             default:
                 return super.mirror(state, mirror);
         }
