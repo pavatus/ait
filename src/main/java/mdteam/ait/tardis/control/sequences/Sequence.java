@@ -39,6 +39,8 @@ public class Sequence {
     public void execute(Tardis tardis) {};
     public void executeMissed(Tardis tardis) {};
 
+    public Text sequenceStartMessage() {return Text.of("");}
+
     public boolean wasMissed(RecentControls recent, int ticks) {
         return ticks >= this.timeToFail()/* || (recent.size() > this.getControls().size())*/;
     }
@@ -50,7 +52,7 @@ public class Sequence {
     public void sendMessageToInteriorPlayers(List<ServerPlayerEntity> playersInInterior) {
         if(playersInInterior.isEmpty()) return;
         for (ServerPlayerEntity player : playersInInterior) {
-            player.sendMessage(Text.of(SequenceRegistry.getSequenceMessage(this.id())), true);
+            player.sendMessage(this.sequenceStartMessage(), true);
         }
     }
 
@@ -64,17 +66,19 @@ public class Sequence {
         private final ExecuteSequence execute;
         private final ExecuteSequence executeMissed;
         private final Long timeToFail;
+        private final Text sequenceStartMessage;
 
-        private Builder(Identifier id, ExecuteSequence execute, ExecuteSequence executeMissed, Long timeToFail, Control... controls) {
+        private Builder(Identifier id, ExecuteSequence execute, ExecuteSequence executeMissed, Long timeToFail, Text sequenceStartMessage, Control... controls) {
             this.id = id;
             this.controls = List.of(controls);
             this.execute = execute;
             this.executeMissed = executeMissed;
             this.timeToFail = timeToFail;
+            this.sequenceStartMessage = sequenceStartMessage;
         }
 
-        public static Sequence create(Identifier id, ExecuteSequence execute, ExecuteSequence executeMissed, Long timeToFail, Control... controls) {
-            return new Builder(id, execute, executeMissed, timeToFail, controls);
+        public static Sequence create(Identifier id, ExecuteSequence execute, ExecuteSequence executeMissed, Long timeToFail, Text sequenceStartMessage, Control... controls) {
+            return new Builder(id, execute, executeMissed, timeToFail, sequenceStartMessage, controls);
         }
 
         @Override
@@ -100,6 +104,11 @@ public class Sequence {
         @Override
         public Long timeToFail() {
             return this.timeToFail;
+        }
+
+        @Override
+        public Text sequenceStartMessage() {
+            return this.sequenceStartMessage;
         }
     }
 }
