@@ -112,7 +112,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
     }
 
     private void updateProperties(ClientTardis tardis, String key, String type, String value) {
-        AITMod.LOGGER.info("Updating Properties " + key + " to " + value); // remove this
+        //AITMod.LOGGER.info("Updating Properties " + key + " to " + value); // remove this
         switch (type) {
             case "string" -> PropertiesHandler.set(tardis, key, value, false);
             case "boolean" -> PropertiesHandler.set(tardis, key, Boolean.parseBoolean(value), false);

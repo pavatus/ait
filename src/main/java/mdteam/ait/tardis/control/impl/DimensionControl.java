@@ -23,11 +23,17 @@ public class DimensionControl extends Control {
     }
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+
+        if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
+            this.addToControlSequence(tardis);
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+        }
+
         TardisTravel travel = tardis.getTravel();
         AbsoluteBlockPos.Directed dest = travel.getDestination();
         List<ServerWorld> dims = getDimensions();
 
-        int current = dims.indexOf(dest.getWorld());
+        int current = dims.indexOf(dest.getWorld() == null ? World.OVERWORLD : dest.getWorld());
         int next = 0;
 
         if (!player.isSneaking()) {
@@ -105,7 +111,7 @@ public class DimensionControl extends Control {
         return String.join(" ", words);
     }
 
-    private List<ServerWorld> getDimensions() {
+    public static List<ServerWorld> getDimensions() {
         List<ServerWorld> dims = new ArrayList<>();
         Iterable<ServerWorld> allDims = TardisUtil.getServer().getWorlds();
 

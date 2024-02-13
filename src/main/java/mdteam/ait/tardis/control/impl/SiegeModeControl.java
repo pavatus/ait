@@ -22,6 +22,7 @@ public class SiegeModeControl extends Control {
         Text enabled = Text.translatable("tardis.message.control.siege.enabled");
         Text disabled = Text.translatable("tardis.message.control.siege.disabled");
         player.sendMessage((tardis.isSiegeMode() ? enabled : disabled), true);
+        this.addToControlSequence(tardis);
         return false;
     }
 

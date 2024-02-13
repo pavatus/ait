@@ -16,6 +16,12 @@ public class HADSControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+
+        if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
+            this.addToControlSequence(tardis);
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+        }
+
         PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED));
 
         Text alarm_enabled = Text.translatable("tardis.message.control.hads.alarm_enabled");

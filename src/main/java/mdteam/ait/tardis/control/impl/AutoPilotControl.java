@@ -17,6 +17,12 @@ public class AutoPilotControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+
+        if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
+            this.addToControlSequence(tardis);
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+        }
+
         PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, !PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));
 
         messagePlayer(player, PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));

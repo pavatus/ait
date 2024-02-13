@@ -23,6 +23,11 @@ public class CloakControl extends Control {
 
         CloakData cloak = tardis.getHandlers().getCloak();
 
+        if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
+            this.addToControlSequence(tardis);
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+        }
+
         cloak.toggle();
         // @TODO: Add translations
         if (cloak.isEnabled()) {

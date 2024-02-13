@@ -199,7 +199,7 @@ public class CableBlock extends Block implements Waterloggable{
 
     private BlockState getStateWith(WorldView world, BlockState state, BlockPos posUp, BlockState aboveState, boolean north, boolean east, boolean south, boolean west) {
         VoxelShape voxelShapeUp = aboveState.getCollisionShape(world, posUp).getFace(Direction.DOWN);
-        VoxelShape voxelShapeBelow = aboveState.getCollisionShape(world, posBelow).getFace(Direction.UP);
+        //VoxelShape voxelShapeBelow = aboveState.getCollisionShape(world, posBelow).getFace(Direction.UP);
         BlockState blockState = this.getStateWith(state, north, east, south, west, voxelShapeUp);
         return blockState.with(UP, this.shouldHavePost(blockState, aboveState, voxelShapeUp));
     }

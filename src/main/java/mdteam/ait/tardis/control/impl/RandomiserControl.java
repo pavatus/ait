@@ -21,6 +21,11 @@ public class RandomiserControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         TardisTravel travel = tardis.getTravel();
 
+        if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
+            this.addToControlSequence(tardis);
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+        }
+
         randomiseDestination(tardis, 10);
         tardis.removeFuel((0.1d * IncrementManager.increment(tardis)) * (tardis.tardisHammerAnnoyance + 1));
 

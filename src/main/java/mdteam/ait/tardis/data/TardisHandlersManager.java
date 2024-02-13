@@ -3,6 +3,7 @@ package mdteam.ait.tardis.data;
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTickable;
+import mdteam.ait.tardis.control.sequences.SequenceHandler;
 import mdteam.ait.tardis.data.loyalty.LoyaltyData;
 import mdteam.ait.tardis.data.properties.PropertiesHolder;
 import net.minecraft.server.MinecraftServer;
@@ -22,6 +23,7 @@ public class TardisHandlersManager extends TardisLink {
     private ServerHumHandler hum = null;
     private ServerAlarmHandler alarms;
     private InteriorChangingHandler interior;
+    private SequenceHandler sequenceHandler;
     private FuelData fuel;
     private HADSData hads;
     private FlightData flight;
@@ -42,6 +44,7 @@ public class TardisHandlersManager extends TardisLink {
         this.hum = new ServerHumHandler(tardis);
         alarms = new ServerAlarmHandler(tardis);
         interior = new InteriorChangingHandler(tardis);
+        this.sequenceHandler = new SequenceHandler(tardis);
         this.fuel = new FuelData(tardis);
         this.hads = new HADSData(tardis);
         this.flight = new FlightData(tardis);
@@ -67,6 +70,7 @@ public class TardisHandlersManager extends TardisLink {
         addTickable(getHum());
         addTickable(getAlarms());
         addTickable(getInteriorChanger());
+        addTickable(getSequenceHandler());
         addTickable(getFuel());
         addTickable(getHADS());
         addTickable(getFlight());
@@ -113,7 +117,7 @@ public class TardisHandlersManager extends TardisLink {
     }
 
     public PropertiesHolder getProperties() {
-        if (this.properties == null && findTardis().isPresent()) {
+        if (this.properties == null && this.findTardis().isPresent()) {
             this.properties = new PropertiesHolder(this.findTardis().get());
         }
         return properties;
@@ -124,7 +128,7 @@ public class TardisHandlersManager extends TardisLink {
     }
 
     public WaypointHandler getWaypoints() {
-        if (this.waypoints == null && findTardis().isPresent()) {
+        if (this.waypoints == null && this.findTardis().isPresent()) {
             this.waypoints = new WaypointHandler(this.findTardis().get());
         }
         return waypoints;
@@ -134,7 +138,7 @@ public class TardisHandlersManager extends TardisLink {
     }
 
     public LoyaltyData getLoyalties() {
-        if (this.loyalties == null && findTardis().isPresent()) {
+        if (this.loyalties == null && this.findTardis().isPresent()) {
             this.loyalties = new LoyaltyData(this.findTardis().get());
         }
         return loyalties;
@@ -143,7 +147,7 @@ public class TardisHandlersManager extends TardisLink {
         this.loyalties = loyalties;
     }
     public DoorData getDoor() {
-        if (this.door == null && findTardis().isPresent()) {
+        if (this.door == null && this.findTardis().isPresent()) {
             this.door = new DoorData(this.findTardis().get());
         }
         return door;
@@ -152,7 +156,7 @@ public class TardisHandlersManager extends TardisLink {
         this.door = door;
     }
     public OvergrownData getOvergrown() {
-        if (this.overgrown == null && findTardis().isPresent()) {
+        if (this.overgrown == null && this.findTardis().isPresent()) {
             this.overgrown = new OvergrownData(this.findTardis().get());
         }
         return overgrown;
@@ -161,7 +165,7 @@ public class TardisHandlersManager extends TardisLink {
         this.overgrown = overgrown;
     }
     public ServerHumHandler getHum() {
-        if (this.hum == null && findTardis().isPresent()) {
+        if (this.hum == null && this.findTardis().isPresent()) {
             this.hum = new ServerHumHandler(this.findTardis().get());
         }
 
@@ -169,7 +173,7 @@ public class TardisHandlersManager extends TardisLink {
     }
 
     public ServerAlarmHandler getAlarms() {
-        if (this.alarms == null && findTardis().isPresent()) {
+        if (this.alarms == null && this.findTardis().isPresent()) {
             this.alarms = new ServerAlarmHandler(this.findTardis().get());
         }
         return alarms;
@@ -178,14 +182,21 @@ public class TardisHandlersManager extends TardisLink {
         this.alarms = alarms;
     }
     public InteriorChangingHandler getInteriorChanger() {
-        if (this.interior == null && findTardis().isPresent()) {
+        if (this.interior == null && this.findTardis().isPresent()) {
             this.interior = new InteriorChangingHandler(this.findTardis().get());
         }
         return interior;
     }
 
+    public SequenceHandler getSequenceHandler() {
+        if (this.sequenceHandler == null && this.findTardis().isPresent()) {
+            this.sequenceHandler = new SequenceHandler(this.findTardis().get());
+        }
+        return sequenceHandler;
+    }
+
     public FuelData getFuel() {
-        if (this.fuel == null && findTardis().isPresent()) {
+        if (this.fuel == null && this.findTardis().isPresent()) {
             this.fuel = new FuelData(this.findTardis().get());
         }
         return fuel;
@@ -195,7 +206,7 @@ public class TardisHandlersManager extends TardisLink {
     }
 
     public HADSData getHADS() {
-        if (this.hads == null && findTardis().isPresent()) {
+        if (this.hads == null && this.findTardis().isPresent()) {
             this.hads = new HADSData(this.findTardis().get());
         }
         return hads;
@@ -204,7 +215,7 @@ public class TardisHandlersManager extends TardisLink {
         this.hads = hads;
     }
     public FlightData getFlight() {
-        if (this.flight == null && findTardis().isPresent()) {
+        if (this.flight == null && this.findTardis().isPresent()) {
             this.flight = new FlightData(this.findTardis().get());
         }
 
@@ -214,7 +225,7 @@ public class TardisHandlersManager extends TardisLink {
         this.flight = flight;
     }
     public SiegeData getSiege() {
-        if (this.siege == null && findTardis().isPresent()) {
+        if (this.siege == null && this.findTardis().isPresent()) {
             this.siege = new SiegeData(this.findTardis().get());
         }
         return this.siege;
@@ -223,13 +234,13 @@ public class TardisHandlersManager extends TardisLink {
         this.siege = siege;
     }
     public CloakData getCloak() {
-        if (this.cloak == null && findTardis().isPresent()) {
+        if (this.cloak == null && this.findTardis().isPresent()) {
             this.cloak = new CloakData(this.findTardis().get());
         }
         return this.cloak;
     }
     public StatsData getStats() {
-        if (this.stats == null && findTardis().isPresent()) {
+        if (this.stats == null && this.findTardis().isPresent()) {
             this.stats = new StatsData(this.findTardis().get());
             addTickable(this.stats);
         }

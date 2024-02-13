@@ -37,6 +37,7 @@ public class TelepathicControl extends Control {
         if (player.getMainHandStack().getItem() instanceof LinkableItem linker) {
             linker.link(player.getMainHandStack(), tardis);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            this.addToControlSequence(tardis);
             return true;
         }
         if (player.getMainHandStack().getItem() instanceof NameTagItem) {
@@ -50,6 +51,7 @@ public class TelepathicControl extends Control {
             if (!player.isCreative())
                 hand.decrement(1);
 
+            this.addToControlSequence(tardis);
             return true;
         }
 

@@ -39,6 +39,8 @@ public class SecurityControl extends Control {
 
         security = !security;
 
+        this.addToControlSequence(tardis);
+
         return true;
     }
 

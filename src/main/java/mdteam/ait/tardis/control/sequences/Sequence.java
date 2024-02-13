@@ -1,30 +1,69 @@
 package mdteam.ait.tardis.control.sequences;
 
+import mdteam.ait.AITMod;
+import mdteam.ait.registry.SequenceRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.control.Control;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // should this be an interface?
-public abstract class Sequence {
-    public abstract Identifier id();
+public class Sequence {
+    public Identifier id() {
+        return new Identifier(AITMod.MOD_ID, "sequence");
+    };
 
     /**
      * A list of controls needed to execute the sequence, in the order they should be executed
      */
-    public abstract List<Control> getControls();
+    public List<Control> getControls() {
+        return new ArrayList<>();
+    };
+    public Long timeToFail() {
+        return 0L;
+    };
 
     /**
-     * Compares the recent controls to this sequence, if everything matches then it is finished
-     * @param recent
-     * @return
+     * @param recent Compares the recent controls to this sequence, if everything matches then it is finished
      */
     public boolean isFinished(RecentControls recent) {
+        if(recent.size() > this.getControls().size())
+            return false;
         return recent.equals(this.getControls());
     }
 
-    public abstract void execute(Tardis tardis);
+    public void execute(Tardis tardis) {};
+    public void executeMissed(Tardis tardis) {};
+
+    public boolean wasMissed(RecentControls recent, int ticks) {
+        return ticks > this.timeToFail() || (recent.size() > this.getControls().size());
+    }
+
+    public boolean controlPartOfSequence(Control control) {
+        return this.getControls().contains(control);
+    }
+
+    public void sendMessageToInteriorPlayers(List<ServerPlayerEntity> playersInInterior) {
+        if(playersInInterior.isEmpty()) return;
+        for (ServerPlayerEntity player : playersInInterior) {
+            player.sendMessage(Text.of(this.getSequenceMessage(this.id())), true);
+        }
+    }
+
+    public String getSequenceMessage(Identifier id) {
+        return switch(id.getPath()) {
+            case SequenceRegistry.AVOID_DEBRIS -> "Debris incoming!";
+            case SequenceRegistry.DIMENSIONAL_BREACH -> "Dimensional stability threatened!";
+            case SequenceRegistry.DIMENSIONAL_DRIFT -> "Drifting off the Euclidean plane!";
+            case SequenceRegistry.ENERGY_DRAIN -> "Artron drain detected!";
+            case SequenceRegistry.FORCED_MAT -> "Materialisation forced!";
+            default -> "Sequence started";
+        };
+    }
 
     public interface ExecuteSequence {
         void run(Tardis tardis);
@@ -34,15 +73,19 @@ public abstract class Sequence {
         private final Identifier id;
         private final List<Control> controls;
         private final ExecuteSequence execute;
+        private final ExecuteSequence executeMissed;
+        private final Long timeToFail;
 
-        private Builder(Identifier id, ExecuteSequence execute, Control... controls) {
+        private Builder(Identifier id, ExecuteSequence execute, ExecuteSequence executeMissed, Long timeToFail, Control... controls) {
             this.id = id;
             this.controls = List.of(controls);
             this.execute = execute;
+            this.executeMissed = executeMissed;
+            this.timeToFail = timeToFail;
         }
 
-        public static Sequence create(Identifier id, ExecuteSequence execute, Control... controls) {
-            return new Builder(id, execute, controls);
+        public static Sequence create(Identifier id, ExecuteSequence execute, ExecuteSequence executeMissed, Long timeToFail, Control... controls) {
+            return new Builder(id, execute, executeMissed, timeToFail, controls);
         }
 
         @Override
@@ -50,6 +93,7 @@ public abstract class Sequence {
             return this.id;
         }
 
+        @Override
         public List<Control> getControls() {
             return this.controls;
         }
@@ -57,6 +101,16 @@ public abstract class Sequence {
         @Override
         public void execute(Tardis tardis) {
             this.execute.run(tardis);
+        }
+
+        @Override
+        public void executeMissed(Tardis tardis) {
+            this.executeMissed.run(tardis);
+        }
+
+        @Override
+        public Long timeToFail() {
+            return this.timeToFail;
         }
     }
 }

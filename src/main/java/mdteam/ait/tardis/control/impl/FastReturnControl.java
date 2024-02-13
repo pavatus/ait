@@ -18,6 +18,11 @@ public class FastReturnControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         TardisTravel travel = tardis.getTravel();
 
+        if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
+            this.addToControlSequence(tardis);
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+        }
+
         boolean bl = travel.getDestination() == travel.getLastPosition(); // fixme move this to be saved in the PropertiesHandler instead as TardisTravel is too bloated rn and will be getting a rewrite
 
         if(travel.getLastPosition() != null) {

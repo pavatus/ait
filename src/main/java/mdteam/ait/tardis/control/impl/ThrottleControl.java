@@ -35,6 +35,7 @@ public class ThrottleControl extends Control {
             }
         }
 
+        this.addToControlSequence(tardis);
         return true;
     }
 

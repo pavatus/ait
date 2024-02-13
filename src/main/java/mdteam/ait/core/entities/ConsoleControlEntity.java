@@ -231,7 +231,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
             control.runAnimation(tardis, (ServerPlayerEntity) player, (ServerWorld) world);
 
-            if (control.shouldFailOnNoPower() && !tardis.hasPower()) {
+            if ((control.shouldFailOnNoPower() && !tardis.hasPower()) || tardis.getHandlers().getSequenceHandler().isConsoleDisabled()) {
                 return false;
             }
 

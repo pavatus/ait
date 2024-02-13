@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.data;
 
 import mdteam.ait.api.tardis.TardisEvents;
+import mdteam.ait.registry.SequenceRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
@@ -9,10 +10,14 @@ import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
+
+import static mdteam.ait.tardis.util.FlightUtil.convertSecondsToTicks;
 
 public class FlightData extends TardisLink {
     private static final String FLIGHT_TICKS_KEY = "flight_ticks";
     private static final String TARGET_TICKS_KEY = "target_ticks";
+    private static final Random random = Random.create();
 
     public FlightData(Tardis tardiz) {
         super(tardiz, "flight");
@@ -70,6 +75,10 @@ public class FlightData extends TardisLink {
         this.setTargetTicks(this.getTargetTicks() + ticks);
     }
 
+    public void decreaseFlightTime(int ticks) {
+        this.setTargetTicks(this.getTargetTicks() - ticks);
+    }
+
     public int getDurationAsPercentage() {
         if(findTardis().isEmpty()) return 0;
         if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0) {
@@ -124,9 +133,22 @@ public class FlightData extends TardisLink {
         if (findTardis().get().getHandlers().getCrashData().getState() != TardisCrashData.State.NORMAL) {
             findTardis().get().getHandlers().getCrashData().addRepairTicks(2 * findTardis().get().getTravel().getSpeed());
         }
-        if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && this.findTardis().get().getTravel().getState() == TardisTravel.State.LANDED) {
+        if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && findTardis().get().getTravel().getState() == TardisTravel.State.LANDED) {
             this.recalculate();
         }
+
+        System.out.println(findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence() ? findTardis().get().getHandlers().getSequenceHandler().getActiveSequence().id() : "none");
+
+        if(findTardis().get().getTravel().inFlight() && findTardis().get().position() != findTardis().get().destination() && !findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
+            if (FlightUtil.getFlightDuration(findTardis().get().getTravel().getPosition(), findTardis().get().getTravel().getDestination()) > convertSecondsToTicks(20)) {
+                int rand = random.nextBetween(0, 60);
+                if (rand == 7) {
+                    findTardis().get().getHandlers().getSequenceHandler().triggerRandomSequence(true);
+                }
+            }
+        }/* else if (!findTardis().get().getTravel().inFlight()) {
+            findTardis().get().getHandlers().getSequenceHandler().setActiveSequence(null, true);
+        }*/
 
         if (this.isInFlight() && !this.findTardis().get().getTravel().isCrashing() && !(this.getFlightTicks() >= this.getTargetTicks()) && this.getTargetTicks() == 0) {
             this.recalculate();

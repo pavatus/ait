@@ -38,9 +38,10 @@ public class PropertiesHandler { // todo move things out of properties
     public static final String MAT_TICKS = "mat_ticks";
     public static final String SPEED = "speed";
     public static final String IS_CLOAKED = "cloaked";
+    public static final String CONSOLE_DISABLED = "console_disabled";
 
     // Should these methods be in the holder instead?
-    
+
     public static void set(Tardis tardis, String key, Object val, boolean performSync) {
         if (!hasChanged(tardis.getHandlers().getProperties(), key, val)) return;
 
@@ -172,21 +173,13 @@ public class PropertiesHandler { // todo move things out of properties
     private static void unlockAllFreebies(HashMap<String, Object> map) {
         for (Iterator<TardisDesktopSchema> it = DesktopRegistry.getInstance().iterator(); it.hasNext(); ) {
             TardisDesktopSchema schema = it.next();
-
             map.put(schema.id().getPath() + "_unlocked", schema.freebie());
         }
     }
-
-    // todo kill me bad bad bad i never want to write code or work on ait again jesus christ how did we let the code get this bad i genuienyl cant even write good code anymore its not worth the effort i just want to finish this god damn networking problem
-    // at least it's better than 1.16.5 :skull: and god yes just release this man already from the hell he's in bro needs a break :sob:
-    // lord baby jesus give us strength, this is some loqor ass code im boutta write. if it fixes network i do not care.
-    // SWITCH CASE GODDAMNIT - Actually Loqor
     public static void sync(PropertiesHolder holder, String key, UUID tardis) {
         if (TardisUtil.isClient()) return;
         Object val = holder.getData().get(key);
-
         if (val == null) return;
-
         switch (val.getClass().getName()) {
             case "java.lang.Integer" ->
                     ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "int", String.valueOf(val));
@@ -201,35 +194,6 @@ public class PropertiesHandler { // todo move things out of properties
             case "java.lang.Identifier" ->
                     ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "identifier", getIdentifier(holder, key).toString());
         }
-        /*if (val instanceof Integer) {
-            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "int", String.valueOf(val));
-            return;
-        }
-
-        if (val instanceof Double) {
-            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "double", String.valueOf(val));
-            return;
-        }
-
-        if (val instanceof Float) {
-            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "float", String.valueOf(val));
-            return;
-        }
-
-        if (val instanceof Boolean) {
-            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "boolean", String.valueOf(val));
-            return;
-        }
-
-        if (val instanceof String) {
-            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "string", (String) val);
-            return;
-        }
-
-        if (val instanceof Identifier || val instanceof LinkedTreeMap<?,?>) {
-            ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "identifier", getIdentifier(holder, key).toString());
-            return;
-        }*/
     }
 
     public static HashMap<String, Object> createDefaultProperties() {
@@ -256,11 +220,12 @@ public class PropertiesHandler { // todo move things out of properties
         map.put(MAT_TICKS,0);
         map.put(SPEED,0);
         map.put(IS_CLOAKED, false);
+        map.put(CONSOLE_DISABLED, false);
         map.put(TardisCrashData.TARDIS_RECOVERY_STATE, TardisCrashData.State.NORMAL);
         map.put(TardisCrashData.TARDIS_REPAIR_TICKS, 0);
 
-        unlockAllFreebies(map);
 
+        unlockAllFreebies(map);
         return map;
     }
 }

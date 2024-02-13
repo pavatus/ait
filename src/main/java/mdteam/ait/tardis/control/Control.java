@@ -58,6 +58,10 @@ public class Control {
         return runServer(tardis, player, world, leftClick);
     }
 
+    public void addToControlSequence(Tardis tardis) {
+        tardis.getHandlers().getSequenceHandler().add(this);
+    }
+
     public SoundEvent getSound() {
         return SoundEvents.BLOCK_NOTE_BLOCK_BIT.value();
     }

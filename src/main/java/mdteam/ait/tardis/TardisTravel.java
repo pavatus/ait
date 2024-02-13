@@ -188,6 +188,21 @@ public class TardisTravel extends TardisLink {
         PropertiesHandler.set(this.findTardis().get(), MAX_SPEED_KEY, speed);
     }
 
+    public boolean inFlight() {
+        if(this.findTardis().isEmpty()) return false;
+        return this.getState() == State.FLIGHT;
+    }
+
+    public boolean isMaterialising() {
+        if(this.findTardis().isEmpty()) return false;
+        return this.getState() == State.MAT;
+    }
+
+    public boolean isDematerialising() {
+        if(this.findTardis().isEmpty()) return false;
+        return this.getState() == State.DEMAT;
+    }
+
     /**
      * Gets the number of ticks that the Tardis has been materialising for
      * @return ticks
@@ -303,7 +318,7 @@ public class TardisTravel extends TardisLink {
             float random_Y_velocity = random.nextFloat(-1f, 2f);
             float random_Z_velocity = random.nextFloat(-2f, 3f);
             player.setVelocity(random_X_velocity * crash_intensity, random_Y_velocity * crash_intensity, random_Z_velocity * crash_intensity);
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 20 * crash_intensity, (int) Math.round(0.25 * crash_intensity), true, false, false));
+            //player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 20 * crash_intensity, (int) Math.round(0.25 * crash_intensity), true, false, false));
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 20 * crash_intensity, 1, true, false, false));
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 20 * crash_intensity, (int) Math.round(0.25 * crash_intensity), true, false, false));
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 20 * crash_intensity, (int) Math.round(0.25 * crash_intensity), true, false, false));
@@ -333,7 +348,7 @@ public class TardisTravel extends TardisLink {
         if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
             this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
         }
-        this.crash_materialize();
+        this.crashAndMaterialise();
         int repair_ticks = 1000 * crash_intensity;
         tardis.getHandlers().getCrashData().setRepairTicks(repair_ticks);
         if (repair_ticks > TardisCrashData.UNSTABLE_TICK_START_THRESHOLD) {
@@ -348,7 +363,7 @@ public class TardisTravel extends TardisLink {
         this.materialise(false);
     }
 
-    public void crash_materialize() {
+    public void crashAndMaterialise() {
         if (this.getDestination().getWorld().isClient() || findTardis().isEmpty() || this.getState() != State.FLIGHT) {
             return;
         }
@@ -399,8 +414,12 @@ public class TardisTravel extends TardisLink {
         // Lock the Tardis doors
         // DoorData.lockTardis(true, this.getTardis().get(), null, true);
 
-        // Set the Tardis state to materialize
+        // Set the Tardis state to materialise
         this.setState(State.MAT);
+
+        if(this.findTardis().get().getHandlers().getSequenceHandler().isConsoleDisabled()) {
+            this.findTardis().get().getHandlers().getSequenceHandler().disableConsole(false);
+        }
 
         // Get the server world of the destination
         ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();

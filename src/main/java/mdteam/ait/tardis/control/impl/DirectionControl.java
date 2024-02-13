@@ -21,6 +21,11 @@ public class DirectionControl extends Control {
         TardisTravel travel = tardis.getTravel();
         AbsoluteBlockPos.Directed dest = travel.getDestination();
 
+        if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
+            this.addToControlSequence(tardis);
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+        }
+
         travel.setDestination(new AbsoluteBlockPos.Directed(dest, getNextDirection(dest.getDirection())), false);
 
         messagePlayer(player, travel.getDestination().getDirection());
