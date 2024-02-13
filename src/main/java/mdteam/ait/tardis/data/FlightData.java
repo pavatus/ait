@@ -4,6 +4,7 @@ import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.registry.SequenceRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
+import mdteam.ait.tardis.control.sequences.SequenceHandler;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -137,20 +138,9 @@ public class FlightData extends TardisLink {
             this.recalculate();
         }
 
-        //System.out.println(findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence() ? findTardis().get().getHandlers().getSequenceHandler().getActiveSequence().id() : "none");
+        triggerSequencingDuringFlight(findTardis().get());
 
-        if(!PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) && this.getDurationAsPercentage() < 100 && findTardis().get().getTravel().inFlight() && findTardis().get().position() != findTardis().get().destination() && !findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
-            if (FlightUtil.getFlightDuration(findTardis().get().getTravel().getPosition(), findTardis().get().getTravel().getDestination()) > convertSecondsToTicks(5)) {
-                int rand = random.nextBetween(0, 80);
-                if (rand == 7) {
-                    findTardis().get().getHandlers().getSequenceHandler().triggerRandomSequence(true);
-                }
-            }
-        }/* else if (!findTardis().get().getTravel().inFlight()) {
-            findTardis().get().getHandlers().getSequenceHandler().setActiveSequence(null, true);
-        }*/
-
-        if (this.isInFlight() && !this.findTardis().get().getTravel().isCrashing() && !(this.getFlightTicks() >= this.getTargetTicks()) && this.getTargetTicks() == 0) {
+        if (this.isInFlight() && !findTardis().get().getTravel().isCrashing() && !(this.getFlightTicks() >= this.getTargetTicks()) && this.getTargetTicks() == 0) {
             this.recalculate();
         }
 
@@ -159,7 +149,24 @@ public class FlightData extends TardisLink {
                 this.onFlightFinished();
             }
 
-            this.setFlightTicks(this.getFlightTicks() + this.findTardis().get().getTravel().getSpeed());
+            this.setFlightTicks(this.getFlightTicks() + findTardis().get().getTravel().getSpeed());
+        }
+    }
+
+    public void triggerSequencingDuringFlight(Tardis tardis) {
+        SequenceHandler sequences = tardis.getHandlers().getSequenceHandler();
+        TardisTravel travel = tardis.getTravel();
+
+        if(!PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND)
+                && this.getDurationAsPercentage() < 100
+                && travel.inFlight() && tardis.position() != tardis.destination() && !sequences.hasActiveSequence()) {
+            if (FlightUtil.getFlightDuration(tardis.position(),
+                    tardis.destination()) > convertSecondsToTicks(5)) {
+                int rand = random.nextBetween(0, 80);
+                if (rand == 7) {
+                    sequences.triggerRandomSequence(true);
+                }
+            }
         }
     }
 }
