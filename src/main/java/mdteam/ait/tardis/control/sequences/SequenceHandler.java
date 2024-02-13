@@ -42,7 +42,7 @@ public class SequenceHandler extends TardisLink {
         recent.add(control);
         ticks = 0;
         this.compareToSequences();
-        sync();
+        //sync();
     }
 
     public boolean hasActiveSequence() {
@@ -54,7 +54,7 @@ public class SequenceHandler extends TardisLink {
         this.activeSequence = sequence;
         if(findTardis().isEmpty() || this.activeSequence == null) return;
         this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(findTardis().get()));
-        sync();
+        //sync();
     }
 
     public void triggerRandomSequence(boolean setTicksTo0) {
@@ -66,7 +66,7 @@ public class SequenceHandler extends TardisLink {
         if(findTardis().isEmpty() || this.activeSequence == null) return;
         FlightUtil.playSoundAtConsole(findTardis().get(), SoundEvents.BLOCK_BEACON_POWER_SELECT);
         this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(findTardis().get()));
-        sync();
+        //sync();
     }
 
     @Nullable
