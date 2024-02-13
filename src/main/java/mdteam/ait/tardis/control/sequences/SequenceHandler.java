@@ -29,6 +29,7 @@ public class SequenceHandler extends TardisLink {
     @Exclude
     private RecentControls recent;
     private int ticks = 0;
+    @Exclude
     private Sequence activeSequence;
 
     public SequenceHandler(Tardis tardisId) {
@@ -75,23 +76,19 @@ public class SequenceHandler extends TardisLink {
     }
 
     private void compareToSequences() {
-        for (Sequence sequence : SequenceRegistry.REGISTRY) {
-            if(this.findTardis().isEmpty()) break;
-            if(this.recent == null)
-                this.recent = new RecentControls(this.findTardis().get().getUuid());
-            if (sequence.isFinished(this.recent)) {
-                sequence.execute(this.findTardis().get());
-                recent.clear();
-                FlightUtil.playSoundAtConsole(this.findTardis().get(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP);
-                this.setActiveSequence(null, true);
-                break;
-            } else if (sequence.wasMissed(this.recent, ticks)) {
-                sequence.executeMissed(this.findTardis().get());
-                missedControlEffects(this.findTardis().get());
-                recent.clear();
-                this.setActiveSequence(null, true);
-                break;
-            }
+        if(this.findTardis().isEmpty() || this.getActiveSequence() == null) return;
+        if(this.recent == null)
+            this.recent = new RecentControls(this.findTardis().get().getUuid());
+        if (this.getActiveSequence().isFinished(this.recent)) {
+            this.getActiveSequence().execute(this.findTardis().get());
+            recent.clear();
+            FlightUtil.playSoundAtConsole(this.findTardis().get(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP);
+            this.setActiveSequence(null, true);
+        } else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
+            this.getActiveSequence().executeMissed(this.findTardis().get());
+            missedControlEffects(this.findTardis().get());
+            recent.clear();
+            this.setActiveSequence(null, true);
         }
     }
 

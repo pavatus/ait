@@ -1,7 +1,6 @@
 package mdteam.ait.tardis.control.sequences;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.registry.SequenceRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.control.Control;
 import net.minecraft.server.network.ServerPlayerEntity;

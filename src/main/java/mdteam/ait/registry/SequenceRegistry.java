@@ -206,7 +206,7 @@ public class SequenceRegistry {
                             pos.getY(),
                             random.nextBetween(pos.getZ() - 24, pos.getZ() + 24), pos.getWorld(),
                             pos.getDirection()));
-                }),  110L, Text.literal("Artron drain detected!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                }),  110L, Text.literal("TARDIS off course!").formatted(Formatting.ITALIC, Formatting.YELLOW),
                 new HandBrakeControl(), new ThrottleControl(), new RandomiserControl()));
 
         GROUND_UNSTABLE = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "ground_unstable"), (finishedTardis -> {
@@ -214,7 +214,7 @@ public class SequenceRegistry {
                     finishedTardis.addFuel(random.nextBetween(45, 125));
                 }), (missedTardis -> {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
-                }),  110L, Text.literal("Artron drain detected!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                }),  110L, Text.literal("Unstable landing position!").formatted(Formatting.ITALIC, Formatting.YELLOW),
                 new LandTypeControl(), new YControl(), new SetWaypointControl()));
 
         INCREMENT_SCALE_RECALCULATION_NECESSARY = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "increment_scale_recalculation_necessary"), (finishedTardis -> {
