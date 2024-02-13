@@ -312,6 +312,10 @@ public class TardisTravel extends TardisLink {
             explosions.add(explosion);
         });
 
+        if(findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
+            findTardis().get().getHandlers().getSequenceHandler().setActiveSequence(null, true);
+        }
+
         Random random = new Random();
         for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
             float random_X_velocity = random.nextFloat(-2f, 3f);
@@ -417,8 +421,12 @@ public class TardisTravel extends TardisLink {
         // Set the Tardis state to materialise
         this.setState(State.MAT);
 
-        if(this.findTardis().get().getHandlers().getSequenceHandler().isConsoleDisabled()) {
+        /*if(this.findTardis().get().getHandlers().getSequenceHandler().isConsoleDisabled()) {
             this.findTardis().get().getHandlers().getSequenceHandler().disableConsole(false);
+        }*/
+
+        if(this.findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
+            this.findTardis().get().getHandlers().getSequenceHandler().setActiveSequence(null, true);
         }
 
         // Get the server world of the destination

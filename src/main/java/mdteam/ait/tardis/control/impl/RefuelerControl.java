@@ -24,8 +24,10 @@ public class RefuelerControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         if(tardis.isGrowth()) return false;
         if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-            this.addToControlSequence(tardis);
-            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+                this.addToControlSequence(tardis);
+                return false;
+            }
         }
         if(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
             //if (TardisUtil.isRiftChunk((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getExteriorPos())) {

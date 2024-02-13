@@ -19,8 +19,10 @@ public class FastReturnControl extends Control {
         TardisTravel travel = tardis.getTravel();
 
         if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-            this.addToControlSequence(tardis);
-            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+                this.addToControlSequence(tardis);
+                return false;
+            }
         }
 
         boolean bl = travel.getDestination() == travel.getLastPosition(); // fixme move this to be saved in the PropertiesHandler instead as TardisTravel is too bloated rn and will be getting a rewrite

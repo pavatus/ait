@@ -21,9 +21,10 @@ public class DoorControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
 
         if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-            this.addToControlSequence(tardis);
-            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this))
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+                this.addToControlSequence(tardis);
                 return false;
+            }
         }
 
         this.soundEvent = !tardis.getDoor().isOpen() ? SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON : SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF;

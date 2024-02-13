@@ -17,10 +17,13 @@ public class DoorLockControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-            this.addToControlSequence(tardis);
-            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+                this.addToControlSequence(tardis);
+                return false;
+            }
         }
-        return toggleLock(tardis, player);
+        toggleLock(tardis, player);
+        return true;
     }
 
     @Override

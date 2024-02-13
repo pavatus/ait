@@ -22,8 +22,10 @@ public class RandomiserControl extends Control {
         TardisTravel travel = tardis.getTravel();
 
         if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-            this.addToControlSequence(tardis);
-            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+                this.addToControlSequence(tardis);
+                return false;
+            }
         }
 
         randomiseDestination(tardis, 10);

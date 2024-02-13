@@ -31,8 +31,8 @@ public class Sequence {
      * @param recent Compares the recent controls to this sequence, if everything matches then it is finished
      */
     public boolean isFinished(RecentControls recent) {
-        if(recent.size() > this.getControls().size())
-            return false;
+        /*if(recent.size() > this.getControls().size())
+            return false;*/
         return recent.equals(this.getControls());
     }
 
@@ -40,7 +40,7 @@ public class Sequence {
     public void executeMissed(Tardis tardis) {};
 
     public boolean wasMissed(RecentControls recent, int ticks) {
-        return ticks > this.timeToFail() || (recent.size() > this.getControls().size());
+        return ticks >= this.timeToFail()/* || (recent.size() > this.getControls().size())*/;
     }
 
     public boolean controlPartOfSequence(Control control) {
@@ -50,19 +50,8 @@ public class Sequence {
     public void sendMessageToInteriorPlayers(List<ServerPlayerEntity> playersInInterior) {
         if(playersInInterior.isEmpty()) return;
         for (ServerPlayerEntity player : playersInInterior) {
-            player.sendMessage(Text.of(this.getSequenceMessage(this.id())), true);
+            player.sendMessage(Text.of(SequenceRegistry.getSequenceMessage(this.id())), true);
         }
-    }
-
-    public String getSequenceMessage(Identifier id) {
-        return switch(id.getPath()) {
-            case SequenceRegistry.AVOID_DEBRIS -> "Debris incoming!";
-            case SequenceRegistry.DIMENSIONAL_BREACH -> "Dimensional stability threatened!";
-            case SequenceRegistry.DIMENSIONAL_DRIFT -> "Drifting off the Euclidean plane!";
-            case SequenceRegistry.ENERGY_DRAIN -> "Artron drain detected!";
-            case SequenceRegistry.FORCED_MAT -> "Materialisation forced!";
-            default -> "Sequence started";
-        };
     }
 
     public interface ExecuteSequence {

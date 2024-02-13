@@ -21,8 +21,10 @@ public class MonitorControl extends Control {
         player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F, 1.0F);
 
         if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-            this.addToControlSequence(tardis);
-            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) return false;
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+                this.addToControlSequence(tardis);
+                return false;
+            }
         }
 
         AITMod.openScreen(player, 0, tardis.getUuid(), console.uuid());

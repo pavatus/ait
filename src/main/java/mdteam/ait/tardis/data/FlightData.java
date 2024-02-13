@@ -137,11 +137,11 @@ public class FlightData extends TardisLink {
             this.recalculate();
         }
 
-        System.out.println(findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence() ? findTardis().get().getHandlers().getSequenceHandler().getActiveSequence().id() : "none");
+        //System.out.println(findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence() ? findTardis().get().getHandlers().getSequenceHandler().getActiveSequence().id() : "none");
 
-        if(findTardis().get().getTravel().inFlight() && findTardis().get().position() != findTardis().get().destination() && !findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
-            if (FlightUtil.getFlightDuration(findTardis().get().getTravel().getPosition(), findTardis().get().getTravel().getDestination()) > convertSecondsToTicks(20)) {
-                int rand = random.nextBetween(0, 60);
+        if(!PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) && this.getDurationAsPercentage() < 100 && findTardis().get().getTravel().inFlight() && findTardis().get().position() != findTardis().get().destination() && !findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
+            if (FlightUtil.getFlightDuration(findTardis().get().getTravel().getPosition(), findTardis().get().getTravel().getDestination()) > convertSecondsToTicks(5)) {
+                int rand = random.nextBetween(0, 80);
                 if (rand == 7) {
                     findTardis().get().getHandlers().getSequenceHandler().triggerRandomSequence(true);
                 }

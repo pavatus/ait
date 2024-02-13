@@ -78,18 +78,18 @@ public class SequenceHandler extends TardisLink {
     private void compareToSequences() {
         for (Sequence sequence : SequenceRegistry.REGISTRY) {
             if(this.findTardis().isEmpty()) break;
+            if(this.recent == null)
+                this.recent = new RecentControls(this.findTardis().get().getUuid());
             if (sequence.isFinished(this.recent)) {
                 sequence.execute(this.findTardis().get());
+                recent.clear();
                 FlightUtil.playSoundAtConsole(this.findTardis().get(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP);
                 this.setActiveSequence(null, true);
-                sync();
-                break;
             } else if (sequence.wasMissed(this.recent, ticks)) {
                 sequence.executeMissed(this.findTardis().get());
                 missedControlEffects(this.findTardis().get());
+                recent.clear();
                 this.setActiveSequence(null, true);
-                sync();
-                break;
             }
         }
     }
@@ -102,8 +102,10 @@ public class SequenceHandler extends TardisLink {
                 1f);
         tardis.getDesktop().getConsoles().forEach(console -> {
             Vec3d vec3d = Vec3d.ofBottomCenter(console.position()).add(0.0, 1.2f, 0.0);
-            if(TardisUtil.getTardisDimension() instanceof ServerWorld world)
-                world.spawnParticles(new DustParticleEffect(new Vector3f(0.75f, 0.1f, 0.1f), 1f), vec3d.getX() + 0.5f, vec3d.getY() + 1, vec3d.getZ() + 0.5f, 20, 0.0F, 0.05F, 0.0F, 2.0F);
+            if(TardisUtil.getTardisDimension() instanceof ServerWorld world) {
+                world.spawnParticles(ParticleTypes.SMALL_FLAME, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.4F, 1F, 0.4F, 5.0F);
+                world.spawnParticles(new DustParticleEffect(new Vector3f(0.2f, 0.2f, 0.2f), 4f), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.0F, 1F, 0.0F, 2.0F);
+            }
         });
     }
 
