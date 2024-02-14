@@ -17,6 +17,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.Direction;
 import org.joml.Vector3f;
 
 
@@ -64,10 +65,13 @@ public class TardisCrashData extends TardisLink{
         AbsoluteBlockPos.Directed exteriorPosition = tardis.getTravel().getExteriorPos();
         ServerWorld exteriorWorld = (ServerWorld) exteriorPosition.getWorld();
         if(tardis.getDoor().isOpen() && this.getState() != State.NORMAL) {
-            exteriorWorld.spawnParticles(ParticleTypes.LARGE_SMOKE,
-                    exteriorPosition.getX(), exteriorPosition.getY(), exteriorPosition.getZ(),
-                    20,
-                    exteriorPosition.getDirection().getVector().getX(), 0.25D, exteriorPosition.getDirection().getVector().getZ(), 0.08D
+            double x = directionToInteger(exteriorPosition.getDirection())[0];
+            double z = directionToInteger(exteriorPosition.getDirection())[1];
+            exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    exteriorPosition.getX() + x, exteriorPosition.getY() + 2f,
+                    exteriorPosition.getZ() + z,
+                    8,
+                    0.05D, 0.05D, 0.05D, 0.01D
             );
         }
         if (!(getState() == State.TOXIC)) return;
@@ -127,6 +131,15 @@ public class TardisCrashData extends TardisLink{
     public void addRepairTicks(Integer ticks) {
         if (findTardis().isEmpty()) return;
         PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_REPAIR_TICKS, getRepairTicks() + ticks);
+    }
+
+    public double[] directionToInteger(Direction direction) {
+        return switch(direction) {
+            default -> new double[]{0.5d, 0.5d};
+            case EAST -> new double[]{-0.5d, 0.5d};
+            case SOUTH -> new double[]{-0.5d, -0.5d};
+            case WEST -> new double[]{0.5d, -0.5d};
+        };
     }
 
     public enum State {

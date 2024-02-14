@@ -7,6 +7,7 @@ import mdteam.ait.client.models.exteriors.DoomExteriorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.coral.CoralRenderer;
+import mdteam.ait.client.renderers.exteriors.DoomConstants;
 import mdteam.ait.client.renderers.exteriors.ExteriorRenderer;
 import net.minecraft.util.Identifier;
 
@@ -22,11 +23,11 @@ public class ClientDoomVariant extends ClientExteriorVariantSchema {
     }
     @Override
     public Identifier texture() {
-        return ExteriorRenderer.DOOM_FRONT_BACK;
+        return DoomConstants.DOOM_FRONT_BACK;
     }
 
     @Override
     public Identifier emission() {
-        return ExteriorRenderer.DOOM_TEXTURE_EMISSION;
+        return DoomConstants.DOOM_TEXTURE_EMISSION;
     }
 }

@@ -79,7 +79,7 @@ public class DoorBlockEntity extends LinkableBlockEntity {
             return;
         if (this.findTardis().get().isGrowth() && this.findTardis().get().hasGrowthExterior())
             return;
-        if (player.getMainHandStack().getItem() instanceof KeyItem && !findTardis().get().isSiegeMode()) {
+        if (player.getMainHandStack().getItem() instanceof KeyItem && !this.findTardis().get().isSiegeMode()) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
             if (!tag.contains("tardis")) {

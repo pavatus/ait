@@ -104,7 +104,7 @@ public class SequenceRegistry {
         }), (missedTardis -> {
             missedTardis.removeFuel(random.nextBetween(45, 125));
             PropertiesHandler.set(missedTardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
-        }),  80L, Text.literal("Anti-gravity error detected!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+        }),  80L, Text.literal("Gravity miscalculation!").formatted(Formatting.ITALIC, Formatting.YELLOW),
                 new AntiGravsControl()));
 
         DIMENSIONAL_DRIFT_X = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_drift_x"), (finishedTardis -> {
@@ -194,7 +194,7 @@ public class SequenceRegistry {
                 }), (missedTardis -> {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
                 }),  80L, Text.literal("Vortex drift: acceleration necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW),
-                new ThrottleControl()));
+                new IncrementControl(), new ThrottleControl()));
 
         COURSE_CORRECT = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "course_correct"), (finishedTardis -> {
                     finishedTardis.getHandlers().getFlight().decreaseFlightTime(60);

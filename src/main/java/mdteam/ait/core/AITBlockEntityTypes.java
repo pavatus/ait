@@ -2,6 +2,7 @@ package mdteam.ait.core;
 
 import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneBlockEntityInit;
 import mdteam.ait.core.blockentities.*;
+import mdteam.ait.core.blocks.DetectorBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 
@@ -14,5 +15,6 @@ public class AITBlockEntityTypes implements NeptuneBlockEntityInit {
     public static BlockEntityType<CoralBlockEntity> CORAL_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(CoralBlockEntity::new, AITBlocks.CORAL_PLANT).build();
     public static BlockEntityType<AITRadioBlockEntity> AIT_RADIO_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(AITRadioBlockEntity::new, AITBlocks.RADIO).build();
     public static BlockEntityType<MonitorBlockEntity> MONITOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(MonitorBlockEntity::new, AITBlocks.MONITOR_BLOCK).build();
+    public static BlockEntityType<DetectorBlockEntity> DETECTOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(DetectorBlockEntity::new, AITBlocks.DETECTOR_BLOCK).build();
     public static BlockEntityType<ArtronCollectorBlockEntity> ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(ArtronCollectorBlockEntity::new, AITBlocks.ARTRON_COLLECTOR_BLOCK).build();
 }

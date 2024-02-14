@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "inverted=false": {
+      "model": "ait:block/detector_block"
+    },
+    "inverted=true": {
+      "model": "ait:block/detector_block_inverted"
+    }
+  }
+}
