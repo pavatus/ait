@@ -65,6 +65,7 @@ public class DoorBlockEntity extends LinkableBlockEntity {
         if (door.findTardis().isEmpty()) return;
         if(!world.isClient() && door.findTardis().get().getTravel().getExteriorPos() == null) return;
         World exteriorWorld = door.findTardis().get().getTravel().getExteriorPos().getWorld();
+        if(exteriorWorld == null) return;
         BlockState exteriorBlockState = exteriorWorld.getBlockState(door.findTardis().get().getTravel().getExteriorPos());
         if(exteriorBlockState.getBlock() instanceof ExteriorBlock) {
             world.setBlockState(pos, blockState.with(Properties.WATERLOGGED, exteriorBlockState.get(Properties.WATERLOGGED) && door.findTardis().get().getDoor().isOpen()), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
