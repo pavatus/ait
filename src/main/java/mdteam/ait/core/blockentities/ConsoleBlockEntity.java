@@ -12,6 +12,7 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisConsole;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
+import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -417,6 +418,14 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         if(this.findTardis().isEmpty()) return;
 
         if (world.isClient()) return;
+
+        if(this.findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
+            List<Control> sequence = this.findTardis().get().getHandlers().getSequenceHandler().getActiveSequence().getControls();
+            for (ConsoleControlEntity entity : this.controlEntities) {
+                entity.partOfSequence(sequence.contains(entity.getControl()));
+                System.out.println(sequence.contains(entity.getControl()) + " | " + entity.isPartOfSequence());
+            }
+        }
 
         ServerTardis tardis = (ServerTardis) this.findTardis().get();
 

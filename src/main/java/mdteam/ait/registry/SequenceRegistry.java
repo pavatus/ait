@@ -15,6 +15,8 @@ import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.PhantomEntity;
 import net.minecraft.entity.mob.ZombieEntity;
@@ -22,12 +24,17 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SequenceRegistry {
     public static final SimpleRegistry<Sequence> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<Sequence>ofRegistry(new Identifier(AITMod.MOD_ID, "sequence"))).buildAndRegister();
@@ -71,6 +78,31 @@ public class SequenceRegistry {
         }), (missedTardis -> {
             missedTardis.removeFuel(-random.nextBetween(45, 125));
             missedTardis.getDoor().openDoors();
+                    List<Explosion> explosions = new ArrayList<>();
+                    missedTardis.getDesktop().getConsoles().forEach(console -> {
+                        Explosion explosion = TardisUtil.getTardisDimension().createExplosion(
+                                null,
+                                null,
+                                null,
+                                console.position().toCenterPos(),
+                                3f * 2,
+                                false,
+                                World.ExplosionSourceType.MOB
+                        );
+                        explosions.add(explosion);
+                    });
+            java.util.Random random = new java.util.Random();
+                    for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(missedTardis)) {
+                        float random_X_velocity = random.nextFloat(-2f, 3f);
+                        float random_Y_velocity = random.nextFloat(-1f, 2f);
+                        float random_Z_velocity = random.nextFloat(-2f, 3f);
+                        player.setVelocity(random_X_velocity * 2, random_Y_velocity * 2, random_Z_velocity * 2);
+                        if (!explosions.isEmpty()) {
+                            player.damage(TardisUtil.getTardisDimension().getDamageSources().explosion(explosions.get(0)), 0);
+                        } else {
+                            player.damage(null, 0);
+                        }
+                    }
             //missedTardis.getTravel().crash();
         }), 100L, Text.literal("Debris incoming!").formatted(Formatting.ITALIC, Formatting.YELLOW),
                 new DirectionControl(), new RandomiserControl()));

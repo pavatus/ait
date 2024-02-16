@@ -36,7 +36,6 @@ public class HartnellAnimations {
                                     Transformation.Interpolations.LINEAR),
                             new Keyframe(3.36f, AnimationHelper.createRotationalVector(0f, 360f, 0f),
                                     Transformation.Interpolations.LINEAR))).build();
-
     public static final Animation HARTNELL_INFLIGHT_ANIMATION = Animation.Builder.create(8f).looping()
             .addBoneAnimation("rotor",
                     new Transformation(Transformation.Targets.TRANSLATE,

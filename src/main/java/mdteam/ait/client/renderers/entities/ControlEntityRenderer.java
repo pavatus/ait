@@ -1,5 +1,6 @@
 package mdteam.ait.client.renderers.entities;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ControlModel;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.SonicItem;
@@ -8,6 +9,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
@@ -24,39 +28,39 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
 
 @Environment(value = EnvType.CLIENT)
 public class ControlEntityRenderer
         extends LivingEntityRenderer<ConsoleControlEntity, ControlModel> {
 
-    // Heh, IDK WHAT THE FUCK IM DOING LMAOOOOOO
+    private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/entity/control/sequenced.png");
 
-    private static final Identifier TEXTURE = new Identifier("textures/entity/bat.png");
+    ControlModel model = new ControlModel(ControlModel.getTexturedModelData().createModel());
 
     public ControlEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new ControlModel(ControlModel.getTexturedModelData().createModel()), 0f);
+        super(context, new ControlModel(ControlModel.getNotModelData().createModel()), 0f);
     }
 
     @Override
-    public void render(ConsoleControlEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        /*matrixStack.push();
-        matrixStack.scale(0.5f, 0.5f, 0.5f);
-        HitResult hitresult = MinecraftClient.getInstance().crosshairTarget;
-        if(hitresult != null) {
-            boolean isPlayerLooking = ConsoleControlEntity.isPlayerLookingAtControl(hitresult, livingEntity);
-            if(isPlayerLooking) {
-                super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
+    public void render(ConsoleControlEntity livingEntity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
+        if(livingEntity.getTardis() == null) return;
+        if(livingEntity.getTardis().getHandlers().getSequenceHandler().hasActiveSequence() && livingEntity.getTardis().getHandlers().getSequenceHandler().getActiveSequence().getControls() != null) {
+            int color = livingEntity.getTardis().getHandlers().getSequenceHandler().getActiveSequence().getControls().indexOf(livingEntity.getControl());
+            if (livingEntity.isPartOfSequence()) {
                 matrixStack.push();
                 matrixStack.scale(0.4f, 0.4f, 0.4f);
-                TextRenderer text = this.getTextRenderer();
-                text.drawWithOutline();
-                super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
+                matrixStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
+                matrixStack.translate(0, (-2 - livingEntity.getControlHeight() / 2) + livingEntity.getWorld().random.nextFloat() * 0.02, 0);
+                matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
+                this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light, OverlayTexture.DEFAULT_UV, 0.9923788f - (color * 0.15f), 0.3607843137f + (color * 0.15f), 0.3607843137f + (color * 0.15f), livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+                this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEyes(TEXTURE)), 0xFF00F0, OverlayTexture.DEFAULT_UV, 0.9923788f - (color * 0.15f), 0.3607843137f + (color * 0.15f), 0.3607843137f + (color * 0.15f), livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
                 matrixStack.pop();
             }
         }
-        matrixStack.pop();*/
-        super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
+        super.render(livingEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
     }
 
     @Override
@@ -71,11 +75,8 @@ public class ControlEntityRenderer
         matrices.multiply(this.dispatcher.getRotation());
         matrices.scale(-0.0075f, -0.0075f, 0.0075f);
         Matrix4f matrix4f = matrices.peek().getPositionMatrix();
-        float g = MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.25f);
-        //int j = (int)(g * 255.0f) << 24;
         TextRenderer textRenderer = this.getTextRenderer();
         float h = (float) -textRenderer.getWidth(text) / 2;
-        //textRenderer.draw(text, h, (float)text.getString().length(), 0x20FFFFFF, false, matrix4f, vertexConsumers, TextRenderer.TextLayerType.NORMAL, j, light);
         HitResult hitresult = MinecraftClient.getInstance().crosshairTarget;
         if (hitresult != null) {
             boolean isPlayerLooking = isPlayerLookingAtControl(hitresult, entity);

@@ -51,7 +51,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
     private static final TrackedData<Float> WIDTH = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> HEIGHT = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Vector3f> OFFSET = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
-
+    private static final TrackedData<Boolean> PART_OF_SEQUENCE = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public ConsoleControlEntity(EntityType<? extends BaseControlEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -79,6 +79,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         this.dataTracker.startTracking(WIDTH, 0.125f);
         this.dataTracker.startTracking(HEIGHT, 0.125f);
         this.dataTracker.startTracking(OFFSET, new Vector3f(0));
+        this.dataTracker.startTracking(PART_OF_SEQUENCE, false);
     }
 
     public String getIdentity() {
@@ -105,8 +106,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
         this.dataTracker.set(HEIGHT, height);
     }
 
-
-    // fixme idk i added it i dunno if it'll work it didnt crash when i tried it so
     public Control getControl() {
         if(control == null) return null;
         return control;
@@ -144,6 +143,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         nbt.putFloat("offsetX", this.getOffset().x());
         nbt.putFloat("offsetY", this.getOffset().y());
         nbt.putFloat("offsetZ", this.getOffset().z());
+        nbt.putBoolean("partOfSequence", this.isPartOfSequence());
     }
 
     @Override
@@ -164,6 +164,9 @@ public class ConsoleControlEntity extends BaseControlEntity {
         }
         if (nbt.contains("offsetX") && nbt.contains("offsetY") && nbt.contains("offsetZ")) {
             this.setOffset(new Vector3f(nbt.getFloat("offsetX"), nbt.getFloat("offsetY"), nbt.getFloat("offsetZ")));
+        }
+        if (nbt.contains("partOfSequence")) {
+            this.partOfSequence(nbt.getBoolean("partOfSequence"));
         }
     }
 
@@ -293,17 +296,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
         }
     }
 
-    public Vec3d offsetFromCentre(BlockPos console, Vector3f vec) {
-        double x = vec.x - console.toCenterPos().x;
-        double y = vec.y - console.toCenterPos().y;
-        double z = vec.z - console.toCenterPos().z;
-
-        return new Vec3d(x, y, z);
-    }
-
     @Override
     public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
         this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
+        this.partOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
     }
 
     @Override
@@ -332,9 +328,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
                 }
             }
         }
-        /*PlayerEntity player = MinecraftClient.getInstance().player;
-        if(player != null)
-            this.setCustomNameVisible(isPlayerLookingAtControl(player, this)); System.out.println("im being looked at ;) : " + this);*/
     }
 
     @Override
@@ -382,5 +375,16 @@ public class ConsoleControlEntity extends BaseControlEntity {
             if (this.control != null)
                 player.sendMessage(Text.literal("EntityDimensions.changing(" + this.getControlWidth() + ", " + this.getControlHeight() + "), new Vector3f(" + centered.getX() + "f, " + centered.getY() + "f, " + centered.getZ() + "f)),"));
         }
+    }
+
+    public void partOfSequence(boolean partOfSequence) {
+        this.dataTracker.set(PART_OF_SEQUENCE, partOfSequence);
+    }
+
+    public boolean isPartOfSequence() {
+        if(this.getTardis() != null && this.getTardis().getHandlers().getSequenceHandler().hasActiveSequence())
+            return this.dataTracker.get(PART_OF_SEQUENCE);
+        else
+            return false;
     }
 }

@@ -162,7 +162,7 @@ public class FlightData extends TardisLink {
                 && travel.inFlight() && tardis.position() != tardis.destination() && !sequences.hasActiveSequence()) {
             if (FlightUtil.getFlightDuration(tardis.position(),
                     tardis.destination()) > convertSecondsToTicks(5)) {
-                int rand = random.nextBetween(0, 560 / tardis.getTravel().getSpeed());
+                int rand = random.nextBetween(0, 560 / (tardis.getTravel().getSpeed() == 0 ? 1 : tardis.getTravel().getSpeed()));
                 if (rand == 7) {
                     sequences.triggerRandomSequence(true);
                 }
