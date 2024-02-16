@@ -40,10 +40,14 @@ public class SequenceHandler extends TardisLink {
 
     public void add(Control control) {
         System.out.println(control);
-        recent.add(control);
+        if(this.getActiveSequence() == null) return;
+        if(recent.size() >= this.getActiveSequence().getControls().size()) {
+            recent.clear();
+        } else {
+            recent.add(control);
+        }
         ticks = 0;
         this.compareToSequences();
-        //sync();
     }
 
     public boolean hasActiveSequence() {
@@ -89,6 +93,8 @@ public class SequenceHandler extends TardisLink {
             missedControlEffects(this.findTardis().get());
             recent.clear();
             this.setActiveSequence(null, true);
+        } else if (recent.size() >= this.getActiveSequence().getControls().size()) {
+            recent.clear();
         }
     }
 

@@ -15,6 +15,13 @@ public class SetWaypointControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         WaypointHandler waypoints = tardis.getHandlers().getWaypoints();
 
+        if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
+            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+                this.addToControlSequence(tardis);
+                return false;
+            }
+        }
+
         waypoints.setDestination();
         waypoints.spawnItem();
 

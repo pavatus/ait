@@ -60,7 +60,6 @@ public class SequenceRegistry {
     public static Sequence COURSE_CORRECT;
     public static Sequence GROUND_UNSTABLE;
     public static Sequence INCREMENT_SCALE_RECALCULATION_NECESSARY;
-    public static Sequence TARGET_POSITION_LOST;
 
     // TODO flight staging
     public static Sequence ENTER_VORTEX;
@@ -256,13 +255,5 @@ public class SequenceRegistry {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
                 }),  80L, Text.literal("Increment scale error! Recalculation necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW),
                 new IncrementControl()));
-
-        TARGET_POSITION_LOST = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "target_position_lost"), (finishedTardis -> {
-                    finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
-                    finishedTardis.addFuel(random.nextBetween(45, 125));
-                }), (missedTardis -> {
-                    missedTardis.getTravel().crash();
-                }),  140L, Text.literal("Target position lost! Recalculation necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW),
-                new IncrementControl(), new XControl(), new YControl(), new ZControl()));
     }
 }

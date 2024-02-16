@@ -41,6 +41,9 @@ public class Sequence {
     public Text sequenceStartMessage() {return Text.of("");}
 
     public boolean wasMissed(RecentControls recent, int ticks) {
+        if(recent.size() >= this.getControls().size() && recent != this.getControls()) {
+            recent.clear();
+        }
         return ticks >= this.timeToFail()/* || (recent.size() > this.getControls().size())*/;
     }
 

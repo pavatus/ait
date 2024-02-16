@@ -46,19 +46,18 @@ public class ControlEntityRenderer
 
     @Override
     public void render(ConsoleControlEntity livingEntity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
-        if(livingEntity.getTardis() == null) return;
-        if(livingEntity.getTardis().getHandlers().getSequenceHandler().hasActiveSequence() && livingEntity.getTardis().getHandlers().getSequenceHandler().getActiveSequence().getControls() != null) {
-            int color = livingEntity.getTardis().getHandlers().getSequenceHandler().getActiveSequence().getControls().indexOf(livingEntity.getControl());
-            if (livingEntity.isPartOfSequence()) {
-                matrixStack.push();
-                matrixStack.scale(0.4f, 0.4f, 0.4f);
-                matrixStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
-                matrixStack.translate(0, (-2 - livingEntity.getControlHeight() / 2) + livingEntity.getWorld().random.nextFloat() * 0.02, 0);
-                matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
-                this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light, OverlayTexture.DEFAULT_UV, 0.9923788f - (color * 0.15f), 0.3607843137f + (color * 0.15f), 0.3607843137f + (color * 0.15f), livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
-                this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEyes(TEXTURE)), 0xFF00F0, OverlayTexture.DEFAULT_UV, 0.9923788f - (color * 0.15f), 0.3607843137f + (color * 0.15f), 0.3607843137f + (color * 0.15f), livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
-                matrixStack.pop();
-            }
+        if (livingEntity.isPartOfSequence()) {
+            System.out.println(livingEntity.getSequenceColor());
+        matrixStack.push();
+        matrixStack.scale(0.4f, 0.4f, 0.4f);
+        matrixStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
+        matrixStack.translate(0, (-2 - livingEntity.getControlHeight() / 2) + livingEntity.getWorld().random.nextFloat() * 0.02, 0);
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
+            //this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light, OverlayTexture.DEFAULT_UV, 1f - (livingEntity.getSequenceColor() * 0.35f), 0.3607843137f + (livingEntity.getSequenceColor() * 0.35f), 0.3607843137f + (livingEntity.getSequenceColor() * 0.35f), livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+            //this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEyes(TEXTURE)), 0xFF00F0, OverlayTexture.DEFAULT_UV, 1f - (livingEntity.getSequenceColor() * 0.35f), 0.3607843137f + (livingEntity.getSequenceColor() * 0.35f), 0.3607843137f + (livingEntity.getSequenceColor() * 0.35f), livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+            this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light, OverlayTexture.DEFAULT_UV, 0.95f - (livingEntity.getSequenceColor() * 0.35f), 0.3f + (livingEntity.getSequenceColor() * 0.35f), 0.3f + (livingEntity.getSequenceColor() * 0.35f), livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+            this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEyes(TEXTURE)), 0xFF00F0, OverlayTexture.DEFAULT_UV, 0.95f - (livingEntity.getSequenceColor() * 0.35f), 0.3f + (livingEntity.getSequenceColor() * 0.35f), 0.3f + (livingEntity.getSequenceColor() * 0.35f), livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+        matrixStack.pop();
         }
         super.render(livingEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
     }

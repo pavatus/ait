@@ -1,5 +1,6 @@
 package mdteam.ait.core.entities;
 
+import it.unimi.dsi.fastutil.ints.IntArrays;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
@@ -52,6 +53,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
     private static final TrackedData<Float> HEIGHT = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Vector3f> OFFSET = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
     private static final TrackedData<Boolean> PART_OF_SEQUENCE = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Integer> SEQUENCE_COLOR = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public ConsoleControlEntity(EntityType<? extends BaseControlEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -80,6 +82,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         this.dataTracker.startTracking(HEIGHT, 0.125f);
         this.dataTracker.startTracking(OFFSET, new Vector3f(0));
         this.dataTracker.startTracking(PART_OF_SEQUENCE, false);
+        this.dataTracker.startTracking(SEQUENCE_COLOR, 0);
     }
 
     public String getIdentity() {
@@ -119,6 +122,14 @@ public class ConsoleControlEntity extends BaseControlEntity {
         this.dataTracker.set(OFFSET, offset);
     }
 
+    public int getSequenceColor() {
+        return this.dataTracker.get(SEQUENCE_COLOR);
+    }
+
+    public void setSequenceColor(int color) {
+        this.dataTracker.set(SEQUENCE_COLOR, color);
+    }
+
     public String createDelayId() {
         return "delay-" + this.getControl().id + "-" + this.getTardis().getUuid();
     }
@@ -144,6 +155,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         nbt.putFloat("offsetY", this.getOffset().y());
         nbt.putFloat("offsetZ", this.getOffset().z());
         nbt.putBoolean("partOfSequence", this.isPartOfSequence());
+        nbt.putInt("sequenceColor", this.getSequenceColor());
     }
 
     @Override
@@ -167,6 +179,9 @@ public class ConsoleControlEntity extends BaseControlEntity {
         }
         if (nbt.contains("partOfSequence")) {
             this.partOfSequence(nbt.getBoolean("partOfSequence"));
+        }
+        if (nbt.contains("sequenceColor")) {
+            this.setSequenceColor(nbt.getInt("sequenceColor"));
         }
     }
 
@@ -300,6 +315,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
     public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
         this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
         this.partOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
+        this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
     }
 
     @Override
