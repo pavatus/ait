@@ -64,10 +64,13 @@ public class SequenceHandler extends TardisLink {
 
     public void triggerRandomSequence(boolean setTicksTo0) {
         if(setTicksTo0) ticks = 0;
-        int rand = Random.create().nextBetween(0, SequenceRegistry.REGISTRY.size());
+        int rand = Random.create().nextBetween(0, SequenceRegistry.REGISTRY.size() - 4);
         Sequence sequence = SequenceRegistry.REGISTRY.get(rand);
         if(sequence == null) return;
-        this.activeSequence = /*sequence == SequenceRegistry.FORCED_MAT ? SequenceRegistry.ENERGY_DRAIN :*/ sequence;
+        this.activeSequence = sequence == SequenceRegistry.TAKE_OFF
+                || sequence == SequenceRegistry.ENTER_VORTEX
+                || sequence == SequenceRegistry.EXIT_VORTEX
+                || sequence == SequenceRegistry.LANDING ? null : sequence;
         if(findTardis().isEmpty() || this.activeSequence == null) return;
         FlightUtil.playSoundAtConsole(findTardis().get(), SoundEvents.BLOCK_BEACON_POWER_SELECT);
         this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(findTardis().get()));
