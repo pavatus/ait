@@ -4,7 +4,6 @@ import mdteam.ait.registry.SequenceRegistry;
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.control.Control;
-import mdteam.ait.tardis.control.impl.HandBrakeControl;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.FlightUtil;
@@ -19,10 +18,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-
-import java.util.Objects;
-
-import static java.lang.Double.NaN;
 
 public class SequenceHandler extends TardisLink {
 
@@ -48,6 +43,11 @@ public class SequenceHandler extends TardisLink {
         }
         ticks = 0;
         this.compareToSequences();
+    }
+
+    public boolean doesControlIndexMatch(Control control, RecentControls recent, Sequence sequence) {
+        if(recent.isEmpty() || sequence.getControls().isEmpty()) return false;
+        return recent.get(recent.indexOf(control)).equals((sequence.getControls().get(sequence.getControls().indexOf(control))));
     }
 
     public boolean hasActiveSequence() {
@@ -140,5 +140,13 @@ public class SequenceHandler extends TardisLink {
     public boolean controlPartOfSequence(Control control) {
         if(this.getActiveSequence() == null) return false;
         return this.getActiveSequence().controlPartOfSequence(control);
+    }
+
+    public RecentControls getRecent() {
+        return recent;
+    }
+
+    public int getActiveSequenceTicks() {
+        return ticks;
     }
 }

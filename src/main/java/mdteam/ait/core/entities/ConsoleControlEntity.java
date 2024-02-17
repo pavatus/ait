@@ -11,6 +11,7 @@ import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.control.impl.SecurityControl;
+import mdteam.ait.tardis.control.sequences.SequenceHandler;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityDimensions;
@@ -54,6 +55,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
     private static final TrackedData<Vector3f> OFFSET = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
     private static final TrackedData<Boolean> PART_OF_SEQUENCE = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Integer> SEQUENCE_COLOR = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Boolean> WAS_SEQUENCED = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public ConsoleControlEntity(EntityType<? extends BaseControlEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -83,6 +85,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         this.dataTracker.startTracking(OFFSET, new Vector3f(0));
         this.dataTracker.startTracking(PART_OF_SEQUENCE, false);
         this.dataTracker.startTracking(SEQUENCE_COLOR, 0);
+        this.dataTracker.startTracking(WAS_SEQUENCED, false);
     }
 
     public String getIdentity() {
@@ -130,6 +133,14 @@ public class ConsoleControlEntity extends BaseControlEntity {
         this.dataTracker.set(SEQUENCE_COLOR, color);
     }
 
+    public boolean wasSequenced() {
+        return this.dataTracker.get(WAS_SEQUENCED);
+    }
+
+    public void setSequenced(boolean sequenced) {
+        this.dataTracker.set(WAS_SEQUENCED, sequenced);
+    }
+
     public String createDelayId() {
         return "delay-" + this.getControl().id + "-" + this.getTardis().getUuid();
     }
@@ -156,6 +167,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         nbt.putFloat("offsetZ", this.getOffset().z());
         nbt.putBoolean("partOfSequence", this.isPartOfSequence());
         nbt.putInt("sequenceColor", this.getSequenceColor());
+        nbt.putBoolean("wasSequenced", this.wasSequenced());
     }
 
     @Override
@@ -182,6 +194,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
         }
         if (nbt.contains("sequenceColor")) {
             this.setSequenceColor(nbt.getInt("sequenceColor"));
+        }
+
+        if (nbt.contains("wasSequenced")) {
+            this.setSequenced(nbt.getBoolean("wasSequenced"));
         }
     }
 
@@ -265,7 +281,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
                     return false;
                 }
             }
-            // this.getTardis(world).getHandlers().getSequencing().add(this.control);
 
             return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, leftClick, this.findConsole().get()); // i dont gotta check these cus i know its server
         }
@@ -316,6 +331,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
         this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
         this.partOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
         this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
+        this.setSequenced(this.getDataTracker().get(WAS_SEQUENCED));
     }
 
     @Override
@@ -343,6 +359,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
                     discard();
                 }
             }
+            /*SequenceHandler sqnc = this.getTardis().getHandlers().getSequenceHandler();
+            if(sqnc.hasActiveSequence() && sqnc.getActiveSequence() != null && sqnc.getRecent() != null && !sqnc.getRecent().isEmpty() && this.getSequenceColor() >= 0) {
+                this.setSequenced(sqnc.getRecent().contains(this.getControl()));
+            }*/
         }
     }
 

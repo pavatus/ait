@@ -8,6 +8,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 
 public class PowerControl extends Control {
+
+    private boolean noDelay = false;
     public PowerControl() {
         super("power");
     }
@@ -17,6 +19,7 @@ public class PowerControl extends Control {
         if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
             if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
                 this.addToControlSequence(tardis);
+                this.noDelay = true;
                 return false;
             }
         }
@@ -36,6 +39,7 @@ public class PowerControl extends Control {
 
     @Override
     public long getDelayLength() {
+        if(this.noDelay) return 0L;
         return 10000L;
     }
 }

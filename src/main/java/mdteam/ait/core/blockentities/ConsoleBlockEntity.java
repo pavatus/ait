@@ -423,8 +423,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
             List<Control> sequence = this.findTardis().get().getHandlers().getSequenceHandler().getActiveSequence().getControls();
             for (ConsoleControlEntity entity : this.controlEntities) {
                 entity.partOfSequence(sequence.contains(entity.getControl()));
+                entity.setSequenced(sequence.contains(entity.getControl()));
                 entity.setSequenceColor(sequence.indexOf(entity.getControl()));
-                //System.out.println(sequence.contains(entity.getControl()) + " | " + entity.isPartOfSequence());
             }
         }
 
