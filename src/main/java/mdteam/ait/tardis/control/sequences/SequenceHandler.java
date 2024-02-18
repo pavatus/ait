@@ -87,14 +87,14 @@ public class SequenceHandler extends TardisLink {
         if(this.recent == null)
             this.recent = new RecentControls(this.findTardis().get().getUuid());
         if (this.getActiveSequence().isFinished(this.recent)) {
-            this.getActiveSequence().execute(this.findTardis().get());
             recent.clear();
+            this.getActiveSequence().execute(this.findTardis().get());
             FlightUtil.playSoundAtConsole(this.findTardis().get(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP);
             this.setActiveSequence(null, true);
         } else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
+            recent.clear();
             this.getActiveSequence().executeMissed(this.findTardis().get());
             missedControlEffects(this.findTardis().get());
-            recent.clear();
             this.setActiveSequence(null, true);
         } else if (recent.size() >= this.getActiveSequence().getControls().size()) {
             recent.clear();

@@ -252,14 +252,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
                     .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE)));
 
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.CONSOLE_ROOM_PORT_BLOCK, 1)
+            /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.CONSOLE_ROOM_PORT_BLOCK, 1)
                     .pattern("III")
                     .pattern("ICI")
                     .pattern("III")
                     .input('I', Items.IRON_INGOT)
                     .input('C', AITBlocks.CONSOLE_GENERATOR)
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(AITBlocks.CONSOLE_GENERATOR), FabricRecipeProvider.conditionsFromItem(AITBlocks.CONSOLE_GENERATOR)));
+                    .criterion(FabricRecipeProvider.hasItem(AITBlocks.CONSOLE_GENERATOR), FabricRecipeProvider.conditionsFromItem(AITBlocks.CONSOLE_GENERATOR)));*/
 
             generateSmithingRecipes(provider);
             return provider;
@@ -452,7 +452,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.RIFT_SCANNER, "Rift Scanner");
         provider.addTranslation(AITItems.SIEGE_ITEM, "TARDIS");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC, "Music Disc");
-        provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Drifting - Radio");
+        provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Radio - Drifting");
         provider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
         provider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
         provider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
@@ -465,8 +465,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
         provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
         provider.addTranslation(AITBlocks.MONITOR_BLOCK, "Monitor");
-        provider.addTranslation(AITBlocks.CONSOLE_ROOM_PORT_BLOCK, "Console Room Port");
-        provider.addTranslation(AITBlocks.ENGINE_ROOM_PORT_BLOCK, "Engine Room Port");
+        //provider.addTranslation(AITBlocks.CONSOLE_ROOM_PORT_BLOCK, "Console Room Port");
+        //provider.addTranslation(AITBlocks.ENGINE_ROOM_PORT_BLOCK, "Engine Room Port");
         provider.addTranslation(AITBlocks.ARTRON_COLLECTOR_BLOCK, "Artron Collector");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
