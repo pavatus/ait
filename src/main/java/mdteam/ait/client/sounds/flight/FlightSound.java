@@ -2,19 +2,12 @@ package mdteam.ait.client.sounds.flight;
 
 import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
-import mdteam.ait.client.sounds.PositionedLoopingSound;
 import mdteam.ait.client.util.ClientTardisUtil;
-import mdteam.ait.config.AITCustomConfig;
 import mdteam.ait.tardis.util.FlightUtil;
-import mdteam.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.Random;
-import java.util.UUID;
-
-import static mdteam.ait.AITMod.AIT_CUSTOM_CONFIG;
 
 public class FlightSound extends PlayerFollowingLoopingSound {
     private static final Random rnd = new Random();

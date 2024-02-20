@@ -1,16 +1,14 @@
 package mdteam.ait;
 
-import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneInitHandler;
-import com.neptunedevelopmentteam.neptunelib.core.itemgroup.NeptuneItemGroup;
-import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
-import com.neptunedevelopmentteam.neptunelib.utils.TimeUtil;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
+import io.wispforest.owo.itemgroup.Icon;
+import io.wispforest.owo.itemgroup.OwoItemGroup;
+import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.compat.regen.RegenHandler;
-import mdteam.ait.config.AITCustomConfig;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -19,6 +17,7 @@ import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.core.managers.RiftChunkManager;
+import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.registry.*;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktop;
@@ -48,10 +47,8 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Rarity;
 import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,15 +62,15 @@ public class AITMod implements ModInitializer {
     public static final String MOD_ID = "ait";
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
     public static final Boolean DEBUG = true;
-    public static final AITCustomConfig AIT_CUSTOM_CONFIG = new AITCustomConfig();
-    public static final NeptuneItemGroup AIT_ITEM_GROUP = new NeptuneItemGroup(new Identifier(AITMod.MOD_ID, "item_group"), AITItems.TARDIS_ITEM.getDefaultStack());
+    public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
+    public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () ->
+            Icon.of(AITItems.TARDIS_ITEM)).build();
     public static final ComponentKey<RadioNBTComponent> RADIONBT =
             ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "radionbt"), RadioNBTComponent.class);
     public static final Random RANDOM = new Random();
 
     @Override
     public void onInitialize() {
-        AIT_CUSTOM_CONFIG.init(MOD_ID);
         ConsoleRegistry.init();
         DesktopRegistry.getInstance().init();
         CategoryRegistry.getInstance().init();
@@ -81,16 +78,16 @@ public class AITMod implements ModInitializer {
         CreakRegistry.init();
         SequenceRegistry.init();
 
-        // These 3 have client registries which also need registering to.
+        // These 3 have client registries which also need registering.
         ConsoleVariantRegistry.getInstance().init();
         ExteriorVariantRegistry.getInstance().init();
         DoorRegistry.init();
 
-        NeptuneInitHandler.register(AITItems.class, MOD_ID);
-        NeptuneInitHandler.register(AITBlocks.class, MOD_ID);
-        NeptuneInitHandler.register(AITSounds.class, MOD_ID);
-        NeptuneInitHandler.register(AITBlockEntityTypes.class, MOD_ID);
-        NeptuneInitHandler.register(AITEntityTypes.class, MOD_ID);
+        FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
+        FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
+        FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
+        FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
+        FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
 
         LootTableEvents.MODIFY.register(((resourceManager, lootManager, id, tableBuilder, source) -> {
             List<Identifier> lootTableIds = List.of(LootTables.ABANDONED_MINESHAFT_CHEST, LootTables.ANCIENT_CITY_CHEST, LootTables.ANCIENT_CITY_ICE_BOX_CHEST, LootTables.DESERT_PYRAMID_CHEST, LootTables.SIMPLE_DUNGEON_CHEST, LootTables.CAT_MORNING_GIFT_GAMEPLAY, LootTables.IGLOO_CHEST_CHEST, LootTables.BASTION_BRIDGE_CHEST);
@@ -261,7 +258,7 @@ public class AITMod implements ModInitializer {
         });
 
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-            AIT_CUSTOM_CONFIG.save();
+            AIT_CONFIG.save();
         });
 
         AIT_ITEM_GROUP.initialize();

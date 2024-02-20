@@ -3,13 +3,13 @@
 
   "text.config.aitconfig.section.Server": "Server",
 
-  "text.config.aitconfig.option.SEARCH_HEIGHT": "Search Height",
-  "text.config.aitconfig.option.SEARCH_HEIGHT.tooltip": "How many blocks up and down a TARDIS should ground search for before giving up",
+  "text.config.aitconfig.option.searchHeight": "Search Height",
+  "text.config.aitconfig.option.searchHeight.tooltip": "How many blocks up and down a TARDIS should ground search for before giving up",
 
-  "text.config.aitconfig.option.ASK_DELAY": "Ask Delay",
-  "text.config.aitconfig.option.ASK_DELAY.tooltip": "How many seconds a client should be on delay for before asking for another TARDIS\nHigher -> Better server performance\nLower -> Less client sync issues",
+  "text.config.aitconfig.option.askDelay": "Ask Delay",
+  "text.config.aitconfig.option.askDelay.tooltip": "How many seconds a client should be on delay for before asking for another TARDIS\nHigher -> Better server performance\nLower -> Less client sync issues",
 
-  "text.config.aitconfig.option.force_sync_delay": "Force Sync Delay",
+  "text.config.aitconfig.option.forceSyncDelay": "Force Sync Delay",
   "text.config.aitconfig.option.force_sync_delay.tooltip": "How many seconds a client should be away from a tardis for before forcing a resync\nHigher -> Better server performance\nLower -> Less client sync issues",
 
   "text.config.aitconfig.section.Client": "Client",

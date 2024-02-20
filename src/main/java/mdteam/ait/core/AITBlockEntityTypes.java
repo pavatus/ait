@@ -1,12 +1,13 @@
 package mdteam.ait.core;
 
-import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneBlockEntityInit;
+import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import mdteam.ait.core.blockentities.*;
-import mdteam.ait.core.blocks.DetectorBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
-public class AITBlockEntityTypes implements NeptuneBlockEntityInit {
+public class AITBlockEntityTypes implements AutoRegistryContainer<BlockEntityType<?>> {
 
     public static BlockEntityType<ExteriorBlockEntity> EXTERIOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(ExteriorBlockEntity::new, AITBlocks.EXTERIOR_BLOCK).build();
     public static BlockEntityType<DoorBlockEntity> DOOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(DoorBlockEntity::new, AITBlocks.DOOR_BLOCK).build();
@@ -17,4 +18,15 @@ public class AITBlockEntityTypes implements NeptuneBlockEntityInit {
     public static BlockEntityType<MonitorBlockEntity> MONITOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(MonitorBlockEntity::new, AITBlocks.MONITOR_BLOCK).build();
     public static BlockEntityType<DetectorBlockEntity> DETECTOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(DetectorBlockEntity::new, AITBlocks.DETECTOR_BLOCK).build();
     public static BlockEntityType<ArtronCollectorBlockEntity> ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(ArtronCollectorBlockEntity::new, AITBlocks.ARTRON_COLLECTOR_BLOCK).build();
+
+    @Override
+    public Registry<BlockEntityType<?>> getRegistry() {
+        return Registries.BLOCK_ENTITY_TYPE;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Class<BlockEntityType<?>> getTargetFieldType() {
+        return (Class <BlockEntityType<?>>) (Object) BlockEntityType.class;
+    }
 }

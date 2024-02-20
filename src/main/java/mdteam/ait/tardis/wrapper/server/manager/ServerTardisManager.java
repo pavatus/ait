@@ -5,7 +5,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.core.AITDimensions;
-import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
+import mdteam.ait.core.util.DeltaTimeManager;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.util.*;
@@ -49,7 +49,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         ServerPlayNetworking.registerGlobalReceiver(
                 ClientTardisManager.ASK, (server, player, handler, buf, responseSender) -> {
                     UUID uuid = buf.readUuid();
-                    if (player == null) return; // todo why does creativious have trust issues with player being null
+                    if (player == null) return;
                     this.sendTardis(player, uuid);
                     addSubscriberToTardis(player, uuid);
                 }
@@ -309,7 +309,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
      * A delay to stop the client getting overloaded with tons of tardises all at once, splitting it up over a few seconds to save server performance.
      */
     private void createAskDelay(ServerPlayerEntity player) {
-        DeltaTimeManager.createDelay(player.getUuidAsString() + "-ask-delay", (long) ((AITMod.AIT_CUSTOM_CONFIG.SERVER.ASK_DELAY) * 1000L)); // A delay between asking for tardises to be synced
+        DeltaTimeManager.createDelay(player.getUuidAsString() + "-ask-delay", (long) ((AITMod.AIT_CONFIG.ASK_DELAY()) * 1000L)); // A delay between asking for tardises to be synced
     }
     private boolean isAskOnDelay(ServerPlayerEntity player) {
         return DeltaTimeManager.isStillWaitingOnDelay(player.getUuidAsString() + "-ask-delay");
@@ -319,7 +319,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
      * A delay to force resync the server when its been a while since theyve seen a tardis to fix sync issues
      */
     private void createForceSyncDelay(ServerPlayerEntity player) {
-        DeltaTimeManager.createDelay(player.getUuidAsString() + "-force-sync-delay", (long) ((AITMod.AIT_CUSTOM_CONFIG.SERVER.FORCE_SYNC_DELAY) * 1000L)); // A delay between asking for tardises to be synced
+        DeltaTimeManager.createDelay(player.getUuidAsString() + "-force-sync-delay", (long) ((AITMod.AIT_CONFIG.force_sync_delay()) * 1000L)); // A delay between asking for tardises to be synced
     }
     private boolean isForceSyncOnDelay(ServerPlayerEntity player) {
         return DeltaTimeManager.isStillWaitingOnDelay(player.getUuidAsString() + "-force-sync-delay");

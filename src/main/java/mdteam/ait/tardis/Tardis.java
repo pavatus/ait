@@ -1,13 +1,13 @@
 package mdteam.ait.tardis;
 
-import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
-import com.neptunedevelopmentteam.neptunelib.utils.TimeUtil;
 import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.item.TardisItemBuilder;
+import mdteam.ait.core.util.DeltaTimeManager;
+import mdteam.ait.core.util.TimeUtil;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;

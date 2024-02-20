@@ -1,12 +1,14 @@
 package mdteam.ait.core;
 
-import com.neptunedevelopmentteam.neptunelib.core.init_handlers.NeptuneSoundEventInit;
+import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.sounds.MatSound;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
-public class AITSounds implements NeptuneSoundEventInit {
+public class AITSounds implements AutoRegistryContainer<SoundEvent> {
     public static final SoundEvent SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/secret_music"));
     public static final SoundEvent EVEN_MORE_SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/even_more_secret_music"));
     public static final SoundEvent DRIFTING_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/drifting_by_radio"));
@@ -78,4 +80,14 @@ public class AITSounds implements NeptuneSoundEventInit {
     // Secret
     public static final SoundEvent DOOM_DOOR_OPEN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/secret/doom_door_open"));
     public static final SoundEvent DOOM_DOOR_CLOSE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/secret/doom_door_close"));
+
+    @Override
+    public Registry<SoundEvent> getRegistry() {
+        return Registries.SOUND_EVENT;
+    }
+
+    @Override
+    public Class<SoundEvent> getTargetFieldType() {
+        return SoundEvent.class;
+    }
 }

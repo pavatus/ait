@@ -1,9 +1,9 @@
 package mdteam.ait.tardis.data;
 
-import com.neptunedevelopmentteam.neptunelib.utils.DeltaTimeManager;
-import com.neptunedevelopmentteam.neptunelib.utils.TimeUtil;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.util.DeltaTimeManager;
+import mdteam.ait.core.util.TimeUtil;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -46,7 +46,7 @@ public class TardisCrashData extends TardisLink{
         }
 
         if (getRepairTicks() > 0) {
-            setRepairTicks(getRepairTicks() - 1);
+            setRepairTicks(this.findTardis().get().isRefueling() ? getRepairTicks() - 10 : getRepairTicks() - 1);
         }
         if (getRepairTicks() == 0 && State.NORMAL == getState()) return;
         ServerTardis tardis = (ServerTardis) this.findTardis().get();

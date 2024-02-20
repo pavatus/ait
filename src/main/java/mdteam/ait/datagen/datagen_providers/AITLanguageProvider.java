@@ -1,13 +1,12 @@
 package mdteam.ait.datagen.datagen_providers;
 
-import com.neptunedevelopmentteam.neptunelib.core.itemgroup.NeptuneItemGroup;
-import io.wispforest.owo.itemgroup.OwoItemGroup;
 import mdteam.ait.AITMod;
 import mdteam.ait.datagen.LanguageType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 
 import java.util.HashMap;
 
@@ -55,8 +54,8 @@ public class AITLanguageProvider extends FabricLanguageProvider {
      * @param itemGroup   The item group to add the translation for.
      * @param translation The translation.
      */
-    public void addTranslation(NeptuneItemGroup itemGroup, String translation) {
-        translations.put(getTranslationKeyForNeptuneItemGroup(itemGroup), translation);
+    public void addTranslation(ItemGroup itemGroup, String translation) {
+        translations.put(getTranslationKeyForItemGroup(itemGroup), translation);
     }
 
     /**
@@ -86,8 +85,8 @@ public class AITLanguageProvider extends FabricLanguageProvider {
      * @return The translation key for the item group
      */
 
-    private String getTranslationKeyForNeptuneItemGroup(NeptuneItemGroup itemGroup) {
-        return itemGroup.getTranslationKey();
+    private String getTranslationKeyForItemGroup(ItemGroup itemGroup) {
+        return itemGroup.getDisplayName().getString();
     }
 
 }

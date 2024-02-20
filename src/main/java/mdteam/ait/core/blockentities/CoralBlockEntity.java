@@ -1,6 +1,5 @@
 package mdteam.ait.core.blockentities;
 
-import com.neptunedevelopmentteam.neptunelib.core.util.NeptuneUtil;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.AITBlocks;
 import net.minecraft.block.BlockState;

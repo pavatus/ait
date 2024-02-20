@@ -1,7 +1,6 @@
 package mdteam.ait.client.sounds.flight;
 
 import mdteam.ait.client.sounds.LoopingSound;
-import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
@@ -15,8 +14,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 
 import java.util.ArrayList;
-
-import static mdteam.ait.AITMod.AIT_CUSTOM_CONFIG;
 
 // All this is CLIENT ONLY!!
 // Loqor, if you dont understand DONT TOUCH or ask me! - doozoo

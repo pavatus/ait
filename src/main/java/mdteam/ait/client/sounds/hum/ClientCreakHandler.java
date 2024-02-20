@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static mdteam.ait.AITMod.AIT_CUSTOM_CONFIG;
+import static mdteam.ait.AITMod.AIT_CONFIG;
 
 public class ClientCreakHandler extends SoundHandler {
     private static final Random random = new Random();
@@ -51,7 +51,7 @@ public class ClientCreakHandler extends SoundHandler {
         List<LoopingSound> list = new ArrayList<>();
 
         for (CreakSound sound : CreakRegistry.REGISTRY) {
-            list.add(new PlayerFollowingLoopingSound(sound.sound(), SoundCategory.AMBIENT, AIT_CUSTOM_CONFIG.CLIENT.INTERIOR_HUM_VOLUME));
+            list.add(new PlayerFollowingLoopingSound(sound.sound(), SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME()));
         }
 
         return list;
@@ -94,7 +94,7 @@ public class ClientCreakHandler extends SoundHandler {
             return;
         }
 
-        PlayerFollowingSound following = new PlayerFollowingSound(chosen.sound(), SoundCategory.AMBIENT, AIT_CUSTOM_CONFIG.CLIENT.INTERIOR_HUM_VOLUME);
+        PlayerFollowingSound following = new PlayerFollowingSound(chosen.sound(), SoundCategory.AMBIENT, AIT_CONFIG.INTERIOR_HUM_VOLUME());
         startIfNotPlaying(following);
     }
 
