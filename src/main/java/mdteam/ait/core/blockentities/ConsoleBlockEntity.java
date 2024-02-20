@@ -419,6 +419,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
         if (world.isClient()) return;
 
+        this.findParent().ifPresent(parent -> parent.tickConsole(this));
+
         if(this.findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
             List<Control> sequence = this.findTardis().get().getHandlers().getSequenceHandler().getActiveSequence().getControls();
             for (ConsoleControlEntity entity : this.controlEntities) {

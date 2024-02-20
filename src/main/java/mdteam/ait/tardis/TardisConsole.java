@@ -5,10 +5,13 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.world.World;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -102,7 +105,19 @@ public class TardisConsole extends TardisLink {
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
+    }
 
+    /**
+     * Tick from the {@link ConsoleBlockEntity#tick(World, BlockPos, BlockState, ConsoleBlockEntity)}
+     * Ensures this console is loaded in the world to avoid performance issues
+     */
+    public void tickConsole(ConsoleBlockEntity block) {
         ticks++;
+
+        // todo this is bad for performance (or so ive heard)
+        if (ticks >= VALIDATE_TICK) {
+            ticks = 0;
+            this.validate();
+        }
     }
 }
