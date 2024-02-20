@@ -6,6 +6,7 @@ import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.util.DeltaTimeManager;
+import mdteam.ait.core.events.ServerCrashEvent;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.util.*;
@@ -82,6 +83,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
         ServerLifecycleEvents.SERVER_STOPPING.register(this::onShutdown);
 
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> this.reset());
+        ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset + save
 
         // ServerLifecycleEvents.SERVER_STARTED.register(server -> this.loadTardises());
         ServerTickEvents.END_SERVER_TICK.register(server -> {

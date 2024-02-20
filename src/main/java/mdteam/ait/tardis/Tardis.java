@@ -46,8 +46,7 @@ public class Tardis {
     protected TardisHandlersManager handlers;
     private boolean dirty = false;
 
-    public int tardisHammerAnnoyance = 0;
-    private int tardisVersion = 1;
+    public int tardisHammerAnnoyance = 0; // todo move :(
 
     public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variant) {
         this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant), false);

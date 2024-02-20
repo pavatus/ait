@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "server.ItemEntityMixin",
+    "server.MinecraftServerMixin",
     "server.ServerPlayerInteractionManagerMixin",
     "server.ServerPlayerMixin",
     "server.StructureTemplateMixin"
