@@ -323,6 +323,14 @@ public class Tardis {
             DoorData.lockTardis(true, this, null, true);
         }
 
+        AbsoluteBlockPos.Directed pos = this.getExterior().getExteriorPos();
+        // If we're falling nearly out of the world, freak out.
+        if (PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.IS_FALLING)
+                && pos.getY() <= pos.getWorld().getBottomY() + 2) {
+            PropertiesHandler.set(this, PropertiesHandler.ANTIGRAVS_ENABLED, true);
+            PropertiesHandler.set(this, PropertiesHandler.IS_FALLING, false);
+        }
+
         this.getTravel().tick(server);
         this.getDesktop().tick(server);
     }
