@@ -22,6 +22,8 @@ public abstract class ItemEntityMixin {
         ItemEntity entity = (ItemEntity) (Object) this;
         ItemStack stack = entity.getStack();
 
+        if (entity.getWorld().isClient()) return;
+
         if (stack.getItem() instanceof SiegeTardisItem) {
             Tardis found = SiegeTardisItem.getTardis(stack);
 
