@@ -37,6 +37,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
@@ -193,7 +194,9 @@ public class FallingTardisEntity extends Entity {
             this.move(MovementType.SELF, this.getVelocity());
             if (!this.getWorld().isClient) {
                 if (getTardis() == null ) return;
-                //this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                this.getTardis().getDesktop().getConsoles().forEach(console -> {
+                    this.getWorld().playSound(null, console.position(), SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                });
                 if (PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
                     stopFalling();
                     return;
