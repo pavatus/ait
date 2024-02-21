@@ -90,10 +90,10 @@ public class CategoryRegistry extends DatapackRegistry<ExteriorCategorySchema> {
     public void init() {
         super.init();
 
-        if (INSTANCE != null) {
+        /*if (INSTANCE != null) {
             AITMod.LOGGER.error("Tried to init Categories but it was already initialized");
             return;
-        }
+        }*/
 
         registerDefaults();
 
