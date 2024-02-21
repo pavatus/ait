@@ -2,6 +2,7 @@ package mdteam.ait.core;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.annotations.AssignedName;
+import io.wispforest.owo.registration.annotations.IterationIgnored;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.item.*;
@@ -11,8 +12,10 @@ import net.minecraft.util.Rarity;
 
 public class AITItems implements ItemRegistryContainer {
     // TARDIS
-    public static final Item TARDIS_ITEM = new TardisItemBuilder(new OwoItemSettings().fireproof().maxCount(1));
-    public static final Item SIEGE_ITEM = new SiegeTardisItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).fireproof());
+    public static final Item TARDIS_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).fireproof().maxCount(1));
+
+
+    public static final Item SIEGE_ITEM = new SiegeTardisItem(new OwoItemSettings().fireproof());
     // Functional Items
     public static final Item REMOTE_ITEM = new RemoteItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item ARTRON_COLLECTOR = new ArtronCollectorItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
