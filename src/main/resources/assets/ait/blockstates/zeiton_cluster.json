@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "ait:block/zeiton_cluster",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "ait:block/zeiton_cluster",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "ait:block/zeiton_cluster",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "ait:block/zeiton_cluster",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "ait:block/zeiton_cluster"
+    },
+    "facing=west": {
+      "model": "ait:block/zeiton_cluster",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

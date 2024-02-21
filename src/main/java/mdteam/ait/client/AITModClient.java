@@ -49,6 +49,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
@@ -379,6 +380,12 @@ public class AITModClient implements ClientModInitializer {
 
     public void setupBlockRendering() {
         BlockRenderLayerMap map = BlockRenderLayerMap.INSTANCE;
+        map.putBlock(AITBlocks.ZEITON_BLOCK, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.BUDDING_ZEITON, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.ZEITON_CLUSTER, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.LARGE_ZEITON_BUD, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.MEDIUM_ZEITON_BUD, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.SMALL_ZEITON_BUD, RenderLayer.getCutout());
         //map.putBlock(FMCBlocks.RADIO, RenderLayer.getCutout());
     }
 }

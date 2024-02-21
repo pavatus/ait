@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "ait:block/large_zeiton_bud",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "ait:block/large_zeiton_bud",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "ait:block/large_zeiton_bud",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "ait:block/large_zeiton_bud",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "ait:block/large_zeiton_bud"
+    },
+    "facing=west": {
+      "model": "ait:block/large_zeiton_bud",
+      "x": 90,
+      "y": 270
+    }
+  }
+}
