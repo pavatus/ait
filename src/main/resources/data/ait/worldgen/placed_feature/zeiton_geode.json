@@ -3,15 +3,10 @@
   "placement": [
     {
       "type": "minecraft:rarity_filter",
-      "chance": 25
+      "chance": 30
     },
     {
-      "type": "minecraft:environment_scan",
-      "direction_of_search": "down",
-      "max_steps": 2,
-      "target_condition": {
-        "type": "minecraft:true"
-      }
+      "type": "minecraft:in_square"
     },
     {
       "type": "minecraft:height_range",
@@ -21,13 +16,12 @@
           "above_bottom": 6
         },
         "max_inclusive": {
-          "above_bottom": 45
+          "absolute": 30
         }
       }
     },
     {
-      "type": "minecraft:heightmap",
-      "heightmap": "WORLD_SURFACE_WG"
+      "type": "minecraft:biome"
     }
   ]
 }
