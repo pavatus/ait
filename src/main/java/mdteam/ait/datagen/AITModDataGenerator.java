@@ -469,6 +469,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         //provider.addTranslation(AITBlocks.CONSOLE_ROOM_PORT_BLOCK, "Console Room Port");
         //provider.addTranslation(AITBlocks.ENGINE_ROOM_PORT_BLOCK, "Engine Room Port");
         provider.addTranslation(AITBlocks.ARTRON_COLLECTOR_BLOCK, "Artron Collector");
+        provider.addTranslation(AITBlocks.ZEITON_BLOCK, "Zeiton Block");
+        provider.addTranslation(AITBlocks.ZEITON_CLUSTER, "Zeiton Cluster");
+        provider.addTranslation(AITBlocks.BUDDING_ZEITON, "Budding Zeiton");
+        provider.addTranslation(AITBlocks.LARGE_ZEITON_BUD, "Large Zeiton Bud");
+        provider.addTranslation(AITBlocks.MEDIUM_ZEITON_BUD, "Medium Zeiton Bud");
+        provider.addTranslation(AITBlocks.SMALL_ZEITON_BUD, "Small Zeiton Bud");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");

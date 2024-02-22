@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ControlModel;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.SonicItem;
+import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.tardis.Tardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,13 +41,15 @@ public class ControlEntityRenderer
 
     ControlModel model = new ControlModel(ControlModel.getTexturedModelData().createModel());
 
+    boolean shouldRender = AITConfig.createAndLoad().SHOULD_RENDER_EXCLAMATION_MARKS();
+
     public ControlEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new ControlModel(ControlModel.getNotModelData().createModel()), 0f);
     }
 
     @Override
     public void render(ConsoleControlEntity livingEntity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
-        if (livingEntity.isPartOfSequence()) {
+        if (livingEntity.isPartOfSequence() && shouldRender) {
             //System.out.println(livingEntity.getSequenceColor());
         matrixStack.push();
         matrixStack.scale(0.4f, 0.4f, 0.4f);
