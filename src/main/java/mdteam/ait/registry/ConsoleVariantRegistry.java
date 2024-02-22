@@ -57,7 +57,7 @@ public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchem
                 continue;
             }
             if (schema.parent() == null) {
-                AITMod.LOGGER.error("Exterior variant " + schema.id() + " has null category!");
+                AITMod.LOGGER.error("Console variant " + schema.id() + " has null category!");
                 AITMod.LOGGER.error("Temporarily returning, fix this code!!!"); // todo
                 continue;
             }
