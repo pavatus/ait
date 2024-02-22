@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.control.sequences;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.registry.SequenceRegistry;
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
@@ -34,9 +35,10 @@ public class SequenceHandler extends TardisLink {
     }
 
     public void add(Control control) {
-        System.out.println(control);
         if(this.getActiveSequence() == null) return;
-        if(recent.size() >= this.getActiveSequence().getControls().size()) {
+        if(recent.get(recent.indexOf(control)) != this.getActiveSequence().getControls().get(this.getActiveSequence().getControls().indexOf(control))) {
+            recent.remove(control);
+        } else if (recent.size() >= this.getActiveSequence().getControls().size()) {
             recent.clear();
         } else {
             recent.add(control);
