@@ -76,11 +76,11 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
                 buf.encodeAsJson(DatapackExterior.CODEC, variant);
                 continue;
             }
-            if (schema.category() == null) {
+            /*if (schema.category() == null) {
                 AITMod.LOGGER.error("Exterior variant " + schema.id() + " has null category!");
                 AITMod.LOGGER.error("Temporarily returning, fix this code!!!"); // todo
                 continue;
-            }
+            }*/
             buf.encodeAsJson(DatapackExterior.CODEC, new DatapackExterior(schema.id(), schema.category().id(), schema.id(), DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, false));
         }
         ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
