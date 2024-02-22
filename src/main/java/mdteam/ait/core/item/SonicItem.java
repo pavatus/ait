@@ -7,6 +7,7 @@ import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
+import mdteam.ait.tardis.data.TardisCrashData;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -237,6 +238,14 @@ public class SonicItem extends LinkableItem {
                 playSonicSounds(user);
 
                 Tardis tardis = getTardis(itemStack);
+
+                if(intToMode(nbt.getInt(MODE_KEY)) == Mode.TARDIS) {
+                    if (tardis.getDesktop() != null && TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), pos) && tardis.getHandlers().getCrashData().getState() != TardisCrashData.State.NORMAL) {
+                        tardis.getHandlers().getCrashData().setRepairTicks(tardis.getHandlers().getCrashData().getRepairTicks() <= 0 ? 0 : tardis.getHandlers().getCrashData().getRepairTicks() - 20);
+                        user.sendMessage(Text.literal("Repairing: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.GOLD), true);
+                        return TypedActionResult.success(itemStack);
+                    }
+                }
 
                 Mode mode = intToMode(nbt.getInt(MODE_KEY));
                 mode.run(tardis, world, pos, user, itemStack);

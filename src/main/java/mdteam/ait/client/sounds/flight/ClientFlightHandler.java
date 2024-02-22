@@ -31,6 +31,9 @@ public class ClientFlightHandler extends SoundHandler {
         return FLIGHT;
     }
     private LoopingSound createFlightSound() {
+        if(tardis().getHandlers().getCrashData().isToxic() || tardis().getHandlers().getCrashData().isUnstable()) {
+            return new FlightSound(AITSounds.UNSTABLE_FLIGHT_LOOP, SoundCategory.BLOCKS, 1f);
+        }
         return new FlightSound(AITSounds.FLIGHT_LOOP, SoundCategory.BLOCKS, 1f);
     }
     public static ClientFlightHandler create() {
