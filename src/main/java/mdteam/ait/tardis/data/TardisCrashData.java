@@ -27,7 +27,7 @@ public class TardisCrashData extends TardisLink{
 
     private static final String DELAY_ID_START = AITMod.MOD_ID + "-tardiscrashrecoverydelay-";
     public static final Integer UNSTABLE_TICK_START_THRESHOLD = 2_400;
-    public static final Integer MAX_REPAIR_TICKS = 12_000;
+    public static final Integer MAX_REPAIR_TICKS = 7_000;
 
     public boolean isToxic() {
         return this.getState() == State.TOXIC;
