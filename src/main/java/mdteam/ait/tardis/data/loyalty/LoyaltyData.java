@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class LoyaltyData extends TardisLink {
-    private HashMap<UUID, Loyalty> data;
+    private final HashMap<UUID, Loyalty> data;
 
     public LoyaltyData(Tardis tardisId, HashMap<UUID, Loyalty> data) {
         super(tardisId, "loyalty");
@@ -24,7 +24,7 @@ public class LoyaltyData extends TardisLink {
     }
 
     public void add(ServerPlayerEntity player) {
-        this.add(player, Loyalty.TOLERATED);
+        this.add(player, Loyalty.NEUTRAL);
     }
 
     public void add(ServerPlayerEntity player, Loyalty loyalty) {
