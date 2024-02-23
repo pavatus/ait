@@ -242,10 +242,14 @@ public class SonicItem extends LinkableItem {
                 Tardis tardis = getTardis(itemStack);
 
                 if(intToMode(nbt.getInt(MODE_KEY)) == Mode.OVERLOAD) {
-                    if (tardis.getDesktop() != null && TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), pos) && tardis.getHandlers().getCrashData().getState() != TardisCrashData.State.NORMAL) {
-                        tardis.getHandlers().getCrashData().setRepairTicks(tardis.getHandlers().getCrashData().getRepairTicks() <= 0 ? 0 : tardis.getHandlers().getCrashData().getRepairTicks() - 20);
-                        user.sendMessage(Text.literal("Repairing: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.GOLD), true);
-                        return TypedActionResult.success(itemStack);
+                    if(tardis.getDoor().isOpen()) {
+                        if (world == TardisUtil.getTardisDimension() && tardis.getHandlers().getCrashData().isUnstable() || tardis.getHandlers().getCrashData().isToxic()) {
+                            tardis.getHandlers().getCrashData().setRepairTicks(tardis.getHandlers().getCrashData().getRepairTicks() <= 0 ? 0 : tardis.getHandlers().getCrashData().getRepairTicks() - 20);
+                            user.sendMessage(Text.literal("Repairing: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.GOLD), true);
+                            return TypedActionResult.pass(itemStack);
+                        }
+                    } else {
+                        user.sendMessage(Text.literal("Doors need to be open for repair!").formatted(Formatting.RED), true);
                     }
                 }
 

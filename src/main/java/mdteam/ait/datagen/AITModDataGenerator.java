@@ -463,6 +463,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITBlocks.RADIO, "Radio");
+        provider.addTranslation(AITBlocks.DETECTOR_BLOCK, "Interior Detector Block");
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
         provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
         provider.addTranslation(AITBlocks.MONITOR_BLOCK, "Monitor");
@@ -482,8 +483,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
         provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ACTIVE");
         provider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocol 116: INACTIVE");
-        provider.addTranslation("message.ait.remoteitem.warning1", "The TARDIS is out of fuel and cannot dematerialize");
-        provider.addTranslation("message.ait.remoteitem.warning2", "The TARDIS is refueling and is unable to dematerialize");
+        provider.addTranslation("message.ait.remoteitem.warning1", "The TARDIS is out of fuel and cannot dematerialise");
+        provider.addTranslation("message.ait.remoteitem.warning2", "The TARDIS is refueling and is unable to dematerialise");
         provider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
         provider.addTranslation("tooltip.ait.remoteitem.notardis", "Remote does not identify with any TARDIS");
         provider.addTranslation("tardis.message.control.antigravs.active", "Antigravs: ACTIVE");
@@ -677,8 +678,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ACTIVE");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocol 116: INACTIVE");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning1", "The TARDIS is out of fuel and cannot dematerialize");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning2", "The TARDIS is refueling and is unable to dematerialize");
+        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning1", "The TARDIS is out of fuel and cannot dematerialise");
+        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning2", "The TARDIS is refueling and is unable to dematerialise");
         aitLanguageProvider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
         aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.notardis", "Remote does not identify with any TARDIS");
         aitLanguageProvider.addTranslation("tardis.message.control.antigravs.active", "Antigravs: ACTIVE");

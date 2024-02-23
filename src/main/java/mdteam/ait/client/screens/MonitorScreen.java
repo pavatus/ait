@@ -340,7 +340,7 @@ public class MonitorScreen extends ConsoleScreen {
         // background behind the tardis and gallifreyan text
         context.getMatrices().push();
         context.getMatrices().translate(0, 0, -100f);
-        context.drawTexture(TEXTURE, i + 4, j + 32, 80, 180, 93, 76);
+        context.drawTexture(TEXTURE, j + 4, i + 32, 80, 180, 93, 76);
         context.getMatrices().pop();
         this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f, 176, delta);
         this.drawBackground(context, delta, mouseX, mouseY);
