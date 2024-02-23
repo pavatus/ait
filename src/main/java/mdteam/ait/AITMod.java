@@ -1,7 +1,5 @@
 package mdteam.ait;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
@@ -13,7 +11,6 @@ import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.commands.*;
-import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.core.managers.RiftChunkManager;
@@ -71,8 +68,6 @@ public class AITMod implements ModInitializer {
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
     public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () ->
             Icon.of(AITItems.TARDIS_ITEM)).disableDynamicTitle().build();
-    public static final ComponentKey<RadioNBTComponent> RADIONBT =
-            ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "radionbt"), RadioNBTComponent.class);
     public static final Random RANDOM = new Random();
 
     public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE, new Identifier(MOD_ID, "zeiton_geode"));

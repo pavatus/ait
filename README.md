@@ -54,7 +54,7 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ---
 
 ### Sound Design:
-- Radio (Music/Ambience, not added yet)
+- Radio
 - TARDISSFX (the YouTube channel)
 
 ---

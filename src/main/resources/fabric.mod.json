@@ -40,9 +40,6 @@
 		],
 		"fabric-datagen": [
           "mdteam.ait.datagen.AITModDataGenerator"
-		],
-		"cardinal-components-block": [
-          "mdteam.ait.core.components.block.AITModBlockComponents"
 		]
 	},
 	"mixins": [
@@ -60,10 +57,5 @@
 		"regeneration": "*",
 		"immersiveportals": "*",
 		"k9-mod": "*"
-	},
-	"custom": {
-		"cardinal-components": [
-			"ait:radionbt"
-		]
 	}
 }

@@ -24,8 +24,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
-import static mdteam.ait.core.blocks.RadioBlock.checkType;
-
 public class DetectorBlock extends WallMountedBlock implements BlockEntityProvider {
     public static final BooleanProperty POWERED;
     public static final BooleanProperty INVERTED;
@@ -130,6 +128,11 @@ public class DetectorBlock extends WallMountedBlock implements BlockEntityProvid
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return checkType(type, AITBlockEntityTypes.DETECTOR_BLOCK_ENTITY_TYPE, DetectorBlock::tick);
+    }
+
+    @Nullable
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
+        return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
     }
 
     private static void updateState(BlockState state, World world, BlockPos pos, Tardis tardis) {

@@ -30,8 +30,6 @@ public class AITBlocks implements BlockRegistryContainer {
             .instrument(Instrument.BANJO));
     public static final Block CORAL_PLANT = new CoralPlantBlock(FabricBlockSettings.create().ticksRandomly().nonOpaque().noCollision()
             .breakInstantly().sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
-    @NoBlockItem
-    public static final Block RADIO = new RadioBlock(FabricBlockSettings.create().nonOpaque().instrument(Instrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F).dropsNothing());
     public static final Block MONITOR_BLOCK = new MonitorBlock(FabricBlockSettings.create().nonOpaque().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
     public static final Block DETECTOR_BLOCK = new DetectorBlock(FabricBlockSettings.create().nonOpaque().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
     public static final Block ZEITON_BLOCK = new AmethystBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool());

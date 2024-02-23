@@ -12,7 +12,6 @@ import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.ClientDoorRegistry;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
-import mdteam.ait.client.renderers.AITRadioRenderer;
 import mdteam.ait.client.renderers.consoles.ConsoleRenderer;
 import mdteam.ait.client.renderers.coral.CoralRenderer;
 import mdteam.ait.client.renderers.doors.DoorRenderer;
@@ -326,7 +325,6 @@ public class AITModClient implements ClientModInitializer {
 	}*/
 
     public void blockEntityRendererRegister() {
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.AIT_RADIO_BLOCK_ENTITY_TYPE, AITRadioRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE, ConsoleGeneratorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, ExteriorRenderer::new);
