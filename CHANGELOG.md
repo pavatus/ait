@@ -1,11 +1,2 @@
-# 1.3.0
-- Flight events!
-- Config has been updated to use OwOLib once more. Access by doing /owo-config ait
-- Fixed bugs with crashing
-- Added Zeiton (doesn't do anything)
-- Repairing the TARDIS with a sonic in overload mode + doors open
-- Fixed particles
-- Added new hartnell console variant: "Mint"
-- Added variant counter per exterior in the monitor screen
-- Added new names for TARDISes on generation
-- Added new detector block for power and vortex
+# 1.3.1
+- Fixed bug so you can actually play the game now :/
