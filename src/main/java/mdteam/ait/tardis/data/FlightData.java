@@ -61,7 +61,7 @@ public class FlightData extends TardisLink {
         if(findTardis().isEmpty()) return;
         this.setFlightTicks(0);
         this.setTargetTicks(0);
-        FlightUtil.playSoundAtConsole(findTardis().get(), SoundEvents.BLOCK_BEACON_POWER_SELECT); // temp sound
+        FlightUtil.playSoundAtConsole(findTardis().get(), SoundEvents.BLOCK_BELL_RESONATE); // temp sound
 
         if (shouldAutoLand()) {
             this.findTardis().get().getTravel().materialise();

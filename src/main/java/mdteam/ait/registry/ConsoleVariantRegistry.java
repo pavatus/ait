@@ -9,6 +9,7 @@ import mdteam.ait.tardis.console.variant.coral.CoralVariant;
 import mdteam.ait.tardis.console.variant.coral.WhiteCoralVariant;
 import mdteam.ait.tardis.console.variant.hartnell.HartnellVariant;
 import mdteam.ait.tardis.console.variant.hartnell.KeltHartnellVariant;
+import mdteam.ait.tardis.console.variant.hartnell.MintHartnellVariant;
 import mdteam.ait.tardis.console.variant.hartnell.WoodenHartnellVariant;
 import mdteam.ait.tardis.console.variant.steam.SteamCherryVariant;
 import mdteam.ait.tardis.console.variant.steam.SteamVariant;
@@ -113,6 +114,7 @@ public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchem
     public static ConsoleVariantSchema HARTNELL;
     public static ConsoleVariantSchema HARTNELL_WOOD;
     public static ConsoleVariantSchema HARTNELL_KELT;
+    public static ConsoleVariantSchema HARTNELL_MINT;
     public static ConsoleVariantSchema CORAL;
     public static ConsoleVariantSchema CORAL_BLUE;
     public static ConsoleVariantSchema CORAL_WHITE;
@@ -128,6 +130,7 @@ public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchem
         // Hartnell variants
         HARTNELL = registerStatic(new HartnellVariant());
         HARTNELL_KELT = registerStatic(new KeltHartnellVariant());
+        HARTNELL_MINT = registerStatic(new MintHartnellVariant());
         HARTNELL_WOOD = registerStatic(new WoodenHartnellVariant()); // fixme this texture is awful - make tright remake it
 
         // Coral variants
