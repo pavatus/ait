@@ -1,6 +1,0 @@
-{
-	"parent": "ait:item/rift_scanner",
-	"textures": {
-		"3": "ait:item/rift_scanner/rift_scanner_sw"
-	}
-}
