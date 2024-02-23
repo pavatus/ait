@@ -237,9 +237,11 @@ public class SonicItem extends LinkableItem {
             if(intToMode(nbt.getInt(MODE_KEY)) != Mode.INACTIVE) {
                 playSonicSounds(user);
 
+                if(getTardis(itemStack) == null) return TypedActionResult.pass(itemStack);
+
                 Tardis tardis = getTardis(itemStack);
 
-                if(intToMode(nbt.getInt(MODE_KEY)) == Mode.TARDIS) {
+                if(intToMode(nbt.getInt(MODE_KEY)) == Mode.OVERLOAD) {
                     if (tardis.getDesktop() != null && TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), pos) && tardis.getHandlers().getCrashData().getState() != TardisCrashData.State.NORMAL) {
                         tardis.getHandlers().getCrashData().setRepairTicks(tardis.getHandlers().getCrashData().getRepairTicks() <= 0 ? 0 : tardis.getHandlers().getCrashData().getRepairTicks() - 20);
                         user.sendMessage(Text.literal("Repairing: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.GOLD), true);

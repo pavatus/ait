@@ -36,20 +36,20 @@ public class SequenceHandler extends TardisLink {
 
     public void add(Control control) {
         if(this.getActiveSequence() == null) return;
-        if(recent.get(recent.indexOf(control)) != this.getActiveSequence().getControls().get(this.getActiveSequence().getControls().indexOf(control))) {
-            recent.remove(control);
-        } else if (recent.size() >= this.getActiveSequence().getControls().size()) {
+        if (recent.size() >= this.getActiveSequence().getControls().size()) {
             recent.clear();
         } else {
             recent.add(control);
         }
         ticks = 0;
+        this.doesControlIndexMatch(control);
         this.compareToSequences();
     }
 
-    public boolean doesControlIndexMatch(Control control, RecentControls recent, Sequence sequence) {
-        if(recent.isEmpty() || sequence.getControls().isEmpty()) return false;
-        return recent.get(recent.indexOf(control)).equals((sequence.getControls().get(sequence.getControls().indexOf(control))));
+    public void doesControlIndexMatch(Control control) {
+        if(recent.get(recent.indexOf(control)) != this.getActiveSequence().getControls().get(this.getActiveSequence().getControls().indexOf(control))) {
+            recent.remove(control);
+        }
     }
 
     public boolean hasActiveSequence() {

@@ -74,7 +74,7 @@ public class TardisCrashData extends TardisLink{
                     0.05D, 0.05D, 0.05D, 0.01D
             );
         }
-        if (!(getState() == State.TOXIC)) return;
+        if (getState() != State.TOXIC) return;
         if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
         exteriorWorld.spawnParticles(new DustColorTransitionParticleEffect(
                         new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 2),

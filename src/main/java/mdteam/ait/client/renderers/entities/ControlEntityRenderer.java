@@ -5,6 +5,7 @@ import mdteam.ait.client.models.consoles.ControlModel;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.core.util.AITConfig;
+import mdteam.ait.core.util.AITConfigModel;
 import mdteam.ait.tardis.Tardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -33,6 +34,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
 
+import static mdteam.ait.AITMod.AIT_CONFIG;
+
 @Environment(value = EnvType.CLIENT)
 public class ControlEntityRenderer
         extends LivingEntityRenderer<ConsoleControlEntity, ControlModel> {
@@ -41,7 +44,7 @@ public class ControlEntityRenderer
 
     ControlModel model = new ControlModel(ControlModel.getTexturedModelData().createModel());
 
-    boolean shouldRender = AITConfig.createAndLoad().SHOULD_RENDER_EXCLAMATION_MARKS();
+    boolean shouldRender = AIT_CONFIG.SHOULD_RENDER_EXCLAMATION_MARKS();
 
     public ControlEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new ControlModel(ControlModel.getNotModelData().createModel()), 0f);

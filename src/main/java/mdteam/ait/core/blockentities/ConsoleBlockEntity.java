@@ -457,9 +457,9 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
         if(tardis.getHandlers().getCrashData().isToxic()) {
             ((ServerWorld) world).spawnParticles(new DustColorTransitionParticleEffect(
-                            new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 2),
+                            new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 7),
                     pos.getX() + 0.5f, pos.getY() + 1.25,
-                    pos.getZ() + 0.5f, 25, 0,0,0, 0.025f);
+                    pos.getZ() + 0.5f, 25, random.nextBoolean() ? 1f : -1f,1f, random.nextBoolean() ? 1f : -1f, 0.025f);
         }
         if (tardis.isRefueling()) {
             ((ServerWorld) world).spawnParticles((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD, pos.getX() + 0.5f, pos.getY() + 1.25,
