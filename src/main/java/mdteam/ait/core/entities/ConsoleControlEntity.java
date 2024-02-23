@@ -45,7 +45,6 @@ import java.util.Optional;
 import java.util.Random;
 
 public class ConsoleControlEntity extends BaseControlEntity {
-
     private BlockPos consoleBlockPos;
     private Control control;
     private static final TrackedData<String> IDENTITY = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.STRING);

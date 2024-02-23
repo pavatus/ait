@@ -77,8 +77,8 @@ public class ControlEntityRenderer
         }
         matrices.pop();
         if (hitresult != null) {
-            boolean isPlayerLooking = isPlayerLookingAtControl(hitresult, entity);
-            if (isPlayerLooking) {
+            boolean isPlayerHoldingScanningSonic = isPlayerHoldingScanningSonic(entity);
+            if (isPlayerHoldingScanningSonic) {
                 if (entity.isPartOfSequence()) {
                     matrices.push();
                     matrices.scale(0.4f, 0.4f, 0.4f);
@@ -118,6 +118,20 @@ public class ControlEntityRenderer
                     Entity hitEntity = ((EntityHitResult) hitResult).getEntity();
                     return hitEntity != null && hitEntity.equals(entity) && nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;
                 }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isPlayerHoldingScanningSonic(ConsoleControlEntity entity) {
+        if (entity.getWorld() == null || !entity.getWorld().isClient())
+            return false;
+        PlayerEntity player = MinecraftClient.getInstance().player;
+        if (player != null) {
+            if (player.getMainHandStack().getItem() instanceof SonicItem ||player.getOffHandStack().getItem() instanceof SonicItem) {
+                ItemStack sonic = player.getOffHandStack();
+                NbtCompound nbt = sonic.getOrCreateNbt();
+                return nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;
             }
         }
         return false;
