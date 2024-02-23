@@ -75,7 +75,9 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         if (size == 0) return;
 
         for (int i = 0; i < size; i++) {
-            this.register(convertDatapack(buf.decodeAsJson(DatapackConsole.CODEC)));
+            ClientConsoleVariantSchema variantSchema = convertDatapack(buf.decodeAsJson(DatapackConsole.CODEC));
+            if(variantSchema == null) return;
+            this.register(variantSchema);
         }
 
         AITMod.LOGGER.info("Read {} console variants from server", size);

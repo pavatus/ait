@@ -12,7 +12,7 @@ public class ClientCopperVariant extends ClientConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/copper_console_emission.png"));
 
     public ClientCopperVariant() {
-        super(CopperVariant.REFERENCE);
+        super(CopperVariant.REFERENCE, CopperVariant.REFERENCE);
     }
 
     @Override

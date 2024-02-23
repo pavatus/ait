@@ -24,10 +24,10 @@ import java.util.concurrent.atomic.AtomicReference;
 }
  */
 public class DatapackConsole extends ConsoleVariantSchema {
-    public static final Identifier DEFAULT_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/desktop/missing_preview.png");
 
     protected final Identifier texture;
     protected final Identifier emission;
+    protected final Identifier id;
     protected boolean initiallyDatapack;
 
     public static final Codec<DatapackConsole> CODEC = RecordCodecBuilder.create(
@@ -41,6 +41,7 @@ public class DatapackConsole extends ConsoleVariantSchema {
 
     public DatapackConsole(Identifier id, Identifier category, Identifier texture, Identifier emission, boolean isDatapack) {
         super(category, id);
+        this.id = id;
         this.texture = texture;
         this.emission = emission;
         this.initiallyDatapack = isDatapack;
@@ -60,6 +61,10 @@ public class DatapackConsole extends ConsoleVariantSchema {
         return this.emission;
     }
 
+    public Identifier id() {
+        return this.id;
+    }
+
     public static DatapackConsole fromInputStream(InputStream stream) {
         return fromJson(JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject());
     }
@@ -68,7 +73,7 @@ public class DatapackConsole extends ConsoleVariantSchema {
 
         CODEC.decode(JsonOps.INSTANCE, json)
                 .get()
-                .ifLeft(var -> { created.set((DatapackConsole) var.getFirst()); })
+                .ifLeft(var -> { created.set(var.getFirst()); })
                 .ifRight(err -> { created.set(null);
                     AITMod.LOGGER.error("Error decoding datapack console variant: " + err);
                 });

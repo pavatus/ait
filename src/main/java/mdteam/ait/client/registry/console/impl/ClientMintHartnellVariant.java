@@ -5,6 +5,7 @@ import mdteam.ait.client.models.consoles.ConsoleModel;
 import mdteam.ait.client.models.consoles.HartnellConsoleModel;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
 import mdteam.ait.tardis.console.variant.hartnell.KeltHartnellVariant;
+import mdteam.ait.tardis.console.variant.hartnell.MintHartnellVariant;
 import net.minecraft.util.Identifier;
 
 public class ClientMintHartnellVariant extends ClientConsoleVariantSchema {
@@ -12,7 +13,7 @@ public class ClientMintHartnellVariant extends ClientConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/hartnell_console_emission.png"));
 
     public ClientMintHartnellVariant() {
-        super(KeltHartnellVariant.REFERENCE);
+        super(MintHartnellVariant.REFERENCE, MintHartnellVariant.REFERENCE);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class SequenceHandler extends TardisLink {
     }
 
     public boolean doesControlIndexMatch(Control control) {
-        System.out.println(recent.indexOf(control) + " - " + this.getActiveSequence().getControls().indexOf(control));
+        if(recent == null || this.getActiveSequence() == null) return false;
         if(recent.indexOf(control) != this.getActiveSequence().getControls().indexOf(control)) {
             recent.remove(control);
             return false;

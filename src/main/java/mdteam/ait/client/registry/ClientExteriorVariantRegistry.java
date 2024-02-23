@@ -79,7 +79,9 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         if (size == 0) return;
 
         for (int i = 0; i < size; i++) {
-            this.register(convertDatapack(buf.decodeAsJson(DatapackExterior.CODEC)));
+            ClientExteriorVariantSchema exterior = convertDatapack(buf.decodeAsJson(DatapackExterior.CODEC));
+            if(exterior == null) return;
+            this.register(exterior);
         }
 
         AITMod.LOGGER.info("Read {} exterior variants from server", size);

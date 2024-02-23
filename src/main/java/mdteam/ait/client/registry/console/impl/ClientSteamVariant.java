@@ -12,7 +12,7 @@ public class ClientSteamVariant extends ClientConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/steam_console_emission.png"));
 
     public ClientSteamVariant() {
-        super(SteamVariant.REFERENCE);
+        super(SteamVariant.REFERENCE, SteamVariant.REFERENCE);
     }
 
     @Override

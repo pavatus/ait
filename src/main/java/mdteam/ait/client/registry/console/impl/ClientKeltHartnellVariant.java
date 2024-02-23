@@ -12,7 +12,7 @@ public class ClientKeltHartnellVariant extends ClientConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/hartnell_console_emission.png"));
 
     public ClientKeltHartnellVariant() {
-        super(KeltHartnellVariant.REFERENCE);
+        super(KeltHartnellVariant.REFERENCE, KeltHartnellVariant.REFERENCE);
     }
 
     @Override
