@@ -17,5 +17,4 @@ public class AITConfigModel {
     @SectionHeader("Client")
     public float INTERIOR_HUM_VOLUME = 0.2f;
     public boolean CUSTOM_MENU = true;
-    public boolean SHOULD_RENDER_EXCLAMATION_MARKS = true;
 }

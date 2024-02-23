@@ -328,9 +328,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
     @Override
     public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
         this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
-        this.partOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
-        this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
-        this.setSequenced(this.getDataTracker().get(WAS_SEQUENCED));
     }
 
     @Override
