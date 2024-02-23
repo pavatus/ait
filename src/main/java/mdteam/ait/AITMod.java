@@ -70,7 +70,7 @@ public class AITMod implements ModInitializer {
     public static final Boolean DEBUG = true;
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
     public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () ->
-            Icon.of(AITItems.TARDIS_ITEM)).build();
+            Icon.of(AITItems.TARDIS_ITEM)).disableDynamicTitle().build();
     public static final ComponentKey<RadioNBTComponent> RADIONBT =
             ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "radionbt"), RadioNBTComponent.class);
     public static final Random RANDOM = new Random();
