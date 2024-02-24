@@ -4,7 +4,7 @@
         "layer0": "ait:item/rift_scanner_16"
     },
     "overrides": [
-        { "predicate": { "scanner": 0.000000 }, "model": "ait:item/rift_scanner/rift_scanner" },
+        { "predicate": { "scanner": 0.000000 }, "model": "ait:item/rift_scanner" },
         { "predicate": { "scanner": 0.015625 }, "model": "ait:item/rift_scanner/rift_scanner_17" },
         { "predicate": { "scanner": 0.046875 }, "model": "ait:item/rift_scanner/rift_scanner_18" },
         { "predicate": { "scanner": 0.078125 }, "model": "ait:item/rift_scanner/rift_scanner_19" },
@@ -36,6 +36,6 @@
         { "predicate": { "scanner": 0.890625 }, "model": "ait:item/rift_scanner/rift_scanner_13" },
         { "predicate": { "scanner": 0.921875 }, "model": "ait:item/rift_scanner/rift_scanner_14" },
         { "predicate": { "scanner": 0.953125 }, "model": "ait:item/rift_scanner/rift_scanner_15" },
-        { "predicate": { "scanner": 0.984375 }, "model": "ait:item/rift_scanner/rift_scanner" }
+        { "predicate": { "scanner": 0.984375 }, "model": "ait:item/rift_scanner" }
     ]
 }
