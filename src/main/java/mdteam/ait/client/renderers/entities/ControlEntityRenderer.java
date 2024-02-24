@@ -2,6 +2,7 @@ package mdteam.ait.client.renderers.entities;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ControlModel;
+import mdteam.ait.core.AITItems;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.core.util.AITConfig;
@@ -128,7 +129,7 @@ public class ControlEntityRenderer
             return false;
         PlayerEntity player = MinecraftClient.getInstance().player;
         if (player != null) {
-            if (player.getMainHandStack().getItem() instanceof SonicItem ||player.getOffHandStack().getItem() instanceof SonicItem) {
+            if (player.getOffHandStack().getItem() instanceof SonicItem) {
                 ItemStack sonic = player.getOffHandStack();
                 NbtCompound nbt = sonic.getOrCreateNbt();
                 return nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;

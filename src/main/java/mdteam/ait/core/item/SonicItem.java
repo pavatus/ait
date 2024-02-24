@@ -209,7 +209,8 @@ public class SonicItem extends LinkableItem {
     }
 
     public static void playSonicSounds(PlayerEntity player) {
-        player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, 1f);
+        // @TODO sonic sounds will sound a little weird for the time being, but make this use the sound instance system like item use stuff like the elytra - Loqor
+        player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, (-player.getPitch() / 90f) + 1f);
     }
 
     public static void cycleMode(ItemStack stack) {
