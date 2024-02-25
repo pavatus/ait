@@ -35,7 +35,7 @@ public class SequenceHandler extends TardisLink {
     }
 
     public void add(Control control) {
-        if(this.getActiveSequence() == null) return;
+        if(this.getActiveSequence() == null || recent == null) return;
         recent.add(control);
         ticks = 0;
         this.doesControlIndexMatch(control);
