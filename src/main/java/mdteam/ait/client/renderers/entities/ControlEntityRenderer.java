@@ -133,6 +133,10 @@ public class ControlEntityRenderer
                 ItemStack sonic = player.getOffHandStack();
                 NbtCompound nbt = sonic.getOrCreateNbt();
                 return nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;
+            } else if (player.getMainHandStack().getItem() instanceof SonicItem) {
+                ItemStack sonic = player.getMainHandStack();
+                NbtCompound nbt = sonic.getOrCreateNbt();
+                return nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;
             }
         }
         return false;

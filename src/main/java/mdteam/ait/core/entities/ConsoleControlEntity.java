@@ -136,7 +136,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
     }
 
     public void setSequenced(boolean sequenced) {
-        this.dataTracker.set(WAS_SEQUENCED, sequenced);
+        this.dataTracker.set(WAS_SEQUENCED, sequenced, true);
     }
 
     public String createDelayId() {
@@ -409,7 +409,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
     }
 
     public void partOfSequence(boolean partOfSequence) {
-        this.dataTracker.set(PART_OF_SEQUENCE, partOfSequence);
+        this.dataTracker.set(PART_OF_SEQUENCE, partOfSequence, true);
     }
 
     public boolean isPartOfSequence() {
