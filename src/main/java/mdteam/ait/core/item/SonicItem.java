@@ -1,5 +1,7 @@
 package mdteam.ait.core.item;
 
+import mdteam.ait.api.tardis.ArtronHolder;
+import mdteam.ait.api.tardis.ArtronHolderItem;
 import mdteam.ait.api.tardis.LinkableItem;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -35,7 +37,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class SonicItem extends LinkableItem {
+public class SonicItem extends LinkableItem implements ArtronHolderItem {
+    private static final double MAX_FUEL = 1000;
 
     public static final String MODE_KEY = "mode";
     public static final String INACTIVE = "inactive";
@@ -50,6 +53,189 @@ public class SonicItem extends LinkableItem {
         NbtCompound nbt = stack.getOrCreateNbt();
         nbt.putInt(MODE_KEY, 0);
         return stack;
+    }
+
+    // fixme no me gusta nada
+    @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        World world = context.getWorld();
+        BlockPos pos = context.getBlockPos();
+        PlayerEntity player = context.getPlayer();
+        ItemStack itemStack = context.getStack();
+
+        if (player == null)
+            return ActionResult.FAIL;
+        if (world.isClient()) return ActionResult.SUCCESS;
+
+        NbtCompound nbt = itemStack.getOrCreateNbt();
+
+        if (!nbt.contains(MODE_KEY)) return ActionResult.FAIL;
+
+        if(intToMode(nbt.getInt(MODE_KEY)) == Mode.INACTIVE) return ActionResult.FAIL;
+
+        playSonicSounds(player);
+
+        Tardis tardis = getTardis(itemStack);
+
+        Mode mode = intToMode(nbt.getInt(MODE_KEY));
+        mode.run(tardis, world, pos, player, itemStack);
+
+        return ActionResult.SUCCESS;
+    }
+
+    public static Tardis getTardis(ItemStack item) {
+        NbtCompound nbt = item.getOrCreateNbt();
+
+        if (!nbt.contains("tardis")) return null;
+
+        return ServerTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")));
+    }
+
+    @Override
+    public void link(ItemStack stack, UUID uuid) {
+        super.link(stack, uuid);
+
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        nbt.putInt(MODE_KEY, 0);
+        nbt.putBoolean(INACTIVE, true);
+    }
+
+    public static void playSonicSounds(PlayerEntity player) {
+        player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, 1f);
+    }
+
+    public static void cycleMode(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        if (!(nbt.contains(MODE_KEY))) {
+            setMode(stack, 0);
+        }
+
+        SonicItem.setMode(stack, nbt.getInt(MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(MODE_KEY) + 1 : 0);
+    }
+
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemStack stack = user.getStackInHand(hand);
+        NbtCompound nbt = stack.getOrCreateNbt();
+        BlockPos pos = user.getBlockPos();
+
+        if (world.isClient()) return TypedActionResult.pass(stack);
+
+        if (this.isOutOfFuel(stack)) return TypedActionResult.fail(stack);
+
+        if (user.isSneaking()) {
+            world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
+            cycleMode(stack);
+
+            this.removeFuel(stack);
+
+            return TypedActionResult.success(stack);
+        }
+
+        if (intToMode(nbt.getInt(MODE_KEY)) == Mode.INACTIVE) return TypedActionResult.fail(stack);
+
+        this.removeFuel(stack);
+
+        playSonicSounds(user);
+
+        Tardis tardis = getTardis(stack);
+
+        Mode mode = intToMode(nbt.getInt(MODE_KEY));
+        mode.run(tardis, world, pos, user, stack);
+
+        return TypedActionResult.success(stack);
+    }
+
+    public static int findModeInt(ItemStack stack) {
+        NbtCompound nbtCompound = stack.getOrCreateNbt();
+        if (!nbtCompound.contains(MODE_KEY))
+            return 0;
+        return nbtCompound.getInt(MODE_KEY);
+    }
+
+    public static void setMode(ItemStack stack, int mode) {
+        NbtCompound nbtCompound = stack.getOrCreateNbt();
+        nbtCompound.putInt(MODE_KEY, mode);
+    }
+    public static void setMode(ItemStack stack, Mode mode) {
+        setMode(stack, mode.ordinal());
+    }
+
+    @Override
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.NONE;
+    }
+
+    // this smells
+    public static Mode intToMode(int mode) {
+        return Mode.values()[mode];
+    }
+
+    // Fuel
+    @Override
+    public double getMaxFuel(ItemStack stack) {
+        return MAX_FUEL;
+    }
+    @Override
+    public boolean isOutOfFuel(ItemStack stack) {
+        boolean outage = ArtronHolderItem.super.isOutOfFuel(stack);
+
+        if (outage && intToMode(stack.getOrCreateNbt().getInt(MODE_KEY)) != Mode.INACTIVE) {
+            setMode(stack, Mode.INACTIVE);
+        }
+
+        return outage;
+    }
+    protected void removeFuel(ItemStack stack) {
+        this.removeFuel(1, stack);
+    }
+    protected void addFuel(ItemStack stack) {
+        this.addFuel(1, stack);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        if (!Screen.hasShiftDown()) {
+            tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
+            return;
+        }
+
+        NbtCompound tag = stack.getOrCreateNbt();
+        String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
+                : Text.translatable("message.ait.sonic.none").getString();
+        String position = Text.translatable("message.ait.sonic.none").getString();
+        if(tag.contains("tardis")) {
+            Tardis tardis = ClientTardisManager.getInstance().getTardis(UUID.fromString(tag.getString("tardis")));
+            if (tardis != null)
+                position = tardis.getTravel() == null || tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();
+        }
+
+        tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
+
+        Mode mode = intToMode(tag.getInt(MODE_KEY));
+        tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
+
+        tooltip.add(
+                Text.literal("Fuel: ").formatted(Formatting.BLUE)
+                        .append(Text.literal(
+                                String.valueOf(
+                                        Math.round(this.getCurrentFuel(stack)))
+                        ).formatted(Formatting.GREEN)
+                    )
+        ); // todo translatable + changing of colour based off fuel
+
+        tooltip.add(ScreenTexts.EMPTY);
+
+        super.appendTooltip(stack, world, tooltip, context);
+
+        if (tag.contains("tardis")) { // Adding the sonics mode
+            tooltip.add(Text.literal("Position: ").formatted(Formatting.BLUE));
+            tooltip.add(Text.literal("> " + position).formatted(Formatting.GRAY));
+        }
+
+        tooltip.add(ScreenTexts.EMPTY);
     }
 
     public enum Mode implements StringIdentifiable {
@@ -159,143 +345,5 @@ public class SonicItem extends LinkableItem {
         public String asString() {
             return StringUtils.capitalize(this.toString().replace("_", " "));
         }
-    }
-
-    // fixme no me gusta nada
-    @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        BlockPos pos = context.getBlockPos();
-        PlayerEntity player = context.getPlayer();
-        ItemStack itemStack = context.getStack();
-
-        if (player == null)
-            return ActionResult.FAIL;
-        if (world.isClient()) return ActionResult.SUCCESS;
-
-        NbtCompound nbt = itemStack.getOrCreateNbt();
-
-        if (!nbt.contains(MODE_KEY)) return ActionResult.FAIL;
-
-        if(intToMode(nbt.getInt(MODE_KEY)) == Mode.INACTIVE) return ActionResult.FAIL;
-
-        playSonicSounds(player);
-
-        Tardis tardis = getTardis(itemStack);
-
-        Mode mode = intToMode(nbt.getInt(MODE_KEY));
-        mode.run(tardis, world, pos, player, itemStack);
-
-        return ActionResult.SUCCESS;
-    }
-
-    public static Tardis getTardis(ItemStack item) {
-        NbtCompound nbt = item.getOrCreateNbt();
-
-        if (!nbt.contains("tardis")) return null;
-
-        return ServerTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")));
-    }
-
-    @Override
-    public void link(ItemStack stack, UUID uuid) {
-        super.link(stack, uuid);
-
-        NbtCompound nbt = stack.getOrCreateNbt();
-
-        nbt.putInt(MODE_KEY, 0);
-        nbt.putBoolean(INACTIVE, true);
-    }
-
-    public static void playSonicSounds(PlayerEntity player) {
-        player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, 1f);
-    }
-
-    public static void cycleMode(ItemStack stack) {
-        NbtCompound nbt = stack.getOrCreateNbt();
-
-        if (!(nbt.contains(MODE_KEY))) {
-            setMode(stack, 0);
-        }
-
-        SonicItem.setMode(stack, nbt.getInt(MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(MODE_KEY) + 1 : 0);
-    }
-
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        NbtCompound nbt = itemStack.getOrCreateNbt();
-        BlockPos pos = user.getBlockPos();
-
-        if (world.isClient()) return TypedActionResult.pass(itemStack);
-
-        if (user.isSneaking()) {
-            world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
-            cycleMode(itemStack);
-        } else {
-            if(intToMode(nbt.getInt(MODE_KEY)) != Mode.INACTIVE) {
-                playSonicSounds(user);
-
-                Tardis tardis = getTardis(itemStack);
-
-                Mode mode = intToMode(nbt.getInt(MODE_KEY));
-                mode.run(tardis, world, pos, user, itemStack);
-            }
-        }
-
-        return TypedActionResult.pass(itemStack);
-    }
-
-    public static int findModeInt(ItemStack stack) {
-        NbtCompound nbtCompound = stack.getOrCreateNbt();
-        if (!nbtCompound.contains(MODE_KEY))
-            return 0;
-        return nbtCompound.getInt(MODE_KEY);
-    }
-
-    public static void setMode(ItemStack stack, int mode) {
-        NbtCompound nbtCompound = stack.getOrCreateNbt();
-        nbtCompound.putInt(MODE_KEY, mode);
-    }
-
-    @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.NONE;
-    }
-
-    @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if (!Screen.hasShiftDown()) {
-            tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
-            return;
-        }
-
-        NbtCompound tag = stack.getOrCreateNbt();
-        String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
-                : Text.translatable("message.ait.sonic.none").getString();
-        String position = Text.translatable("message.ait.sonic.none").getString();
-        if(tag.contains("tardis")) {
-            Tardis tardis = ClientTardisManager.getInstance().getTardis(UUID.fromString(tag.getString("tardis")));
-            if (tardis != null)
-                position = tardis.getTravel() == null || tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();
-        }
-
-        tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
-
-        Mode mode = intToMode(tag.getInt(MODE_KEY));
-        tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
-
-        tooltip.add(ScreenTexts.EMPTY);
-
-        if (tag.contains("tardis")) { // Adding the sonics mode
-            tooltip.add(Text.literal("Position: ").formatted(Formatting.BLUE));
-            tooltip.add(Text.literal("> " + position).formatted(Formatting.GRAY));
-        }
-
-        super.appendTooltip(stack, world, tooltip, context);
-    }
-
-    public static Mode intToMode(int mode) {
-        return Mode.values()[mode];
     }
 }
