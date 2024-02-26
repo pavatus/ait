@@ -327,26 +327,24 @@ public class ConsoleControlEntity extends BaseControlEntity {
     @Override
     public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
         this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
-        this.dataTracker.set(PART_OF_SEQUENCE, this.getDataTracker().get(PART_OF_SEQUENCE));
-        this.dataTracker.set(WAS_SEQUENCED, this.getDataTracker().get(WAS_SEQUENCED));
-        this.dataTracker.set(SEQUENCE_COLOR, this.getDataTracker().get(SEQUENCE_COLOR));
+        //this.dataTracker.set(PART_OF_SEQUENCE, this.getDataTracker().get(PART_OF_SEQUENCE));
+        //this.dataTracker.set(WAS_SEQUENCED, this.getDataTracker().get(WAS_SEQUENCED));
+        //this.dataTracker.set(SEQUENCE_COLOR, this.getDataTracker().get(SEQUENCE_COLOR));
     }
 
-    /*@Override
+    @Override
     public void onTrackedDataSet(TrackedData<?> data) {
-
-        if (PART_OF_SEQUENCE.equals(data) && this.getWorld().isClient()) {
+        super.onTrackedDataSet(data);
+        if (PART_OF_SEQUENCE.equals(data) && this.getWorld().isClient) {
             this.partOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
         }
-        if (WAS_SEQUENCED.equals(data) && this.getWorld().isClient()) {
+        if (WAS_SEQUENCED.equals(data) && this.getWorld().isClient) {
             this.setSequenced(this.getDataTracker().get(WAS_SEQUENCED));
         }
-        if (SEQUENCE_COLOR.equals(data) && this.getWorld().isClient()) {
+        if (SEQUENCE_COLOR.equals(data) && this.getWorld().isClient) {
             this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
         }
-
-        super.onTrackedDataSet(data);
-    }*/
+    }
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
