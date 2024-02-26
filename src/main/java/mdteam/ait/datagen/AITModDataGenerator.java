@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.util.AITModTags;
 import mdteam.ait.datagen.datagen_providers.*;
 import mdteam.ait.datagen.datagen_providers.loot.AITBlockLootTables;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -193,13 +194,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.BLAZE_ROD), FabricRecipeProvider.conditionsFromItem(Items.BLAZE_ROD)));
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RENAISSANCE_SONIC_SCREWDRIVER, 1)
                     .input(AITItems.CORAL_SONIC_SCREWDRIVER)
+                    .group("sonic_item")
                     .criterion(FabricRecipeProvider.hasItem(AITItems.CORAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.CORAL_SONIC_SCREWDRIVER)));
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.CORAL_SONIC_SCREWDRIVER, 1)
                     .input(AITItems.MECHANICAL_SONIC_SCREWDRIVER)
+                    .group("sonic_item")
                     .criterion(FabricRecipeProvider.hasItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER)));
-            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.MECHANICAL_SONIC_SCREWDRIVER, 1)
-                    .input(AITItems.RENAISSANCE_SONIC_SCREWDRIVER)
-                    .criterion(FabricRecipeProvider.hasItem(AITItems.RENAISSANCE_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.RENAISSANCE_SONIC_SCREWDRIVER)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.CONSOLE_GENERATOR, 1)
                     .pattern(" G ")
                     .pattern("CEC")

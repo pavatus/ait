@@ -1,6 +1,8 @@
 package mdteam.ait.datagen.datagen_providers;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.AITItems;
+import mdteam.ait.core.util.AITModTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.item.Item;
@@ -18,11 +20,11 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
         super(output, RegistryKeys.ITEM, completableFuture);
     }
 
-    public static final TagKey<Item> TEST_ITEMS = TagKey.of(RegistryKeys.ITEM, new Identifier(AITMod.MOD_ID, ("test_items")));
-
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
-        getOrCreateTagBuilder(TEST_ITEMS);
-        //.add();
+        getOrCreateTagBuilder(AITModTags.Items.SONIC_ITEM)
+                .add(AITItems.MECHANICAL_SONIC_SCREWDRIVER)
+                .add(AITItems.CORAL_SONIC_SCREWDRIVER)
+                .add(AITItems.RENAISSANCE_SONIC_SCREWDRIVER);
     }
 }

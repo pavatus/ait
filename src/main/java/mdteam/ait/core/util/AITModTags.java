@@ -16,7 +16,7 @@ public class AITModTags {
         }
     }
     public static class Items {
-        //public static final TagKey<Item> test = TagKey.of(RegistryKeys.ITEM, new Identifier(AITMod.MOD_ID, "test"));
+        public static final TagKey<Item> SONIC_ITEM = TagKey.of(RegistryKeys.ITEM, new Identifier(AITMod.MOD_ID, "sonic_item"));
 
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, new Identifier(AITMod.MOD_ID, name));
