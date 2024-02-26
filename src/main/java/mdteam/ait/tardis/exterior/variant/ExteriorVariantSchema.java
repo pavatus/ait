@@ -26,12 +26,12 @@ import java.lang.reflect.Type;
 /**
  * A variant for a {@link ExteriorCategorySchema} which provides a model, texture, emission, {@link ExteriorAnimation} and {@link DoorSchema}
  * <br><br>
- * This should be registered in {@link ExteriorVariantRegistry#REGISTRY}
+ * This should be registered in {@link ExteriorVariantRegistry}
  * <br><br>
- * This should <b>ONLY</b> be created once in registry, you should grab the class via {@link ExteriorVariantRegistry#REGISTRY#get(Identifier)}, the identifier being this variants id variable.
+ * This should <b>ONLY</b> be created once in registry, you should grab the class via {@link ExteriorVariantRegistry#get(Identifier)}, the identifier being this variants id variable.
  * <br><br>
- * It is recommended for implementations of this class to have a static "REFERENCE" {@link Identifier} variable which other things can use to get this from the {@link ExteriorVariantRegistry#REGISTRY}
- * @see ExteriorVariantRegistry#REGISTRY
+ * It is recommended for implementations of this class to have a static "REFERENCE" {@link Identifier} variable which other things can use to get this from the {@link ExteriorVariantRegistry}
+ * @see ExteriorVariantRegistry
  * @author duzo
  */
 public abstract class ExteriorVariantSchema implements Identifiable {

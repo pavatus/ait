@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.util.AITModTags;
 import mdteam.ait.datagen.datagen_providers.*;
 import mdteam.ait.datagen.datagen_providers.loot.AITBlockLootTables;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -26,7 +27,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         generateLanguages(pack);
-        generateItemTags(pack); // fixme im not sure why this is being silly goofy
+        generateItemTags(pack);
+        generateBlockTags(pack);
         generateRecipes(pack);
         generateBlockModels(pack);
         generateSoundData(pack);
@@ -186,15 +188,18 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('E', Items.ENDER_EYE)
                     .input('C', Items.COMPARATOR)
                     .input('B', Items.BLAZE_ROD)
+                    .group("sonic_item")
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
                     .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE))
                     .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
                     .criterion(FabricRecipeProvider.hasItem(Items.BLAZE_ROD), FabricRecipeProvider.conditionsFromItem(Items.BLAZE_ROD)));
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RENAISSANCE_SONIC_SCREWDRIVER, 1)
                     .input(AITItems.CORAL_SONIC_SCREWDRIVER)
+                    .group("sonic_item")
                     .criterion(FabricRecipeProvider.hasItem(AITItems.CORAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.CORAL_SONIC_SCREWDRIVER)));
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.CORAL_SONIC_SCREWDRIVER, 1)
                     .input(AITItems.MECHANICAL_SONIC_SCREWDRIVER)
+                    .group("sonic_item")
                     .criterion(FabricRecipeProvider.hasItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.CONSOLE_GENERATOR, 1)
                     .pattern(" G ")
@@ -331,6 +336,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addSound("tardis/fail_land", AITSounds.FAIL_MAT);
             provider.addSound("tardis/emergency_mat", AITSounds.EMERG_MAT);
             provider.addSound("tardis/flight_loop", AITSounds.FLIGHT_LOOP);
+            provider.addSound("tardis/unstable_flight_loop", AITSounds.UNSTABLE_FLIGHT_LOOP);
             provider.addSound("tardis/console_shutdown", AITSounds.SHUTDOWN);
             provider.addSound("tardis/console_powerup", AITSounds.POWERUP);
             provider.addSound("tardis/siege_enable", AITSounds.SIEGE_ENABLE);
@@ -386,10 +392,13 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(AITItemTagProvider::new);
     }
 
+    public void generateBlockTags(FabricDataGenerator.Pack pack) {
+        pack.addProvider(AITBlockTagProvider::new);
+    }
+
     public void generateBlockModels(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> {
             AITModelProvider aitModelProvider = new AITModelProvider(output);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.RADIO);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE_GENERATOR);
             aitModelProvider.registerDirectionalBlock(AITBlocks.EXTERIOR_BLOCK);
@@ -461,13 +470,20 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
-        provider.addTranslation(AITBlocks.RADIO, "Radio");
+        provider.addTranslation(AITBlocks.DETECTOR_BLOCK, "Interior Detector Block");
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
         provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
         provider.addTranslation(AITBlocks.MONITOR_BLOCK, "Monitor");
         //provider.addTranslation(AITBlocks.CONSOLE_ROOM_PORT_BLOCK, "Console Room Port");
         //provider.addTranslation(AITBlocks.ENGINE_ROOM_PORT_BLOCK, "Engine Room Port");
         provider.addTranslation(AITBlocks.ARTRON_COLLECTOR_BLOCK, "Artron Collector");
+        provider.addTranslation(AITBlocks.ZEITON_BLOCK, "Zeiton Block");
+        provider.addTranslation(AITBlocks.ZEITON_CLUSTER, "Zeiton Cluster");
+        provider.addTranslation(AITBlocks.BUDDING_ZEITON, "Budding Zeiton");
+        provider.addTranslation(AITBlocks.LARGE_ZEITON_BUD, "Large Zeiton Bud");
+        provider.addTranslation(AITBlocks.MEDIUM_ZEITON_BUD, "Medium Zeiton Bud");
+        provider.addTranslation(AITBlocks.SMALL_ZEITON_BUD, "Small Zeiton Bud");
+        provider.addTranslation(AITItems.ZEITON_SHARD, "Zeiton Shard");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
@@ -475,8 +491,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
         provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ACTIVE");
         provider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocol 116: INACTIVE");
-        provider.addTranslation("message.ait.remoteitem.warning1", "The TARDIS is out of fuel and cannot dematerialize");
-        provider.addTranslation("message.ait.remoteitem.warning2", "The TARDIS is refueling and is unable to dematerialize");
+        provider.addTranslation("message.ait.remoteitem.warning1", "The TARDIS is out of fuel and cannot dematerialise");
+        provider.addTranslation("message.ait.remoteitem.warning2", "The TARDIS is refueling and is unable to dematerialise");
         provider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
         provider.addTranslation("tooltip.ait.remoteitem.notardis", "Remote does not identify with any TARDIS");
         provider.addTranslation("tardis.message.control.antigravs.active", "Antigravs: ACTIVE");
@@ -565,7 +581,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
         aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
-        aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
         aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterieur");
         aitLanguageProvider.addTranslation(AITBlocks.CORAL_PLANT, "Corail TARDIS");
         aitLanguageProvider.addTranslation("death.attack.tardis_squash", "%1$s a été écrasé(e) par un TARDIS!");
@@ -660,7 +675,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
-        aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
         aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
         aitLanguageProvider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
         aitLanguageProvider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
@@ -670,8 +684,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ACTIVE");
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocol 116: INACTIVE");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning1", "The TARDIS is out of fuel and cannot dematerialize");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning2", "The TARDIS is refueling and is unable to dematerialize");
+        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning1", "The TARDIS is out of fuel and cannot dematerialise");
+        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning2", "The TARDIS is refueling and is unable to dematerialise");
         aitLanguageProvider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
         aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.notardis", "Remote does not identify with any TARDIS");
         aitLanguageProvider.addTranslation("tardis.message.control.antigravs.active", "Antigravs: ACTIVE");
@@ -741,7 +755,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
         aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
-        aitLanguageProvider.addTranslation(AITBlocks.RADIO, "Radio");
         aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Äußere Hülle");
         aitLanguageProvider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Koralle");
         aitLanguageProvider.addTranslation("death.attack.tardis_squash", "%1$s wurde von einer TARDIS zerquetscht!");

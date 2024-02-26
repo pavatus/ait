@@ -123,7 +123,7 @@ public class RiftScannerItem extends Item {
     }
 
     private static void createSearchDelay(ServerPlayerEntity player) {
-        DeltaTimeManager.createDelay(player.getUuidAsString() + "-rift-search-delay", 60 * 1000L);
+        DeltaTimeManager.createDelay(player.getUuidAsString() + "-rift-search-delay", 20 * 1000L);
     }
     private static boolean isSearchOnDelay(ServerPlayerEntity player) {
         return DeltaTimeManager.isStillWaitingOnDelay(player.getUuidAsString() + "-rift-search-delay");

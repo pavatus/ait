@@ -41,7 +41,6 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ### Developers:
 - Loqor (Owner, Developer)
 - Duzo (Head Developer)
-- Creativious (Backend Developer)
 - Dr. Theo (Backend Developer)
 
 ---
@@ -55,7 +54,7 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ---
 
 ### Sound Design:
-- Radio (Music/Ambience, not added yet)
+- Radio
 - TARDISSFX (the YouTube channel)
 
 ---
@@ -71,6 +70,7 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 - Craig (Suff) (Help with code)
 - Bug1312 (Help with code)
 - MagicMan(?) (Help with modeling)
+- Creativious (Help with code)
 
 
 ## Links

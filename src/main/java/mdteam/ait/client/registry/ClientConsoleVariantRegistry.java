@@ -75,7 +75,9 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         if (size == 0) return;
 
         for (int i = 0; i < size; i++) {
-            this.register(convertDatapack(buf.decodeAsJson(DatapackConsole.CODEC)));
+            ClientConsoleVariantSchema variantSchema = convertDatapack(buf.decodeAsJson(DatapackConsole.CODEC));
+            if(variantSchema == null) return;
+            this.register(variantSchema);
         }
 
         AITMod.LOGGER.info("Read {} console variants from server", size);
@@ -113,6 +115,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema HARTNELL;
     public static ClientConsoleVariantSchema HARTNELL_WOOD;
     public static ClientConsoleVariantSchema HARTNELL_KELT;
+    public static ClientConsoleVariantSchema HARTNELL_MINT;
     public static ClientConsoleVariantSchema CORAL_GREEN;
     public static ClientConsoleVariantSchema CORAL_BLUE;
     public static ClientConsoleVariantSchema CORAL_WHITE;
@@ -132,6 +135,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         // Hartnell variants
         HARTNELL = register(new ClientHartnellVariant());
         HARTNELL_KELT = register(new ClientKeltHartnellVariant());
+        HARTNELL_MINT = register(new ClientMintHartnellVariant());
         HARTNELL_WOOD = register(new ClientWoodenHartnellVariant()); // fixme this texture is awful - make tright remake it
 
         // Coral variants

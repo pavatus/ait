@@ -1,2 +1,4 @@
-# 1.2.46
-- Performance stuff
+# 1.3.2
+- Removed cardinal components
+- Removed radio block
+- AIT works with Sinytra Connector.

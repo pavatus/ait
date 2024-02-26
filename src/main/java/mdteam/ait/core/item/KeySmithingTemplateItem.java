@@ -31,7 +31,7 @@ public class KeySmithingTemplateItem extends Item {
         tooltip.add(ScreenTexts.EMPTY);
         tooltip.add(Text.translatable("message.ait.keysmithing.key").formatted(TITLE_FORMATTING));
         tooltip.add(ScreenTexts.space().append(Text.literal(this.KEY)).formatted(DESCRIPTION_FORMATTING));
-        tooltip.add(Text.translatable("message.ait.keysmithing.ingredient:").formatted(TITLE_FORMATTING));
+        tooltip.add(Text.translatable("message.ait.keysmithing.ingredient").formatted(TITLE_FORMATTING));
         tooltip.add(ScreenTexts.space().append(Text.literal(this.INGREDIENT)).formatted(DESCRIPTION_FORMATTING));
     }
 }

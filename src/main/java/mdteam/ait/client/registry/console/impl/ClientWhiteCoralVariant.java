@@ -12,7 +12,7 @@ public class ClientWhiteCoralVariant extends ClientConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/coral_white_emission.png"));
 
     public ClientWhiteCoralVariant() {
-        super(WhiteCoralVariant.REFERENCE);
+        super(WhiteCoralVariant.REFERENCE, WhiteCoralVariant.REFERENCE);
     }
 
     @Override

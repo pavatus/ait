@@ -1,7 +1,5 @@
 package mdteam.ait;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
@@ -13,7 +11,6 @@ import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.commands.*;
-import mdteam.ait.core.components.block.radio.RadioNBTComponent;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.core.managers.RiftChunkManager;
@@ -33,6 +30,8 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -46,10 +45,14 @@ import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.feature.PlacedFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,10 +67,10 @@ public class AITMod implements ModInitializer {
     public static final Boolean DEBUG = true;
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
     public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () ->
-            Icon.of(AITItems.TARDIS_ITEM)).build();
-    public static final ComponentKey<RadioNBTComponent> RADIONBT =
-            ComponentRegistry.getOrCreate(new Identifier(AITMod.MOD_ID, "radionbt"), RadioNBTComponent.class);
+            Icon.of(AITItems.TARDIS_ITEM)).disableDynamicTitle().build();
     public static final Random RANDOM = new Random();
+
+    public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE, new Identifier(MOD_ID, "zeiton_geode"));
 
     @Override
     public void onInitialize() {
@@ -106,6 +109,8 @@ public class AITMod implements ModInitializer {
         TardisCriterions.init();
 
         entityAttributeRegister();
+
+        BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES, CUSTOM_GEODE_PLACED_KEY);
 
         // ip support
         if (DependencyChecker.hasPortals())

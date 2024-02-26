@@ -11,6 +11,7 @@ import mdteam.ait.core.item.HammerItem;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -29,10 +30,14 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +49,11 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 
     public ConsoleBlock(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return makeShape();
     }
 
     @Nullable
@@ -70,6 +80,20 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 
 
         return ActionResult.SUCCESS;
+    }
+
+    public VoxelShape makeShape(){
+        VoxelShape shape = VoxelShapes.empty();
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 0, 0, 1, 0.875, 1), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 0.875, -0.25, 1, 1, 1.25), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 1, 0, 1, 1.125, 1), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.25, 0.875, 0, 1.25, 1, 1), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.1875, 0.875, -0.125, 1.1875, 1, 0), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.1875, 0.875, 1, 1.1875, 1, 1.125), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(1, 0.875, -0.1875, 1.125, 1, 1.1875), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.125, 0.875, -0.1875, 0, 1, 1.1875), BooleanBiFunction.OR);
+
+        return shape;
     }
 
     @Override

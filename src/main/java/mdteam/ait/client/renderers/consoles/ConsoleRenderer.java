@@ -24,6 +24,8 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
         ClientConsoleVariantSchema variant = ClientConsoleVariantRegistry.withParent(entity.getVariant());
 
+        if(variant == null) return;
+
         Class<? extends ConsoleModel> modelClass = variant.model().getClass();
 
         if (console != null && console.getClass() != modelClass)

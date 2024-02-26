@@ -12,7 +12,7 @@ public class ClientWoodenHartnellVariant extends ClientConsoleVariantSchema {
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/hartnell_console_emission.png"));
 
     public ClientWoodenHartnellVariant() {
-        super(WoodenHartnellVariant.REFERENCE);
+        super(WoodenHartnellVariant.REFERENCE, WoodenHartnellVariant.REFERENCE);
     }
 
     @Override

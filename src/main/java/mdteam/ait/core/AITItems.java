@@ -14,6 +14,8 @@ public class AITItems implements ItemRegistryContainer {
     // TARDIS
     public static final Item TARDIS_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).fireproof().maxCount(1));
 
+    // Crafting items
+    public static final Item ZEITON_SHARD = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
     public static final Item SIEGE_ITEM = new SiegeTardisItem(new OwoItemSettings().fireproof());
     // Functional Items

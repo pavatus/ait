@@ -14,6 +14,7 @@ import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.control.ControlTypes;
+import mdteam.ait.tardis.control.sequences.SequenceHandler;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -421,15 +422,16 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
         this.findParent().ifPresent(parent -> parent.tickConsole(this));
 
+
         if(this.findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
-            List<Control> sequence = this.findTardis().get().getHandlers().getSequenceHandler().getActiveSequence().getControls();
+            SequenceHandler handler = this.findTardis().get().getHandlers().getSequenceHandler();
+            List<Control> sequence = handler.getActiveSequence().getControls();
             for (ConsoleControlEntity entity : this.controlEntities) {
                 entity.partOfSequence(sequence.contains(entity.getControl()));
-                if(this.findTardis().get().getHandlers().getSequenceHandler().getRecent() != null) {
-                    if(!this.findTardis().get().getHandlers().getSequenceHandler().getRecent().isEmpty())
-                        entity.setSequenced(this.findTardis().get().getHandlers().getSequenceHandler().getRecent().contains(entity.getControl()) && sequence.contains(entity.getControl()));
+                if(sequence.contains(entity.getControl())) {
+                    entity.setSequenced(handler.doesControlIndexMatch(entity.getControl()));
+                    entity.setSequenceColor(sequence.indexOf(entity.getControl()));
                 }
-                entity.setSequenceColor(sequence.indexOf(entity.getControl()));
             }
         }
 
@@ -444,21 +446,21 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
                     pos.getZ() + 0.5f, 20, 0,0,0, 0.01f);
             ((ServerWorld) world).spawnParticles(new DustColorTransitionParticleEffect(
                             new Vector3f(0.75f, 0.75f, 0.75f), new Vector3f(0.1f, 0.1f, 0.1f), 1), pos.getX() + 0.5f, pos.getY() + 1.25,
-                    pos.getZ() + 0.5f, 20, 0,0,0, 0.01f);
+                    pos.getZ() + 0.5f, 5, 0,0,0, 0.01f);
         }
 
         if(tardis.getHandlers().getCrashData().isToxic() || tardis.getHandlers().getCrashData().isUnstable()) {
             ((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
                     pos.getZ() + 0.5f, 20, 0,0,0, 0.025f);
             ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, pos.getX() + 0.5f, pos.getY() + 1.25,
-                    pos.getZ() + 0.5f, 30, 0,0.05f,0, 0.025f);
+                    pos.getZ() + 0.5f, 5, 0,0.05f,0, 0.025f);
         }
 
         if(tardis.getHandlers().getCrashData().isToxic()) {
             ((ServerWorld) world).spawnParticles(new DustColorTransitionParticleEffect(
                             new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 2),
                     pos.getX() + 0.5f, pos.getY() + 1.25,
-                    pos.getZ() + 0.5f, 25, 0,0,0, 0.025f);
+                    pos.getZ() + 0.5f, 5, random.nextBoolean() ? 0.5f : -0.5f,3f, random.nextBoolean() ? 0.5f : -0.5f, 0.025f);
         }
         if (tardis.isRefueling()) {
             ((ServerWorld) world).spawnParticles((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD, pos.getX() + 0.5f, pos.getY() + 1.25,

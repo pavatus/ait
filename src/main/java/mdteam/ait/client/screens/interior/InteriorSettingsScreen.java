@@ -182,6 +182,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.drawBackground(context); // the grey backdrop
+        this.renderDesktop(context);
         if(!this.buttons.get(2).isHovered()) context.drawTexture(BACKGROUND, left + 149, top + 142, 0, 166, 12, 12);
         if(!this.buttons.get(3).isHovered()) context.drawTexture(BACKGROUND, left + 232, top + 142, 12, 166, 12, 12);
         if(!this.buttons.get(4).isHovered()) context.drawTexture(BACKGROUND, left + 228, top + 111, 0, 178, 16, 16);
@@ -221,7 +222,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
             context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114, tardis().getTravel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
         }
 
-        this.renderDesktop(context);
         this.renderHums(context);
         super.render(context, mouseX, mouseY, delta);
     }

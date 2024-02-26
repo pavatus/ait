@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.control.sequences;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.registry.SequenceRegistry;
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
@@ -34,20 +35,20 @@ public class SequenceHandler extends TardisLink {
     }
 
     public void add(Control control) {
-        System.out.println(control);
-        if(this.getActiveSequence() == null) return;
-        if(recent.size() >= this.getActiveSequence().getControls().size()) {
-            recent.clear();
-        } else {
-            recent.add(control);
-        }
+        if(this.getActiveSequence() == null || recent == null) return;
+        recent.add(control);
         ticks = 0;
+        this.doesControlIndexMatch(control);
         this.compareToSequences();
     }
 
-    public boolean doesControlIndexMatch(Control control, RecentControls recent, Sequence sequence) {
-        if(recent.isEmpty() || sequence.getControls().isEmpty()) return false;
-        return recent.get(recent.indexOf(control)).equals((sequence.getControls().get(sequence.getControls().indexOf(control))));
+    public boolean doesControlIndexMatch(Control control) {
+        if(recent == null || this.getActiveSequence() == null) return false;
+        if(recent.indexOf(control) != this.getActiveSequence().getControls().indexOf(control)) {
+            recent.remove(control);
+            return false;
+        }
+        return true;
     }
 
     public boolean hasActiveSequence() {
@@ -89,7 +90,7 @@ public class SequenceHandler extends TardisLink {
         if (this.getActiveSequence().isFinished(this.recent)) {
             recent.clear();
             this.getActiveSequence().execute(this.findTardis().get());
-            FlightUtil.playSoundAtConsole(this.findTardis().get(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP);
+            completedControlEffects(this.findTardis().get());
             this.setActiveSequence(null, true);
         } else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
             recent.clear();
@@ -111,7 +112,23 @@ public class SequenceHandler extends TardisLink {
             Vec3d vec3d = Vec3d.ofBottomCenter(console.position()).add(0.0, 1.2f, 0.0);
             if(TardisUtil.getTardisDimension() instanceof ServerWorld world) {
                 world.spawnParticles(ParticleTypes.SMALL_FLAME, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.4F, 1F, 0.4F, 5.0F);
+                world.spawnParticles(ParticleTypes.FLASH, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 4, 0.4F, 1F, 0.4F, 5.0F);
                 world.spawnParticles(new DustParticleEffect(new Vector3f(0.2f, 0.2f, 0.2f), 4f), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.0F, 1F, 0.0F, 2.0F);
+            }
+        });
+    }
+
+    public static void completedControlEffects(Tardis tardis) {
+        FlightUtil.playSoundAtConsole(tardis,
+                SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP,
+                SoundCategory.BLOCKS,
+                3f,
+                1f);
+        tardis.getDesktop().getConsoles().forEach(console -> {
+            Vec3d vec3d = Vec3d.ofBottomCenter(console.position()).add(0.0, 1.2f, 0.0);
+            if(TardisUtil.getTardisDimension() instanceof ServerWorld world) {
+                world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
+                world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
             }
         });
     }

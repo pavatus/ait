@@ -1,10 +1,6 @@
-Developers: Creativious, Loqor, Duzo and Theo
+Developers: Loqor, Duzo and Theo
 
-Modelers/Textures: Tright, Magic Man
-
-Animations: Monsterwail
-
-Sounds: Doctor1922
+Artists: Tright, b2bmrww2, classic_account
 
 Steam Console Original Design: DocArcane
 

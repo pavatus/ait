@@ -214,12 +214,6 @@ public class MonitorScreen extends ConsoleScreen {
         int j = ((this.height) - this.backgroundHeight) / 2;
         context.drawTexture(TEXTURE, i - 8, j + 4, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        // background behind the tardis and gallifreyan text
-        context.getMatrices().push();
-        context.getMatrices().translate(0, 0, -100f);
-        context.drawTexture(TEXTURE, i + 4, j + 32, 80, 180, 93, 76);
-        context.getMatrices().pop();
-
         // apply button
         if(!this.buttons.get(0).isHovered()) context.drawTexture(TEXTURE, i + 22, j + 114, 0, 227, 57, 12);
 
@@ -343,12 +337,17 @@ public class MonitorScreen extends ConsoleScreen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
         int j = ((this.width - this.backgroundWidth) / 2);
+        // background behind the tardis and gallifreyan text
+        context.getMatrices().push();
+        context.getMatrices().translate(0, 0, -100f);
+        context.drawTexture(TEXTURE, j + 4, i + 32, 80, 180, 93, 76);
+        context.getMatrices().pop();
+        this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f, 176, delta);
         this.drawBackground(context, delta, mouseX, mouseY);
         /*float yClamping = MathHelper.clamp(mouseY, i + 60, i + 65);
         float xClamping = mouseX <= 196 && mouseX >= 156 ? MathHelper.clamp((mouseX + this.backgroundWidth / 2), j + 10, j + 50) : 176;
         AITMod.LOGGER.debug((mouseX + this.backgroundWidth / 2) +  " min: " + (j + 10) + ", max: " + (j + 50) + ": is this clamped right = " + xClamping);*/
         // todo manually adjusting all these values are annoying me
-        this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f, 176, delta);
         this.drawInformationText(context);
         super.render(context, mouseX, mouseY, delta);
     }

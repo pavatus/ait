@@ -1,0 +1,11 @@
+  {
+  "parent": "item/amethyst_bud",
+  "textures": {
+    "layer0": "ait:block/large_zeiton_bud"
+  },
+  "display": {
+    "fixed": {
+      "translation": [ 0, 4, 0 ]
+    }
+  }
+}

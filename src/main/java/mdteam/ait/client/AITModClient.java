@@ -12,7 +12,6 @@ import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.ClientDoorRegistry;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
-import mdteam.ait.client.renderers.AITRadioRenderer;
 import mdteam.ait.client.renderers.consoles.ConsoleRenderer;
 import mdteam.ait.client.renderers.coral.CoralRenderer;
 import mdteam.ait.client.renderers.doors.DoorRenderer;
@@ -49,6 +48,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
@@ -234,8 +234,6 @@ public class AITModClient implements ClientModInitializer {
         };
     }
 
-
-    // @TODO creativious this is the model predicate for the rift scanner, all you have to do is make the value being returned go from 0.0f to 0.75f in a circle to simulate a compass-like item.
     public void riftScannerPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.RIFT_SCANNER, new Identifier("scanner"),new RiftTarget((world, stack, entity) -> GlobalPos.create(entity.getWorld().getRegistryKey(), RiftScannerItem.getTarget(stack).getCenterAtY(75))));
     }
@@ -327,7 +325,6 @@ public class AITModClient implements ClientModInitializer {
 	}*/
 
     public void blockEntityRendererRegister() {
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.AIT_RADIO_BLOCK_ENTITY_TYPE, AITRadioRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE, ConsoleGeneratorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, ExteriorRenderer::new);
@@ -379,6 +376,12 @@ public class AITModClient implements ClientModInitializer {
 
     public void setupBlockRendering() {
         BlockRenderLayerMap map = BlockRenderLayerMap.INSTANCE;
+        map.putBlock(AITBlocks.ZEITON_BLOCK, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.BUDDING_ZEITON, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.ZEITON_CLUSTER, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.LARGE_ZEITON_BUD, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.MEDIUM_ZEITON_BUD, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.SMALL_ZEITON_BUD, RenderLayer.getCutout());
         //map.putBlock(FMCBlocks.RADIO, RenderLayer.getCutout());
     }
 }

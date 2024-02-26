@@ -2,8 +2,11 @@ package mdteam.ait.client.renderers.entities;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.consoles.ControlModel;
+import mdteam.ait.core.AITItems;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.SonicItem;
+import mdteam.ait.core.util.AITConfig;
+import mdteam.ait.core.util.AITConfigModel;
 import mdteam.ait.tardis.Tardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,6 +35,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
 
+import static mdteam.ait.AITMod.AIT_CONFIG;
+
 @Environment(value = EnvType.CLIENT)
 public class ControlEntityRenderer
         extends LivingEntityRenderer<ConsoleControlEntity, ControlModel> {
@@ -46,25 +51,6 @@ public class ControlEntityRenderer
 
     @Override
     public void render(ConsoleControlEntity livingEntity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
-        if (livingEntity.isPartOfSequence()) {
-            //System.out.println(livingEntity.getSequenceColor());
-        matrixStack.push();
-        matrixStack.scale(0.4f, 0.4f, 0.4f);
-        matrixStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
-        matrixStack.translate(0, (-2 - livingEntity.getControlHeight() / 2) + livingEntity.getWorld().random.nextFloat() * 0.02, 0);
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
-            //this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light, OverlayTexture.DEFAULT_UV, 1f - (livingEntity.getSequenceColor() * 0.35f), 0.3607843137f + (livingEntity.getSequenceColor() * 0.35f), 0.3607843137f + (livingEntity.getSequenceColor() * 0.35f), livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
-            //this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEyes(TEXTURE)), 0xFF00F0, OverlayTexture.DEFAULT_UV, 1f - (livingEntity.getSequenceColor() * 0.35f), 0.3607843137f + (livingEntity.getSequenceColor() * 0.35f), 0.3607843137f + (livingEntity.getSequenceColor() * 0.35f), livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
-            this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light, OverlayTexture.DEFAULT_UV,
-                    !livingEntity.wasSequenced() ? 0.95f - (livingEntity.getSequenceColor() >= 1 ? livingEntity.getSequenceColor() + 1 : livingEntity.getSequenceColor() * 0.35f) : 0.0f,
-                    !livingEntity.wasSequenced() ? 0.3f + (livingEntity.getSequenceColor() >= 1 ? livingEntity.getSequenceColor() + 1 : livingEntity.getSequenceColor() * 0.35f) : 0.9f,
-                    !livingEntity.wasSequenced() ? 0.3f + (livingEntity.getSequenceColor() >= 1 ? livingEntity.getSequenceColor() + 1 : livingEntity.getSequenceColor() * 0.35f) : 0.1f, livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
-            this.model.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEyes(TEXTURE)), 0xFF00F0, OverlayTexture.DEFAULT_UV,
-                    !livingEntity.wasSequenced() ? 0.95f - (livingEntity.getSequenceColor() >= 1 ? livingEntity.getSequenceColor() + 1 : livingEntity.getSequenceColor() * 0.35f) : 0.5f,
-                    !livingEntity.wasSequenced() ? 0.3f + (livingEntity.getSequenceColor() >= 1 ? livingEntity.getSequenceColor() + 1 : livingEntity.getSequenceColor() * 0.35f) : 0.9f,
-                    !livingEntity.wasSequenced() ? 0.3f + (livingEntity.getSequenceColor() >= 1 ? livingEntity.getSequenceColor() + 1 : livingEntity.getSequenceColor() * 0.35f) : 0.5f, livingEntity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
-        matrixStack.pop();
-        }
         super.render(livingEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
     }
 
@@ -91,6 +77,27 @@ public class ControlEntityRenderer
             }
         }
         matrices.pop();
+        if (hitresult != null) {
+            boolean isPlayerHoldingScanningSonic = isPlayerHoldingScanningSonic(entity);
+            if (isPlayerHoldingScanningSonic) {
+                if (entity.isPartOfSequence()) {
+                    matrices.push();
+                    matrices.scale(0.4f, 0.4f, 0.4f);
+                    matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
+                    matrices.translate(0, (-2 - entity.getControlHeight() / 2) + entity.getWorld().random.nextFloat() * 0.02, 0);
+                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
+                    this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light, OverlayTexture.DEFAULT_UV,
+                            !entity.wasSequenced() ? 0.95f - (entity.getSequenceColor() >= 1 ? entity.getSequenceColor() + 1 : entity.getSequenceColor() * 0.35f) : 0.0f,
+                            !entity.wasSequenced() ? 0.3f + (entity.getSequenceColor() >= 1 ? entity.getSequenceColor() + 1 : entity.getSequenceColor() * 0.35f) : 0.9f,
+                            !entity.wasSequenced() ? 0.3f + (entity.getSequenceColor() >= 1 ? entity.getSequenceColor() + 1 : entity.getSequenceColor() * 0.35f) : 0.1f, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+                    this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEyes(TEXTURE)), 0xFF00F0, OverlayTexture.DEFAULT_UV,
+                            !entity.wasSequenced() ? 0.95f - (entity.getSequenceColor() >= 1 ? entity.getSequenceColor() + 1 : entity.getSequenceColor() * 0.35f) : 0.5f,
+                            !entity.wasSequenced() ? 0.3f + (entity.getSequenceColor() >= 1 ? entity.getSequenceColor() + 1 : entity.getSequenceColor() * 0.35f) : 0.9f,
+                            !entity.wasSequenced() ? 0.3f + (entity.getSequenceColor() >= 1 ? entity.getSequenceColor() + 1 : entity.getSequenceColor() * 0.35f) : 0.5f, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+                    matrices.pop();
+                }
+            }
+        }
     }
 
     public static boolean isPlayerLookingAtControl(HitResult hitResult, ConsoleControlEntity entity) {
@@ -112,6 +119,24 @@ public class ControlEntityRenderer
                     Entity hitEntity = ((EntityHitResult) hitResult).getEntity();
                     return hitEntity != null && hitEntity.equals(entity) && nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;
                 }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isPlayerHoldingScanningSonic(ConsoleControlEntity entity) {
+        if (entity.getWorld() == null || !entity.getWorld().isClient())
+            return false;
+        PlayerEntity player = MinecraftClient.getInstance().player;
+        if (player != null) {
+            if (player.getOffHandStack().getItem() instanceof SonicItem) {
+                ItemStack sonic = player.getOffHandStack();
+                NbtCompound nbt = sonic.getOrCreateNbt();
+                return nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;
+            } else if (player.getMainHandStack().getItem() instanceof SonicItem) {
+                ItemStack sonic = player.getMainHandStack();
+                NbtCompound nbt = sonic.getOrCreateNbt();
+                return nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;
             }
         }
         return false;
