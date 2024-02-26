@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class SonicItem extends LinkableItem implements ArtronHolderItem {
-    private static final double MAX_FUEL = 1000;
+    public static final double MAX_FUEL = 1000;
 
     public static final String MODE_KEY = "mode";
     public static final String INACTIVE = "inactive";

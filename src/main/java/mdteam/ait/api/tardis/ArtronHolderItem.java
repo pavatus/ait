@@ -43,6 +43,9 @@ public interface ArtronHolderItem {
     default boolean isOutOfFuel(ItemStack stack) {
         return this.getCurrentFuel(stack) <= 0;
     }
+    default boolean hasMaxFuel(ItemStack stack) {
+        return this.getCurrentFuel(stack) >= this.getMaxFuel(stack);
+    }
 
     default String getFuelKey() {
         return FUEL_KEY;

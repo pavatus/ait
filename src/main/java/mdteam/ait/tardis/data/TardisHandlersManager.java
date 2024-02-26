@@ -14,13 +14,14 @@ import java.util.List;
 public class TardisHandlersManager extends TardisLink {
     @Exclude
     private List<TardisLink> tickables = new ArrayList<>();
+    // TODO - refactor of this class, i have ideas
     // Yup
     private DoorData door;
     private PropertiesHolder properties;
     private WaypointHandler waypoints;
     private LoyaltyData loyalties;
     private OvergrownData overgrown;
-    private ServerHumHandler hum = null;
+    private ServerHumHandler hum;
     private ServerAlarmHandler alarms;
     private InteriorChangingHandler interior;
     private SequenceHandler sequenceHandler;
@@ -31,6 +32,8 @@ public class TardisHandlersManager extends TardisLink {
     private CloakData cloak;
     private StatsData stats;
     private TardisCrashData crashData;
+    private SonicHandler sonic;
+
     // private final SequenceHandler sequence;
 
     public TardisHandlersManager(Tardis tardis) {
@@ -52,6 +55,7 @@ public class TardisHandlersManager extends TardisLink {
         this.cloak = new CloakData(tardis);
         this.stats = new StatsData(tardis);
         this.crashData = new TardisCrashData(tardis);
+        this.sonic = new SonicHandler(tardis);
         // this.sequence = new SequenceHandler(tardisId);
 
         generateTickables();
@@ -77,6 +81,7 @@ public class TardisHandlersManager extends TardisLink {
         addTickable(getSiege());
         addTickable(getStats());
         addTickable(getCrashData());
+        addTickable(getSonic());
         // addTickable(getSequencing()); // todo sequences
     }
 
@@ -256,6 +261,13 @@ public class TardisHandlersManager extends TardisLink {
             this.crashData = new TardisCrashData(this.findTardis().get());
         }
         return this.crashData;
+    }
+
+    public SonicHandler getSonic() {
+        if (this.sonic == null && this.findTardis().isPresent()) {
+            this.sonic = new SonicHandler(this.findTardis().get());
+        }
+        return this.sonic;
     }
     // public SequenceHandler getSequencing() {return this.sequence;}
 }
