@@ -111,11 +111,15 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         if (nbt.contains("variant")) {
             setVariant(Identifier.tryParse(nbt.getString("variant")));
         }
+        if (nbt.contains("parent"))
+            setParent(NbtHelper.toUuid(nbt.get("parent")));
 
         if (type != null)
             nbt.putString("type", type.toString());
         if (variant != null)
             nbt.putString("variant", variant.toString());
+        if (parent != null)
+            nbt.put("parent", NbtHelper.fromUuid(parent));
         markNeedsControl();
         markNeedsSyncing();
         return nbt;
@@ -418,13 +422,11 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         }
         if(this.findTardis().isEmpty()) return;
 
-        if (world.isClient()) return;
-
         this.findParent().ifPresent(parent -> parent.tickConsole(this));
-
 
         if(this.findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
             SequenceHandler handler = this.findTardis().get().getHandlers().getSequenceHandler();
+            if(handler.getActiveSequence() == null) return;
             List<Control> sequence = handler.getActiveSequence().getControls();
             for (ConsoleControlEntity entity : this.controlEntities) {
                 entity.partOfSequence(sequence.contains(entity.getControl()));
@@ -434,6 +436,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
                 }
             }
         }
+
+        if (world.isClient()) return;
 
         ServerTardis tardis = (ServerTardis) this.findTardis().get();
 

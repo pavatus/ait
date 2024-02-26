@@ -1,11 +1,11 @@
 package mdteam.ait.tardis.data.loyalty;
 
-public enum Loyalty { // fixme someone like loqor who had that hour long rant on how this will work can change all this.
+public enum Loyalty {
     REJECT("none", 0),
     NEUTRAL("neutral", 25),
-    COMPANION("low", 50),
-    PILOT("medium", 75),
-    OWNER("high", 100);
+    COMPANION("companion", 50),
+    PILOT("pilot", 75),
+    OWNER("owner", 100);
 
     public final String id;
     public final int level;
