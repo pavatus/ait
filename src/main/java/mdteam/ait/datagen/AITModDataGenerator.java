@@ -197,6 +197,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.CORAL_SONIC_SCREWDRIVER, 1)
                     .input(AITItems.MECHANICAL_SONIC_SCREWDRIVER)
                     .criterion(FabricRecipeProvider.hasItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER)));
+            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.MECHANICAL_SONIC_SCREWDRIVER, 1)
+                    .input(AITItems.RENAISSANCE_SONIC_SCREWDRIVER)
+                    .criterion(FabricRecipeProvider.hasItem(AITItems.RENAISSANCE_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.RENAISSANCE_SONIC_SCREWDRIVER)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.CONSOLE_GENERATOR, 1)
                     .pattern(" G ")
                     .pattern("CEC")
@@ -479,6 +482,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.LARGE_ZEITON_BUD, "Large Zeiton Bud");
         provider.addTranslation(AITBlocks.MEDIUM_ZEITON_BUD, "Medium Zeiton Bud");
         provider.addTranslation(AITBlocks.SMALL_ZEITON_BUD, "Small Zeiton Bud");
+        provider.addTranslation(AITItems.ZEITON_SHARD, "Zeiton Shard");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
