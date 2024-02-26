@@ -1,7 +1,7 @@
 package mdteam.ait.datagen.datagen_providers;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.datagen.LanguageType;
+import mdteam.ait.datagen.datagen_providers.lang.LanguageType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.block.Block;

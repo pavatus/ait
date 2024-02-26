@@ -4,8 +4,8 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.core.util.AITModTags;
 import mdteam.ait.datagen.datagen_providers.*;
+import mdteam.ait.datagen.datagen_providers.lang.LanguageType;
 import mdteam.ait.datagen.datagen_providers.loot.AITBlockLootTables;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -404,10 +404,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             aitModelProvider.registerDirectionalBlock(AITBlocks.EXTERIOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CORAL_PLANT);
-            //aitModelProvider.registerDirectionalBlock(AITBlocks.MONITOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.ARTRON_COLLECTOR_BLOCK);
-
-            //falloutModelProvider.registerSimpleBlock(AITBlocks.DEEPSLATE_URANIUM_ORE);
             return aitModelProvider;
         }));
     }
