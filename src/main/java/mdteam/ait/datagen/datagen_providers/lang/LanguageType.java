@@ -1,4 +1,4 @@
-package mdteam.ait.datagen;
+package mdteam.ait.datagen.datagen_providers.lang;
 
 public enum LanguageType {
     EN_US,
