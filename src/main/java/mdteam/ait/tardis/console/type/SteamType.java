@@ -48,6 +48,7 @@ public class SteamType extends ConsoleTypeSchema {
             new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.16250001f, 0.0875f), new Vector3f(-0.838281256146729f, 0.4000003784894943f, 0.0046874964609742165f)),
             new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7125000134110451f, 0.47500038146972656f, 0.1789062386378646f)),
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.1f), new Vector3f(-0.7109374962747097f, 0.47500057239085436f, -0.17265624925494194f)),
+            new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.125f, 0.08749999f), new Vector3f(0.1519531337544322f, 0.8124998090788722f, -0.26171875f)),
     };
 
     public SteamType() {

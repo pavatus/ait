@@ -102,7 +102,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     }
 
     public static void playSonicSounds(PlayerEntity player) {
-        player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, 1f);
+        // @TODO sonic sounds will sound a little weird for the time being, but make this use the sound instance system like item use stuff like the elytra - Loqor
+        player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, (-player.getPitch() / 90f) + 1f);
     }
 
     public static void cycleMode(ItemStack stack) {
@@ -132,6 +133,27 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             this.removeFuel(stack);
 
             return TypedActionResult.success(stack);
+        } else if(intToMode(nbt.getInt(MODE_KEY)) != Mode.INACTIVE) {
+            playSonicSounds(user);
+
+            if (getTardis(stack) == null) return TypedActionResult.pass(stack);
+
+            Tardis tardis = getTardis(stack);
+
+            if (intToMode(nbt.getInt(MODE_KEY)) == Mode.OVERLOAD) {
+                if (tardis.getDoor().isOpen()) {
+                    if (world == TardisUtil.getTardisDimension() && tardis.getHandlers().getCrashData().isUnstable() || tardis.getHandlers().getCrashData().isToxic()) {
+                        tardis.getHandlers().getCrashData().setRepairTicks(tardis.getHandlers().getCrashData().getRepairTicks() <= 0 ? 0 : tardis.getHandlers().getCrashData().getRepairTicks() - 20);
+                        user.sendMessage(Text.literal("Repairing: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.GOLD), true);
+                        return TypedActionResult.pass(stack);
+                    }
+                } else {
+                    user.sendMessage(Text.literal("Doors need to be open for repair!").formatted(Formatting.RED), true);
+                }
+            }
+
+            Mode mode = intToMode(nbt.getInt(MODE_KEY));
+            mode.run(tardis, world, pos, user, stack);
         }
 
         if (intToMode(nbt.getInt(MODE_KEY)) == Mode.INACTIVE) return TypedActionResult.fail(stack);
@@ -218,7 +240,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
 
         tooltip.add(
-                Text.literal("Fuel: ").formatted(Formatting.BLUE)
+                Text.literal("AU: ").formatted(Formatting.BLUE)
                         .append(Text.literal(
                                 String.valueOf(
                                         Math.round(this.getCurrentFuel(stack)))
