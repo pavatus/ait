@@ -22,9 +22,8 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
-    private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
     private ConsoleModel console;
-    public ConsoleRenderer(BlockEntityRendererFactory.Context ctx) {}
+    public ConsoleRenderer(BlockEntityRendererFactory.Context ctx){}
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (entity.findTardis().isEmpty()) return;
@@ -45,7 +44,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         int maxLight = 0xFFFFFF;
 
         matrices.push();
-        //matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
+        //matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         if (console != null) {
             if (entity.findTardis().isEmpty()) return; // for some it forgets the tardis can be null, fucking weird
@@ -71,20 +70,19 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         return switch(schema.parent().id().getPath()) {
             case "console/hartnell" -> new Vector3f(0.1f, 1.2f, 0.26f);
             case "console/coral" -> new Vector3f(1.15f, 1.2f, 0.5f);
-            case "console/toyota" -> new Vector3f(-0.4359374921768904f, 0.6249999944120646f, -0.26015625055879354f);
-            case "console/alnico" -> new Vector3f(-0.4359374921768904f, 0.6249999944120646f, -0.26015625055879354f);
-            case "console/steam" -> new Vector3f(-0.4359374921768904f, 0.6249999944120646f, -0.26015625055879354f);
+            case "console/toyota" -> new Vector3f(-0.4359374921768904f, 1.6f, -0.26015625055879354f);
+            case "console/alnico" -> new Vector3f(-0.4359374921768904f, 1.2f, -0.26015625055879354f);
+            case "console/steam" -> new Vector3f(-0.4359374921768904f, 1.3f, -0.26015625055879354f);
             default -> new Vector3f(0, 0, 0);
         };
     }
 
     private float[] sonicItemRotations(ClientConsoleVariantSchema schema) {
         return switch(schema.parent().id().getPath()) {
-            case "console/hartnell" -> new float[] {120f, 135f};
-            case "console/coral" -> new float[] {120f, 135f};
-            case "console/toyota" -> new float[] {120f, 135f};
-            case "console/alnico" -> new float[] {120f, 135f};
-            case "console/steam" -> new float[] {120f, 135f};
+            case "console/hartnell", "console/alnico" -> new float[] {120f, 135f};
+            case "console/coral" -> new float[] {90f, 135f};
+            case "console/toyota" -> new float[] {210f, 135f};
+            case "console/steam" -> new float[] {-120f, 135f};
             default -> new float[] {0, 0};
         };
     }
