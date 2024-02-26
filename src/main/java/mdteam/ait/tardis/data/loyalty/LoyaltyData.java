@@ -23,45 +23,28 @@ public class LoyaltyData extends TardisLink {
         return this.data;
     }
 
-    public void addPlayer(ServerPlayerEntity player) {
-        this.setLoyalty(player, Loyalty.NEUTRAL);
+    public void add(ServerPlayerEntity player) {
+        this.set(player, Loyalty.NEUTRAL);
+    }
+    public Loyalty get(ServerPlayerEntity player) {
+        return this.data().get(player.getUuid());
     }
 
-    public void subtractLoyaltyLevel(ServerPlayerEntity player, int loyaltyValue) {
-        int playerLevel = this.get(player).level;
-        int newLevel = Math.min(Math.max(playerLevel - loyaltyValue, 0), Loyalty.OWNER.level);
-        this.setLoyalty(player, this.levelToLoyaltyValue(newLevel));
-    }
-
-    public void addLoyaltyLevel(ServerPlayerEntity player, int loyaltyValue) {
-        int playerLevel = this.get(player).level;
-        int newLevel = Math.min(Math.max(playerLevel + loyaltyValue, 0), Loyalty.OWNER.level);
-        this.setLoyalty(player, this.levelToLoyaltyValue(newLevel));
-    }
-
-    public void setLoyalty(ServerPlayerEntity player, Loyalty loyalty) {
+    public void set(ServerPlayerEntity player, Loyalty loyalty) {
         this.data().put(player.getUuid(), loyalty);
 
         this.sync();
     }
 
-    public Loyalty get(ServerPlayerEntity player) {
-        return this.data().get(player.getUuid());
+    public void subtractLoyalty(ServerPlayerEntity player, int loyaltyValue) {
+        int playerLevel = this.get(player).level;
+        int newLevel = Math.min(Math.max(playerLevel - loyaltyValue, 0), Loyalty.OWNER.level);
+        this.set(player,  Loyalty.get(newLevel));
     }
 
-    public Loyalty levelToLoyaltyValue(int level) {
-        if(level > 0 && level <= 25) {
-            return Loyalty.NEUTRAL;
-        }
-        if(level > 25 && level <= 50) {
-            return Loyalty.COMPANION;
-        }
-        if(level > 50 && level <= 75) {
-            return Loyalty.PILOT;
-        }
-        if(level > 75 && level <= 100) {
-            return Loyalty.OWNER;
-        }
-        return Loyalty.REJECT;
+    public void addLoyalty(ServerPlayerEntity player, int loyaltyValue) {
+        int playerLevel = this.get(player).level;
+        int newLevel = Math.min(Math.max(playerLevel + loyaltyValue, 0), Loyalty.OWNER.level);
+        this.set(player, Loyalty.get(newLevel));
     }
 }
