@@ -20,17 +20,17 @@ public class AITBlocks implements BlockRegistryContainer {
 
     @NoBlockItem
     public static final Block EXTERIOR_BLOCK = new ExteriorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing().luminance(7));
-    public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque().noCollision().noBlockBreakParticles()
+    public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque().noCollision()
             .instrument(Instrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F));
     public static final Block CONSOLE = new ConsoleBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
             .instrument(Instrument.COW_BELL));
     public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles()
             .instrument(Instrument.COW_BELL));
-    public static final Block ARTRON_COLLECTOR_BLOCK = new ArtronCollectorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles()
+    public static final Block ARTRON_COLLECTOR_BLOCK = new ArtronCollectorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool()
             .instrument(Instrument.BANJO));
     public static final Block CORAL_PLANT = new CoralPlantBlock(FabricBlockSettings.create().ticksRandomly().nonOpaque().noCollision()
             .breakInstantly().sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
-    public static final Block MONITOR_BLOCK = new MonitorBlock(FabricBlockSettings.create().nonOpaque().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
+    public static final Block MONITOR_BLOCK = new MonitorBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
     public static final Block DETECTOR_BLOCK = new DetectorBlock(FabricBlockSettings.create().nonOpaque().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
     public static final Block ZEITON_BLOCK = new AmethystBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool());
     public static final Block BUDDING_ZEITON = new BuddingAmethystBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).ticksRandomly().strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool().pistonBehavior(PistonBehavior.DESTROY));

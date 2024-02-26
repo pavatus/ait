@@ -26,7 +26,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         generateLanguages(pack);
-        generateItemTags(pack); // fixme im not sure why this is being silly goofy
+        generateItemTags(pack);
+        generateBlockTags(pack);
         generateRecipes(pack);
         generateBlockModels(pack);
         generateSoundData(pack);
@@ -385,6 +386,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
     public void generateItemTags(FabricDataGenerator.Pack pack) {
         pack.addProvider(AITItemTagProvider::new);
+    }
+
+    public void generateBlockTags(FabricDataGenerator.Pack pack) {
+        pack.addProvider(AITBlockTagProvider::new);
     }
 
     public void generateBlockModels(FabricDataGenerator.Pack pack) {
