@@ -188,6 +188,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('E', Items.ENDER_EYE)
                     .input('C', Items.COMPARATOR)
                     .input('B', Items.BLAZE_ROD)
+                    .group("sonic_item")
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
                     .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE))
                     .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
