@@ -3,6 +3,7 @@ package mdteam.ait.tardis.data;
 import mdteam.ait.api.tardis.ArtronHolderItem;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.core.item.WaypointItem;
+import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 public class SonicHandler extends TardisLink implements ArtronHolderItem {
     public static final String HAS_SONIC = "has_sonic";
+    @Exclude // Excluded as gson cannot serialise this
     private ItemStack current; // The current sonic in the slot
     public SonicHandler(Tardis tardis) {
         super(tardis, "sonic");
@@ -70,7 +72,7 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
     }
 
     public void spawnItem(ItemStack sonic) {
-        if (findTardis().isEmpty() || !this.hasSonic()) return;
+        if (this.findTardis().isEmpty() || !this.hasSonic()) return;
 
         Tardis tardis = this.findTardis().get();
 
@@ -105,7 +107,7 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 
         if (!tardis.hasPower()) return;
 
-        this.addFuel(10, sonic);
-        tardis.getHandlers().getFuel().removeFuel(10);
+        this.addFuel(1, sonic);
+        tardis.getHandlers().getFuel().removeFuel(1);
     }
 }

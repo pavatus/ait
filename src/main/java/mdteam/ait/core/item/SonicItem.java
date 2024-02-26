@@ -226,7 +226,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     )
         ); // todo translatable + changing of colour based off fuel
 
-        tooltip.add(ScreenTexts.EMPTY);
+        if (tag.contains("tardis")) tooltip.add(ScreenTexts.EMPTY);
 
         super.appendTooltip(stack, world, tooltip, context);
 
