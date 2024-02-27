@@ -127,6 +127,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             mode = findMode(stack);
         }
 
+        // todo fix issues with this
         if (mode == Mode.OVERLOAD) { // fixme should be in "run" in Overload mode
             if (!hasTardis) return false;
 
@@ -286,7 +287,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
 
-        Mode mode = intToMode(tag.getInt(MODE_KEY));
+        Mode mode = findPreviousMode(stack);
         tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
 
         tooltip.add(
@@ -386,18 +387,15 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                 world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
                 TardisTravel travel = tardis.getTravel();
-                BlockPos temp = player.getBlockPos();
 
-                if (world.getBlockState(pos).isReplaceable()) temp = pos;
-
-                AbsoluteBlockPos.Directed playerPos = new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection());
+                AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, player.getMovementDirection().getOpposite());
 
                 if (!ExteriorAnimation.isNearTardis(player, tardis, 256)) {
-                    travel.setDestination(playerPos, true);
+                    travel.setDestination(target, true);
                     return;
                 }
 
-                FlightUtil.travelTo(tardis, playerPos);
+                FlightUtil.travelTo(tardis, target);
 
                 player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);
             }
