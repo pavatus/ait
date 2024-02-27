@@ -54,8 +54,8 @@ public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchem
         buf.writeInt(REGISTRY.size());
         for (ConsoleVariantSchema schema : REGISTRY.values()) {
             if (schema instanceof DatapackConsole variant) {
-                if (schema.parent() == null) {
-                    AITMod.LOGGER.error("Console variant " + schema.id() + " has null category!");
+                if (variant.parent() == null) {
+                    AITMod.LOGGER.error("Console variant " + variant.id() + " has null category!");
                     AITMod.LOGGER.error("Temporarily returning, fix this code!!!"); // todo
                     continue;
                 }

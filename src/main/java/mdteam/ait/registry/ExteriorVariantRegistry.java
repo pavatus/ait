@@ -70,8 +70,8 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
         buf.writeInt(REGISTRY.size());
         for (ExteriorVariantSchema schema : REGISTRY.values()) {
             if (schema instanceof DatapackExterior variant) {
-                if (schema.category() == null) {
-                    AITMod.LOGGER.error("Exterior variant " + schema.id() + " has null category!");
+                if (variant.category() == null) {
+                    AITMod.LOGGER.error("Exterior variant " + variant.id() + " has null category!");
                     AITMod.LOGGER.error("Temporarily returning, fix this code!!!"); // todo
                     continue;
                 }
