@@ -42,6 +42,9 @@ public class FlightUtil {
     public static int convertSecondsToTicks(int seconds) {
         return seconds * 20;
     }
+    public static int convertSecondsToTicks(double seconds) {
+        return (int) (seconds * 20);
+    }
 
     public static int getFlightDuration(AbsoluteBlockPos.Directed source, AbsoluteBlockPos.Directed destination) {
         float distance = MathHelper.sqrt((float) source.getSquaredDistance(destination));

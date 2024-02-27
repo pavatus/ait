@@ -114,7 +114,7 @@ public class TardisCrashData extends TardisLink{
         PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE, state);
     }
 
-    public Integer getRepairTicks() {
+    public Integer getRepairTicks() { // what kind of madman uses Integer instead of int
         if (findTardis().isEmpty()) return 0;
         return PropertiesHandler.getInt(findTardis().get().getHandlers().getProperties(), TARDIS_REPAIR_TICKS);
     }

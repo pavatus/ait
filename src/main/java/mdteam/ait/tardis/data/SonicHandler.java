@@ -18,7 +18,7 @@ import java.util.Optional;
 
 public class SonicHandler extends TardisLink implements ArtronHolderItem {
     public static final String HAS_SONIC = "has_sonic";
-    @Exclude // Excluded as gson cannot serialise this
+    @Exclude // Excluded as gson cannot serialise this ( TODO this means sonic is NOT saved )
     private ItemStack current; // The current sonic in the slot
     public SonicHandler(Tardis tardis) {
         super(tardis, "sonic");
@@ -96,7 +96,7 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
     public void tick(MinecraftServer server) {
         super.tick(server);
 
-        if (!this.hasSonic()) return;
+        if (!this.hasSonic() || this.isSonicNull()) return;
 
         ItemStack sonic = this.get();
 

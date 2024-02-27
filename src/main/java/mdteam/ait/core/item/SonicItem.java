@@ -9,6 +9,7 @@ import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
+import mdteam.ait.tardis.data.TardisCrashData;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -18,6 +19,8 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -41,18 +44,23 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     public static final double MAX_FUEL = 1000;
 
     public static final String MODE_KEY = "mode";
+    public static final String PREV_MODE_KEY = "PreviousMode";
     public static final String INACTIVE = "inactive";
+
+    private static final int SONIC_SFX_LENGTH = FlightUtil.convertSecondsToTicks(1.5);
 
     public SonicItem(Settings settings) {
         super(settings.maxCount(1));
     }
 
     @Override
-    public ItemStack getDefaultStack() {
-        ItemStack stack = new ItemStack(this);
-        NbtCompound nbt = stack.getOrCreateNbt();
-        nbt.putInt(MODE_KEY, 0);
-        return stack;
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemStack stack = user.getStackInHand(hand);
+        BlockPos pos = user.getBlockPos();
+
+        boolean success = useSonic(world, user, pos, hand, stack);
+
+        return success ? TypedActionResult.consume(stack) : TypedActionResult.fail(stack);
     }
 
     // fixme no me gusta nada
@@ -61,26 +69,109 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         World world = context.getWorld();
         BlockPos pos = context.getBlockPos();
         PlayerEntity player = context.getPlayer();
-        ItemStack itemStack = context.getStack();
+        ItemStack stack = context.getStack();
 
         if (player == null)
             return ActionResult.FAIL;
-        if (world.isClient()) return ActionResult.SUCCESS;
 
-        NbtCompound nbt = itemStack.getOrCreateNbt();
+        boolean success = useSonic(world, player, pos, context.getHand(), stack);
 
-        if (!nbt.contains(MODE_KEY)) return ActionResult.FAIL;
+        return success ? ActionResult.CONSUME : ActionResult.FAIL;
+    }
 
-        if(intToMode(nbt.getInt(MODE_KEY)) == Mode.INACTIVE) return ActionResult.FAIL;
+    @Override
+    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        setPreviousMode(stack);
+        setMode(stack, Mode.INACTIVE);
+
+        super.onStoppedUsing(stack, world, user, remainingUseTicks);
+    }
+
+    @Override
+    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+        setPreviousMode(stack);
+        setMode(stack, Mode.INACTIVE);
+
+        return super.finishUsing(stack, world, user);
+    }
+
+    @Override
+    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        super.usageTick(world, user, stack, remainingUseTicks);
+
+        if (!(user instanceof PlayerEntity player)) {
+            return;
+        }
+
+        if (remainingUseTicks % SONIC_SFX_LENGTH != 0) return;
 
         playSonicSounds(player);
+    }
 
-        Tardis tardis = getTardis(itemStack);
+    @Override
+    public int getMaxUseTime(ItemStack stack) {
+        return 72000; // prolly big enough
+    }
 
-        Mode mode = intToMode(nbt.getInt(MODE_KEY));
-        mode.run(tardis, world, pos, player, itemStack);
+    private boolean useSonic(World world, PlayerEntity user, BlockPos pos, Hand hand, ItemStack stack) {
+        Tardis tardis = getTardis(stack);
+        boolean hasTardis = tardis != null;
+        NbtCompound nbt = stack.getOrCreateNbt();
+        Mode mode = findMode(stack);
 
-        return ActionResult.SUCCESS;
+        if (world.isClient()) return true;
+
+        // if (user.isUsingItem() && stack.equals(user.getActiveItem())) return false;
+
+        if (this.isOutOfFuel(stack)) return false;
+
+        if (user.isSneaking()) {
+            world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
+            cycleMode(stack);
+
+            this.removeFuel(stack);
+
+            return true;
+        }
+
+        if (mode == Mode.INACTIVE) {
+            Mode prev = findPreviousMode(stack);
+            if (prev == Mode.INACTIVE) return false;
+
+            setMode(stack, prev);
+            mode = findMode(stack);
+        }
+
+        // todo fix issues with this
+        if (mode == Mode.OVERLOAD) { // fixme should be in "run" in Overload mode
+            if (!hasTardis) return false;
+
+            TardisCrashData crash = tardis.getHandlers().getCrashData();
+            boolean isToxic = crash.isToxic();
+            boolean isUnstable = crash.isUnstable();
+            int repairTicks = crash.getRepairTicks();
+
+            if (!isToxic && !isUnstable) return false;
+
+            if (tardis.getDoor().isClosed()) {
+                user.sendMessage(Text.literal("Doors need to be open for repair!").formatted(Formatting.RED), true);
+                return true;
+            }
+
+            if (world != TardisUtil.getTardisDimension()) return false;
+
+            crash.setRepairTicks(repairTicks <= 0 ? 0 : repairTicks - 20);
+            user.sendMessage(Text.literal("Repairing: " + crash.getRepairTicks()).formatted(Formatting.GOLD), true);
+            return true;
+        }
+
+        user.setCurrentHand(hand);
+
+        this.removeFuel(stack);
+
+        mode.run(tardis, world, pos, user, stack);
+
+        return true;
     }
 
     public static Tardis getTardis(ItemStack item) {
@@ -100,72 +191,31 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         nbt.putInt(MODE_KEY, 0);
         nbt.putBoolean(INACTIVE, true);
     }
+    @Override
+    public ItemStack getDefaultStack() {
+        ItemStack stack = new ItemStack(this);
+        NbtCompound nbt = stack.getOrCreateNbt();
 
+        nbt.putInt(MODE_KEY, 0);
+        nbt.putDouble(FUEL_KEY, getMaxFuel(stack));
+
+        return stack;
+    }
     public static void playSonicSounds(PlayerEntity player) {
-        // @TODO sonic sounds will sound a little weird for the time being, but make this use the sound instance system like item use stuff like the elytra - Loqor
-        player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, (-player.getPitch() / 90f) + 1f);
+//        player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, (-player.getPitch() / 90f) + 1f);
+        player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, 1f);
     }
 
     public static void cycleMode(ItemStack stack) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        if (!(nbt.contains(MODE_KEY))) {
+        if (!(nbt.contains(PREV_MODE_KEY))) {
             setMode(stack, 0);
+            setPreviousMode(stack);
         }
 
-        SonicItem.setMode(stack, nbt.getInt(MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(MODE_KEY) + 1 : 0);
-    }
-
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
-        NbtCompound nbt = stack.getOrCreateNbt();
-        BlockPos pos = user.getBlockPos();
-
-        if (world.isClient()) return TypedActionResult.pass(stack);
-
-        if (this.isOutOfFuel(stack)) return TypedActionResult.fail(stack);
-
-        if (user.isSneaking()) {
-            world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
-            cycleMode(stack);
-
-            this.removeFuel(stack);
-        } else if (intToMode(nbt.getInt(MODE_KEY)) != Mode.INACTIVE) {
-            playSonicSounds(user);
-
-            if (getTardis(stack) == null) return TypedActionResult.fail(stack);
-
-            Tardis tardis = getTardis(stack);
-
-            if (intToMode(nbt.getInt(MODE_KEY)) == Mode.OVERLOAD) {
-                if (tardis.getDoor().isOpen()) {
-                    if (world == TardisUtil.getTardisDimension() && tardis.getHandlers().getCrashData().isUnstable() || tardis.getHandlers().getCrashData().isToxic()) {
-                        tardis.getHandlers().getCrashData().setRepairTicks(tardis.getHandlers().getCrashData().getRepairTicks() <= 0 ? 0 : tardis.getHandlers().getCrashData().getRepairTicks() - 20);
-                        user.sendMessage(Text.literal("Repairing: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.GOLD), true);
-                        return TypedActionResult.success(stack, false);
-                    }
-                } else if (tardis.getHandlers().getCrashData().isToxic() || tardis.getHandlers().getCrashData().isUnstable()) {
-                    user.sendMessage(Text.literal("Doors need to be open for repair!").formatted(Formatting.RED), true);
-                }
-            }
-
-            Mode mode = intToMode(nbt.getInt(MODE_KEY));
-            mode.run(tardis, world, pos, user, stack);
-        }
-
-        if (intToMode(nbt.getInt(MODE_KEY)) == Mode.INACTIVE) return TypedActionResult.fail(stack);
-
-        this.removeFuel(stack);
-
-        playSonicSounds(user);
-
-        Tardis tardis = getTardis(stack);
-
-        Mode mode = intToMode(nbt.getInt(MODE_KEY));
-        mode.run(tardis, world, pos, user, stack);
-
-        return TypedActionResult.consume(stack);
+        SonicItem.setMode(stack, nbt.getInt(PREV_MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(PREV_MODE_KEY) + 1 : 0);
+        setPreviousMode(stack);
     }
 
     public static int findModeInt(ItemStack stack) {
@@ -182,6 +232,17 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     public static void setMode(ItemStack stack, Mode mode) {
         setMode(stack, mode.ordinal());
     }
+    private static void setPreviousMode(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+        nbt.putInt(PREV_MODE_KEY, findModeInt(stack));
+    }
+    private static Mode findPreviousMode(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        if (!nbt.contains(PREV_MODE_KEY)) setPreviousMode(stack);
+
+        return intToMode(nbt.getInt(PREV_MODE_KEY));
+    }
 
     @Override
     public UseAction getUseAction(ItemStack stack) {
@@ -191,6 +252,11 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     // this smells
     public static Mode intToMode(int mode) {
         return Mode.values()[mode];
+    }
+
+    // ew
+    private static Mode findMode(ItemStack stack) {
+        return intToMode(findModeInt(stack));
     }
 
     // Fuel
@@ -234,7 +300,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
 
-        Mode mode = intToMode(tag.getInt(MODE_KEY));
+        Mode mode = findPreviousMode(stack);
         tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
 
         tooltip.add(
@@ -301,8 +367,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         SCANNING(Formatting.AQUA) {
             @Override
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
-                // fixme temporary replacement for interior changing
-
                 if (!(world.getRegistryKey() == World.OVERWORLD && !world.isClient())) return;
 
                 Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
@@ -336,18 +400,15 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                 world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
                 TardisTravel travel = tardis.getTravel();
-                BlockPos temp = player.getBlockPos();
 
-                if (world.getBlockState(pos).isReplaceable()) temp = pos;
-
-                AbsoluteBlockPos.Directed playerPos = new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection());
+                AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, player.getMovementDirection().getOpposite());
 
                 if (!ExteriorAnimation.isNearTardis(player, tardis, 256)) {
-                    travel.setDestination(playerPos, true);
+                    travel.setDestination(target, true);
                     return;
                 }
 
-                FlightUtil.travelTo(tardis, playerPos);
+                FlightUtil.travelTo(tardis, target);
 
                 player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);
             }
