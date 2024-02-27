@@ -131,12 +131,10 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             cycleMode(stack);
 
             this.removeFuel(stack);
-
-            return TypedActionResult.success(stack);
-        } else if(intToMode(nbt.getInt(MODE_KEY)) != Mode.INACTIVE) {
+        } else if (intToMode(nbt.getInt(MODE_KEY)) != Mode.INACTIVE) {
             playSonicSounds(user);
 
-            if (getTardis(stack) == null) return TypedActionResult.pass(stack);
+            if (getTardis(stack) == null) return TypedActionResult.fail(stack);
 
             Tardis tardis = getTardis(stack);
 
@@ -145,7 +143,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     if (world == TardisUtil.getTardisDimension() && tardis.getHandlers().getCrashData().isUnstable() || tardis.getHandlers().getCrashData().isToxic()) {
                         tardis.getHandlers().getCrashData().setRepairTicks(tardis.getHandlers().getCrashData().getRepairTicks() <= 0 ? 0 : tardis.getHandlers().getCrashData().getRepairTicks() - 20);
                         user.sendMessage(Text.literal("Repairing: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.GOLD), true);
-                        return TypedActionResult.pass(stack);
+                        return TypedActionResult.success(stack, false);
                     }
                 } else if (tardis.getHandlers().getCrashData().isToxic() || tardis.getHandlers().getCrashData().isUnstable()) {
                     user.sendMessage(Text.literal("Doors need to be open for repair!").formatted(Formatting.RED), true);
@@ -167,7 +165,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         Mode mode = intToMode(nbt.getInt(MODE_KEY));
         mode.run(tardis, world, pos, user, stack);
 
-        return TypedActionResult.success(stack);
+        return TypedActionResult.consume(stack);
     }
 
     public static int findModeInt(ItemStack stack) {
