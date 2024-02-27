@@ -84,7 +84,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 
         createTextButton(Text.translatable("screen.ait.interiorsettings.back"),(button -> backToExteriorChangeScreen()));
         createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole"), (button -> sendCachePacket()));
-        createTextButton(Text.translatable("screen.ait.interiorsettings.security"), (button -> toSecurityScreen()));
+        createTextButton(Text.translatable("screen.ait.security.button"), (button -> toSecurityScreen()));
 
         this.addButton(
                 new PressableTextWidget(
