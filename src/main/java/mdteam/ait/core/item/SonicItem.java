@@ -44,6 +44,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     public static final double MAX_FUEL = 1000;
 
     public static final String MODE_KEY = "mode";
+    public static final String PREV_MODE_KEY = "PreviousMode";
     public static final String INACTIVE = "inactive";
 
     public SonicItem(Settings settings) {
@@ -57,7 +58,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         boolean success = useSonic(world, user, pos, hand, stack);
 
-        return success ? TypedActionResult.success(stack) : TypedActionResult.fail(stack);
+        return success ? TypedActionResult.pass(stack) : TypedActionResult.fail(stack);
     }
 
     // fixme no me gusta nada
@@ -73,12 +74,12 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         boolean success = useSonic(world, player, pos, context.getHand(), stack);
 
-        return success ? ActionResult.SUCCESS : ActionResult.FAIL;
+        return success ? ActionResult.PASS : ActionResult.FAIL;
     }
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        System.out.println("STOPPED USE");
+        setPreviousMode(stack);
         setMode(stack, Mode.INACTIVE);
 
         super.onStoppedUsing(stack, world, user, remainingUseTicks);
@@ -86,6 +87,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+        setPreviousMode(stack);
         setMode(stack, Mode.INACTIVE);
 
         return super.finishUsing(stack, world, user);
@@ -104,6 +106,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         if (world.isClient()) return true;
 
+        if (stack.equals(user.getActiveItem())) return false;
+
         if (this.isOutOfFuel(stack)) return false;
 
         if (user.isSneaking()) {
@@ -115,7 +119,12 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             return true;
         }
 
-        if (mode == Mode.INACTIVE) return false;
+        if (mode == Mode.INACTIVE) {
+            Mode prev = findPreviousMode(stack);
+            if (prev == Mode.INACTIVE) return false;
+
+            setMode(stack, prev);
+        }
 
         if (mode == Mode.OVERLOAD) { // fixme should be in "run" in Overload mode
             if (!hasTardis) return false;
@@ -205,6 +214,17 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     }
     public static void setMode(ItemStack stack, Mode mode) {
         setMode(stack, mode.ordinal());
+    }
+    private static void setPreviousMode(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+        nbt.putInt(PREV_MODE_KEY, findModeInt(stack));
+    }
+    private static Mode findPreviousMode(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        if (!nbt.contains(PREV_MODE_KEY)) setPreviousMode(stack);
+
+        return intToMode(nbt.getInt(PREV_MODE_KEY));
     }
 
     @Override
