@@ -103,8 +103,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             return;
         }
 
-        System.out.println(remainingUseTicks % SONIC_SFX_LENGTH);
-
         if (remainingUseTicks % SONIC_SFX_LENGTH != 0) return;
 
         playSonicSounds(player);
