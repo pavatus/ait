@@ -117,9 +117,10 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.pop();
         if(!entity.findTardis().get().getHandlers().getSonic().hasSonic()) return;
         matrices.push();
-        matrices.translate(sonicItemTranslations(exteriorVariant).x(), sonicItemTranslations(exteriorVariant).y(), sonicItemTranslations(exteriorVariant).z());
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + sonicItemRotations(exteriorVariant)[0]));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(sonicItemRotations(exteriorVariant)[1]));
+        //matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + sonicItemRotations(exteriorVariant)[0]));
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + exteriorVariant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());
+        matrices.translate(exteriorVariant.sonicItemTranslations().x(), exteriorVariant.sonicItemTranslations().y(), exteriorVariant.sonicItemTranslations().z());
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(exteriorVariant.sonicItemRotations()[1]));
         matrices.scale(0.9f, 0.9f, 0.9f);
         int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
         ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get();
@@ -130,33 +131,5 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
     @Override
     public boolean rendersOutsideBoundingBox(T blockEntity) {
         return true;
-    }
-
-    private Vector3f sonicItemTranslations(ClientExteriorVariantSchema schema) {
-        return switch(schema.parent().id().getPath()) {
-            case "booth" -> new Vector3f(0.5f, 1.2f, 0.5f);
-            case "box" -> new Vector3f(0.5f, 1.2f, 0.5f);
-            case "capsule" -> new Vector3f(0.5f, 1.2f, 0.5f);
-            case "classic" -> new Vector3f(0.5f, 1.2f, 0.5f);
-            case "easter_head" -> new Vector3f(0.5f, 1.2f, 0.5f);
-            case "plinth" -> new Vector3f(0.5f, 1.2f, 0.5f);
-            case "renegade" -> new Vector3f(0.5f, 1.2f, 0.5f);
-            case "tardim" -> new Vector3f(0.5f, 1.2f,0.5f);
-            default -> new Vector3f(0f, 0f, 0f);
-        };
-    }
-
-    private float[] sonicItemRotations(ClientExteriorVariantSchema schema) {
-        return switch(schema.parent().id().getPath()) {
-            case "booth" -> new float[] {0f, 45f};
-            case "box" -> new float[] {0f, 45};
-            case "capsule" -> new float[] {0f, 45f};
-            case "classic" -> new float[] {0f, 45f};
-            case "easter_head" -> new float[] {0f, 45f};
-            case "plinth" -> new float[] {0f, 45f};
-            case "renegade" -> new float[] {0f, 45f};
-            case "tardim" -> new float[] {0f, 45f};
-            default -> new float[] {0f, 0f};
-        };
     }
 }

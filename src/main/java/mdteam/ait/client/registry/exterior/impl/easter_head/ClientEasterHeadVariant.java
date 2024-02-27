@@ -6,6 +6,7 @@ import mdteam.ait.client.models.exteriors.EasterHeadModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import net.minecraft.util.Identifier;
+import org.joml.Vector3f;
 
 // a useful class for creating easter_head variants as they all have the same filepath you know
 public abstract class ClientEasterHeadVariant extends ClientExteriorVariantSchema {
@@ -31,5 +32,15 @@ public abstract class ClientEasterHeadVariant extends ClientExteriorVariantSchem
     @Override
     public Identifier emission() {
         return null;
+    }
+
+    @Override
+    public Vector3f sonicItemTranslations() {
+        return new Vector3f(0.25f, 1.1f, 1.2f);
+    }
+
+    @Override
+    public float[] sonicItemRotations() {
+        return new float[] {0f, 112.5f};
     }
 }

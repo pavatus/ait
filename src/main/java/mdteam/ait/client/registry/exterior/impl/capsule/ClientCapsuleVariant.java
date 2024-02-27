@@ -5,6 +5,7 @@ import mdteam.ait.client.models.exteriors.CapsuleExteriorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import net.minecraft.util.Identifier;
+import org.joml.Vector3f;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class ClientCapsuleVariant extends ClientExteriorVariantSchema {
@@ -30,5 +31,10 @@ public abstract class ClientCapsuleVariant extends ClientExteriorVariantSchema {
     @Override
     public Identifier emission() {
         return null;
+    }
+
+    @Override
+    public Vector3f sonicItemTranslations() {
+        return new Vector3f(0.5f, 1.2f, 1.15f);
     }
 }
