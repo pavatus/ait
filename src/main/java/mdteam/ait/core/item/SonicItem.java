@@ -58,7 +58,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         boolean success = useSonic(world, user, pos, hand, stack);
 
-        return success ? TypedActionResult.pass(stack) : TypedActionResult.fail(stack);
+        return success ? TypedActionResult.consume(stack) : TypedActionResult.fail(stack);
     }
 
     // fixme no me gusta nada
@@ -74,7 +74,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         boolean success = useSonic(world, player, pos, context.getHand(), stack);
 
-        return success ? ActionResult.PASS : ActionResult.FAIL;
+        return success ? ActionResult.CONSUME : ActionResult.FAIL;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         if (world.isClient()) return true;
 
-        if (stack.equals(user.getActiveItem())) return false;
+        // if (user.isUsingItem() && stack.equals(user.getActiveItem())) return false;
 
         if (this.isOutOfFuel(stack)) return false;
 
@@ -124,6 +124,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             if (prev == Mode.INACTIVE) return false;
 
             setMode(stack, prev);
+            mode = findMode(stack);
         }
 
         if (mode == Mode.OVERLOAD) { // fixme should be in "run" in Overload mode
@@ -194,11 +195,13 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     public static void cycleMode(ItemStack stack) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        if (!(nbt.contains(MODE_KEY))) {
+        if (!(nbt.contains(PREV_MODE_KEY))) {
             setMode(stack, 0);
+            setPreviousMode(stack);
         }
 
-        SonicItem.setMode(stack, nbt.getInt(MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(MODE_KEY) + 1 : 0);
+        SonicItem.setMode(stack, nbt.getInt(PREV_MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(PREV_MODE_KEY) + 1 : 0);
+        setPreviousMode(stack);
     }
 
     public static int findModeInt(ItemStack stack) {
@@ -350,8 +353,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         SCANNING(Formatting.AQUA) {
             @Override
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
-                // fixme temporary replacement for interior changing
-
                 if (!(world.getRegistryKey() == World.OVERWORLD && !world.isClient())) return;
 
                 Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
