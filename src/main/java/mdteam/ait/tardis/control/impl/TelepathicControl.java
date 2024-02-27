@@ -43,16 +43,13 @@ public class TelepathicControl extends Control {
 
         boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
         if (!KeyItem.hasMatchingKeyInInventory(player, tardis) && security) return false;
-        if (player.getMainHandStack().getItem() instanceof KeyItem linker) {
+
+        if (player.getMainHandStack().getItem() instanceof LinkableItem linker) {
             linker.link(player.getMainHandStack(), tardis);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             return true;
         }
-        if (player.getMainHandStack().getItem() instanceof RemoteItem linker) {
-            linker.link(player.getMainHandStack(), tardis);
-            world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            return true;
-        }
+
         if (player.getMainHandStack().getItem() instanceof NameTagItem) {
             ItemStack hand = player.getMainHandStack();
 
