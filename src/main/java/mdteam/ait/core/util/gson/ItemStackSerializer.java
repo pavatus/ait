@@ -3,11 +3,6 @@ package mdteam.ait.core.util.gson;
 import com.google.gson.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import org.jglrxavpok.hephaistos.json.NBTGsonReader;
-import org.jglrxavpok.hephaistos.json.NBTGsonWriter;
-import org.jglrxavpok.hephaistos.nbt.CompoundBuilder;
-import org.jglrxavpok.hephaistos.nbt.NBT;
-import org.jglrxavpok.hephaistos.nbt.NBTType;
 
 import java.lang.reflect.Type;
 

@@ -6,13 +6,6 @@ import mdteam.ait.AITMod;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.nbt.visitor.StringNbtWriter;
-import org.jglrxavpok.hephaistos.antlr.SNBTParser;
-import org.jglrxavpok.hephaistos.json.NBTGsonReader;
-import org.jglrxavpok.hephaistos.json.NBTGsonWriter;
-import org.jglrxavpok.hephaistos.nbt.CompoundBuilder;
-import org.jglrxavpok.hephaistos.nbt.NBT;
-import org.jglrxavpok.hephaistos.nbt.NBTCompound;
-import org.jglrxavpok.hephaistos.nbt.NBTType;
 
 import java.lang.reflect.Type;
 
