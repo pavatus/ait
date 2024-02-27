@@ -3,6 +3,7 @@ package mdteam.ait.tardis.control.impl;
 import com.mojang.datafixers.util.Pair;
 import mdteam.ait.api.tardis.LinkableItem;
 import mdteam.ait.core.item.KeyItem;
+import mdteam.ait.core.item.RemoteItem;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
@@ -42,7 +43,12 @@ public class TelepathicControl extends Control {
 
         boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
         if (!KeyItem.hasMatchingKeyInInventory(player, tardis) && security) return false;
-        if (player.getMainHandStack().getItem() instanceof LinkableItem linker) {
+        if (player.getMainHandStack().getItem() instanceof KeyItem linker) {
+            linker.link(player.getMainHandStack(), tardis);
+            world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            return true;
+        }
+        if (player.getMainHandStack().getItem() instanceof RemoteItem linker) {
             linker.link(player.getMainHandStack(), tardis);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             return true;

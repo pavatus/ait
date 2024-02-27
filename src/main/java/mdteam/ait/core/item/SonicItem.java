@@ -147,7 +147,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                         user.sendMessage(Text.literal("Repairing: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.GOLD), true);
                         return TypedActionResult.pass(stack);
                     }
-                } else {
+                } else if (tardis.getHandlers().getCrashData().isToxic() || tardis.getHandlers().getCrashData().isUnstable()) {
                     user.sendMessage(Text.literal("Doors need to be open for repair!").formatted(Formatting.RED), true);
                 }
             }

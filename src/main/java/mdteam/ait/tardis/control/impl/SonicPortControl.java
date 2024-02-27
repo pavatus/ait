@@ -6,12 +6,15 @@ import mdteam.ait.tardis.TardisConsole;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.util.FlightUtil;
+import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.Vec3d;
 
 public class SonicPortControl extends Control { // TODO - implement onto consoles
     public SonicPortControl() {
@@ -27,6 +30,18 @@ public class SonicPortControl extends Control { // TODO - implement onto console
         if (hasSonic && shouldEject) {
             handler.spawnItem();
             return true;
+        }
+
+        if (player.isSneaking() && player.getMainHandStack().getItem() instanceof SonicItem linker) {
+            linker.link(player.getMainHandStack(), tardis);
+            world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            tardis.getDesktop().getConsoles().forEach(consolis -> {
+                Vec3d vec3d = Vec3d.ofBottomCenter(consolis.position()).add(0.0, 1.2f, 0.0);
+                if(TardisUtil.getTardisDimension() instanceof ServerWorld) {
+                    world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
+                    world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
+                }
+            });
         }
 
         ItemStack stack = player.getMainHandStack();
