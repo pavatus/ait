@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.SiegeModeModel;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
+import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
@@ -13,16 +14,21 @@ import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import mdteam.ait.tardis.TardisExterior;
+import org.joml.Vector3f;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
     private ExteriorModel model;
@@ -109,10 +115,48 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             }
         }
         matrices.pop();
+        if(!entity.findTardis().get().getHandlers().getSonic().hasSonic()) return;
+        matrices.push();
+        matrices.translate(sonicItemTranslations(exteriorVariant).x(), sonicItemTranslations(exteriorVariant).y(), sonicItemTranslations(exteriorVariant).z());
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + sonicItemRotations(exteriorVariant)[0]));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(sonicItemRotations(exteriorVariant)[1]));
+        matrices.scale(0.9f, 0.9f, 0.9f);
+        int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
+        ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get();
+        MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), 0);
+        matrices.pop();
     }
 
     @Override
     public boolean rendersOutsideBoundingBox(T blockEntity) {
         return true;
+    }
+
+    private Vector3f sonicItemTranslations(ClientExteriorVariantSchema schema) {
+        return switch(schema.parent().id().getPath()) {
+            case "booth" -> new Vector3f(0.5f, 1.2f, 0.5f);
+            case "box" -> new Vector3f(0.5f, 1.2f, 0.5f);
+            case "capsule" -> new Vector3f(0.5f, 1.2f, 0.5f);
+            case "classic" -> new Vector3f(0.5f, 1.2f, 0.5f);
+            case "easter_head" -> new Vector3f(0.5f, 1.2f, 0.5f);
+            case "plinth" -> new Vector3f(0.5f, 1.2f, 0.5f);
+            case "renegade" -> new Vector3f(0.5f, 1.2f, 0.5f);
+            case "tardim" -> new Vector3f(0.5f, 1.2f,0.5f);
+            default -> new Vector3f(0f, 0f, 0f);
+        };
+    }
+
+    private float[] sonicItemRotations(ClientExteriorVariantSchema schema) {
+        return switch(schema.parent().id().getPath()) {
+            case "booth" -> new float[] {0f, 45f};
+            case "box" -> new float[] {0f, 45};
+            case "capsule" -> new float[] {0f, 45f};
+            case "classic" -> new float[] {0f, 45f};
+            case "easter_head" -> new float[] {0f, 45f};
+            case "plinth" -> new float[] {0f, 45f};
+            case "renegade" -> new float[] {0f, 45f};
+            case "tardim" -> new float[] {0f, 45f};
+            default -> new float[] {0f, 0f};
+        };
     }
 }
