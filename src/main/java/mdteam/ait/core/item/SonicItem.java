@@ -47,6 +47,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     public static final String PREV_MODE_KEY = "PreviousMode";
     public static final String INACTIVE = "inactive";
 
+    private static final int SONIC_SFX_LENGTH = FlightUtil.convertSecondsToTicks(1.5);
+
     public SonicItem(Settings settings) {
         super(settings.maxCount(1));
     }
@@ -91,6 +93,21 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         setMode(stack, Mode.INACTIVE);
 
         return super.finishUsing(stack, world, user);
+    }
+
+    @Override
+    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        super.usageTick(world, user, stack, remainingUseTicks);
+
+        if (!(user instanceof PlayerEntity player)) {
+            return;
+        }
+
+        System.out.println(remainingUseTicks % SONIC_SFX_LENGTH);
+
+        if (remainingUseTicks % SONIC_SFX_LENGTH != 0) return;
+
+        playSonicSounds(player);
     }
 
     @Override
@@ -154,8 +171,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         this.removeFuel(stack);
 
-        playSonicSounds(user);
-
         mode.run(tardis, world, pos, user, stack);
 
         return true;
@@ -189,8 +204,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         return stack;
     }
     public static void playSonicSounds(PlayerEntity player) {
-        // @TODO sonic sounds will sound a little weird for the time being, but make this use the sound instance system like item use stuff like the elytra - Loqor
-        player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, (-player.getPitch() / 90f) + 1f);
+//        player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, (-player.getPitch() / 90f) + 1f);
+        player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, 1f);
     }
 
     public static void cycleMode(ItemStack stack) {
