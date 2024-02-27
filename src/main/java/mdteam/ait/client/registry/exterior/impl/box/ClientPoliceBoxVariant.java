@@ -5,6 +5,7 @@ import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.PoliceBoxModel;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import net.minecraft.util.Identifier;
+import org.joml.Vector3f;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class ClientPoliceBoxVariant extends ClientExteriorVariantSchema {
@@ -30,5 +31,10 @@ public abstract class ClientPoliceBoxVariant extends ClientExteriorVariantSchema
     @Override
     public Identifier emission() {
         return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_emission" + ".png");
+    }
+
+    @Override
+    public Vector3f sonicItemTranslations() {
+        return new Vector3f(0.56f, 1.2f, 1.2f);
     }
 }

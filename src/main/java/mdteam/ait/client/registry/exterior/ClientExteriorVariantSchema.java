@@ -11,6 +11,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
+import org.joml.Vector3f;
 
 import java.lang.reflect.Type;
 
@@ -42,6 +43,10 @@ public abstract class ClientExteriorVariantSchema implements Identifiable {
     public abstract Identifier texture();
     public abstract Identifier emission();
     public abstract ExteriorModel model();
+    public abstract Vector3f sonicItemTranslations();
+    public float[] sonicItemRotations() {
+        return new float[] {0f, 45f};
+    }
 
     /**
      * The default exterior for this category
