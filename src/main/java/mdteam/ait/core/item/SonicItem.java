@@ -48,75 +48,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     }
 
     @Override
-    public ItemStack getDefaultStack() {
-        ItemStack stack = new ItemStack(this);
-        NbtCompound nbt = stack.getOrCreateNbt();
-        nbt.putInt(MODE_KEY, 0);
-        return stack;
-    }
-
-    // fixme no me gusta nada
-    @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        BlockPos pos = context.getBlockPos();
-        PlayerEntity player = context.getPlayer();
-        ItemStack itemStack = context.getStack();
-
-        if (player == null)
-            return ActionResult.FAIL;
-        if (world.isClient()) return ActionResult.SUCCESS;
-
-        NbtCompound nbt = itemStack.getOrCreateNbt();
-
-        if (!nbt.contains(MODE_KEY)) return ActionResult.FAIL;
-
-        if(intToMode(nbt.getInt(MODE_KEY)) == Mode.INACTIVE) return ActionResult.FAIL;
-
-        playSonicSounds(player);
-
-        Tardis tardis = getTardis(itemStack);
-
-        Mode mode = intToMode(nbt.getInt(MODE_KEY));
-        mode.run(tardis, world, pos, player, itemStack);
-
-        return ActionResult.SUCCESS;
-    }
-
-    public static Tardis getTardis(ItemStack item) {
-        NbtCompound nbt = item.getOrCreateNbt();
-
-        if (!nbt.contains("tardis")) return null;
-
-        return ServerTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")));
-    }
-
-    @Override
-    public void link(ItemStack stack, UUID uuid) {
-        super.link(stack, uuid);
-
-        NbtCompound nbt = stack.getOrCreateNbt();
-
-        nbt.putInt(MODE_KEY, 0);
-        nbt.putBoolean(INACTIVE, true);
-    }
-
-    public static void playSonicSounds(PlayerEntity player) {
-        // @TODO sonic sounds will sound a little weird for the time being, but make this use the sound instance system like item use stuff like the elytra - Loqor
-        player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, (-player.getPitch() / 90f) + 1f);
-    }
-
-    public static void cycleMode(ItemStack stack) {
-        NbtCompound nbt = stack.getOrCreateNbt();
-
-        if (!(nbt.contains(MODE_KEY))) {
-            setMode(stack, 0);
-        }
-
-        SonicItem.setMode(stack, nbt.getInt(MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(MODE_KEY) + 1 : 0);
-    }
-
-    @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         NbtCompound nbt = stack.getOrCreateNbt();
@@ -166,6 +97,73 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         mode.run(tardis, world, pos, user, stack);
 
         return TypedActionResult.consume(stack);
+    }
+
+    // fixme no me gusta nada
+    @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        World world = context.getWorld();
+        BlockPos pos = context.getBlockPos();
+        PlayerEntity player = context.getPlayer();
+        ItemStack itemStack = context.getStack();
+
+        if (player == null)
+            return ActionResult.FAIL;
+        if (world.isClient()) return ActionResult.SUCCESS;
+
+        NbtCompound nbt = itemStack.getOrCreateNbt();
+
+        if (!nbt.contains(MODE_KEY)) return ActionResult.FAIL;
+
+        if(intToMode(nbt.getInt(MODE_KEY)) == Mode.INACTIVE) return ActionResult.FAIL;
+
+        playSonicSounds(player);
+
+        Tardis tardis = getTardis(itemStack);
+
+        Mode mode = intToMode(nbt.getInt(MODE_KEY));
+        mode.run(tardis, world, pos, player, itemStack);
+
+        return ActionResult.SUCCESS;
+    }
+
+    public static Tardis getTardis(ItemStack item) {
+        NbtCompound nbt = item.getOrCreateNbt();
+
+        if (!nbt.contains("tardis")) return null;
+
+        return ServerTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")));
+    }
+
+    @Override
+    public void link(ItemStack stack, UUID uuid) {
+        super.link(stack, uuid);
+
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        nbt.putInt(MODE_KEY, 0);
+        nbt.putBoolean(INACTIVE, true);
+    }
+    @Override
+    public ItemStack getDefaultStack() {
+        ItemStack stack = new ItemStack(this);
+        NbtCompound nbt = stack.getOrCreateNbt();
+        nbt.putInt(MODE_KEY, 0);
+        return stack;
+    }
+    public static void playSonicSounds(PlayerEntity player) {
+        // @TODO sonic sounds will sound a little weird for the time being, but make this use the sound instance system like item use stuff like the elytra - Loqor
+        player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, (-player.getPitch() / 90f) + 1f);
+    }
+
+    public static void cycleMode(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        if (!(nbt.contains(MODE_KEY))) {
+            setMode(stack, 0);
+        }
+
+        SonicItem.setMode(stack, nbt.getInt(MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(MODE_KEY) + 1 : 0);
     }
 
     public static int findModeInt(ItemStack stack) {
