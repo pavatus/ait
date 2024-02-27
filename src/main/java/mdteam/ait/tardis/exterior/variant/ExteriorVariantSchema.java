@@ -62,7 +62,7 @@ public abstract class ExteriorVariantSchema implements Identifiable {
         };
     }
 
-    protected Identifier categoryId() { return this.category; }
+    public Identifier categoryId() { return this.category; }
 
     public ExteriorCategorySchema category() { return CategoryRegistry.getInstance().get(this.categoryId()); }
     public Identifier id() { return id; }
