@@ -45,7 +45,7 @@ public class PowerControl extends Control {
 
     @Override
     public boolean shouldHaveDelay(Tardis tardis) {
-        if (!tardis.hasPower()) return false;
+        if (tardis.hasPower()) return false;
 
         return super.shouldHaveDelay();
     }
