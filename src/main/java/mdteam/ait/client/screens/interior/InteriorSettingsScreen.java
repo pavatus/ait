@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.screens.ConsoleScreen;
 import mdteam.ait.client.screens.TardisScreen;
+import mdteam.ait.client.screens.TardisSecurityScreen;
 import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.HumsRegistry;
@@ -82,8 +83,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         this.buttons.clear();
 
         createTextButton(Text.translatable("screen.ait.interiorsettings.back"),(button -> backToExteriorChangeScreen()));
-        //createTextButton(Text.translatable("screen.ait.interiorsettings.changeinterior"), (button -> toSelectInteriorScreen()));
         createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole"), (button -> sendCachePacket()));
+        createTextButton(Text.translatable("screen.ait.security.button"), (button -> toSecurityScreen()));
 
         this.addButton(
                 new PressableTextWidget(
@@ -167,8 +168,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
     public void backToExteriorChangeScreen() {
         MinecraftClient.getInstance().setScreen(this.parent);
     }
-    public void toSelectInteriorScreen() {
-        MinecraftClient.getInstance().setScreen(new OwOInteriorSelectScreen(tardis().getUuid(), this));
+    public void toSecurityScreen() {
+        MinecraftClient.getInstance().setScreen(new TardisSecurityScreen(tardis().getUuid(), this.console, this));
     }
 
 
@@ -183,16 +184,16 @@ public class InteriorSettingsScreen extends ConsoleScreen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.drawBackground(context); // the grey backdrop
         this.renderDesktop(context);
-        if(!this.buttons.get(2).isHovered()) context.drawTexture(BACKGROUND, left + 149, top + 142, 0, 166, 12, 12);
-        if(!this.buttons.get(3).isHovered()) context.drawTexture(BACKGROUND, left + 232, top + 142, 12, 166, 12, 12);
-        if(!this.buttons.get(4).isHovered()) context.drawTexture(BACKGROUND, left + 228, top + 111, 0, 178, 16, 16);
+        if(!this.buttons.get(3).isHovered()) context.drawTexture(BACKGROUND, left + 149, top + 142, 0, 166, 12, 12);
+        if(!this.buttons.get(4).isHovered()) context.drawTexture(BACKGROUND, left + 232, top + 142, 12, 166, 12, 12);
+        if(!this.buttons.get(5).isHovered()) context.drawTexture(BACKGROUND, left + 228, top + 111, 0, 178, 16, 16);
 
         // big triangles
-        if(!this.buttons.get(5).isHovered()) context.drawTexture(TEXTURE, left + 149, top + 76, 0, 197, 15, 30);
-        if(!this.buttons.get(6).isHovered()) context.drawTexture(TEXTURE, left + 229, top + 76, 30, 197, 15, 30);
+        if(!this.buttons.get(6).isHovered()) context.drawTexture(TEXTURE, left + 149, top + 76, 0, 197, 15, 30);
+        if(!this.buttons.get(7).isHovered()) context.drawTexture(TEXTURE, left + 229, top + 76, 30, 197, 15, 30);
 
         // big apply button
-        if(!this.buttons.get(7).isHovered()) context.drawTexture(TEXTURE, left + 168, top + 94, 0, 227, 57, 12);
+        if(!this.buttons.get(8).isHovered()) context.drawTexture(TEXTURE, left + 168, top + 94, 0, 227, 57, 12);
 
         if(tardis() == null) return;
 

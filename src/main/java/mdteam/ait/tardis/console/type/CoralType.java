@@ -48,6 +48,7 @@ public class CoralType extends ConsoleTypeSchema {
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.074999996f), new Vector3f(0.8007812770083547f, 0.5375005733221769f, -0.02343749813735485f)),
             new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.1375f, 0.1125f), new Vector3f(0.7257812488824129f, 0.5875006653368473f, 0.2390625039115548f)),
             new ControlTypes(new CloakControl(), EntityDimensions.changing(0.1375f, 0.1375f), new Vector3f(-0.3484375160187483f, 0.600000855512917f, 0.4757812535390258f)),
+            new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.125f, 0.08749999f), new Vector3f(0.6019531404599547f, 0.6249998062849045f, 7.812539115548134E-4f)),
     };
     public CoralType() {
         super(REFERENCE, "coral");

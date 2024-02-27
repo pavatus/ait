@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.exterior.variant.*;
 import mdteam.ait.tardis.exterior.variant.box.*;
+import mdteam.ait.tardis.exterior.variant.classic.*;
 import mdteam.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
 import mdteam.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
 import mdteam.ait.tardis.util.TardisUtil;
@@ -11,10 +12,6 @@ import mdteam.ait.tardis.exterior.variant.booth.*;
 import mdteam.ait.tardis.exterior.variant.capsule.CapsuleDefaultVariant;
 import mdteam.ait.tardis.exterior.variant.capsule.CapsuleFireVariant;
 import mdteam.ait.tardis.exterior.variant.capsule.CapsuleSoulVariant;
-import mdteam.ait.tardis.exterior.variant.classic.ClassicBoxDefinitiveVariant;
-import mdteam.ait.tardis.exterior.variant.classic.ClassicBoxPrimeVariant;
-import mdteam.ait.tardis.exterior.variant.classic.ClassicBoxPtoredVariant;
-import mdteam.ait.tardis.exterior.variant.classic.ClassicBoxYetiVariant;
 import mdteam.ait.tardis.exterior.variant.doom.DoomVariant;
 import mdteam.ait.tardis.exterior.variant.easter_head.EasterHeadDefaultVariant;
 import mdteam.ait.tardis.exterior.variant.easter_head.EasterHeadFireVariant;
@@ -145,6 +142,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
     public static ExteriorVariantSchema YETI;
     public static ExteriorVariantSchema DEFINITIVE;
     public static ExteriorVariantSchema PTORED;
+    public static ExteriorVariantSchema MINT;
     public static ExteriorVariantSchema CAPSULE_DEFAULT;
     public static ExteriorVariantSchema CAPSULE_SOUL;
     public static ExteriorVariantSchema CAPSULE_FIRE;
@@ -186,6 +184,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
         YETI = register(new ClassicBoxYetiVariant());
         DEFINITIVE = register(new ClassicBoxDefinitiveVariant());
         PTORED = register(new ClassicBoxPtoredVariant());
+        MINT = register(new ClassicBoxMintVariant());
 
         // Capsule
         CAPSULE_DEFAULT = register(new CapsuleDefaultVariant());

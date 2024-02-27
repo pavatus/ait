@@ -530,6 +530,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.monitor.traveltime", "Travel Time");
         provider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
         provider.addTranslation("screen.ait.interiorsettings.back", "> Back");
+        provider.addTranslation("screen.ait.interiorsettings.security", "> Security Options");
         provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
         provider.addTranslation("screen.ait.interiorsettings.cacheconsole", "> Cache Console");
 
@@ -539,6 +540,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.eight", "Eighth");
 
         provider.addTranslation("screen.ait.interor_select.title", "Interior Select");
+        provider.addTranslation("screen.ait.security.leave_behind", "> Leave Behind");
+        provider.addTranslation("screen.ait.security.hostile_alarms", "> Hostile Alarms");
         provider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
         provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");

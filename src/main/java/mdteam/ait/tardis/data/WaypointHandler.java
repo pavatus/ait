@@ -31,7 +31,6 @@ public class WaypointHandler extends TardisLink {
         PropertiesHandler.set(this.findTardis().get(), HAS_CARTRIDGE, false);
     }
 
-    // todo summon a new waypoint item at the console if spawnItem is true
     /**
      * Sets the new waypoint
      * @param var

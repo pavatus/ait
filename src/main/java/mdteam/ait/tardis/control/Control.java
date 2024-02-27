@@ -83,6 +83,9 @@ public class Control {
     public boolean shouldHaveDelay() {
         return true;
     }
+    public boolean shouldHaveDelay(Tardis tardis) {
+        return this.shouldHaveDelay();
+    }
     public boolean ignoresSecurity() {
         return false;
     }

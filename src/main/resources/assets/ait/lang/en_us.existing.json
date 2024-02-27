@@ -17,5 +17,10 @@
   "text.config.aitconfig.option.INTERIOR_HUM_VOLUME": "Interior Hum Volume",
 
   "text.config.aitconfig.option.CUSTOM_MENU": "Custom Menu",
-  "text.config.aitconfig.option.CUSTOM_MENU.tooltip": "Whether the custom title screen should show"
+  "text.config.aitconfig.option.CUSTOM_MENU.tooltip": "Whether the custom title screen should show",
+
+  "screen.ait.security.title": "Security",
+  "screen.ait.security.button": "> Security",
+  "screen.ait.security.leave_behind": "> Toggle leaving behind",
+  "screen.ait.security.hostile_alarms": "> Toggle hostile alarms"
 }

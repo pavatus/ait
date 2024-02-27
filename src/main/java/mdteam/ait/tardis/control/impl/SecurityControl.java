@@ -54,19 +54,23 @@ public class SecurityControl extends Control {
 
     public static void runSecurityProtocols(Tardis tardis) {
         boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SECURITY_KEY);
+        boolean leaveBehind = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.LEAVE_BEHIND);
 
         if (!security) return;
 
         List<ServerPlayerEntity> forRemoval = new ArrayList<>();
 
-        for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
-            if (!hasMatchingKey(player, tardis)) {
-                forRemoval.add(player);
+        if(leaveBehind) {
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+                if (!hasMatchingKey(player, tardis)) {
+                    forRemoval.add(player);
+                }
             }
-        }
 
-        for (ServerPlayerEntity player : forRemoval) {
-            TardisUtil.teleportOutside(tardis, player);
+
+            for (ServerPlayerEntity player : forRemoval) {
+                TardisUtil.teleportOutside(tardis, player);
+            }
         }
     }
 

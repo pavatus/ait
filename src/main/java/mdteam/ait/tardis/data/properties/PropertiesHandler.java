@@ -39,6 +39,10 @@ public class PropertiesHandler { // todo move things out of properties
     public static final String SPEED = "speed";
     public static final String IS_CLOAKED = "cloaked";
     public static final String CONSOLE_DISABLED = "console_disabled";
+    public static final String LEAVE_BEHIND = "leave_behind";
+    public static final String HOSTILE_PRESENCE_TOGGLE = "hostile_presence_toggle";
+    public static final Identifier LEAVEBEHIND = new Identifier(AITMod.MOD_ID, "leavebehind");
+    public static final Identifier HOSTILEALARMS = new Identifier(AITMod.MOD_ID, "hostilealarms");
 
     // Should these methods be in the holder instead?
 
@@ -221,6 +225,8 @@ public class PropertiesHandler { // todo move things out of properties
         map.put(SPEED,0);
         map.put(IS_CLOAKED, false);
         map.put(CONSOLE_DISABLED, false);
+        map.put(LEAVE_BEHIND, false);
+        map.put(HOSTILE_PRESENCE_TOGGLE, true);
         map.put(TardisCrashData.TARDIS_RECOVERY_STATE, TardisCrashData.State.NORMAL);
         map.put(TardisCrashData.TARDIS_REPAIR_TICKS, 0);
 

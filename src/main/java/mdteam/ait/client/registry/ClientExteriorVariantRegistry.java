@@ -8,10 +8,7 @@ import mdteam.ait.client.registry.exterior.impl.box.*;
 import mdteam.ait.client.registry.exterior.impl.capsule.ClientCapsuleDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.capsule.ClientCapsuleFireVariant;
 import mdteam.ait.client.registry.exterior.impl.capsule.ClientCapsuleSoulVariant;
-import mdteam.ait.client.registry.exterior.impl.classic.ClientClassicBoxDefinitiveVariant;
-import mdteam.ait.client.registry.exterior.impl.classic.ClientClassicBoxPrimeVariant;
-import mdteam.ait.client.registry.exterior.impl.classic.ClientClassicBoxPtoredVariant;
-import mdteam.ait.client.registry.exterior.impl.classic.ClientClassicBoxYetiVariant;
+import mdteam.ait.client.registry.exterior.impl.classic.*;
 import mdteam.ait.client.registry.exterior.impl.doom.ClientDoomVariant;
 import mdteam.ait.client.registry.exterior.impl.easter_head.ClientEasterHeadDefaultVariant;
 import mdteam.ait.client.registry.exterior.impl.easter_head.ClientEasterHeadFireVariant;
@@ -125,6 +122,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema YETI;
     public static ClientExteriorVariantSchema DEFINITIVE;
     public static ClientExteriorVariantSchema PTORED;
+    public static ClientExteriorVariantSchema MINT;
     public static ClientExteriorVariantSchema CAPSULE_DEFAULT;
     public static ClientExteriorVariantSchema CAPSULE_SOUL;
     public static ClientExteriorVariantSchema CAPSULE_FIRE;
@@ -165,6 +163,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         YETI = registerStatic(new ClientClassicBoxYetiVariant());
         DEFINITIVE = registerStatic(new ClientClassicBoxDefinitiveVariant());
         PTORED = registerStatic(new ClientClassicBoxPtoredVariant());
+        MINT = registerStatic(new ClientClassicBoxMintVariant());
 
         // Capsule
         CAPSULE_DEFAULT = registerStatic(new ClientCapsuleDefaultVariant());

@@ -4,6 +4,7 @@ import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import mdteam.ait.api.tardis.TardisEvents;
+import mdteam.ait.client.screens.TardisSecurityScreen;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.compat.regen.RegenHandler;
@@ -248,6 +249,24 @@ public class AITMod implements ModInitializer {
             TardisUtil.getServer().execute(() -> {
                 if (tardis == null) return;
                 tardis.getDesktop().cacheConsole(console);
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.LEAVEBEHIND, (server, player, handler, buf, responseSender) -> {
+            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+            boolean behind = buf.readBoolean();
+            TardisUtil.getServer().execute(() -> {
+                if (tardis == null) return;
+                PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.LEAVE_BEHIND, behind);
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.HOSTILEALARMS, (server, player, handler, buf, responseSender) -> {
+            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+            boolean hostile = buf.readBoolean();
+            TardisUtil.getServer().execute(() -> {
+                if (tardis == null) return;
+                PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
             });
         });
 
