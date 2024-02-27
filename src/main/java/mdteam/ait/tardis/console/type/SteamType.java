@@ -19,7 +19,7 @@ import org.joml.Vector3f;
 public class SteamType extends ConsoleTypeSchema {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/steam");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
-            new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.2375f, 0.22500002f), new Vector3f(0.22890625894069672f, 0.37499999813735485f, -0.7984375264495611f)),
+            new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.18749999f, 0.25000003f), new Vector3f(0.23046875f, 0.3875000001862645f, -0.798828125f)),
             new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.125f, 0.17500001f), new Vector3f(-0.889062512665987f, 0.3999999985098839f, 0.25156248919665813f)),
             new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.06249999f, 0.20000002f), new Vector3f(-0.32031250186264515f, 0.4000003803521395f, -0.8367187771946192f)),
             new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.12500001f, 0.10000001f), new Vector3f(-0.162500006146729f, 0.3749999962747097f, 0.9621093794703484f)),
@@ -48,7 +48,7 @@ public class SteamType extends ConsoleTypeSchema {
             new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.16250001f, 0.0875f), new Vector3f(-0.838281256146729f, 0.4000003784894943f, 0.0046874964609742165f)),
             new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.074999996f, 0.1f), new Vector3f(-0.7125000134110451f, 0.47500038146972656f, 0.1789062386378646f)),
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.1f), new Vector3f(-0.7109374962747097f, 0.47500057239085436f, -0.17265624925494194f)),
-            new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.125f, 0.08749999f), new Vector3f(0.1519531337544322f, 0.8124998090788722f, -0.26171875f)),
+            new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.125f, 0.1125f), new Vector3f(0.35234375298023224f, 0.4624999947845936f, -0.5992187550291419f)),
     };
 
     public SteamType() {

@@ -420,6 +420,9 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
         if (world.isClient()) {
             this.tickAge();
         }
+
+        if (world.isClient()) return;
+
         if(this.findTardis().isEmpty()) return;
 
         this.findParent().ifPresent(parent -> parent.tickConsole(this));
@@ -436,8 +439,6 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
                 }
             }
         }
-
-        if (world.isClient()) return;
 
         ServerTardis tardis = (ServerTardis) this.findTardis().get();
 
