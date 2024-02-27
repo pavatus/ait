@@ -269,7 +269,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
             if (this.isOnDelay()) return false;
 
-            if (this.control.shouldHaveDelay() && !this.isOnDelay()) {
+            if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
                 this.createDelay(this.control.getDelayLength());
             }
 

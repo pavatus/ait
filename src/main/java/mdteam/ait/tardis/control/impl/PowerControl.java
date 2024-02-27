@@ -42,4 +42,11 @@ public class PowerControl extends Control {
         if(this.noDelay) return 0L;
         return 10000L;
     }
+
+    @Override
+    public boolean shouldHaveDelay(Tardis tardis) {
+        if (!tardis.hasPower()) return false;
+
+        return super.shouldHaveDelay();
+    }
 }
