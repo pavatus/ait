@@ -5,6 +5,7 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.server.MinecraftServer;
@@ -46,8 +47,11 @@ public class ServerAlarmHandler extends TardisLink {
     public void tick(MinecraftServer server) {
         super.tick(server);
 
+        if (findTardis().isEmpty()) return;
+        ServerTardis tardis = (ServerTardis) findTardis().get();
+
         // @TODO make a new control that makes it (by default) detect hostile entities in the interior plus a check when it's been cleared of all hostile entities - Loqor
-        if(!isEnabled() && findTardis().isPresent() && PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE)) {
+        if(!isEnabled() && PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE)) {
             for (Entity entity : TardisUtil.getEntitiesInInterior(findTardis().get(), 200)) {
                 if (entity instanceof HostileEntity && !entity.hasCustomName()) {
                     this.enable();
@@ -56,14 +60,14 @@ public class ServerAlarmHandler extends TardisLink {
             return;
         }
 
-        if (findTardis().isEmpty()) return;
-        if (findTardis().get().getTravel().getState() == TardisTravel.State.FLIGHT) return;
+        if (!tardis.getHandlers().getAlarms().isEnabled()) return;
+        if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) return;
 
         soundCounter++;
 
         if (soundCounter >= CLOISTER_LENGTH_TICKS) {
             soundCounter = 0;
-            getExteriorPos().getWorld().playSound(null, getExteriorPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
+            this.getExteriorPos().getWorld().playSound(null, getExteriorPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
         }
     }
 }

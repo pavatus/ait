@@ -44,7 +44,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
     private final Screen parent;
 
     public TardisSecurityScreen(UUID tardis, UUID console, Screen parent) {
-        super(Text.translatable("screen.ait.interiorsettings.title"), tardis, console);
+        super(Text.translatable("screen.ait.security.title"), tardis, console);
         this.parent = parent;
         updateTardis();
     }
