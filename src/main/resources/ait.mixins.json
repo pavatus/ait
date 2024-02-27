@@ -6,7 +6,6 @@
   "mixins": [
     "server.ItemEntityMixin",
     "server.MinecraftServerMixin",
-    "server.NbtCompoundMixin",
     "server.ServerPlayerInteractionManagerMixin",
     "server.ServerPlayerMixin",
     "server.StructureTemplateMixin"

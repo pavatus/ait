@@ -6,16 +6,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.events.BlockEntityPreLoadEvent;
-import mdteam.ait.core.util.gson.IdentifierSerializer;
 import mdteam.ait.core.util.gson.ItemStackSerializer;
+import mdteam.ait.core.util.gson.NbtSerializer;
 import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
+import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
 import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import mdteam.ait.tardis.link.Linkable;
 import mdteam.ait.tardis.util.Corners;
 import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
 import mdteam.ait.tardis.variant.door.DoorSchema;
-import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.EnvType;
@@ -25,8 +25,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import org.jglrxavpok.hephaistos.json.NBTGsonReader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,8 +63,8 @@ public abstract class TardisManager<T extends Tardis> {
                 .registerTypeAdapter(ConsoleTypeSchema.class, ConsoleTypeSchema.serializer())
                 .registerTypeAdapter(ConsoleVariantSchema.class, ConsoleVariantSchema.serializer())
                 .registerTypeAdapter(Corners.class, Corners.serializer())
-//                .registerTypeAdapter(ItemStack.class, new ItemStackSerializer())
-                .registerTypeAdapter(Identifier.class, new IdentifierSerializer());
+                .registerTypeAdapter(NbtCompound.class, new NbtSerializer())
+                .registerTypeAdapter(ItemStack.class, new ItemStackSerializer());
         builder = this.getGsonBuilder(builder);
         this.gson = builder.create();
     }
