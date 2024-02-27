@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.events.BlockEntityPreLoadEvent;
+import mdteam.ait.core.util.gson.IdentifierSerializer;
+import mdteam.ait.core.util.gson.ItemStackSerializer;
 import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.link.Linkable;
@@ -22,6 +24,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -49,13 +52,17 @@ public abstract class TardisManager<T extends Tardis> {
                     public boolean shouldSkipClass(Class<?> clazz) {
                         return false;
                     }
-                }).registerTypeAdapter(TardisDesktopSchema.class, TardisDesktopSchema.serializer())
+                })
+                .setPrettyPrinting()
+                .registerTypeAdapter(TardisDesktopSchema.class, TardisDesktopSchema.serializer())
                 .registerTypeAdapter(ExteriorVariantSchema.class, ExteriorVariantSchema.serializer())
                 .registerTypeAdapter(DoorSchema.class, DoorSchema.serializer())
                 .registerTypeAdapter(ExteriorCategorySchema.class, ExteriorCategorySchema.serializer())
                 .registerTypeAdapter(ConsoleTypeSchema.class, ConsoleTypeSchema.serializer())
                 .registerTypeAdapter(ConsoleVariantSchema.class, ConsoleVariantSchema.serializer())
-                .registerTypeAdapter(Corners.class, Corners.serializer());
+                .registerTypeAdapter(Corners.class, Corners.serializer())
+//                .registerTypeAdapter(ItemStack.class, new ItemStackSerializer())
+                .registerTypeAdapter(Identifier.class, new IdentifierSerializer());
         builder = this.getGsonBuilder(builder);
         this.gson = builder.create();
     }
