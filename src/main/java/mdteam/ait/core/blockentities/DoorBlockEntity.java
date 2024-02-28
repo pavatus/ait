@@ -90,7 +90,7 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 				DoorData.toggleLock(tardis, (ServerPlayerEntity) player);
 			} else {
 				world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-				player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
+				player.sendMessage(Text.translatable("tardis.key.identity_error"), true); //TARDIS does not identify with key
 			}
 			return;
 		}

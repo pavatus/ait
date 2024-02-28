@@ -51,9 +51,10 @@ public class RiftChunkCommand {
 		boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
 		Text message;
 		if (!isARiftChunk) {
-			message = Text.literal("This chunk is not a rift chunk, so you can't set the artron levels of it");
+			message = Text.translatable("riftchunk.cannotsetlevel"); //This chunk is not a rift chunk, so you can't set the artron levels of it
 		} else {
-			message = Text.literal("The artron levels in this chunk are: " + RiftChunkManager.getArtronLevels(source.getWorld(), targetBlockPos));
+			message = Text.translatable("riftchunk.getlevel").append(Text.literal(": " + RiftChunkManager.getArtronLevels(source.getWorld(), targetBlockPos)));
+			// The artron levels in this chunk are
 		}
 		source.sendMessage(message);
 
@@ -67,11 +68,11 @@ public class RiftChunkCommand {
 		boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
 		Text message;
 		if (!isARiftChunk) {
-			message = Text.literal("This chunk is not a rift chunk, so you can't get the artron levels of it");
+			message = Text.translatable("riftchunk.cannotsetlevel"); // This chunk is not a rift chunk, so you can't get the artron levels of it
 		} else {
 			Integer artron_levels = IntegerArgumentType.getInteger(context, "artron-levels");
 			RiftChunkManager.setArtronLevels(source.getServerWorld(), targetBlockPos, artron_levels);
-			message = Text.literal("You set the artron levels in this chunk to: " + artron_levels);
+			message = Text.translatable("riftchunk.setlevel").append(Text.literal(": " + artron_levels));
 		}
 		source.sendMessage(message);
 

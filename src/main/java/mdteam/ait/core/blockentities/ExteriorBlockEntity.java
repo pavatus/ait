@@ -77,7 +77,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 				DoorData.toggleLock(this.findTardis().get(), (ServerPlayerEntity) player);
 			} else {
 				world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-				player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
+				player.sendMessage(Text.translatable("tardis.key.identity_error"), true); //TARDIS does not identify with key
 			}
 			return;
 		}
@@ -90,7 +90,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 				world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 				return;
 			}
-			player.sendMessage(Text.literal("Repairing: " + this.findTardis().get().getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.BOLD, Formatting.GOLD), true);
+			player.sendMessage(Text.translatable("tardis.exterior.sonic.repairing").append(Text.literal(": " + this.findTardis().get().getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.BOLD, Formatting.GOLD)), true);
 			return;
 		}
 
@@ -115,7 +115,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 				world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1F, 0.2F);
 			} else {
 				world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-				player.sendMessage(Text.literal("Unable to repair TARDIS with current tool!"), true);
+				player.sendMessage(Text.translatable("tardis.tool.cannot_repair"), true); //Unable to repair TARDIS with current tool!
 			}
 			return;
 		}

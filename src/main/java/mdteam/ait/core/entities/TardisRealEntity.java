@@ -109,7 +109,7 @@ public class TardisRealEntity extends Entity {
 				DoorData.toggleLock(this.getTardis(), (ServerPlayerEntity) player);
 			} else {
 				this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-				player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
+				player.sendMessage(Text.translatable("tardis.key.identity_error"), true); //TARDIS does not identify with key
 			}
 			return ActionResult.SUCCESS;
 		}

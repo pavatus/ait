@@ -539,6 +539,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		provider.addTranslation("tardis.message.destination_biome", "Destination Biome: ");
 		provider.addTranslation("tardis.message.control.increment.info", "Increment: ");
 		provider.addTranslation("tardis.message.control.randomiser.poscontrol", "Destination: ");
+		provider.addTranslation("tardis.key.identity_error", "TARDIS does not identify with key");
 		provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
 		provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
 		provider.addTranslation("message.ait.sonic.handbrakedisengaged", "Handbrake disengaged, destination set to current position");
@@ -549,6 +550,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
 		provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
 		provider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
+		provider.addTranslation("tardis.exterior.sonic.repairing", "Repairing");
+		provider.addTranslation("tardis.tool.cannot_repair", "Cannot repair TARDIS with current tool");
+		provider.addTranslation("tardis.fuel.max", "TARDIS fuel is at maximum");
+		provider.addTranslation("tardis.not_damaged", "TARDIS is not damaged");
+		provider.addTranslation("tardis.cloak.on", "Cloak: ON");
+		provider.addTranslation("tardis.cloak.off", "Cloak: OFF");
 		//
 		provider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
 		provider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
@@ -574,10 +581,15 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 		provider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
 		provider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
 		provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
+		provider.addTranslation("command.ait.riftchunk.isariftchunk", "RIFT CHUNK FOUND");
+		provider.addTranslation("command.ait.riftchunk.notariftchunk", "RIFT CHUNK NOT FOUND");
 		provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
 		provider.addTranslation("waypoint.position.tooltip", "Position");
 		provider.addTranslation("waypoint.dimension.tooltip", "Dimension");
 		provider.addTranslation("waypoint.direction.tooltip", "Direction");
+		provider.addTranslation("riftchunk.cannotsetlevel", "This chunk is not a rift chunk, so you can't set the artron levels of it");
+		provider.addTranslation("riftchunk.getlevel", "The artron levels in this chunk are");
+		provider.addTranslation("riftchunk.setlevel", "Set the artron levels in this chunk to");
 
 		return provider;
 	}

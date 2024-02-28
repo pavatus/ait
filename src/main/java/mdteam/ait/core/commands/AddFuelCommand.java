@@ -36,7 +36,7 @@ public class AddFuelCommand {
 		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
 		if (tardis == null || source == null) return 0;
 		if (tardis.getFuel() >= FuelData.TARDIS_MAX_FUEL) {
-			source.sendMessage(Text.literal("TARDIS fuel is at max!"), true);
+			source.sendMessage(Text.translatable("tardis.fuel.max"), true); // TARDIS fuel is at max!
 			return 0;
 		}
 		double fuelAmount = DoubleArgumentType.getDouble(context, "amount");

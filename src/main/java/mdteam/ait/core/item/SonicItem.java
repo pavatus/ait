@@ -370,7 +370,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 					int repairticksleft = exteriorBlockEntity.findTardis().get().getHandlers().getCrashData().getRepairTicks();
 					int repairminutes = repairticksleft / 20 / 60;
 					if (repairticksleft == 0) {
-						player.sendMessage(Text.literal("Your tardis is not damaged").formatted(Formatting.GOLD), true);
+						player.sendMessage(Text.translatable("tardis.not_damaged").formatted(Formatting.GOLD), true); // Your tardis is not damaged
 						return;
 					}
 					player.sendMessage(Text.literal("You have " + repairminutes + (repairminutes == 1 ? " minute" : " minutes") + " of repair left.").formatted(Formatting.GOLD), true);
