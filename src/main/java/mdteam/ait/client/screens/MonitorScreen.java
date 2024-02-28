@@ -52,7 +52,6 @@ public class MonitorScreen extends ConsoleScreen {
 	public MonitorScreen(UUID tardis, UUID console) {
 		super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis, console);
 		this.tardisId = tardis;
-		//AITMod.LOGGER.debug("@#!@@!: " + tardis + " | " + ClientTardisManager.getInstance().getLookup());
 	}
 
 	@Override
@@ -350,9 +349,6 @@ public class MonitorScreen extends ConsoleScreen {
 		context.getMatrices().pop();
 		this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f, 176, delta);
 		this.drawBackground(context, delta, mouseX, mouseY);
-        /*float yClamping = MathHelper.clamp(mouseY, i + 60, i + 65);
-        float xClamping = mouseX <= 196 && mouseX >= 156 ? MathHelper.clamp((mouseX + this.backgroundWidth / 2), j + 10, j + 50) : 176;
-        AITMod.LOGGER.debug((mouseX + this.backgroundWidth / 2) +  " min: " + (j + 10) + ", max: " + (j + 50) + ": is this clamped right = " + xClamping);*/
 		// todo manually adjusting all these values are annoying me
 		this.drawInformationText(context);
 		super.render(context, mouseX, mouseY, delta);

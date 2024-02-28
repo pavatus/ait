@@ -309,7 +309,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				true
 		);
 		Text hum = Text.translatable("screen.ait.interior.settings." + this.hum.name());
-		//AITMod.LOGGER.debug(this.hum.name());
 		context.drawText(
 				this.textRenderer,
 				hum,
