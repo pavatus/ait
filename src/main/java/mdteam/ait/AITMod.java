@@ -4,7 +4,6 @@ import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import mdteam.ait.api.tardis.TardisEvents;
-import mdteam.ait.client.screens.TardisSecurityScreen;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.compat.immersive.PortalsHandler;
 import mdteam.ait.compat.regen.RegenHandler;
@@ -63,255 +62,252 @@ import java.util.Random;
 import java.util.UUID;
 
 public class AITMod implements ModInitializer {
-    public static final String MOD_ID = "ait";
-    public static final Logger LOGGER = LoggerFactory.getLogger("ait");
-    public static final Boolean DEBUG = true;
-    public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
-    public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () ->
-            Icon.of(AITItems.TARDIS_ITEM)).disableDynamicTitle().build();
-    public static final Random RANDOM = new Random();
+	public static final String MOD_ID = "ait";
+	public static final Logger LOGGER = LoggerFactory.getLogger("ait");
+	public static final Boolean DEBUG = true;
+	public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
+	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () ->
+			Icon.of(AITItems.TARDIS_ITEM)).disableDynamicTitle().build();
+	public static final Random RANDOM = new Random();
 
-    public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE, new Identifier(MOD_ID, "zeiton_geode"));
+	public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE, new Identifier(MOD_ID, "zeiton_geode"));
 
-    @Override
-    public void onInitialize() {
-        ConsoleRegistry.init();
-        DesktopRegistry.getInstance().init();
-        CategoryRegistry.getInstance().init();
-        HumsRegistry.init();
-        CreakRegistry.init();
-        SequenceRegistry.init();
+	@Override
+	public void onInitialize() {
+		ConsoleRegistry.init();
+		DesktopRegistry.getInstance().init();
+		CategoryRegistry.getInstance().init();
+		HumsRegistry.init();
+		CreakRegistry.init();
+		SequenceRegistry.init();
 
-        // These 3 have client registries which also need registering.
-        ConsoleVariantRegistry.getInstance().init();
-        ExteriorVariantRegistry.getInstance().init();
-        DoorRegistry.init();
+		// These 3 have client registries which also need registering.
+		ConsoleVariantRegistry.getInstance().init();
+		ExteriorVariantRegistry.getInstance().init();
+		DoorRegistry.init();
 
-        FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
+		FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
+		FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
+		FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
+		FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
+		FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
 
-        LootTableEvents.MODIFY.register(((resourceManager, lootManager, id, tableBuilder, source) -> {
-            List<Identifier> lootTableIds = List.of(LootTables.ABANDONED_MINESHAFT_CHEST, LootTables.ANCIENT_CITY_CHEST, LootTables.ANCIENT_CITY_ICE_BOX_CHEST, LootTables.DESERT_PYRAMID_CHEST, LootTables.SIMPLE_DUNGEON_CHEST, LootTables.CAT_MORNING_GIFT_GAMEPLAY, LootTables.IGLOO_CHEST_CHEST, LootTables.BASTION_BRIDGE_CHEST);
-            if (source.isBuiltin() && lootTableIds.contains(id)) {
-                LootPool.Builder poolBuilder = LootPool.builder()
-                        .with(ItemEntry.builder(AITItems.DRIFTING_MUSIC_DISC));
+		LootTableEvents.MODIFY.register(((resourceManager, lootManager, id, tableBuilder, source) -> {
+			List<Identifier> lootTableIds = List.of(LootTables.ABANDONED_MINESHAFT_CHEST, LootTables.ANCIENT_CITY_CHEST, LootTables.ANCIENT_CITY_ICE_BOX_CHEST, LootTables.DESERT_PYRAMID_CHEST, LootTables.SIMPLE_DUNGEON_CHEST, LootTables.CAT_MORNING_GIFT_GAMEPLAY, LootTables.IGLOO_CHEST_CHEST, LootTables.BASTION_BRIDGE_CHEST);
+			if (source.isBuiltin() && lootTableIds.contains(id)) {
+				LootPool.Builder poolBuilder = LootPool.builder()
+						.with(ItemEntry.builder(AITItems.DRIFTING_MUSIC_DISC));
 
-                tableBuilder.pool(poolBuilder);
-            }
-        }));
+				tableBuilder.pool(poolBuilder);
+			}
+		}));
 
-        TardisUtil.init();
-        TardisManager.getInstance();
-        TardisManager.init();
-        RiftChunkManager.init();
-        TardisCriterions.init();
+		TardisUtil.init();
+		TardisManager.getInstance();
+		TardisManager.init();
+		RiftChunkManager.init();
+		TardisCriterions.init();
 
-        entityAttributeRegister();
+		entityAttributeRegister();
 
-        BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES, CUSTOM_GEODE_PLACED_KEY);
+		BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES, CUSTOM_GEODE_PLACED_KEY);
 
-        // ip support
-        if (DependencyChecker.hasPortals())
-            PortalsHandler.init();
+		// ip support
+		if (DependencyChecker.hasPortals())
+			PortalsHandler.init();
 
-        if (DependencyChecker.hasRegeneration())
-            RegenHandler.init();
+		if (DependencyChecker.hasRegeneration())
+			RegenHandler.init();
 
-        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
-            TeleportInteriorCommand.register(dispatcher);
-            UnlockInteriorsCommand.register(dispatcher);
-            SummonTardisCommand.register(dispatcher);
-            SetLockedCommand.register(dispatcher);
-            // SetHumCommand.register(dispatcher);
-            GetInsideTardisCommand.register(dispatcher);
-            SetFuelCommand.register(dispatcher);
-            AddFuelCommand.register(dispatcher);
-            RemoveFuelCommand.register(dispatcher);
-            //RemoveTardisCommand.register(dispatcher); // @TODO make sure this works idk bro
-            SetRepairTicksCommand.register(dispatcher);
-            ToggleHumCommand.register(dispatcher);
-            ToggleAlarmCommand.register(dispatcher);
-            //ToggleSiegeModeCommand.register(dispatcher);
-            RiftChunkCommand.register(dispatcher);
-            //RealWorldCommand.register(dispatcher);
-            SetNameCommand.register(dispatcher);
-            GetNameCommand.register(dispatcher);
-            SetMaxSpeedCommand.register(dispatcher);
-            SetSiegeCommand.register(dispatcher);
-            LinkCommand.register(dispatcher);
-        }));
+		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
+			TeleportInteriorCommand.register(dispatcher);
+			UnlockInteriorsCommand.register(dispatcher);
+			SummonTardisCommand.register(dispatcher);
+			SetLockedCommand.register(dispatcher);
+			GetInsideTardisCommand.register(dispatcher);
+			SetFuelCommand.register(dispatcher);
+			AddFuelCommand.register(dispatcher);
+			RemoveFuelCommand.register(dispatcher);
+			//RemoveTardisCommand.register(dispatcher); // @TODO make sure this works idk bro
+			SetRepairTicksCommand.register(dispatcher);
+			RiftChunkCommand.register(dispatcher);
+			SetNameCommand.register(dispatcher);
+			GetNameCommand.register(dispatcher);
+			SetMaxSpeedCommand.register(dispatcher);
+			SetSiegeCommand.register(dispatcher);
+			LinkCommand.register(dispatcher);
+		}));
 
-        ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {
-            // fixme this doesnt seem to run??
-            if (blockEntity instanceof ConsoleBlockEntity console) {
-                console.markNeedsSyncing();
-            }
-        }));
+		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {
+			// fixme this doesnt seem to run??
+			if (blockEntity instanceof ConsoleBlockEntity console) {
+				console.markNeedsSyncing();
+			}
+		}));
 
-        TardisEvents.LANDED.register((tardis -> {
-            // stuff for resetting the ExteriorAnimation
-            if (tardis.getTravel().getPosition().getWorld().getBlockEntity(tardis.getTravel().getExteriorPos()) instanceof ExteriorBlockEntity entity) {
-                entity.getAnimation().setupAnimation(tardis.getTravel().getState());
-            }
-        }));
+		TardisEvents.LANDED.register((tardis -> {
+			// stuff for resetting the ExteriorAnimation
+			if (tardis.getTravel().getPosition().getWorld().getBlockEntity(tardis.getTravel().getExteriorPos()) instanceof ExteriorBlockEntity entity) {
+				entity.getAnimation().setupAnimation(tardis.getTravel().getState());
+			}
+		}));
 
-        TardisEvents.DEMAT.register((tardis -> {
-            if (tardis.isGrowth() || tardis.getHandlers().getInteriorChanger().isGenerating() || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
-                return true; // cancelled
+		TardisEvents.DEMAT.register((tardis -> {
+			if (tardis.isGrowth() || tardis.getHandlers().getInteriorChanger().isGenerating() || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
+				return true; // cancelled
 
-            if (tardis.getDoor().isOpen() /*|| !tardis.getDoor().locked()*/)
-                return true;
+			if (tardis.getDoor().isOpen() /*|| !tardis.getDoor().locked()*/)
+				return true;
 
-            for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
-                TardisCriterions.TAKEOFF.trigger((ServerPlayerEntity) player);
-            }
-            return false;
-        }));
+			for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+				TardisCriterions.TAKEOFF.trigger((ServerPlayerEntity) player);
+			}
+			return false;
+		}));
 
-        TardisEvents.MAT.register((tardis -> {
-            // Check that the tardis has finished flight
-            boolean flightDone = tardis.getHandlers().getFlight().hasFinishedFlight();
+		TardisEvents.MAT.register((tardis -> {
+			// Check that the tardis has finished flight
+			boolean flightDone = tardis.getHandlers().getFlight().hasFinishedFlight();
 
-            // Check if the Tardis is on cooldown
-            boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
+			// Check if the Tardis is on cooldown
+			boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
 
-            // Check if the destination is already occupied
-            boolean isDestinationOccupied = !tardis.getTravel().getDestination().equals(tardis.getExterior().getExteriorPos()) && !tardis.getTravel().checkDestination();
+			// Check if the destination is already occupied
+			boolean isDestinationOccupied = !tardis.getTravel().getDestination().equals(tardis.getExterior().getExteriorPos()) && !tardis.getTravel().checkDestination();
 
-            return /*!flightDone ||*/ isCooldown || isDestinationOccupied;
-        }));
+			return /*!flightDone ||*/ isCooldown || isDestinationOccupied;
+		}));
 
-        TardisEvents.CRASH.register((tardis -> {
-            for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
-                TardisCriterions.CRASH.trigger((ServerPlayerEntity) player);
-            }
-        }));
+		TardisEvents.CRASH.register((tardis -> {
+			for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+				TardisCriterions.CRASH.trigger((ServerPlayerEntity) player);
+			}
+		}));
 
-        TardisEvents.OUT_OF_FUEL.register(Tardis::disablePower);
-        TardisEvents.LOSE_POWER.register((tardis -> {
-            if (TardisUtil.getTardisDimension() != null) {
-                FlightUtil.playSoundAtConsole(tardis, AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
-            }
+		TardisEvents.OUT_OF_FUEL.register(Tardis::disablePower);
+		TardisEvents.LOSE_POWER.register((tardis -> {
+			if (TardisUtil.getTardisDimension() != null) {
+				FlightUtil.playSoundAtConsole(tardis, AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+			}
 
 
-            // disabling protocols
-            PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, false);
-            PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
-            PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
-            PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
-        }));
-        TardisEvents.REGAIN_POWER.register((tardis -> {
-            FlightUtil.playSoundAtConsole(tardis, AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
-        }));
+			// disabling protocols
+			PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, false);
+			PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
+			PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
+			PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
+		}));
+		TardisEvents.REGAIN_POWER.register((tardis -> {
+			FlightUtil.playSoundAtConsole(tardis, AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
+		}));
 
-        ServerPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.ASK, ((server, player, handler, buf, responseSender) -> {
-            if (player.getServerWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+		ServerPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.ASK, ((server, player, handler, buf, responseSender) -> {
+			if (player.getServerWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
 
-            BlockPos consolePos = buf.readBlockPos();
-            // fixme the gotten block entity is always null, shit.
-            if (player.getServerWorld().getBlockEntity(consolePos) instanceof ConsoleBlockEntity console)
-                console.markNeedsSyncing();
-        }));
+			BlockPos consolePos = buf.readBlockPos();
+			// fixme the gotten block entity is always null, shit.
+			if (player.getServerWorld().getBlockEntity(consolePos) instanceof ConsoleBlockEntity console)
+				console.markNeedsSyncing();
+		}));
 
-        ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ((server, player, handler, buf, responseSender) -> {
-            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-            TardisDesktopSchema desktop = DesktopRegistry.getInstance().get(buf.readIdentifier());
+		ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ((server, player, handler, buf, responseSender) -> {
+			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+			TardisDesktopSchema desktop = DesktopRegistry.getInstance().get(buf.readIdentifier());
 
-            if (tardis == null || desktop == null) return;
+			if (tardis == null || desktop == null) return;
 
-            tardis.getHandlers().getInteriorChanger().queueInteriorChange(desktop);
-        }));
+			tardis.getHandlers().getInteriorChanger().queueInteriorChange(desktop);
+		}));
 
-        ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE, ((server, player, handler, buf, responseSender) -> {
-            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-            HumSound hum = HumSound.fromName(buf.readString(), buf.readString());
+		ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE, ((server, player, handler, buf, responseSender) -> {
+			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+			HumSound hum = HumSound.fromName(buf.readString(), buf.readString());
 
-            if (tardis == null || hum == null) return;
+			if (tardis == null || hum == null) return;
 
-            tardis.getHandlers().getHum().setHum(hum);
-        }));
+			tardis.getHandlers().getHum().setHum(hum);
+		}));
 
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            DesktopRegistry.getInstance().syncToClient(handler.getPlayer());
-            CategoryRegistry.getInstance().syncToClient(handler.getPlayer());
-            ExteriorVariantRegistry.getInstance().syncToClient(handler.getPlayer());
-            ConsoleVariantRegistry.getInstance().syncToClient(handler.getPlayer());
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			DesktopRegistry.getInstance().syncToClient(handler.getPlayer());
+			CategoryRegistry.getInstance().syncToClient(handler.getPlayer());
+			ExteriorVariantRegistry.getInstance().syncToClient(handler.getPlayer());
+			ConsoleVariantRegistry.getInstance().syncToClient(handler.getPlayer());
 
-            ServerTardisManager.getInstance().onPlayerJoin(handler.getPlayer());
-        });
+			ServerTardisManager.getInstance().onPlayerJoin(handler.getPlayer());
+		});
 
-        ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
-            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-            UUID console = buf.readUuid();
-            TardisUtil.getServer().execute(() -> {
-                if (tardis == null) return;
-                tardis.getDesktop().cacheConsole(console);
-            });
-        });
+		ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
+			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+			UUID console = buf.readUuid();
+			TardisUtil.getServer().execute(() -> {
+				if (tardis == null) return;
+				tardis.getDesktop().cacheConsole(console);
+			});
+		});
 
-        ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.LEAVEBEHIND, (server, player, handler, buf, responseSender) -> {
-            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-            boolean behind = buf.readBoolean();
-            TardisUtil.getServer().execute(() -> {
-                if (tardis == null) return;
-                PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.LEAVE_BEHIND, behind);
-            });
-        });
+		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.LEAVEBEHIND, (server, player, handler, buf, responseSender) -> {
+			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+			boolean behind = buf.readBoolean();
+			TardisUtil.getServer().execute(() -> {
+				if (tardis == null) return;
+				PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.LEAVE_BEHIND, behind);
+			});
+		});
 
-        ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.HOSTILEALARMS, (server, player, handler, buf, responseSender) -> {
-            Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-            boolean hostile = buf.readBoolean();
-            TardisUtil.getServer().execute(() -> {
-                if (tardis == null) return;
-                PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
-            });
-        });
+		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.HOSTILEALARMS, (server, player, handler, buf, responseSender) -> {
+			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+			boolean hostile = buf.readBoolean();
+			TardisUtil.getServer().execute(() -> {
+				if (tardis == null) return;
+				PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
+			});
+		});
 
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-            ServerPlayerEntity player = handler.getPlayer();
+		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+			ServerPlayerEntity player = handler.getPlayer();
 
-            for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
-                if (!tardis.isSiegeMode()) continue;
-                if (!Objects.equals(tardis.getHandlers().getSiege().getHeldPlayerUUID(), player.getUuid())) continue;
+			for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
+				if (!tardis.isSiegeMode()) continue;
+				if (!Objects.equals(tardis.getHandlers().getSiege().getHeldPlayerUUID(), player.getUuid())) continue;
 
-                SiegeTardisItem.placeTardis(tardis, SiegeTardisItem.fromEntity(player));
-            }
-        });
+				SiegeTardisItem.placeTardis(tardis, SiegeTardisItem.fromEntity(player));
+			}
+		});
 
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-            AIT_CONFIG.save();
-        });
+		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
+			AIT_CONFIG.save();
+		});
 
-        AIT_ITEM_GROUP.initialize();
-    }
+		AIT_ITEM_GROUP.initialize();
+	}
 
-    public void entityAttributeRegister() {
-        FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createControlAttributes());
-    }
+	public void entityAttributeRegister() {
+		FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createControlAttributes());
+	}
 
-    public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
-    public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
-    public static final Identifier OPEN_SCREEN_CONSOLE = new Identifier(AITMod.MOD_ID, "open_screen_console");
+	public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
+	public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
+	public static final Identifier OPEN_SCREEN_CONSOLE = new Identifier(AITMod.MOD_ID, "open_screen_console");
 
-    public static void openScreen(ServerPlayerEntity player, int id) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(id);
-        ServerPlayNetworking.send(player, OPEN_SCREEN, buf);
-    }
-    public static void openScreen(ServerPlayerEntity player, int id, UUID tardis) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(id);
-        buf.writeUuid(tardis);
-        ServerPlayNetworking.send(player, OPEN_SCREEN_TARDIS, buf);
-    }
-    public static void openScreen(ServerPlayerEntity player, int id, UUID tardis, UUID console) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(id);
-        buf.writeUuid(tardis);
-        buf.writeUuid(console);
-        ServerPlayNetworking.send(player, OPEN_SCREEN_CONSOLE, buf);
-    }
+	public static void openScreen(ServerPlayerEntity player, int id) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeInt(id);
+		ServerPlayNetworking.send(player, OPEN_SCREEN, buf);
+	}
+
+	public static void openScreen(ServerPlayerEntity player, int id, UUID tardis) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeInt(id);
+		buf.writeUuid(tardis);
+		ServerPlayNetworking.send(player, OPEN_SCREEN_TARDIS, buf);
+	}
+
+	public static void openScreen(ServerPlayerEntity player, int id, UUID tardis, UUID console) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeInt(id);
+		buf.writeUuid(tardis);
+		buf.writeUuid(console);
+		ServerPlayNetworking.send(player, OPEN_SCREEN_CONSOLE, buf);
+	}
 }

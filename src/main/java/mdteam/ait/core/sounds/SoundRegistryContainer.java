@@ -5,18 +5,16 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 
-import java.lang.reflect.Field;
-
 public interface SoundRegistryContainer extends AutoRegistryContainer<SoundEvent> {
 
-    @Override
-    default Registry<SoundEvent> getRegistry() {
-        return Registries.SOUND_EVENT;
-    }
+	@Override
+	default Registry<SoundEvent> getRegistry() {
+		return Registries.SOUND_EVENT;
+	}
 
-    @Override
-    default Class<SoundEvent> getTargetFieldType() {
-        return SoundEvent.class;
-    }
+	@Override
+	default Class<SoundEvent> getTargetFieldType() {
+		return SoundEvent.class;
+	}
 
 }

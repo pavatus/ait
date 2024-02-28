@@ -10,21 +10,23 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class CoralGrowthDoorModel extends DoorModel {
 	private final ModelPart coral;
+
 	public CoralGrowthDoorModel(ModelPart root) {
 		this.coral = root.getChild("coral");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
 		ModelPartData coral = modelPartData.addChild("coral", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 24.0F, 3.0F));
 
 		ModelPartData seven = coral.addChild("seven", ModelPartBuilder.create().uv(150, 386).cuboid(-5.0F, -35.0F, -6.0F, 10.0F, 34.0F, 0.0F, new Dilation(0.0F))
-		.uv(229, 393).cuboid(-5.0F, -35.0F, -12.0F, 10.0F, 0.0F, 6.0F, new Dilation(0.0F))
-		.uv(229, 386).cuboid(-5.0F, -1.0F, -12.0F, 10.0F, 0.0F, 6.0F, new Dilation(0.0F))
-		.uv(205, 386).cuboid(-5.0F, -35.0F, -12.0F, 0.0F, 34.0F, 6.0F, new Dilation(0.0F))
-		.uv(192, 386).cuboid(5.0F, -35.0F, -12.0F, 0.0F, 34.0F, 6.0F, new Dilation(0.0F))
-		.uv(104, 7).cuboid(-12.0F, -39.0F, -12.0F, 24.0F, 0.0F, 17.0F, new Dilation(0.0F))
-		.uv(7, 7).cuboid(-12.0F, 0.0F, -12.0F, 24.0F, 0.0F, 17.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+				.uv(229, 393).cuboid(-5.0F, -35.0F, -12.0F, 10.0F, 0.0F, 6.0F, new Dilation(0.0F))
+				.uv(229, 386).cuboid(-5.0F, -1.0F, -12.0F, 10.0F, 0.0F, 6.0F, new Dilation(0.0F))
+				.uv(205, 386).cuboid(-5.0F, -35.0F, -12.0F, 0.0F, 34.0F, 6.0F, new Dilation(0.0F))
+				.uv(192, 386).cuboid(5.0F, -35.0F, -12.0F, 0.0F, 34.0F, 6.0F, new Dilation(0.0F))
+				.uv(104, 7).cuboid(-12.0F, -39.0F, -12.0F, 24.0F, 0.0F, 17.0F, new Dilation(0.0F))
+				.uv(7, 7).cuboid(-12.0F, 0.0F, -12.0F, 24.0F, 0.0F, 17.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData cube_r1 = seven.addChild("cube_r1", ModelPartBuilder.create().uv(390, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-9.0F, -19.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
 
@@ -53,17 +55,17 @@ public class CoralGrowthDoorModel extends DoorModel {
 		ModelPartData cube_r13 = seven.addChild("cube_r13", ModelPartBuilder.create().uv(390, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(9.0F, -37.0F, 0.0F, 0.0F, 1.5708F, 0.2618F));
 
 		ModelPartData bone9 = seven.addChild("bone9", ModelPartBuilder.create().uv(65, 290).cuboid(27.2752F, -21.0F, -0.8776F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
-		.uv(21, 343).cuboid(10.3046F, -21.0F, 9.093F, 9.9411F, 42.0F, 0.0F, new Dilation(0.25F))
-		.uv(21, 343).cuboid(20.3046F, -21.0F, 9.093F, 7.0F, 42.0F, 0.0F, new Dilation(0.0F))
-		.uv(21, 343).cuboid(3.2458F, -21.0F, 9.093F, 7.0F, 42.0F, 0.0F, new Dilation(0.0F))
-		.uv(107, 290).cuboid(3.2752F, -21.0F, -0.8776F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
-		.uv(42, 427).cuboid(10.3046F, -21.0F, -7.907F, 9.9411F, 8.0F, 0.0F, new Dilation(0.0F))
-		.uv(63, 427).cuboid(10.3046F, 20.0F, -7.907F, 9.9411F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(-15.2752F, -21.0F, -4.093F));
+				.uv(21, 343).cuboid(10.3046F, -21.0F, 9.093F, 9.9411F, 42.0F, 0.0F, new Dilation(0.25F))
+				.uv(21, 343).cuboid(20.3046F, -21.0F, 9.093F, 7.0F, 42.0F, 0.0F, new Dilation(0.0F))
+				.uv(21, 343).cuboid(3.2458F, -21.0F, 9.093F, 7.0F, 42.0F, 0.0F, new Dilation(0.0F))
+				.uv(107, 290).cuboid(3.2752F, -21.0F, -0.8776F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
+				.uv(42, 427).cuboid(10.3046F, -21.0F, -7.907F, 9.9411F, 8.0F, 0.0F, new Dilation(0.0F))
+				.uv(63, 427).cuboid(10.3046F, 20.0F, -7.907F, 9.9411F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(-15.2752F, -21.0F, -4.093F));
 
 		ModelPartData octagon_r1 = bone9.addChild("octagon_r1", ModelPartBuilder.create().uv(171, 386).cuboid(-4.9706F, -13.0F, -12.0F, 9.9411F, 33.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.309F, 0.0F));
 
 		ModelPartData octagon_r2 = bone9.addChild("octagon_r2", ModelPartBuilder.create().uv(233, 290).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F))
-		.uv(86, 290).cuboid(-12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F)), ModelTransform.of(15.2752F, 0.0F, 4.093F, 0.0F, -0.7854F, 0.0F));
+				.uv(86, 290).cuboid(-12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F)), ModelTransform.of(15.2752F, 0.0F, 4.093F, 0.0F, -0.7854F, 0.0F));
 
 		ModelPartData octagon_r3 = bone9.addChild("octagon_r3", ModelPartBuilder.create().uv(0, 427).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 8.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(15.2752F, 37.6777F, -8.6141F, -0.7854F, 0.0F, 0.0F));
 
@@ -72,6 +74,7 @@ public class CoralGrowthDoorModel extends DoorModel {
 		ModelPartData octagon_r5 = bone9.addChild("octagon_r5", ModelPartBuilder.create().uv(218, 386).cuboid(-12.0F, -13.0F, -4.9706F, 0.0F, 33.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(30.5514F, 0.0F, 0.0003F, 0.0F, -0.2618F, 0.0F));
 		return TexturedModelData.of(modelData, 1024, 1024);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		coral.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);

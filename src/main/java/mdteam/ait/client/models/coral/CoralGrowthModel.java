@@ -1,11 +1,7 @@
 package mdteam.ait.client.models.coral;
 
-import mdteam.ait.client.models.exteriors.ExteriorModel;
-import mdteam.ait.core.blockentities.CoralBlockEntity;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
@@ -21,6 +17,7 @@ public class CoralGrowthModel extends SinglePartEntityModel {
 	public final ModelPart five;
 	public final ModelPart six;
 	public final ModelPart seven;
+
 	public CoralGrowthModel(ModelPart root) {
 		this.coral = root.getChild("coral");
 		this.one = this.coral.getChild("one");
@@ -31,6 +28,7 @@ public class CoralGrowthModel extends SinglePartEntityModel {
 		this.six = this.coral.getChild("six");
 		this.seven = this.coral.getChild("seven");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -143,16 +141,16 @@ public class CoralGrowthModel extends SinglePartEntityModel {
 		ModelPartData cube_r48 = five.addChild("cube_r48", ModelPartBuilder.create().uv(455, 188).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(6.0F, -1.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
 
 		ModelPartData cube_r49 = five.addChild("cube_r49", ModelPartBuilder.create().uv(390, 188).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F))
-		.uv(130, 205).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -26.0F, -2.0F, 2.3562F, 0.0F, -3.1416F));
+				.uv(130, 205).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -26.0F, -2.0F, 2.3562F, 0.0F, -3.1416F));
 
 		ModelPartData cube_r50 = five.addChild("cube_r50", ModelPartBuilder.create().uv(325, 188).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F))
-		.uv(325, 205).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(2.0F, -26.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
+				.uv(325, 205).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(2.0F, -26.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
 
 		ModelPartData cube_r51 = five.addChild("cube_r51", ModelPartBuilder.create().uv(260, 188).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F))
-		.uv(260, 205).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -26.0F, 2.0F, -0.7854F, 0.0F, 0.0F));
+				.uv(260, 205).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -26.0F, 2.0F, -0.7854F, 0.0F, 0.0F));
 
 		ModelPartData cube_r52 = five.addChild("cube_r52", ModelPartBuilder.create().uv(195, 188).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F))
-		.uv(195, 205).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-2.0F, -26.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
+				.uv(195, 205).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-2.0F, -26.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
 
 		ModelPartData cube_r53 = five.addChild("cube_r53", ModelPartBuilder.create().uv(260, 256).cuboid(-8.0F, -6.9583F, -7.6558F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 3.0F, 0.0F, -0.4363F, -0.7854F, 0.0F));
 
@@ -277,22 +275,22 @@ public class CoralGrowthModel extends SinglePartEntityModel {
 		ModelPartData cube_r112 = six.addChild("cube_r112", ModelPartBuilder.create().uv(243, 0).cuboid(-12.0F, -42.0F, 0.0F, 24.0F, 42.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
 
 		ModelPartData octagon2 = six.addChild("octagon2", ModelPartBuilder.create().uv(84, 343).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F))
-		.uv(42, 343).cuboid(-4.9706F, -21.0F, 12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F))
-		.uv(191, 290).cuboid(12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
-		.uv(149, 290).cuboid(-12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -21.0F, 0.0F));
+				.uv(42, 343).cuboid(-4.9706F, -21.0F, 12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F))
+				.uv(191, 290).cuboid(12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
+				.uv(149, 290).cuboid(-12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -21.0F, 0.0F));
 
 		ModelPartData octagon_r1 = octagon2.addChild("octagon_r1", ModelPartBuilder.create().uv(170, 290).cuboid(-12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
-		.uv(212, 290).cuboid(12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
-		.uv(63, 343).cuboid(-4.9706F, -21.0F, 12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F))
-		.uv(105, 343).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
+				.uv(212, 290).cuboid(12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
+				.uv(63, 343).cuboid(-4.9706F, -21.0F, 12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F))
+				.uv(105, 343).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
 
 		ModelPartData seven = coral.addChild("seven", ModelPartBuilder.create().uv(150, 386).cuboid(-5.0F, -35.0F, -6.0F, 10.0F, 34.0F, 0.0F, new Dilation(0.0F))
-		.uv(229, 393).cuboid(-5.0F, -35.0F, -12.0F, 10.0F, 0.0F, 6.0F, new Dilation(0.0F))
-		.uv(229, 386).cuboid(-5.0F, -1.0F, -12.0F, 10.0F, 0.0F, 6.0F, new Dilation(0.0F))
-		.uv(205, 386).cuboid(-5.0F, -35.0F, -12.0F, 0.0F, 34.0F, 6.0F, new Dilation(0.0F))
-		.uv(192, 386).cuboid(5.0F, -35.0F, -12.0F, 0.0F, 34.0F, 6.0F, new Dilation(0.0F))
-		.uv(97, 0).cuboid(-12.0F, -39.0F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F))
-		.uv(0, 0).cuboid(-12.0F, 0.0F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+				.uv(229, 393).cuboid(-5.0F, -35.0F, -12.0F, 10.0F, 0.0F, 6.0F, new Dilation(0.0F))
+				.uv(229, 386).cuboid(-5.0F, -1.0F, -12.0F, 10.0F, 0.0F, 6.0F, new Dilation(0.0F))
+				.uv(205, 386).cuboid(-5.0F, -35.0F, -12.0F, 0.0F, 34.0F, 6.0F, new Dilation(0.0F))
+				.uv(192, 386).cuboid(5.0F, -35.0F, -12.0F, 0.0F, 34.0F, 6.0F, new Dilation(0.0F))
+				.uv(97, 0).cuboid(-12.0F, -39.0F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F))
+				.uv(0, 0).cuboid(-12.0F, 0.0F, -12.0F, 24.0F, 0.0F, 24.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData cube_r113 = seven.addChild("cube_r113", ModelPartBuilder.create().uv(455, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -19.0F, 9.0F, -0.7854F, 0.0F, 0.0F));
 
@@ -331,17 +329,17 @@ public class CoralGrowthModel extends SinglePartEntityModel {
 		ModelPartData cube_r130 = seven.addChild("cube_r130", ModelPartBuilder.create().uv(390, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(9.0F, -37.0F, 0.0F, 0.0F, 1.5708F, 0.2618F));
 
 		ModelPartData bone9 = seven.addChild("bone9", ModelPartBuilder.create().uv(65, 290).cuboid(27.2752F, -21.0F, -0.8776F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
-		.uv(21, 343).cuboid(10.3046F, -21.0F, 16.093F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F))
-		.uv(107, 290).cuboid(3.2752F, -21.0F, -0.8776F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
-		.uv(42, 427).cuboid(10.3046F, -21.0F, -7.907F, 9.9411F, 8.0F, 0.0F, new Dilation(0.0F))
-		.uv(63, 427).cuboid(10.3046F, 20.0F, -7.907F, 9.9411F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(-15.2752F, -21.0F, -4.093F));
+				.uv(21, 343).cuboid(10.3046F, -21.0F, 16.093F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F))
+				.uv(107, 290).cuboid(3.2752F, -21.0F, -0.8776F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
+				.uv(42, 427).cuboid(10.3046F, -21.0F, -7.907F, 9.9411F, 8.0F, 0.0F, new Dilation(0.0F))
+				.uv(63, 427).cuboid(10.3046F, 20.0F, -7.907F, 9.9411F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(-15.2752F, -21.0F, -4.093F));
 
 		ModelPartData octagon_r2 = bone9.addChild("octagon_r2", ModelPartBuilder.create().uv(171, 386).cuboid(-4.9706F, -13.0F, -12.0F, 9.9411F, 33.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.309F, 0.0F));
 
 		ModelPartData octagon_r3 = bone9.addChild("octagon_r3", ModelPartBuilder.create().uv(233, 290).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F))
-		.uv(86, 290).cuboid(-12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
-		.uv(128, 290).cuboid(12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
-		.uv(0, 343).cuboid(-4.9706F, -21.0F, 12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(15.2752F, 0.0F, 4.093F, 0.0F, -0.7854F, 0.0F));
+				.uv(86, 290).cuboid(-12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
+				.uv(128, 290).cuboid(12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
+				.uv(0, 343).cuboid(-4.9706F, -21.0F, 12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(15.2752F, 0.0F, 4.093F, 0.0F, -0.7854F, 0.0F));
 
 		ModelPartData octagon_r4 = bone9.addChild("octagon_r4", ModelPartBuilder.create().uv(0, 427).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 8.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(15.2752F, 37.6777F, -8.6141F, -0.7854F, 0.0F, 0.0F));
 
@@ -350,15 +348,18 @@ public class CoralGrowthModel extends SinglePartEntityModel {
 		ModelPartData octagon_r6 = bone9.addChild("octagon_r6", ModelPartBuilder.create().uv(218, 386).cuboid(-12.0F, -13.0F, -4.9706F, 0.0F, 33.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(30.5514F, 0.0F, 0.0003F, 0.0F, -0.2618F, 0.0F));
 		return TexturedModelData.of(modelData, 1024, 1024);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 
 	}
+
 	@Override
 	public ModelPart getPart() {
 		return coral;
 	}
 
 	@Override
-	public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {}
+	public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+	}
 }

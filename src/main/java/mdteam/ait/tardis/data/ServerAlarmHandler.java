@@ -13,61 +13,62 @@ import net.minecraft.sound.SoundCategory;
 
 // use this as reference for starting other looping sounds on the exterior
 public class ServerAlarmHandler extends TardisLink {
-    // fixme this is bad bad but i cant be assed with packets and thinking so hardcoding this value will be okay for now
-    public static final int CLOISTER_LENGTH_TICKS = 3 * 20;
-    private int soundCounter = 0; // decides when to start the next cloister sound
+	// fixme this is bad bad but i cant be assed with packets and thinking so hardcoding this value will be okay for now
+	public static final int CLOISTER_LENGTH_TICKS = 3 * 20;
+	private int soundCounter = 0; // decides when to start the next cloister sound
 
-    public ServerAlarmHandler(Tardis tardis) {
-        super(tardis, "alarm");
-    }
+	public ServerAlarmHandler(Tardis tardis) {
+		super(tardis, "alarm");
+	}
 
-    public void enable() {
-        this.set(true);
-    }
+	public void enable() {
+		this.set(true);
+	}
 
-    public void disable() {
-        this.set(false);
-    }
-    private void set(boolean var) {
-        if (this.findTardis().isEmpty()) return;
-        PropertiesHandler.set(this.findTardis().get(), PropertiesHandler.ALARM_ENABLED, var);
-    }
+	public void disable() {
+		this.set(false);
+	}
 
-    public boolean isEnabled() {
-        if (this.findTardis().isEmpty()) return false;
-        return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
-    }
+	private void set(boolean var) {
+		if (this.findTardis().isEmpty()) return;
+		PropertiesHandler.set(this.findTardis().get(), PropertiesHandler.ALARM_ENABLED, var);
+	}
 
-    public void toggle() {
-        if (isEnabled()) disable();
-        else enable();
-    }
+	public boolean isEnabled() {
+		if (this.findTardis().isEmpty()) return false;
+		return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
+	}
 
-    @Override
-    public void tick(MinecraftServer server) {
-        super.tick(server);
+	public void toggle() {
+		if (isEnabled()) disable();
+		else enable();
+	}
 
-        if (findTardis().isEmpty()) return;
-        ServerTardis tardis = (ServerTardis) findTardis().get();
+	@Override
+	public void tick(MinecraftServer server) {
+		super.tick(server);
 
-        // @TODO make a new control that makes it (by default) detect hostile entities in the interior plus a check when it's been cleared of all hostile entities - Loqor
-        if(!isEnabled() && PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE)) {
-            for (Entity entity : TardisUtil.getEntitiesInInterior(findTardis().get(), 200)) {
-                if (entity instanceof HostileEntity && !entity.hasCustomName()) {
-                    this.enable();
-                }
-            }
-            return;
-        }
+		if (findTardis().isEmpty()) return;
+		ServerTardis tardis = (ServerTardis) findTardis().get();
 
-        if (!tardis.getHandlers().getAlarms().isEnabled()) return;
-        if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) return;
+		// @TODO make a new control that makes it (by default) detect hostile entities in the interior plus a check when it's been cleared of all hostile entities - Loqor
+		if (!isEnabled() && PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE)) {
+			for (Entity entity : TardisUtil.getEntitiesInInterior(findTardis().get(), 200)) {
+				if (entity instanceof HostileEntity && !entity.hasCustomName()) {
+					this.enable();
+				}
+			}
+			return;
+		}
 
-        soundCounter++;
+		if (!tardis.getHandlers().getAlarms().isEnabled()) return;
+		if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) return;
 
-        if (soundCounter >= CLOISTER_LENGTH_TICKS) {
-            soundCounter = 0;
-            this.getExteriorPos().getWorld().playSound(null, getExteriorPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
-        }
-    }
+		soundCounter++;
+
+		if (soundCounter >= CLOISTER_LENGTH_TICKS) {
+			soundCounter = 0;
+			this.getExteriorPos().getWorld().playSound(null, getExteriorPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
+		}
+	}
 }

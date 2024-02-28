@@ -22,64 +22,68 @@ import java.lang.reflect.Type;
  * It should be registered in {@link DoorRegistry#REGISTRY} and only obtained from there.
  * <br><br>
  * This should be referenced by a {@link ExteriorVariantSchema} to be used
- * @see DoorRegistry#REGISTRY
+ *
  * @author duzo
+ * @see DoorRegistry#REGISTRY
  */
 public abstract class DoorSchema {
-    private final Identifier id;
+	private final Identifier id;
 
-    protected DoorSchema(Identifier id) {
-        this.id = id;
-    }
+	protected DoorSchema(Identifier id) {
+		this.id = id;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() == null) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() == null) return false;
 
-        DoorSchema that = (DoorSchema) o;
+		DoorSchema that = (DoorSchema) o;
 
-        return id.equals(that.id);
-    }
+		return id.equals(that.id);
+	}
 
-    public Identifier id() { return id; }
-    public abstract boolean isDouble();
+	public Identifier id() {
+		return id;
+	}
 
-    // fixme should this be in a "DoorSounds" type thing, also i dont like these method names.
-    public SoundEvent openSound() {
-        return SoundEvents.BLOCK_WOODEN_DOOR_CLOSE;
-    }
+	public abstract boolean isDouble();
 
-    public SoundEvent closeSound() {
-        return SoundEvents.BLOCK_WOODEN_DOOR_OPEN;
-    }
+	// fixme should this be in a "DoorSounds" type thing, also i dont like these method names.
+	public SoundEvent openSound() {
+		return SoundEvents.BLOCK_WOODEN_DOOR_CLOSE;
+	}
 
-    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
-        return pos; // just cus some dont have portals
-    }
+	public SoundEvent closeSound() {
+		return SoundEvents.BLOCK_WOODEN_DOOR_OPEN;
+	}
 
-    public static Object serializer() {
-        return new Serializer();
-    }
+	public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+		return pos; // just cus some dont have portals
+	}
 
-    private static class Serializer implements JsonSerializer<DoorSchema>, JsonDeserializer<DoorSchema> {
+	public static Object serializer() {
+		return new Serializer();
+	}
 
-        @Override
-        public DoorSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Identifier id;
+	private static class Serializer implements JsonSerializer<DoorSchema>, JsonDeserializer<DoorSchema> {
 
-            try {
-                id = new Identifier(json.getAsJsonPrimitive().getAsString());
-            } catch (InvalidIdentifierException e) {
-                id = CapsuleDoorVariant.REFERENCE;
-            }
+		@Override
+		public DoorSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+			Identifier id;
 
-            return DoorRegistry.REGISTRY.get(id);
-        }
+			try {
+				id = new Identifier(json.getAsJsonPrimitive().getAsString());
+			} catch (InvalidIdentifierException e) {
+				id = CapsuleDoorVariant.REFERENCE;
+			}
 
-        @Override
-        public JsonElement serialize(DoorSchema src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.id().toString());
-        }
-    }
+			return DoorRegistry.REGISTRY.get(id);
+		}
+
+		@Override
+		public JsonElement serialize(DoorSchema src, Type typeOfSrc, JsonSerializationContext context) {
+			return new JsonPrimitive(src.id().toString());
+		}
+	}
 }

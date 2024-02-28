@@ -16,27 +16,27 @@ import static mdteam.ait.core.item.WaypointItem.getPos;
 import static mdteam.ait.core.item.WaypointItem.setPos;
 
 public class LoadWaypointControl extends Control {
-    public LoadWaypointControl() {
-        super("load_waypoint");
-    }
+	public LoadWaypointControl() {
+		super("load_waypoint");
+	}
 
-    @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
-        if (leftClick) {
-            tardis.getHandlers().getWaypoints().spawnItem();
-            return true;
-        }
+	@Override
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
+		if (leftClick) {
+			tardis.getHandlers().getWaypoints().spawnItem();
+			return true;
+		}
 
-        ItemStack itemStack = player.getMainHandStack();
-        if (!(itemStack.getItem() instanceof WaypointItem)) return false;
+		ItemStack itemStack = player.getMainHandStack();
+		if (!(itemStack.getItem() instanceof WaypointItem)) return false;
 
-        if (getPos(itemStack) == null) setPos(itemStack, tardis.getTravel().getPosition());
+		if (getPos(itemStack) == null) setPos(itemStack, tardis.getTravel().getPosition());
 
-        tardis.getHandlers().getWaypoints().markHasCartridge();
-        tardis.getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
-        player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+		tardis.getHandlers().getWaypoints().markHasCartridge();
+		tardis.getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
+		player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
-        FlightUtil.playSoundAtConsole(tardis, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
-        return true;
-    }
+		FlightUtil.playSoundAtConsole(tardis, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
+		return true;
+	}
 }

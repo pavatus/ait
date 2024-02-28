@@ -25,96 +25,97 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEntityTicker<ArtronCollectorBlockEntity>, ArtronHolder {
-    public double artronAmount = 0;
-    public ArtronCollectorBlockEntity(BlockPos pos, BlockState state) {
-        super(AITBlockEntityTypes.ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE, pos, state);
-    }
+	public double artronAmount = 0;
 
-    @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.putDouble("artronAmount", this.artronAmount);
-    }
+	public ArtronCollectorBlockEntity(BlockPos pos, BlockState state) {
+		super(AITBlockEntityTypes.ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE, pos, state);
+	}
 
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        if(nbt.contains("artronAmount"))
-            this.setCurrentFuel(nbt.getDouble("artronAmount"));
-        super.readNbt(nbt);
-    }
+	@Override
+	protected void writeNbt(NbtCompound nbt) {
+		super.writeNbt(nbt);
+		nbt.putDouble("artronAmount", this.artronAmount);
+	}
 
-    public void useOn(World world, boolean sneaking, PlayerEntity player) {
-        if(!world.isClient()) {
-            player.sendMessage(Text.literal(this.getCurrentFuel() + "/" + ArtronCollectorItem.COLLECTOR_MAX_FUEL).formatted(Formatting.GOLD));
-            ItemStack stack = player.getMainHandStack();
-            if (stack.getItem() instanceof ArtronCollectorItem) {
-                double residual = ArtronCollectorItem.addFuel(stack, this.getCurrentFuel());
-                this.setCurrentFuel(residual);
-            } else if (stack.getItem() instanceof ChargedZeitonCrystalItem crystal) {
-                double residual = crystal.addFuel(this.getCurrentFuel(), stack);
-                this.setCurrentFuel(residual);
-            }
-            if (stack.getItem() == AITBlocks.ZEITON_CLUSTER.asItem()) {
-                if(sneaking) {
-                    this.setCurrentFuel(this.addFuel(15));
-                    if(!player.isCreative()) stack.decrement(1);
-                    return;
-                }
-                player.getInventory().setStack(player.getInventory().selectedSlot, new ItemStack(AITItems.CHARGED_ZEITON_CRYSTAL));
-            }
-        }
-    }
+	@Override
+	public void readNbt(NbtCompound nbt) {
+		if (nbt.contains("artronAmount"))
+			this.setCurrentFuel(nbt.getDouble("artronAmount"));
+		super.readNbt(nbt);
+	}
 
-    @Override
-    public void setCurrentFuel(double artronAmount) {
-        this.artronAmount = artronAmount;
-        markDirty();
-        if(this.hasWorld())
-            this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
-    }
+	public void useOn(World world, boolean sneaking, PlayerEntity player) {
+		if (!world.isClient()) {
+			player.sendMessage(Text.literal(this.getCurrentFuel() + "/" + ArtronCollectorItem.COLLECTOR_MAX_FUEL).formatted(Formatting.GOLD));
+			ItemStack stack = player.getMainHandStack();
+			if (stack.getItem() instanceof ArtronCollectorItem) {
+				double residual = ArtronCollectorItem.addFuel(stack, this.getCurrentFuel());
+				this.setCurrentFuel(residual);
+			} else if (stack.getItem() instanceof ChargedZeitonCrystalItem crystal) {
+				double residual = crystal.addFuel(this.getCurrentFuel(), stack);
+				this.setCurrentFuel(residual);
+			}
+			if (stack.getItem() == AITBlocks.ZEITON_CLUSTER.asItem()) {
+				if (sneaking) {
+					this.setCurrentFuel(this.addFuel(15));
+					if (!player.isCreative()) stack.decrement(1);
+					return;
+				}
+				player.getInventory().setStack(player.getInventory().selectedSlot, new ItemStack(AITItems.CHARGED_ZEITON_CRYSTAL));
+			}
+		}
+	}
 
-    @Override
-    public double getMaxFuel() {
-        return ArtronCollectorItem.COLLECTOR_MAX_FUEL;
-    }
+	@Override
+	public void setCurrentFuel(double artronAmount) {
+		this.artronAmount = artronAmount;
+		markDirty();
+		if (this.hasWorld())
+			this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+	}
 
-    @Override
-    public double getCurrentFuel() {
-        return this.artronAmount;
-    }
+	@Override
+	public double getMaxFuel() {
+		return ArtronCollectorItem.COLLECTOR_MAX_FUEL;
+	}
 
-    @Nullable
-    @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
-    }
+	@Override
+	public double getCurrentFuel() {
+		return this.artronAmount;
+	}
 
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbtCompound = super.toInitialChunkDataNbt();
-        nbtCompound.putDouble("artronAmount", this.artronAmount);
-        return nbtCompound;
-    }
+	@Nullable
+	@Override
+	public Packet<ClientPlayPacketListener> toUpdatePacket() {
+		return BlockEntityUpdateS2CPacket.create(this);
+	}
 
-    @Override
-    public void tick(World world, BlockPos pos, BlockState state, ArtronCollectorBlockEntity blockEntity) {
-        if(world.isClient()) return;
+	@Override
+	public NbtCompound toInitialChunkDataNbt() {
+		NbtCompound nbtCompound = super.toInitialChunkDataNbt();
+		nbtCompound.putDouble("artronAmount", this.artronAmount);
+		return nbtCompound;
+	}
 
-        if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) >= 3  && this.getCurrentFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()))) {
-            RiftChunkManager.setArtronLevels(world, pos,RiftChunkManager.getArtronLevels(world, pos) - 3);
-            this.addFuel( 3);
-            this.updateListeners();
-            DeltaTimeManager.createDelay(getDelay(), 500L);
-        }
-    }
+	@Override
+	public void tick(World world, BlockPos pos, BlockState state, ArtronCollectorBlockEntity blockEntity) {
+		if (world.isClient()) return;
 
-    private void updateListeners() {
-        this.markDirty();
-        if(this.getWorld() != null)
-            this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
-    }
+		if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) >= 3 && this.getCurrentFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()))) {
+			RiftChunkManager.setArtronLevels(world, pos, RiftChunkManager.getArtronLevels(world, pos) - 3);
+			this.addFuel(3);
+			this.updateListeners();
+			DeltaTimeManager.createDelay(getDelay(), 500L);
+		}
+	}
 
-    public String getDelay() {
-        return "collector-" + this.getPos() + "-collectdelay";
-    }
+	private void updateListeners() {
+		this.markDirty();
+		if (this.getWorld() != null)
+			this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
+	}
+
+	public String getDelay() {
+		return "collector-" + this.getPos() + "-collectdelay";
+	}
 }

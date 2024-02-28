@@ -8,9 +8,11 @@ import net.minecraft.entity.Entity;
 
 public class ArtronCollectorModel extends SinglePartEntityModel {
 	public ModelPart collector;
+
 	public ArtronCollectorModel(ModelPart root) {
 		this.collector = root.getChild("collector");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();

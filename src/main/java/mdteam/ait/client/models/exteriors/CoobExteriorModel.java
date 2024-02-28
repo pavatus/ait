@@ -10,37 +10,39 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class CoobExteriorModel extends ExteriorModel {
 
-    public ModelPart tardis;
-    public CoobExteriorModel(ModelPart root) {
-        super(RenderLayer::getEntityCutoutNoCull);
-        this.tardis = root.getChild("root");
-    }
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData root = modelPartData.addChild("root", ModelPartBuilder.create().uv(42, 59).cuboid(-8.0F, -16.0F, -8.0F, 16.0F, 16.0F, 16.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
-        return TexturedModelData.of(modelData, 128, 128);
-    }
+	public ModelPart tardis;
 
-    @Override
-    public ModelPart getPart() {
-        return tardis;
-    }
+	public CoobExteriorModel(ModelPart root) {
+		super(RenderLayer::getEntityCutoutNoCull);
+		this.tardis = root.getChild("root");
+	}
 
-    @Override
-    public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (exterior.findTardis().isEmpty()) return;
-        matrices.push();
+	public static TexturedModelData getTexturedModelData() {
+		ModelData modelData = new ModelData();
+		ModelPartData modelPartData = modelData.getRoot();
+		ModelPartData root = modelPartData.addChild("root", ModelPartBuilder.create().uv(42, 59).cuboid(-8.0F, -16.0F, -8.0F, 16.0F, 16.0F, 16.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+		return TexturedModelData.of(modelData, 128, 128);
+	}
 
-        matrices.translate(0,-1.5f,0);
+	@Override
+	public ModelPart getPart() {
+		return tardis;
+	}
 
-        super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+	@Override
+	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+		if (exterior.findTardis().isEmpty()) return;
+		matrices.push();
 
-        matrices.pop();
-    }
+		matrices.translate(0, -1.5f, 0);
 
-    @Override
-    public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
-        return Animation.Builder.create(0).build();
-    }
+		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+		matrices.pop();
+	}
+
+	@Override
+	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+		return Animation.Builder.create(0).build();
+	}
 }

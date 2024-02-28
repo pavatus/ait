@@ -2,16 +2,14 @@ package mdteam.ait.registry;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
-import mdteam.ait.tardis.exterior.variant.*;
-import mdteam.ait.tardis.exterior.variant.box.*;
-import mdteam.ait.tardis.exterior.variant.classic.*;
-import mdteam.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
-import mdteam.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
-import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.exterior.variant.DatapackExterior;
+import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import mdteam.ait.tardis.exterior.variant.booth.*;
+import mdteam.ait.tardis.exterior.variant.box.*;
 import mdteam.ait.tardis.exterior.variant.capsule.CapsuleDefaultVariant;
 import mdteam.ait.tardis.exterior.variant.capsule.CapsuleFireVariant;
 import mdteam.ait.tardis.exterior.variant.capsule.CapsuleSoulVariant;
+import mdteam.ait.tardis.exterior.variant.classic.*;
 import mdteam.ait.tardis.exterior.variant.doom.DoomVariant;
 import mdteam.ait.tardis.exterior.variant.easter_head.EasterHeadDefaultVariant;
 import mdteam.ait.tardis.exterior.variant.easter_head.EasterHeadFireVariant;
@@ -20,9 +18,12 @@ import mdteam.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
 import mdteam.ait.tardis.exterior.variant.plinth.PlinthDefaultVariant;
 import mdteam.ait.tardis.exterior.variant.plinth.PlinthFireVariant;
 import mdteam.ait.tardis.exterior.variant.plinth.PlinthSoulVariant;
+import mdteam.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
+import mdteam.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
 import mdteam.ait.tardis.exterior.variant.tardim.TardimDefaultVariant;
 import mdteam.ait.tardis.exterior.variant.tardim.TardimFireVariant;
 import mdteam.ait.tardis.exterior.variant.tardim.TardimSoulVariant;
+import mdteam.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -50,214 +51,213 @@ import java.util.List;
  */
 public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSchema> {
 
-    public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_exterior_variants");
-    private static ExteriorVariantRegistry INSTANCE;
-    public static ExteriorVariantSchema registerStatic(ExteriorVariantSchema schema) {
-        return ExteriorVariantRegistry.getInstance().register(schema);
-    }
+	public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_exterior_variants");
+	private static ExteriorVariantRegistry INSTANCE;
 
-    public void syncToEveryone() {
-        if (TardisUtil.getServer() == null) return;
-        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
-            syncToClient(player);
-        }
-    }
+	public static ExteriorVariantSchema registerStatic(ExteriorVariantSchema schema) {
+		return ExteriorVariantRegistry.getInstance().register(schema);
+	}
 
-    @Override
-    public void syncToClient(ServerPlayerEntity player) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(REGISTRY.size());
-        for (ExteriorVariantSchema schema : REGISTRY.values()) {
-            if (schema instanceof DatapackExterior variant) {
-                buf.encodeAsJson(DatapackExterior.CODEC, variant);
-                continue;
-            }
+	public void syncToEveryone() {
+		if (TardisUtil.getServer() == null) return;
+		for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
+			syncToClient(player);
+		}
+	}
+
+	@Override
+	public void syncToClient(ServerPlayerEntity player) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeInt(REGISTRY.size());
+		for (ExteriorVariantSchema schema : REGISTRY.values()) {
+			if (schema instanceof DatapackExterior variant) {
+				buf.encodeAsJson(DatapackExterior.CODEC, variant);
+				continue;
+			}
             /*if (schema.categoryId() == null) {
                 AITMod.LOGGER.error("Exterior variant " + schema.id() + " has null category!");
                 AITMod.LOGGER.error("Temporarily returning, fix this code!!!"); // todo
                 continue;
             }*/
-            buf.encodeAsJson(DatapackExterior.CODEC, new DatapackExterior(schema.id(), schema.categoryId(), schema.id(), DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, false));
-        }
-        ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
-    }
-    @Override
-    public void readFromServer(PacketByteBuf buf) {
-        REGISTRY.clear();
-        registerDefaults();
-        int size = buf.readInt();
+			buf.encodeAsJson(DatapackExterior.CODEC, new DatapackExterior(schema.id(), schema.categoryId(), schema.id(), DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, false));
+		}
+		ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
+	}
 
-        DatapackExterior variant;
+	@Override
+	public void readFromServer(PacketByteBuf buf) {
+		REGISTRY.clear();
+		registerDefaults();
+		int size = buf.readInt();
 
-        for (int i = 0; i < size; i++) {
-            variant = buf.decodeAsJson(DatapackExterior.CODEC);
-            if (!variant.wasDatapack()) continue;
-            register(variant);
-        }
+		DatapackExterior variant;
 
-        AITMod.LOGGER.info("Read {} exterior variants from server", size);
-    }
+		for (int i = 0; i < size; i++) {
+			variant = buf.decodeAsJson(DatapackExterior.CODEC);
+			if (!variant.wasDatapack()) continue;
+			register(variant);
+		}
 
-    public static DatapackRegistry<ExteriorVariantSchema> getInstance() {
-        if (INSTANCE == null) {
-            AITMod.LOGGER.debug("ExteriorVariantRegistry was not initialized, Creating a new instance");
-            INSTANCE = new ExteriorVariantRegistry();
-        }
+		AITMod.LOGGER.info("Read {} exterior variants from server", size);
+	}
 
-        return INSTANCE;
-    }
+	public static DatapackRegistry<ExteriorVariantSchema> getInstance() {
+		if (INSTANCE == null) {
+			AITMod.LOGGER.debug("ExteriorVariantRegistry was not initialized, Creating a new instance");
+			INSTANCE = new ExteriorVariantRegistry();
+		}
 
-    public static Collection<ExteriorVariantSchema> withParent(ExteriorCategorySchema parent) {
-        List<ExteriorVariantSchema> list = new ArrayList<>();
+		return INSTANCE;
+	}
 
-        for (ExteriorVariantSchema schema : ExteriorVariantRegistry.getInstance().REGISTRY.values()) {
-            //AITExteriors.iterator().forEach((System.out::println));
+	public static Collection<ExteriorVariantSchema> withParent(ExteriorCategorySchema parent) {
+		List<ExteriorVariantSchema> list = new ArrayList<>();
 
-            if (schema.category().equals(parent)) list.add(schema);
-        }
+		for (ExteriorVariantSchema schema : ExteriorVariantRegistry.getInstance().REGISTRY.values()) {
+			if (schema.category().equals(parent)) list.add(schema);
+		}
 
-        return list;
-    }
-    public static List<ExteriorVariantSchema> withParentToList(ExteriorCategorySchema parent) {
-        List<ExteriorVariantSchema> list = new ArrayList<>();
+		return list;
+	}
 
-        for (ExteriorVariantSchema schema : ExteriorVariantRegistry.getInstance().REGISTRY.values()) {
-            if (schema.category().equals(parent)) list.add(schema);
-        }
+	public static List<ExteriorVariantSchema> withParentToList(ExteriorCategorySchema parent) {
+		List<ExteriorVariantSchema> list = new ArrayList<>();
 
-        return list;
-    }
+		for (ExteriorVariantSchema schema : ExteriorVariantRegistry.getInstance().REGISTRY.values()) {
+			if (schema.category().equals(parent)) list.add(schema);
+		}
 
-    public static ExteriorVariantSchema TARDIM_DEFAULT;
-    public static ExteriorVariantSchema TARDIM_FIRE;
-    public static ExteriorVariantSchema TARDIM_SOUL;
-    public static ExteriorVariantSchema BOX_DEFAULT;
-    public static ExteriorVariantSchema BOX_FIRE;
-    public static ExteriorVariantSchema BOX_SOUL;
-    public static ExteriorVariantSchema BOX_FUTURE;
-    public static ExteriorVariantSchema BOX_CORAL;
-    public static ExteriorVariantSchema BOX_TOKAMAK;
-    public static ExteriorVariantSchema PRIME;
-    public static ExteriorVariantSchema YETI;
-    public static ExteriorVariantSchema DEFINITIVE;
-    public static ExteriorVariantSchema PTORED;
-    public static ExteriorVariantSchema MINT;
-    public static ExteriorVariantSchema CAPSULE_DEFAULT;
-    public static ExteriorVariantSchema CAPSULE_SOUL;
-    public static ExteriorVariantSchema CAPSULE_FIRE;
-    public static ExteriorVariantSchema BOOTH_DEFAULT;
-    public static ExteriorVariantSchema BOOTH_FIRE;
-    public static ExteriorVariantSchema BOOTH_SOUL;
-    public static ExteriorVariantSchema BOOTH_VINTAGE;
-    public static ExteriorVariantSchema BOOTH_BLUE;
-    public static ExteriorVariantSchema COOB; // dont use : (
-    public static ExteriorVariantSchema HEAD_DEFAULT;
-    public static ExteriorVariantSchema HEAD_SOUL;
-    public static ExteriorVariantSchema HEAD_FIRE;
-    public static ExteriorVariantSchema CORAL_GROWTH;
-    public static ExteriorVariantSchema DOOM;
-    public static ExteriorVariantSchema PLINTH_DEFAULT;
-    public static ExteriorVariantSchema PLINTH_SOUL;
-    public static ExteriorVariantSchema PLINTH_FIRE;
-    public static ExteriorVariantSchema RENEGADE_DEFAULT;
-    public static ExteriorVariantSchema RENEGADE_TRON;
+		return list;
+	}
 
-    private void registerDefaults() {
-        // todo make this not static
+	public static ExteriorVariantSchema TARDIM_DEFAULT;
+	public static ExteriorVariantSchema TARDIM_FIRE;
+	public static ExteriorVariantSchema TARDIM_SOUL;
+	public static ExteriorVariantSchema BOX_DEFAULT;
+	public static ExteriorVariantSchema BOX_FIRE;
+	public static ExteriorVariantSchema BOX_SOUL;
+	public static ExteriorVariantSchema BOX_FUTURE;
+	public static ExteriorVariantSchema BOX_CORAL;
+	public static ExteriorVariantSchema BOX_TOKAMAK;
+	public static ExteriorVariantSchema PRIME;
+	public static ExteriorVariantSchema YETI;
+	public static ExteriorVariantSchema DEFINITIVE;
+	public static ExteriorVariantSchema PTORED;
+	public static ExteriorVariantSchema MINT;
+	public static ExteriorVariantSchema CAPSULE_DEFAULT;
+	public static ExteriorVariantSchema CAPSULE_SOUL;
+	public static ExteriorVariantSchema CAPSULE_FIRE;
+	public static ExteriorVariantSchema BOOTH_DEFAULT;
+	public static ExteriorVariantSchema BOOTH_FIRE;
+	public static ExteriorVariantSchema BOOTH_SOUL;
+	public static ExteriorVariantSchema BOOTH_VINTAGE;
+	public static ExteriorVariantSchema BOOTH_BLUE;
+	public static ExteriorVariantSchema COOB; // dont use : (
+	public static ExteriorVariantSchema HEAD_DEFAULT;
+	public static ExteriorVariantSchema HEAD_SOUL;
+	public static ExteriorVariantSchema HEAD_FIRE;
+	public static ExteriorVariantSchema CORAL_GROWTH;
+	public static ExteriorVariantSchema DOOM;
+	public static ExteriorVariantSchema PLINTH_DEFAULT;
+	public static ExteriorVariantSchema PLINTH_SOUL;
+	public static ExteriorVariantSchema PLINTH_FIRE;
+	public static ExteriorVariantSchema RENEGADE_DEFAULT;
+	public static ExteriorVariantSchema RENEGADE_TRON;
 
-        // TARDIM
-        TARDIM_DEFAULT = register(new TardimDefaultVariant());
-        TARDIM_FIRE = register(new TardimFireVariant());
-        TARDIM_SOUL = register(new TardimSoulVariant());
+	private void registerDefaults() {
+		// todo make this not static
 
-        // Police Box
-        BOX_DEFAULT = register(new PoliceBoxDefaultVariant());
-        BOX_SOUL = register(new PoliceBoxSoulVariant());
-        BOX_FIRE = register(new PoliceBoxFireVariant());
-        BOX_FUTURE = register(new PoliceBoxFuturisticVariant());
-        BOX_CORAL = register(new PoliceBoxCoralVariant());
-        BOX_TOKAMAK = register(new PoliceBoxTokamakVariant());
+		// TARDIM
+		TARDIM_DEFAULT = register(new TardimDefaultVariant());
+		TARDIM_FIRE = register(new TardimFireVariant());
+		TARDIM_SOUL = register(new TardimSoulVariant());
 
-        // Classic Box
-        PRIME = register(new ClassicBoxPrimeVariant());
-        YETI = register(new ClassicBoxYetiVariant());
-        DEFINITIVE = register(new ClassicBoxDefinitiveVariant());
-        PTORED = register(new ClassicBoxPtoredVariant());
-        MINT = register(new ClassicBoxMintVariant());
+		// Police Box
+		BOX_DEFAULT = register(new PoliceBoxDefaultVariant());
+		BOX_SOUL = register(new PoliceBoxSoulVariant());
+		BOX_FIRE = register(new PoliceBoxFireVariant());
+		BOX_FUTURE = register(new PoliceBoxFuturisticVariant());
+		BOX_CORAL = register(new PoliceBoxCoralVariant());
+		BOX_TOKAMAK = register(new PoliceBoxTokamakVariant());
 
-        // Capsule
-        CAPSULE_DEFAULT = register(new CapsuleDefaultVariant());
-        CAPSULE_SOUL = register(new CapsuleSoulVariant());
-        CAPSULE_FIRE = register(new CapsuleFireVariant());
+		// Classic Box
+		PRIME = register(new ClassicBoxPrimeVariant());
+		YETI = register(new ClassicBoxYetiVariant());
+		DEFINITIVE = register(new ClassicBoxDefinitiveVariant());
+		PTORED = register(new ClassicBoxPtoredVariant());
+		MINT = register(new ClassicBoxMintVariant());
 
-        // Booth
-        BOOTH_DEFAULT = register(new BoothDefaultVariant());
-        BOOTH_FIRE = register(new BoothFireVariant());
-        BOOTH_SOUL = register(new BoothSoulVariant());
-        BOOTH_VINTAGE = register(new BoothVintageVariant());
-        BOOTH_BLUE = register(new BoothBlueVariant());
+		// Capsule
+		CAPSULE_DEFAULT = register(new CapsuleDefaultVariant());
+		CAPSULE_SOUL = register(new CapsuleSoulVariant());
+		CAPSULE_FIRE = register(new CapsuleFireVariant());
 
-        // funny
-        // COOB = register(new RedCoobVariant()); // fixme CUBE HAS BEEN REMOVED, REPEAT, CUBE HAS BEEN REMOVED. DO NOT PANIC!!
+		// Booth
+		BOOTH_DEFAULT = register(new BoothDefaultVariant());
+		BOOTH_FIRE = register(new BoothFireVariant());
+		BOOTH_SOUL = register(new BoothSoulVariant());
+		BOOTH_VINTAGE = register(new BoothVintageVariant());
+		BOOTH_BLUE = register(new BoothBlueVariant());
 
-        // Easter Head
-        HEAD_DEFAULT = register(new EasterHeadDefaultVariant());
-        HEAD_SOUL = register(new EasterHeadSoulVariant());
-        HEAD_FIRE = register(new EasterHeadFireVariant());
+		// funny
+		// COOB = register(new RedCoobVariant()); // fixme CUBE HAS BEEN REMOVED, REPEAT, CUBE HAS BEEN REMOVED. DO NOT PANIC!!
 
-        // Coral Growth
-        CORAL_GROWTH = register(new CoralGrowthVariant());
+		// Easter Head
+		HEAD_DEFAULT = register(new EasterHeadDefaultVariant());
+		HEAD_SOUL = register(new EasterHeadSoulVariant());
+		HEAD_FIRE = register(new EasterHeadFireVariant());
 
-        // Doom
-        DOOM = register(new DoomVariant());
+		// Coral Growth
+		CORAL_GROWTH = register(new CoralGrowthVariant());
 
-        // Plinth
-        PLINTH_DEFAULT = register(new PlinthDefaultVariant());
-        PLINTH_SOUL = register(new PlinthSoulVariant());
-        PLINTH_FIRE = register(new PlinthFireVariant());
+		// Doom
+		DOOM = register(new DoomVariant());
 
-        // Renegade
-        RENEGADE_DEFAULT = register(new RenegadeDefaultVariant());
-        RENEGADE_TRON = register(new RenegadeTronVariant());
+		// Plinth
+		PLINTH_DEFAULT = register(new PlinthDefaultVariant());
+		PLINTH_SOUL = register(new PlinthSoulVariant());
+		PLINTH_FIRE = register(new PlinthFireVariant());
 
-        System.out.println(this.toList());
-    }
+		// Renegade
+		RENEGADE_DEFAULT = register(new RenegadeDefaultVariant());
+		RENEGADE_TRON = register(new RenegadeTronVariant());
+	}
 
-    // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
-    public void init() {
+	// AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
+	public void init() {
 
 
-        // Reading from Datapacks
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-            @Override
-            public Identifier getFabricId() {
-                return new Identifier(AITMod.MOD_ID, "exterior");
-            }
+		// Reading from Datapacks
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+			@Override
+			public Identifier getFabricId() {
+				return new Identifier(AITMod.MOD_ID, "exterior");
+			}
 
-            @Override
-            public void reload(ResourceManager manager) {
-                ExteriorVariantRegistry.getInstance().clearCache();
-                registerDefaults();
+			@Override
+			public void reload(ResourceManager manager) {
+				ExteriorVariantRegistry.getInstance().clearCache();
+				registerDefaults();
 
-                for(Identifier id : manager.findResources("exterior", filename -> filename.getPath().endsWith(".json")).keySet()) {
-                    try(InputStream stream = manager.getResource(id).get().getInputStream()) {
-                        ExteriorVariantSchema created = DatapackExterior.fromInputStream(stream);
+				for (Identifier id : manager.findResources("exterior", filename -> filename.getPath().endsWith(".json")).keySet()) {
+					try (InputStream stream = manager.getResource(id).get().getInputStream()) {
+						ExteriorVariantSchema created = DatapackExterior.fromInputStream(stream);
 
-                        if (created == null) {
-                            stream.close();
-                            continue;
-                        }
+						if (created == null) {
+							stream.close();
+							continue;
+						}
 
-                        ExteriorVariantRegistry.getInstance().register(created);
-                        stream.close();
-                        AITMod.LOGGER.info("Loaded datapack exterior variant " + created.id().toString());
-                    } catch(Exception e) {
-                        AITMod.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
-                    }
-                }
+						ExteriorVariantRegistry.getInstance().register(created);
+						stream.close();
+						AITMod.LOGGER.info("Loaded datapack exterior variant " + created.id().toString());
+					} catch (Exception e) {
+						AITMod.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
+					}
+				}
 
-                syncToEveryone();
-            }
-        });
-    }
+				syncToEveryone();
+			}
+		});
+	}
 }

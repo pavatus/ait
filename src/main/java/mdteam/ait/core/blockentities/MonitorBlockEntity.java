@@ -16,35 +16,34 @@ import net.minecraft.world.World;
 import java.util.Optional;
 
 import static mdteam.ait.tardis.util.TardisUtil.findTardisByInterior;
-import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
 
 public class MonitorBlockEntity extends LinkableBlockEntity {
 
-    public MonitorBlockEntity(BlockPos pos, BlockState state) {
-        super(AITBlockEntityTypes.MONITOR_BLOCK_ENTITY_TYPE, pos, state);
-    }
+	public MonitorBlockEntity(BlockPos pos, BlockState state) {
+		super(AITBlockEntityTypes.MONITOR_BLOCK_ENTITY_TYPE, pos, state);
+	}
 
-    public void useOn(World world, boolean sneaking, PlayerEntity player) {
-        if (world.isClient() || this.findTardis().isEmpty()) return;
-        boolean security = PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
-        if (security) {
-            if (!SecurityControl.hasMatchingKey((ServerPlayerEntity) player, this.findTardis().get())) {
-                return;
-            }
-        }
-        player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F, 1.0F);
-        AITMod.openScreen((ServerPlayerEntity) player, 0, this.findTardis().get().getUuid()); // we can cast because we know its on server :p
-    }
+	public void useOn(World world, boolean sneaking, PlayerEntity player) {
+		if (world.isClient() || this.findTardis().isEmpty()) return;
+		boolean security = PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
+		if (security) {
+			if (!SecurityControl.hasMatchingKey((ServerPlayerEntity) player, this.findTardis().get())) {
+				return;
+			}
+		}
+		player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F, 1.0F);
+		AITMod.openScreen((ServerPlayerEntity) player, 0, this.findTardis().get().getUuid()); // we can cast because we know its on server :p
+	}
 
 
-    @Override
-    public Optional<Tardis> findTardis() {
-        if(this.tardisId == null && this.hasWorld()) {
-            assert this.getWorld() != null;
-            Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
-            if (found != null)
-                this.setTardis(found);
-        }
-        return super.findTardis();
-    }
+	@Override
+	public Optional<Tardis> findTardis() {
+		if (this.tardisId == null && this.hasWorld()) {
+			assert this.getWorld() != null;
+			Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
+			if (found != null)
+				this.setTardis(found);
+		}
+		return super.findTardis();
+	}
 }

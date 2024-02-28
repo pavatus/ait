@@ -16,10 +16,12 @@ import net.minecraft.client.util.math.MatrixStack;
 // Paste this class into your mod and generate all required imports
 public class ClassicExteriorModel extends ExteriorModel {
 	private final ModelPart classic;
+
 	public ClassicExteriorModel(ModelPart root) {
 		super(RenderLayer::getEntityCutoutNoCull);
 		this.classic = root.getChild("classic");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -36,22 +38,22 @@ public class ClassicExteriorModel extends ExteriorModel {
 		ModelPartData Doors = classic.addChild("Doors", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData right_door = Doors.addChild("right_door", ModelPartBuilder.create().uv(0, 189).cuboid(-0.5F, -25.5F, -0.5F, 13.0F, 53.0F, 1.0F, new Dilation(0.0F))
-		.uv(203, 76).cuboid(-0.5F, -25.5F, -1.0F, 13.0F, 53.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(-12.5F, -29.5F, -14.5F));
+				.uv(203, 76).cuboid(-0.5F, -25.5F, -1.0F, 13.0F, 53.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(-12.5F, -29.5F, -14.5F));
 
 		ModelPartData left_door = Doors.addChild("left_door", ModelPartBuilder.create().uv(194, 21).cuboid(-12.5F, -25.5F, -0.5F, 13.0F, 53.0F, 1.0F, new Dilation(0.0F))
-		.uv(0, 29).cuboid(-11.5F, -0.5F, -1.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
-		.uv(5, 29).cuboid(-8.0F, -7.0F, -0.51F, 3.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(12.5F, -29.5F, -14.5F));
+				.uv(0, 29).cuboid(-11.5F, -0.5F, -1.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
+				.uv(5, 29).cuboid(-8.0F, -7.0F, -0.51F, 3.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(12.5F, -29.5F, -14.5F));
 
 		ModelPartData Walls = classic.addChild("Walls", ModelPartBuilder.create().uv(120, 13).cuboid(-15.0F, -58.0F, -13.0F, 1.0F, 56.0F, 26.0F, new Dilation(0.0F))
-		.uv(55, 137).cuboid(-15.5F, -58.0F, -13.0F, 0.0F, 56.0F, 26.0F, new Dilation(0.0F))
-		.uv(29, 106).cuboid(-13.0F, -58.0F, -15.0F, 26.0F, 3.0F, 1.0F, new Dilation(0.0F))
-		.uv(109, 0).cuboid(-13.0F, -58.0F, -15.5F, 26.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+				.uv(55, 137).cuboid(-15.5F, -58.0F, -13.0F, 0.0F, 56.0F, 26.0F, new Dilation(0.0F))
+				.uv(29, 106).cuboid(-13.0F, -58.0F, -15.0F, 26.0F, 3.0F, 1.0F, new Dilation(0.0F))
+				.uv(109, 0).cuboid(-13.0F, -58.0F, -15.5F, 26.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
 		ModelPartData Wall_r1 = Walls.addChild("Wall_r1", ModelPartBuilder.create().uv(150, 70).cuboid(-15.5F, -58.0F, -13.0F, 0.0F, 56.0F, 26.0F, new Dilation(0.0F))
-		.uv(87, 80).cuboid(-15.0F, -58.0F, -13.0F, 1.0F, 56.0F, 26.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
+				.uv(87, 80).cuboid(-15.0F, -58.0F, -13.0F, 1.0F, 56.0F, 26.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
 
 		ModelPartData Wall_r2 = Walls.addChild("Wall_r2", ModelPartBuilder.create().uv(116, 137).cuboid(-15.75F, -58.0F, -13.0F, 0.0F, 56.0F, 26.0F, new Dilation(0.0F))
-		.uv(0, 106).cuboid(-15.0F, -58.0F, -13.0F, 1.0F, 56.0F, 26.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+				.uv(0, 106).cuboid(-15.0F, -58.0F, -13.0F, 1.0F, 56.0F, 26.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
 
 		ModelPartData PCB = classic.addChild("PCB", ModelPartBuilder.create().uv(203, 154).cuboid(-14.0F, -61.0F, -18.0F, 28.0F, 4.0F, 3.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
 
@@ -62,21 +64,22 @@ public class ClassicExteriorModel extends ExteriorModel {
 		ModelPartData cube_r6 = PCB.addChild("cube_r6", ModelPartBuilder.create().uv(203, 146).cuboid(-14.0F, -58.0F, -18.0F, 28.0F, 4.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
 		ModelPartData Roof = classic.addChild("Roof", ModelPartBuilder.create().uv(0, 39).cuboid(-15.0F, -65.0F, -15.0F, 30.0F, 5.0F, 30.0F, new Dilation(0.0F))
-		.uv(230, 18).cuboid(-14.0F, -55.0F, -14.0F, 28.0F, 0.0F, 28.0F, new Dilation(0.0F))
-		.uv(17, 25).cuboid(-16.5F, -65.0F, -16.5F, 3.0F, 2.0F, 3.0F, new Dilation(0.05F))
-		.uv(17, 19).cuboid(-16.5F, -65.0F, 13.5F, 3.0F, 2.0F, 3.0F, new Dilation(0.05F))
-		.uv(19, 11).cuboid(13.5F, -65.0F, -16.5F, 3.0F, 2.0F, 3.0F, new Dilation(0.05F))
-		.uv(19, 0).cuboid(13.5F, -65.0F, 13.5F, 3.0F, 2.0F, 3.0F, new Dilation(0.05F))
-		.uv(0, 75).cuboid(-14.0F, -67.0F, -14.0F, 28.0F, 2.0F, 28.0F, new Dilation(0.0F))
-		.uv(0, 0).cuboid(-3.0F, -69.0F, -3.0F, 6.0F, 4.0F, 6.0F, new Dilation(0.0F))
-		.uv(0, 11).cuboid(-3.0F, -73.0F, -3.0F, 6.0F, 1.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
+				.uv(230, 18).cuboid(-14.0F, -55.0F, -14.0F, 28.0F, 0.0F, 28.0F, new Dilation(0.0F))
+				.uv(17, 25).cuboid(-16.5F, -65.0F, -16.5F, 3.0F, 2.0F, 3.0F, new Dilation(0.05F))
+				.uv(17, 19).cuboid(-16.5F, -65.0F, 13.5F, 3.0F, 2.0F, 3.0F, new Dilation(0.05F))
+				.uv(19, 11).cuboid(13.5F, -65.0F, -16.5F, 3.0F, 2.0F, 3.0F, new Dilation(0.05F))
+				.uv(19, 0).cuboid(13.5F, -65.0F, 13.5F, 3.0F, 2.0F, 3.0F, new Dilation(0.05F))
+				.uv(0, 75).cuboid(-14.0F, -67.0F, -14.0F, 28.0F, 2.0F, 28.0F, new Dilation(0.0F))
+				.uv(0, 0).cuboid(-3.0F, -69.0F, -3.0F, 6.0F, 4.0F, 6.0F, new Dilation(0.0F))
+				.uv(0, 11).cuboid(-3.0F, -73.0F, -3.0F, 6.0F, 1.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
 
 		ModelPartData cube_r7 = Roof.addChild("cube_r7", ModelPartBuilder.create().uv(0, 19).cuboid(-2.0F, -71.75F, -2.0F, 4.0F, 5.0F, 4.0F, new Dilation(0.0F))
-		.uv(0, 43).cuboid(-3.5F, -69.75F, 0.0F, 7.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -2.25F, 0.0F, 0.0F, 0.7854F, 0.0F));
+				.uv(0, 43).cuboid(-3.5F, -69.75F, 0.0F, 7.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -2.25F, 0.0F, 0.0F, 0.7854F, 0.0F));
 
 		ModelPartData cube_r8 = Roof.addChild("cube_r8", ModelPartBuilder.create().uv(0, 39).cuboid(-3.5F, -69.75F, 0.0F, 7.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -2.25F, 0.0F, 0.0F, -0.7854F, 0.0F));
 		return TexturedModelData.of(modelData, 512, 512);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		classic.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
@@ -89,9 +92,9 @@ public class ClassicExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if(exterior.findTardis().get() == null) return;
+		if (exterior.findTardis().get() == null) return;
 		if (exterior.findTardis().isEmpty()) return;
-        matrices.push();
+		matrices.push();
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5f, 0);
 
@@ -99,7 +102,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
 		DoorData door = exterior.findTardis().get().getDoor();
-		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
+		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
 		//if (DependencyChecker.hasPortals())
@@ -113,7 +116,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 	@Override
 	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 
-        matrices.push();
+		matrices.push();
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5f, 0);
 
@@ -121,7 +124,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
 		DoorData door = realEntity.getTardis().getDoor();
-		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen())  ? -5F : 0.0F;
+		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
 		//if (DependencyChecker.hasPortals())
@@ -143,7 +146,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        matrices.push();
+		matrices.push();
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5f, 0);
 

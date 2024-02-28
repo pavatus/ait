@@ -2,9 +2,7 @@ package mdteam.ait.tardis.util;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -18,161 +16,163 @@ import org.jetbrains.annotations.Unmodifiable;
 @Unmodifiable
 public class AbsoluteBlockPos extends BlockPos {
 
-    private final SerialDimension dimension;
+	private final SerialDimension dimension;
 
-    public AbsoluteBlockPos(int x, int y, int z, SerialDimension dimension) {
-        super(x, y, z);
+	public AbsoluteBlockPos(int x, int y, int z, SerialDimension dimension) {
+		super(x, y, z);
 
-        this.dimension = dimension;
-    }
+		this.dimension = dimension;
+	}
 
-    public AbsoluteBlockPos(BlockPos pos, SerialDimension dimension) {
-        this(pos.getX(), pos.getY(), pos.getZ(), dimension);
-    }
+	public AbsoluteBlockPos(BlockPos pos, SerialDimension dimension) {
+		this(pos.getX(), pos.getY(), pos.getZ(), dimension);
+	}
 
-    public AbsoluteBlockPos(int x, int y, int z, World world) {
-        this(x, y, z, new SerialDimension(world));
-    }
+	public AbsoluteBlockPos(int x, int y, int z, World world) {
+		this(x, y, z, new SerialDimension(world));
+	}
 
-    public AbsoluteBlockPos(BlockPos pos, World world) {
-        this(pos.getX(), pos.getY(), pos.getZ(), world);
-    }
+	public AbsoluteBlockPos(BlockPos pos, World world) {
+		this(pos.getX(), pos.getY(), pos.getZ(), world);
+	}
 
-    public World getWorld() {
-        return dimension.get();
-    }
+	public World getWorld() {
+		return dimension.get();
+	}
 
-    public SerialDimension getDimension() {
-        return dimension;
-    }
+	public SerialDimension getDimension() {
+		return dimension;
+	}
 
-    public BlockEntity getBlockEntity() {
-        return this.getWorld().getBlockEntity(this);
-    }
+	public BlockEntity getBlockEntity() {
+		return this.getWorld().getBlockEntity(this);
+	}
 
-    public void addBlockEntity(BlockEntity blockEntity) {
-        this.getWorld().addBlockEntity(blockEntity);
-    }
+	public void addBlockEntity(BlockEntity blockEntity) {
+		this.getWorld().addBlockEntity(blockEntity);
+	}
 
-    public BlockState getBlockState() {
-        return this.getWorld().getBlockState(this);
-    }
+	public BlockState getBlockState() {
+		return this.getWorld().getBlockState(this);
+	}
 
-    public void setBlockState(BlockState state) {
-        this.getWorld().setBlockState(this, state);
-    }
+	public void setBlockState(BlockState state) {
+		this.getWorld().setBlockState(this, state);
+	}
 
-    public Chunk getChunk() {
-        return this.getWorld().getChunk(this);
-    }
+	public Chunk getChunk() {
+		return this.getWorld().getChunk(this);
+	}
 
-    public AbsoluteBlockPos above() {
-        return new AbsoluteBlockPos(this.getX(), this.getY() + 1, this.getZ(), this.getWorld());
-    }
+	public AbsoluteBlockPos above() {
+		return new AbsoluteBlockPos(this.getX(), this.getY() + 1, this.getZ(), this.getWorld());
+	}
 
-    public NbtCompound toNbt() {
-        NbtCompound nbt = new NbtCompound();
+	public NbtCompound toNbt() {
+		NbtCompound nbt = new NbtCompound();
 
-        nbt.put("pos", NbtHelper.fromBlockPos(this));
-        nbt.putString("dimension", this.getDimension().getValue());
+		nbt.put("pos", NbtHelper.fromBlockPos(this));
+		nbt.putString("dimension", this.getDimension().getValue());
 
-        return nbt;
-    }
-    public static AbsoluteBlockPos fromNbt(NbtCompound nbt) {
-        BlockPos pos = NbtHelper.toBlockPos(nbt.getCompound("pos"));
-        SerialDimension dimension = new SerialDimension(nbt.getString("dimension"));
-        return new AbsoluteBlockPos(pos, dimension);
-    }
+		return nbt;
+	}
 
-    @Override
-    public String toString() {
-        return "AbsoluteBlockPos[ " + getX() + " _ " + getY() + " _ " + getZ() + " ] | [ " + getWorld() + " ]";
-    }
+	public static AbsoluteBlockPos fromNbt(NbtCompound nbt) {
+		BlockPos pos = NbtHelper.toBlockPos(nbt.getCompound("pos"));
+		SerialDimension dimension = new SerialDimension(nbt.getString("dimension"));
+		return new AbsoluteBlockPos(pos, dimension);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof AbsoluteBlockPos absolute)
-            return this.getDimension().equals(absolute.getDimension()) && super.equals(absolute);
+	@Override
+	public String toString() {
+		return "AbsoluteBlockPos[ " + getX() + " _ " + getY() + " _ " + getZ() + " ] | [ " + getWorld() + " ]";
+	}
 
-        return super.equals(o);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof AbsoluteBlockPos absolute)
+			return this.getDimension().equals(absolute.getDimension()) && super.equals(absolute);
 
-    public static class Directed extends AbsoluteBlockPos {
+		return super.equals(o);
+	}
 
-        private final Direction direction;
+	public static class Directed extends AbsoluteBlockPos {
 
-        public Directed(int x, int y, int z, SerialDimension dimension, Direction direction) {
-            super(x, y, z, dimension);
+		private final Direction direction;
 
-            this.direction = direction;
-        }
+		public Directed(int x, int y, int z, SerialDimension dimension, Direction direction) {
+			super(x, y, z, dimension);
 
-        public Directed(BlockPos pos, SerialDimension dimension, Direction direction) {
-            this(pos.getX(), pos.getY(), pos.getZ(), dimension, direction);
-        }
+			this.direction = direction;
+		}
 
-        public Directed(AbsoluteBlockPos pos, Direction direction) {
-            this(pos, pos.getDimension(), direction);
-        }
+		public Directed(BlockPos pos, SerialDimension dimension, Direction direction) {
+			this(pos.getX(), pos.getY(), pos.getZ(), dimension, direction);
+		}
 
-        public Directed(int x, int y, int z, World world, Direction direction) {
-            super(x, y, z, world);
+		public Directed(AbsoluteBlockPos pos, Direction direction) {
+			this(pos, pos.getDimension(), direction);
+		}
 
-            this.direction = direction;
-        }
+		public Directed(int x, int y, int z, World world, Direction direction) {
+			super(x, y, z, world);
 
-        public Directed(BlockPos pos, World world, Direction direction) {
-            this(pos.getX(), pos.getY(), pos.getZ(), world, direction);
-        }
+			this.direction = direction;
+		}
 
-        public Direction getDirection() {
-            return direction;
-        }
+		public Directed(BlockPos pos, World world, Direction direction) {
+			this(pos.getX(), pos.getY(), pos.getZ(), world, direction);
+		}
 
-        @Override
-        public boolean equals(Object o) {
-            if (o instanceof AbsoluteBlockPos.Directed other)
-                return this.direction == other.direction && super.equals(other);
+		public Direction getDirection() {
+			return direction;
+		}
 
-            return super.equals(o);
-        }
+		@Override
+		public boolean equals(Object o) {
+			if (o instanceof AbsoluteBlockPos.Directed other)
+				return this.direction == other.direction && super.equals(other);
 
-        @Override
-        public NbtCompound toNbt() {
-            NbtCompound nbt = super.toNbt();
+			return super.equals(o);
+		}
 
-            nbt.putInt("direction", this.direction.getId());
+		@Override
+		public NbtCompound toNbt() {
+			NbtCompound nbt = super.toNbt();
 
-            return nbt;
-        }
+			nbt.putInt("direction", this.direction.getId());
 
-        public static Directed fromNbt(NbtCompound nbt) {
-            AbsoluteBlockPos pos = AbsoluteBlockPos.fromNbt(nbt);
+			return nbt;
+		}
 
-            Direction dir = Direction.byId(nbt.getInt("direction"));
+		public static Directed fromNbt(NbtCompound nbt) {
+			AbsoluteBlockPos pos = AbsoluteBlockPos.fromNbt(nbt);
 
-            return new Directed(pos, dir);
-        }
-    }
-    // i dont understand how to use this class, it needs documentation. I don't understand why the world variable is there if the client can't get worlds other than its own
-    public static class Client extends AbsoluteBlockPos.Directed {
-        private final World world;
+			Direction dir = Direction.byId(nbt.getInt("direction"));
 
-        public Client(AbsoluteBlockPos pos, Direction direction, World world) {
-            super(pos, direction);
+			return new Directed(pos, dir);
+		}
+	}
 
-            this.world = world;
-        }
+	// i dont understand how to use this class, it needs documentation. I don't understand why the world variable is there if the client can't get worlds other than its own
+	public static class Client extends AbsoluteBlockPos.Directed {
+		private final World world;
 
-        public World getClientWorld() {
-            return this.world;
-        }
+		public Client(AbsoluteBlockPos pos, Direction direction, World world) {
+			super(pos, direction);
 
-        public Client(int x, int y, int z, World world, Direction direction) {
-            super(x, y, z, world, direction);
+			this.world = world;
+		}
 
-            this.world = world;
-        }
-    }
+		public World getClientWorld() {
+			return this.world;
+		}
+
+		public Client(int x, int y, int z, World world, Direction direction) {
+			super(x, y, z, world, direction);
+
+			this.world = world;
+		}
+	}
 }
 

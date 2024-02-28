@@ -6,13 +6,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
 public class GotoWaypointControl extends Control {
-    public GotoWaypointControl() {
-        super("goto_waypoint");
-    }
+	public GotoWaypointControl() {
+		super("goto_waypoint");
+	}
 
-    @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        tardis.getHandlers().getWaypoints().gotoWaypoint();
-        return true;
-    }
+	@Override
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+		tardis.getHandlers().getWaypoints().gotoWaypoint();
+		return true;
+	}
 }

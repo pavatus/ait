@@ -6,9 +6,9 @@ import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
 import net.minecraft.util.Identifier;
 
 public class BlueCoralVariant extends ConsoleVariantSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/coral_blue");
+	public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/coral_blue");
 
-    public BlueCoralVariant() {
-        super(CoralType.REFERENCE, REFERENCE);
-    }
+	public BlueCoralVariant() {
+		super(CoralType.REFERENCE, REFERENCE);
+	}
 }

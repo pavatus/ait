@@ -15,26 +15,26 @@ import java.util.function.Function;
 
 @SuppressWarnings("rawtypes")
 public abstract class DoorModel extends SinglePartEntityModel {
-    public static int MAX_TICK_COUNT = 2 * 20;
-    public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
+	public static int MAX_TICK_COUNT = 2 * 20;
+	public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
 
-    public DoorModel() {
-        this(RenderLayer::getEntityCutoutNoCull);
-    }
+	public DoorModel() {
+		this(RenderLayer::getEntityCutoutNoCull);
+	}
 
-    public DoorModel(Function<Identifier, RenderLayer> function) {
-        super(function);
-    }
+	public DoorModel(Function<Identifier, RenderLayer> function) {
+		super(function);
+	}
 
-    public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (door.findTardis().isEmpty()) return;
+	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+		if (door.findTardis().isEmpty()) return;
 
-        root.render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
-    }
+		root.render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+	}
 
-    @Override
-    public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-    }
+	@Override
+	public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+	}
 
-    public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);
+	public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);
 }
