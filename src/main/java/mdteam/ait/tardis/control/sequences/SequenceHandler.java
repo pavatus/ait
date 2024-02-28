@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 public class SequenceHandler extends TardisLink {
-
     @Exclude
     private RecentControls recent;
     private int ticks = 0;

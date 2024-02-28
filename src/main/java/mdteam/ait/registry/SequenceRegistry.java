@@ -18,6 +18,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.DrownedEntity;
 import net.minecraft.entity.mob.PhantomEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.item.Items;
@@ -178,7 +179,6 @@ public class SequenceRegistry {
 
         CLOAK_TO_AVOID_VORTEX_TRAPPED_MOBS = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "cloak_to_avoid_vortex_trapped_mobs"), (finishedTardis -> {
             finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
-            // @TODO fix the entity spawning stuff, idk if i should do it though so - Loqor
             if(finishedTardis.getDoor().getDoorPos() == null) return;
             if(finishedTardis.getDoor().isOpen() || TardisUtil.getTardisDimension().isClient()) return;
             ItemEntity rewardForCloaking = new ItemEntity(EntityType.ITEM, TardisUtil.getTardisDimension());
@@ -193,10 +193,13 @@ public class SequenceRegistry {
             ZombieEntity zombieEntity = new ZombieEntity(EntityType.ZOMBIE, TardisUtil.getTardisDimension());
             zombieEntity.setPosition(missedTardis.getDoor().getDoorPos().getX() + 0.5f,
                     missedTardis.getDoor().getDoorPos().getY() + 0.5f, missedTardis.getDoor().getDoorPos().getZ() + 0.5f);
+            DrownedEntity drownedEntity = new DrownedEntity(EntityType.DROWNED, TardisUtil.getTardisDimension());
+                    drownedEntity.setPosition(missedTardis.getDoor().getDoorPos().getX() + 0.5f,
+                            missedTardis.getDoor().getDoorPos().getY() + 0.5f, missedTardis.getDoor().getDoorPos().getZ() + 0.5f);
             PhantomEntity phantomEntity = new PhantomEntity(EntityType.PHANTOM, TardisUtil.getTardisDimension());
             phantomEntity.setPosition(missedTardis.getDoor().getDoorPos().getX() + 0.5f,
                     missedTardis.getDoor().getDoorPos().getY() + 0.5f, missedTardis.getDoor().getDoorPos().getZ() + 0.5f);
-            TardisUtil.getTardisDimension().spawnEntity(random.nextBoolean() ? zombieEntity : phantomEntity);
+            TardisUtil.getTardisDimension().spawnEntity(random.nextBoolean() ? random.nextBoolean() ? drownedEntity : zombieEntity : phantomEntity);
         }), 80L, Text.literal("Immediate cloaking necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW),
                 new CloakControl(), new RandomiserControl()));
 

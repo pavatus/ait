@@ -65,13 +65,13 @@ public class TardisCrashData extends TardisLink{
             tardis.getHandlers().getAlarms().disable();
         }
         AbsoluteBlockPos.Directed exteriorPosition = tardis.getTravel().getExteriorPos();
+        double x = directionToInteger(exteriorPosition.getDirection())[0];
+        double z = directionToInteger(exteriorPosition.getDirection())[1];
         ServerWorld exteriorWorld = (ServerWorld) exteriorPosition.getWorld();
         if(tardis.getDoor().isOpen() && this.getState() != State.NORMAL) {
-            double x = directionToInteger(exteriorPosition.getDirection())[0];
-            double z = directionToInteger(exteriorPosition.getDirection())[1];
             exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    exteriorPosition.toCenterPos().x, exteriorPosition.getY() + 2f,
-                    exteriorPosition.toCenterPos().y,
+                    exteriorPosition.toCenterPos().x + x, exteriorPosition.getY() + 2f,
+                    exteriorPosition.toCenterPos().z + z,
                     8,
                     0.05D, 0.05D, 0.05D, 0.01D
             );
@@ -80,9 +80,10 @@ public class TardisCrashData extends TardisLink{
         if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
         exteriorWorld.spawnParticles(new DustColorTransitionParticleEffect(
                         new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 2),
-                exteriorPosition.getX(), exteriorPosition.getY(), exteriorPosition.getZ(),
+                exteriorPosition.toCenterPos().x + x, exteriorPosition.getY() + 2f,
+                exteriorPosition.toCenterPos().z + z,
                 25,
-                exteriorPosition.getDirection().getVector().getX(), 0.05f, exteriorPosition.getDirection().getVector().getZ(), 0.08D
+                0.05D, 0.05D, 0.05D, 0.08D
         );
         if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
         if (!TardisUtil.isInteriorNotEmpty(tardis)) return;

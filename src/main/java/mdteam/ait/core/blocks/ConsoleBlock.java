@@ -76,6 +76,11 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
             if (itemStack.getItem() instanceof HammerItem) {
                 itemStack.getItem().useOnBlock(new ItemUsageContext(world, player, hand, itemStack, hit));
             }
+            if(itemStack.getItem() == AITBlocks.ZEITON_CLUSTER.asItem()) {
+                if(consoleBlockEntity.findTardis().isEmpty()) return ActionResult.FAIL;
+                consoleBlockEntity.findTardis().get().addFuel(15);
+                player.getActiveItem().decrement(1);
+            }
         }
 
 
