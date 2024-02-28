@@ -25,7 +25,7 @@ public class FoggyUtils {
             RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));;
             RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 11, 32));
             RenderSystem.setShaderFogShape(FogShape.SPHERE);
-            RenderSystem.setShaderFogColor(0f,0.8f,0f, 0.35f);
+            RenderSystem.setShaderFogColor(0.8f,0.8f,0.8f, 0.35f);
         }
     }
 }
