@@ -57,35 +57,14 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         matrices.pop();
         if(!entity.findTardis().get().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return;
         matrices.push();
-        matrices.translate(sonicItemTranslations(variant).x(), sonicItemTranslations(variant).y(), sonicItemTranslations(variant).z());
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(sonicItemRotations(variant)[0]));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(sonicItemRotations(variant)[1]));
+        matrices.translate(variant.sonicItemTranslations().x(), variant.sonicItemTranslations().y(), variant.sonicItemTranslations().z());
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(variant.sonicItemRotations()[0]));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(variant.sonicItemRotations()[1]));
         matrices.scale(0.9f, 0.9f, 0.9f);
         int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
         ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC);
         MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), 0);
         matrices.pop();
-    }
-
-    private Vector3f sonicItemTranslations(ClientConsoleVariantSchema schema) {
-        return switch(schema.parent().id().getPath()) {
-            case "console/hartnell" -> new Vector3f(0.1f, 1.2f, 0.26f);
-            case "console/coral" -> new Vector3f(1.15f, 1.2f, 0.5f);
-            case "console/toyota" -> new Vector3f(-0.5275f, 1.35f, 0.7f);
-            case "console/alnico" -> new Vector3f(-0.55f, 1.1f, -0.1f);
-            case "console/steam" -> new Vector3f(0.9f, 1.125f, -0.19f);
-            default -> new Vector3f(0, 0, 0);
-        };
-    }
-
-    private float[] sonicItemRotations(ClientConsoleVariantSchema schema) {
-        return switch(schema.parent().id().getPath()) {
-            case "console/hartnell", "console/alnico" -> new float[] {120f, 135f};
-            case "console/coral" -> new float[] {90f, 135f};
-            case "console/toyota" -> new float[] {-120f, -45f};
-            case "console/steam" -> new float[] {30f, 120f};
-            default -> new float[] {0, 0};
-        };
     }
 
 }

@@ -11,6 +11,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
+import org.joml.Vector3f;
 
 import java.lang.reflect.Type;
 
@@ -47,6 +48,14 @@ public abstract class ClientConsoleVariantSchema implements Identifiable {
 
     public static Object serializer() {
         return new Serializer();
+    }
+
+    public Vector3f sonicItemTranslations() {
+        return new Vector3f(0.1f, 1.2f, 0.26f);
+    }
+
+    public float[] sonicItemRotations() {
+        return new float[] {120f, 135f};
     }
 
     private static class Serializer implements JsonSerializer<ClientConsoleVariantSchema>, JsonDeserializer<ClientConsoleVariantSchema> {
