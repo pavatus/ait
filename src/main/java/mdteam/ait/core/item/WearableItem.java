@@ -4,6 +4,13 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 
+/**
+ * A WearableItem is an Item that can be equipped.
+ * Allows for custom rendering using own models + feature renderer instead of the default one
+ *
+ * From Duzo's Persona Mod
+ * @author duzo
+ */
 public class WearableItem extends Item implements Equipment {
     private final EquipmentSlot slot;
     private final boolean hasCustomRenderer;
