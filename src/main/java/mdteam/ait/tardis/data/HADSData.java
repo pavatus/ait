@@ -3,6 +3,8 @@ package mdteam.ait.tardis.data;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
+import mdteam.ait.tardis.wrapper.server.ServerTardisTravel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.mob.CreeperEntity;
@@ -43,7 +45,6 @@ public class HADSData extends TardisLink {
 
 	// @TODO Fix hads idk why its broken. duzo did something to the demat idk what happened lol
 	public void tickingForDanger(World world) {
-		/*System.out.println("hello");*/
 		if (getExteriorPos() == null) return;
 		List<Entity> listOfEntities = world.getOtherEntities(null,
 				new Box(getExteriorPos()).expand(3f),
@@ -80,16 +81,25 @@ public class HADSData extends TardisLink {
 	public void dematerialiseWhenInDanger() {
 		// fixme is bug pls fix - idea enqueue a remat ( NEEDS_MAT var ? )
 		if (findTardis().isEmpty()) return;
+
+		ServerTardis tardis = (ServerTardis) findTardis().get();
+
+		ServerTardisTravel travel = (ServerTardisTravel) tardis.getTravel();
+		TardisTravel.State state = travel.getState();
+
+		ServerAlarmHandler alarm = tardis.getHandlers().getAlarms();
+
 		if (isInDanger()) {
-			if (findTardis().get().getTravel().getState() == TardisTravel.State.LANDED) {
-				findTardis().get().getTravel().dematerialise(false);
+			if (state == TardisTravel.State.LANDED) {
+				travel.dematerialise(false);
 			}
-			findTardis().get().getHandlers().getAlarms().enable();
-		} else if (findTardis().get().getHandlers().getAlarms().isEnabled()) {
-			if (findTardis().get().getTravel().getState() == TardisTravel.State.FLIGHT) {
-				findTardis().get().getTravel().materialise();
-			} else if (findTardis().get().getTravel().getState() == TardisTravel.State.MAT)
-				findTardis().get().getHandlers().getAlarms().disable();
+			tardis.getHandlers().getAlarms().enable();
+
+		} else if (alarm.isEnabled()) {
+			if (state == TardisTravel.State.FLIGHT) {
+				travel.materialise();
+			} else if (state == TardisTravel.State.MAT)
+				alarm.disable();
 		}
 	}
 
