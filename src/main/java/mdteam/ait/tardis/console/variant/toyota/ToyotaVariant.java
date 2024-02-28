@@ -6,9 +6,9 @@ import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
 import net.minecraft.util.Identifier;
 
 public class ToyotaVariant extends ConsoleVariantSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/toyota");
+	public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/toyota");
 
-    public ToyotaVariant() {
-        super(ToyotaType.REFERENCE, REFERENCE);
-    }
+	public ToyotaVariant() {
+		super(ToyotaType.REFERENCE, REFERENCE);
+	}
 }

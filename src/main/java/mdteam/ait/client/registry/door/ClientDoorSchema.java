@@ -15,56 +15,63 @@ import java.lang.reflect.Type;
 
 @Environment(EnvType.CLIENT)
 public abstract class ClientDoorSchema {
-    private final Identifier parent;
-    private final Identifier id;
+	private final Identifier parent;
+	private final Identifier id;
 
-    protected ClientDoorSchema(Identifier parent, Identifier id) {
-        this.parent = parent;
-        this.id = id;
-    }
-    protected ClientDoorSchema(Identifier parent) {
-        this.id = parent;
-        this.parent = parent;
-    }
+	protected ClientDoorSchema(Identifier parent, Identifier id) {
+		this.parent = parent;
+		this.id = id;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() == null) return false;
+	protected ClientDoorSchema(Identifier parent) {
+		this.id = parent;
+		this.parent = parent;
+	}
 
-        ClientDoorSchema that = (ClientDoorSchema) o;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() == null) return false;
 
-        return id.equals(that.id);
-    }
+		ClientDoorSchema that = (ClientDoorSchema) o;
 
-    public DoorSchema parent() { return DoorRegistry.REGISTRY.get(this.parent); }
-    public Identifier id() { return id; }
-    // public abstract Identifier texture();
-    // public abstract Identifier emission();
-    public abstract DoorModel model();
+		return id.equals(that.id);
+	}
 
-    public static Object serializer() {
-        return new Serializer();
-    }
+	public DoorSchema parent() {
+		return DoorRegistry.REGISTRY.get(this.parent);
+	}
 
-    private static class Serializer implements JsonSerializer<ClientDoorSchema>, JsonDeserializer<ClientDoorSchema> {
+	public Identifier id() {
+		return id;
+	}
 
-        @Override
-        public ClientDoorSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Identifier id;
+	// public abstract Identifier texture();
+	// public abstract Identifier emission();
+	public abstract DoorModel model();
 
-            try {
-                id = new Identifier(json.getAsJsonPrimitive().getAsString());
-            } catch (InvalidIdentifierException e) {
-                id = CapsuleDoorVariant.REFERENCE;
-            }
+	public static Object serializer() {
+		return new Serializer();
+	}
 
-            return ClientDoorRegistry.REGISTRY.get(id);
-        }
+	private static class Serializer implements JsonSerializer<ClientDoorSchema>, JsonDeserializer<ClientDoorSchema> {
 
-        @Override
-        public JsonElement serialize(ClientDoorSchema src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.id().toString());
-        }
-    }
+		@Override
+		public ClientDoorSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+			Identifier id;
+
+			try {
+				id = new Identifier(json.getAsJsonPrimitive().getAsString());
+			} catch (InvalidIdentifierException e) {
+				id = CapsuleDoorVariant.REFERENCE;
+			}
+
+			return ClientDoorRegistry.REGISTRY.get(id);
+		}
+
+		@Override
+		public JsonElement serialize(ClientDoorSchema src, Type typeOfSrc, JsonSerializationContext context) {
+			return new JsonPrimitive(src.id().toString());
+		}
+	}
 }

@@ -7,7 +7,7 @@ import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 
 public class ClientTardisExterior extends TardisExterior {
 
-    public ClientTardisExterior(Tardis tardis, ExteriorCategorySchema exterior, ExteriorVariantSchema variant) {
-        super(tardis, exterior, variant);
-    }
+	public ClientTardisExterior(Tardis tardis, ExteriorCategorySchema exterior, ExteriorVariantSchema variant) {
+		super(tardis, exterior, variant);
+	}
 }

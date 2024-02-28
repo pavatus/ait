@@ -10,9 +10,11 @@ import net.minecraft.util.math.RotationAxis;
 
 public class CopperConsoleModel extends ConsoleModel {
 	private final ModelPart copper;
+
 	public CopperConsoleModel(ModelPart root) {
 		this.copper = root.getChild("copper");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -1194,6 +1196,7 @@ public class CopperConsoleModel extends ConsoleModel {
 		ModelPartData cube_r204 = rack2.addChild("cube_r204", ModelPartBuilder.create().uv(220, 231).cuboid(-8.0F, -0.5F, 0.0F, 16.0F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -40.75F, 19.9F, 0.0F, 0.0F, -0.2182F));
 		return TexturedModelData.of(modelData, 256, 256);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		matrices.push();

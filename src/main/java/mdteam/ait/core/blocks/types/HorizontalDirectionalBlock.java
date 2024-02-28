@@ -11,22 +11,22 @@ import org.jetbrains.annotations.Nullable;
 
 public class HorizontalDirectionalBlock extends Block {
 
-    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+	public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
 
-    public HorizontalDirectionalBlock(Settings settings) {
-        super(settings);
+	public HorizontalDirectionalBlock(Settings settings) {
+		super(settings);
 
-        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
-    }
+		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
+	}
 
-    @Nullable
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
-    }
+	@Nullable
+	@Override
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
+		return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(FACING);
+	}
 }

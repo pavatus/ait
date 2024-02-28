@@ -3,79 +3,80 @@ package mdteam.ait.tardis.console.type;
 import com.google.gson.*;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
-import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.registry.datapack.Identifiable;
 import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
 import mdteam.ait.tardis.control.ControlTypes;
 import mdteam.ait.tardis.exterior.category.CapsuleCategory;
-import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
 import java.lang.reflect.Type;
 
 public abstract class ConsoleTypeSchema implements Identifiable {
-    private final Identifier id;
-    private final String name;
+	private final Identifier id;
+	private final String name;
 
-    protected ConsoleTypeSchema(Identifier id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+	protected ConsoleTypeSchema(Identifier id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() == null) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() == null) return false;
 
-        ConsoleTypeSchema that = (ConsoleTypeSchema) o;
+		ConsoleTypeSchema that = (ConsoleTypeSchema) o;
 
-        return id.equals(that.id);
-    }
+		return id.equals(that.id);
+	}
 
-    public Identifier id() {
-        return this.id;
-    }
-    public String name() { return this.name; }
+	public Identifier id() {
+		return this.id;
+	}
 
-    @Override
-    public String toString() {
-        return this.name();
-    }
+	public String name() {
+		return this.name;
+	}
 
-    //@TODO protocol abstraction with numbered letters
+	@Override
+	public String toString() {
+		return this.name();
+	}
 
-    public abstract ControlTypes[] getControlTypes(); // fixme this kinda sucks idk
+	//@TODO protocol abstraction with numbered letters
 
-    /**
-     * The default console for this category
-     */
-    public ConsoleVariantSchema getDefaultVariant() {
-        return ConsoleVariantRegistry.withParentToList(this).get(0);
-    }
+	public abstract ControlTypes[] getControlTypes(); // fixme this kinda sucks idk
 
-    public static Object serializer() {
-        return new Serializer();
-    }
+	/**
+	 * The default console for this category
+	 */
+	public ConsoleVariantSchema getDefaultVariant() {
+		return ConsoleVariantRegistry.withParentToList(this).get(0);
+	}
 
-    private static class Serializer implements JsonSerializer<ConsoleTypeSchema>, JsonDeserializer<ConsoleTypeSchema> {
+	public static Object serializer() {
+		return new Serializer();
+	}
 
-        @Override
-        public ConsoleTypeSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Identifier id;
+	private static class Serializer implements JsonSerializer<ConsoleTypeSchema>, JsonDeserializer<ConsoleTypeSchema> {
 
-            try {
-                id = new Identifier(json.getAsJsonPrimitive().getAsString());
-            } catch (InvalidIdentifierException e) {
-                id = CapsuleCategory.REFERENCE;
-            }
+		@Override
+		public ConsoleTypeSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+			Identifier id;
 
-            return ConsoleRegistry.REGISTRY.get(id);
-        }
+			try {
+				id = new Identifier(json.getAsJsonPrimitive().getAsString());
+			} catch (InvalidIdentifierException e) {
+				id = CapsuleCategory.REFERENCE;
+			}
 
-        @Override
-        public JsonElement serialize(ConsoleTypeSchema src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.id().toString());
-        }
-    }
+			return ConsoleRegistry.REGISTRY.get(id);
+		}
+
+		@Override
+		public JsonElement serialize(ConsoleTypeSchema src, Type typeOfSrc, JsonSerializationContext context) {
+			return new JsonPrimitive(src.id().toString());
+		}
+	}
 }

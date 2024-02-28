@@ -18,31 +18,31 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class SetHumCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("set-hum").requires(source -> source.hasPermissionLevel(2))
-                        .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-                                .then(argument("hum", StringArgumentType.string())
-                                        .executes(SetHumCommand::runCommand)))));
-    }
+	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+		dispatcher.register(literal(AITMod.MOD_ID)
+				.then(literal("set-hum").requires(source -> source.hasPermissionLevel(2))
+						.then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
+								.then(argument("hum", StringArgumentType.string())
+										.executes(SetHumCommand::runCommand)))));
+	}
 
-    private static int runCommand(CommandContext<ServerCommandSource> context) {
-        ServerPlayerEntity source = context.getSource().getPlayer();
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
-        SoundEvent hum = stringToHum(StringArgumentType.getString(context, "hum"));
+	private static int runCommand(CommandContext<ServerCommandSource> context) {
+		ServerPlayerEntity source = context.getSource().getPlayer();
+		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
+		SoundEvent hum = stringToHum(StringArgumentType.getString(context, "hum"));
 
-        if (tardis == null || source == null) return 0;
+		if (tardis == null || source == null) return 0;
 
-        // tardis.getHandlers().getHum().setHum(hum);
+		// tardis.getHandlers().getHum().setHum(hum);
 
-        return Command.SINGLE_SUCCESS;
-    }
+		return Command.SINGLE_SUCCESS;
+	}
 
-    // fixme this is only temporary and is NOT how it should be done!!
-    private static SoundEvent stringToHum(String var) {
-        return switch (var.toLowerCase()) {
-            default -> AITSounds.TOYOTA_HUM;
-            case "coral" -> AITSounds.CORAL_HUM;
-        };
-    }
+	// fixme this is only temporary and is NOT how it should be done!!
+	private static SoundEvent stringToHum(String var) {
+		return switch (var.toLowerCase()) {
+			default -> AITSounds.TOYOTA_HUM;
+			case "coral" -> AITSounds.CORAL_HUM;
+		};
+	}
 }

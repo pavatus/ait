@@ -22,6 +22,7 @@ public class CoralConsoleModel extends ConsoleModel {
 	public CoralConsoleModel(ModelPart root) {
 		this.console = root.getChild("console");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -1326,6 +1327,7 @@ public class CoralConsoleModel extends ConsoleModel {
 		ModelPartData rings5 = rings4.addChild("rings5", ModelPartBuilder.create().uv(58, 145).cuboid(-7.25F, -26.0F, -1.0F, 1.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.4363F, 0.0F));
 		return TexturedModelData.of(modelData, 256, 256);
 	}
+
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
 		/*System.out.println(state);*/
@@ -1368,13 +1370,11 @@ public class CoralConsoleModel extends ConsoleModel {
 		// Door Control
 		ModelPart doorControl = this.console.getChild("controls").getChild("p_ctrl_1").getChild("bone29").getChild("crank").getChild("bone32");
 
-		if(console.findTardis().get().getDoor().isLeftOpen()) {
+		if (console.findTardis().get().getDoor().isLeftOpen()) {
 			doorControl.pitch = doorControl.pitch - 0.8f;
-		}
-		else if(console.findTardis().get().getDoor().isRightOpen()){
+		} else if (console.findTardis().get().getDoor().isRightOpen()) {
 			doorControl.pitch = doorControl.pitch - 1.5f;
-		}
-		else {
+		} else {
 			doorControl.pitch = doorControl.pitch;
 		}
 
@@ -1386,7 +1386,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Throttle
 		ModelPart throttle = this.console.getChild("controls").getChild("p_ctrl_5").getChild("bone49").getChild("lever3").getChild("bone52");
-		throttle.roll = throttle.roll  + (tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed());
+		throttle.roll = throttle.roll + (tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed());
 
 		// Increment
 		ModelPart increment = this.console.getChild("controls").getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("crank2");
@@ -1428,6 +1428,7 @@ public class CoralConsoleModel extends ConsoleModel {
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}
+
 	@Override
 	public ModelPart getPart() {
 		return console;

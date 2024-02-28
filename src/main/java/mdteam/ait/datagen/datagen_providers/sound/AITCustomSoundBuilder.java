@@ -4,9 +4,9 @@ import net.minecraft.sound.SoundEvent;
 
 @FunctionalInterface
 public interface AITCustomSoundBuilder {
-    void add(String soundName, SoundEvent[] soundEvents);
+	void add(String soundName, SoundEvent[] soundEvents);
 
-    default void add(String soundName, SoundEvent soundEvent) {
-        add(soundName, new SoundEvent[]{soundEvent});
-    }
+	default void add(String soundName, SoundEvent soundEvent) {
+		add(soundName, new SoundEvent[]{soundEvent});
+	}
 }

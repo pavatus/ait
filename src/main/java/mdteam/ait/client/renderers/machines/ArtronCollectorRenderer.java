@@ -20,46 +20,46 @@ import net.minecraft.util.math.RotationAxis;
 // Paste this class into your mod and generate all required imports
 public class ArtronCollectorRenderer<T extends ArtronCollectorBlockEntity> implements BlockEntityRenderer<T> {
 
-    public static final Identifier COLLECTOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/machines/artron_collector.png"));
-    public static final Identifier EMISSIVE_COLLECTOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/machines/artron_collector_emission.png"));
-    private final ArtronCollectorModel artronCollectorModel;
+	public static final Identifier COLLECTOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/machines/artron_collector.png"));
+	public static final Identifier EMISSIVE_COLLECTOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/machines/artron_collector_emission.png"));
+	private final ArtronCollectorModel artronCollectorModel;
 
-    public ArtronCollectorRenderer(BlockEntityRendererFactory.Context ctx) {
-        this.artronCollectorModel = new ArtronCollectorModel(ArtronCollectorModel.getTexturedModelData().createModel());
-    }
+	public ArtronCollectorRenderer(BlockEntityRendererFactory.Context ctx) {
+		this.artronCollectorModel = new ArtronCollectorModel(ArtronCollectorModel.getTexturedModelData().createModel());
+	}
 
-    @Override
-    public void render(ArtronCollectorBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+	@Override
+	public void render(ArtronCollectorBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
-        BlockState blockState = entity.getCachedState();
+		BlockState blockState = entity.getCachedState();
 
-        float f = blockState.get(ArtronCollectorBlock.FACING).asRotation();
+		float f = blockState.get(ArtronCollectorBlock.FACING).asRotation();
 
-        if (MinecraftClient.getInstance().world == null) return;
+		if (MinecraftClient.getInstance().world == null) return;
 
-        matrices.push();
+		matrices.push();
 
-        matrices.translate(0.5f, 1.5f, 0.5f);
+		matrices.translate(0.5f, 1.5f, 0.5f);
 
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
 
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
-        ModelPart batteryLevels = artronCollectorModel.collector.getChild("battery_levels");
+		ModelPart batteryLevels = artronCollectorModel.collector.getChild("battery_levels");
 
-        artronCollectorModel.collector.getChild("spinner").yaw =
-                entity.getCurrentFuel() > 0 ? ((float) MinecraftClient.getInstance().world.getTime() / 12000L) * 180.0f : 0;
+		artronCollectorModel.collector.getChild("spinner").yaw =
+				entity.getCurrentFuel() > 0 ? ((float) MinecraftClient.getInstance().world.getTime() / 12000L) * 180.0f : 0;
 
-        batteryLevels.getChild("b_1").visible = entity.getCurrentFuel() > 250 && entity.getCurrentFuel() < 500;
-        batteryLevels.getChild("b_2").visible = entity.getCurrentFuel() > 500 && entity.getCurrentFuel() < 750;
-        batteryLevels.getChild("b_3").visible = entity.getCurrentFuel() > 750 && entity.getCurrentFuel() < 1000;
-        batteryLevels.getChild("b_4").visible = entity.getCurrentFuel() > 1000 && entity.getCurrentFuel() < 1250;
-        batteryLevels.getChild("b_5").visible = entity.getCurrentFuel() > 1250 && entity.getCurrentFuel() < 1500;
-        batteryLevels.getChild("b_6").visible = entity.getCurrentFuel() == 1500;
+		batteryLevels.getChild("b_1").visible = entity.getCurrentFuel() > 250 && entity.getCurrentFuel() < 500;
+		batteryLevels.getChild("b_2").visible = entity.getCurrentFuel() > 500 && entity.getCurrentFuel() < 750;
+		batteryLevels.getChild("b_3").visible = entity.getCurrentFuel() > 750 && entity.getCurrentFuel() < 1000;
+		batteryLevels.getChild("b_4").visible = entity.getCurrentFuel() > 1000 && entity.getCurrentFuel() < 1250;
+		batteryLevels.getChild("b_5").visible = entity.getCurrentFuel() > 1250 && entity.getCurrentFuel() < 1500;
+		batteryLevels.getChild("b_6").visible = entity.getCurrentFuel() == 1500;
 
-        this.artronCollectorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(COLLECTOR_TEXTURE)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
-        this.artronCollectorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(EMISSIVE_COLLECTOR_TEXTURE)), 0xF000F00, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+		this.artronCollectorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(COLLECTOR_TEXTURE)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+		this.artronCollectorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(EMISSIVE_COLLECTOR_TEXTURE)), 0xF000F00, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        matrices.pop();
-    }
+		matrices.pop();
+	}
 }

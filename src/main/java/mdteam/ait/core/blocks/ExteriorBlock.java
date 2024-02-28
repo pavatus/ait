@@ -14,7 +14,6 @@ import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.FlightUtil;
-import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -53,278 +52,282 @@ import static mdteam.ait.core.blocks.DoorBlock.rotateShape;
 
 public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak, Waterloggable {
 
-    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final BooleanProperty WATERLOGGED;
-    public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16,1, 16);
-    public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
-            Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
-    public static final VoxelShape PORTALS_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 10.0, 16.0, 32.0, 16.0),
-            Block.createCuboidShape(0, 0, -3.5, 16,1, 16));
-    public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
-    public ExteriorBlock(Settings settings) {
-        super(settings.nonOpaque());
+	public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+	public static final BooleanProperty WATERLOGGED;
+	public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16, 1, 16);
+	public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
+			Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
+	public static final VoxelShape PORTALS_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 10.0, 16.0, 32.0, 16.0),
+			Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
+	public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
 
-        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
-    }
-    @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
-    }
-    @Nullable
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite()).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
-    }
+	public ExteriorBlock(Settings settings) {
+		super(settings.nonOpaque());
 
-    public static boolean isWaterlogged(BlockState state) {
-        return state.get(Properties.WATERLOGGED);
-    }
+		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
-    }
+	@Override
+	public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+		return false;
+	}
 
-    @Override
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return AITItems.TARDIS_ITEM.getDefaultStack();
-    }
+	@Nullable
+	@Override
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
+		FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+		return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite()).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+	}
 
-    public FluidState getFluidState(BlockState state) {
-        return (Boolean)state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
+	public static boolean isWaterlogged(BlockState state) {
+		return state.get(Properties.WATERLOGGED);
+	}
 
-    public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
-        return !(Boolean)state.get(WATERLOGGED);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(FACING, WATERLOGGED);
+	}
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).findTardis().isEmpty())
-            return getNormalShape(state, world, pos);
+	@Override
+	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+		return AITItems.TARDIS_ITEM.getDefaultStack();
+	}
 
-        if (((ExteriorBlockEntity) blockEntity).findTardis().get().isSiegeMode())
-            return SIEGE_SHAPE;
+	public FluidState getFluidState(BlockState state) {
+		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+	}
 
-        TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().getTravel().getState();
-        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
-            return getNormalShape(state, world, pos);
+	public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
+		return !(Boolean) state.get(WATERLOGGED);
+	}
 
-        if(DependencyChecker.hasPortals()) {
-            return PORTALS_SHAPE;
-        }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).findTardis().isEmpty())
+			return getNormalShape(state, world, pos);
 
-        return VoxelShapes.empty();
-    }
+		if (((ExteriorBlockEntity) blockEntity).findTardis().get().isSiegeMode())
+			return SIEGE_SHAPE;
 
-    @Override
-    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-        return VoxelShapes.empty();
-    }
+		TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().getTravel().getState();
+		if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
+			return getNormalShape(state, world, pos);
 
-    @Override
-    public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
-        return VoxelShapes.empty();
-    }
+		if (DependencyChecker.hasPortals()) {
+			return PORTALS_SHAPE;
+		}
 
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        // todo move these to a reusable method
+		return VoxelShapes.empty();
+	}
 
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).findTardis().isEmpty())
-            return getNormalShape(state, world, pos);
+	@Override
+	public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+		return VoxelShapes.empty();
+	}
 
-        if (((ExteriorBlockEntity) blockEntity).findTardis().get().isSiegeMode())
-            return SIEGE_SHAPE;
-        if (((ExteriorBlockEntity) blockEntity).findTardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM)) {
-            return LEDGE_DOOM;
-        }
-        // todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
-        if (DependencyChecker.hasPortals())
-            if (((ExteriorBlockEntity) blockEntity).findTardis().get().getDoor().isOpen() && ((ExteriorBlockEntity) blockEntity).findTardis().get().getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
-                return getLedgeShape(state, world, pos);
+	@Override
+	public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
+		return VoxelShapes.empty();
+	}
 
-        TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().getTravel().getState();
-        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
-            return getNormalShape(state, world, pos);
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		// todo move these to a reusable method
 
-        if(DependencyChecker.hasPortals()) {
-            return PORTALS_SHAPE;
-        }
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).findTardis().isEmpty())
+			return getNormalShape(state, world, pos);
 
-        return VoxelShapes.empty();
-    }
+		if (((ExteriorBlockEntity) blockEntity).findTardis().get().isSiegeMode())
+			return SIEGE_SHAPE;
+		if (((ExteriorBlockEntity) blockEntity).findTardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM)) {
+			return LEDGE_DOOM;
+		}
+		// todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
+		if (DependencyChecker.hasPortals())
+			if (((ExteriorBlockEntity) blockEntity).findTardis().get().getDoor().isOpen() && ((ExteriorBlockEntity) blockEntity).findTardis().get().getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
+				return getLedgeShape(state, world, pos);
 
-    public VoxelShape getNormalShape(BlockState state, BlockView world, BlockPos pos) {
-        if ( world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.findTardis().isPresent() && exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING)) != null)
-            return exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING));
+		TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().getTravel().getState();
+		if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
+			return getNormalShape(state, world, pos);
 
-        return rotateShape(Direction.NORTH, state.get(FACING), CUBE_NORTH_SHAPE);
-    }
+		if (DependencyChecker.hasPortals()) {
+			return PORTALS_SHAPE;
+		}
 
-    public VoxelShape getLedgeShape(BlockState state, BlockView world, BlockPos pos) {
-        // fixme these wont have ledges probably
-        if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.findTardis().isPresent() && exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING)) != null)
-            return exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING));
+		return VoxelShapes.empty();
+	}
 
-        return rotateShape(Direction.NORTH, state.get(FACING), CUBE_NORTH_SHAPE);
-    }
+	public VoxelShape getNormalShape(BlockState state, BlockView world, BlockPos pos) {
+		if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.findTardis().isPresent() && exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING)) != null)
+			return exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING));
 
-    @Override
-    public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).findTardis().isEmpty())
-            return getNormalShape(state, world, pos);
+		return rotateShape(Direction.NORTH, state.get(FACING), CUBE_NORTH_SHAPE);
+	}
 
-        TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().getTravel().getState();
-        if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
-            return getNormalShape(state, world, pos);
+	public VoxelShape getLedgeShape(BlockState state, BlockView world, BlockPos pos) {
+		// fixme these wont have ledges probably
+		if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.findTardis().isPresent() && exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING)) != null)
+			return exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING));
 
-        if (((ExteriorBlockEntity) blockEntity).findTardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM)) {
-            return LEDGE_DOOM;
-        }
+		return rotateShape(Direction.NORTH, state.get(FACING), CUBE_NORTH_SHAPE);
+	}
 
-        if(DependencyChecker.hasPortals()) {
-            return PORTALS_SHAPE;
-        }
+	@Override
+	public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).findTardis().isEmpty())
+			return getNormalShape(state, world, pos);
 
-        return VoxelShapes.empty();
-    }
+		TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().getTravel().getState();
+		if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
+			return getNormalShape(state, world, pos);
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) {
-            if (world.isClient()) { // this wont ever get called because of the early return above, remove?
-                if (exteriorBlockEntity.findTardis().isEmpty()) {
-                    ClientTardisManager.getInstance().askTardis(new AbsoluteBlockPos(pos, world));
-                    return ActionResult.FAIL;
-                }
-                return ActionResult.SUCCESS;
-            }
+		if (((ExteriorBlockEntity) blockEntity).findTardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM)) {
+			return LEDGE_DOOM;
+		}
 
-            if(exteriorBlockEntity.findTardis().isEmpty()) return ActionResult.FAIL;
-            exteriorBlockEntity.useOn((ServerWorld) world, player.isSneaking(), player);
-        }
+		if (DependencyChecker.hasPortals()) {
+			return PORTALS_SHAPE;
+		}
 
-        return ActionResult.CONSUME;
-    }
+		return VoxelShapes.empty();
+	}
 
-    @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (world.isClient())
-            return;
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) {
+			if (world.isClient()) { // this wont ever get called because of the early return above, remove?
+				if (exteriorBlockEntity.findTardis().isEmpty()) {
+					ClientTardisManager.getInstance().askTardis(new AbsoluteBlockPos(pos, world));
+					return ActionResult.FAIL;
+				}
+				return ActionResult.SUCCESS;
+			}
 
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof ExteriorBlockEntity exterior) {
-            exterior.onEntityCollision(entity);
-        }
-    }
+			if (exteriorBlockEntity.findTardis().isEmpty()) return ActionResult.FAIL;
+			exteriorBlockEntity.useOn((ServerWorld) world, player.isSneaking(), player);
+		}
 
-    @Nullable
-    @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new ExteriorBlockEntity(pos, state);
-    }
+		return ActionResult.CONSUME;
+	}
 
-    @Override
-    public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
-        return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
-    }
+	@Override
+	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+		if (world.isClient())
+			return;
 
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull World world, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
-        return (world1, blockPos, blockState, ticker) -> {
-            if (ticker instanceof ExteriorBlockEntity exterior) {
-                exterior.tick(world, blockPos, blockState, exterior);
-            }
-        };
-    }
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (blockEntity instanceof ExteriorBlockEntity exterior) {
+			exterior.onEntityCollision(entity);
+		}
+	}
 
-    @Override
-    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-        super.onBroken(world, pos, state);
+	@Nullable
+	@Override
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return new ExteriorBlockEntity(pos, state);
+	}
 
-        if (!world.isClient()) {
-            BlockEntity entity = world.getBlockEntity(pos);
+	@Override
+	public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
+		return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
+	}
 
-            if (!(entity instanceof ExteriorBlockEntity))
-                return;
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull World world, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+		return (world1, blockPos, blockState, ticker) -> {
+			if (ticker instanceof ExteriorBlockEntity exterior) {
+				exterior.tick(world, blockPos, blockState, exterior);
+			}
+		};
+	}
 
-            ((ExteriorBlockEntity) entity).onBroken();
-        }
-    }
+	@Override
+	public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+		super.onBroken(world, pos, state);
 
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        // this is called when the block is first placed, but we have a demat anim..
-        tryFall(state, world, pos);
-    }
+		if (!world.isClient()) {
+			BlockEntity entity = world.getBlockEntity(pos);
 
-    public void tryFall(BlockState state, ServerWorld world, BlockPos pos) {
-        if (canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= (world.getBottomY() + 1)
-                && findTardis(world, pos) != null
-                && !PropertiesHandler.getBool(findTardis(world, pos).getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)
-                && findTardis(world, pos).getTravel().getState() == TardisTravel.State.LANDED
-                && findTardis(world, pos).getExterior().getCategory() != CategoryRegistry.CORAL_GROWTH) {
-            FallingTardisEntity falling = FallingTardisEntity.spawnFromBlock(world, pos, state);
-            // OH SHIT WE FALLING
-            if(state.get(WATERLOGGED)) {
-                state.with(WATERLOGGED, false);
-            }
-            this.configureFallingTardis(falling, world, pos);
-        }
-    }
+			if (!(entity instanceof ExteriorBlockEntity))
+				return;
 
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
+			((ExteriorBlockEntity) entity).onBroken();
+		}
+	}
 
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-    }
+	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		// this is called when the block is first placed, but we have a demat anim..
+		tryFall(state, world, pos);
+	}
 
-    private Tardis findTardis(ServerWorld world, BlockPos pos) {
-        if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
-            if(exterior.findTardis().isEmpty()) return null;
-            return exterior.findTardis().get();
-        }
-        return null;
-    }
+	public void tryFall(BlockState state, ServerWorld world, BlockPos pos) {
+		if (canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= (world.getBottomY() + 1)
+				&& findTardis(world, pos) != null
+				&& !PropertiesHandler.getBool(findTardis(world, pos).getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)
+				&& findTardis(world, pos).getTravel().getState() == TardisTravel.State.LANDED
+				&& findTardis(world, pos).getExterior().getCategory() != CategoryRegistry.CORAL_GROWTH) {
+			FallingTardisEntity falling = FallingTardisEntity.spawnFromBlock(world, pos, state);
+			// OH SHIT WE FALLING
+			if (state.get(WATERLOGGED)) {
+				state.with(WATERLOGGED, false);
+			}
+			this.configureFallingTardis(falling, world, pos);
+		}
+	}
 
-    public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingTardisEntity fallingTardisEntity) {
-        if(fallingTardisEntity.getTardis() == null) return;
-        fallingTardisEntity.getTardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, fallingTardisEntity.getTardis().getTravel().getPosition().getDirection()));
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+		if (state.get(WATERLOGGED)) {
+			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
 
-        world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
-        FlightUtil.playSoundAtConsole(fallingTardisEntity.getTardis(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+	}
 
-        PropertiesHandler.set(fallingTardisEntity.getTardis(), PropertiesHandler.IS_FALLING, false);
-        //PropertiesHandler.set(fallingTardisEntity.getTardis(), PropertiesHandler.ALARM_ENABLED, PropertiesHandler.getBool((fallingTardisEntity.getTardis().getHandlers().getProperties()), PropertiesHandler.ALARM_ENABLED));
-        DoorData.lockTardis(PropertiesHandler.getBool(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), fallingTardisEntity.getTardis(), null, false);
+	private Tardis findTardis(ServerWorld world, BlockPos pos) {
+		if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
+			if (exterior.findTardis().isEmpty()) return null;
+			return exterior.findTardis().get();
+		}
+		return null;
+	}
+
+	public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingTardisEntity fallingTardisEntity) {
+		if (fallingTardisEntity.getTardis() == null) return;
+		fallingTardisEntity.getTardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, fallingTardisEntity.getTardis().getTravel().getPosition().getDirection()));
+
+		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+		FlightUtil.playSoundAtConsole(fallingTardisEntity.getTardis(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+
+		PropertiesHandler.set(fallingTardisEntity.getTardis(), PropertiesHandler.IS_FALLING, false);
+		//PropertiesHandler.set(fallingTardisEntity.getTardis(), PropertiesHandler.ALARM_ENABLED, PropertiesHandler.getBool((fallingTardisEntity.getTardis().getHandlers().getProperties()), PropertiesHandler.ALARM_ENABLED));
+		DoorData.lockTardis(PropertiesHandler.getBool(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), fallingTardisEntity.getTardis(), null, false);
         /*if(!fallingTardisEntity.getTardis().getTravel().isCrashing())
             fallingTardisEntity.getTardis().getTravel().crash();*/
-    }
+	}
 
-    protected void configureFallingTardis(FallingTardisEntity entity, ServerWorld world, BlockPos pos) {
-    }
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (random.nextInt(16) == 0) {
-            BlockPos blockPos = pos.down();
-            if (canFallThrough(world.getBlockState(blockPos))) {
-                ParticleUtil.spawnParticle(world, pos, random, ParticleTypes.TOTEM_OF_UNDYING);
-            }
-        }
-    }
+	protected void configureFallingTardis(FallingTardisEntity entity, ServerWorld world, BlockPos pos) {
+	}
 
-    @Override
-    public void onTryBreak(World world, BlockPos pos, BlockState state) {
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+		if (random.nextInt(16) == 0) {
+			BlockPos blockPos = pos.down();
+			if (canFallThrough(world.getBlockState(blockPos))) {
+				ParticleUtil.spawnParticle(world, pos, random, ParticleTypes.TOTEM_OF_UNDYING);
+			}
+		}
+	}
 
-    }
+	@Override
+	public void onTryBreak(World world, BlockPos pos, BlockState state) {
 
-    static {
-        WATERLOGGED = Properties.WATERLOGGED;
-    }
+	}
+
+	static {
+		WATERLOGGED = Properties.WATERLOGGED;
+	}
 }

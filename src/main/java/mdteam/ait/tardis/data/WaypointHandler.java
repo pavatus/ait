@@ -12,89 +12,98 @@ import net.minecraft.item.ItemStack;
 import java.util.Optional;
 
 public class WaypointHandler extends TardisLink {
-    public static final String HAS_CARTRIDGE = "has_cartridge";
-    private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
-    public WaypointHandler(Tardis tardis) {
-        super(tardis, "waypoint");
-    }
+	public static final String HAS_CARTRIDGE = "has_cartridge";
+	private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
 
-    public boolean hasCartridge() {
-        if (this.findTardis().isEmpty()) return false;
-        return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), HAS_CARTRIDGE);
-    }
-    public void markHasCartridge() {
-        if (this.findTardis().isEmpty()) return;
-        PropertiesHandler.set(this.findTardis().get(), HAS_CARTRIDGE, true);
-    }
-    private void clearCartridge() {
-        if (this.findTardis().isEmpty()) return;
-        PropertiesHandler.set(this.findTardis().get(), HAS_CARTRIDGE, false);
-    }
+	public WaypointHandler(Tardis tardis) {
+		super(tardis, "waypoint");
+	}
 
-    /**
-     * Sets the new waypoint
-     * @param var
-     * @return The optional of the previous waypoiint
-     */
-    public Optional<Waypoint> set(Waypoint var, boolean spawnItem) {
-        Optional<Waypoint> prev = Optional.ofNullable(this.current);
-        // System.out.println(var);
-        // System.out.println(this.current);
-        this.current = var;
+	public boolean hasCartridge() {
+		if (this.findTardis().isEmpty()) return false;
+		return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), HAS_CARTRIDGE);
+	}
 
-        if (spawnItem && prev.isPresent()) {
-            this.spawnItem(prev.get());
-        }
+	public void markHasCartridge() {
+		if (this.findTardis().isEmpty()) return;
+		PropertiesHandler.set(this.findTardis().get(), HAS_CARTRIDGE, true);
+	}
 
-        return prev;
-    }
+	private void clearCartridge() {
+		if (this.findTardis().isEmpty()) return;
+		PropertiesHandler.set(this.findTardis().get(), HAS_CARTRIDGE, false);
+	}
 
-    public Waypoint get() {
-        return this.current;
-    }
-    public boolean hasWaypoint() {
-        return this.current != null;
-    }
-    public void clear(boolean spawnItem) {
-        this.set(null, spawnItem);
-    }
+	/**
+	 * Sets the new waypoint
+	 *
+	 * @param var
+	 * @return The optional of the previous waypoiint
+	 */
+	public Optional<Waypoint> set(Waypoint var, boolean spawnItem) {
+		Optional<Waypoint> prev = Optional.ofNullable(this.current);
+		// System.out.println(var);
+		// System.out.println(this.current);
+		this.current = var;
 
-    public void gotoWaypoint() {
-        if (findTardis().isEmpty() || !this.hasWaypoint()) return; // todo move this check to the DEMAT event so the fail to takeoff happens
+		if (spawnItem && prev.isPresent()) {
+			this.spawnItem(prev.get());
+		}
 
-        PropertiesHandler.setAutoPilot(this.findTardis().get().getHandlers().getProperties(), true);
-        FlightUtil.travelTo(findTardis().get(), this.get());
-    }
-    public void setDestination() {
-        if (findTardis().isEmpty() || !this.hasWaypoint()) return;
+		return prev;
+	}
 
-        this.findTardis().get().getTravel().setDestination(this.get(), true);
-    }
+	public Waypoint get() {
+		return this.current;
+	}
 
-    public void spawnItem() {
-        if (!this.hasWaypoint()) return;
+	public boolean hasWaypoint() {
+		return this.current != null;
+	}
 
-        spawnItem(this.get());
-        this.clear(false);
-    }
+	public void clear(boolean spawnItem) {
+		this.set(null, spawnItem);
+	}
 
-    public void spawnItem(Waypoint waypoint) {
-        if (findTardis().isEmpty() || !this.hasCartridge()) return;
+	public void gotoWaypoint() {
+		if (findTardis().isEmpty() || !this.hasWaypoint())
+			return; // todo move this check to the DEMAT event so the fail to takeoff happens
 
-        Tardis tardis = this.findTardis().get();
+		PropertiesHandler.setAutoPilot(this.findTardis().get().getHandlers().getProperties(), true);
+		FlightUtil.travelTo(findTardis().get(), this.get());
+	}
 
-        if (tardis.getDesktop().findCurrentConsole().isEmpty()) return;
+	public void setDestination() {
+		if (findTardis().isEmpty() || !this.hasWaypoint()) return;
 
-        spawnItem(waypoint, tardis.getDesktop().findCurrentConsole().get().position());
-        this.clearCartridge();
-    }
+		this.findTardis().get().getTravel().setDestination(this.get(), true);
+	}
 
-    public static ItemStack createWaypointItem(Waypoint waypoint) {
-        return WaypointItem.create(waypoint);
-    }
-    public static ItemEntity spawnItem(Waypoint waypoint, AbsoluteBlockPos pos) {
-        ItemEntity entity = new ItemEntity(pos.getWorld(), pos.getX(), pos.getY(), pos.getZ(), createWaypointItem(waypoint));
-        pos.getWorld().spawnEntity(entity);
-        return entity;
-    }
+	public void spawnItem() {
+		if (!this.hasWaypoint()) return;
+
+		spawnItem(this.get());
+		this.clear(false);
+	}
+
+	public void spawnItem(Waypoint waypoint) {
+		if (findTardis().isEmpty() || !this.hasCartridge()) return;
+
+		Tardis tardis = this.findTardis().get();
+
+		if (tardis.getDesktop().findCurrentConsole().isEmpty()) return;
+
+		spawnItem(waypoint, tardis.getDesktop().findCurrentConsole().get().position());
+		this.clearCartridge();
+	}
+
+	public static ItemStack createWaypointItem(Waypoint waypoint) {
+		return WaypointItem.create(waypoint);
+	}
+
+	public static ItemEntity spawnItem(Waypoint waypoint, AbsoluteBlockPos pos) {
+		ItemEntity entity = new ItemEntity(pos.getWorld(), pos.getX(), pos.getY(), pos.getZ(), createWaypointItem(waypoint));
+		pos.getWorld().spawnEntity(entity);
+		return entity;
+	}
 }

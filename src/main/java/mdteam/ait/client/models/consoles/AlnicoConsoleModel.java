@@ -16,9 +16,11 @@ import net.minecraft.util.math.Direction;
 
 public class AlnicoConsoleModel extends ConsoleModel {
 	private final ModelPart alnico;
+
 	public AlnicoConsoleModel(ModelPart root) {
 		this.alnico = root.getChild("alnico");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -805,6 +807,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 				.uv(45, 29).cuboid(-0.975F, 0.0F, -4.0335F, 2.0F, 0.0F, 3.0F, new Dilation(0.001F)), ModelTransform.of(-4.5F, 0.0F, -7.75F, 0.0F, 0.5236F, 0.0F));
 		return TexturedModelData.of(modelData, 256, 256);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		alnico.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
@@ -881,7 +884,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
-		return switch(state) {
+		return switch (state) {
 			case FLIGHT, MAT, DEMAT -> AlnicoAnimations.CONSOLE_ALNICO_FLIGHT;
 			case LANDED -> AlnicoAnimations.CONSOLE_ALNICO_IDLE;
 			default -> Animation.Builder.create(0).build();

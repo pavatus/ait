@@ -10,9 +10,11 @@ import net.minecraft.util.math.RotationAxis;
 
 public class PlinthDoorModel extends DoorModel {
 	private final ModelPart plinth;
+
 	public PlinthDoorModel(ModelPart root) {
 		this.plinth = root.getChild("plinth");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -25,6 +27,7 @@ public class PlinthDoorModel extends DoorModel {
 				.uv(36, 79).cuboid(12.0F, -45.0F, -8.0F, 2.0F, 42.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 		return TexturedModelData.of(modelData, 128, 128);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		plinth.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);

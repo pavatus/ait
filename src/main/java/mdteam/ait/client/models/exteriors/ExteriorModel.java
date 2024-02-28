@@ -21,69 +21,69 @@ import static mdteam.ait.tardis.animation.ExteriorAnimation.*;
 
 @SuppressWarnings("rawtypes")
 public abstract class ExteriorModel extends SinglePartEntityModel {
-    public static int MAX_TICK_COUNT = 2 * 20;
+	public static int MAX_TICK_COUNT = 2 * 20;
 
-    public ExteriorModel() {
-        this(RenderLayer::getEntityCutoutNoCull);
-    }
+	public ExteriorModel() {
+		this(RenderLayer::getEntityCutoutNoCull);
+	}
 
-    public ExteriorModel(Function<Identifier, RenderLayer> function) {
-        super(function);
-    }
+	public ExteriorModel(Function<Identifier, RenderLayer> function) {
+		super(function);
+	}
 
-    private static float getAnimationLengthInTicks(Animation anim) {
-        return anim.lengthInSeconds() * 20;
-    }
+	private static float getAnimationLengthInTicks(Animation anim) {
+		return anim.lengthInSeconds() * 20;
+	}
 
-    private void checkAnimationTimer(ExteriorBlockEntity exterior) {
-        DoorData.DoorStateEnum state = exterior.findTardis().get().getDoor().getDoorState();
-        Animation anim = getAnimationForDoorState(state);
-
-
-        int max = (int) getAnimationLengthInTicks(anim);
-        if (exterior.animationTimer > max) {
-            exterior.animationTimer = max;
-        }
-    }
-
-    public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (exterior.findTardis().isEmpty()) return;
-
-        float alpha = exterior.getAlpha();
-
-        if (exterior.findTardis().get().getHandlers().getCloak().isEnabled()) {
-            if (!KeyItem.hasMatchingKeyInInventory(MinecraftClient.getInstance().player, exterior.findTardis().get())) {
-                alpha = 0f;
-                root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
-                return;
-            }
-            if (isNearTardis(MinecraftClient.getInstance().player, exterior.findTardis().get(), MAX_CLOAK_DISTANCE)) {
-                alpha =  1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, exterior.findTardis().get()) / MAX_CLOAK_DISTANCE);
-                if (exterior.getAlpha() != 0.105f)
-                    alpha = alpha * exterior.getAlpha();
-            } else {
-                alpha = 0f;
-            }
-        }
-
-        root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
-    }
-
-    public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
-
-    public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        if (realEntity.getTardis() == null) return;
-
-        root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
-
-    @Override
-    public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-
-    }
+	private void checkAnimationTimer(ExteriorBlockEntity exterior) {
+		DoorData.DoorStateEnum state = exterior.findTardis().get().getDoor().getDoorState();
+		Animation anim = getAnimationForDoorState(state);
 
 
-    public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);
+		int max = (int) getAnimationLengthInTicks(anim);
+		if (exterior.animationTimer > max) {
+			exterior.animationTimer = max;
+		}
+	}
+
+	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+		if (exterior.findTardis().isEmpty()) return;
+
+		float alpha = exterior.getAlpha();
+
+		if (exterior.findTardis().get().getHandlers().getCloak().isEnabled()) {
+			if (!KeyItem.hasMatchingKeyInInventory(MinecraftClient.getInstance().player, exterior.findTardis().get())) {
+				alpha = 0f;
+				root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+				return;
+			}
+			if (isNearTardis(MinecraftClient.getInstance().player, exterior.findTardis().get(), MAX_CLOAK_DISTANCE)) {
+				alpha = 1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, exterior.findTardis().get()) / MAX_CLOAK_DISTANCE);
+				if (exterior.getAlpha() != 0.105f)
+					alpha = alpha * exterior.getAlpha();
+			} else {
+				alpha = 0f;
+			}
+		}
+
+		root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+	}
+
+	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+		root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+	}
+
+	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+		if (realEntity.getTardis() == null) return;
+
+		root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+	}
+
+	@Override
+	public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
+	}
+
+
+	public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);
 }

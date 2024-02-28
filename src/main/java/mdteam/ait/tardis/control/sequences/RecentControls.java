@@ -12,26 +12,27 @@ import java.util.List;
 import java.util.UUID;
 
 public class RecentControls extends ArrayList<Control> {
-    private final UUID tardisId;
+	private final UUID tardisId;
 
-    public RecentControls(UUID tardisId, List<Control> controls) {
-        super(controls);
-        this.tardisId = tardisId;
-    }
-    public RecentControls(UUID tardisId) {
-        this(tardisId, new ArrayList<>());
-    }
+	public RecentControls(UUID tardisId, List<Control> controls) {
+		super(controls);
+		this.tardisId = tardisId;
+	}
 
-    public Tardis tardis() {
-        if (tardisId == null) {
-            AITMod.LOGGER.warn("RecentControls is missing a TARDIS!");
-            return null;
-        }
+	public RecentControls(UUID tardisId) {
+		this(tardisId, new ArrayList<>());
+	}
 
-        if (TardisUtil.isClient())
-            return ClientTardisManager.getInstance().getLookup().get(this.tardisId);
+	public Tardis tardis() {
+		if (tardisId == null) {
+			AITMod.LOGGER.warn("RecentControls is missing a TARDIS!");
+			return null;
+		}
 
-        return ServerTardisManager.getInstance().getTardis(this.tardisId);
-    }
+		if (TardisUtil.isClient())
+			return ClientTardisManager.getInstance().getLookup().get(this.tardisId);
+
+		return ServerTardisManager.getInstance().getTardis(this.tardisId);
+	}
 }
 

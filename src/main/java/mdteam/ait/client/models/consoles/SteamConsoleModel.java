@@ -15,9 +15,11 @@ import net.minecraft.util.math.Direction;
 
 public class SteamConsoleModel extends ConsoleModel {
 	private final ModelPart steam;
+
 	public SteamConsoleModel(ModelPart root) {
 		this.steam = root.getChild("steam");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -884,6 +886,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		ModelPartData cube_r84 = gears6.addChild("cube_r84", ModelPartBuilder.create().uv(0, 0).cuboid(-3.0F, -17.25F, -0.5F, 7.0F, 9.0F, 1.0F, new Dilation(-0.2F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6545F));
 		return TexturedModelData.of(modelData, 128, 128);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		steam.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
@@ -891,7 +894,7 @@ public class SteamConsoleModel extends ConsoleModel {
 
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if(console.findTardis().isEmpty()) return;
+		if (console.findTardis().isEmpty()) return;
 
 		Tardis tardis = console.findTardis().get();
 
@@ -918,7 +921,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		refueling.roll = (console.findTardis().get().isRefueling() ? 0.4363F : -0.5672F);
 
 		ModelPart handbrake = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("lever6").getChild("bone41");
-		handbrake.roll = handbrake.roll + (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)? - 0f : 1.5f);
+		handbrake.roll = handbrake.roll + (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? -0f : 1.5f);
 
 		ModelPart power = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever7").getChild("bone45");
 		power.roll = power.roll + (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ? 0f : 1.5f);
@@ -926,7 +929,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		ModelPart landType = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("valve").getChild("bone9");
 		landType.pivotY = landType.pivotY + (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? 0.5f : 0);
 
-        ModelPart direction = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("crank").getChild("bone42");
+		ModelPart direction = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("crank").getChild("bone42");
 		direction.yaw = direction.yaw + (console.findTardis().get().getTravel().getDestination().getDirection() != Direction.NORTH ? console.findTardis().get().getTravel().getDestination().getDirection() != Direction.EAST ? console.findTardis().get().getTravel().getDestination().getDirection() != Direction.SOUTH ? 1.5708f * 3f : 1.5708f * 2f : 1.5708f : 0);
 
 		ModelPart doorControl = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("crank2").getChild("bone18");
@@ -948,7 +951,7 @@ public class SteamConsoleModel extends ConsoleModel {
 
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
-		return switch(state) {
+		return switch (state) {
 			case LANDED -> SteamAnimations.CONSOLE_STEAM_IDLE;
 			case FLIGHT, MAT, DEMAT, CRASH -> SteamAnimations.CONSOLE_STEAM_FLIGHT;
 			default -> Animation.Builder.create(0).build();

@@ -1,7 +1,6 @@
 package mdteam.ait.mixin.server;
 
 import mdteam.ait.api.ICantBreak;
-import mdteam.ait.core.blocks.ExteriorBlock;
 import net.minecraft.block.Block;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
@@ -15,15 +14,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ServerPlayerInteractionManager.class)
 public class ServerPlayerInteractionManagerMixin {
 
-    @Shadow protected ServerWorld world;
+	@Shadow
+	protected ServerWorld world;
 
-    @Inject(method = "tryBreakBlock", at = @At(value = "HEAD"), cancellable = true)
-    public void tryBreakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        Block block = this.world.getBlockState(pos).getBlock();
-        if (block instanceof ICantBreak cantBreak) {
-            cantBreak.onTryBreak(this.world, pos, this.world.getBlockState(pos));
-            cir.setReturnValue(false);
-            cir.cancel();
-        }
-    }
+	@Inject(method = "tryBreakBlock", at = @At(value = "HEAD"), cancellable = true)
+	public void tryBreakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+		Block block = this.world.getBlockState(pos).getBlock();
+		if (block instanceof ICantBreak cantBreak) {
+			cantBreak.onTryBreak(this.world, pos, this.world.getBlockState(pos));
+			cir.setReturnValue(false);
+			cir.cancel();
+		}
+	}
 }

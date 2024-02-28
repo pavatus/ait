@@ -15,87 +15,89 @@ import net.minecraft.util.math.BlockPos;
 import org.joml.Math;
 
 public abstract class ExteriorAnimation {
-    public static final double MAX_CLOAK_DISTANCE = 5d;
-    protected float alpha = 1;
-    protected ExteriorBlockEntity exterior;
-    protected int timeLeft, maxTime, startTime;
-    public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_setup_anim");
+	public static final double MAX_CLOAK_DISTANCE = 5d;
+	protected float alpha = 1;
+	protected ExteriorBlockEntity exterior;
+	protected int timeLeft, maxTime, startTime;
+	public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_setup_anim");
 
-    public ExteriorAnimation(ExteriorBlockEntity exterior) {
-        this.exterior = exterior;
-    }
+	public ExteriorAnimation(ExteriorBlockEntity exterior) {
+		this.exterior = exterior;
+	}
 
-    // fixme bug that sometimes happens where server doesnt have animation
-    protected void runAlphaChecks(TardisTravel.State state) {
-        if (this.exterior.getWorld().isClient() || this.exterior.findTardis().isEmpty())
-            return;
+	// fixme bug that sometimes happens where server doesnt have animation
+	protected void runAlphaChecks(TardisTravel.State state) {
+		if (this.exterior.getWorld().isClient() || this.exterior.findTardis().isEmpty())
+			return;
 
-        if (alpha <= 0f && state == TardisTravel.State.DEMAT) {
-            exterior.findTardis().get().getTravel().toFlight();
-        }
-        if (alpha >= 1f && state == TardisTravel.State.MAT) {
-            exterior.findTardis().get().getTravel().forceLand(this.exterior);
-        }
-    }
+		if (alpha <= 0f && state == TardisTravel.State.DEMAT) {
+			exterior.findTardis().get().getTravel().toFlight();
+		}
+		if (alpha >= 1f && state == TardisTravel.State.MAT) {
+			exterior.findTardis().get().getTravel().forceLand(this.exterior);
+		}
+	}
 
-    public float getAlpha() {
+	public float getAlpha() {
 
-        if(this.exterior.findTardis().isEmpty()) return 1f;
+		if (this.exterior.findTardis().isEmpty()) return 1f;
 
-        if (this.timeLeft < 0) {
-            this.setupAnimation(exterior.findTardis().get().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
-            return 1f;
-        }
-        if (this.exterior.findTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.exterior.findTardis().get().getHandlers().getCloak().isEnabled()) {
-            return 0.105f;
-        }
+		if (this.timeLeft < 0) {
+			this.setupAnimation(exterior.findTardis().get().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+			return 1f;
+		}
+		if (this.exterior.findTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.exterior.findTardis().get().getHandlers().getCloak().isEnabled()) {
+			return 0.105f;
+		}
 
-        return Math.clamp(0.0F, 1.0F, this.alpha);
-    }
-    private boolean isServer() {
-        return !this.exterior.getWorld().isClient();
-    }
+		return Math.clamp(0.0F, 1.0F, this.alpha);
+	}
 
-    public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius) {
-        return radius >= distanceFromTardis(player, tardis);
-    }
-    public static double distanceFromTardis(PlayerEntity player, Tardis tardis) {
-        BlockPos pPos = player.getBlockPos();
-        BlockPos tPos = tardis.position();
-        double distance = Math.sqrt(tPos.getSquaredDistance(pPos));
-        return distance;
-    }
+	private boolean isServer() {
+		return !this.exterior.getWorld().isClient();
+	}
 
-    public abstract void tick();
+	public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius) {
+		return radius >= distanceFromTardis(player, tardis);
+	}
 
-    public abstract void setupAnimation(TardisTravel.State state);
+	public static double distanceFromTardis(PlayerEntity player, Tardis tardis) {
+		BlockPos pPos = player.getBlockPos();
+		BlockPos tPos = tardis.position();
+		double distance = Math.sqrt(tPos.getSquaredDistance(pPos));
+		return distance;
+	}
 
-    public void setAlpha(float alpha) {
-        this.alpha = Math.clamp(0.0F, 1.0F, alpha);
-    }
+	public abstract void tick();
 
-    public boolean hasAnimationStarted() {
-        return this.timeLeft < this.startTime;
-    }
+	public abstract void setupAnimation(TardisTravel.State state);
 
-    public void tellClientsToSetup(TardisTravel.State state) {
-        if (exterior.getWorld() == null) return; // happens when tardis spawns above world limit, so thats nice
-        if (exterior.getWorld().isClient()) return;
-        if (exterior.findTardis().isEmpty()) return;
+	public void setAlpha(float alpha) {
+		this.alpha = Math.clamp(0.0F, 1.0F, alpha);
+	}
 
-        for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(exterior.findTardis().get())) {
-            // System.out.println(player);
-            tellClientToSetup(state, player);
-        }
-    }
+	public boolean hasAnimationStarted() {
+		return this.timeLeft < this.startTime;
+	}
 
-    public void tellClientToSetup(TardisTravel.State state, ServerPlayerEntity player) {
-        if (exterior.getWorld().isClient() && exterior.findTardis().isEmpty()) return;
+	public void tellClientsToSetup(TardisTravel.State state) {
+		if (exterior.getWorld() == null) return; // happens when tardis spawns above world limit, so thats nice
+		if (exterior.getWorld().isClient()) return;
+		if (exterior.findTardis().isEmpty()) return;
 
-        PacketByteBuf data = PacketByteBufs.create();
-        data.writeInt(state.ordinal());
-        data.writeUuid(exterior.findTardis().get().getUuid());
+		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(exterior.findTardis().get())) {
+			// System.out.println(player);
+			tellClientToSetup(state, player);
+		}
+	}
 
-        ServerPlayNetworking.send(player, UPDATE, data);
-    }
+	public void tellClientToSetup(TardisTravel.State state, ServerPlayerEntity player) {
+		if (exterior.getWorld().isClient() && exterior.findTardis().isEmpty()) return;
+
+		PacketByteBuf data = PacketByteBufs.create();
+		data.writeInt(state.ordinal());
+		data.writeUuid(exterior.findTardis().get().getUuid());
+
+		ServerPlayNetworking.send(player, UPDATE, data);
+	}
 }

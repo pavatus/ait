@@ -13,52 +13,54 @@ import net.minecraft.client.MinecraftClient;
  * A class for playing + managing our custom sounds on the client, right now just a place to store the hum/alarm handlers
  */
 public class ClientSoundManager {
-    private static ClientHumHandler hum;
-    private static ClientAlarmHandler alarm;
-    private static ClientFlightHandler flight;
-    private static ClientCreakHandler creak;
+	private static ClientHumHandler hum;
+	private static ClientAlarmHandler alarm;
+	private static ClientFlightHandler flight;
+	private static ClientCreakHandler creak;
 
-    public static ClientHumHandler getHum() {
-        if (hum == null) {
-            hum = ClientHumHandler.create();
-        }
+	public static ClientHumHandler getHum() {
+		if (hum == null) {
+			hum = ClientHumHandler.create();
+		}
 
-        return hum;
-    }
-    public static ClientAlarmHandler getAlarm() {
-        if (alarm == null) {
-            alarm = ClientAlarmHandler.create();
-        }
+		return hum;
+	}
 
-        return alarm;
-    }
-    public static ClientFlightHandler getFlight() {
-        if (flight == null) {
-            flight = ClientFlightHandler.create();
-        }
+	public static ClientAlarmHandler getAlarm() {
+		if (alarm == null) {
+			alarm = ClientAlarmHandler.create();
+		}
 
-        return flight;
-    }
+		return alarm;
+	}
 
-    public static ClientCreakHandler getCreaks() {
-        if (creak == null) {
-            creak = ClientCreakHandler.create();
-        }
-        return creak;
-    }
+	public static ClientFlightHandler getFlight() {
+		if (flight == null) {
+			flight = ClientFlightHandler.create();
+		}
+
+		return flight;
+	}
+
+	public static ClientCreakHandler getCreaks() {
+		if (creak == null) {
+			creak = ClientCreakHandler.create();
+		}
+		return creak;
+	}
 
 
-    public static void tick(MinecraftClient client) {
-        if (getAlarm() != null)
-            getAlarm().tick(client);
+	public static void tick(MinecraftClient client) {
+		if (getAlarm() != null)
+			getAlarm().tick(client);
 
-        if (getHum() != null)
-            getHum().tick(client);
+		if (getHum() != null)
+			getHum().tick(client);
 
-        if (getFlight() != null)
-            getFlight().tick(client);
+		if (getFlight() != null)
+			getFlight().tick(client);
 
-        if (getCreaks() != null)
-            getCreaks().tick(client);
-    }
+		if (getCreaks() != null)
+			getCreaks().tick(client);
+	}
 }

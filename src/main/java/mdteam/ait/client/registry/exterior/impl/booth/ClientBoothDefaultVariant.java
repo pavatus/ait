@@ -1,7 +1,7 @@
 package mdteam.ait.client.registry.exterior.impl.booth;
 
 public class ClientBoothDefaultVariant extends ClientBoothVariant {
-    public ClientBoothDefaultVariant() {
-        super("default");
-    }
+	public ClientBoothDefaultVariant() {
+		super("default");
+	}
 }

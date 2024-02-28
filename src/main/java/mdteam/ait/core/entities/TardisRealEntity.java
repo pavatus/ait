@@ -41,161 +41,169 @@ import java.util.function.Supplier;
 
 public class TardisRealEntity extends Entity {
 
-    public static final TrackedData<Optional<UUID>> TARDIS_ID;
-    private Supplier<BlockState> blockStateSupplier;
-    public TardisRealEntity(EntityType<?> type, World world) {
-        super(type, world);
-        this.blockStateSupplier = AITBlocks.EXTERIOR_BLOCK::getDefaultState;
-    }
+	public static final TrackedData<Optional<UUID>> TARDIS_ID;
+	private Supplier<BlockState> blockStateSupplier;
 
-    private TardisRealEntity(World world, UUID tardisID, double x, double y, double z, BlockState blockState) {
-        this(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, world);
-        this.blockStateSupplier = () -> blockState;
-        this.dataTracker.set(TARDIS_ID, Optional.of(tardisID));
-        this.setPosition(x, y, z);
-        this.setVelocity(Vec3d.ZERO);
-    }
+	public TardisRealEntity(EntityType<?> type, World world) {
+		super(type, world);
+		this.blockStateSupplier = AITBlocks.EXTERIOR_BLOCK::getDefaultState;
+	}
 
-    public static TardisRealEntity spawnFromExteriorBlockEntity(World world, BlockPos pos) {
-        BlockEntity block_entity = world.getBlockEntity(pos);
-        if (!(block_entity instanceof ExteriorBlockEntity exterior_block_entity)) throw new IllegalStateException("Failed to find the exterior block entity!");
-        if(exterior_block_entity.findTardis().isEmpty()) return null;
-        BlockState block_state = world.getBlockState(pos);
-        if (!(block_state.getBlock() instanceof ExteriorBlock)) throw new IllegalStateException("Failed to find the exterior block!");
-        TardisRealEntity tardis_real_entity = new TardisRealEntity(world, exterior_block_entity.findTardis().get().getUuid(), (double)pos.getX() + 0.5, (double)pos.getY(), pos.getZ() + 0.5, block_state);
-        PropertiesHandler.set(exterior_block_entity.findTardis().get(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
-        // set dirty for the tardis after this, but not right now cuz I am testing @TODO
-        world.spawnEntity(tardis_real_entity);
-        tardis_real_entity.setRotation(block_state.get(ExteriorBlock.FACING).asRotation(), 0);
-        return tardis_real_entity;
-    }
+	private TardisRealEntity(World world, UUID tardisID, double x, double y, double z, BlockState blockState) {
+		this(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, world);
+		this.blockStateSupplier = () -> blockState;
+		this.dataTracker.set(TARDIS_ID, Optional.of(tardisID));
+		this.setPosition(x, y, z);
+		this.setVelocity(Vec3d.ZERO);
+	}
 
-    public static TardisRealEntity testSpawnFromExteriorBlockEntity(World world, BlockPos pos, BlockPos spawnPos) {
-        BlockEntity block_entity = world.getBlockEntity(pos);
-        if (!(block_entity instanceof ExteriorBlockEntity exterior_block_entity)) throw new IllegalStateException("Failed to find the exterior block entity!");
-        if(exterior_block_entity.findTardis().isEmpty()) return null;
-        BlockState block_state = world.getBlockState(pos);
-        if (!(block_state.getBlock() instanceof ExteriorBlock)) throw new IllegalStateException("Failed to find the exterior block!");
-        TardisRealEntity tardis_real_entity = new TardisRealEntity(world, exterior_block_entity.findTardis().get().getUuid(), (double)spawnPos.getX() + 0.5, (double)spawnPos.getY(), spawnPos.getZ() + 0.5, block_state);
-        PropertiesHandler.set(exterior_block_entity.findTardis().get(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
-        // set dirty for the tardis after this, but not right now cuz I am testing @TODO
-        world.spawnEntity(tardis_real_entity);
-        tardis_real_entity.setRotation(45f, block_state.get(ExteriorBlock.FACING).asRotation());
-        System.out.println(tardis_real_entity);
-        return tardis_real_entity;
-    }
-    @Override
-    public ActionResult interact(PlayerEntity player, Hand hand) {
-        if (player == null)
-            return ActionResult.FAIL;
+	public static TardisRealEntity spawnFromExteriorBlockEntity(World world, BlockPos pos) {
+		BlockEntity block_entity = world.getBlockEntity(pos);
+		if (!(block_entity instanceof ExteriorBlockEntity exterior_block_entity))
+			throw new IllegalStateException("Failed to find the exterior block entity!");
+		if (exterior_block_entity.findTardis().isEmpty()) return null;
+		BlockState block_state = world.getBlockState(pos);
+		if (!(block_state.getBlock() instanceof ExteriorBlock))
+			throw new IllegalStateException("Failed to find the exterior block!");
+		TardisRealEntity tardis_real_entity = new TardisRealEntity(world, exterior_block_entity.findTardis().get().getUuid(), (double) pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, block_state);
+		PropertiesHandler.set(exterior_block_entity.findTardis().get(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
+		// set dirty for the tardis after this, but not right now cuz I am testing @TODO
+		world.spawnEntity(tardis_real_entity);
+		tardis_real_entity.setRotation(block_state.get(ExteriorBlock.FACING).asRotation(), 0);
+		return tardis_real_entity;
+	}
 
-        boolean sneaking = player.isSneaking();
+	public static TardisRealEntity testSpawnFromExteriorBlockEntity(World world, BlockPos pos, BlockPos spawnPos) {
+		BlockEntity block_entity = world.getBlockEntity(pos);
+		if (!(block_entity instanceof ExteriorBlockEntity exterior_block_entity))
+			throw new IllegalStateException("Failed to find the exterior block entity!");
+		if (exterior_block_entity.findTardis().isEmpty()) return null;
+		BlockState block_state = world.getBlockState(pos);
+		if (!(block_state.getBlock() instanceof ExteriorBlock))
+			throw new IllegalStateException("Failed to find the exterior block!");
+		TardisRealEntity tardis_real_entity = new TardisRealEntity(world, exterior_block_entity.findTardis().get().getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, block_state);
+		PropertiesHandler.set(exterior_block_entity.findTardis().get(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
+		// set dirty for the tardis after this, but not right now cuz I am testing @TODO
+		world.spawnEntity(tardis_real_entity);
+		tardis_real_entity.setRotation(45f, block_state.get(ExteriorBlock.FACING).asRotation());
+		System.out.println(tardis_real_entity);
+		return tardis_real_entity;
+	}
 
-        if (this.getTardis().isGrowth())
-            return ActionResult.FAIL;
+	@Override
+	public ActionResult interact(PlayerEntity player, Hand hand) {
+		if (player == null)
+			return ActionResult.FAIL;
 
-        if (player.getMainHandStack().getItem() instanceof KeyItem && !getTardis().isSiegeMode() && !getTardis().getHandlers().getInteriorChanger().isGenerating()) {
-            ItemStack key = player.getMainHandStack();
-            NbtCompound tag = key.getOrCreateNbt();
-            if (!tag.contains("tardis")) {
-                return ActionResult.FAIL;
-            }
-            if (Objects.equals(this.getTardis().getUuid().toString(), tag.getString("tardis"))) {
-                DoorData.toggleLock(this.getTardis(), (ServerPlayerEntity) player);
-            } else {
-                this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-                player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
-            }
-            return ActionResult.SUCCESS;
-        }
+		boolean sneaking = player.isSneaking();
 
-        if (sneaking && getTardis().isSiegeMode() && !getTardis().isSiegeBeingHeld()) {
-            SiegeTardisItem.pickupTardis(getTardis(), (ServerPlayerEntity) player);
-            return ActionResult.SUCCESS;
-        }
+		if (this.getTardis().isGrowth())
+			return ActionResult.FAIL;
 
-        DoorData.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getBlockPos(), (ServerPlayerEntity) player);
-        // fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
-        if (sneaking)
-            return ActionResult.FAIL;
-        return ActionResult.SUCCESS;
-    }
+		if (player.getMainHandStack().getItem() instanceof KeyItem && !getTardis().isSiegeMode() && !getTardis().getHandlers().getInteriorChanger().isGenerating()) {
+			ItemStack key = player.getMainHandStack();
+			NbtCompound tag = key.getOrCreateNbt();
+			if (!tag.contains("tardis")) {
+				return ActionResult.FAIL;
+			}
+			if (Objects.equals(this.getTardis().getUuid().toString(), tag.getString("tardis"))) {
+				DoorData.toggleLock(this.getTardis(), (ServerPlayerEntity) player);
+			} else {
+				this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+				player.sendMessage(Text.literal("TARDIS does not identify with key"), true);
+			}
+			return ActionResult.SUCCESS;
+		}
 
-    public static TardisRealEntity spawnFromTardisId(World world, UUID tardisId, BlockPos spawnPos) {
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisId);
-        if(tardis.getExterior().getExteriorPos() == null) return null;
-        BlockState blockState = world.getBlockState(tardis.getDesktop().getExteriorPos());
-        TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double)spawnPos.getX() + 0.5, (double)spawnPos.getY(), spawnPos.getZ() + 0.5, blockState);
-        PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
-        world.spawnEntity(tardisRealEntity);
-        tardisRealEntity.setRotation(blockState.get(ExteriorBlock.FACING).asRotation(), 0);
-        return tardisRealEntity;
-    }
+		if (sneaking && getTardis().isSiegeMode() && !getTardis().isSiegeBeingHeld()) {
+			SiegeTardisItem.pickupTardis(getTardis(), (ServerPlayerEntity) player);
+			return ActionResult.SUCCESS;
+		}
 
-    @Override
-    public void tick() {
-        super.tick();
-        if(this.getTardis() == null) return;
-        if(this.getWorld().isClient()) return;
-    }
+		DoorData.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getBlockPos(), (ServerPlayerEntity) player);
+		// fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
+		if (sneaking)
+			return ActionResult.FAIL;
+		return ActionResult.SUCCESS;
+	}
 
-    public float getRotation(float tickDelta) {
-        return ((float)this.age + tickDelta) / 20.0f;
-    }
+	public static TardisRealEntity spawnFromTardisId(World world, UUID tardisId, BlockPos spawnPos) {
+		Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisId);
+		if (tardis.getExterior().getExteriorPos() == null) return null;
+		BlockState blockState = world.getBlockState(tardis.getDesktop().getExteriorPos());
+		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, blockState);
+		PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
+		world.spawnEntity(tardisRealEntity);
+		tardisRealEntity.setRotation(blockState.get(ExteriorBlock.FACING).asRotation(), 0);
+		return tardisRealEntity;
+	}
 
-    @Override
-    public float getBodyYaw() {
-        return 180.0f - this.getRotation(0.5f) / ((float)Math.PI * 2) * 360.0f;
-    }
-    static {
-        TARDIS_ID = DataTracker.registerData(TardisRealEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
-    }
+	@Override
+	public void tick() {
+		super.tick();
+		if (this.getTardis() == null) return;
+		if (this.getWorld().isClient()) {
+		}
+	}
 
-    public BlockState getBlockState() {
-        return this.blockStateSupplier.get();
-    }
+	public float getRotation(float tickDelta) {
+		return ((float) this.age + tickDelta) / 20.0f;
+	}
 
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.putString("TardisID", this.getTardisID().toString());
-        return nbt;
-    }
+	@Override
+	public float getBodyYaw() {
+		return 180.0f - this.getRotation(0.5f) / ((float) Math.PI * 2) * 360.0f;
+	}
 
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.dataTracker.set(TARDIS_ID, Optional.of(UUID.fromString(nbt.getString("TardisID"))));
-    }
+	static {
+		TARDIS_ID = DataTracker.registerData(TardisRealEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+	}
 
-    public Tardis getTardis() {
-        if (getTardisID() == null) {
-            AITMod.LOGGER.warn("Tardis ID is null somehow?");
-            return null;
-        }
+	public BlockState getBlockState() {
+		return this.blockStateSupplier.get();
+	}
 
-        if (TardisUtil.isClient()) {
-            return ClientTardisManager.getInstance().getLookup().get(getTardisID());
-        }
-        return ServerTardisManager.getInstance().getTardis(getTardisID());
-    }
+	@Override
+	public NbtCompound writeNbt(NbtCompound nbt) {
+		super.writeNbt(nbt);
+		nbt.putString("TardisID", this.getTardisID().toString());
+		return nbt;
+	}
 
-    public UUID getTardisID() {
-        return this.dataTracker.get(TARDIS_ID).orElse(null);
-    }
+	@Override
+	public void readNbt(NbtCompound nbt) {
+		super.readNbt(nbt);
+		this.dataTracker.set(TARDIS_ID, Optional.of(UUID.fromString(nbt.getString("TardisID"))));
+	}
 
-    @Override
-    protected void initDataTracker() {
-        this.dataTracker.startTracking(TARDIS_ID, Optional.empty());
-    }
+	public Tardis getTardis() {
+		if (getTardisID() == null) {
+			AITMod.LOGGER.warn("Tardis ID is null somehow?");
+			return null;
+		}
 
-    @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
+		if (TardisUtil.isClient()) {
+			return ClientTardisManager.getInstance().getLookup().get(getTardisID());
+		}
+		return ServerTardisManager.getInstance().getTardis(getTardisID());
+	}
 
-    }
+	public UUID getTardisID() {
+		return this.dataTracker.get(TARDIS_ID).orElse(null);
+	}
 
-    @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+	@Override
+	protected void initDataTracker() {
+		this.dataTracker.startTracking(TARDIS_ID, Optional.empty());
+	}
 
-    }
+	@Override
+	protected void readCustomDataFromNbt(NbtCompound nbt) {
+
+	}
+
+	@Override
+	protected void writeCustomDataToNbt(NbtCompound nbt) {
+
+	}
 }

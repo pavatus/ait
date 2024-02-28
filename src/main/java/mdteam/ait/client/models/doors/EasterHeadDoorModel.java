@@ -11,9 +11,11 @@ import org.joml.Vector3f;
 
 public class EasterHeadDoorModel extends DoorModel {
 	private final ModelPart bottom;
+
 	public EasterHeadDoorModel(ModelPart root) {
 		this.bottom = root.getChild("bottom");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -24,6 +26,7 @@ public class EasterHeadDoorModel extends DoorModel {
 		ModelPartData door = bottom.addChild("door", ModelPartBuilder.create().uv(8, 1).mirrored().cuboid(-9.0F, -30.0F, -8.0F, 18.0F, 0.0F, 19.0F, new Dilation(0.005F)).mirrored(false), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 		return TexturedModelData.of(modelData, 256, 256);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		bottom.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
@@ -33,10 +36,10 @@ public class EasterHeadDoorModel extends DoorModel {
 	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		matrices.push();
 
-		matrices.translate(0,-1.5f,0);
+		matrices.translate(0, -1.5f, 0);
 
 		if (door.findTardis().get().getDoor().isOpen())
-			this.bottom.translate(new Vector3f(0,-30,0));
+			this.bottom.translate(new Vector3f(0, -30, 0));
 
 		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

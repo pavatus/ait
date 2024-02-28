@@ -18,25 +18,25 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 // TEMPORARY - REMOVE LATER
 public class ToggleAlarmCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("toggle-alarm").requires(source -> source.hasPermissionLevel(2))
-                        .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-                                .executes(ToggleAlarmCommand::runCommand))));
-    }
+	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+		dispatcher.register(literal(AITMod.MOD_ID)
+				.then(literal("toggle-alarm").requires(source -> source.hasPermissionLevel(2))
+						.then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
+								.executes(ToggleAlarmCommand::runCommand))));
+	}
 
-    private static int runCommand(CommandContext<ServerCommandSource> context) {
-        ServerPlayerEntity source = context.getSource().getPlayer();
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
+	private static int runCommand(CommandContext<ServerCommandSource> context) {
+		ServerPlayerEntity source = context.getSource().getPlayer();
+		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
 
-        if (tardis == null || source == null) return 0;
+		if (tardis == null || source == null) return 0;
 
-        PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED));
+		PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED));
 
-        tardis.markDirty();
+		tardis.markDirty();
 
-        source.sendMessage(Text.literal("Alarms set to: " + PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)), true);
+		source.sendMessage(Text.literal("Alarms set to: " + PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)), true);
 
-        return Command.SINGLE_SUCCESS;
-    }
+		return Command.SINGLE_SUCCESS;
+	}
 }

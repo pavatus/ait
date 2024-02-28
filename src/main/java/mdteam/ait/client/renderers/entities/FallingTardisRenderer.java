@@ -18,66 +18,68 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
 public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
-    private ExteriorModel model;
-    public FallingTardisRenderer(EntityRendererFactory.Context context) {
-        super(context);
-    }
+	private ExteriorModel model;
 
-    @Override
-    public void render(FallingTardisEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
+	public FallingTardisRenderer(EntityRendererFactory.Context context) {
+		super(context);
+	}
 
-        if (entity.getTardis() == null) {
-            return;
-        }
+	@Override
+	public void render(FallingTardisEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+		super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
 
-        TardisExterior tardisExterior = entity.getTardis().getExterior();
-        ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardisExterior.getVariant());
+		if (entity.getTardis() == null) {
+			return;
+		}
 
-        if (tardisExterior == null || exteriorVariant == null) return;
-        Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
+		TardisExterior tardisExterior = entity.getTardis().getExterior();
+		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardisExterior.getVariant());
 
-        if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.
-            model = null;
+		if (tardisExterior == null || exteriorVariant == null) return;
+		Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
 
-        if(MinecraftClient.getInstance().player == null) return;
+		if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.
+			model = null;
 
-        if (getModel(entity) == null) return;
+		if (MinecraftClient.getInstance().player == null) return;
 
-        matrices.push();
-        float f = entity.getBlockState().get(ExteriorBlock.FACING).asRotation();
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+		if (getModel(entity) == null) return;
 
-        if (entity.getTardis().isSiegeMode()) {
-            model = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
-            model.renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), light,1,1,1,1,1);
-        } else {
-            getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, 1, 1, 1, 1, 1);
-            if (exteriorVariant.emission() != null)
-                getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), light, 1, 1, 1, 1, 1);
-        }
-        matrices.pop();
-    }
+		matrices.push();
+		float f = entity.getBlockState().get(ExteriorBlock.FACING).asRotation();
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
+		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-    private ExteriorModel getModel(FallingTardisEntity entity) {
-        if (model == null && entity.getTardis() != null) {
-            model = ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant()).model();
-        }
+		if (entity.getTardis().isSiegeMode()) {
+			model = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
+			model.renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), light, 1, 1, 1, 1, 1);
+		} else {
+			getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, 1, 1, 1, 1, 1);
+			if (exteriorVariant.emission() != null)
+				getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), light, 1, 1, 1, 1, 1);
+		}
+		matrices.pop();
+	}
 
-        return model;
-    }
+	private ExteriorModel getModel(FallingTardisEntity entity) {
+		if (model == null && entity.getTardis() != null) {
+			model = ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant()).model();
+		}
 
-    @Override
-    public Identifier getTexture(FallingTardisEntity entity) {
-        if (entity.getTardis() == null) return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE; // random texture just so i dont crash
+		return model;
+	}
 
-        return ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant()).texture();
-    }
+	@Override
+	public Identifier getTexture(FallingTardisEntity entity) {
+		if (entity.getTardis() == null)
+			return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE; // random texture just so i dont crash
 
-    public Identifier getEmission(FallingTardisEntity entity) {
-        if (entity.getTardis() == null) return getTexture(entity);
+		return ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant()).texture();
+	}
 
-        return ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant()).emission();
-    }
+	public Identifier getEmission(FallingTardisEntity entity) {
+		if (entity.getTardis() == null) return getTexture(entity);
+
+		return ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant()).emission();
+	}
 }

@@ -20,83 +20,85 @@ import java.util.List;
 import java.util.UUID;
 
 public class OwOMonitorScreen extends BaseOwoScreen<FlowLayout> {
-    private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
-    private final UUID tardisid;
-    private ExteriorCategorySchema currentModel;
-    private ExteriorVariantSchema currentVariant;
+	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/exterior_changer.png");
+	private final UUID tardisid;
+	private ExteriorCategorySchema currentModel;
+	private ExteriorVariantSchema currentVariant;
 
-    public OwOMonitorScreen(UUID tardisid) {
-        this.tardisid = tardisid;
-        this.updateTardis();
-    }
+	public OwOMonitorScreen(UUID tardisid) {
+		this.tardisid = tardisid;
+		this.updateTardis();
+	}
 
-    protected Tardis tardis() {
-        return ClientTardisManager.getInstance().getLookup().get(this.tardisid);
-    }
+	protected Tardis tardis() {
+		return ClientTardisManager.getInstance().getLookup().get(this.tardisid);
+	}
 
-    protected Tardis updateTardis() {
-        ClientTardisManager.getInstance().ask(this.tardisid);
-        return tardis();
-    }
+	protected Tardis updateTardis() {
+		ClientTardisManager.getInstance().ask(this.tardisid);
+		return tardis();
+	}
 
-    public ExteriorCategorySchema getCurrentModel() {
-        return currentModel == null ? tardis().getExterior().getCategory() : currentModel;
-    }
+	public ExteriorCategorySchema getCurrentModel() {
+		return currentModel == null ? tardis().getExterior().getCategory() : currentModel;
+	}
 
-    public void setCurrentModel(ExteriorCategorySchema currentModel) {
-        this.currentModel = currentModel;
-    }
+	public void setCurrentModel(ExteriorCategorySchema currentModel) {
+		this.currentModel = currentModel;
+	}
 
-    public ExteriorVariantSchema getCurrentVariant() {
-        return currentVariant == null ? tardis().getExterior().getVariant() : currentVariant;
-    }
+	public ExteriorVariantSchema getCurrentVariant() {
+		return currentVariant == null ? tardis().getExterior().getVariant() : currentVariant;
+	}
 
-    public void setCurrentVariant(ExteriorVariantSchema currentVariant) {
-        this.currentVariant = currentVariant;
-    }
+	public void setCurrentVariant(ExteriorVariantSchema currentVariant) {
+		this.currentVariant = currentVariant;
+	}
 
-    @Override
-    protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
-        return OwoUIAdapter.create(this, Containers::verticalFlow);
-    }
-    @Override
-    public boolean shouldPause() {
-        return false;
-    }
-    @Override
-    protected void build(FlowLayout rootComponent) {
-        rootComponent
-                .surface(Surface.VANILLA_TRANSLUCENT)
-                .horizontalAlignment(HorizontalAlignment.CENTER)
-                .verticalAlignment(VerticalAlignment.CENTER);
-        FlowLayout container = Containers.horizontalFlow(Sizing.fixed(236), Sizing.fixed(133));
-        Component panel = Components.texture(TEXTURE, 0, 133, 20, 40);
-        List<Component> listing = new ArrayList<>();
-        for(int i = 0; i < 5; i++) {
-            listing.add(panel.id("panel_" + i));
-        }
-        ScrollContainer<Component> scrollContainer = Containers.verticalScroll(
-                Sizing.content(), Sizing.fill(98), Components.list(
-                listing, (layout) -> {
-            Containers.horizontalFlow(Sizing.fill(100), Sizing.content());
-            }, (s) -> Containers.stack(Sizing.content(),
-                                        Sizing.content())
-                        .child(Components.label(Text.literal("huh?"))).child(Components.button(Text.empty(),
-                                        buttonComponent ->
-                                AITMod.LOGGER.debug("hello :)"))).padding(Insets.of(10))
-                                .surface(Surface.TOOLTIP)
-                                .alignment(HorizontalAlignment.CENTER,VerticalAlignment.TOP)
+	@Override
+	protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
+		return OwoUIAdapter.create(this, Containers::verticalFlow);
+	}
+
+	@Override
+	public boolean shouldPause() {
+		return false;
+	}
+
+	@Override
+	protected void build(FlowLayout rootComponent) {
+		rootComponent
+				.surface(Surface.VANILLA_TRANSLUCENT)
+				.horizontalAlignment(HorizontalAlignment.CENTER)
+				.verticalAlignment(VerticalAlignment.CENTER);
+		FlowLayout container = Containers.horizontalFlow(Sizing.fixed(236), Sizing.fixed(133));
+		Component panel = Components.texture(TEXTURE, 0, 133, 20, 40);
+		List<Component> listing = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			listing.add(panel.id("panel_" + i));
+		}
+		ScrollContainer<Component> scrollContainer = Containers.verticalScroll(
+				Sizing.content(), Sizing.fill(98), Components.list(
+						listing, (layout) -> {
+							Containers.horizontalFlow(Sizing.fill(100), Sizing.content());
+						}, (s) -> Containers.stack(Sizing.content(),
+										Sizing.content())
+								.child(Components.label(Text.literal("huh?"))).child(Components.button(Text.empty(),
+										buttonComponent ->
+												AITMod.LOGGER.debug("hello :)"))).padding(Insets.of(10))
+								.surface(Surface.TOOLTIP)
+								.alignment(HorizontalAlignment.CENTER, VerticalAlignment.TOP)
                         /*.verticalAlignment(VerticalAlignment.TOP)
                         .horizontalAlignment(HorizontalAlignment.LEFT)*/, false));
-        Component left = Components.button(Text.literal("<"), buttonComponent -> AITMod.LOGGER.debug(String.valueOf(this.tardisid))).sizing(Sizing.fixed(15))
-                .positioning(Positioning.absolute(20, 20));
-        Component right = Components.button(Text.literal(">"), buttonComponent -> AITMod.LOGGER.debug(String.valueOf(this.tardisid))).sizing(Sizing.fixed(15))
-                .positioning(Positioning.absolute(25, 20));
+		Component left = Components.button(Text.literal("<"), buttonComponent -> AITMod.LOGGER.debug(String.valueOf(this.tardisid))).sizing(Sizing.fixed(15))
+				.positioning(Positioning.absolute(20, 20));
+		Component right = Components.button(Text.literal(">"), buttonComponent -> AITMod.LOGGER.debug(String.valueOf(this.tardisid))).sizing(Sizing.fixed(15))
+				.positioning(Positioning.absolute(25, 20));
 
-        container.child(left);
-        container.child(right);
+		container.child(left);
+		container.child(right);
 
-        container.child(scrollContainer.surface(Surface.PANEL_INSET).positioning(Positioning.absolute((container.horizontalSizing().get().value / 2) - 100, 0)));
-        rootComponent.child(container.surface(Surface.DARK_PANEL));
-    }
+		container.child(scrollContainer.surface(Surface.PANEL_INSET).positioning(Positioning.absolute((container.horizontalSizing().get().value / 2) - 100, 0)));
+		rootComponent.child(container.surface(Surface.DARK_PANEL));
+	}
 }

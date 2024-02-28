@@ -14,77 +14,87 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SoundHandler {
-    protected List<LoopingSound> sounds; // shouldnt really be LoopingSound
+	protected List<LoopingSound> sounds; // shouldnt really be LoopingSound
 
-    protected SoundHandler() {}
+	protected SoundHandler() {
+	}
 
-    public static SoundHandler create(LoopingSound... list) {
-        SoundHandler handler = new SoundHandler();
+	public static SoundHandler create(LoopingSound... list) {
+		SoundHandler handler = new SoundHandler();
 
-        handler.sounds = new ArrayList<>();
-        handler.sounds.addAll(java.util.List.of(list));
+		handler.sounds = new ArrayList<>();
+		handler.sounds.addAll(java.util.List.of(list));
 
-        return handler;
-    }
+		return handler;
+	}
 
-    public void startIfNotPlaying(SoundEvent event) {
-        if (!isPlaying(event)) startSound(event);
-    }
-    public void startIfNotPlaying(SoundInstance sound) {
-        if (!isPlaying(sound)) startSound(sound);
-    }
+	public void startIfNotPlaying(SoundEvent event) {
+		if (!isPlaying(event)) startSound(event);
+	}
 
-    public boolean isPlaying(SoundEvent event) {
-        return MinecraftClient.getInstance().getSoundManager().isPlaying(findSoundByEvent(event));
-    }
-    public boolean isPlaying(SoundInstance sound) {
-        return MinecraftClient.getInstance().getSoundManager().isPlaying(sound);
-    }
+	public void startIfNotPlaying(SoundInstance sound) {
+		if (!isPlaying(sound)) startSound(sound);
+	}
 
-    /**
-     * Searches through the sounds in this handler and starts playing whichever one matches the SoundEvent given
-     * @param event the event to search for
-     */
-    public void startSound(SoundEvent event) {
-        SoundInstance sound = findSoundByEvent(event);
+	public boolean isPlaying(SoundEvent event) {
+		return MinecraftClient.getInstance().getSoundManager().isPlaying(findSoundByEvent(event));
+	}
 
-        MinecraftClient.getInstance().getSoundManager().play(sound);
-    }
-    public void startSound(SoundInstance sound) {
-        if (sound == null) return;
-        MinecraftClient.getInstance().getSoundManager().play(sound);
-    }
-    public void stopSound(SoundEvent event) {
-        MinecraftClient.getInstance().getSoundManager().stop(findSoundByEvent(event));
-    }
-    public void stopSound(SoundInstance sound) {
-        MinecraftClient.getInstance().getSoundManager().stop(sound);
-    }
-    public void stopSounds() {
-        if (this.sounds == null) return;
+	public boolean isPlaying(SoundInstance sound) {
+		return MinecraftClient.getInstance().getSoundManager().isPlaying(sound);
+	}
 
-        for (LoopingSound sound : this.sounds) {
-            this.stopSound(sound);
-        }
-    }
+	/**
+	 * Searches through the sounds in this handler and starts playing whichever one matches the SoundEvent given
+	 *
+	 * @param event the event to search for
+	 */
+	public void startSound(SoundEvent event) {
+		SoundInstance sound = findSoundByEvent(event);
 
-    /**
-     * Finds the first sound instance that matches the event given fixme i hate this sm and it doesnt work for sounds which are randomised
-     * @return
-     */
-    public SoundInstance findSoundByEvent(SoundEvent event) {
-        return findSoundById(event.getId());
-    }
-    public SoundInstance findSoundById(Identifier id) {
-        Identifier temp;
+		MinecraftClient.getInstance().getSoundManager().play(sound);
+	}
 
-        for (SoundInstance sound : this.sounds) {
-            temp = sound.getId();
+	public void startSound(SoundInstance sound) {
+		if (sound == null) return;
+		MinecraftClient.getInstance().getSoundManager().play(sound);
+	}
 
-            if (temp.equals(id)) return sound;
-        }
+	public void stopSound(SoundEvent event) {
+		MinecraftClient.getInstance().getSoundManager().stop(findSoundByEvent(event));
+	}
 
-        AITMod.LOGGER.error("Could not find sound " + id + " in list, returning empty sound!");
-        return new PlayerFollowingLoopingSound(SoundEvents.INTENTIONALLY_EMPTY, SoundCategory.NEUTRAL);
-    }
+	public void stopSound(SoundInstance sound) {
+		MinecraftClient.getInstance().getSoundManager().stop(sound);
+	}
+
+	public void stopSounds() {
+		if (this.sounds == null) return;
+
+		for (LoopingSound sound : this.sounds) {
+			this.stopSound(sound);
+		}
+	}
+
+	/**
+	 * Finds the first sound instance that matches the event given fixme i hate this sm and it doesnt work for sounds which are randomised
+	 *
+	 * @return
+	 */
+	public SoundInstance findSoundByEvent(SoundEvent event) {
+		return findSoundById(event.getId());
+	}
+
+	public SoundInstance findSoundById(Identifier id) {
+		Identifier temp;
+
+		for (SoundInstance sound : this.sounds) {
+			temp = sound.getId();
+
+			if (temp.equals(id)) return sound;
+		}
+
+		AITMod.LOGGER.error("Could not find sound " + id + " in list, returning empty sound!");
+		return new PlayerFollowingLoopingSound(SoundEvents.INTENTIONALLY_EMPTY, SoundCategory.NEUTRAL);
+	}
 }

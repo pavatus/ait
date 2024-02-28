@@ -7,30 +7,32 @@ import net.minecraft.item.Item;
 /**
  * A WearableItem is an Item that can be equipped.
  * Allows for custom rendering using own models + feature renderer instead of the default one
- *
+ * <p>
  * From Duzo's Persona Mod
+ *
  * @author duzo
  */
 public class WearableItem extends Item implements Equipment {
-    private final EquipmentSlot slot;
-    private final boolean hasCustomRenderer;
+	private final EquipmentSlot slot;
+	private final boolean hasCustomRenderer;
 
-    public WearableItem(EquipmentSlot slot, boolean hasCustomRenderer, Settings settings) {
-        super(settings);
+	public WearableItem(EquipmentSlot slot, boolean hasCustomRenderer, Settings settings) {
+		super(settings);
 
-        this.slot = slot;
-        this.hasCustomRenderer = hasCustomRenderer;
-    }
-    public WearableItem(EquipmentSlot slot, Settings settings) {
-        this(slot, false, settings);
-    }
+		this.slot = slot;
+		this.hasCustomRenderer = hasCustomRenderer;
+	}
 
-    @Override
-    public EquipmentSlot getSlotType() {
-        return this.slot;
-    }
+	public WearableItem(EquipmentSlot slot, Settings settings) {
+		this(slot, false, settings);
+	}
 
-    public boolean hasCustomRenderer() {
-        return this.hasCustomRenderer;
-    }
+	@Override
+	public EquipmentSlot getSlotType() {
+		return this.slot;
+	}
+
+	public boolean hasCustomRenderer() {
+		return this.hasCustomRenderer;
+	}
 }
