@@ -403,7 +403,6 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		});
 
 		this.needsControls = false;
-		//System.out.println("SpawnControls(): I'm getting run :) somewhere..");
 	}
 
 	public void tickAge() {

@@ -49,7 +49,6 @@ public class RemoteItem extends LinkableItem {
 			return ActionResult.FAIL;
 
 		Tardis tardis = ServerTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")));
-		//System.out.println(ServerTardisManager.getInstance().getTardis(nbt.getUuid("tardis")));
 
 		if (tardis != null) {
 			if (tardis.getFuel() <= 0) {

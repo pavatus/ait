@@ -61,11 +61,6 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 			texture = entity.findTardis().get().getDoor().isOpen() ? DoomDoorModel.DOOM_DOOR_OPEN : DoomDoorModel.DOOM_DOOR;
 			emission = null;
 		}
-		// if (entity.getTardis().getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED)
-		//     light = LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE;
-		int red = 1;
-		int green = 1;
-		int blue = 1;
 
 		if (DependencyChecker.hasPortals() && entity.findTardis().get().getTravel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_FALLING) && entity.findTardis().get().getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED) {
 			BlockPos pos = entity.findTardis().get().getTravel().getPosition();
@@ -74,14 +69,10 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 				World doorWorld = entity.getWorld();
 				BlockPos doorPos = entity.getPos();
 				int lightConst = 524296; // 1 / maxLight;
-				//light = WorldRenderer.getLightmapCoordinates(entity.getTardis().getHandlers().getExteriorPos().getWorld(), entity.getTardis().getHandlers().getExteriorPos());;
 				int i = world.getLightLevel(LightType.SKY, pos);
 				int j = world.getLightLevel(LightType.BLOCK, pos);
 				int k = doorWorld.getLightLevel(LightType.BLOCK, doorPos);
-                /*light = ((i + j >= 15 ? ((i + j) * 2) : i != 0 ? i * (world.isNight() ? 1 : 2) +
-                        (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j + 6) : j * 2) * lightConst);*/
 				light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight() ? (i / 15) + j > 0 ? j + 13 : j : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j)) * lightConst;
-				//System.out.println("Sky: " + i + " | Block: " + j + " | light: " + light);
 			}
 		}
 

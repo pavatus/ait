@@ -348,9 +348,7 @@ public class TardisUtil {
 			return null;
 		}
 		if (TardisManager.getInstance(isServer).getLookup() == null) return null;
-		for (Tardis tardis : TardisManager.getInstance(isServer).getLookup().values()) {
-			// System.out.println(pos);
-			// System.out.println(tardis.getDesktop().getCorners());
+		for (Tardis tardis : TardisManager.getInstance(isServer).getLookup().values()) {;
 			if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos))
 				return tardis;
 		}

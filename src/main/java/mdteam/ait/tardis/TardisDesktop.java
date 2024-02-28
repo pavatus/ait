@@ -41,22 +41,7 @@ public class TardisDesktop extends TardisLink {
 		this.schema = schema;
 		this.corners = TardisUtil.findInteriorSpot();
 
-//        BlockPos doorPos = new DesktopGenerator(schema).place(
-//                (ServerWorld) TardisUtil.getTardisDimension(), this.getCorners()
-//        );
-//
-//        System.out.println(doorPos);
-//
-//        if (!(TardisUtil.getTardisDimension().getBlockEntity(doorPos) instanceof DoorBlockEntity door)) {
-//            AITMod.LOGGER.error("Failed to find the interior door!");
-//            return;
-//        }
-//
-//        // this is needed for door and console initialization. when we call #setTardis(ITardis) the desktop field is still null.
-//        door.setDesktop(this);
-//        door.setTardis(tardis);
 		this.changeInterior(schema);
-		//console.setTardis(tardis);
 	}
 
 	public TardisDesktop(Tardis tardis, TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed door, AbsoluteBlockPos.Directed console) {

@@ -86,7 +86,6 @@ public abstract class ExteriorAnimation {
 		if (exterior.findTardis().isEmpty()) return;
 
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(exterior.findTardis().get())) {
-			// System.out.println(player);
 			tellClientToSetup(state, player);
 		}
 	}

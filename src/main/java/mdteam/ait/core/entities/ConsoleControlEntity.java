@@ -318,7 +318,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	public void setControlData(ConsoleTypeSchema consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
 		this.consoleBlockPos = consoleBlockPosition;
 		this.control = type.getControl();
-		// System.out.println(type);
 		if (consoleType != null) {
 			this.setControlWidth(type.getScale().width);
 			this.setControlHeight(type.getScale().height);

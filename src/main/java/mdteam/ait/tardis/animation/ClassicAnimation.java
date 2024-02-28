@@ -29,7 +29,6 @@ public class ClassicAnimation extends ExteriorAnimation {
 			runAlphaChecks(state);
 		} else if (state == TardisTravel.State.MAT) {
 			timeLeft++;
-			System.out.println(timeLeft);
 
 			if (timeLeft > 680) {
 				this.setAlpha(((float) timeLeft - 680) / (860 - 620));

@@ -42,8 +42,7 @@ public class WaypointHandler extends TardisLink {
 	 */
 	public Optional<Waypoint> set(Waypoint var, boolean spawnItem) {
 		Optional<Waypoint> prev = Optional.ofNullable(this.current);
-		// System.out.println(var);
-		// System.out.println(this.current);
+
 		this.current = var;
 
 		if (spawnItem && prev.isPresent()) {

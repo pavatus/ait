@@ -74,8 +74,6 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 		}
 
 		AITMod.LOGGER.info("Read {} console variants from server", size);
-
-		getInstance().toList().forEach(s -> System.out.println(s.texture()));
 	}
 
 	public static ClientConsoleVariantSchema convertDatapack(DatapackConsole variant) {

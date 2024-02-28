@@ -114,8 +114,6 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 		List<ExteriorVariantSchema> list = new ArrayList<>();
 
 		for (ExteriorVariantSchema schema : ExteriorVariantRegistry.getInstance().REGISTRY.values()) {
-			//AITExteriors.iterator().forEach((System.out::println));
-
 			if (schema.category().equals(parent)) list.add(schema);
 		}
 
@@ -223,8 +221,6 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 		// Renegade
 		RENEGADE_DEFAULT = register(new RenegadeDefaultVariant());
 		RENEGADE_TRON = register(new RenegadeTronVariant());
-
-		System.out.println(this.toList());
 	}
 
 	// AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE

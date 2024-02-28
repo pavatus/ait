@@ -106,8 +106,6 @@ public class TardisItemBuilder extends Item {
 				return ActionResult.SUCCESS;
 			}
 
-			//System.out.println(this.exterior);
-
 			ServerTardisManager.getInstance().create(pos, CategoryRegistry.getInstance().get(this.exterior), findRandomVariant(CategoryRegistry.getInstance().get(this.exterior)), DesktopRegistry.getInstance().get(this.desktop), false);
 			context.getStack().decrement(1);
 		}

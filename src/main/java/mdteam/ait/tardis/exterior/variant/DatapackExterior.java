@@ -79,7 +79,6 @@ public class DatapackExterior extends ExteriorVariantSchema {
 	}
 
 	public ExteriorVariantSchema getParent() {
-		// ExteriorVariantRegistry.getInstance().toList().forEach(schema -> System.out.println(schema.id()));
 		return ExteriorVariantRegistry.getInstance().get(this.getParentId());
 	}
 

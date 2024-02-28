@@ -86,7 +86,6 @@ public class TardisRealEntity extends Entity {
 		// set dirty for the tardis after this, but not right now cuz I am testing @TODO
 		world.spawnEntity(tardis_real_entity);
 		tardis_real_entity.setRotation(45f, block_state.get(ExteriorBlock.FACING).asRotation());
-		System.out.println(tardis_real_entity);
 		return tardis_real_entity;
 	}
 

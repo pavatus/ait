@@ -812,8 +812,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		matrices.push();
 		matrices.translate(0.5f, -1.5f, -0.5f);
-		// matrices.scale(0.5f, 0.5f, 0.5f);
-		//System.out.println("Fuel: " + console.getTardis().get().getFuel() + " || clamped fuel: " + (((console.getTardis().get().getFuel() / 5000) * 2) - 1));
+
 		this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("m_meter_2").getChild("bone110").yaw =
 				(float) (((console.findTardis().get().getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
 		ModelPart fuelLowWarningLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("sym_lamp2").getChild("bone96");
