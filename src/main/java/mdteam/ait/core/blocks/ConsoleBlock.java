@@ -118,10 +118,6 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 	@Override
 	public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
 		if (entity instanceof PlayerEntity player) {
-//            player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 30, 0));
-//            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 60, 0));
-//            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 60, 0));
-//            player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 60, 0));
 			Random random = new Random();
 			int x_random = random.nextInt(1, 10);
 			int y_random = random.nextInt(1, 10);

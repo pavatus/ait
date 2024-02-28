@@ -120,9 +120,7 @@ public class TardisRealEntity extends Entity {
 		}
 
 		DoorData.useDoor(this.getTardis(), (ServerWorld) this.getWorld(), this.getBlockPos(), (ServerPlayerEntity) player);
-		// fixme maybe this is required idk the doorhandler already marks the tardis dirty || tardis().markDirty();
-		if (sneaking)
-			return ActionResult.FAIL;
+
 		return ActionResult.SUCCESS;
 	}
 

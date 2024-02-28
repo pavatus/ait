@@ -112,7 +112,6 @@ public class SiegeTardisItem extends Item {
 		player.getMainHandStack().setCount(0);
 
 		if (player.isCreative()) {
-			// annoying shit
 			int slot = findSlot(player, tardis);
 			if (slot == -1) {
 				return ActionResult.SUCCESS; // how

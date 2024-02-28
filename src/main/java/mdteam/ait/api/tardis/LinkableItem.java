@@ -21,7 +21,6 @@ public abstract class LinkableItem extends Item {
 		super(settings);
 	}
 
-	// could b static? idk but overriding static methods isnt possible.
 	public void link(ItemStack stack, Tardis tardis) {
 		this.link(stack, tardis.getUuid());
 	}

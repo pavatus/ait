@@ -60,7 +60,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		return success ? TypedActionResult.consume(stack) : TypedActionResult.fail(stack);
 	}
 
-	// fixme no me gusta nada
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
 		World world = context.getWorld();
@@ -118,8 +117,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 		if (world.isClient()) return true;
 
-		// if (user.isUsingItem() && stack.equals(user.getActiveItem())) return false;
-
 		if (this.isOutOfFuel(stack)) return false;
 
 		if (user.isSneaking()) {
@@ -137,11 +134,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 			setMode(stack, prev);
 			mode = findMode(stack);
-		}
-
-		// todo fix issues with this
-		if (mode == Mode.OVERLOAD) { // fixme should be in "run" in Overload mode
-			return true;
 		}
 
 		user.setCurrentHand(hand);
@@ -183,7 +175,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	}
 
 	public static void playSonicSounds(PlayerEntity player) {
-//        player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, (-player.getPitch() / 90f) + 1f);
 		player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, 1f);
 	}
 
@@ -340,16 +331,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		OVERLOAD(Formatting.RED) {
 			@Override
 			public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
-				// fixme temporary replacement for exterior changing
-
 				BlockEntity entity = world.getBlockEntity(pos);
 				Block block = world.getBlockState(pos).getBlock();
-
-				// fixme this doesnt work because a dispenser requires that you have redstone power input or the state wont trigger :/ - Loqor
-                /*if(player.isSneaking() && block instanceof DispenserBlock dispenser) {
-                    world.setBlockState(pos, world.getBlockState(pos).with(Properties.TRIGGERED, true), Block.NO_REDRAW);
-                    //world.emitGameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
-                }*/
 
 				if (block instanceof TntBlock tnt) {
 					TntBlock.primeTnt(world, pos);

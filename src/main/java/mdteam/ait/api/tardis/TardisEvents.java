@@ -7,6 +7,8 @@ import net.fabricmc.fabric.api.event.EventFactory;
 
 public final class TardisEvents {
 
+	// Flight
+
 	public static final Event<Demat> DEMAT = EventFactory.createArrayBacked(Demat.class, callbacks -> (tardis) -> {
 		for (Demat callback : callbacks) {
 			return callback.onDemat(tardis);
@@ -31,6 +33,8 @@ public final class TardisEvents {
 			callback.onCrash(tardis);
 		}
 	});
+
+	// Power / Fuel
 	public static final Event<NoFuel> OUT_OF_FUEL = EventFactory.createArrayBacked(NoFuel.class, callbacks -> (tardis) -> {
 		for (NoFuel callback : callbacks) {
 			callback.onNoFuel(tardis);
@@ -47,7 +51,7 @@ public final class TardisEvents {
 		}
 	});
 
-	// door stuff
+	// Door
 	public static final Event<OpenDoor> DOOR_OPEN = EventFactory.createArrayBacked(OpenDoor.class, callbacks -> ((tardis) -> {
 		for (OpenDoor callback : callbacks) {
 			callback.onOpen(tardis);

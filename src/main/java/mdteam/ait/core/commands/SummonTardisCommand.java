@@ -8,6 +8,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.UuidArgumentType;
@@ -60,17 +61,7 @@ public class SummonTardisCommand {
 		if (pos == null)
 			pos = source.getBlockPos();
 
-		tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(pos, source.getServerWorld(), source.getMovementDirection()), true);
-		// travel.toggleHandbrake();
-
-		//FIXME: move to a kind of "goto" method, i would make it but theo said hands off the tardis package
-		if (tardis.getTravel().getState() == LANDED) {
-			PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
-			tardis.getTravel().dematerialise(true, forced);
-		}
-		if (tardis.getTravel().getState() == FLIGHT) {
-			tardis.getTravel().materialise();
-		}
+		FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(pos, source.getServerWorld(), source.getMovementDirection()));
 
 		source.sendMessage(Text.literal("TARDIS [" + tardis.getUuid().toString().substring(0, 7) + "] is on the way!"), true); // testing purposes can be removed if ugly
 

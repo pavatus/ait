@@ -29,8 +29,6 @@ import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueT
 
 public class WaypointItem extends Item {
 	public static final String POS_KEY = "pos";
-	/*public static final String LOCKED_KEY = "locked";*/
-	// fixme ehhhhh should we have a locked variable for the tardis waypoints? maybe it could be helpful?
 
 	public WaypointItem(Settings settings) {
 		super(settings);

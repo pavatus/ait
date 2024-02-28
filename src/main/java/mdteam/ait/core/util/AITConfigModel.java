@@ -8,7 +8,7 @@ import mdteam.ait.AITMod;
 @Modmenu(modId = AITMod.MOD_ID)
 @Config(name = "aitconfig", wrapperName = "AITConfig")
 public class AITConfigModel {
-	// todo these shouldnt really be all caps underlined
+	// todo these SHOULD really be all caps underlined
 	@SectionHeader("Server")
 	public int SEARCH_HEIGHT = 64;
 	public double ASK_DELAY = 1.0;

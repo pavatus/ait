@@ -177,7 +177,7 @@ public class RiftChunkManager {
 				riftChunkArtronLevels.put(lll, artron);
 			}
 		} catch (Exception e) {
-			// ignore cuz I'm baller like that
+			e.printStackTrace();
 		}
 	}
 }

@@ -104,12 +104,8 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 	private void createTardis(ServerWorld world, BlockPos pos) {
 		// Create a new tardis
 		ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), CategoryRegistry.getInstance().get(GrowthCategory.REFERENCE), ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE), DesktopRegistry.DEFAULT_CAVE, false);
-		created.getHandlers().getFuel().setCurrentFuel(0);
-		// created.getHandlers().getOvergrown().setOvergrown(true); //fixme created.getEnvironmentHandler().setCoralCovered(true);
 
-		//LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, world);
-		// lightning.setPos(pos.getX(),pos.getY(),pos.getZ());
-		// world.spawnEntity(lightning);
+		created.getHandlers().getFuel().setCurrentFuel(0);
 	}
 
 	@Override

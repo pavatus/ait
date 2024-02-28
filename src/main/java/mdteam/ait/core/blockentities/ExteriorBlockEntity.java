@@ -48,7 +48,7 @@ import java.util.Random;
 import static mdteam.ait.tardis.TardisTravel.State.*;
 import static mdteam.ait.tardis.util.TardisUtil.findTardisByPosition;
 
-public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ExteriorBlockEntity> { // fixme copy tardishandler and refactor to use uuids instead, this is incredibly inefficient and the main cause of lag.
+public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ExteriorBlockEntity> {
 	public int animationTimer = 0;
 	public final AnimationState DOOR_STATE = new AnimationState();
 	private ExteriorAnimation animation;
@@ -156,33 +156,38 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 
 	@Override
 	public void tick(World world, BlockPos pos, BlockState blockState, ExteriorBlockEntity blockEntity) {
-		if (findTardis().isEmpty()) return;
-		Random random = new Random();
-		if (this.animation != null && this.findTardis().get().getTravel().getState() != LANDED)
+		if (this.findTardis().isEmpty()) return;
+
+		Tardis tardis = this.findTardis().get();
+
+		TardisTravel travel = tardis.getTravel();
+		TardisTravel.State state = travel.getState();
+
+		if (this.animation != null && state != LANDED)
 			this.getAnimation().tick();
 
 		if (world.isClient()) {
 			this.checkAnimations();
 		}
-        /*if(getTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
-        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX(), pos.getY() + 2.5,
-                pos.getZ(), random.nextFloat(-0.15f, 0.15f), 0.015, random.nextFloat(-0.15f, 0.15f));
-        }*/
 
-		// Should be when tardis is set to landed / position is changed instead. fixme
 		if (!world.isClient() && (blockState.getBlock() instanceof ExteriorBlock)) {
 			// For checking falling
 			((ExteriorBlock) blockState.getBlock()).tryFall(blockState, (ServerWorld) world, pos);
 		}
 
-		if (!world.isClient() && !PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED) && this.findTardis().get().getTravel().getState() == MAT && this.getAlpha() >= 0.9f) {
+		boolean previouslyLocked = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED);
+
+		if (!world.isClient()
+				&& !previouslyLocked
+				&& state == MAT
+				&& this.getAlpha() >= 0.9f) {
 			for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(this.getPos()).expand(0, 1, 0), EntityPredicates.EXCEPT_SPECTATOR)) {
-				TardisUtil.teleportInside(this.findTardis().get(), entity); // fixme i dont like how this works you can just run into peoples tardises while theyre landing
+				TardisUtil.teleportInside(tardis, entity);
 			}
 		}
 
 		// ensures we dont exist during flight
-		if (!world.isClient() && this.findTardis().get().getTravel().getState() == FLIGHT) {
+		if (!world.isClient() && state == FLIGHT) {
 			world.removeBlock(this.getPos(), false);
 		}
 	}
@@ -194,8 +199,6 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 
 		this.animation = this.findTardis().get().getExterior().getVariant().animation(this);
 
-		// Removed because of unnecessary spam, again. - Loqor
-		//AITMod.LOGGER.warn("Created new ANIMATION for " + this);
 		this.animation.setupAnimation(this.findTardis().get().getTravel().getState());
 
 		if (this.getWorld() != null) {
@@ -207,15 +210,20 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 
 	public void checkAnimations() {
 		// DO NOT RUN THIS ON SERVER!!
-		if (findTardis().isEmpty()) return;
+		if (this.findTardis().isEmpty()) return;
 		animationTimer++;
-//        if (!DOOR_STATE.isRunning()) {
-//            DOOR_STATE.startIfNotRunning(animationTimer);
-//        }
-		if (findTardis().get().getHandlers().getDoor().getAnimationExteriorState() == null) return;
-		if (findTardis().get().getHandlers().getDoor().getAnimationExteriorState() == null || !(findTardis().get().getHandlers().getDoor().getAnimationExteriorState().equals(findTardis().get().getDoor().getDoorState()))) {
+
+		Tardis tardis = this.findTardis().get();
+
+		DoorData door = tardis.getDoor();
+
+		DoorData.DoorStateEnum doorState = door.getDoorState();
+		DoorData.DoorStateEnum animState = door.getAnimationExteriorState();
+
+		if (animState == null) return;
+		if (!animState.equals(doorState)) {
 			DOOR_STATE.start(animationTimer);
-			findTardis().get().getHandlers().getDoor().tempExteriorState = findTardis().get().getDoor().getDoorState();
+			door.tempExteriorState = doorState;
 		}
 	}
 
@@ -255,7 +263,6 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 	}
 
 	public void onBroken() {
-		if (this.findTardis().isPresent())
-			this.findTardis().get().getTravel().setState(TardisTravel.State.FLIGHT);
+		this.findTardis().ifPresent((tardis -> tardis.getTravel().setState(TardisTravel.State.FLIGHT)));
 	}
 }

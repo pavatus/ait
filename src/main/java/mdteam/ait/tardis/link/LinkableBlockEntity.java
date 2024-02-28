@@ -82,6 +82,14 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
 	}
 
 	// lord save us.
+
+	/**
+	 * Attempts to find the TARDIS related to this block entity
+	 * It looks for the block entity's tardis id stored in the lookup
+	 * Some overrides also search for the tardis based off the exterior pos / interior pos
+	 * This is resource intensive and the result of this should be stored in a variable (you should be doing this anyway for things you are repeatedly calling)
+	 * @return the found TARDIS, or empty.
+	 */
 	@Override
 	public Optional<Tardis> findTardis() {
 		if (TardisUtil.isClient()) { // todo replace deprecated check

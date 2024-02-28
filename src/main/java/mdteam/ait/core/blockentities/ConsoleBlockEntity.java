@@ -186,7 +186,6 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 	public void setTardis(Tardis tardis) {
 		if (tardis == null) {
-//            AITMod.LOGGER.error("Tardis was null in ConsoleBlockEntity at " + this.getPos());
 			return;
 		}
 

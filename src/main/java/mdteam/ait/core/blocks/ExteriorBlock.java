@@ -139,14 +139,16 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).findTardis().isEmpty())
 			return getNormalShape(state, world, pos);
 
-		if (((ExteriorBlockEntity) blockEntity).findTardis().get().isSiegeMode())
+		Tardis tardis = ((ExteriorBlockEntity) blockEntity).findTardis().get();
+
+		if (tardis.isSiegeMode())
 			return SIEGE_SHAPE;
-		if (((ExteriorBlockEntity) blockEntity).findTardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM)) {
+		if (tardis.getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM)) {
 			return LEDGE_DOOM;
 		}
 		// todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
 		if (DependencyChecker.hasPortals())
-			if (((ExteriorBlockEntity) blockEntity).findTardis().get().getDoor().isOpen() && ((ExteriorBlockEntity) blockEntity).findTardis().get().getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
+			if (tardis.getDoor().isOpen() && ((ExteriorBlockEntity) blockEntity).findTardis().get().getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
 				return getLedgeShape(state, world, pos);
 
 		TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().getTravel().getState();
@@ -200,7 +202,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
 		if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) {
-			if (world.isClient()) { // this wont ever get called because of the early return above, remove?
+			if (world.isClient()) {
 				if (exteriorBlockEntity.findTardis().isEmpty()) {
 					ClientTardisManager.getInstance().askTardis(new AbsoluteBlockPos(pos, world));
 					return ActionResult.FAIL;
@@ -261,23 +263,32 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	}
 
 	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-		// this is called when the block is first placed, but we have a demat anim..
+		// this is called when the block is first placed, but we have a demat anim so nothing occurs.
 		tryFall(state, world, pos);
 	}
 
 	public void tryFall(BlockState state, ServerWorld world, BlockPos pos) {
-		if (canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= (world.getBottomY() + 1)
-				&& findTardis(world, pos) != null
-				&& !PropertiesHandler.getBool(findTardis(world, pos).getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)
-				&& findTardis(world, pos).getTravel().getState() == TardisTravel.State.LANDED
-				&& findTardis(world, pos).getExterior().getCategory() != CategoryRegistry.CORAL_GROWTH) {
-			FallingTardisEntity falling = FallingTardisEntity.spawnFromBlock(world, pos, state);
-			// OH SHIT WE FALLING
-			if (state.get(WATERLOGGED)) {
-				state.with(WATERLOGGED, false);
-			}
-			this.configureFallingTardis(falling, world, pos);
+		if (!canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= (world.getBottomY() + 1)) return;
+
+		Tardis tardis = findTardis(world, pos);
+
+		if (tardis == null) return;
+
+		boolean antigravs = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED);
+
+		if (antigravs) return;
+
+		if (tardis.getTravel().getState() != TardisTravel.State.LANDED) return;
+
+		if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH)) return;
+
+		FallingTardisEntity falling = FallingTardisEntity.spawnFromBlock(world, pos, state);
+
+		if (state.get(WATERLOGGED)) {
+			state.with(WATERLOGGED, false);
 		}
+
+		this.configureFallingTardis(falling, world, pos);
 	}
 
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
@@ -296,18 +307,17 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		return null;
 	}
 
-	public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingTardisEntity fallingTardisEntity) {
-		if (fallingTardisEntity.getTardis() == null) return;
-		fallingTardisEntity.getTardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, fallingTardisEntity.getTardis().getTravel().getPosition().getDirection()));
+	public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingTardisEntity falling) {
+		Tardis tardis = falling.getTardis();
+
+		if (tardis == null) return;
+		tardis.getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, tardis.getTravel().getPosition().getDirection()));
 
 		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
-		FlightUtil.playSoundAtConsole(fallingTardisEntity.getTardis(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+		FlightUtil.playSoundAtConsole(tardis, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
-		PropertiesHandler.set(fallingTardisEntity.getTardis(), PropertiesHandler.IS_FALLING, false);
-		//PropertiesHandler.set(fallingTardisEntity.getTardis(), PropertiesHandler.ALARM_ENABLED, PropertiesHandler.getBool((fallingTardisEntity.getTardis().getHandlers().getProperties()), PropertiesHandler.ALARM_ENABLED));
-		DoorData.lockTardis(PropertiesHandler.getBool(fallingTardisEntity.getTardis().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), fallingTardisEntity.getTardis(), null, false);
-        /*if(!fallingTardisEntity.getTardis().getTravel().isCrashing())
-            fallingTardisEntity.getTardis().getTravel().crash();*/
+		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
+		DoorData.lockTardis(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis, null, false);
 	}
 
 	protected void configureFallingTardis(FallingTardisEntity entity, ServerWorld world, BlockPos pos) {

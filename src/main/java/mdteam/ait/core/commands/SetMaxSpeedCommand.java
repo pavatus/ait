@@ -15,7 +15,9 @@ import static mdteam.ait.core.commands.TeleportInteriorCommand.TARDIS_SUGGESTION
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
-// TODO - temporary command to set max speed until we find a proper way
+/**
+ * temporary command to set max speed until we find a proper way
+ */
 public class SetMaxSpeedCommand {
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		dispatcher.register(literal(AITMod.MOD_ID)
