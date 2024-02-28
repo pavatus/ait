@@ -320,7 +320,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                 if (blockState.getBlock() == Blocks.IRON_DOOR || blockState.getBlock() == Blocks.IRON_TRAPDOOR) {
                     world.playSound(player, pos, blockState.get(Properties.OPEN) ? SoundEvents.BLOCK_IRON_DOOR_OPEN : SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
                     world.setBlockState(pos, blockState.with(Properties.OPEN, !blockState.get(Properties.OPEN)), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                    world.emitGameEvent(player, blockState.get(Properties.OPEN) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
                     return;
                 }
 
