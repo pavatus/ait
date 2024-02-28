@@ -1,14 +1,23 @@
 package mdteam.ait.core.item;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.FlightData;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.*;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -18,11 +27,21 @@ import net.minecraft.world.World;
 import org.joml.Vector3f;
 
 import java.util.Random;
+import java.util.function.Consumer;
 
-public class HammerItem extends Item {
-    public HammerItem(Settings settings) {
-        super(settings);
+public class HammerItem extends SwordItem {
+    public HammerItem(int attackDamage, float attackSpeed, Settings settings) {
+        super(ToolMaterials.IRON, attackDamage, attackSpeed, settings);
     }
+
+    public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
+        if (state.isOf(Blocks.IRON_BLOCK)) {
+            return 15.0F;
+        } else {
+            return state.isIn(BlockTags.SWORD_EFFICIENT) ? 1.5F : 1.0F;
+        }
+    }
+
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
@@ -98,5 +117,10 @@ public class HammerItem extends Item {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isSuitableFor(BlockState state) {
+        return state.isOf(Blocks.IRON_BLOCK);
     }
 }
