@@ -2,7 +2,10 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.api.tardis.ArtronHolder;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.AITItems;
 import mdteam.ait.core.item.ArtronCollectorItem;
+import mdteam.ait.core.item.ChargedZeitonCrystalItem;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.core.util.DeltaTimeManager;
 import net.minecraft.block.Block;
@@ -47,6 +50,12 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
             if (stack.getItem() instanceof ArtronCollectorItem) {
                 double residual = ArtronCollectorItem.addFuel(stack, this.getCurrentFuel());
                 this.setCurrentFuel(residual);
+            } else if (stack.getItem() instanceof ChargedZeitonCrystalItem crystal) {
+                double residual = crystal.addFuel(this.getCurrentFuel(), stack);
+                this.setCurrentFuel(residual);
+            }
+            if (stack.getItem() == AITBlocks.ZEITON_CLUSTER.asItem()) {
+                player.getInventory().setStack(player.getInventory().selectedSlot, new ItemStack(AITItems.CHARGED_ZEITON_CRYSTAL));
             }
         }
     }
@@ -55,6 +64,8 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
     public void setCurrentFuel(double artronAmount) {
         this.artronAmount = artronAmount;
         markDirty();
+        if(this.hasWorld())
+            this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
     }
 
     @Override

@@ -8,7 +8,7 @@ import mdteam.ait.client.renderers.wearables.RespiratorHudOverlay;
 import mdteam.ait.client.screens.TardisSecurityScreen;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
-import mdteam.ait.core.item.RiftScannerItem;
+import mdteam.ait.core.item.*;
 import mdteam.ait.registry.*;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
@@ -26,9 +26,6 @@ import mdteam.ait.client.screens.interior.OwOInteriorSelectScreen;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.item.KeyItem;
-import mdteam.ait.core.item.SonicItem;
-import mdteam.ait.core.item.WaypointItem;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
@@ -82,6 +79,7 @@ public class AITModClient implements ClientModInitializer {
         entityRenderRegister();
         sonicModelPredicate();
         riftScannerPredicate();
+        chargedZeitonCrystalPredicate();
         waypointPredicate();
         setKeyBinding();
 
@@ -241,6 +239,23 @@ public class AITModClient implements ClientModInitializer {
 
     public void riftScannerPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.RIFT_SCANNER, new Identifier("scanner"),new RiftTarget((world, stack, entity) -> GlobalPos.create(entity.getWorld().getRegistryKey(), RiftScannerItem.getTarget(stack).getCenterAtY(75))));
+    }
+
+    public void chargedZeitonCrystalPredicate() {
+        ModelPredicateProviderRegistry.register(AITItems.CHARGED_ZEITON_CRYSTAL, new Identifier("fuel"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            if(itemStack.getItem() instanceof ChargedZeitonCrystalItem item) {
+                float value = (float) (item.getCurrentFuel(itemStack) / item.getMaxFuel(itemStack));
+                if(value > 0.0f && value < 0.5f) {
+                    return 0.5f;
+                } else if(value > 0.5f && value < 1.0f) {
+                    return 1.0f;
+                } else {
+                    return 0.0f;
+                }
+            }
+            return 0.0F;
+        });
     }
 
     public void sonicModelPredicate() { // fixme lord give me strength - amen brother

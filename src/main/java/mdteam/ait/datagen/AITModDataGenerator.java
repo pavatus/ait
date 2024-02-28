@@ -75,6 +75,20 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.GOLD_NUGGET),
                             FabricRecipeProvider.conditionsFromItem(Items.GOLD_NUGGET))
             );
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.CHARGED_ZEITON_CRYSTAL, 1)
+                            .pattern("ZZZ")
+                            .pattern("CAC")
+                            .pattern("ZZZ")
+                            .input('Z', AITItems.ZEITON_SHARD)
+                            .input('C', AITBlocks.ZEITON_CLUSTER)
+                            .input('A', AITItems.ARTRON_COLLECTOR)
+                            .criterion(FabricRecipeProvider.hasItem(AITItems.ZEITON_SHARD),
+                                    FabricRecipeProvider.conditionsFromItem(AITItems.ZEITON_SHARD))
+                            .criterion(FabricRecipeProvider.hasItem(AITBlocks.ZEITON_CLUSTER),
+                                    FabricRecipeProvider.conditionsFromItem(AITBlocks.ZEITON_CLUSTER))
+                            .criterion(FabricRecipeProvider.hasItem(AITItems.ARTRON_COLLECTOR),
+                                    FabricRecipeProvider.conditionsFromItem(AITItems.ARTRON_COLLECTOR))
+            );
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, 1)
                     .pattern("SSS")
                     .pattern("SGS")
@@ -467,8 +481,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
         provider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
         provider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
-        provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector Panel");
+        provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector Unit");
         provider.addTranslation(AITItems.RIFT_SCANNER, "Rift Scanner");
+        provider.addTranslation(AITItems.CHARGED_ZEITON_CRYSTAL, "Charged Zeiton Crystal");
         provider.addTranslation(AITItems.SIEGE_ITEM, "TARDIS");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC, "Music Disc");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Radio - Drifting");

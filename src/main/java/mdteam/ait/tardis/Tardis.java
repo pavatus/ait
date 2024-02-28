@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.client.util.ClientTardisUtil;
+import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.core.util.DeltaTimeManager;
@@ -247,7 +248,8 @@ public class Tardis {
         TardisUtil.getEntitiesInInterior(this, 50)
                 .stream()
                 .filter(entity -> (entity instanceof ItemEntity) &&
-                        ((ItemEntity) entity).getStack().getItem() == Items.NETHER_STAR &&
+                        (((ItemEntity) entity).getStack().getItem() == Items.NETHER_STAR ||
+                                ((ItemEntity) entity).getStack() == AITItems.CHARGED_ZEITON_CRYSTAL.getDefaultStack()) &&
                         entity.isTouchingWater()).forEach(entity -> {
                     if (this.getExterior().getExteriorPos() == null) return;
                     this.setFuelCount(8000);

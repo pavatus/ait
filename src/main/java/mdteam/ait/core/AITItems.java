@@ -14,10 +14,6 @@ import net.minecraft.util.Rarity;
 public class AITItems implements ItemRegistryContainer {
     // TARDIS
     public static final Item TARDIS_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).fireproof().maxCount(1));
-
-    // Crafting items
-    public static final Item ZEITON_SHARD = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-
     public static final Item SIEGE_ITEM = new SiegeTardisItem(new OwoItemSettings().fireproof());
     // Functional Items
     public static final Item REMOTE_ITEM = new RemoteItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
@@ -40,6 +36,10 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item RENAISSANCE_SONIC_SCREWDRIVER = new SonicItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     @AssignedName("coral")
     public static final Item CORAL_SONIC_SCREWDRIVER = new SonicItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
+    // Crafting items
+    public static final Item ZEITON_SHARD = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item CHARGED_ZEITON_CRYSTAL = new ChargedZeitonCrystalItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(16));
 
     // Waypoint-related
     public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
