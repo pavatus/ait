@@ -2,6 +2,7 @@ package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.core.AITBlockEntityTypes;
+import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITEntityTypes;
 import mdteam.ait.core.entities.ConsoleControlEntity;
@@ -28,6 +29,7 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
@@ -38,6 +40,7 @@ import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -326,6 +329,15 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
+
+        if(!world.isClient()) return;
+        if(this.findTardis().isEmpty()) return;
+
+        ItemStack itemStack = player.getMainHandStack();
+        if(itemStack.getItem() == AITBlocks.ZEITON_CLUSTER.asItem()) {
+            this.findTardis().get().addFuel(15);
+            if(!player.isCreative()) itemStack.decrement(1);
+        }
 
     }
     @Override

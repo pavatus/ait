@@ -70,8 +70,8 @@ public class TardisCrashData extends TardisLink{
         ServerWorld exteriorWorld = (ServerWorld) exteriorPosition.getWorld();
         if(tardis.getDoor().isOpen() && this.getState() != State.NORMAL) {
             exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    exteriorPosition.toCenterPos().x + x, exteriorPosition.getY() + 2f,
-                    exteriorPosition.toCenterPos().z + z,
+                    exteriorPosition.toCenterPos().x, exteriorPosition.getY() + 2f,
+                    exteriorPosition.toCenterPos().z,
                     8,
                     0.05D, 0.05D, 0.05D, 0.01D
             );
@@ -79,11 +79,11 @@ public class TardisCrashData extends TardisLink{
         if (getState() != State.TOXIC) return;
         if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
         exteriorWorld.spawnParticles(new DustColorTransitionParticleEffect(
-                        new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 2),
-                exteriorPosition.toCenterPos().x + x, exteriorPosition.getY() + 2f,
-                exteriorPosition.toCenterPos().z + z,
+                        new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 3),
+                exteriorPosition.toCenterPos().x, exteriorPosition.getY() + 0.1f,
+                exteriorPosition.toCenterPos().z,
                 25,
-                0.05D, 0.05D, 0.05D, 0.08D
+                0.05D, 0.75D, 0.05D, 0.01D
         );
         if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
         if (!TardisUtil.isInteriorNotEmpty(tardis)) return;

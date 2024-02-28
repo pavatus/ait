@@ -57,7 +57,7 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
             if (stack.getItem() == AITBlocks.ZEITON_CLUSTER.asItem()) {
                 if(sneaking) {
                     this.setCurrentFuel(this.addFuel(15));
-                    player.getActiveItem().decrement(1);
+                    if(!player.isCreative()) stack.decrement(1);
                     return;
                 }
                 player.getInventory().setStack(player.getInventory().selectedSlot, new ItemStack(AITItems.CHARGED_ZEITON_CRYSTAL));

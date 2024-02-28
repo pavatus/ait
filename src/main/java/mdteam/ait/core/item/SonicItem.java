@@ -356,7 +356,15 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         SCANNING(Formatting.AQUA) {
             @Override
             public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
-                if (!(world.getRegistryKey() == World.OVERWORLD && !world.isClient())) return;
+
+                if(!world.isClient()) return;
+
+                if (world == TardisUtil.getTardisDimension() && tardis.getHandlers().getCrashData().isUnstable() || tardis.getHandlers().getCrashData().isToxic()) {
+                    player.sendMessage(Text.literal("Repair time: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.DARK_RED, Formatting.ITALIC), true);
+                    return;
+                }
+
+                if (!(world.getRegistryKey() == World.OVERWORLD)) return;
 
                 Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
                 Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);

@@ -96,7 +96,10 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
             return;
         }
 
-        if (player.getMainHandStack().getItem() instanceof SonicItem && !findTardis().get().isSiegeMode() && !findTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
+        if (player.getMainHandStack().getItem() instanceof SonicItem &&
+                !findTardis().get().isSiegeMode() &&
+                !findTardis().get().getHandlers().getInteriorChanger().isGenerating() &&
+                !findTardis().get().getDoor().isOpen() && findTardis().get().getHandlers().getCrashData().getRepairTicks() > 0) {
             ItemStack sonic = player.getMainHandStack();
             NbtCompound tag = sonic.getOrCreateNbt();
             if (!tag.contains("tardis")) {

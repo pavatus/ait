@@ -8,6 +8,7 @@ import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.core.util.AITConfig;
 import mdteam.ait.core.util.AITConfigModel;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.data.SonicHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -127,19 +128,11 @@ public class ControlEntityRenderer
     public static boolean isPlayerHoldingScanningSonic(ConsoleControlEntity entity) {
         if (entity.getWorld() == null || !entity.getWorld().isClient())
             return false;
-        PlayerEntity player = MinecraftClient.getInstance().player;
-        if (player != null) {
-            if (player.getOffHandStack().getItem() instanceof SonicItem) {
-                ItemStack sonic = player.getOffHandStack();
-                NbtCompound nbt = sonic.getOrCreateNbt();
-                return nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;
-            } else if (player.getMainHandStack().getItem() instanceof SonicItem) {
-                ItemStack sonic = player.getMainHandStack();
-                NbtCompound nbt = sonic.getOrCreateNbt();
-                return nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;
-            }
-        }
-        return false;
+        if(entity.getTardis() == null) return false;
+        if(entity.getTardis().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return false;
+        ItemStack sonic = entity.getTardis().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC);
+            NbtCompound nbt = sonic.getOrCreateNbt();
+            return nbt.contains(SonicItem.MODE_KEY) && nbt.getInt(SonicItem.MODE_KEY) == 3;
     }
 
     @Override

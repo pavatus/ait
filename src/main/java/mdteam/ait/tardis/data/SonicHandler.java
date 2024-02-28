@@ -130,7 +130,7 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 
             if (!isToxic && !isUnstable) return;
 
-            crash.setRepairTicks(repairTicks <= 0 ? 0 : repairTicks - 20);
+            crash.setRepairTicks(repairTicks <= 0 ? 0 : repairTicks - 5);
             tardis.getExterior().getExteriorPos().getWorld().playSound(null, tardis.getExterior().getExteriorPos(),
                     AITSounds.SONIC_USE, SoundCategory.BLOCKS, 0.5f, 1f);
             this.removeFuel(1, sonic);
