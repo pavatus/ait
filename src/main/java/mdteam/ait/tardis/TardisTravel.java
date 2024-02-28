@@ -11,6 +11,7 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.util.ForcedChunkUtil;
 import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.PosType;
+import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.data.TardisCrashData;
 import mdteam.ait.tardis.data.TardisLink;
 import mdteam.ait.tardis.util.FlightUtil;
@@ -108,7 +109,7 @@ public class TardisTravel extends TardisLink {
         boolean handbrake = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE);
         boolean autopilot = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND);
 
-        if (speed > 0 && state == State.LANDED && !handbrake) {
+        if (speed > 0 && state == State.LANDED && !handbrake && !tardis.getHandlers().getSonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
             this.dematerialise(autopilot);
         }
         if (speed == 0 && state == State.FLIGHT) {

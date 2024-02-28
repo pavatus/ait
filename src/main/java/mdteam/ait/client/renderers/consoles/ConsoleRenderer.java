@@ -6,6 +6,7 @@ import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
+import mdteam.ait.tardis.data.SonicHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.OverlayTexture;
@@ -54,14 +55,14 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
             if (entity.findTardis().get().hasPower())
                 console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(variant.emission(), true)), maxLight, overlay, 1, 1, 1, 1);        }
         matrices.pop();
-        if(!entity.findTardis().get().getHandlers().getSonic().hasSonic()) return;
+        if(!entity.findTardis().get().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return;
         matrices.push();
         matrices.translate(sonicItemTranslations(variant).x(), sonicItemTranslations(variant).y(), sonicItemTranslations(variant).z());
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(sonicItemRotations(variant)[0]));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(sonicItemRotations(variant)[1]));
         matrices.scale(0.9f, 0.9f, 0.9f);
         int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
-        ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get();
+        ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC);
         MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), 0);
         matrices.pop();
     }

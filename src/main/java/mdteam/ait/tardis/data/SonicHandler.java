@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.data;
 
 import mdteam.ait.api.tardis.ArtronHolderItem;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.core.item.WaypointItem;
 import mdteam.ait.tardis.Exclude;
@@ -8,32 +9,39 @@ import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.FlightUtil;
+import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.util.Waypoint;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class SonicHandler extends TardisLink implements ArtronHolderItem {
-    public static final String HAS_SONIC = "has_sonic";
-    private ItemStack current; // The current sonic in the slot
+    public static final String HAS_CONSOLE_SONIC = "has_console_sonic";
+    public static final String HAS_EXTERIOR_SONIC = "has_exterior_sonic";
+    private ItemStack console; // The current sonic in the console
+    private ItemStack exterior; // The current sonic in the exterior's keyhole (or any hole)
     public SonicHandler(Tardis tardis) {
         super(tardis, "sonic");
     }
 
-    public boolean hasSonic() {
+    public boolean hasSonic(String sonic) {
         if (this.findTardis().isEmpty()) return false;
-        return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), HAS_SONIC);
+        return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), sonic);
     }
-    public void markHasSonic() {
+    public void markHasSonic(String sonic) {
         if (this.findTardis().isEmpty()) return;
-        PropertiesHandler.set(this.findTardis().get(), HAS_SONIC, true);
+        PropertiesHandler.set(this.findTardis().get(), sonic, true);
     }
-    private void clearSonicMark() {
+    public void clearSonicMark(String sonic) {
         if (this.findTardis().isEmpty()) return;
-        PropertiesHandler.set(this.findTardis().get(), HAS_SONIC, false);
+        PropertiesHandler.set(this.findTardis().get(), sonic, false);
     }
 
     /**
@@ -41,44 +49,46 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
      * @param var
      * @return The optional of the previous sonic
      */
-    public Optional<ItemStack> set(ItemStack var, boolean spawnItem) {
-        Optional<ItemStack> prev = Optional.ofNullable(this.current);
-        // System.out.println(var);
-        // System.out.println(this.current);
-        this.current = var;
+    public Optional<ItemStack> set(ItemStack var, boolean spawnItem, String sonic) {
+        Optional<ItemStack> prev = Optional.ofNullable(this.get(sonic));
+        if(Objects.equals(sonic, HAS_CONSOLE_SONIC)) {
+            this.console = var;
+        } else {
+            this.exterior = var;
+        }
 
         if (spawnItem && prev.isPresent()) {
-            this.spawnItem(prev.get());
+            this.spawnItem(prev.get(), sonic);
         }
 
         return prev;
     }
 
-    public ItemStack get() {
-        return this.current;
+    public ItemStack get(String sonic) {
+        return Objects.equals(sonic, HAS_CONSOLE_SONIC) ? this.console : this.exterior;
     }
-    public boolean isSonicNull() {
-        return this.current == null;
+    public boolean isSonicNull(String sonic) {
+        return Objects.equals(sonic, HAS_CONSOLE_SONIC) ? this.console == null : this.exterior == null;
     }
-    public void clear(boolean spawnItem) {
-        this.set(null, spawnItem);
+    public void clear(boolean spawnItem, String sonic) {
+        this.set(null, spawnItem, sonic);
     }
-    public void spawnItem() {
-        if (this.isSonicNull()) return;
+    public void spawnItem(String sonic) {
+        if (this.isSonicNull(sonic)) return;
 
-        spawnItem(this.get());
-        this.clear(false);
+        spawnItem(this.get(sonic), sonic);
+        this.clear(false, sonic);
     }
 
-    public void spawnItem(ItemStack sonic) {
-        if (this.findTardis().isEmpty() || !this.hasSonic()) return;
+    public void spawnItem(ItemStack sonic, String sonicWhere) {
+        if (this.findTardis().isEmpty() || !this.hasSonic(sonicWhere)) return;
 
         Tardis tardis = this.findTardis().get();
 
-        if (tardis.getDesktop().findCurrentConsole().isEmpty()) return;
+        if (Objects.equals(sonicWhere, HAS_CONSOLE_SONIC) && tardis.getDesktop().findCurrentConsole().isEmpty()) return;
 
-        spawnItem(sonic, tardis.getDesktop().findCurrentConsole().get().position());
-        this.clearSonicMark();
+        spawnItem(sonic, Objects.equals(sonicWhere, HAS_CONSOLE_SONIC) ? tardis.getDesktop().findCurrentConsole().get().position() : tardis.getExterior().getExteriorPos());
+        this.clearSonicMark(sonicWhere);
     }
     public static ItemEntity spawnItem(ItemStack sonic, AbsoluteBlockPos pos) {
         ItemEntity entity = new ItemEntity(pos.getWorld(), pos.getX(), pos.getY(), pos.getZ(), sonic);
@@ -95,18 +105,35 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
     public void tick(MinecraftServer server) {
         super.tick(server);
 
-        if (!this.hasSonic()) return;
+        if(this.findTardis().isEmpty()) return;
 
-        ItemStack sonic = this.get();
+        if (this.hasSonic(HAS_CONSOLE_SONIC)) {
+            ItemStack sonic = this.get(HAS_CONSOLE_SONIC);
+            if (this.hasMaxFuel(sonic)) return;
+            // Safe to get as ^ that method runs the check for us
+            ServerTardis tardis = (ServerTardis) this.findTardis().get();
+            if (!tardis.hasPower()) return;
+            this.addFuel(1, sonic);
+            tardis.getHandlers().getFuel().removeFuel(1);
+        }
+        if (this.hasSonic(HAS_EXTERIOR_SONIC)) {
+            ItemStack sonic = this.get(HAS_EXTERIOR_SONIC);
+            ServerTardis tardis = (ServerTardis) this.findTardis().get();
+            if (tardis.getHandlers().getCrashData().getRepairTicks() <= 0) {
+                this.spawnItem(this.get(HAS_EXTERIOR_SONIC), HAS_EXTERIOR_SONIC);
+                return;
+            }
+            TardisCrashData crash = tardis.getHandlers().getCrashData();
+            boolean isToxic = crash.isToxic();
+            boolean isUnstable = crash.isUnstable();
+            int repairTicks = crash.getRepairTicks();
 
-        if (this.hasMaxFuel(sonic)) return;
+            if (!isToxic && !isUnstable) return;
 
-        // Safe to get as ^ that method runs the check for us
-        ServerTardis tardis = (ServerTardis) this.findTardis().get();
-
-        if (!tardis.hasPower()) return;
-
-        this.addFuel(1, sonic);
-        tardis.getHandlers().getFuel().removeFuel(1);
+            crash.setRepairTicks(repairTicks <= 0 ? 0 : repairTicks - 20);
+            tardis.getExterior().getExteriorPos().getWorld().playSound(null, tardis.getExterior().getExteriorPos(),
+                    AITSounds.SONIC_USE, SoundCategory.BLOCKS, 0.5f, 1f);
+            this.removeFuel(1, sonic);
+        }
     }
 }

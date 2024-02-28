@@ -24,11 +24,11 @@ public class SonicPortControl extends Control { // TODO - implement onto console
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick, TardisConsole console) {
         SonicHandler handler = tardis.getHandlers().getSonic();
-        boolean hasSonic = handler.hasSonic();
+        boolean hasSonic = handler.hasSonic(SonicHandler.HAS_CONSOLE_SONIC);
         boolean shouldEject = leftClick || player.isSneaking();
 
         if (hasSonic && shouldEject) {
-            handler.spawnItem();
+            handler.spawnItem(SonicHandler.HAS_CONSOLE_SONIC);
             return true;
         }
 
@@ -48,8 +48,8 @@ public class SonicPortControl extends Control { // TODO - implement onto console
 
         if (!(stack.getItem() instanceof SonicItem)) return false;
 
-        handler.set(stack, true);
-        handler.markHasSonic();
+        handler.set(stack, true, SonicHandler.HAS_CONSOLE_SONIC);
+        handler.markHasSonic(SonicHandler.HAS_CONSOLE_SONIC);
         player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
         FlightUtil.playSoundAtConsole(tardis, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);

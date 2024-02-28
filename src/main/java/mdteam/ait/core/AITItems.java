@@ -2,10 +2,11 @@ package mdteam.ait.core;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.annotations.AssignedName;
-import io.wispforest.owo.registration.annotations.IterationIgnored;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.item.*;
+import mdteam.ait.core.item.WearableItem;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.util.Rarity;
@@ -23,6 +24,7 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item ARTRON_COLLECTOR = new ArtronCollectorItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item RIFT_SCANNER = new RiftScannerItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item HAMMER = new HammerItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(5000));
+    public static final Item RESPIRATOR = new WearableItem(EquipmentSlot.HEAD, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
     // Keys/Key Templates
     public static final Item IRON_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item GOLD_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SNAP);

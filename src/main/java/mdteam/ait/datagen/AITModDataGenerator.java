@@ -257,6 +257,19 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
                     .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE)));
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RESPIRATOR, 1)
+                    .pattern("NNN")
+                    .pattern("SPS")
+                    .pattern("WNW")
+                    .input('N', Items.IRON_NUGGET)
+                    .input('S', Items.STRING)
+                    .input('P', Items.GLASS_PANE)
+                    .input('W', Items.PINK_WOOL)
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.IRON_NUGGET))
+                    .criterion(FabricRecipeProvider.hasItem(Items.STRING), FabricRecipeProvider.conditionsFromItem(Items.STRING))
+                    .criterion(FabricRecipeProvider.hasItem(Items.GLASS_PANE), FabricRecipeProvider.conditionsFromItem(Items.GLASS_PANE))
+                    .criterion(FabricRecipeProvider.hasItem(Items.PINK_WOOL), FabricRecipeProvider.conditionsFromItem(Items.PINK_WOOL)));
+
             /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.CONSOLE_ROOM_PORT_BLOCK, 1)
                     .pattern("III")
                     .pattern("ICI")
@@ -481,6 +494,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.MEDIUM_ZEITON_BUD, "Medium Zeiton Bud");
         provider.addTranslation(AITBlocks.SMALL_ZEITON_BUD, "Small Zeiton Bud");
         provider.addTranslation(AITItems.ZEITON_SHARD, "Zeiton Shard");
+        provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");

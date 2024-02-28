@@ -10,6 +10,7 @@ import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -115,7 +116,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             }
         }
         matrices.pop();
-        if(!entity.findTardis().get().getHandlers().getSonic().hasSonic()) return;
+        if(!entity.findTardis().get().getHandlers().getSonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) return;
+        ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get(SonicHandler.HAS_EXTERIOR_SONIC);
+        if(stack == null) return;
         matrices.push();
         //matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + sonicItemRotations(exteriorVariant)[0]));
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + exteriorVariant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());
@@ -123,7 +126,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(exteriorVariant.sonicItemRotations()[1]));
         matrices.scale(0.9f, 0.9f, 0.9f);
         int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
-        ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get();
         MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), 0);
         matrices.pop();
     }

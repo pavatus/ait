@@ -29,6 +29,7 @@ import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import org.joml.Vector3f;
 
 public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteriorVariantSchema> {
     private static ClientExteriorVariantRegistry INSTANCE;
@@ -100,6 +101,11 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
             @Override
             public ExteriorModel model() {
                 return getInstance().get(variant.getParentId()).model();
+            }
+
+            @Override
+            public Vector3f sonicItemTranslations() {
+                return new Vector3f(0.5f, 1.2f, 1.2f);
             }
         };
     }

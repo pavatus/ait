@@ -16,6 +16,8 @@
     "client.TitleScreenMixin",
     "client.rendering.BGRendererMixin",
     "client.rendering.GameRendererMixin",
+    "client.rendering.HeadFeatureRendererMixin",
+    "client.rendering.PlayerEntityRendererMixin",
     "client.rendering.PlayerPoseRendererMixin",
     "client.rendering.SkyboxMixin",
     "client.rendering.WindowMixin"

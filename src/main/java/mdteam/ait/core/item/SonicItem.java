@@ -144,24 +144,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         // todo fix issues with this
         if (mode == Mode.OVERLOAD) { // fixme should be in "run" in Overload mode
-            if (!hasTardis) return false;
-
-            TardisCrashData crash = tardis.getHandlers().getCrashData();
-            boolean isToxic = crash.isToxic();
-            boolean isUnstable = crash.isUnstable();
-            int repairTicks = crash.getRepairTicks();
-
-            if (!isToxic && !isUnstable) return false;
-
-            if (tardis.getDoor().isClosed()) {
-                user.sendMessage(Text.literal("Doors need to be open for repair!").formatted(Formatting.RED), true);
-                return true;
-            }
-
-            if (world != TardisUtil.getTardisDimension()) return false;
-
-            crash.setRepairTicks(repairTicks <= 0 ? 0 : repairTicks - 20);
-            user.sendMessage(Text.literal("Repairing: " + crash.getRepairTicks()).formatted(Formatting.GOLD), true);
             return true;
         }
 

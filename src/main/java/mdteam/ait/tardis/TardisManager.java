@@ -28,7 +28,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import org.jglrxavpok.hephaistos.json.NBTGsonReader;
 
 import java.util.HashMap;
 import java.util.Map;

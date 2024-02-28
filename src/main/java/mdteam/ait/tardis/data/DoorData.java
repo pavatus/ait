@@ -260,7 +260,7 @@ public class DoorData extends TardisLink {
             return false;
         }
 
-        if (tardis.getLockedTardis()) {
+        if (tardis.getLockedTardis() || tardis.getHandlers().getSonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
             //if (pos != null)
                 //world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
             if (player != null && pos != null) {

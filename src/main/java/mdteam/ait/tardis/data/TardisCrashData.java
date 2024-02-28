@@ -1,6 +1,7 @@
 package mdteam.ait.tardis.data;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.util.DeltaTimeManager;
 import mdteam.ait.core.util.TimeUtil;
@@ -10,6 +11,7 @@ import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
@@ -48,9 +50,9 @@ public class TardisCrashData extends TardisLink{
         if (getRepairTicks() > 0) {
             setRepairTicks(this.findTardis().get().isRefueling() ? getRepairTicks() - 10 : getRepairTicks() - 1);
         }
-        if (getRepairTicks() == 0 && State.NORMAL == getState()) return;
+        if (getRepairTicks() <= 0 && State.NORMAL == getState()) return;
         ServerTardis tardis = (ServerTardis) this.findTardis().get();
-        if (getRepairTicks() == 0) {
+        if (getRepairTicks() <= 0) {
             setState(State.NORMAL);
             tardis.getHandlers().getAlarms().disable();
             return;
@@ -68,8 +70,8 @@ public class TardisCrashData extends TardisLink{
             double x = directionToInteger(exteriorPosition.getDirection())[0];
             double z = directionToInteger(exteriorPosition.getDirection())[1];
             exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    exteriorPosition.getX() + x, exteriorPosition.getY() + 2f,
-                    exteriorPosition.getZ() + z,
+                    exteriorPosition.toCenterPos().x, exteriorPosition.getY() + 2f,
+                    exteriorPosition.toCenterPos().y,
                     8,
                     0.05D, 0.05D, 0.05D, 0.01D
             );
@@ -85,6 +87,7 @@ public class TardisCrashData extends TardisLink{
         if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
         if (!TardisUtil.isInteriorNotEmpty(tardis)) return;
         for (ServerPlayerEntity serverPlayerEntity : TardisUtil.getPlayersInInterior(tardis)) {
+            if(serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.RESPIRATOR) continue;
             serverPlayerEntity.playSound(AITSounds.CLOISTER, 1f, 1f);
             serverPlayerEntity.damage(exteriorWorld.getDamageSources().magic(), 3f);
             //TODO this messes with people and specifically me so im gonna remove it for now serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 5, true, false, false));

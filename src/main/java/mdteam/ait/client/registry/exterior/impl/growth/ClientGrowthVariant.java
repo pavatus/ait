@@ -8,6 +8,7 @@ import mdteam.ait.client.models.exteriors.TardimExteriorModel;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.coral.CoralRenderer;
 import net.minecraft.util.Identifier;
+import org.joml.Vector3f;
 
 public class ClientGrowthVariant extends ClientExteriorVariantSchema {
     public ClientGrowthVariant() {
@@ -27,5 +28,10 @@ public class ClientGrowthVariant extends ClientExteriorVariantSchema {
     @Override
     public Identifier emission() {
         return null;
+    }
+
+    @Override
+    public Vector3f sonicItemTranslations() {
+        return new Vector3f(0, 0, 0);
     }
 }

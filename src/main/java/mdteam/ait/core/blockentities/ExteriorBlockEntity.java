@@ -1,15 +1,18 @@
 package mdteam.ait.core.blockentities;
 
+import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.compat.DependencyChecker;
 import mdteam.ait.core.AITBlockEntityTypes;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.registry.CategoryRegistry;
+import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.exterior.category.CapsuleCategory;
 import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
+import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.*;
@@ -25,14 +28,18 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,7 +65,11 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
         if (this.findTardis().get().isGrowth())
             return;
 
-        if (player.getMainHandStack().getItem() instanceof KeyItem && !findTardis().get().isSiegeMode() && !findTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
+        SonicHandler handler = this.findTardis().get().getHandlers().getSonic();
+        boolean hasSonic = handler.hasSonic(SonicHandler.HAS_EXTERIOR_SONIC);
+        boolean shouldEject = player.isSneaking();
+
+        if (player.getMainHandStack().getItem() instanceof KeyItem && !findTardis().get().isSiegeMode() && !findTardis().get().getHandlers().getInteriorChanger().isGenerating() && this.findTardis().get().getHandlers().getCrashData().getRepairTicks() > 0) {
             ItemStack key = player.getMainHandStack();
             NbtCompound tag = key.getOrCreateNbt();
             if (!tag.contains("tardis")) {
@@ -73,12 +84,47 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
             return;
         }
 
+        if (hasSonic) {
+            if(shouldEject) {
+                player.giveItemStack(handler.get(SonicHandler.HAS_EXTERIOR_SONIC));
+                handler.clear(false, SonicHandler.HAS_EXTERIOR_SONIC);
+                handler.clearSonicMark(SonicHandler.HAS_EXTERIOR_SONIC);
+                world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                return;
+            }
+            player.sendMessage(Text.literal("Repairing: " + this.findTardis().get().getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.BOLD, Formatting.GOLD), true);
+            return;
+        }
+
+        if (player.getMainHandStack().getItem() instanceof SonicItem && !findTardis().get().isSiegeMode() && !findTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
+            ItemStack sonic = player.getMainHandStack();
+            NbtCompound tag = sonic.getOrCreateNbt();
+            if (!tag.contains("tardis")) {
+                return;
+            }
+            if (Objects.equals(this.findTardis().get().getUuid().toString(), tag.getString("tardis"))) {
+
+                ItemStack stack = player.getMainHandStack();
+
+                if (!(stack.getItem() instanceof SonicItem)) return;
+
+                handler.set(stack, true, SonicHandler.HAS_EXTERIOR_SONIC);
+                handler.markHasSonic(SonicHandler.HAS_EXTERIOR_SONIC);
+                player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+                world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1F, 0.2F);
+            } else {
+                world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                player.sendMessage(Text.literal("Unable to repair TARDIS with current tool!"), true);
+            }
+            return;
+        }
+
         if (sneaking && findTardis().get().isSiegeMode() && !findTardis().get().isSiegeBeingHeld()) {
             SiegeTardisItem.pickupTardis(findTardis().get(), (ServerPlayerEntity) player);
             return;
         }
 
-        if(findTardis().get().getTravel().getState() == LANDED || findTardis().get().getTravel().getState() == CRASH) {
+        if((findTardis().get().getTravel().getState() == LANDED || findTardis().get().getTravel().getState() == CRASH)) {
             DoorData.useDoor(this.findTardis().get(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
         }
     }

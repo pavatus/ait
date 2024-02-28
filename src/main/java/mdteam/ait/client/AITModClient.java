@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import mdteam.ait.client.renderers.machines.ArtronCollectorRenderer;
 import mdteam.ait.client.renderers.monitors.MonitorRenderer;
+import mdteam.ait.client.renderers.wearables.RespiratorHudOverlay;
 import mdteam.ait.client.screens.TardisSecurityScreen;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
@@ -41,6 +42,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
@@ -82,6 +84,8 @@ public class AITModClient implements ClientModInitializer {
         riftScannerPredicate();
         waypointPredicate();
         setKeyBinding();
+
+        HudRenderCallback.EVENT.register(new RespiratorHudOverlay());
 
         ClientExteriorVariantRegistry.getInstance().init();
         ClientConsoleVariantRegistry.getInstance().init();
