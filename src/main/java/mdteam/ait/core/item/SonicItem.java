@@ -346,18 +346,17 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 				if (!world.isClient()) return;
 
-				if (world == TardisUtil.getTardisDimension() && tardis.getHandlers().getCrashData().isUnstable() || tardis.getHandlers().getCrashData().isToxic()) {
-					player.sendMessage(Text.literal("Repair time: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.DARK_RED, Formatting.ITALIC), true);
-					return;
+				if ((world.getRegistryKey() == World.OVERWORLD)) {
+					Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
+					Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
+					player.sendMessage((RiftChunkManager.isRiftChunk(pos) ? found : notfound), true);
+					if (RiftChunkManager.isRiftChunk(pos))
+						player.sendMessage(Text.literal("AU: " + (RiftChunkManager.getArtronLevels(world, pos))).formatted(Formatting.GOLD));
 				}
 
-				if (!(world.getRegistryKey() == World.OVERWORLD)) return;
-
-				Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
-				Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
-				player.sendMessage((RiftChunkManager.isRiftChunk(pos) ? found : notfound), true);
-				if (RiftChunkManager.isRiftChunk(pos))
-					player.sendMessage(Text.literal("AU: " + (RiftChunkManager.getArtronLevels(world, pos))).formatted(Formatting.GOLD));
+				if (world == TardisUtil.getTardisDimension() && tardis.getHandlers().getCrashData().isUnstable() || tardis.getHandlers().getCrashData().isToxic()) {
+					player.sendMessage(Text.literal("Repair time: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.DARK_RED, Formatting.ITALIC), true);
+				}
 			}
 		},
 		TARDIS(Formatting.BLUE) {
