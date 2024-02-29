@@ -5,8 +5,7 @@ import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import mdteam.ait.client.renderers.decoration.PlaqueRenderer;
 import mdteam.ait.client.renderers.machines.ArtronCollectorRenderer;
 import mdteam.ait.client.renderers.monitors.MonitorRenderer;
-import mdteam.ait.client.renderers.wearables.RespiratorHudOverlay;
-import mdteam.ait.client.screens.TardisSecurityScreen;
+import mdteam.ait.client.renderers.wearables.AITHudOverlay;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import mdteam.ait.core.item.*;
@@ -84,7 +83,7 @@ public class AITModClient implements ClientModInitializer {
         waypointPredicate();
         setKeyBinding();
 
-        HudRenderCallback.EVENT.register(new RespiratorHudOverlay());
+        HudRenderCallback.EVENT.register(new AITHudOverlay());
 
         ClientExteriorVariantRegistry.getInstance().init();
         ClientConsoleVariantRegistry.getInstance().init();

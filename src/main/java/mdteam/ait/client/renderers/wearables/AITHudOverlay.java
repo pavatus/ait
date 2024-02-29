@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
-public class RespiratorHudOverlay implements HudRenderCallback {
+public class AITHudOverlay implements HudRenderCallback {
 
 	@Override
 	public void onHudRender(DrawContext drawContext, float v) {
