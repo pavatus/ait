@@ -50,7 +50,7 @@ jobs:
           github-token: "${{secrets.GITHUB_TOKEN}}"
 
           github-generate-changelog: true
-          version-type: beta
+          version-type: release
 
           loaders: fabric
           java: "${{env.JAVA_VERSION}}"
