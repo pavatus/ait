@@ -1,0 +1,6 @@
+public VoxelShape makeShape(){
+	VoxelShape shape = VoxelShapes.empty();
+	shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.create(-0.25, 0, 0.4375, 1.25, 0.75, 0.5625);
+
+	return shape;
+}
