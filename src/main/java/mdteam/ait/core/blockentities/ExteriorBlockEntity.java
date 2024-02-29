@@ -67,7 +67,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 		boolean hasSonic = handler.hasSonic(SonicHandler.HAS_EXTERIOR_SONIC);
 		boolean shouldEject = player.isSneaking();
 
-		if (player.getMainHandStack().getItem() instanceof KeyItem && !findTardis().get().isSiegeMode() && !findTardis().get().getHandlers().getInteriorChanger().isGenerating() && this.findTardis().get().getHandlers().getCrashData().getRepairTicks() > 0) {
+		if (player.getMainHandStack().getItem() instanceof KeyItem && !findTardis().get().isSiegeMode() && !findTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
 			ItemStack key = player.getMainHandStack();
 			NbtCompound tag = key.getOrCreateNbt();
 			if (!tag.contains("tardis")) {

@@ -562,6 +562,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
         provider.addTranslation("tardis.exterior.sonic.repairing", "Repairing");
         provider.addTranslation("tardis.tool.cannot_repair", "Unable to repair TARDIS with current tool");
+        provider.addTranslation("tardis.key.identity_error", "TARDIS does not identify with key");
         //
         provider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
         provider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
