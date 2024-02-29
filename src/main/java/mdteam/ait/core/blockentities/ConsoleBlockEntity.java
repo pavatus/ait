@@ -1,11 +1,9 @@
 package mdteam.ait.core.blockentities;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.AITBlockEntityTypes;
-import mdteam.ait.core.AITBlocks;
-import mdteam.ait.core.AITDimensions;
-import mdteam.ait.core.AITEntityTypes;
+import mdteam.ait.core.*;
 import mdteam.ait.core.entities.ConsoleControlEntity;
+import mdteam.ait.core.item.ChargedZeitonCrystalItem;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.registry.ConsoleRegistry;
 import mdteam.ait.registry.ConsoleVariantRegistry;
@@ -341,6 +339,11 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		if (itemStack.getItem() == AITBlocks.ZEITON_CLUSTER.asItem()) {
 			this.findTardis().get().addFuel(15);
 			if (!player.isCreative()) itemStack.decrement(1);
+		} else if (itemStack.getItem() instanceof ChargedZeitonCrystalItem) {
+			NbtCompound nbt = itemStack.getOrCreateNbt();
+			if(!nbt.contains(ChargedZeitonCrystalItem.FUEL_KEY)) return;
+			this.findTardis().get().addFuel(nbt.getDouble(ChargedZeitonCrystalItem.FUEL_KEY));
+			nbt.putDouble(ChargedZeitonCrystalItem.FUEL_KEY, 0);
 		}
 
 	}

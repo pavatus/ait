@@ -43,7 +43,10 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
+import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.provider.number.LootNumberProvider;
+import net.minecraft.loot.provider.number.LootNumberProviderTypes;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -92,7 +95,7 @@ public class AITMod implements ModInitializer {
 		FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
 
-		LootTableEvents.MODIFY.register(((resourceManager, lootManager, id, tableBuilder, source) -> {
+		/*LootTableEvents.MODIFY.register(((resourceManager, lootManager, id, tableBuilder, source) -> {
 			List<Identifier> lootTableIds = List.of(LootTables.ABANDONED_MINESHAFT_CHEST, LootTables.ANCIENT_CITY_CHEST, LootTables.ANCIENT_CITY_ICE_BOX_CHEST, LootTables.DESERT_PYRAMID_CHEST, LootTables.SIMPLE_DUNGEON_CHEST, LootTables.CAT_MORNING_GIFT_GAMEPLAY, LootTables.IGLOO_CHEST_CHEST, LootTables.BASTION_BRIDGE_CHEST);
 			if (source.isBuiltin() && lootTableIds.contains(id)) {
 				LootPool.Builder poolBuilder = LootPool.builder()
@@ -100,7 +103,7 @@ public class AITMod implements ModInitializer {
 
 				tableBuilder.pool(poolBuilder);
 			}
-		}));
+		}));*/
 
 		TardisUtil.init();
 		TardisManager.getInstance();

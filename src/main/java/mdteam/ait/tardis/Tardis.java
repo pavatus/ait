@@ -4,8 +4,8 @@ import mdteam.ait.AITMod;
 import mdteam.ait.api.tardis.TardisEvents;
 import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.client.util.ClientTardisUtil;
-import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
+import mdteam.ait.core.item.ChargedZeitonCrystalItem;
 import mdteam.ait.core.item.TardisItemBuilder;
 import mdteam.ait.core.util.DeltaTimeManager;
 import mdteam.ait.core.util.TimeUtil;
@@ -24,7 +24,10 @@ import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -261,12 +264,12 @@ public class Tardis {
 		return this.getTravel().getDestination();
 	}
 
-	private void generateInteriorWithNetherStar() {
+	private void generateInteriorWithItem() {
 		TardisUtil.getEntitiesInInterior(this, 50)
 				.stream()
 				.filter(entity -> (entity instanceof ItemEntity) &&
 						(((ItemEntity) entity).getStack().getItem() == Items.NETHER_STAR ||
-								((ItemEntity) entity).getStack() == AITItems.CHARGED_ZEITON_CRYSTAL.getDefaultStack()) &&
+								isChargedCrystal(((ItemEntity) entity).getStack())) &&
 						entity.isTouchingWater()).forEach(entity -> {
 					if (this.getExterior().getExteriorPos() == null) return;
 					this.setFuelCount(8000);
@@ -278,6 +281,16 @@ public class Tardis {
 						entity.discard();
 					}
 				});
+	}
+
+	private boolean isChargedCrystal(ItemStack stack) {
+		if(stack.getItem() instanceof ChargedZeitonCrystalItem) {
+			NbtCompound nbt = stack.getOrCreateNbt();
+			if(nbt.contains(ChargedZeitonCrystalItem.FUEL_KEY)) {
+				return nbt.getDouble(ChargedZeitonCrystalItem.FUEL_KEY) >= ChargedZeitonCrystalItem.MAX_FUEL;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -309,7 +322,7 @@ public class Tardis {
             } else {
                 this.generateInteriorWithNetherStar();
             }*/
-			this.generateInteriorWithNetherStar();
+			this.generateInteriorWithItem();
 		}
 		if (isGrowth() && getDoor().isBothClosed() && !getHandlers().getInteriorChanger().isGenerating())
 			getDoor().openDoors();
