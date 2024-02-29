@@ -3,6 +3,7 @@ package mdteam.ait.client.renderers.wearables;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.wearables.RespiratorModel;
 import mdteam.ait.core.AITItems;
+import mdteam.ait.core.item.WearableArmorItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -24,6 +25,7 @@ public class RespiratorFeatureRenderer<T extends LivingEntity, M extends PlayerE
 		extends FeatureRenderer<T, M> {
 
 	private static final Identifier RESPIRATOR = new Identifier(AITMod.MOD_ID, "textures/entity/wearables/respirator.png");
+	private static final Identifier FACELESS_RESPIRATOR = new Identifier(AITMod.MOD_ID, "textures/entity/wearables/faceless_respirator.png");
 	private final RespiratorModel model;
 
 	public RespiratorFeatureRenderer(FeatureRendererContext<T, M> context, EntityModelLoader loader) {
@@ -33,16 +35,17 @@ public class RespiratorFeatureRenderer<T extends LivingEntity, M extends PlayerE
 
 	@Override
 	public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T livingEntity, float f, float g, float h, float j, float k, float l) {
-		if (livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() != AITItems.RESPIRATOR) return;
+		if (livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() != AITItems.RESPIRATOR
+				|| livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() != AITItems.FACELESS_RESPIRATOR) return;
 
-		if (!(livingEntity instanceof AbstractClientPlayerEntity player)) return;
+		if (!(livingEntity instanceof AbstractClientPlayerEntity)) return;
 
 		matrixStack.push();
 
 		this.model.mask.copyTransform(this.getContextModel().head);
 		this.model.setAngles(livingEntity, f, g, j, k, l);
 
-		VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySmoothCutout(RESPIRATOR));
+		VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySmoothCutout(livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.RESPIRATOR ? RESPIRATOR : FACELESS_RESPIRATOR));
 		this.model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1f);
 
 		matrixStack.pop();

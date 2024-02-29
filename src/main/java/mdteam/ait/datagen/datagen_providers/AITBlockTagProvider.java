@@ -23,7 +23,9 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 				.add(AITBlocks.LARGE_ZEITON_BUD)
 				.add(AITBlocks.MEDIUM_ZEITON_BUD)
 				.add(AITBlocks.SMALL_ZEITON_BUD)
-				.add(AITBlocks.MONITOR_BLOCK);
+				.add(AITBlocks.MONITOR_BLOCK)
+				.add(AITBlocks.ARTRON_COLLECTOR_BLOCK)
+				.add(AITBlocks.CONSOLE_GENERATOR);
 
 		getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
 				.add(AITBlocks.ZEITON_BLOCK)

@@ -87,7 +87,7 @@ public class TardisCrashData extends TardisLink {
 		if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
 		if (!TardisUtil.isInteriorNotEmpty(tardis)) return;
 		for (ServerPlayerEntity serverPlayerEntity : TardisUtil.getPlayersInInterior(tardis)) {
-			if (serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.RESPIRATOR) continue;
+			if (serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.RESPIRATOR || serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.FACELESS_RESPIRATOR) continue;
 			serverPlayerEntity.playSound(AITSounds.CLOISTER, 1f, 1f);
 			serverPlayerEntity.damage(exteriorWorld.getDamageSources().magic(), 3f);
 			//TODO this messes with people and specifically me so im gonna remove it for now serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 5, true, false, false));

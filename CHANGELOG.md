@@ -1,4 +1,6 @@
-# 1.0.1 Official Release
-- Fixed translation for the key not identifying with a TARDIS
-- Fixed key not being able to be used on the exterior during non-repair
-- Fixed the respirator not acting like an armor item, and not shift+left-clicking into the headslot
+# 1.0.2 Official Release
+- Fixed block loot tables.
+- Made sonic linking more intuitive.
+- Made flight events happen faster.
+- Fixed bug where the budding zeiton block grew amethyst and not zeiton crystals.
+- Added faceless respirator.
