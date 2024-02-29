@@ -33,11 +33,13 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 	public void markHasSonic(String sonic) {
 		if (this.findTardis().isEmpty()) return;
 		PropertiesHandler.set(this.findTardis().get(), sonic, true);
+		this.sync();
 	}
 
 	public void clearSonicMark(String sonic) {
 		if (this.findTardis().isEmpty()) return;
 		PropertiesHandler.set(this.findTardis().get(), sonic, false);
+		this.sync();
 	}
 
 	/**
@@ -57,6 +59,8 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 		if (spawnItem && prev.isPresent()) {
 			this.spawnItem(prev.get(), sonic);
 		}
+
+		this.sync();
 
 		return prev;
 	}

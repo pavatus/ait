@@ -2,6 +2,7 @@ package mdteam.ait.tardis.wrapper.client;
 
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.data.DoorData;
+import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -20,6 +21,10 @@ public class ClientTardis extends Tardis {
 
 	public void setTravel(TardisTravel travel) {
 		this.travel = travel;
+	}
+
+	public void setSonic(SonicHandler sonicHandler) {
+		this.handlers.setSonic(sonicHandler);
 	}
 
 	public void setExterior(TardisExterior exterior) {

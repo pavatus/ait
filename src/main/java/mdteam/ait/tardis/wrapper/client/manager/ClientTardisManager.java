@@ -10,6 +10,7 @@ import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.tardis.*;
 import mdteam.ait.tardis.data.DoorData;
+import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.SerialDimension;
@@ -105,6 +106,8 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 					tardis.setExterior(ClientTardisManager.getInstance().gson.fromJson(json, TardisExterior.class));
 			case "travel" ->
 					tardis.setTravel(ClientTardisManager.getInstance().gson.fromJson(json, TardisTravel.class));
+			case "sonic" ->
+					tardis.setSonic(ClientTardisManager.getInstance().gson.fromJson(json, SonicHandler.class));
 		}
 	}
 

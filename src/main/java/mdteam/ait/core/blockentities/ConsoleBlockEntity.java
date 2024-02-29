@@ -445,16 +445,28 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 		this.findParent().ifPresent(parent -> parent.tickConsole(this));
 
-		if (this.findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
-			SequenceHandler handler = this.findTardis().get().getHandlers().getSequenceHandler();
-			if (handler.getActiveSequence() == null) return;
-			List<Control> sequence = handler.getActiveSequence().getControls();
-			for (ConsoleControlEntity entity : this.controlEntities) {
-				entity.partOfSequence(sequence.contains(entity.getControl()));
-				if (sequence.contains(entity.getControl())) {
-					entity.setSequenced(handler.doesControlIndexMatch(entity.getControl()));
-					entity.setSequenceColor(sequence.indexOf(entity.getControl()));
-				}
+		SequenceHandler handler = this.findTardis().get().getHandlers().getSequenceHandler();
+
+		if(this.findTardis().get().getTravel().inFlight() || this.findTardis().get().getTravel().isMaterialising()) {
+			if (handler.hasActiveSequence() && handler.getActiveSequence() != null) {
+				System.out.println("yes active sequence yum" + handler.getActiveSequence());
+				List<Control> sequence = handler.getActiveSequence().getControls();
+
+				// Convert the sequence to a Set for efficient lookups
+				Set<Control> sequenceSet = new HashSet<>(sequence);
+
+				// Iterate only through entities whose controls are in the sequenceSet
+				this.controlEntities/*.stream() // Convert to a stream for easy filtering
+						.filter(entity -> sequenceSet.contains(entity.getControl())) // Filter entities with controls in the sequence*/
+						.forEach(entity -> {
+							// Since we're here, the entity's control is part of the sequence
+							Control control = entity.getControl();
+							entity.setPartOfSequence(sequenceSet.contains(control));
+							entity.setWasSequenced(handler.doesControlIndexMatch(control));
+							entity.setSequenceColor(sequence.indexOf(control)); // Note: This still incurs O(n), consider optimization if needed
+						});
+			} else {
+				this.controlEntities.forEach(entity -> entity.setPartOfSequence(false));
 			}
 		}
 

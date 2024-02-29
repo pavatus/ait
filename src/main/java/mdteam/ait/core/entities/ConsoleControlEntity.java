@@ -51,7 +51,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	private static final TrackedData<Float> HEIGHT = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Vector3f> OFFSET = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
 	private static final TrackedData<Boolean> PART_OF_SEQUENCE = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-	private static final TrackedData<Integer> SEQUENCE_COLOR = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final TrackedData<Integer> SEQUENCE_COLOR = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.INTEGER); // <--->
 	private static final TrackedData<Boolean> WAS_SEQUENCED = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 	public ConsoleControlEntity(EntityType<? extends BaseControlEntity> entityType, World world) {
@@ -135,8 +135,16 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		return this.dataTracker.get(WAS_SEQUENCED);
 	}
 
-	public void setSequenced(boolean sequenced) {
+	public void setWasSequenced(boolean sequenced) {
 		this.dataTracker.set(WAS_SEQUENCED, sequenced);
+	}
+
+	public void setPartOfSequence(boolean partOfSequence) {
+		this.dataTracker.set(PART_OF_SEQUENCE, partOfSequence);
+	}
+
+	public boolean isPartOfSequence() {
+		return this.dataTracker.get(PART_OF_SEQUENCE);
 	}
 
 	public String createDelayId() {
@@ -173,8 +181,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt) {
 		super.readCustomDataFromNbt(nbt);
-		//if(this.controlTypes != null)
-		//    this.controlTypes = this.controlTypes.deserializeTypes(nbt);
 		var console = (NbtCompound) nbt.get("console");
 		if (console != null)
 			this.consoleBlockPos = NbtHelper.toBlockPos(console);
@@ -190,14 +196,14 @@ public class ConsoleControlEntity extends BaseControlEntity {
 			this.setOffset(new Vector3f(nbt.getFloat("offsetX"), nbt.getFloat("offsetY"), nbt.getFloat("offsetZ")));
 		}
 		if (nbt.contains("partOfSequence")) {
-			this.partOfSequence(nbt.getBoolean("partOfSequence"));
+			this.setPartOfSequence(nbt.getBoolean("partOfSequence"));
 		}
 		if (nbt.contains("sequenceColor")) {
 			this.setSequenceColor(nbt.getInt("sequenceColor"));
 		}
 
 		if (nbt.contains("wasSequenced")) {
-			this.setSequenced(nbt.getBoolean("wasSequenced"));
+			this.setWasSequenced(nbt.getBoolean("wasSequenced"));
 		}
 	}
 
@@ -321,30 +327,31 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		if (consoleType != null) {
 			this.setControlWidth(type.getScale().width);
 			this.setControlHeight(type.getScale().height);
-			this.setCustomName(Text.translatable(type.getControl().id)/*.fillStyle(Style.EMPTY.withColor(Formatting.GOLD).withBold(true))*/);
+			this.setCustomName(Text.translatable(type.getControl().id));
 		}
 	}
 
 	@Override
 	public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
 		this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
-		//this.dataTracker.set(PART_OF_SEQUENCE, this.getDataTracker().get(PART_OF_SEQUENCE));
-		//this.dataTracker.set(WAS_SEQUENCED, this.getDataTracker().get(WAS_SEQUENCED));
-		//this.dataTracker.set(SEQUENCE_COLOR, this.getDataTracker().get(SEQUENCE_COLOR));
 	}
 
 	@Override
 	public void onTrackedDataSet(TrackedData<?> data) {
+		if(PART_OF_SEQUENCE.equals(data)) {
+			if(this.getWorld().isClient()) {
+				this.setPartOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
+			}
+		} else if(SEQUENCE_COLOR.equals(data)) {
+			if(this.getWorld().isClient()) {
+				this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
+			}
+		} else if(WAS_SEQUENCED.equals(data)) {
+			if(this.getWorld().isClient()) {
+				this.setWasSequenced(this.getDataTracker().get(WAS_SEQUENCED));
+			}
+		}
 		super.onTrackedDataSet(data);
-		if (PART_OF_SEQUENCE.equals(data) && this.getWorld().isClient) {
-			this.partOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
-		}
-		if (WAS_SEQUENCED.equals(data) && this.getWorld().isClient) {
-			this.setSequenced(this.getDataTracker().get(WAS_SEQUENCED));
-		}
-		if (SEQUENCE_COLOR.equals(data) && this.getWorld().isClient) {
-			this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
-		}
 	}
 
 	@Override
@@ -425,16 +432,5 @@ public class ConsoleControlEntity extends BaseControlEntity {
 			if (this.control != null)
 				player.sendMessage(Text.literal("EntityDimensions.changing(" + this.getControlWidth() + ", " + this.getControlHeight() + "), new Vector3f(" + centered.getX() + "f, " + centered.getY() + "f, " + centered.getZ() + "f)),"));
 		}
-	}
-
-	public void partOfSequence(boolean partOfSequence) {
-		this.dataTracker.set(PART_OF_SEQUENCE, partOfSequence);
-	}
-
-	public boolean isPartOfSequence() {
-		if (this.getTardis() != null && this.getTardis().getHandlers().getSequenceHandler().hasActiveSequence())
-			return this.dataTracker.get(PART_OF_SEQUENCE);
-		else
-			return false;
 	}
 }

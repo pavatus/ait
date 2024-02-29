@@ -1,5 +1,7 @@
 package mdteam.ait.tardis.control.sequences;
 
+import mdteam.ait.client.renderers.entities.ControlEntityRenderer;
+import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.registry.SequenceRegistry;
 import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
@@ -58,7 +60,6 @@ public class SequenceHandler extends TardisLink {
 		this.activeSequence = sequence;
 		if (findTardis().isEmpty() || this.activeSequence == null) return;
 		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(findTardis().get()));
-		//sync();
 	}
 
 	public void triggerRandomSequence(boolean setTicksTo0) {

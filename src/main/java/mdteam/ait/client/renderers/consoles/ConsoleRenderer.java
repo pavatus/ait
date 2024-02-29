@@ -56,13 +56,14 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 		}
 		matrices.pop();
 		if (!entity.findTardis().get().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return;
+		ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC);
+		if(stack == null) return;
 		matrices.push();
 		matrices.translate(variant.sonicItemTranslations().x(), variant.sonicItemTranslations().y(), variant.sonicItemTranslations().z());
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(variant.sonicItemRotations()[0]));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(variant.sonicItemRotations()[1]));
 		matrices.scale(0.9f, 0.9f, 0.9f);
 		int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
-		ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC);
 		MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), 0);
 		matrices.pop();
 	}

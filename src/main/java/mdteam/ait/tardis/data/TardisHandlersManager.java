@@ -288,5 +288,9 @@ public class TardisHandlersManager extends TardisLink {
 		}
 		return this.sonic;
 	}
+
+	public void setSonic(SonicHandler sonicHandler) {
+		this.sonic = sonicHandler;
+	}
 	// public SequenceHandler getSequencing() {return this.sequence;}
 }

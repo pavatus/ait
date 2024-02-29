@@ -110,12 +110,11 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	}
 
 	private boolean useSonic(World world, PlayerEntity user, BlockPos pos, Hand hand, ItemStack stack) {
-		Tardis tardis = getTardis(stack);
-		boolean hasTardis = tardis != null;
-		NbtCompound nbt = stack.getOrCreateNbt();
 		Mode mode = findMode(stack);
 
 		if (world.isClient()) return true;
+
+		Tardis tardis = getTardis(stack);
 
 		if (this.isOutOfFuel(stack)) return false;
 

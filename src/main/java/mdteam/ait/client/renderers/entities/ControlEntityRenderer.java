@@ -5,6 +5,7 @@ import mdteam.ait.client.models.consoles.ControlModel;
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.tardis.data.SonicHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -104,6 +105,7 @@ public class ControlEntityRenderer
 				}
 			} else if (player.getOffHandStack().getItem() instanceof SonicItem) {
 				ItemStack sonic = player.getOffHandStack();
+				if(sonic == null) return false;
 				NbtCompound nbt = sonic.getOrCreateNbt();
 				if (hitResult.getType() == HitResult.Type.ENTITY) {
 					Entity hitEntity = ((EntityHitResult) hitResult).getEntity();
@@ -120,6 +122,7 @@ public class ControlEntityRenderer
 		if (entity.getTardis() == null) return false;
 		if (!entity.getTardis().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return false;
 		ItemStack sonic = entity.getTardis().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC);
+		if(sonic == null) return false;
 		NbtCompound nbt = sonic.getOrCreateNbt();
 		return nbt.contains(SonicItem.MODE_KEY) && (nbt.getInt(SonicItem.PREV_MODE_KEY) == 3 || nbt.getInt(SonicItem.MODE_KEY) == 3);
 	}
