@@ -2,6 +2,7 @@ package mdteam.ait.core.item;
 
 import mdteam.ait.api.tardis.ArtronHolderItem;
 import mdteam.ait.api.tardis.LinkableItem;
+import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.managers.RiftChunkManager;
@@ -128,6 +129,10 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		}
 
 		if (mode == Mode.INACTIVE) {
+			if(world.getBlockState(pos).getBlock() == AITBlocks.ZEITON_CLUSTER) {
+				this.addFuel(200, stack);
+				world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+			}
 			Mode prev = findPreviousMode(stack);
 			if (prev == Mode.INACTIVE) return false;
 
