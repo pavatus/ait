@@ -10,13 +10,16 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.render.*;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -25,7 +28,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 @Environment(value = EnvType.CLIENT)
@@ -43,6 +50,10 @@ public class ControlEntityRenderer
 	@Override
 	public void render(ConsoleControlEntity livingEntity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
 		super.render(livingEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
+
+		if (isPlayerHoldingScanningSonic()) {
+				renderOutline(livingEntity, matrixStack, vertexConsumerProvider);
+		}
 	}
 
 	@Override
@@ -89,6 +100,36 @@ public class ControlEntityRenderer
 				}
 			}
 		}
+	}
+
+	private static void renderOutline(LivingEntity entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers) {
+		VertexConsumer vertices = vertexConsumers.getBuffer(RenderLayer.LINES);
+
+		Box box = entity.getBoundingBox().offset(-entity.getX(), -entity.getY(), -entity.getZ());
+		WorldRenderer.drawBox(matrices, vertices, box, 1.0f, 1.0f, 1.0f, 1.0f);
+	}
+
+	private static boolean isPlayerHoldingScanningSonic() {
+		PlayerEntity player = MinecraftClient.getInstance().player;
+
+		if (player == null) return false;
+
+		boolean mainhand;
+
+		if (player.getMainHandStack().getItem() instanceof SonicItem) {
+			mainhand = true;
+		} else if (player.getOffHandStack().getItem() instanceof SonicItem) {
+			mainhand = false;
+		} else {
+			return false;
+		}
+
+		ItemStack stack = mainhand ? player.getMainHandStack() : player.getOffHandStack();
+
+		boolean current = SonicItem.findMode(stack) == SonicItem.Mode.SCANNING;
+		boolean prev = SonicItem.findPreviousMode(stack) == SonicItem.Mode.SCANNING;
+
+		return current || prev;
 	}
 
 	public static boolean isPlayerLookingAtControl(HitResult hitResult, ConsoleControlEntity entity) {

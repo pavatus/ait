@@ -215,7 +215,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		nbt.putInt(PREV_MODE_KEY, findModeInt(stack));
 	}
 
-	private static Mode findPreviousMode(ItemStack stack) {
+	public static Mode findPreviousMode(ItemStack stack) {
 		NbtCompound nbt = stack.getOrCreateNbt();
 
 		if (!nbt.contains(PREV_MODE_KEY)) setPreviousMode(stack);
@@ -234,7 +234,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	}
 
 	// ew
-	private static Mode findMode(ItemStack stack) {
+	public static Mode findMode(ItemStack stack) {
 		return intToMode(findModeInt(stack));
 	}
 
