@@ -21,8 +21,8 @@ public class GetInsideTardisCommand {
 	public static final SuggestionProvider<ServerCommandSource> TARDIS_SUGGESTION = (context, builder) -> CommandSource.suggestMatching(ServerTardisManager.getInstance().getLookup().keySet().stream().map(UUID::toString), builder);
 
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-		dispatcher.register(literal(AITMod.MOD_ID).then(literal("get").then(literal("tardis_id").requires(source -> source.hasPermissionLevel(2))
-				.executes(GetInsideTardisCommand::runCommand))));
+		dispatcher.register(literal(AITMod.MOD_ID).then(literal("tardis_id_from_interior").requires(source -> source.hasPermissionLevel(2))
+				.executes(GetInsideTardisCommand::runCommand)));
 	}
 
 	private static int runCommand(CommandContext<ServerCommandSource> context) {

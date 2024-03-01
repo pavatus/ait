@@ -77,6 +77,9 @@ public class PropertiesHandler { // todo move things out of properties
 
 		return holder.getData().get(key);
 	}
+	public static Object get(Tardis tardis, String key) {
+		return get(tardis.getHandlers().getProperties(), key);
+	}
 
 	public static TardisDesktopSchema getDesktop(PropertiesHolder holder, String key) {
 		if (!holder.getData().containsKey(key)) {

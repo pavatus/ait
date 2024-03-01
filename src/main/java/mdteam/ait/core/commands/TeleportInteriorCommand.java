@@ -28,11 +28,12 @@ public final class TeleportInteriorCommand {
 
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		dispatcher.register(literal(AITMod.MOD_ID)
-				.then(literal("interior").requires(source -> source.hasPermissionLevel(2))
+				.then(literal("teleport").requires(source -> source.hasPermissionLevel(2))
+						.then(literal("interior")
 						.then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-								.executes(TeleportInteriorCommand::runCommand)
-								.then(argument("players", EntityArgumentType.players())
-										.executes(TeleportInteriorCommand::runCommandWithPlayers))))
+							.executes(TeleportInteriorCommand::runCommand)
+						.then(argument("players", EntityArgumentType.players())
+								.executes(TeleportInteriorCommand::runCommandWithPlayers)))))
 		);
 	}
 
