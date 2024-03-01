@@ -98,7 +98,7 @@ public class SequenceRegistry {
 						if (!explosions.isEmpty()) {
 							player.damage(TardisUtil.getTardisDimension().getDamageSources().explosion(explosions.get(0)), 0);
 						} else {
-							player.damage(null, 0);
+							player.damage(TardisUtil.getTardisDimension().getDamageSources().generic(), 0);
 						}
 					}
 					//missedTardis.getTravel().crash();

@@ -24,6 +24,8 @@ import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.MinecraftServer;
@@ -37,6 +39,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -347,7 +350,7 @@ public class TardisTravel extends TardisLink {
 			if (!explosions.isEmpty()) {
 				player.damage(TardisUtil.getTardisDimension().getDamageSources().explosion(explosions.get(0)), damage_to_player);
 			} else {
-				player.damage(null, damage_to_player);
+				player.damage(TardisUtil.getTardisDimension().getDamageSources().generic(), damage_to_player);
 			}
 		}
 		tardis.setLockedTardis(true);
@@ -792,8 +795,11 @@ public class TardisTravel extends TardisLink {
 
 		if (Objects.equals(this.destination, pos)) return;
 
+		WorldBorder border = this.destination.getWorld().getWorldBorder();
 
-		this.destination = pos;
+		this.destination = border.contains(this.destination)
+						? pos : new AbsoluteBlockPos.Directed(border.clamp(pos.getX(), pos.getY(), pos.getZ()),
+						pos.getDimension(), pos.getDirection());
 		this.findTardis().get().getHandlers().getFlight().recalculate();
 
 		if (withChecks)

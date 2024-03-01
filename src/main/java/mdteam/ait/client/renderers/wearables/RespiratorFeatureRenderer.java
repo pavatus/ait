@@ -35,8 +35,7 @@ public class RespiratorFeatureRenderer<T extends LivingEntity, M extends PlayerE
 
 	@Override
 	public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T livingEntity, float f, float g, float h, float j, float k, float l) {
-		if (livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() != AITItems.RESPIRATOR
-				|| livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() != AITItems.FACELESS_RESPIRATOR) return;
+		if (!(livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof WearableArmorItem)) return;
 
 		if (!(livingEntity instanceof AbstractClientPlayerEntity)) return;
 
