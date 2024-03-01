@@ -600,6 +600,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
         provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
+        provider.addTranslation("command.ait.riftchunk.cannotsetlevel", "This chunk is not a rift chunk, so you can't set the artron levels of it");
+        provider.addTranslation("command.ait.riftchunk.setlevel", "Set artron levels in rift chunk to: ");
+        provider.addTranslation("command.ait.riftchunk.cannotgetlevel", "This chunk is not a rift chunk, so you can't get the artron levels of it");
+        provider.addTranslation("command.ait.riftchunk.getlevel", "AU in rift chunk: ");
         provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
         provider.addTranslation("waypoint.position.tooltip", "Position");
         provider.addTranslation("waypoint.dimension.tooltip", "Dimension");

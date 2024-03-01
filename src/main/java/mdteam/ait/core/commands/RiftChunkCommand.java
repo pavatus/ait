@@ -18,16 +18,16 @@ public class RiftChunkCommand {
 
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		dispatcher.register(literal(AITMod.MOD_ID)
-				.then(literal("rift-chunk").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-						.then(literal("is-rift-chunk").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+				.then(literal("rift_chunk").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+						.then(literal("is_rift_chunk").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
 								.then(argument("position", BlockPosArgumentType.blockPos())
 										.executes(RiftChunkCommand::runIsRiftChunkCommand)))
-						.then(literal("get-artron-levels").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+						.then(literal("get_artron_levels").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
 								.then(argument("position", BlockPosArgumentType.blockPos())
 										.executes(RiftChunkCommand::runGetArtronLevels)))
-						.then(literal("set-artron-levels").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+						.then(literal("set_artron_levels").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
 								.then(argument("position", BlockPosArgumentType.blockPos())
-										.then(argument("artron-levels", IntegerArgumentType.integer())
+										.then(argument("artron_levels", IntegerArgumentType.integer())
 												.executes(RiftChunkCommand::runSetArtronLevels)
 										)))));
 	}
@@ -37,9 +37,9 @@ public class RiftChunkCommand {
 		ServerPlayerEntity source = context.getSource().getPlayer();
 		if (source == null) return 0;
 		boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
-		Text is_a_rift_chunk = Text.translatable("command.ait.riftchunk.isariftchunk");
-		Text not_a_rift_chunk = Text.translatable("command.ait.riftchunk.notariftchunk");
-		source.sendMessage((isARiftChunk ? is_a_rift_chunk : not_a_rift_chunk));
+		Text isriftchunk = Text.translatable("message.ait.sonic.riftfound");
+		Text notriftchunk = Text.translatable("message.ait.sonic.riftnotfound");
+		source.sendMessage((isARiftChunk ? isriftchunk : notriftchunk));
 
 		return 1;
 	}
@@ -50,12 +50,9 @@ public class RiftChunkCommand {
 		if (source == null) return 0;
 		boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
 		Text message;
-		if (!isARiftChunk) {
-			message = Text.translatable("riftchunk.cannotsetlevel"); //This chunk is not a rift chunk, so you can't set the artron levels of it
-		} else {
-			message = Text.translatable("riftchunk.getlevel").append(Text.literal(": " + RiftChunkManager.getArtronLevels(source.getWorld(), targetBlockPos)));
-			// The artron levels in this chunk are
-		}
+		message = !isARiftChunk ? Text.translatable("command.ait.riftchunk.cannotgetlevel") :
+				Text.translatable("command.ait.riftchunk.getlevel")
+						.append(Text.literal(": " + RiftChunkManager.getArtronLevels(source.getWorld(), targetBlockPos)));
 		source.sendMessage(message);
 
 		return 1;
@@ -68,11 +65,11 @@ public class RiftChunkCommand {
 		boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
 		Text message;
 		if (!isARiftChunk) {
-			message = Text.translatable("riftchunk.cannotsetlevel"); // This chunk is not a rift chunk, so you can't get the artron levels of it
+			message = Text.translatable("command.ait.riftchunk.cannotsetlevel"); // This chunk is not a rift chunk, so you can't get the artron levels of it
 		} else {
 			Integer artron_levels = IntegerArgumentType.getInteger(context, "artron-levels");
 			RiftChunkManager.setArtronLevels(source.getServerWorld(), targetBlockPos, artron_levels);
-			message = Text.translatable("riftchunk.setlevel").append(Text.literal(": " + artron_levels));
+			message = Text.translatable("command.ait.riftchunk.setlevel").append(Text.literal(": " + artron_levels));
 		}
 		source.sendMessage(message);
 

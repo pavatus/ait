@@ -349,15 +349,13 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		SCANNING(Formatting.AQUA) {
 			@Override
 			public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
-
-				if (!world.isClient()) return;
-
 				if ((world.getRegistryKey() == World.OVERWORLD)) {
 					Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
 					Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
 					player.sendMessage((RiftChunkManager.isRiftChunk(pos) ? found : notfound), true);
 					if (RiftChunkManager.isRiftChunk(pos))
 						player.sendMessage(Text.literal("AU: " + (RiftChunkManager.getArtronLevels(world, pos))).formatted(Formatting.GOLD));
+					return;
 				}
 
 				if (world == TardisUtil.getTardisDimension() && tardis.getHandlers().getCrashData().isUnstable() || tardis.getHandlers().getCrashData().isToxic()) {
@@ -403,7 +401,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 			}
 		};
 
-		public Formatting format;
+		public final Formatting format;
 
 		Mode(Formatting format) {
 			this.format = format;
