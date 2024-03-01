@@ -25,7 +25,7 @@ public class HailMaryControl extends Control {
 
 		PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HAIL_MARY));
 		tardis.removeFuel(50 * (tardis.tardisHammerAnnoyance + 1));
-		messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HAIL_MARY));
+		// messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HAIL_MARY));
 
 		return true;
 	}

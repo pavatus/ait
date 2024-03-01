@@ -40,7 +40,7 @@ public class HandBrakeControl extends Control {
 
 		this.soundEvent = handbrake ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
 
-		messagePlayer(player, handbrake);
+		// messagePlayer(player, handbrake);
 
 		boolean autopilot = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND);
 		TardisTravel travel = tardis.getTravel();

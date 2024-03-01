@@ -33,7 +33,7 @@ public class RefuelerControl extends Control {
 			tardis.setRefueling(!tardis.isRefueling());
 			Text enabled = Text.translatable("tardis.message.control.refueler.enabled");
 			Text disabled = Text.translatable("tardis.message.control.refueler.disabled");
-			player.sendMessage((tardis.isRefueling() ? enabled : disabled), true);
+			// player.sendMessage((tardis.isRefueling() ? enabled : disabled), true);
 			if (tardis.isRefueling()) {
 				FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_CANDLE_EXTINGUISH, SoundCategory.BLOCKS, 10, 1);
 			}

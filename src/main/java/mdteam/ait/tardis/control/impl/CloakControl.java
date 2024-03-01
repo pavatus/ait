@@ -33,10 +33,10 @@ public class CloakControl extends Control {
 		cloak.toggle();
 		// @TODO: Add translations
 		if (cloak.isEnabled()) {
-			player.sendMessage(Text.translatable("tardis.cloak.on"), true);
+			// player.sendMessage(Text.translatable("tardis.cloak.on"), true);
 			world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING, SoundCategory.BLOCKS, 1.0F, 1.0F);
 		} else {
-			player.sendMessage(Text.literal("tardis.cloak.off"), true);
+			// player.sendMessage(Text.literal("tardis.cloak.off"), true);
 			world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING_STOP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 		}
 

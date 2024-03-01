@@ -27,7 +27,7 @@ public class AutoPilotControl extends Control {
 
 		PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, !PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));
 
-		messagePlayer(player, PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));
+		// messagePlayer(player, PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));
 
 		return true;
 	}
