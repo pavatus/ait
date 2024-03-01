@@ -18,6 +18,7 @@ import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
@@ -58,23 +59,29 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 	}
 
 	public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
-		if (findTardis().isEmpty() || player == null)
+		if (this.findTardis().isEmpty() || player == null)
 			return;
-		if (this.findTardis().get().isGrowth())
+
+		ServerTardis tardis = (ServerTardis) this.findTardis().get();
+
+		if (tardis.isGrowth())
 			return;
 
 		SonicHandler handler = this.findTardis().get().getHandlers().getSonic();
 		boolean hasSonic = handler.hasSonic(SonicHandler.HAS_EXTERIOR_SONIC);
 		boolean shouldEject = player.isSneaking();
 
-		if (player.getMainHandStack().getItem() instanceof KeyItem && !findTardis().get().isSiegeMode() && !findTardis().get().getHandlers().getInteriorChanger().isGenerating() && this.findTardis().get().getHandlers().getCrashData().getRepairTicks() > 0) {
+		if (player.getMainHandStack().getItem() instanceof KeyItem
+				&& !tardis.isSiegeMode()
+				&& !tardis.getHandlers().getInteriorChanger().isGenerating()
+				&& tardis.getHandlers().getCrashData().getRepairTicks() > 0) {
 			ItemStack key = player.getMainHandStack();
 			NbtCompound tag = key.getOrCreateNbt();
 			if (!tag.contains("tardis")) {
 				return;
 			}
-			if (Objects.equals(this.findTardis().get().getUuid().toString(), tag.getString("tardis"))) {
-				DoorData.toggleLock(this.findTardis().get(), (ServerPlayerEntity) player);
+			if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
+				DoorData.toggleLock(tardis, (ServerPlayerEntity) player);
 			} else {
 				world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 				player.sendMessage(Text.translatable("tardis.key.identity_error"), true); //TARDIS does not identify with key
@@ -90,20 +97,21 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 				world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 				return;
 			}
-			player.sendMessage(Text.translatable("tardis.exterior.sonic.repairing").append(Text.literal(": " + this.findTardis().get().getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.BOLD, Formatting.GOLD)), true);
+			player.sendMessage(Text.translatable("tardis.exterior.sonic.repairing").append(Text.literal(": " + tardis.getHandlers().getCrashData().getRepairTicksAsSeconds() + "s").formatted(Formatting.BOLD, Formatting.GOLD)), true);
 			return;
 		}
 
 		if (player.getMainHandStack().getItem() instanceof SonicItem &&
-				!findTardis().get().isSiegeMode() &&
-				!findTardis().get().getHandlers().getInteriorChanger().isGenerating() &&
-				!findTardis().get().getDoor().isOpen() && findTardis().get().getHandlers().getCrashData().getRepairTicks() > 0) {
+				!tardis.isSiegeMode() &&
+				!tardis.getHandlers().getInteriorChanger().isGenerating() &&
+				!tardis.getDoor().isOpen()
+				&& tardis.getHandlers().getCrashData().getRepairTicks() > 0) {
 			ItemStack sonic = player.getMainHandStack();
 			NbtCompound tag = sonic.getOrCreateNbt();
 			if (!tag.contains("tardis")) {
 				return;
 			}
-			if (Objects.equals(this.findTardis().get().getUuid().toString(), tag.getString("tardis"))) {
+			if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
 
 				ItemStack stack = player.getMainHandStack();
 
@@ -120,13 +128,16 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 			return;
 		}
 
-		if (sneaking && findTardis().get().isSiegeMode() && !findTardis().get().isSiegeBeingHeld()) {
-			SiegeTardisItem.pickupTardis(findTardis().get(), (ServerPlayerEntity) player);
+		if (sneaking
+				&& tardis.isSiegeMode()
+				&& !tardis.isSiegeBeingHeld()) {
+			SiegeTardisItem.pickupTardis(tardis, (ServerPlayerEntity) player);
 			return;
 		}
 
-		if ((findTardis().get().getTravel().getState() == LANDED || findTardis().get().getTravel().getState() == CRASH)) {
-			DoorData.useDoor(this.findTardis().get(), (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
+		if ((tardis.getTravel().getState() == LANDED
+				|| tardis.getTravel().getState() == CRASH)) {
+			DoorData.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
 		}
 	}
 

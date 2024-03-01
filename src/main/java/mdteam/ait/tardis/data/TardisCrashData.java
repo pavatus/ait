@@ -125,6 +125,10 @@ public class TardisCrashData extends TardisLink {
 		return PropertiesHandler.getInt(findTardis().get().getHandlers().getProperties(), TARDIS_REPAIR_TICKS);
 	}
 
+	public int getRepairTicksAsSeconds() {
+		return getRepairTicks() / 20;
+	}
+
 	public void setRepairTicks(Integer ticks) {
 		if (findTardis().isEmpty()) return;
 		if (ticks > MAX_REPAIR_TICKS) {
