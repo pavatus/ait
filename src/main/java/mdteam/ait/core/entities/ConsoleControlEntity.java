@@ -244,8 +244,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
 			// play sound
 			this.getWorld().playSound(null, this.getBlockPos(), AITSounds.EVEN_MORE_SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
 		}
-		if (this.consoleBlockPos != null)
-			this.getWorld().playSound(null, this.getBlockPos(), this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
 
 		if (!world.isClient()) {
 			if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM) {
@@ -255,11 +253,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
             }*/
 
 			if (this.getTardis() == null) return false; // AAAAAAAAAAA
-
-			//blahblah
-			//if (DeltaTimeManager.isStillWaitingOnDelay(getDelayId(this.getTardis()))) return false;
-
-			//DeltaTimeManager.createDelay(getDelayId(this.getTardis()), 500L);
 
 			Tardis tardis = this.getTardis(world);
 
@@ -287,6 +280,9 @@ public class ConsoleControlEntity extends BaseControlEntity {
 					return false;
 				}
 			}
+
+			if (this.consoleBlockPos != null)
+				this.getWorld().playSound(null, this.getBlockPos(), this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
 
 			return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, leftClick, this.findConsole().get()); // i dont gotta check these cus i know its server
 		}
