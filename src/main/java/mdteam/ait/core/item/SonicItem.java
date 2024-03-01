@@ -40,7 +40,6 @@ import java.util.UUID;
 
 public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	public static final double MAX_FUEL = 1000;
-
 	public static final String MODE_KEY = "mode";
 	public static final String PREV_MODE_KEY = "PreviousMode";
 	public static final String INACTIVE = "inactive";
@@ -128,11 +127,13 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 			return true;
 		}
 
+		if(world.getBlockState(pos).getBlock() == AITBlocks.ZEITON_CLUSTER) {
+			this.addFuel(200, stack);
+			world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+			return true;
+		}
+
 		if (mode == Mode.INACTIVE) {
-			if(world.getBlockState(pos).getBlock() == AITBlocks.ZEITON_CLUSTER) {
-				this.addFuel(200, stack);
-				world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-			}
 			Mode prev = findPreviousMode(stack);
 			if (prev == Mode.INACTIVE) return false;
 

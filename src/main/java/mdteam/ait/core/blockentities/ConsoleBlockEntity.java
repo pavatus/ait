@@ -461,7 +461,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 		if(this.findTardis().get().getTravel().inFlight() || this.findTardis().get().getTravel().isMaterialising()) {
 			if (handler.hasActiveSequence() && handler.getActiveSequence() != null) {
-				System.out.println("yes active sequence yum" + handler.getActiveSequence());
+				//System.out.println("yes active sequence yum" + handler.getActiveSequence());
 				List<Control> sequence = handler.getActiveSequence().getControls();
 
 				// Convert the sequence to a Set for efficient lookups
@@ -490,7 +490,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 			((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.025f);
 			((ServerWorld) world).spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX() + 0.5f, pos.getY() + 1.25,
-					pos.getZ() + 0.5f, 20, 0, 0, 0, 0.01f);
+					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.01f);
 			((ServerWorld) world).spawnParticles(new DustColorTransitionParticleEffect(
 							new Vector3f(0.75f, 0.75f, 0.75f), new Vector3f(0.1f, 0.1f, 0.1f), 1), pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.01f);

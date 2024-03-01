@@ -11,7 +11,10 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
 
 	@Override
 	public void generate() {
-		this.addDrop(AITBlocks.DOOR_BLOCK);
+		AITBlocks.getBlocks().stream().filter(block ->
+				block != AITBlocks.EXTERIOR_BLOCK && block != AITBlocks.CONSOLE
+		).forEach(this::addDrop);
+		/*this.addDrop(AITBlocks.DOOR_BLOCK);
 		this.addDrop(AITBlocks.ZEITON_BLOCK);
 		this.addDrop(AITBlocks.ZEITON_CLUSTER);
 		this.addDrop(AITBlocks.BUDDING_ZEITON);
@@ -20,6 +23,9 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
 		this.addDrop(AITBlocks.SMALL_ZEITON_BUD);
 		this.addDrop(AITBlocks.MONITOR_BLOCK);
 		this.addDrop(AITBlocks.DETECTOR_BLOCK);
-		this.addDrop(AITBlocks.ARTRON_COLLECTOR_BLOCK);
+		this.addDrop(AITBlocks.CORAL_PLANT);
+		this.addDrop(AITBlocks.CONSOLE_GENERATOR);
+		this.addDrop(AITBlocks.PLAQUE_BLOCK);
+		this.addDrop(AITBlocks.ARTRON_COLLECTOR_BLOCK);*/
 	}
 }

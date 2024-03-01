@@ -1,20 +1,6 @@
-# 1.0.0 Official Release
-- Added Charged Zeiton Crystal.
-- Fixed bug with exclamation marks not appearing.
-- Added sonic port control for all consoles.
-- Added repairing via putting the sonic into the exterior keyhole (or nose or something).
-- Fixed particles with the exterior during crashed state.
-- Fixed crash state issues, indicates much better when you're in a toxic/unstable flight mode.
-- Added respirator for not choking during the toxic phase of crashing.
-- Added TARDIS plaque - displays the name of the TARDIS and the date of creation.
-- Added security screen - Leave Behind toggle and Hostile Alarms toggle, as well as also displaying identical information as the plaque.
-- Tweaked how the sonic works - can now open iron doors/trapdoors and has AU.
-- Sonic can be used on Zeiton Clusters for 200 AU.
-- The hammer is now dangerous.
-- Fixed that dastardly datapack bug.
-- Fixed alarms constantly playing at the exterior.
-- Power lever now has delay when the power is off.
-- Artron can be attained by giving the TARDIS Zeiton Clusters (or Charged Zeiton Crystals) directly into the console (gives 15 artron).
-- Fixed the rift scanner losing a part of its texture.
-- Removed the radio block (sorry).
-- Updated TARDIS names (give us suggestions!).
+# 1.0.2 Official Release
+- Fixed block loot tables.
+- Made sonic linking more intuitive.
+- Made flight events happen faster.
+- Fixed bug where the budding zeiton block grew amethyst and not zeiton crystals.
+- Added faceless respirator.

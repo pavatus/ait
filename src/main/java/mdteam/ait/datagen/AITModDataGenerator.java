@@ -294,6 +294,17 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.GLASS_PANE), FabricRecipeProvider.conditionsFromItem(Items.GLASS_PANE))
                     .criterion(FabricRecipeProvider.hasItem(Items.PINK_WOOL), FabricRecipeProvider.conditionsFromItem(Items.PINK_WOOL)));
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.FACELESS_RESPIRATOR, 1)
+                    .pattern("   ")
+                    .pattern(" R ")
+                    .pattern("NWN")
+                    .input('R', Items.REDSTONE)
+                    .input('N', Items.IRON_NUGGET)
+                    .input('W', Items.BLACK_WOOL)
+                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE))
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.IRON_NUGGET))
+                    .criterion(FabricRecipeProvider.hasItem(Items.BLACK_WOOL), FabricRecipeProvider.conditionsFromItem(Items.BLACK_WOOL)));
+
             /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.CONSOLE_ROOM_PORT_BLOCK, 1)
                     .pattern("III")
                     .pattern("ICI")
@@ -520,6 +531,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.SMALL_ZEITON_BUD, "Small Zeiton Bud");
         provider.addTranslation(AITItems.ZEITON_SHARD, "Zeiton Shard");
         provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
+        provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
         provider.addTranslation(AITBlocks.PLAQUE_BLOCK, "TARDIS Plaque");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
@@ -562,6 +574,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
         provider.addTranslation("tardis.exterior.sonic.repairing", "Repairing");
         provider.addTranslation("tardis.tool.cannot_repair", "Unable to repair TARDIS with current tool");
+        provider.addTranslation("tardis.key.identity_error", "TARDIS does not identify with key");
         //
         provider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
         provider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
