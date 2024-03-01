@@ -45,7 +45,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	public static final String PREV_MODE_KEY = "PreviousMode";
 	public static final String INACTIVE = "inactive";
 
-	private static final int SONIC_SFX_LENGTH = FlightUtil.convertSecondsToTicks(1.5);
+	public static final int SONIC_SFX_LENGTH = FlightUtil.convertSecondsToTicks(1.5);
 
 	public SonicItem(Settings settings) {
 		super(settings.maxCount(1));

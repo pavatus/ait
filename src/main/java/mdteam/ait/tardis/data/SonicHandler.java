@@ -3,6 +3,7 @@ package mdteam.ait.tardis.data;
 import mdteam.ait.api.tardis.ArtronHolderItem;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.item.SonicItem;
+import mdteam.ait.tardis.Exclude;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
@@ -21,6 +22,9 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 	private ItemStack console; // The current sonic in the console
 	private ItemStack exterior; // The current sonic in the exterior's keyhole (or any hole)
 
+	@Exclude
+	private int sfxTicks = 0; // Sonic use sound tick for exterior
+
 	public SonicHandler(Tardis tardis) {
 		super(tardis, "sonic");
 	}
@@ -28,6 +32,12 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 	public boolean hasSonic(String sonic) {
 		if (this.findTardis().isEmpty()) return false;
 		return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), sonic);
+	}
+	public boolean hasConsoleSonic() {
+		return hasSonic(HAS_CONSOLE_SONIC);
+	}
+	public boolean hasExteriorSonic() {
+		return hasSonic(HAS_EXTERIOR_SONIC);
 	}
 
 	public void markHasSonic(String sonic) {
@@ -121,7 +131,9 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 			this.addFuel(1, sonic);
 			tardis.getHandlers().getFuel().removeFuel(1);
 		}
-		if (this.hasSonic(HAS_EXTERIOR_SONIC)) {
+		if (this.hasExteriorSonic()) {
+			sfxTicks++;
+
 			ItemStack sonic = this.get(HAS_EXTERIOR_SONIC);
 			ServerTardis tardis = (ServerTardis) this.findTardis().get();
 			if (tardis.getHandlers().getCrashData().getRepairTicks() <= 0) {
@@ -136,9 +148,16 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 			if (!isToxic && !isUnstable) return;
 
 			crash.setRepairTicks(repairTicks <= 0 ? 0 : repairTicks - 5);
-			tardis.getExterior().getExteriorPos().getWorld().playSound(null, tardis.getExterior().getExteriorPos(),
-					AITSounds.SONIC_USE, SoundCategory.BLOCKS, 0.5f, 1f);
+
+			if (sfxTicks % SonicItem.SONIC_SFX_LENGTH == 0) {
+				tardis.getExterior().getExteriorPos().getWorld().playSound(null, tardis.getExterior().getExteriorPos(),
+						AITSounds.SONIC_USE, SoundCategory.BLOCKS, 0.5f, 1f);
+			}
+
 			this.removeFuel(1, sonic);
+		}
+		else if (sfxTicks > 0) {
+			sfxTicks = 0;
 		}
 	}
 }
