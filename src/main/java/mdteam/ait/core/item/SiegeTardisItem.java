@@ -160,14 +160,15 @@ public class SiegeTardisItem extends Item {
 	public static int findSlot(ServerPlayerEntity player, Tardis tardis) {
 		Tardis found;
 
-		for (int i = 0; i < 36; i++) {
-			found = getTardis(player.getInventory().getStack(i));
+		for (ItemStack stack : player.getInventory().main) {
+			found = getTardis(stack);
 
 			if (found == null) continue;
 			if (found.equals(tardis)) {
-				return i;
+				return player.getInventory().indexOf(stack);
 			}
 		}
+
 		return -1;
 	}
 
