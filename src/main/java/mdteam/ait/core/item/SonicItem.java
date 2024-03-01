@@ -57,7 +57,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 		boolean success = useSonic(world, user, pos, hand, stack);
 
-		return success ? TypedActionResult.consume(stack) : TypedActionResult.fail(stack);
+		return success ? TypedActionResult.success(stack, false) : TypedActionResult.fail(stack);
 	}
 
 	@Override
@@ -372,7 +372,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 					int repairticksleft = exteriorBlockEntity.findTardis().get().getHandlers().getCrashData().getRepairTicks();
 					int repairminutes = repairticksleft / 20 / 60;
 					if (repairticksleft == 0) {
-						player.sendMessage(Text.translatable("tardis.not_damaged").formatted(Formatting.GOLD), true); // Your tardis is not damaged
+						player.sendMessage(Text.translatable("tardis.sonic.not_damaged").formatted(Formatting.GOLD), true); // Your tardis is not damaged
 						return;
 					}
 					player.sendMessage(Text.literal("You have " + repairminutes + (repairminutes == 1 ? " minute" : " minutes") + " of repair left.").formatted(Formatting.GOLD), true);
@@ -388,7 +388,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 				TardisTravel travel = tardis.getTravel();
 
-				AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, player.getMovementDirection().getOpposite());
+				AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, player.getHorizontalFacing());
 
 				if (!ExteriorAnimation.isNearTardis(player, tardis, 256)) {
 					travel.setDestination(target, true);

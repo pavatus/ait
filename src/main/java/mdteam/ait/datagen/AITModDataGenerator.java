@@ -565,6 +565,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
         provider.addTranslation("message.ait.sonic.handbrakedisengaged", "Handbrake disengaged, destination set to current position");
+        provider.addTranslation("message.sonic.not_damaged", "TARDIS is not damaged");
         provider.addTranslation("message.ait.sonic.mode", "Mode: ");
         provider.addTranslation("message.ait.sonic.none", "None");
         provider.addTranslation("message.ait.remoteitem.warning4", "Target has been reset and updated, the device is now pointing towards your new target");

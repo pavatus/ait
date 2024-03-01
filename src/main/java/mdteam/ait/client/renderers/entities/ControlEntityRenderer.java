@@ -106,7 +106,7 @@ public class ControlEntityRenderer
 		VertexConsumer vertices = vertexConsumers.getBuffer(RenderLayer.LINES);
 
 		Box box = entity.getBoundingBox().offset(-entity.getX(), -entity.getY(), -entity.getZ());
-		WorldRenderer.drawBox(matrices, vertices, box, 1.0f, 1.0f, 1.0f, 1.0f);
+		WorldRenderer.drawBox(matrices, vertices, box, 0.0f, 0.8f, 1.0f, 1.0f);
 	}
 
 	private static boolean isPlayerHoldingScanningSonic() {

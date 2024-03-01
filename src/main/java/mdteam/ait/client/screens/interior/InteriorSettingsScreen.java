@@ -184,8 +184,16 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-		this.drawBackground(context); // the grey backdrop
+		tickForSpin++;
 		this.renderDesktop(context);
+		this.drawBackground(context); // the grey backdrop
+		context.getMatrices().push();
+		int x = (left + 79);
+		int y = (top + 59);
+		context.getMatrices().translate(0, 0, 0f);
+		context.getMatrices().multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
+		context.drawTexture(BACKGROUND, x - 41, y - 41, 173, 173, 83, 83);
+		context.getMatrices().pop();
 		if (!this.buttons.get(3).isHovered()) context.drawTexture(BACKGROUND, left + 149, top + 142, 0, 166, 12, 12);
 		if (!this.buttons.get(4).isHovered()) context.drawTexture(BACKGROUND, left + 232, top + 142, 12, 166, 12, 12);
 		if (!this.buttons.get(5).isHovered()) context.drawTexture(BACKGROUND, left + 228, top + 111, 0, 178, 16, 16);
@@ -234,7 +242,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private void renderDesktop(DrawContext context) {
-		tickForSpin++;
 		context.drawCenteredTextWithShadow(
 				this.textRenderer,
 				this.selectedDesktop.name(),
@@ -254,13 +261,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				this.selectedDesktop.previewTexture().height * 2,
 				this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2);
 		//context.drawTexture(this.selectedDesktop.previewTexture().texture(), left + 151, top + 14, 91, 91, 0, 0, this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2, this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2);
-		context.getMatrices().pop();
-		context.getMatrices().push();
-		int x = (left + 79);
-		int y = (top + 59);
-		context.getMatrices().translate(0, 0, 0f);
-		context.getMatrices().multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
-		context.drawTexture(BACKGROUND, x - 41, y - 41, 173, 173, 83, 83);
 		context.getMatrices().pop();
 	}
 
