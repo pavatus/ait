@@ -73,8 +73,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 
 		if (player.getMainHandStack().getItem() instanceof KeyItem
 				&& !tardis.isSiegeMode()
-				&& !tardis.getHandlers().getInteriorChanger().isGenerating()
-				&& tardis.getHandlers().getCrashData().getRepairTicks() > 0) {
+				&& !tardis.getHandlers().getInteriorChanger().isGenerating()) {
 			ItemStack key = player.getMainHandStack();
 			NbtCompound tag = key.getOrCreateNbt();
 			if (!tag.contains("tardis")) {
