@@ -79,7 +79,7 @@ public class AITMod implements ModInitializer {
 	public void onInitialize() {
 		ConsoleRegistry.init();
 		DesktopRegistry.getInstance().init();
-		CategoryRegistry.getInstance().init();
+		CategoryRegistry.getInstance();
 		HumsRegistry.init();
 		CreakRegistry.init();
 		SequenceRegistry.init();
