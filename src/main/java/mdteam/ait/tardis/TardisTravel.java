@@ -10,8 +10,12 @@ import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.core.sounds.MatSound;
 import mdteam.ait.core.util.ForcedChunkUtil;
+import mdteam.ait.registry.CategoryRegistry;
+import mdteam.ait.registry.ExteriorVariantRegistry;
 import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.PosType;
+import mdteam.ait.tardis.control.sequences.Sequence;
+import mdteam.ait.tardis.control.sequences.SequenceHandler;
 import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.data.TardisCrashData;
@@ -100,7 +104,6 @@ public class TardisTravel extends TardisLink {
 	}
 
 	public void tick(MinecraftServer server) {
-
 		if (this.findTardis().isEmpty()) return;
 
 		this.tickDemat();
@@ -411,24 +414,26 @@ public class TardisTravel extends TardisLink {
 	 */
 	public void materialise(boolean ignoreChecks) {
 		// Check if running on the client side, and if so, return early
-		if (this.getDestination().getWorld().isClient() || findTardis().isEmpty()) {
+		if (this.getDestination().getWorld().isClient() || this.findTardis().isEmpty()) {
 			return;
 		}
+
+		ServerTardis tardis = (ServerTardis) this.findTardis().get();
 
 		if (this.getState() != State.FLIGHT) return;
 
 		// Disable autopilot
 		// PropertiesHandler.setAutoPilot(this.getTardis().get().getHandlers().getProperties(), false);
 
-		this.setDestination(FlightUtil.getPositionFromPercentage(this.findTardis().get().position(), this.findTardis().get().destination(), this.findTardis().get().getHandlers().getFlight().getDurationAsPercentage()), true);
+		this.setDestination(FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage()), true);
 
 		// Check if materialization is on cooldown and return if it is
-		if (!ignoreChecks && FlightUtil.isMaterialiseOnCooldown(findTardis().get())) {
+		if (!ignoreChecks && FlightUtil.isMaterialiseOnCooldown(tardis)) {
 			return;
 		}
 
 		// Check if the Tardis materialization is prevented by event listeners
-		if (!ignoreChecks && TardisEvents.MAT.invoker().onMat(findTardis().get())) {
+		if (!ignoreChecks && TardisEvents.MAT.invoker().onMat(tardis)) {
 			failToMaterialise();
 			return;
 		}
@@ -443,8 +448,10 @@ public class TardisTravel extends TardisLink {
             this.findTardis().get().getHandlers().getSequenceHandler().disableConsole(false);
         }*/
 
-		if (this.findTardis().get().getHandlers().getSequenceHandler().hasActiveSequence()) {
-			this.findTardis().get().getHandlers().getSequenceHandler().setActiveSequence(null, true);
+		SequenceHandler sequences = tardis.getHandlers().getSequenceHandler();
+
+		if (sequences.hasActiveSequence()) {
+			sequences.setActiveSequence(null, true);
 		}
 
 		// Get the server world of the destination
@@ -453,10 +460,7 @@ public class TardisTravel extends TardisLink {
 		// Play materialize sound at the destination
 		this.getDestination().getWorld().playSound(null, this.getDestination(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
 
-		// Play materialize sound at the Tardis console position if it exists
-		if (this.findTardis().isPresent()) {
-			FlightUtil.playSoundAtConsole(this.findTardis().get(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
-		}
+		FlightUtil.playSoundAtConsole(tardis, this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
 
 		// Set the destination block to the Tardis exterior block
 		ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
@@ -472,6 +476,17 @@ public class TardisTravel extends TardisLink {
 
 		// Run animations on the block entity
 		this.runAnimations(blockEntity);
+
+		this.onMaterialise(tardis);
+	}
+
+	private void onMaterialise(ServerTardis tardis) {
+		if (tardis.isGrowth()) {
+			TardisExterior exterior = tardis.getExterior();
+
+			exterior.setType(CategoryRegistry.CAPSULE);
+			tardis.getDoor().closeDoors();
+		}
 	}
 
 	public void dematerialise(boolean withRemat, boolean ignoreChecks) {

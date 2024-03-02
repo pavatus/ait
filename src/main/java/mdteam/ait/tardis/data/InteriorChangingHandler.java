@@ -8,8 +8,10 @@ import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
+import mdteam.ait.tardis.TardisExterior;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.data.properties.PropertiesHolder;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -75,12 +77,14 @@ public class InteriorChangingHandler extends TardisLink {
 		Tardis tardis = this.findTardis().get();
 
 		if (!tardis.isGrowth() && !tardis.hasPower()) return;
+
 		if (tardis.getHandlers().getFuel().getCurrentFuel() < 5000 && !(tardis.isGrowth() && tardis.hasGrowthDesktop())) {
 			for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
 				player.sendMessage(Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED), true);
 				return;
 			}
 		}
+
 		setQueuedInterior(schema);
 		setTicks(0);
 		setGenerating(true);
@@ -94,19 +98,27 @@ public class InteriorChangingHandler extends TardisLink {
 	}
 
 	private void onCompletion() {
-		if (findTardis().isEmpty()) return;
+		if (this.findTardis().isEmpty()) return;
+
+		Tardis tardis = this.findTardis().get();
+		PropertiesHolder properties = tardis.getHandlers().getProperties();
+
 		setGenerating(false);
 		clearedOldInterior = false;
-		findTardis().get().getHandlers().getAlarms().disable();
-		DoorData.lockTardis(PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), findTardis().get(), null, false);
 
-		if (findTardis().get().hasGrowthExterior()) {
-			PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE, false);
-			PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, true);
-			findTardis().get().getExterior().setType(CategoryRegistry.CAPSULE);
-			findTardis().get().getExterior().setVariant(TardisItemBuilder.findRandomVariant(CategoryRegistry.CAPSULE));
-			findTardis().get().getExterior().getExteriorPos().getWorld().playSound(null, findTardis().get().getExterior().getExteriorPos(), AITSounds.MAT, SoundCategory.BLOCKS, 5f, 1f);
-			findTardis().get().getTravel().setState(TardisTravel.State.MAT);
+		tardis.getHandlers().getAlarms().disable();
+
+		boolean previouslyLocked = PropertiesHandler.getBool(properties, PropertiesHandler.PREVIOUSLY_LOCKED);
+		DoorData.lockTardis(previouslyLocked, tardis, null, false);
+
+		if (tardis.hasGrowthExterior()) {
+			PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, false);
+			PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, true);
+
+			// exterior.getExteriorPos().getWorld().playSound(null, exterior.getExteriorPos(), AITSounds.MAT, SoundCategory.BLOCKS, 5f, 1f);
+			// tardis.getTravel().setState(TardisTravel.State.MAT);
+
+			tardis.getTravel().dematerialise(true, true);
 		}
 	}
 
@@ -172,6 +184,5 @@ public class InteriorChangingHandler extends TardisLink {
 			findTardis().get().getDesktop().changeInterior(getQueuedInterior());
 			onCompletion();
 		}
-
 	}
 }

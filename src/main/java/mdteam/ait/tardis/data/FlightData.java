@@ -7,6 +7,7 @@ import mdteam.ait.tardis.control.sequences.SequenceHandler;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.FlightUtil;
 import mdteam.ait.tardis.util.TardisUtil;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
@@ -59,8 +60,10 @@ public class FlightData extends TardisLink {
 
 	private void onFlightFinished() {
 		if (findTardis().isEmpty()) return;
+
 		this.setFlightTicks(0);
 		this.setTargetTicks(0);
+
 		FlightUtil.playSoundAtConsole(findTardis().get(), SoundEvents.BLOCK_BELL_RESONATE); // temp sound
 
 		if (shouldAutoLand()) {
@@ -69,8 +72,11 @@ public class FlightData extends TardisLink {
 	}
 
 	private boolean shouldAutoLand() {
-		if (findTardis().isEmpty()) return false;
-		return PropertiesHandler.willAutoPilot(findTardis().get().getHandlers().getProperties()) || !TardisUtil.isInteriorNotEmpty(this.findTardis().get()); // todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
+		if (this.findTardis().isEmpty()) return false;
+
+		Tardis tardis = this.findTardis().get();
+
+		return PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()) || !TardisUtil.isInteriorNotEmpty(tardis); // todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
 	}
 
 	public void increaseFlightTime(int ticks) {
@@ -133,17 +139,23 @@ public class FlightData extends TardisLink {
 	@Override
 	public void tick(MinecraftServer server) {
 		super.tick(server);
-		if (findTardis().isEmpty()) return;
-		if (findTardis().get().getHandlers().getCrashData().getState() != TardisCrashData.State.NORMAL) {
-			findTardis().get().getHandlers().getCrashData().addRepairTicks(2 * findTardis().get().getTravel().getSpeed());
+
+		if (this.findTardis().isEmpty()) return;
+
+		ServerTardis tardis = (ServerTardis) this.findTardis().get();
+		TardisCrashData crash = tardis.getHandlers().getCrashData();
+		TardisTravel travel = tardis.getTravel();
+
+		if (crash.getState() != TardisCrashData.State.NORMAL) {
+			crash.addRepairTicks(2 * travel.getSpeed());
 		}
-		if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && findTardis().get().getTravel().getState() == TardisTravel.State.LANDED) {
+		if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && travel.getState() == TardisTravel.State.LANDED) {
 			this.recalculate();
 		}
 
-		triggerSequencingDuringFlight(findTardis().get());
+		triggerSequencingDuringFlight(tardis);
 
-		if (this.isInFlight() && !findTardis().get().getTravel().isCrashing() && !(this.getFlightTicks() >= this.getTargetTicks()) && this.getTargetTicks() == 0) {
+		if (this.isInFlight() && !travel.isCrashing() && !(this.getFlightTicks() >= this.getTargetTicks()) && this.getTargetTicks() == 0) {
 			this.recalculate();
 		}
 
@@ -152,7 +164,11 @@ public class FlightData extends TardisLink {
 				this.onFlightFinished();
 			}
 
-			this.setFlightTicks(this.getFlightTicks() + findTardis().get().getTravel().getSpeed());
+			this.setFlightTicks(this.getFlightTicks() + travel.getSpeed());
+		}
+
+		if (this.isInFlight() && this.hasFinishedFlight() && !TardisUtil.isInteriorNotEmpty(tardis)) {
+			travel.materialise();
 		}
 	}
 

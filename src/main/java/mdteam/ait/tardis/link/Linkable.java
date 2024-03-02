@@ -5,7 +5,7 @@ import mdteam.ait.tardis.Tardis;
 import java.util.Optional;
 
 public interface Linkable {
-	Optional<Tardis> findTardis();
+	Optional<Tardis> findTardis(boolean isClient);
 
 	void setTardis(Tardis tardis);
 

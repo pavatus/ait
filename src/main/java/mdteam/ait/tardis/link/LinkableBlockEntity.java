@@ -85,31 +85,27 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
 
 	/**
 	 * Attempts to find the TARDIS related to this block entity
-	 * It looks for the block entity's tardis id stored in the lookup
+	 * It looks for the block entities tardis id stored in the lookup
 	 * Some overrides also search for the tardis based off the exterior pos / interior pos
 	 * This is resource intensive and the result of this should be stored in a variable (you should be doing this anyway for things you are repeatedly calling)
 	 * @return the found TARDIS, or empty.
 	 */
 	@Override
-	public Optional<Tardis> findTardis() {
-		if (TardisUtil.isClient()) { // todo replace deprecated check
+	public Optional<Tardis> findTardis(boolean isClient) {
+		if (isClient) { // todo replace deprecated check
 			if (!ClientTardisManager.getInstance().hasTardis(this.tardisId)) {
 				if (this.tardisId != null)
 					ClientTardisManager.getInstance().loadTardis(this.tardisId, tardis -> {
 					});
 				return Optional.empty();
-				// todo add of `ifPresent()` of `isEmpty()` checks
-				// eg if before it was PropertiesHandler.set(this.getTardis, ...)
-				// it should become:
-				// this.getTardis().ifPresent(tardis -> PropertiesHandler.set(tardis, ...))
-				// or
-				// if (this.getTardis().isEmpty()) return;
-				//  because i dont want to rewrite a lot of the code base rn. this needs replacing badly but i am desperate for this release to come out and idc.
-				// issues with doing it this way is that client will probably have to repeat things multiple times to get things to happen.
 			}
 			return Optional.ofNullable(ClientTardisManager.getInstance().getTardis(this.tardisId));
 		}
 		return Optional.ofNullable(ServerTardisManager.getInstance().getTardis(this.tardisId));
+	}
+
+	public Optional<Tardis> findTardis() {
+		return this.findTardis(this.getWorld().isClient());
 	}
 
 	@Override

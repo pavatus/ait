@@ -73,7 +73,7 @@ public class TardisItemBuilder extends Item {
 	public static TardisDesktopSchema findRandomDesktop(Tardis tardis) { // todo this may cause looping crashes
 		TardisDesktopSchema found = findRandomDesktop();
 
-		if (tardis.isDesktopUnlocked(found)) return found;
+		if (tardis.isDesktopUnlocked(found) && !found.equals(DesktopRegistry.DEFAULT_CAVE)) return found;
 
 		return findRandomDesktop(tardis);
 	}

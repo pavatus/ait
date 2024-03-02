@@ -40,21 +40,18 @@ public abstract class AbstractTardisComponent {
 		return Init.ALWAYS;
 	}
 
+	/**
+	 * Attempts to find the TARDIS related to this component
+	 * It looks for the components tardis id stored in the lookup
+	 * This is resource intensive and the result of this should be stored in a variable (you should be doing this anyway for things you are repeatedly calling)
+	 * @return the found TARDIS, or empty.
+	 */
 	public Optional<Tardis> findTardis() {
 		if (TardisUtil.isClient()) { // todo replace deprecated check
 			if (!ClientTardisManager.getInstance().hasTardis(this.tardisId)) {
 				if (this.tardisId != null)
-					ClientTardisManager.getInstance().loadTardis(this.tardisId, tardis -> {
-					});
+					ClientTardisManager.getInstance().loadTardis(this.tardisId, tardis -> {});
 				return Optional.empty();
-				// todo add of `ifPresent()` of `isEmpty()` checks
-				// eg if before it was PropertiesHandler.set(this.getTardis, ...)
-				// it should become:
-				// this.getTardis().ifPresent(tardis -> PropertiesHandler.set(tardis, ...))
-				// or
-				// if (this.getTardis().isEmpty()) return;
-				//  because i dont want to rewrite a lot of the code base rn. this needs replacing badly but i am desperate for this release to come out and idc.
-				// issues with doing it this way is that client will probably have to repeat things multiple times to get things to happen.
 			}
 			return Optional.of(ClientTardisManager.getInstance().getTardis(this.tardisId));
 		}
