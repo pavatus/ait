@@ -30,7 +30,7 @@ public class ServerPlayerMixin {
 			player.setVelocity(0, 0, 0);
 			this.joinInvulnerabilityTicks = 60;
 			TardisUtil.teleportInside(found, player);
-			player.setVelocity(0, 0, 0);
+			player.fallDistance = 0;
 		}
 	}
 }

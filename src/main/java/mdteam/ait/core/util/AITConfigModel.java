@@ -4,6 +4,10 @@ import io.wispforest.owo.config.annotation.Config;
 import io.wispforest.owo.config.annotation.Modmenu;
 import io.wispforest.owo.config.annotation.SectionHeader;
 import mdteam.ait.AITMod;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.world.World;
+
+import java.util.List;
 
 @Modmenu(modId = AITMod.MOD_ID)
 @Config(name = "aitconfig", wrapperName = "AITConfig")
