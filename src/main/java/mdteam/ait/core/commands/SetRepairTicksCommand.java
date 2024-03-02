@@ -27,7 +27,7 @@ public class SetRepairTicksCommand {
 		dispatcher.register(literal(AITMod.MOD_ID)
 				.then(literal("repair").then(literal("set").requires(source -> source.hasPermissionLevel(2))
 						.then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-								.then(argument("amount", IntegerArgumentType.integer(0, TardisCrashData.MAX_REPAIR_TICKS))
+								.then(argument("timeUntilFullRepair", IntegerArgumentType.integer(0, TardisCrashData.MAX_REPAIR_TICKS))
 										.executes(SetRepairTicksCommand::runCommand))))));
 	}
 
