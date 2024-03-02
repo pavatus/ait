@@ -9,11 +9,13 @@ import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
+import org.apache.http.client.utils.DateUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -101,26 +103,34 @@ public class StatsData extends TardisLink {
 	}
 
 	public Date getCreationDate() {
-		if (findTardis().isEmpty()) return Date.from(Instant.now());
+		if (this.findTardis().isEmpty()) return Date.from(Instant.now());
 
-		if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), DATE_KEY) == null) {
-			AITMod.LOGGER.error(findTardis().get().getUuid().toString() + " was missing creation date! Resetting to now");
+		Tardis tardis=  this.findTardis().get();
+
+		if (PropertiesHandler.get(tardis.getHandlers().getProperties(), DATE_KEY) == null) {
+			AITMod.LOGGER.error(tardis.getUuid().toString() + " was missing creation date! Resetting to now");
 			markCreationDate();
 		}
 
+		String date = PropertiesHandler.getString(tardis.getHandlers().getProperties(), DATE_KEY);
+
 		try {
-			return DateFormat.getDateInstance().parse(PropertiesHandler.getString(findTardis().get().getHandlers().getProperties(), DATE_KEY));
+			return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date);
 		} catch (Exception e) {
+			AITMod.LOGGER.error("Failed to parse date from " + date);
+
+			this.markCreationDate();
+
 			return Date.from(Instant.now());
 		}
 	}
 
 	public String getCreationString() {
-		return DateFormat.getDateInstance().format(getCreationDate());
+		return DateUtils.formatDate(this.getCreationDate(),"EEE, dd MMM yyyy HH:mm:ss");
 	}
 
 	public void markCreationDate() {
 		if (findTardis().isEmpty()) return;
-		PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), DATE_KEY, Date.from(Instant.now()).toString());
+		PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), DATE_KEY, DateUtils.formatDate(Date.from(Instant.now()), "yyyy-MM-dd HH:mm:ss"));
 	}
 }
