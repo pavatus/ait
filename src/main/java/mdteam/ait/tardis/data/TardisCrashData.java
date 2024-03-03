@@ -126,7 +126,7 @@ public class TardisCrashData extends TardisLink {
 	}
 
 	public int getRepairTicksAsSeconds() {
-		return getRepairTicks() / 20;
+		return (this.getRepairTicks() / 20) / 10;
 	}
 
 	public void setRepairTicks(Integer ticks) {
