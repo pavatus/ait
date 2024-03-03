@@ -6,13 +6,13 @@ import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import net.minecraft.registry.Registry;
 
 public interface ConsoleRegistryContainer extends AutoRegistryContainer<ConsoleTypeSchema> {
-    @Override
-    default Registry<ConsoleTypeSchema> getRegistry() {
-        return ConsoleRegistry.REGISTRY;
-    }
+	@Override
+	default Registry<ConsoleTypeSchema> getRegistry() {
+		return ConsoleRegistry.REGISTRY;
+	}
 
-    @Override
-    default Class<ConsoleTypeSchema> getTargetFieldType() {
-        return ConsoleTypeSchema.class;
-    }
+	@Override
+	default Class<ConsoleTypeSchema> getTargetFieldType() {
+		return ConsoleTypeSchema.class;
+	}
 }

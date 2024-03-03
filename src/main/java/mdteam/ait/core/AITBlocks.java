@@ -19,21 +19,22 @@ import java.util.List;
 public class AITBlocks implements BlockRegistryContainer {
 
     @NoBlockItem
-    public static final Block EXTERIOR_BLOCK = new ExteriorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing().luminance(7));
+    public static final Block EXTERIOR_BLOCK = new ExteriorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing().luminance(7).pistonBehavior(PistonBehavior.IGNORE));
     public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque().noCollision()
-            .instrument(Instrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F));
+            .instrument(Instrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
     public static final Block CONSOLE = new ConsoleBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
-            .instrument(Instrument.COW_BELL));
-    public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles()
-            .instrument(Instrument.COW_BELL));
-    public static final Block ARTRON_COLLECTOR_BLOCK = new ArtronCollectorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool()
-            .instrument(Instrument.BANJO));
+            .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.IGNORE));
+    public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
+            .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.DESTROY));
+    public static final Block ARTRON_COLLECTOR_BLOCK = new ArtronCollectorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
+            .instrument(Instrument.BANJO).pistonBehavior(PistonBehavior.IGNORE));
     public static final Block CORAL_PLANT = new CoralPlantBlock(FabricBlockSettings.create().ticksRandomly().nonOpaque().noCollision()
             .breakInstantly().sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
-    public static final Block MONITOR_BLOCK = new MonitorBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
-    public static final Block DETECTOR_BLOCK = new DetectorBlock(FabricBlockSettings.create().nonOpaque().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
+    public static final Block MONITOR_BLOCK = new MonitorBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
+    public static final Block PLAQUE_BLOCK = new PlaqueBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
+    public static final Block DETECTOR_BLOCK = new DetectorBlock(FabricBlockSettings.create().nonOpaque().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.NORMAL));
     public static final Block ZEITON_BLOCK = new AmethystBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool());
-    public static final Block BUDDING_ZEITON = new BuddingAmethystBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).ticksRandomly().strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool().pistonBehavior(PistonBehavior.DESTROY));
+    public static final Block BUDDING_ZEITON = new BuddingZeitonBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).ticksRandomly().strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool().pistonBehavior(PistonBehavior.DESTROY));
     public static final Block ZEITON_CLUSTER = new AmethystClusterBlock(7, 3, FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).solid().nonOpaque().ticksRandomly().sounds(BlockSoundGroup.AMETHYST_CLUSTER).strength(1.5F).luminance((state) -> 5).pistonBehavior(PistonBehavior.DESTROY));
     public static final Block LARGE_ZEITON_BUD = new AmethystClusterBlock(5, 3, FabricBlockSettings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.MEDIUM_AMETHYST_BUD).solid().luminance((state) -> 4).pistonBehavior(PistonBehavior.DESTROY));
     public static final Block MEDIUM_ZEITON_BUD = new AmethystClusterBlock(4, 3, FabricBlockSettings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.LARGE_AMETHYST_BUD).solid().luminance((state) -> 2).pistonBehavior(PistonBehavior.DESTROY));

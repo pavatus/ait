@@ -1,4 +1,16 @@
-# 1.3.2
-- Removed cardinal components
-- Removed radio block
-- AIT works with Sinytra Connector.
+# 1.0.3 Official Release
+- Fixed respirators not rendering for some strange reason.
+- Fixed the sonic not being able to scan for rifts or charge in any other mode but inactive.
+- Made the controls highlight blue when holding the scanning sonic.
+- Removed HUD messages for controls that have reactive levers or buttons (handbrake, antigravs, etc.)
+- Perhaps fixed the player being able to fall and teleport back to the interior door.
+- Datapack desktops will now have working consoles, properly this time.
+- Sounds for controls only play when the control actually runs.
+- Added new TARDIS properties command.
+- Modified commands to make more sense.
+- Changed repairing: 1234 from just ticks to seconds.
+- Fixed sound effects at the exterior when repairing with a sonic.
+- Stacking issues with the siege mode TARDIS has been resolved.
+- With performance mods, the interior changing screen will no longer appear on top of other elements.
+- Fixed using the sonic in TARDIS mode to actually face the correct direction.
+- Added fixed translations.

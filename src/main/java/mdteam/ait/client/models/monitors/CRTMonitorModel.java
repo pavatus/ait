@@ -1,7 +1,5 @@
 package mdteam.ait.client.models.monitors;
 
-import mdteam.ait.core.blockentities.MonitorBlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
@@ -11,9 +9,11 @@ import net.minecraft.util.math.RotationAxis;
 
 public class CRTMonitorModel extends SinglePartEntityModel {
 	private final ModelPart crt;
+
 	public CRTMonitorModel(ModelPart root) {
 		this.crt = root.getChild("crt");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -29,6 +29,7 @@ public class CRTMonitorModel extends SinglePartEntityModel {
 		ModelPartData gallifreyan = crt.addChild("gallifreyan", ModelPartBuilder.create().uv(31, 38).cuboid(-3.0F, -3.0F, -0.1F, 6.0F, 6.0F, 0.0F, new Dilation(0.001F)), ModelTransform.pivot(4.0F, -8.0F, -10.0F));
 		return TexturedModelData.of(modelData, 128, 128);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		matrices.push();

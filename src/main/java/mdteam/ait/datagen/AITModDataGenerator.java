@@ -75,6 +75,20 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.GOLD_NUGGET),
                             FabricRecipeProvider.conditionsFromItem(Items.GOLD_NUGGET))
             );
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.CHARGED_ZEITON_CRYSTAL, 1)
+                    .pattern("ZZZ")
+                    .pattern("CAC")
+                    .pattern("ZZZ")
+                    .input('Z', AITItems.ZEITON_SHARD)
+                    .input('C', AITBlocks.ZEITON_CLUSTER)
+                    .input('A', AITItems.ARTRON_COLLECTOR)
+                    .criterion(FabricRecipeProvider.hasItem(AITItems.ZEITON_SHARD),
+                            FabricRecipeProvider.conditionsFromItem(AITItems.ZEITON_SHARD))
+                    .criterion(FabricRecipeProvider.hasItem(AITBlocks.ZEITON_CLUSTER),
+                            FabricRecipeProvider.conditionsFromItem(AITBlocks.ZEITON_CLUSTER))
+                    .criterion(FabricRecipeProvider.hasItem(AITItems.ARTRON_COLLECTOR),
+                            FabricRecipeProvider.conditionsFromItem(AITItems.ARTRON_COLLECTOR))
+            );
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, 1)
                     .pattern("SSS")
                     .pattern("SGS")
@@ -180,6 +194,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE))
                     .criterion(FabricRecipeProvider.hasItem(Items.BLAZE_ROD), FabricRecipeProvider.conditionsFromItem(Items.BLAZE_ROD))
                     .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK)));
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITBlocks.PLAQUE_BLOCK, 1)
+                    .pattern("GSG")
+                    .pattern("SBS")
+                    .pattern("GSG")
+                    .input('G', Items.GOLD_NUGGET)
+                    .input('S', Items.SPRUCE_SLAB)
+                    .input('B', Items.BLACK_CONCRETE)
+                    .criterion(FabricRecipeProvider.hasItem(Items.GOLD_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.GOLD_NUGGET))
+                    .criterion(FabricRecipeProvider.hasItem(Items.SPRUCE_SLAB), FabricRecipeProvider.conditionsFromItem(Items.SPRUCE_SLAB))
+                    .criterion(FabricRecipeProvider.hasItem(Items.BLACK_CONCRETE), FabricRecipeProvider.conditionsFromItem(Items.BLACK_CONCRETE)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.MECHANICAL_SONIC_SCREWDRIVER, 1)
                     .pattern(" IE")
                     .pattern("ICI")
@@ -256,6 +280,30 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('B', Items.ENDER_EYE)
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
                     .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RESPIRATOR, 1)
+                    .pattern("NNN")
+                    .pattern("SPS")
+                    .pattern("WNW")
+                    .input('N', Items.IRON_NUGGET)
+                    .input('S', Items.STRING)
+                    .input('P', Items.GLASS_PANE)
+                    .input('W', Items.PINK_WOOL)
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.IRON_NUGGET))
+                    .criterion(FabricRecipeProvider.hasItem(Items.STRING), FabricRecipeProvider.conditionsFromItem(Items.STRING))
+                    .criterion(FabricRecipeProvider.hasItem(Items.GLASS_PANE), FabricRecipeProvider.conditionsFromItem(Items.GLASS_PANE))
+                    .criterion(FabricRecipeProvider.hasItem(Items.PINK_WOOL), FabricRecipeProvider.conditionsFromItem(Items.PINK_WOOL)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.FACELESS_RESPIRATOR, 1)
+                    .pattern("   ")
+                    .pattern(" R ")
+                    .pattern("NWN")
+                    .input('R', Items.REDSTONE)
+                    .input('N', Items.IRON_NUGGET)
+                    .input('W', Items.BLACK_WOOL)
+                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE))
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.IRON_NUGGET))
+                    .criterion(FabricRecipeProvider.hasItem(Items.BLACK_WOOL), FabricRecipeProvider.conditionsFromItem(Items.BLACK_WOOL)));
 
             /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.CONSOLE_ROOM_PORT_BLOCK, 1)
                     .pattern("III")
@@ -454,8 +502,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
         provider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
         provider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
-        provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector Panel");
+        provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector Unit");
         provider.addTranslation(AITItems.RIFT_SCANNER, "Rift Scanner");
+        provider.addTranslation(AITItems.CHARGED_ZEITON_CRYSTAL, "Charged Zeiton Crystal");
         provider.addTranslation(AITItems.SIEGE_ITEM, "TARDIS");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC, "Music Disc");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Radio - Drifting");
@@ -481,6 +530,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.MEDIUM_ZEITON_BUD, "Medium Zeiton Bud");
         provider.addTranslation(AITBlocks.SMALL_ZEITON_BUD, "Small Zeiton Bud");
         provider.addTranslation(AITItems.ZEITON_SHARD, "Zeiton Shard");
+        provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
+        provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
+        provider.addTranslation(AITBlocks.PLAQUE_BLOCK, "TARDIS Plaque");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
@@ -513,13 +565,17 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
         provider.addTranslation("message.ait.sonic.handbrakedisengaged", "Handbrake disengaged, destination set to current position");
-        provider.addTranslation("message.ait.sonic.mode","Mode: ");
+        provider.addTranslation("message.sonic.not_damaged", "TARDIS is not damaged");
+        provider.addTranslation("message.ait.sonic.mode", "Mode: ");
         provider.addTranslation("message.ait.sonic.none", "None");
         provider.addTranslation("message.ait.remoteitem.warning4", "Target has been reset and updated, the device is now pointing towards your new target");
-        provider.addTranslation("message.ait.keysmithing.upgrade","Upgrade");
+        provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         provider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
+        provider.addTranslation("tardis.exterior.sonic.repairing", "Repairing");
+        provider.addTranslation("tardis.tool.cannot_repair", "Unable to repair TARDIS with current tool");
+        provider.addTranslation("tardis.key.identity_error", "TARDIS does not identify with key");
         //
         provider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
         provider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
@@ -545,6 +601,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
         provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
+        provider.addTranslation("command.ait.riftchunk.cannotsetlevel", "This chunk is not a rift chunk, so you can't set the artron levels of it");
+        provider.addTranslation("command.ait.riftchunk.setlevel", "Set artron levels in rift chunk to: ");
+        provider.addTranslation("command.ait.riftchunk.cannotgetlevel", "This chunk is not a rift chunk, so you can't get the artron levels of it");
+        provider.addTranslation("command.ait.riftchunk.getlevel", "AU in rift chunk: ");
         provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
         provider.addTranslation("waypoint.position.tooltip", "Position");
         provider.addTranslation("waypoint.dimension.tooltip", "Dimension");
@@ -619,10 +679,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "CHUNK À FAILLE TROUVÉ");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "CHUNK À FAILLE NON TROUVÉ");
         aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged", "Frein à main desserré, destination définie à la position actuelle");
-        aitLanguageProvider.addTranslation("message.ait.sonic.mode","Mode: ");
+        aitLanguageProvider.addTranslation("message.ait.sonic.mode", "Mode: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.none", "Aucun");
         aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4", "La cible a été réinitialisée et mise à jour, l'appareil est maintenant orienté vers votre nouvelle cible");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade","Amélioration");
+        aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade", "Amélioration");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Type de Clé: ");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Matériau: ");
         aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "La clé ne s’identifie avec aucun TARDIS");
@@ -709,10 +769,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
         aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged", "Handbrake disengaged, destination set to current position");
-        aitLanguageProvider.addTranslation("message.ait.sonic.mode","Mode: ");
+        aitLanguageProvider.addTranslation("message.ait.sonic.mode", "Mode: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.none", "None");
         aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4", "Target has been reset and updated, the device is now pointing towards your new target");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade","Upgrade");
+        aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
@@ -789,10 +849,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "RIFT-CHUNK GEFUNDEN");
         aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "KEIN RIFT-CHUNK GEFUNDEN");
         aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged", "Handbremse deaktiviert, Koordinaten auf jetzige Position gesetzt");
-        aitLanguageProvider.addTranslation("message.ait.sonic.mode","Modus: ");
+        aitLanguageProvider.addTranslation("message.ait.sonic.mode", "Modus: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.none", "Keiner");
         aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4", "Ziel wurde zurückgesetzt und aktualisiert, das Gerät zeigt nun in Richtung des neuen Ziels");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade","Upgrade");
+        aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Schlüsseltyp: ");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "Schlüssel identifiziert sich mit keiner TARDIS");
@@ -815,6 +875,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         return aitLanguageProvider;
     }
+
     public AITLanguageProvider addPortugueseTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
         return provider;
@@ -895,9 +956,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     public void generate_EN_NZ_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_NZ))); // en_nz (English New Zealand)
     }
+
     public void generate_PT_BR_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> addPortugueseTranslations(output, registriesFuture, LanguageType.PT_BR))); // pt_br (Portuguese Brazil)
     }
+
     public void generate_RU_RU_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.RU_RU))); // ru_ru (Russian Russia)
     }

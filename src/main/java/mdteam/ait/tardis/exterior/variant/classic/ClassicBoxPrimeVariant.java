@@ -1,7 +1,7 @@
 package mdteam.ait.tardis.exterior.variant.classic;
 
 public class ClassicBoxPrimeVariant extends ClassicBoxVariant {
-    public ClassicBoxPrimeVariant() {
-        super("prime");
-    }
+	public ClassicBoxPrimeVariant() {
+		super("prime");
+	}
 }

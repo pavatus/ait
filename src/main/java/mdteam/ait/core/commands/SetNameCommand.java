@@ -16,26 +16,26 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class SetNameCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("name")
-                        .requires(source -> source.hasPermissionLevel(2))
-                        .then(literal("set")
-                        .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-                        .then(argument("value", StringArgumentType.string())
-                                .executes(SetNameCommand::runCommand)))))
-        );
-    }
+	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+		dispatcher.register(literal(AITMod.MOD_ID)
+				.then(literal("name")
+						.requires(source -> source.hasPermissionLevel(2))
+						.then(literal("set")
+								.then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
+										.then(argument("value", StringArgumentType.string())
+												.executes(SetNameCommand::runCommand)))))
+		);
+	}
 
-    private static int runCommand(CommandContext<ServerCommandSource> context) {
-        ServerPlayerEntity source = context.getSource().getPlayer();
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
-        String name = StringArgumentType.getString(context, "value");
+	private static int runCommand(CommandContext<ServerCommandSource> context) {
+		ServerPlayerEntity source = context.getSource().getPlayer();
+		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
+		String name = StringArgumentType.getString(context, "value");
 
-        if (tardis == null || source == null) return 0;
+		if (tardis == null || source == null) return 0;
 
-        tardis.getHandlers().getStats().setName(name);
+		tardis.getHandlers().getStats().setName(name);
 
-        return Command.SINGLE_SUCCESS;
-    }
+		return Command.SINGLE_SUCCESS;
+	}
 }

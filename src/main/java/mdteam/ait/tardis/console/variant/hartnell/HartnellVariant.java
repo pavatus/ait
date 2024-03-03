@@ -6,9 +6,9 @@ import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
 import net.minecraft.util.Identifier;
 
 public class HartnellVariant extends ConsoleVariantSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/hartnell");
+	public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/hartnell");
 
-    public HartnellVariant() {
-        super(HartnellType.REFERENCE, REFERENCE);
-    }
+	public HartnellVariant() {
+		super(HartnellType.REFERENCE, REFERENCE);
+	}
 }

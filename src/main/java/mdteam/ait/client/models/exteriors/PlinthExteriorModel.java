@@ -11,9 +11,11 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class PlinthExteriorModel extends ExteriorModel {
 	private final ModelPart plinth;
+
 	public PlinthExteriorModel(ModelPart root) {
 		this.plinth = root.getChild("plinth");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -28,6 +30,7 @@ public class PlinthExteriorModel extends ExteriorModel {
 				.uv(36, 0).cuboid(-8.0F, -45.0F, -8.0F, 2.0F, 42.0F, 16.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 		return TexturedModelData.of(modelData, 128, 128);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		plinth.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
@@ -36,7 +39,7 @@ public class PlinthExteriorModel extends ExteriorModel {
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		if (exterior.findTardis().isEmpty()) return;
-        matrices.push();
+		matrices.push();
 
 		matrices.translate(0, -1.5f, 0);
 
@@ -49,7 +52,7 @@ public class PlinthExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        matrices.push();
+		matrices.push();
 
 		matrices.translate(0, -1.5f, 0);
 
@@ -61,7 +64,7 @@ public class PlinthExteriorModel extends ExteriorModel {
 	@Override
 	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 
-        matrices.push();
+		matrices.push();
 
 		matrices.translate(0, -1.5f, 0);
 

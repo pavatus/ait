@@ -20,104 +20,108 @@ import static mdteam.ait.tardis.util.TardisUtil.findTardisByInterior;
 
 // TODO - move variant and type over to here
 public class TardisConsole extends TardisLink {
-    private static final int VALIDATE_TICK = 30 * 20;
+	private static final int VALIDATE_TICK = 30 * 20;
 
-    private final UUID uuid;
-    private final AbsoluteBlockPos position;
+	private final UUID uuid;
+	private final AbsoluteBlockPos position;
 
-    @Exclude
-    private int ticks = 0;
+	@Exclude
+	private int ticks = 0;
 
-    protected TardisConsole(Tardis tardis, AbsoluteBlockPos pos, UUID uuid) {
-        super(tardis, "console");
-        this.position = pos;
-        this.uuid = uuid;
-    }
-    public TardisConsole(Tardis tardis, AbsoluteBlockPos pos) {
-        this(tardis, pos, UUID.randomUUID());
-    }
+	protected TardisConsole(Tardis tardis, AbsoluteBlockPos pos, UUID uuid) {
+		super(tardis, "console");
+		this.position = pos;
+		this.uuid = uuid;
+	}
 
-    public boolean inUse() {
-        if (this.findEntity().isEmpty()) return false;
+	public TardisConsole(Tardis tardis, AbsoluteBlockPos pos) {
+		this(tardis, pos, UUID.randomUUID());
+	}
 
-        ConsoleBlockEntity entity = this.findEntity().get();
+	public boolean inUse() {
+		if (this.findEntity().isEmpty()) return false;
 
-        if (!entity.hasWorld()) return false;
+		ConsoleBlockEntity entity = this.findEntity().get();
 
-        assert entity.getWorld() != null;
+		if (!entity.hasWorld()) return false;
 
-        int radius = 3;
+		assert entity.getWorld() != null;
 
-        return !entity.getWorld().getEntitiesByClass(
-            ServerPlayerEntity.class,
-            new Box(
-                    entity.getPos().up(radius).north(radius).west(radius),
-                    entity.getPos().down(radius).south(radius).east(radius)
-            ),
-            player -> !player.isSpectator()
-        ).isEmpty();
-    }
+		int radius = 3;
 
-    public AbsoluteBlockPos position() {
-        return this.position;
-    }
-    public UUID uuid() {
-        return this.uuid;
-    }
+		return !entity.getWorld().getEntitiesByClass(
+				ServerPlayerEntity.class,
+				new Box(
+						entity.getPos().up(radius).north(radius).west(radius),
+						entity.getPos().down(radius).south(radius).east(radius)
+				),
+				player -> !player.isSpectator()
+		).isEmpty();
+	}
 
-    public Optional<ConsoleBlockEntity> findEntity() {
-        BlockEntity found = TardisUtil.getTardisDimension().getBlockEntity(this.position);
+	public AbsoluteBlockPos position() {
+		return this.position;
+	}
 
-        return (found instanceof ConsoleBlockEntity) ? Optional.of((ConsoleBlockEntity) found) : Optional.empty();
-    }
+	public UUID uuid() {
+		return this.uuid;
+	}
 
-    @Override
-    public Optional<Tardis> findTardis() {
-        if(this.tardisId == null) {
-            if (!this.validate()) return Optional.empty();
+	public Optional<ConsoleBlockEntity> findEntity() {
+		BlockEntity found = TardisUtil.getTardisDimension().getBlockEntity(this.position);
 
-            Tardis found = findTardisByInterior(this.position(), !this.findEntity().get().getWorld().isClient());
-            if (found != null)
-                this.setTardis(found);
-        }
-        return super.findTardis();
-    }
+		return (found instanceof ConsoleBlockEntity) ? Optional.of((ConsoleBlockEntity) found) : Optional.empty();
+	}
 
-    public boolean validate() {
-        if (this.shouldRemove()) {
-            AITMod.LOGGER.warn("Removing " + this.uuid() + " from desktop as it was invalid");
-            this.remove();
-            return false;
-        }
+	@Override
+	public Optional<Tardis> findTardis() {
+		if (this.tardisId == null) {
+			if (!this.validate()) return Optional.empty();
 
-        return true;
-    }
-    private boolean shouldRemove() {
-        return this.findEntity().isEmpty();
-    }
-    private void remove() {
-        if (this.findTardis().isEmpty()) return;
+			Tardis found = findTardisByInterior(this.position(), !this.findEntity().get().getWorld().isClient());
+			if (found != null)
+				this.setTardis(found);
+		}
+		return super.findTardis();
+	}
 
-        Tardis tardis = this.findTardis().get();
-        tardis.getDesktop().removeConsole(this);
-    }
+	public boolean validate() {
+		if (this.shouldRemove()) {
+			AITMod.LOGGER.warn("Removing " + this.uuid() + " from desktop as it was invalid");
+			this.remove();
+			return false;
+		}
 
-    @Override
-    public void tick(MinecraftServer server) {
-        super.tick(server);
-    }
+		return true;
+	}
 
-    /**
-     * Tick from the {@link ConsoleBlockEntity#tick(World, BlockPos, BlockState, ConsoleBlockEntity)}
-     * Ensures this console is loaded in the world to avoid performance issues
-     */
-    public void tickConsole(ConsoleBlockEntity block) {
-        ticks++;
+	private boolean shouldRemove() {
+		return this.findEntity().isEmpty();
+	}
 
-        // todo this is bad for performance (or so ive heard)
-        if (ticks >= VALIDATE_TICK) {
-            ticks = 0;
-            this.validate();
-        }
-    }
+	private void remove() {
+		if (this.findTardis().isEmpty()) return;
+
+		Tardis tardis = this.findTardis().get();
+		tardis.getDesktop().removeConsole(this);
+	}
+
+	@Override
+	public void tick(MinecraftServer server) {
+		super.tick(server);
+	}
+
+	/**
+	 * Tick from the {@link ConsoleBlockEntity#tick(World, BlockPos, BlockState, ConsoleBlockEntity)}
+	 * Ensures this console is loaded in the world to avoid performance issues
+	 */
+	public void tickConsole(ConsoleBlockEntity block) {
+		ticks++;
+
+		// todo this is bad for performance (or so ive heard)
+		if (ticks >= VALIDATE_TICK) {
+			ticks = 0;
+			this.validate();
+		}
+	}
 }

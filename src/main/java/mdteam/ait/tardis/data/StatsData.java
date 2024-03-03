@@ -9,11 +9,13 @@ import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
+import org.apache.http.client.utils.DateUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,104 +24,113 @@ import java.util.Optional;
 
 // is StatsData a good name for this class?
 public class StatsData extends TardisLink {
-    private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
-    private static final String NAME_KEY = "name";
-    private static List<String> NAME_CACHE;
+	private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
+	private static final String NAME_KEY = "name";
+	private static List<String> NAME_CACHE;
 
-    private static final String DATE_KEY = "date";
+	private static final String DATE_KEY = "date";
 
-    public StatsData(Tardis tardis) {
-        super(tardis, "stats");
-    }
+	public StatsData(Tardis tardis) {
+		super(tardis, "stats");
+	}
 
-    public String getName() {
-        if(findTardis().isEmpty()) return "";
+	public String getName() {
+		if (findTardis().isEmpty()) return "";
 
-        String name = (String) PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), NAME_KEY);
+		String name = (String) PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), NAME_KEY);
 
-        if (name == null) {
-            name = getRandomName();
-            this.setName(name);
-        }
+		if (name == null) {
+			name = getRandomName();
+			this.setName(name);
+		}
 
-        return name;
-    }
+		return name;
+	}
 
-    public void setName(String name) {
-        if(findTardis().isEmpty()) return;
-        PropertiesHandler.set(findTardis().get(), NAME_KEY, name);
-    }
+	public void setName(String name) {
+		if (findTardis().isEmpty()) return;
+		PropertiesHandler.set(findTardis().get(), NAME_KEY, name);
+	}
 
-    public static String fixupName(String name) {
-        String[] words = name.split("_");
-        StringBuilder result = new StringBuilder();
-        for (String word : words) {
-            result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
-        }
-        return result.toString().trim();
-    }
+	public static String fixupName(String name) {
+		String[] words = name.split("_");
+		StringBuilder result = new StringBuilder();
+		for (String word : words) {
+			result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
+		}
+		return result.toString().trim();
+	}
 
-    public static String getRandomName() {
-        if (shouldGenerateNames()) loadNames();
-        if (NAME_CACHE == null) return "";
+	public static String getRandomName() {
+		if (shouldGenerateNames()) loadNames();
+		if (NAME_CACHE == null) return "";
 
-        return NAME_CACHE.get(AITMod.RANDOM.nextInt(NAME_CACHE.size()));
-    }
+		return NAME_CACHE.get(AITMod.RANDOM.nextInt(NAME_CACHE.size()));
+	}
 
-    public static boolean shouldGenerateNames() {
-        return (NAME_CACHE == null
-                || NAME_CACHE.isEmpty())
-                && TardisUtil.getServer() != null;
-    }
+	public static boolean shouldGenerateNames() {
+		return (NAME_CACHE == null
+				|| NAME_CACHE.isEmpty())
+				&& TardisUtil.getServer() != null;
+	}
 
-    private static void loadNames() {
-        if (TardisUtil.getServer() == null) return;
-        if (NAME_CACHE == null) NAME_CACHE = new ArrayList<>();
+	private static void loadNames() {
+		if (TardisUtil.getServer() == null) return;
+		if (NAME_CACHE == null) NAME_CACHE = new ArrayList<>();
 
-        NAME_CACHE.clear();
+		NAME_CACHE.clear();
 
-        try {
-            Optional<Resource> resource = TardisUtil.getServer().getResourceManager().getResource(NAME_PATH);
+		try {
+			Optional<Resource> resource = TardisUtil.getServer().getResourceManager().getResource(NAME_PATH);
 
-            if (resource.isEmpty()) {
-                AITMod.LOGGER.error("ERROR in tardis_names.json:");
-                AITMod.LOGGER.error("Missing Resource");
-                return;
-            }
+			if (resource.isEmpty()) {
+				AITMod.LOGGER.error("ERROR in tardis_names.json:");
+				AITMod.LOGGER.error("Missing Resource");
+				return;
+			}
 
-            InputStream stream = resource.get().getInputStream();
+			InputStream stream = resource.get().getInputStream();
 
-            JsonArray list = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonArray();
+			JsonArray list = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonArray();
 
-            for (JsonElement element : list) {
-                NAME_CACHE.add(element.getAsString());
-            }
-        } catch (IOException e) {
-            AITMod.LOGGER.error("ERROR in tardis_names.json");
-            e.printStackTrace();
-            return;
-        }
-    }
+			for (JsonElement element : list) {
+				NAME_CACHE.add(element.getAsString());
+			}
+		} catch (IOException e) {
+			AITMod.LOGGER.error("ERROR in tardis_names.json");
+			e.printStackTrace();
+		}
+	}
 
-    public Date getCreationDate() {
-        if(findTardis().isEmpty()) return Date.from(Instant.now());
+	public Date getCreationDate() {
+		if (this.findTardis().isEmpty()) return Date.from(Instant.now());
 
-        if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), DATE_KEY) == null) {
-            AITMod.LOGGER.error(findTardis().get().getUuid().toString() + " was missing creation date! Resetting to now");
-            markCreationDate();
-        }
+		Tardis tardis=  this.findTardis().get();
 
-        try {
-            return DateFormat.getDateInstance().parse(PropertiesHandler.getString(findTardis().get().getHandlers().getProperties(), DATE_KEY));
-        } catch (Exception e) {
-            return Date.from(Instant.now());
-        }
-    }
-    public String getCreationString() {
-        return DateFormat.getDateInstance().format(getCreationDate());
-    }
-    public void markCreationDate() {
-        if(findTardis().isEmpty()) return;
-        PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), DATE_KEY, Date.from(Instant.now()).toString());
-    }
+		if (PropertiesHandler.get(tardis.getHandlers().getProperties(), DATE_KEY) == null) {
+			AITMod.LOGGER.error(tardis.getUuid().toString() + " was missing creation date! Resetting to now");
+			markCreationDate();
+		}
+
+		String date = PropertiesHandler.getString(tardis.getHandlers().getProperties(), DATE_KEY);
+
+		try {
+			return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date);
+		} catch (Exception e) {
+			AITMod.LOGGER.error("Failed to parse date from " + date);
+
+			this.markCreationDate();
+
+			return Date.from(Instant.now());
+		}
+	}
+
+	public String getCreationString() {
+		return DateUtils.formatDate(this.getCreationDate(),"EEE, dd MMM yyyy HH:mm:ss");
+	}
+
+	public void markCreationDate() {
+		if (findTardis().isEmpty()) return;
+		PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), DATE_KEY, DateUtils.formatDate(Date.from(Instant.now()), "yyyy-MM-dd HH:mm:ss"));
+	}
 }

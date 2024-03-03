@@ -7,16 +7,16 @@ import net.minecraft.util.Identifier;
 
 public class DevDesktop extends TardisDesktopSchema {
 
-    public DevDesktop() {
-        super(new Identifier(AITMod.MOD_ID, "dev"), new DesktopPreviewTexture(
-                DesktopPreviewTexture.pathFromDesktopId(new Identifier(AITMod.MOD_ID, "dev")),
-                800,
-                800
-        ));
-    }
+	public DevDesktop() {
+		super(new Identifier(AITMod.MOD_ID, "dev"), new DesktopPreviewTexture(
+				DesktopPreviewTexture.pathFromDesktopId(new Identifier(AITMod.MOD_ID, "dev")),
+				800,
+				800
+		));
+	}
 
-    @Override
-    public boolean freebie() {
-        return false;
-    }
+	@Override
+	public boolean freebie() {
+		return false;
+	}
 }

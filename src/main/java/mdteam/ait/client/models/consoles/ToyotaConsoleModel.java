@@ -18,9 +18,11 @@ import net.minecraft.util.math.RotationAxis;
 
 public class ToyotaConsoleModel extends ConsoleModel {
 	private final ModelPart toyota;
+
 	public ToyotaConsoleModel(ModelPart root) {
 		this.toyota = root.getChild("toyota");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -810,6 +812,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 				.uv(51, 110).cuboid(-0.5F, -42.0F, 0.0F, 1.0F, 8.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 37.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
 		return TexturedModelData.of(modelData, 256, 256);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		matrices.push();
@@ -862,7 +865,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		//Door Control
 		ModelPart doorControl = this.toyota.getChild("panel1").getChild("controls").getChild("power");
-		doorControl.pitch = console.findTardis().get().getDoor().isLeftOpen() ? doorControl.pitch - 1f : console.findTardis().get().getDoor().isRightOpen() ? doorControl.pitch - 1.55f: doorControl.pitch;
+		doorControl.pitch = console.findTardis().get().getDoor().isLeftOpen() ? doorControl.pitch - 1f : console.findTardis().get().getDoor().isRightOpen() ? doorControl.pitch - 1.55f : doorControl.pitch;
 		ModelPart doorControlLights = this.toyota.getChild("panel1").getChild("controls").getChild("powerlights").getChild("powerlights2");
 		doorControlLights.pivotY = !(console.findTardis().get().getDoor().isOpen()) ? doorControlLights.pivotY : doorControlLights.pivotY + 1;
 
@@ -894,7 +897,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		// Refuel Light Warning
 		ModelPart fuelWarning = this.toyota.getChild("panel4").getChild("yellow5");
-		fuelWarning.pivotY = !(console.findTardis().get().getFuel() > (console.findTardis().get().getFuel() / 10)) ? fuelWarning.pivotY  : fuelWarning.pivotY + 1;
+		fuelWarning.pivotY = !(console.findTardis().get().getFuel() > (console.findTardis().get().getFuel() / 10)) ? fuelWarning.pivotY : fuelWarning.pivotY + 1;
 
 		// Ground Search Control
 		ModelPart groundSearch = this.toyota.getChild("panel1").getChild("controls").getChild("smallswitch");
@@ -930,7 +933,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
-		return switch(state) {
+		return switch (state) {
 			case MAT, DEMAT, FLIGHT -> ToyotaAnimations.CONSOLE_TOYOTA_FLIGHT;
 			case LANDED -> ToyotaAnimations.CONSOLE_TOYOTA_IDLE;
 			default -> Animation.Builder.create(0).build();

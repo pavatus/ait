@@ -21,28 +21,28 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class SetRepairTicksCommand {
-    public static final SuggestionProvider<ServerCommandSource> TARDIS_SUGGESTION = (context, builder) -> CommandSource.suggestMatching(ServerTardisManager.getInstance().getLookup().keySet().stream().map(UUID::toString), builder);
+	public static final SuggestionProvider<ServerCommandSource> TARDIS_SUGGESTION = (context, builder) -> CommandSource.suggestMatching(ServerTardisManager.getInstance().getLookup().keySet().stream().map(UUID::toString), builder);
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("repair").then(literal("set").requires(source -> source.hasPermissionLevel(2))
-                        .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-                                .then(argument("amount", IntegerArgumentType.integer(0, TardisCrashData.MAX_REPAIR_TICKS))
-                                        .executes(SetRepairTicksCommand::runCommand))))));
-    }
+	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+		dispatcher.register(literal(AITMod.MOD_ID)
+				.then(literal("repair").then(literal("set").requires(source -> source.hasPermissionLevel(2))
+						.then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
+								.then(argument("timeUntilFullRepair", IntegerArgumentType.integer(0, TardisCrashData.MAX_REPAIR_TICKS))
+										.executes(SetRepairTicksCommand::runCommand))))));
+	}
 
-    private static int runCommand(CommandContext<ServerCommandSource> context) {
-        ServerPlayerEntity source = context.getSource().getPlayer();
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
-        if (tardis == null || source == null) return 0;
-        if (tardis.getHandlers().getCrashData().getRepairTicks() >= TardisCrashData.MAX_REPAIR_TICKS) {
-            source.sendMessage(Text.literal("TARDIS repair ticks are at max!"), true);
-            return 0;
-        }
-        int repairTicksAmount = IntegerArgumentType.getInteger(context, "amount");
-        tardis.getHandlers().getCrashData().setRepairTicks(repairTicksAmount);
-        source.sendMessage(Text.literal("Set repair ticks for [" + tardis.getUuid() + "] to: [" + tardis.getHandlers().getCrashData().getRepairTicks() + "]"), true);
-        return Command.SINGLE_SUCCESS;
-    }
+	private static int runCommand(CommandContext<ServerCommandSource> context) {
+		ServerPlayerEntity source = context.getSource().getPlayer();
+		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
+		if (tardis == null || source == null) return 0;
+		if (tardis.getHandlers().getCrashData().getRepairTicks() >= TardisCrashData.MAX_REPAIR_TICKS) {
+			source.sendMessage(Text.literal("TARDIS repair ticks are at max!"), true);
+			return 0;
+		}
+		int repairTicksAmount = IntegerArgumentType.getInteger(context, "amount");
+		tardis.getHandlers().getCrashData().setRepairTicks(repairTicksAmount);
+		source.sendMessage(Text.literal("Set repair ticks for [" + tardis.getUuid() + "] to: [" + tardis.getHandlers().getCrashData().getRepairTicks() + "]"), true);
+		return Command.SINGLE_SUCCESS;
+	}
 
 }

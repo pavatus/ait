@@ -22,22 +22,22 @@ import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DatapackExterior extends ExteriorVariantSchema {
-    public static final Identifier DEFAULT_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/desktop/missing_preview.png");
+	public static final Identifier DEFAULT_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/desktop/missing_preview.png");
 
-    protected final Identifier parent;
-    protected final Identifier texture;
-    protected final Identifier emission;
-    protected boolean initiallyDatapack;
+	protected final Identifier parent;
+	protected final Identifier texture;
+	protected final Identifier emission;
+	protected boolean initiallyDatapack;
 
-    public static final Codec<DatapackExterior> CODEC = RecordCodecBuilder.create(
-            instance -> instance.group(
-                    Identifier.CODEC.fieldOf("id").forGetter(ExteriorVariantSchema::id),
-                    Identifier.CODEC.fieldOf("category").forGetter(ExteriorVariantSchema::categoryId),
-                    Identifier.CODEC.fieldOf("parent").forGetter(DatapackExterior::getParentId),
-                    Identifier.CODEC.fieldOf("texture").forGetter(DatapackExterior::texture),
-                    Identifier.CODEC.fieldOf("emission").forGetter(DatapackExterior::emission),
-                    Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack)
-            ).apply(instance, DatapackExterior::new));
+	public static final Codec<DatapackExterior> CODEC = RecordCodecBuilder.create(
+			instance -> instance.group(
+					Identifier.CODEC.fieldOf("id").forGetter(ExteriorVariantSchema::id),
+					Identifier.CODEC.fieldOf("category").forGetter(ExteriorVariantSchema::categoryId),
+					Identifier.CODEC.fieldOf("parent").forGetter(DatapackExterior::getParentId),
+					Identifier.CODEC.fieldOf("texture").forGetter(DatapackExterior::texture),
+					Identifier.CODEC.fieldOf("emission").forGetter(DatapackExterior::emission),
+					Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack)
+			).apply(instance, DatapackExterior::new));
 
 //    public static final Codec<ExteriorVariantSchema> CODEC_DEFAULT = RecordCodecBuilder.create(
 //            instance -> instance.group(
@@ -46,89 +46,95 @@ public class DatapackExterior extends ExteriorVariantSchema {
 //            ).apply(instance, DatapackVariant::new)
 //    );
 
-    public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, boolean isDatapack) {
-        super(category, id);
-        this.parent = parent;
-        this.texture = texture;
-        this.emission = emission;
-        this.initiallyDatapack = isDatapack;
-    }
-    public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission) {
-        this(id, category, parent, texture, emission, true);
-    }
+	public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, boolean isDatapack) {
+		super(category, id);
+		this.parent = parent;
+		this.texture = texture;
+		this.emission = emission;
+		this.initiallyDatapack = isDatapack;
+	}
 
-    public static DatapackExterior fromInputStream(InputStream stream) {
-        return fromJson(JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject());
-    }
-    public static DatapackExterior fromJson(JsonObject json) {
-        AtomicReference<DatapackExterior> created = new AtomicReference<>();
+	public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission) {
+		this(id, category, parent, texture, emission, true);
+	}
 
-        CODEC.decode(JsonOps.INSTANCE, json)
-                .get()
-                .ifLeft(var -> { created.set((DatapackExterior) var.getFirst()); })
-                .ifRight(err -> { created.set(null);
-                    AITMod.LOGGER.error("Error decoding datapack exterior variant: " + err);
-                });
+	public static DatapackExterior fromInputStream(InputStream stream) {
+		return fromJson(JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject());
+	}
 
-        return created.get();
-    }
+	public static DatapackExterior fromJson(JsonObject json) {
+		AtomicReference<DatapackExterior> created = new AtomicReference<>();
 
-    public ExteriorVariantSchema getParent() {
-        // ExteriorVariantRegistry.getInstance().toList().forEach(schema -> System.out.println(schema.id()));
-        return ExteriorVariantRegistry.getInstance().get(this.getParentId());
-    }
-    public Identifier getParentId() {
-        return this.parent;
-    }
+		CODEC.decode(JsonOps.INSTANCE, json)
+				.get()
+				.ifLeft(var -> {
+					created.set(var.getFirst());
+				})
+				.ifRight(err -> {
+					created.set(null);
+					AITMod.LOGGER.error("Error decoding datapack exterior variant: " + err);
+				});
 
-    @Override
-    public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
-        return this.getParent().animation(exterior);
-    }
+		return created.get();
+	}
 
-    @Override
-    public DoorSchema door() {
-        return this.getParent().door();
-    }
+	public ExteriorVariantSchema getParent() {
+		return ExteriorVariantRegistry.getInstance().get(this.getParentId());
+	}
 
-    @Override
-    public MatSound getSound(TardisTravel.State state) {
-        return this.getParent().getSound(state);
-    }
+	public Identifier getParentId() {
+		return this.parent;
+	}
 
-    @Override
-    public VoxelShape bounding(Direction dir) {
-        return this.getParent().bounding(dir);
-    }
+	@Override
+	public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
+		return this.getParent().animation(exterior);
+	}
 
-    @Override
-    public boolean hasPortals() {
-        return this.getParent().hasPortals();
-    }
+	@Override
+	public DoorSchema door() {
+		return this.getParent().door();
+	}
 
-    @Override
-    public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
-        return this.getParent().adjustPortalPos(pos, direction);
-    }
+	@Override
+	public MatSound getSound(TardisTravel.State state) {
+		return this.getParent().getSound(state);
+	}
 
-    @Override
-    public double portalWidth() {
-        return this.getParent().portalWidth();
-    }
+	@Override
+	public VoxelShape bounding(Direction dir) {
+		return this.getParent().bounding(dir);
+	}
 
-    @Override
-    public double portalHeight() {
-        return this.getParent().portalHeight();
-    }
+	@Override
+	public boolean hasPortals() {
+		return this.getParent().hasPortals();
+	}
 
-    public boolean wasDatapack() {
-        return this.initiallyDatapack;
-    }
-    public Identifier texture() {
-        return this.texture;
-    }
+	@Override
+	public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+		return this.getParent().adjustPortalPos(pos, direction);
+	}
 
-    public Identifier emission() {
-        return this.emission;
-    }
+	@Override
+	public double portalWidth() {
+		return this.getParent().portalWidth();
+	}
+
+	@Override
+	public double portalHeight() {
+		return this.getParent().portalHeight();
+	}
+
+	public boolean wasDatapack() {
+		return this.initiallyDatapack;
+	}
+
+	public Identifier texture() {
+		return this.texture;
+	}
+
+	public Identifier emission() {
+		return this.emission;
+	}
 }

@@ -2,12 +2,13 @@ package mdteam.ait.client;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
+import mdteam.ait.client.renderers.decoration.PlaqueRenderer;
 import mdteam.ait.client.renderers.machines.ArtronCollectorRenderer;
 import mdteam.ait.client.renderers.monitors.MonitorRenderer;
-import mdteam.ait.client.screens.TardisSecurityScreen;
+import mdteam.ait.client.renderers.wearables.AITHudOverlay;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
-import mdteam.ait.core.item.RiftScannerItem;
+import mdteam.ait.core.item.*;
 import mdteam.ait.registry.*;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
 import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
@@ -25,9 +26,6 @@ import mdteam.ait.client.screens.interior.OwOInteriorSelectScreen;
 import mdteam.ait.client.util.ClientTardisUtil;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.item.KeyItem;
-import mdteam.ait.core.item.SonicItem;
-import mdteam.ait.core.item.WaypointItem;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
@@ -41,6 +39,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
@@ -80,8 +79,11 @@ public class AITModClient implements ClientModInitializer {
         entityRenderRegister();
         sonicModelPredicate();
         riftScannerPredicate();
+        chargedZeitonCrystalPredicate();
         waypointPredicate();
         setKeyBinding();
+
+        HudRenderCallback.EVENT.register(new AITHudOverlay());
 
         ClientExteriorVariantRegistry.getInstance().init();
         ClientConsoleVariantRegistry.getInstance().init();
@@ -239,6 +241,23 @@ public class AITModClient implements ClientModInitializer {
         ModelPredicateProviderRegistry.register(AITItems.RIFT_SCANNER, new Identifier("scanner"),new RiftTarget((world, stack, entity) -> GlobalPos.create(entity.getWorld().getRegistryKey(), RiftScannerItem.getTarget(stack).getCenterAtY(75))));
     }
 
+    public void chargedZeitonCrystalPredicate() {
+        ModelPredicateProviderRegistry.register(AITItems.CHARGED_ZEITON_CRYSTAL, new Identifier("fuel"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0F;
+            if(itemStack.getItem() instanceof ChargedZeitonCrystalItem item) {
+                float value = (float) (item.getCurrentFuel(itemStack) / item.getMaxFuel(itemStack));
+                if(value > 0.0f && value < 0.5f) {
+                    return 0.5f;
+                } else if(value > 0.5f && value < 1.0f) {
+                    return 1.0f;
+                } else {
+                    return 0.0f;
+                }
+            }
+            return 0.0F;
+        });
+    }
+
     public void sonicModelPredicate() { // fixme lord give me strength - amen brother
         ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0F;
@@ -333,6 +352,7 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CORAL_BLOCK_ENTITY_TYPE, CoralRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.MONITOR_BLOCK_ENTITY_TYPE, MonitorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE, ArtronCollectorRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.PLAQUE_BLOCK_ENTITY_TYPE, PlaqueRenderer::new);
     }
 
     public void entityRenderRegister() {

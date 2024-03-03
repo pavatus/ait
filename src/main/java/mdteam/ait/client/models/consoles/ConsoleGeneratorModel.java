@@ -8,9 +8,11 @@ import net.minecraft.entity.Entity;
 
 public class ConsoleGeneratorModel extends SinglePartEntityModel {
 	private final ModelPart bone7;
+
 	public ConsoleGeneratorModel(ModelPart root) {
 		this.bone7 = root.getChild("bone7");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -195,6 +197,7 @@ public class ConsoleGeneratorModel extends SinglePartEntityModel {
 		ModelPartData bone68 = bone67.addChild("bone68", ModelPartBuilder.create().uv(18, 13).cuboid(-7.0F, -3.0F, 0.0F, 14.0F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 		return TexturedModelData.of(modelData, 64, 64);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		matrices.push();

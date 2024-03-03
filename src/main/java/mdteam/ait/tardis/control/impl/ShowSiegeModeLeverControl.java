@@ -7,21 +7,19 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 
-import static mdteam.ait.tardis.data.DoorData.useDoor;
-
 public class ShowSiegeModeLeverControl extends Control {
 
-    public ShowSiegeModeLeverControl() {
-        super("toggle_siege_mode_lever");
-    }
+	public ShowSiegeModeLeverControl() {
+		super("toggle_siege_mode_lever");
+	}
 
-    @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        return true;
-    }
+	@Override
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+		return true;
+	}
 
-    @Override
-    public SoundEvent getSound() {
-        return SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF;
-    }
+	@Override
+	public SoundEvent getSound() {
+		return SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF;
+	}
 }

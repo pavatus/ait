@@ -5,12 +5,10 @@ import mdteam.ait.client.sounds.PlayerFollowingLoopingSound;
 import mdteam.ait.client.util.ClientShakeUtil;
 import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITSounds;
-import mdteam.ait.client.util.ShaderUtils;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.SoundHandler;
 import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -22,57 +20,64 @@ import java.util.List;
 // Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
 // todo create a ServerAlarmHandler if necessary eg in future when we do more of the stuff on the trello to do with alarms.
 public class ClientAlarmHandler extends SoundHandler {
-    public static LoopingSound CLOISTER_INTERIOR;
-    protected ClientAlarmHandler() {}
+	public static LoopingSound CLOISTER_INTERIOR;
 
-    public LoopingSound getInteriorCloister() {
-        if (CLOISTER_INTERIOR == null) CLOISTER_INTERIOR = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 10f);
+	protected ClientAlarmHandler() {
+	}
 
-        return CLOISTER_INTERIOR;
-    }
-    public static ClientAlarmHandler create() {
-        if (MinecraftClient.getInstance().player == null) return null;
+	public LoopingSound getInteriorCloister() {
+		if (CLOISTER_INTERIOR == null)
+			CLOISTER_INTERIOR = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 10f);
 
-        ClientAlarmHandler handler = new ClientAlarmHandler();
-        handler.generate();
-        return handler;
-    }
+		return CLOISTER_INTERIOR;
+	}
 
-    private void generate() {
-        if (CLOISTER_INTERIOR == null) CLOISTER_INTERIOR = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 10f);
+	public static ClientAlarmHandler create() {
+		if (MinecraftClient.getInstance().player == null) return null;
 
-        this.sounds = new ArrayList<>();
-        this.sounds.addAll(List.of(
-                CLOISTER_INTERIOR
-        ));
-    }
-    public boolean isPlayerInATardis() {
-        if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return false;
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
+		ClientAlarmHandler handler = new ClientAlarmHandler();
+		handler.generate();
+		return handler;
+	}
 
-        return found != null;
-    }
+	private void generate() {
+		if (CLOISTER_INTERIOR == null)
+			CLOISTER_INTERIOR = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 10f);
 
-    public Tardis tardis() {
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-        return found;
-    }
+		this.sounds = new ArrayList<>();
+		this.sounds.add(
+				CLOISTER_INTERIOR
+		);
+	}
 
-    public boolean isEnabled() {
-        return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
-    }
+	public boolean isPlayerInATardis() {
+		if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+			return false;
+		ClientPlayerEntity player = MinecraftClient.getInstance().player;
+		Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
 
-    public void tick(MinecraftClient client) {
-        if (this.sounds == null) this.generate();
+		return found != null;
+	}
 
-        if (isPlayerInATardis() && isEnabled()) {
-            this.startIfNotPlaying(getInteriorCloister());
+	public Tardis tardis() {
+		ClientPlayerEntity player = MinecraftClient.getInstance().player;
+		Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
+		return found;
+	}
 
-            ClientShakeUtil.shake(0.15f);
-        } else {
-            this.stopSounds();
-        }
-    }
+	public boolean isEnabled() {
+		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
+	}
+
+	public void tick(MinecraftClient client) {
+		if (this.sounds == null) this.generate();
+
+		if (isPlayerInATardis() && isEnabled()) {
+			this.startIfNotPlaying(getInteriorCloister());
+
+			ClientShakeUtil.shake(0.15f);
+		} else {
+			this.stopSounds();
+		}
+	}
 }

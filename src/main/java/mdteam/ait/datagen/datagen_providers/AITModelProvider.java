@@ -11,38 +11,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AITModelProvider extends FabricModelProvider {
-    private final List<Block> directionalBlocksToRegister = new ArrayList<>();
-    private final List<Block> simpleBlocksToRegister = new ArrayList<>();
+	private final List<Block> directionalBlocksToRegister = new ArrayList<>();
+	private final List<Block> simpleBlocksToRegister = new ArrayList<>();
 
-    public AITModelProvider(FabricDataOutput output) {
-        super(output);
-    }
+	public AITModelProvider(FabricDataOutput output) {
+		super(output);
+	}
 
-    @Override
-    public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
-        for (Block block : directionalBlocksToRegister) {
+	@Override
+	public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+		for (Block block : directionalBlocksToRegister) {
 //            Identifier identifier = new Identifier(block.getTranslationKey().split("\\.")[1]);
-            blockStateModelGenerator.blockStateCollector.accept(
-                    MultipartBlockStateSupplier.create(block)
-                            .with(When.create().set(Properties.HORIZONTAL_FACING, Direction.NORTH),
-                                    BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R0))
-            );
-        }
-        for (Block block : simpleBlocksToRegister) {
-            blockStateModelGenerator.registerSimpleCubeAll(block);
-        }
-    }
+			blockStateModelGenerator.blockStateCollector.accept(
+					MultipartBlockStateSupplier.create(block)
+							.with(When.create().set(Properties.HORIZONTAL_FACING, Direction.NORTH),
+									BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R0))
+			);
+		}
+		for (Block block : simpleBlocksToRegister) {
+			blockStateModelGenerator.registerSimpleCubeAll(block);
+		}
+	}
 
-    @Override
-    public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+	@Override
+	public void generateItemModels(ItemModelGenerator itemModelGenerator) {
 
-    }
+	}
 
-    public void registerDirectionalBlock(Block block) {
-        directionalBlocksToRegister.add(block);
-    }
+	public void registerDirectionalBlock(Block block) {
+		directionalBlocksToRegister.add(block);
+	}
 
-    public void registerSimpleBlock(Block block) {
-        simpleBlocksToRegister.add(block);
-    }
+	public void registerSimpleBlock(Block block) {
+		simpleBlocksToRegister.add(block);
+	}
 }

@@ -10,24 +10,24 @@ import net.minecraft.sound.SoundEvents;
 import static mdteam.ait.tardis.data.DoorData.toggleLock;
 
 public class DoorLockControl extends Control {
-    public DoorLockControl() {
-        super("door_lock");
-    }
+	public DoorLockControl() {
+		super("door_lock");
+	}
 
-    @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-                this.addToControlSequence(tardis);
-                return false;
-            }
-        }
-        toggleLock(tardis, player);
-        return true;
-    }
+	@Override
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
+			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+				this.addToControlSequence(tardis);
+				return false;
+			}
+		}
+		toggleLock(tardis, player);
+		return true;
+	}
 
-    @Override
-    public SoundEvent getSound() {
-        return SoundEvents.BLOCK_LEVER_CLICK;
-    }
+	@Override
+	public SoundEvent getSound() {
+		return SoundEvents.BLOCK_LEVER_CLICK;
+	}
 }

@@ -10,47 +10,47 @@ import net.minecraft.sound.SoundEvent;
 import java.util.Random;
 
 public class FlightSound extends PlayerFollowingLoopingSound {
-    private static final Random rnd = new Random();
-    private static final int PITCH_CHANGE_TICK = FlightUtil.convertSecondsToTicks(4);
-    private int ticks = 0;
+	private static final Random rnd = new Random();
+	private static final int PITCH_CHANGE_TICK = FlightUtil.convertSecondsToTicks(4);
+	private int ticks = 0;
 
-    public FlightSound(SoundEvent soundEvent, SoundCategory soundCategory, float volume) {
-        super(soundEvent, soundCategory, volume);
-    }
+	public FlightSound(SoundEvent soundEvent, SoundCategory soundCategory, float volume) {
+		super(soundEvent, soundCategory, volume);
+	}
 
-    @Override
-    public void tick() {
-        super.tick();
+	@Override
+	public void tick() {
+		super.tick();
 
-        ticks++;
-        if (ticks >= PITCH_CHANGE_TICK) {
-            pitch = getRandomPitch();
-            ticks = 0;
-        }
+		ticks++;
+		if (ticks >= PITCH_CHANGE_TICK) {
+			pitch = getRandomPitch();
+			ticks = 0;
+		}
 
-        volume = (float) ((1f - (ClientTardisUtil.distanceFromConsole() / ClientFlightHandler.MAX_DISTANCE))); // laag?
-    }
+		volume = (float) ((1f - (ClientTardisUtil.distanceFromConsole() / ClientFlightHandler.MAX_DISTANCE))); // laag?
+	}
 
-    private static float getRandomPitch() {
-        if (ClientTardisUtil.getCurrentTardis() == null) return 1f;
+	private static float getRandomPitch() {
+		if (ClientTardisUtil.getCurrentTardis() == null) return 1f;
 
-        int speed = ClientTardisUtil.getCurrentTardis().getTravel().getSpeed();
+		int speed = ClientTardisUtil.getCurrentTardis().getTravel().getSpeed();
 
-        if (ClientSoundManager.getFlight().hasThrottleAndHandbrakeDown()) {
-            // todo i hate switch
-            return switch (speed) {
-                default -> 1.0f;
-                case 1 -> 0.5f;
-                case 2 -> 0.55f;
-                case 3 -> 0.6f;
-            };
-        }
+		if (ClientSoundManager.getFlight().hasThrottleAndHandbrakeDown()) {
+			// todo i hate switch
+			return switch (speed) {
+				default -> 1.0f;
+				case 1 -> 0.5f;
+				case 2 -> 0.55f;
+				case 3 -> 0.6f;
+			};
+		}
 
-        return switch (speed) {
-            default -> 1.0f;
-            case 1 -> rnd.nextFloat(0.9f,0.95f);
-            case 2 -> rnd.nextFloat(0.95f,1.0f);
-            case 3 -> rnd.nextFloat(1.0f,1.25f);
-        };
-    }
+		return switch (speed) {
+			default -> 1.0f;
+			case 1 -> rnd.nextFloat(0.9f, 0.95f);
+			case 2 -> rnd.nextFloat(0.95f, 1.0f);
+			case 3 -> rnd.nextFloat(1.0f, 1.25f);
+		};
+	}
 }

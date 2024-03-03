@@ -1,6 +1,5 @@
 package mdteam.ait.tardis.control.impl;
 
-import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.data.CloakData;
@@ -13,39 +12,39 @@ import net.minecraft.text.Text;
 
 public class CloakControl extends Control {
 
-    public CloakControl() {
-        // ⬚ ?
-        super("protocol_3");
-    }
+	public CloakControl() {
+		// ⬚ ?
+		super("protocol_3");
+	}
 
-    @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+	@Override
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
 
-        CloakData cloak = tardis.getHandlers().getCloak();
+		CloakData cloak = tardis.getHandlers().getCloak();
 
-        if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-                this.addToControlSequence(tardis);
-                world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                return false;
-            }
-        }
+		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
+			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+				this.addToControlSequence(tardis);
+				world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				return false;
+			}
+		}
 
-        cloak.toggle();
-        // @TODO: Add translations
-        if (cloak.isEnabled()) {
-            player.sendMessage(Text.literal("CLOAK: ON"), true);
-            world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        } else {
-            player.sendMessage(Text.literal("CLOAK: OFF"), true);
-            world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING_STOP, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        }
+		cloak.toggle();
+		// @TODO: Add translations
+		if (cloak.isEnabled()) {
+			// player.sendMessage(Text.translatable("tardis.cloak.on"), true);
+			world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING, SoundCategory.BLOCKS, 1.0F, 1.0F);
+		} else {
+			// player.sendMessage(Text.literal("tardis.cloak.off"), true);
+			world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING_STOP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public SoundEvent getSound() {
-        return SoundEvents.INTENTIONALLY_EMPTY;
-    }
+	@Override
+	public SoundEvent getSound() {
+		return SoundEvents.INTENTIONALLY_EMPTY;
+	}
 }

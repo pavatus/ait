@@ -28,94 +28,94 @@ import java.util.List;
 import static mdteam.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 
 public class WaypointItem extends Item {
-    public static final String POS_KEY = "pos";
-    /*public static final String LOCKED_KEY = "locked";*/
-    // fixme ehhhhh should we have a locked variable for the tardis waypoints? maybe it could be helpful?
+	public static final String POS_KEY = "pos";
 
-    public WaypointItem(Settings settings) {
-        super(settings);
-    }
+	public WaypointItem(Settings settings) {
+		super(settings);
+	}
 
-    @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        BlockPos pos = context.getBlockPos();
-        PlayerEntity player = context.getPlayer();
-        ItemStack itemStack = context.getStack();
-        Hand hand = context.getHand();
+	@Override
+	public ActionResult useOnBlock(ItemUsageContext context) {
+		World world = context.getWorld();
+		BlockPos pos = context.getBlockPos();
+		PlayerEntity player = context.getPlayer();
+		ItemStack itemStack = context.getStack();
+		Hand hand = context.getHand();
 
-        if (player == null)
-            return ActionResult.FAIL;
-        if (world.isClient()) return ActionResult.SUCCESS;
+		if (player == null)
+			return ActionResult.FAIL;
+		if (world.isClient()) return ActionResult.SUCCESS;
 
-        if (!player.isSneaking()) return ActionResult.FAIL;
-        if (hand != Hand.MAIN_HAND) return ActionResult.FAIL;
-        if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity console)) return ActionResult.FAIL;
+		if (!player.isSneaking()) return ActionResult.FAIL;
+		if (hand != Hand.MAIN_HAND) return ActionResult.FAIL;
+		if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity console)) return ActionResult.FAIL;
 
-        if (console.findTardis().isEmpty() || console.findTardis().get().getTravel().getPosition() == null)
-            return ActionResult.PASS;
+		if (console.findTardis().isEmpty() || console.findTardis().get().getTravel().getPosition() == null)
+			return ActionResult.PASS;
 
-        if (getPos(itemStack) == null) setPos(itemStack, console.findTardis().get().getTravel().getPosition());
+		if (getPos(itemStack) == null) setPos(itemStack, console.findTardis().get().getTravel().getPosition());
 
-        console.findTardis().get().getHandlers().getWaypoints().markHasCartridge();
-        console.findTardis().get().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
-        player.setStackInHand(hand, ItemStack.EMPTY);
+		console.findTardis().get().getHandlers().getWaypoints().markHasCartridge();
+		console.findTardis().get().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
+		player.setStackInHand(hand, ItemStack.EMPTY);
 
-        world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
+		world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
 
-        return ActionResult.SUCCESS;
-    }
+		return ActionResult.SUCCESS;
+	}
 
-    @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if (!Screen.hasShiftDown()) {
-            tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
-            return;
-        }
+	@Override
+	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+		if (!Screen.hasShiftDown()) {
+			tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
+			return;
+		}
 
-        NbtCompound main = stack.getOrCreateNbt();
+		NbtCompound main = stack.getOrCreateNbt();
 
-        if (!(main.contains(POS_KEY))) return;
+		if (!(main.contains(POS_KEY))) return;
 
-        NbtCompound nbt = main.getCompound(POS_KEY);
+		NbtCompound nbt = main.getCompound(POS_KEY);
 
-        BlockPos pos = NbtHelper.toBlockPos(nbt.getCompound("pos"));
-        String dimension = nbt.getString("dimension");
-        Direction dir = Direction.byId(nbt.getInt("direction"));
+		BlockPos pos = NbtHelper.toBlockPos(nbt.getCompound("pos"));
+		String dimension = nbt.getString("dimension");
+		Direction dir = Direction.byId(nbt.getInt("direction"));
 
-        tooltip.add(Text.translatable("waypoint.position.tooltip").append(Text.literal(
-                " > " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ()))
-                .formatted(Formatting.BLUE));
-        tooltip.add(Text.translatable("waypoint.direction.tooltip").append(Text.literal(
-            " > " + dir.asString().toUpperCase()))
-                .formatted(Formatting.BLUE));
-        tooltip.add(Text.translatable("waypoint.dimension.tooltip").append(Text.literal(
-            " > " + convertWorldValueToModified(dimension)))
-                .formatted(Formatting.BLUE));
-    }
+		tooltip.add(Text.translatable("waypoint.position.tooltip").append(Text.literal(
+						" > " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ()))
+				.formatted(Formatting.BLUE));
+		tooltip.add(Text.translatable("waypoint.direction.tooltip").append(Text.literal(
+						" > " + dir.asString().toUpperCase()))
+				.formatted(Formatting.BLUE));
+		tooltip.add(Text.translatable("waypoint.dimension.tooltip").append(Text.literal(
+						" > " + convertWorldValueToModified(dimension)))
+				.formatted(Formatting.BLUE));
+	}
 
-    public static ItemStack create(Waypoint pos) {
-        ItemStack stack = new ItemStack(AITItems.WAYPOINT_CARTRIDGE);
-        setPos(stack, pos);
-        if (pos.hasName()) {
-            stack.setCustomName(Text.literal(pos.name()));
-        }
-        return stack;
-    }
+	public static ItemStack create(Waypoint pos) {
+		ItemStack stack = new ItemStack(AITItems.WAYPOINT_CARTRIDGE);
+		setPos(stack, pos);
+		if (pos.hasName()) {
+			stack.setCustomName(Text.literal(pos.name()));
+		}
+		return stack;
+	}
 
-    public static AbsoluteBlockPos.Directed getPos(ItemStack stack) {
-        NbtCompound nbt = stack.getOrCreateNbt();
+	public static AbsoluteBlockPos.Directed getPos(ItemStack stack) {
+		NbtCompound nbt = stack.getOrCreateNbt();
 
-        if (!nbt.contains(POS_KEY)) return null;
+		if (!nbt.contains(POS_KEY)) return null;
 
-        return AbsoluteBlockPos.Directed.fromNbt(nbt.getCompound(POS_KEY));
-    }
-    public static void setPos(ItemStack stack, AbsoluteBlockPos.Directed pos) {
-        NbtCompound nbt = stack.getOrCreateNbt();
+		return AbsoluteBlockPos.Directed.fromNbt(nbt.getCompound(POS_KEY));
+	}
 
-        nbt.put(POS_KEY, pos.toNbt());
-    }
-    public static boolean hasPos(ItemStack stack) {
-        return stack.getOrCreateNbt().contains(POS_KEY);
-    }
+	public static void setPos(ItemStack stack, AbsoluteBlockPos.Directed pos) {
+		NbtCompound nbt = stack.getOrCreateNbt();
+
+		nbt.put(POS_KEY, pos.toNbt());
+	}
+
+	public static boolean hasPos(ItemStack stack) {
+		return stack.getOrCreateNbt().contains(POS_KEY);
+	}
 }

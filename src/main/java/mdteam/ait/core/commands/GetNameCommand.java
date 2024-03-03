@@ -16,24 +16,24 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class GetNameCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("name")
-                        .requires(source -> source.hasPermissionLevel(2))
-                        .then(literal("get")
-                        .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-                                .executes(GetNameCommand::runCommand))))
-        );
-    }
+	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+		dispatcher.register(literal(AITMod.MOD_ID)
+				.then(literal("name")
+						.requires(source -> source.hasPermissionLevel(2))
+						.then(literal("get")
+								.then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
+										.executes(GetNameCommand::runCommand))))
+		);
+	}
 
-    private static int runCommand(CommandContext<ServerCommandSource> context) {
-        ServerPlayerEntity source = context.getSource().getPlayer();
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
+	private static int runCommand(CommandContext<ServerCommandSource> context) {
+		ServerPlayerEntity source = context.getSource().getPlayer();
+		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
 
-        if (tardis == null || source == null) return 0;
+		if (tardis == null || source == null) return 0;
 
-        source.sendMessage(Text.literal(tardis.getHandlers().getStats().getName()), false);
+		source.sendMessage(Text.literal(tardis.getHandlers().getStats().getName()), false);
 
-        return Command.SINGLE_SUCCESS;
-    }
+		return Command.SINGLE_SUCCESS;
+	}
 }

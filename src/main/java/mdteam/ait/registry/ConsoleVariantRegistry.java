@@ -2,7 +2,8 @@ package mdteam.ait.registry;
 
 import mdteam.ait.AITMod;
 import mdteam.ait.tardis.console.type.ConsoleTypeSchema;
-import mdteam.ait.tardis.console.variant.*;
+import mdteam.ait.tardis.console.variant.ConsoleVariantSchema;
+import mdteam.ait.tardis.console.variant.DatapackConsole;
 import mdteam.ait.tardis.console.variant.alnico.AlnicoVariant;
 import mdteam.ait.tardis.console.variant.coral.BlueCoralVariant;
 import mdteam.ait.tardis.console.variant.coral.CoralVariant;
@@ -34,161 +35,164 @@ import java.util.Collection;
 import java.util.List;
 
 public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchema> {
-    public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_console_variants");
-    private static ConsoleVariantRegistry INSTANCE;
-    public static ConsoleVariantSchema registerStatic(ConsoleVariantSchema schema) {
-        return ConsoleVariantRegistry.getInstance().register(schema);
-    }
+	public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_console_variants");
+	private static ConsoleVariantRegistry INSTANCE;
 
-    public void syncToEveryone() {
-        if (TardisUtil.getServer() == null) return;
+	public static ConsoleVariantSchema registerStatic(ConsoleVariantSchema schema) {
+		return ConsoleVariantRegistry.getInstance().register(schema);
+	}
 
-        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
-            syncToClient(player);
-        }
-    }
+	public void syncToEveryone() {
+		if (TardisUtil.getServer() == null) return;
 
-    @Override
-    public void syncToClient(ServerPlayerEntity player) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(REGISTRY.size());
-        for (ConsoleVariantSchema schema : REGISTRY.values()) {
-            if (schema instanceof DatapackConsole variant) {
-                buf.encodeAsJson(DatapackConsole.CODEC, variant);
-                continue;
-            }
-            if (schema.parent() == null) {
+		for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
+			syncToClient(player);
+		}
+	}
+
+	@Override
+	public void syncToClient(ServerPlayerEntity player) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeInt(REGISTRY.size());
+		for (ConsoleVariantSchema schema : REGISTRY.values()) {
+			if (schema instanceof DatapackConsole variant) {
+				buf.encodeAsJson(DatapackConsole.CODEC, variant);
+				continue;
+			}
+            /*if (schema.parent() == null) {
                 AITMod.LOGGER.error("Console variant " + schema.id() + " has null category!");
                 AITMod.LOGGER.error("Temporarily returning, fix this code!!!"); // todo
                 continue;
-            }
-            buf.encodeAsJson(DatapackConsole.CODEC, new DatapackConsole(schema.id(), schema.parent().id(), DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, false));
-        }
-        ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
-    }
-    @Override
-    public void readFromServer(PacketByteBuf buf) {
-        REGISTRY.clear();
-        registerDefaults();
-        int size = buf.readInt();
+            }*/
+			buf.encodeAsJson(DatapackConsole.CODEC, new DatapackConsole(schema.id(), schema.parent().id(), DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, false));
+		}
+		ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
+	}
 
-        DatapackConsole variant;
+	@Override
+	public void readFromServer(PacketByteBuf buf) {
+		REGISTRY.clear();
+		registerDefaults();
+		int size = buf.readInt();
 
-        for (int i = 0; i < size; i++) {
-            variant = buf.decodeAsJson(DatapackConsole.CODEC);
-            if (!variant.wasDatapack()) continue;
-            register(variant);
-        }
+		DatapackConsole variant;
 
-        AITMod.LOGGER.info("Read {} console variants from server", size);
-    }
+		for (int i = 0; i < size; i++) {
+			variant = buf.decodeAsJson(DatapackConsole.CODEC);
+			if (!variant.wasDatapack()) continue;
+			register(variant);
+		}
 
-    public static DatapackRegistry<ConsoleVariantSchema> getInstance() {
-        if (INSTANCE == null) {
-            AITMod.LOGGER.debug("ConsoleVariantRegistry was not initialized, Creating a new instance");
-            INSTANCE = new ConsoleVariantRegistry();
-        }
+		AITMod.LOGGER.info("Read {} console variants from server", size);
+	}
 
-        return INSTANCE;
-    }
+	public static DatapackRegistry<ConsoleVariantSchema> getInstance() {
+		if (INSTANCE == null) {
+			AITMod.LOGGER.debug("ConsoleVariantRegistry was not initialized, Creating a new instance");
+			INSTANCE = new ConsoleVariantRegistry();
+		}
 
-    public static Collection<ConsoleVariantSchema> withParent(ConsoleTypeSchema parent) {
-        List<ConsoleVariantSchema> list = new ArrayList<>();
+		return INSTANCE;
+	}
 
-        for (ConsoleVariantSchema schema : ConsoleVariantRegistry.getInstance().REGISTRY.values()) {
-            if (schema.parent().equals(parent)) list.add(schema);
-        }
+	public static Collection<ConsoleVariantSchema> withParent(ConsoleTypeSchema parent) {
+		List<ConsoleVariantSchema> list = new ArrayList<>();
 
-        return list;
-    }
-    public static List<ConsoleVariantSchema> withParentToList(ConsoleTypeSchema parent) {
-        List<ConsoleVariantSchema> list = new ArrayList<>();
+		for (ConsoleVariantSchema schema : ConsoleVariantRegistry.getInstance().REGISTRY.values()) {
+			if (schema.parent().equals(parent)) list.add(schema);
+		}
 
-        for (ConsoleVariantSchema schema : ConsoleVariantRegistry.getInstance().REGISTRY.values()) {
-            if (schema.parent().equals(parent)) list.add(schema);
-        }
+		return list;
+	}
 
-        return list;
-    }
+	public static List<ConsoleVariantSchema> withParentToList(ConsoleTypeSchema parent) {
+		List<ConsoleVariantSchema> list = new ArrayList<>();
 
-    public static ConsoleVariantSchema HARTNELL;
-    public static ConsoleVariantSchema HARTNELL_WOOD;
-    public static ConsoleVariantSchema HARTNELL_KELT;
-    public static ConsoleVariantSchema HARTNELL_MINT;
-    public static ConsoleVariantSchema CORAL;
-    public static ConsoleVariantSchema CORAL_BLUE;
-    public static ConsoleVariantSchema CORAL_WHITE;
-    public static ConsoleVariantSchema COPPER;
-    public static ConsoleVariantSchema TOYOTA;
-    public static ConsoleVariantSchema TOYOTA_BLUE;
-    public static ConsoleVariantSchema TOYOTA_LEGACY;
-    public static ConsoleVariantSchema ALNICO;
-    public static ConsoleVariantSchema STEAM;
-    public static ConsoleVariantSchema STEAM_CHERRY;
+		for (ConsoleVariantSchema schema : ConsoleVariantRegistry.getInstance().REGISTRY.values()) {
+			if (schema.parent().equals(parent)) list.add(schema);
+		}
 
-    private static void registerDefaults() {
-        // Hartnell variants
-        HARTNELL = registerStatic(new HartnellVariant());
-        HARTNELL_KELT = registerStatic(new KeltHartnellVariant());
-        HARTNELL_MINT = registerStatic(new MintHartnellVariant());
-        HARTNELL_WOOD = registerStatic(new WoodenHartnellVariant()); // fixme this texture is awful - make tright remake it
+		return list;
+	}
 
-        // Coral variants
-        CORAL = registerStatic(new CoralVariant());
-        CORAL_BLUE = registerStatic(new BlueCoralVariant());
-        CORAL_WHITE = registerStatic(new WhiteCoralVariant());
+	public static ConsoleVariantSchema HARTNELL;
+	public static ConsoleVariantSchema HARTNELL_WOOD;
+	public static ConsoleVariantSchema HARTNELL_KELT;
+	public static ConsoleVariantSchema HARTNELL_MINT;
+	public static ConsoleVariantSchema CORAL;
+	public static ConsoleVariantSchema CORAL_BLUE;
+	public static ConsoleVariantSchema CORAL_WHITE;
+	public static ConsoleVariantSchema COPPER;
+	public static ConsoleVariantSchema TOYOTA;
+	public static ConsoleVariantSchema TOYOTA_BLUE;
+	public static ConsoleVariantSchema TOYOTA_LEGACY;
+	public static ConsoleVariantSchema ALNICO;
+	public static ConsoleVariantSchema STEAM;
+	public static ConsoleVariantSchema STEAM_CHERRY;
 
-        // Copper variants
-        //COPPER = register(new CopperVariant());
+	private static void registerDefaults() {
+		// Hartnell variants
+		HARTNELL = registerStatic(new HartnellVariant());
+		HARTNELL_KELT = registerStatic(new KeltHartnellVariant());
+		HARTNELL_MINT = registerStatic(new MintHartnellVariant());
+		HARTNELL_WOOD = registerStatic(new WoodenHartnellVariant()); // fixme this texture is awful - make tright remake it
 
-        // Toyota variants
-        TOYOTA = registerStatic(new ToyotaVariant());
-        TOYOTA_BLUE = registerStatic(new ToyotaBlueVariant());
-        TOYOTA_LEGACY = registerStatic(new ToyotaLegacyVariant());
+		// Coral variants
+		CORAL = registerStatic(new CoralVariant());
+		CORAL_BLUE = registerStatic(new BlueCoralVariant());
+		CORAL_WHITE = registerStatic(new WhiteCoralVariant());
 
-        // Alnico variants
-        ALNICO = registerStatic(new AlnicoVariant());
+		// Copper variants
+		//COPPER = register(new CopperVariant());
 
-        // Steam variants
-        STEAM = registerStatic(new SteamVariant());
-        STEAM_CHERRY = registerStatic(new SteamCherryVariant());
-    }
+		// Toyota variants
+		TOYOTA = registerStatic(new ToyotaVariant());
+		TOYOTA_BLUE = registerStatic(new ToyotaBlueVariant());
+		TOYOTA_LEGACY = registerStatic(new ToyotaLegacyVariant());
 
-    // AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
-    public void init() {
+		// Alnico variants
+		ALNICO = registerStatic(new AlnicoVariant());
+
+		// Steam variants
+		STEAM = registerStatic(new SteamVariant());
+		STEAM_CHERRY = registerStatic(new SteamCherryVariant());
+	}
+
+	// AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
+	public void init() {
 
 
-        // Reading from Datapacks
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-            @Override
-            public Identifier getFabricId() {
-                return new Identifier(AITMod.MOD_ID, "console");
-            }
+		// Reading from Datapacks
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+			@Override
+			public Identifier getFabricId() {
+				return new Identifier(AITMod.MOD_ID, "console");
+			}
 
-            @Override
-            public void reload(ResourceManager manager) {
-                ConsoleVariantRegistry.getInstance().clearCache();
-                registerDefaults();
+			@Override
+			public void reload(ResourceManager manager) {
+				ConsoleVariantRegistry.getInstance().clearCache();
+				registerDefaults();
 
-                for(Identifier id : manager.findResources("console", filename -> filename.getPath().endsWith(".json")).keySet()) {
-                    try(InputStream stream = manager.getResource(id).get().getInputStream()) {
-                        ConsoleVariantSchema created = DatapackConsole.fromInputStream(stream);
+				for (Identifier id : manager.findResources("console", filename -> filename.getPath().endsWith(".json")).keySet()) {
+					try (InputStream stream = manager.getResource(id).get().getInputStream()) {
+						ConsoleVariantSchema created = DatapackConsole.fromInputStream(stream);
 
-                        if (created == null) {
-                            stream.close();
-                            continue;
-                        }
+						if (created == null) {
+							stream.close();
+							continue;
+						}
 
-                        ConsoleVariantRegistry.getInstance().register(created);
-                        stream.close();
-                        AITMod.LOGGER.info("Loaded datapack console variant " + created.id().toString());
-                    } catch(Exception e) {
-                        AITMod.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
-                    }
-                }
+						ConsoleVariantRegistry.getInstance().register(created);
+						stream.close();
+						AITMod.LOGGER.info("Loaded datapack console variant " + created.id().toString());
+					} catch (Exception e) {
+						AITMod.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
+					}
+				}
 
-                syncToEveryone();
-            }
-        });
-    }
+				syncToEveryone();
+			}
+		});
+	}
 }

@@ -17,16 +17,19 @@ import net.minecraft.util.Identifier;
 public class SiegeModeModel extends ExteriorModel {
 	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/siege_mode/siege_mode.png");
 	private final ModelPart body;
+
 	public SiegeModeModel(ModelPart root) {
 		this.body = root.getChild("body");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
 		ModelPartData body = modelPartData.addChild("body", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new Dilation(0.0F))
-		.uv(0, 16).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new Dilation(0.25F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+				.uv(0, 16).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new Dilation(0.25F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 		return TexturedModelData.of(modelData, 32, 32);
 	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		body.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
@@ -36,7 +39,7 @@ public class SiegeModeModel extends ExteriorModel {
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		if (exterior.findTardis().isEmpty()) return;
 		matrices.push();
-		matrices.translate(0,-1.5,0);
+		matrices.translate(0, -1.5, 0);
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
@@ -44,8 +47,8 @@ public class SiegeModeModel extends ExteriorModel {
 
 	@Override
 	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        matrices.push();
-		matrices.translate(0,-1.5,0);
+		matrices.push();
+		matrices.translate(0, -1.5, 0);
 
 		super.renderRealWorld(realEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
@@ -53,8 +56,8 @@ public class SiegeModeModel extends ExteriorModel {
 
 	@Override
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        matrices.push();
-		matrices.translate(0,-1.5,0);
+		matrices.push();
+		matrices.translate(0, -1.5, 0);
 
 		super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 		matrices.pop();

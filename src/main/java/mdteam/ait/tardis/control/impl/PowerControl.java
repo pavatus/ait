@@ -9,44 +9,46 @@ import net.minecraft.sound.SoundEvent;
 
 public class PowerControl extends Control {
 
-    private boolean noDelay = false;
-    public PowerControl() {
-        super("power");
-    }
+	private boolean noDelay = false;
 
-    @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-        if(tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-            if(tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-                this.addToControlSequence(tardis);
-                this.noDelay = true;
-                return false;
-            }
-        }
-        tardis.togglePower();
+	public PowerControl() {
+		super("power");
+	}
 
-        return false;
-    }
+	@Override
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
+			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+				this.addToControlSequence(tardis);
+				this.noDelay = true;
+				return false;
+			}
+		}
+		tardis.togglePower();
 
-    @Override
-    public SoundEvent getSound() {
-        return AITSounds.HANDBRAKE_LEVER_PULL;
-    }
-    @Override
-    public boolean shouldFailOnNoPower() {
-        return false;
-    }
+		return false;
+	}
 
-    @Override
-    public long getDelayLength() {
-        if(this.noDelay) return 0L;
-        return 10000L;
-    }
+	@Override
+	public SoundEvent getSound() {
+		return AITSounds.HANDBRAKE_LEVER_PULL;
+	}
 
-    @Override
-    public boolean shouldHaveDelay(Tardis tardis) {
-        if (tardis.hasPower()) return false;
+	@Override
+	public boolean shouldFailOnNoPower() {
+		return false;
+	}
 
-        return super.shouldHaveDelay();
-    }
+	@Override
+	public long getDelayLength() {
+		if (this.noDelay) return 0L;
+		return 10000L;
+	}
+
+	@Override
+	public boolean shouldHaveDelay(Tardis tardis) {
+		if (tardis.hasPower()) return false;
+
+		return super.shouldHaveDelay();
+	}
 }
