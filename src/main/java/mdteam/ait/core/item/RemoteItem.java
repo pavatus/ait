@@ -1,6 +1,7 @@
 package mdteam.ait.core.item;
 
 import mdteam.ait.api.tardis.LinkableItem;
+import mdteam.ait.core.util.SpecificDirection;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.FlightUtil;
@@ -70,7 +71,7 @@ public class RemoteItem extends LinkableItem {
 					if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
 					tardis.getTravel().setSpeed(tardis.getTravel().getMaxSpeed());
-					FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection().getOpposite()));
+					FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, SpecificDirection.fromRotation(player.getHeadYaw())));
 				} else {
 					world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 					player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);

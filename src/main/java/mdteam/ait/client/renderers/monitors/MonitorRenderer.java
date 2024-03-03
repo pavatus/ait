@@ -72,7 +72,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 
 		String positionPosText = " " + abpp.getX() + ", " + abpp.getY() + ", " + abpp.getZ();
 		String positionDimensionText = " " + convertWorldValueToModified(abpp.getDimension().getValue());
-		String positionDirectionText = " " + abpp.getDirection().toString().toUpperCase();
+		String positionDirectionText = " " + abpp.getSpecific().asName().toUpperCase();
 
 
 		this.textRenderer.drawWithOutline(Text.of("❌").asOrderedText(), 0, 0, 0xF00F00, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
@@ -84,7 +84,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 
 		String destinationPosText = " " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
 		String destinationDimensionText = " " + convertWorldValueToModified(abpd.getDimension().getValue());
-		String destinationDirectionText = " " + abpd.getDirection().toString().toUpperCase();
+		String destinationDirectionText = " " + abpd.getSpecific().asName().toUpperCase();
 
 		this.textRenderer.drawWithOutline(Text.of("✛").asOrderedText(), 0, 40, 0x00F0FF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(destinationPosText).asOrderedText(), 0, 48, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);

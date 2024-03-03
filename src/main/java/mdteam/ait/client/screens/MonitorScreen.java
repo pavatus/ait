@@ -313,10 +313,10 @@ public class MonitorScreen extends ConsoleScreen {
 		if (abpd.getDimension() == null) return;
 		String positionText = abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
 		String dimensionText = convertWorldValueToModified(abpd.getDimension().getValue());
-		String directionText = abpd.getDirection().toString().toUpperCase();
+		String directionText = abpd.getSpecific().asName().toUpperCase();
 		String destinationText = dabpd.getX() + ", " + dabpd.getY() + ", " + dabpd.getZ();
 		String dDimensionText = convertWorldValueToModified(dabpd.getDimension().getValue());
-		String dDirectionText = dabpd.getDirection().toString().toUpperCase();
+		String dDirectionText = dabpd.getSpecific().asString().toUpperCase();
 		String fuelText = String.valueOf(Math.round((getFromUUID(tardisId).getFuel() / TARDIS_MAX_FUEL) * 100));
 		String flightTimeText = (tardis().getTravel().getState() == TardisTravel.State.LANDED ? "0" : String.valueOf(tardis().getHandlers().getFlight().getDurationAsPercentage()));
 		// position

@@ -88,7 +88,11 @@ public class TardisTravel extends TardisLink {
 	}
 
 	public void setPosition(AbsoluteBlockPos.Directed pos) {
+		System.out.println(pos.getSpecific());
+
 		this.position = pos;
+
+		System.out.println(this.getPosition().getSpecific());
 	}
 
 	public void setLastPosition(AbsoluteBlockPos.Directed position) {
@@ -126,9 +130,9 @@ public class TardisTravel extends TardisLink {
 				int new_x = getDestination().getX() + random_change;
 				int new_y = getDestination().getX();
 				int new_z = getDestination().getZ() + random_change;
-				this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getDirection()));
+				this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getSpecific()));
 				if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
-					this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
+					this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getSpecific()));
 				}
 			}
 			this.materialise();
@@ -369,9 +373,9 @@ public class TardisTravel extends TardisLink {
 		int new_y = getDestination().getY();/*.getWorld().getTopY() - 1;*/
 		int new_z = getDestination().getZ() + random_change;
 		this.setCrashing(true);
-		this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getDirection()));
+		this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getSpecific()));
 		if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
-			this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
+			this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getSpecific()));
 		}
 		this.crashAndMaterialise();
 		int repair_ticks = 1000 * crash_intensity;
@@ -601,7 +605,7 @@ public class TardisTravel extends TardisLink {
 						MathHelper.clamp(getDestination().getY(), world.getBottomY(), world.getTopY() - 1),
 						getDestination().getZ(),
 						getDestination().getWorld(),
-						getDestination().getDirection()),
+						getDestination().getSpecific()),
 				false
 		);
 
@@ -618,7 +622,7 @@ public class TardisTravel extends TardisLink {
 				ground = world.getBlockState(temp.down());
 
 				if (isReplaceable(current, top) && !isReplaceable(ground)) { // check two blocks cus tardis is two blocks tall yk and check for groud
-					this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
+					this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getSpecific()), false);
 					return true;
 				}
 
@@ -633,7 +637,7 @@ public class TardisTravel extends TardisLink {
 				ground = world.getBlockState(temp.down());
 
 				if (isReplaceable(current, top) && !isReplaceable(ground)) { // check two blocks cus tardis is two blocks tall yk and check for groud
-					this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
+					this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getSpecific()), false);
 					return true;
 				}
 
@@ -681,7 +685,7 @@ public class TardisTravel extends TardisLink {
 		}
 
 		if (world.getBlockEntity(this.getDestination().down()) instanceof ExteriorBlockEntity) {
-			this.setDestination(new AbsoluteBlockPos.Directed(this.getDestination().down(), world, this.getDestination().getDirection()), false);
+			this.setDestination(new AbsoluteBlockPos.Directed(this.getDestination().down(), world, this.getDestination().getSpecific()), false);
 			return true;
 		}
 
@@ -717,7 +721,7 @@ public class TardisTravel extends TardisLink {
 		this.setDestination(new AbsoluteBlockPos.Directed(
 						h,
 						TardisUtil.getTardisDimension(),
-						this.getDestination().getDirection()),
+						this.getDestination().getSpecific()),
 				checks
 		);
 	}
@@ -814,7 +818,7 @@ public class TardisTravel extends TardisLink {
 
 		this.destination = border.contains(this.destination)
 						? pos : new AbsoluteBlockPos.Directed(border.clamp(pos.getX(), pos.getY(), pos.getZ()),
-						pos.getDimension(), pos.getDirection());
+						pos.getDimension(), pos.getSpecific());
 		this.findTardis().get().getHandlers().getFlight().recalculate();
 
 		if (withChecks)

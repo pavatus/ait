@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.control.impl;
 
+import mdteam.ait.core.util.SpecificDirection;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.Control;
@@ -26,34 +27,27 @@ public class DirectionControl extends Control {
 			}
 		}
 
-		travel.setDestination(new AbsoluteBlockPos.Directed(dest, getNextDirection(dest.getDirection())), false);
+		travel.setDestination(new AbsoluteBlockPos.Directed(dest, getNextDirection(dest.getSpecific())), false);
 
-		messagePlayer(player, travel.getDestination().getDirection());
+		messagePlayer(player, travel.getDestination().getSpecific());
 
 		return true;
 	}
 
-	private void messagePlayer(ServerPlayerEntity player, Direction direction) {
+	private void messagePlayer(ServerPlayerEntity player, SpecificDirection direction) {
 		String arrow = "";
-		if (direction == Direction.NORTH)
-			arrow = "↑";
-		else if (direction == Direction.EAST)
-			arrow = "→";
-		else if (direction == Direction.SOUTH)
-			arrow = "↓";
-		else if (direction == Direction.WEST)
-			arrow = "←";
-		player.sendMessage(Text.literal("Direction: " + direction.toString().substring(0, 1).toUpperCase() + direction.toString().substring(1) + " | " + arrow), true); // fixme translatable is preferred
+		// if (direction == Direction.NORTH)
+		// 	arrow = "↑";
+		// else if (direction == Direction.EAST)
+		// 	arrow = "→";
+		// else if (direction == Direction.SOUTH)
+		// 	arrow = "↓";
+		// else if (direction == Direction.WEST)
+		// 	arrow = "←";
+		player.sendMessage(Text.literal("Direction: " + direction.asName() + " | " + arrow), true); // fixme translatable is preferred
 	}
 
-	private Direction getNextDirection(Direction current) {
-		return switch (current) {
-			case DOWN -> Direction.NORTH;
-			case UP -> Direction.NORTH;
-			case NORTH -> Direction.EAST;
-			case SOUTH -> Direction.WEST;
-			case WEST -> Direction.NORTH;
-			case EAST -> Direction.SOUTH;
-		};
+	private SpecificDirection getNextDirection(SpecificDirection current) {
+		return SpecificDirection.fromRotation(current.toRotation() + 45);
 	}
 }

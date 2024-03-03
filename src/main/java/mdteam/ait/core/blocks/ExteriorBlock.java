@@ -311,7 +311,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		Tardis tardis = falling.getTardis();
 
 		if (tardis == null) return;
-		tardis.getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, tardis.getTravel().getPosition().getDirection()));
+		tardis.getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, tardis.getTravel().getPosition().getSpecific()));
 
 		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 		FlightUtil.playSoundAtConsole(tardis, AITSounds.LAND_THUD, SoundCategory.BLOCKS);

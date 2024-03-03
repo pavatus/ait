@@ -11,6 +11,7 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.TardisExterior;
 import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -44,11 +45,11 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			return;
 		}
 
-		TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.findTardis().get().getExterior().getVariant());
-		TardisExterior tardisExterior = entity.findTardis().get().getExterior();
+		ClientTardis tardis = (ClientTardis) entity.findTardis().get();
 
-		if (tardisExterior == null) return;
+		TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+		TardisExterior tardisExterior = tardis.getExterior();
+		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardisExterior.getVariant());
 
 		Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
 
@@ -58,8 +59,11 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		if (model == null)
 			this.model = exteriorVariant.model();
 
-		BlockState blockState = entity.getCachedState();
-		float f = blockState.get(ExteriorBlock.FACING).asRotation();
+		// BlockState blockState = entity.getCachedState();
+		// float f = blockState.get(ExteriorBlock.FACING).asRotation();
+
+		float f = tardis.getTravel().getPosition().getSpecific().toRotation();
+
 		int maxLight = 0xF000F0;
 		matrices.push();
 		matrices.translate(0.5, 0, 0.5);
@@ -78,9 +82,11 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			emission = DoomConstants.getEmissionForRotation(DoomConstants.getTextureForRotation(wrappedDegrees, entity.findTardis().get()), entity.findTardis().get());
 		}
 
-		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f :
-				MinecraftClient.getInstance().player.getHeadYaw() + ((wrappedDegrees > -135 && wrappedDegrees < 135) ? 180f : 0f)));
+		//matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f :
+		//		MinecraftClient.getInstance().player.getHeadYaw() + ((wrappedDegrees > -135 && wrappedDegrees < 135) ? 180f : 0f)));
 
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f));
 
 		// -------------------------------------------------------------------------------------------------------------------
 
@@ -112,12 +118,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(emission, true)), maxLight, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
 			}
 		}
+
+
 		matrices.pop();
 		if (!entity.findTardis().get().getHandlers().getSonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) return;
 		ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get(SonicHandler.HAS_EXTERIOR_SONIC);
 		if (stack == null) return;
 		matrices.push();
-		//matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + sonicItemRotations(exteriorVariant)[0]));
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + exteriorVariant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());
 		matrices.translate(exteriorVariant.sonicItemTranslations().x(), exteriorVariant.sonicItemTranslations().y(), exteriorVariant.sonicItemTranslations().z());
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(exteriorVariant.sonicItemRotations()[1]));

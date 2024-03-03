@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.util;
 
+import mdteam.ait.core.util.SpecificDirection;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -98,23 +99,51 @@ public class AbsoluteBlockPos extends BlockPos {
 
 	public static class Directed extends AbsoluteBlockPos {
 
-		private final Direction direction;
+		private final SpecificDirection direction;
 
+		@Deprecated
 		public Directed(int x, int y, int z, SerialDimension dimension, Direction direction) {
+			super(x, y, z, dimension);
+
+			this.direction = SpecificDirection.fromDirection(direction);
+		}
+
+		@Deprecated
+		public Directed(BlockPos pos, SerialDimension dimension, Direction direction) {
+			this(pos.getX(), pos.getY(), pos.getZ(), dimension, direction);
+		}
+
+		@Deprecated
+		public Directed(AbsoluteBlockPos pos, Direction direction) {
+			this(pos, pos.getDimension(), direction);
+		}
+
+		@Deprecated
+		public Directed(int x, int y, int z, World world, Direction direction) {
+			super(x, y, z, world);
+
+			this.direction = SpecificDirection.fromDirection(direction);
+		}
+
+		public Directed(BlockPos pos, World world, SpecificDirection direction) {
+			this(pos.getX(), pos.getY(), pos.getZ(), world, direction);
+		}
+
+		public Directed(int x, int y, int z, SerialDimension dimension, SpecificDirection direction) {
 			super(x, y, z, dimension);
 
 			this.direction = direction;
 		}
 
-		public Directed(BlockPos pos, SerialDimension dimension, Direction direction) {
+		public Directed(BlockPos pos, SerialDimension dimension, SpecificDirection direction) {
 			this(pos.getX(), pos.getY(), pos.getZ(), dimension, direction);
 		}
 
-		public Directed(AbsoluteBlockPos pos, Direction direction) {
+		public Directed(AbsoluteBlockPos pos, SpecificDirection direction) {
 			this(pos, pos.getDimension(), direction);
 		}
 
-		public Directed(int x, int y, int z, World world, Direction direction) {
+		public Directed(int x, int y, int z, World world, SpecificDirection direction) {
 			super(x, y, z, world);
 
 			this.direction = direction;
@@ -124,8 +153,12 @@ public class AbsoluteBlockPos extends BlockPos {
 			this(pos.getX(), pos.getY(), pos.getZ(), world, direction);
 		}
 
+		@Deprecated
 		public Direction getDirection() {
-			return direction;
+			return direction.toDirection();
+		}
+		public SpecificDirection getSpecific() {
+			return this.direction;
 		}
 
 		@Override
@@ -140,7 +173,7 @@ public class AbsoluteBlockPos extends BlockPos {
 		public NbtCompound toNbt() {
 			NbtCompound nbt = super.toNbt();
 
-			nbt.putInt("direction", this.direction.getId());
+			nbt.putFloat("SpecificDirection", this.direction.toRotation());
 
 			return nbt;
 		}
@@ -148,7 +181,15 @@ public class AbsoluteBlockPos extends BlockPos {
 		public static Directed fromNbt(NbtCompound nbt) {
 			AbsoluteBlockPos pos = AbsoluteBlockPos.fromNbt(nbt);
 
-			Direction dir = Direction.byId(nbt.getInt("direction"));
+			SpecificDirection dir = SpecificDirection.NORTH;
+
+			if (nbt.contains("SpecificDirection")) {
+				dir = SpecificDirection.fromRotation(nbt.getFloat("SpecificDirection"));
+			}
+
+			if (nbt.contains("direction")) {
+				dir = SpecificDirection.fromDirection(Direction.byId(nbt.getInt("direction")));
+			}
 
 			return new Directed(pos, dir);
 		}
