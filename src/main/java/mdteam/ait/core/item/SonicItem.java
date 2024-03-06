@@ -36,6 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class SonicItem extends LinkableItem implements ArtronHolderItem {
@@ -43,6 +44,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	public static final String MODE_KEY = "mode";
 	public static final String PREV_MODE_KEY = "PreviousMode";
 	public static final String INACTIVE = "inactive";
+	public static final String SONIC_TYPE = "sonic_type";
 
 	public static final int SONIC_SFX_LENGTH = FlightUtil.convertSecondsToTicks(1.5);
 
@@ -54,6 +56,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 		ItemStack stack = user.getStackInHand(hand);
 		BlockPos pos = user.getBlockPos();
+
+		if(world.isClient()) return TypedActionResult.pass(stack);
 
 		boolean success = useSonic(world, user, pos, hand, stack);
 
@@ -68,11 +72,11 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		ItemStack stack = context.getStack();
 
 		if (player == null)
-			return ActionResult.FAIL;
+			return ActionResult.PASS;
 
 		boolean success = useSonic(world, player, pos, context.getHand(), stack);
 
-		return success ? ActionResult.CONSUME : ActionResult.FAIL;
+		return success ? ActionResult.CONSUME : ActionResult.PASS;
 	}
 
 	@Override
@@ -175,6 +179,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 		nbt.putInt(MODE_KEY, 0);
 		nbt.putDouble(FUEL_KEY, getMaxFuel(stack));
+		nbt.putInt(SONIC_TYPE, 0);
 
 		return stack;
 	}
@@ -202,6 +207,13 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		return nbtCompound.getInt(MODE_KEY);
 	}
 
+	public static int findTypeInt(ItemStack stack) {
+		NbtCompound nbtCompound = stack.getOrCreateNbt();
+		if (!nbtCompound.contains(SONIC_TYPE))
+			return 0;
+		return nbtCompound.getInt(SONIC_TYPE);
+	}
+
 	public static void setMode(ItemStack stack, int mode) {
 		NbtCompound nbtCompound = stack.getOrCreateNbt();
 		nbtCompound.putInt(MODE_KEY, mode);
@@ -209,6 +221,15 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 	public static void setMode(ItemStack stack, Mode mode) {
 		setMode(stack, mode.ordinal());
+	}
+
+	public static void setType(ItemStack stack, int type) {
+		NbtCompound nbtCompound = stack.getOrCreateNbt();
+		nbtCompound.putInt(SONIC_TYPE, type);
+	}
+
+	public static void setType(ItemStack stack, SonicTypes type) {
+		setMode(stack, type.ordinal());
 	}
 
 	private static void setPreviousMode(ItemStack stack) {
@@ -234,9 +255,17 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		return Mode.values()[mode];
 	}
 
+	public static SonicTypes intToSonicType(int mode) {
+		return SonicTypes.values()[mode];
+	}
+
 	// ew
 	public static Mode findMode(ItemStack stack) {
 		return intToMode(findModeInt(stack));
+	}
+
+	public static SonicTypes findSonicType(ItemStack stack) {
+		return intToSonicType(findTypeInt(stack));
 	}
 
 	// Fuel
@@ -286,6 +315,11 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		Mode mode = findPreviousMode(stack);
 		tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
 
+		tooltip.add(Text.translatable("message.ait.sonic.currenttype").formatted(Formatting.BLUE));
+		String capitalised = findSonicType(stack).asString().toLowerCase().substring(0, 1).toUpperCase() + tag.getString(SONIC_TYPE).toLowerCase().substring(1);
+		Text sonicType = Text.literal(capitalised).formatted(Formatting.GRAY);
+		tooltip.add(sonicType);
+
 		tooltip.add(
 				Text.literal("AU: ").formatted(Formatting.BLUE)
 						.append(Text.literal(
@@ -319,9 +353,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 				BlockState blockState = world.getBlockState(pos);
 
 				if (blockState.getBlock() == Blocks.IRON_DOOR || blockState.getBlock() == Blocks.IRON_TRAPDOOR) {
-					world.playSound(player, pos, blockState.get(Properties.OPEN) ? SoundEvents.BLOCK_IRON_DOOR_OPEN : SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
 					world.setBlockState(pos, blockState.with(Properties.OPEN, !blockState.get(Properties.OPEN)), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
 					world.emitGameEvent(player, blockState.get(Properties.OPEN) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+					world.playSound(player, pos, blockState.get(Properties.OPEN) ? SoundEvents.BLOCK_IRON_DOOR_OPEN : SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
 					return;
 				}
 
@@ -408,6 +442,19 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		}
 
 		public abstract void run(@Nullable Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack);
+
+		@Override
+		public String asString() {
+			return StringUtils.capitalize(this.toString().replace("_", " "));
+		}
+	}
+
+	public enum SonicTypes implements StringIdentifiable {
+		DEFAULT,
+		MECHANICAL,
+		CORAL,
+		RENAISSANCE,
+		FOB;
 
 		@Override
 		public String asString() {

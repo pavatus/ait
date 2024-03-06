@@ -3,12 +3,14 @@ package mdteam.ait.client.screens.interior;
 import com.google.common.collect.Lists;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.screens.ConsoleScreen;
+import mdteam.ait.client.screens.SonicSettingsScreen;
 import mdteam.ait.client.screens.TardisSecurityScreen;
 import mdteam.ait.client.sounds.ClientSoundManager;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.HumsRegistry;
 import mdteam.ait.tardis.TardisDesktop;
 import mdteam.ait.tardis.TardisDesktopSchema;
+import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.sound.HumSound;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -20,6 +22,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
@@ -85,6 +88,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
 		createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole"), (button -> sendCachePacket()));
 		createTextButton(Text.translatable("screen.ait.security.button"), (button -> toSecurityScreen()));
+		createTextButton(Text.translatable("screen.ait.sonic.button").formatted(tardis().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC) ? Formatting.WHITE : Formatting.GRAY), (button -> toSonicScreen()));
 
 		this.addButton(
 				new PressableTextWidget(
@@ -140,6 +144,10 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 						this.textRenderer
 				)
 		);
+	}
+
+	private void toSonicScreen() {
+		MinecraftClient.getInstance().setScreen(new SonicSettingsScreen(tardis().getUuid(), this.console, this));
 	}
 
 	private <T extends ClickableWidget> void addButton(T button) {

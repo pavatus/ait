@@ -258,7 +258,6 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX, float delta) {
-		// testing @todo
 		tickForSpin++;
 		if (getFromUUID(tardisId) != null) {
 			if (this.getCategory() == null || this.getCurrentVariant() == null) return;

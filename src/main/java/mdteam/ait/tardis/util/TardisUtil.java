@@ -331,9 +331,9 @@ public class TardisUtil {
 					player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 				} else {
 					if (entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
-						entity.refreshPositionAndAngles(vec.x, vec.y, vec.z, pos.getDirection().asRotation(), entity.getPitch());
+						entity.refreshPositionAndAngles(vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, pos.getDirection().asRotation(), entity.getPitch());
 					} else {
-						entity.teleport((ServerWorld) pos.getWorld(), vec.x, vec.y, vec.z, Set.of(), pos.getDirection().asRotation(), entity.getPitch());
+						entity.teleport((ServerWorld) pos.getWorld(), vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, Set.of(), pos.getDirection().asRotation(), entity.getPitch());
 					}
 				}
 			}

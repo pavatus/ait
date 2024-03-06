@@ -595,6 +595,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
         provider.addTranslation("screen.ait.interior.settings.eight", "Eighth");
 
+        provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");
+
         provider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         provider.addTranslation("screen.ait.security.leave_behind", "> Leave Behind");
         provider.addTranslation("screen.ait.security.hostile_alarms", "> Hostile Alarms");
@@ -771,6 +773,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged", "Handbrake disengaged, destination set to current position");
         aitLanguageProvider.addTranslation("message.ait.sonic.mode", "Mode: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.none", "None");
+        aitLanguageProvider.addTranslation("message.ait.sonic.currenttype", "Current Type: ");
         aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4", "Target has been reset and updated, the device is now pointing towards your new target");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
