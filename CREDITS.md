@@ -7,3 +7,5 @@ Steam Console Original Design: DocArcane
 Translations: 
 - French: lavachefrancaise
 - German: hoooiii
+
+Thank you to everyone at MDTeam. You've been awesome.
