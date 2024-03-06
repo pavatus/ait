@@ -6,10 +6,10 @@
 ![Modrinth Downloads](https://img.shields.io/modrinth/dt/ait?logo=modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait)
 ![CurseForge Downloads](https://img.shields.io/curseforge/dt/856138?logo=curseforge&color=red&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fadventures-in-time)
 
-![Wiki](https://img.shields.io/badge/wiki-grey?logo=gitbook&logoColor=white&link=https%3A%2F%2Fm-d-team.github.io%2Fait-fabric-1.20.1%2F)
+![Wiki](https://img.shields.io/badge/wiki-grey?logo=gitbook&logoColor=white&link=https%3A%2F%2Floqor.dev%2Fait%2F)
 
 
-**by [MDTeam](https://m-d-team.github.io/)**
+**by [Loqor](https://github.com/loqor/ait)**
 
 **Requires [OwoLib](https://modrinth.com/mod/owo-lib)**
 
@@ -74,9 +74,9 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 
 
 ## Links
-[Wiki](https://m-d-team.github.io/ait-fabric-1.20.1/)
+[Wiki](https://loqor.dev/ait/)
 
-[Github](https://github.com/M-D-Team/ait-fabric-1.20.1/)
+[Github](https://github.com/loqor/ait/)
 
 [Curseforge](https://www.curseforge.com/minecraft/mc-mods/adventures-in-time)
 
