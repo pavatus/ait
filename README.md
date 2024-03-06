@@ -39,14 +39,14 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ## Credits
 
 ### Developers:
-- Loqor (Owner, Developer)
-- Duzo (Head Developer)
-- Dr. Theo (Backend Developer)
+- Loqor
+- Duzo
+- Dr. Theo
 
 ---
 
 ### Artists:
-- Tright (Head Modeler)
+- Tright (Modeler)
 - b2bmrww2 (Modeler)
 - classic_account (Builder)
 - Monsterwaill (Animator)
@@ -59,15 +59,9 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 
 ---
 
-### Contributions:
-- TheVale (Co-Founder)
-- Tryzo (Ben) (Original Founder)
-
----
-
 ## Thank You's:
 - DocArcane (Credit for the Steampunk console design)
-- Craig (Suff) (Help with code)
+- Jeryn (Suff) (Help with code)
 - Bug1312 (Help with code)
 - MagicMan(?) (Help with modeling)
 - Creativious (Help with code)
