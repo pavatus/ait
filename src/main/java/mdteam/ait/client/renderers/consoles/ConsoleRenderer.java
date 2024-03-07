@@ -5,6 +5,7 @@ import mdteam.ait.client.registry.ClientConsoleVariantRegistry;
 import mdteam.ait.client.registry.console.ClientConsoleVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.tardis.data.SonicHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;

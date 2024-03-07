@@ -1,5 +1,6 @@
 package mdteam.ait.client.util;
 
+import mdteam.ait.AITMod;
 import mdteam.ait.client.models.doors.DoorModel;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.registry.ClientDoorRegistry;
@@ -13,6 +14,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.UUID;
@@ -25,6 +27,7 @@ public class ClientTardisUtil {
 	private static int alarmDeltaTick;
 	private static boolean alarmDeltaDirection; // true for increasing false for decreasing
 	private static int powerDeltaTick;
+	public static final Identifier CHANGE_SONIC = new Identifier(AITMod.MOD_ID, "change_sonic");
 
 	public static void changeExteriorWithScreen(UUID uuid, String exterior, String variant, boolean variantchange) {
 		PacketByteBuf buf = PacketByteBufs.create();
@@ -33,6 +36,13 @@ public class ClientTardisUtil {
 		buf.writeBoolean(variantchange);
 		buf.writeString(variant);
 		ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);
+	}
+
+	public static void changeSonicWithScreen(UUID uuid, int sonic_type) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeUuid(uuid);
+		buf.writeInt(sonic_type);
+		ClientPlayNetworking.send(CHANGE_SONIC, buf);
 	}
 
 	public static void snapToOpenDoors(UUID uuid) {

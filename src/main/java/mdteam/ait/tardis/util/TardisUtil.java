@@ -10,6 +10,7 @@ import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.events.ServerLoadEvent;
 import mdteam.ait.core.item.KeyItem;
+import mdteam.ait.core.item.SonicItem;
 import mdteam.ait.registry.CategoryRegistry;
 import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.registry.ExteriorVariantRegistry;
@@ -19,6 +20,7 @@ import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.pos.PosType;
 import mdteam.ait.tardis.data.DoorData;
+import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -53,6 +55,8 @@ import qouteall.imm_ptl.core.api.PortalAPI;
 
 import java.nio.file.Path;
 import java.util.*;
+
+import static mdteam.ait.client.util.ClientTardisUtil.CHANGE_SONIC;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
@@ -93,6 +97,13 @@ public class TardisUtil {
 
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
 			SERVER = null;
+		});
+		ServerPlayNetworking.registerGlobalReceiver(CHANGE_SONIC, (server, player, handler, buf, responseSender) -> {
+			UUID uuid = buf.readUuid();
+			int sonicType = buf.readInt();
+			Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
+			tardis.getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC)
+					.getOrCreateNbt().putInt(SonicItem.SONIC_TYPE, sonicType);
 		});
 		ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
 				(server, player, handler, buf, responseSender) -> {

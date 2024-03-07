@@ -20,9 +20,9 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
 	@Override
 	protected void configure(RegistryWrapper.WrapperLookup arg) {
 		getOrCreateTagBuilder(AITModTags.Items.SONIC_ITEM)
-				.add(AITItems.MECHANICAL_SONIC_SCREWDRIVER)
-				.add(AITItems.CORAL_SONIC_SCREWDRIVER)
-				.add(AITItems.RENAISSANCE_SONIC_SCREWDRIVER);
+				.add(AITItems.SONIC_SCREWDRIVER);
+				//.add(AITItems.CORAL_SONIC_SCREWDRIVER)
+				//.add(AITItems.RENAISSANCE_SONIC_SCREWDRIVER);
 		getOrCreateTagBuilder(ItemTags.CREEPER_DROP_MUSIC_DISCS)
 				.add(AITItems.DRIFTING_MUSIC_DISC);
 	}

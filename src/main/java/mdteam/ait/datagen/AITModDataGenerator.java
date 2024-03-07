@@ -204,7 +204,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.GOLD_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.GOLD_NUGGET))
                     .criterion(FabricRecipeProvider.hasItem(Items.SPRUCE_SLAB), FabricRecipeProvider.conditionsFromItem(Items.SPRUCE_SLAB))
                     .criterion(FabricRecipeProvider.hasItem(Items.BLACK_CONCRETE), FabricRecipeProvider.conditionsFromItem(Items.BLACK_CONCRETE)));
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.MECHANICAL_SONIC_SCREWDRIVER, 1)
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.SONIC_SCREWDRIVER, 1)
                     .pattern(" IE")
                     .pattern("ICI")
                     .pattern("BI ")
@@ -217,14 +217,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE))
                     .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
                     .criterion(FabricRecipeProvider.hasItem(Items.BLAZE_ROD), FabricRecipeProvider.conditionsFromItem(Items.BLAZE_ROD)));
-            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RENAISSANCE_SONIC_SCREWDRIVER, 1)
+            /*provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RENAISSANCE_SONIC_SCREWDRIVER, 1)
                     .input(AITItems.CORAL_SONIC_SCREWDRIVER)
                     .group("sonic_item")
                     .criterion(FabricRecipeProvider.hasItem(AITItems.CORAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.CORAL_SONIC_SCREWDRIVER)));
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.CORAL_SONIC_SCREWDRIVER, 1)
                     .input(AITItems.MECHANICAL_SONIC_SCREWDRIVER)
                     .group("sonic_item")
-                    .criterion(FabricRecipeProvider.hasItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER)));
+                    .criterion(FabricRecipeProvider.hasItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER)));*/
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.CONSOLE_GENERATOR, 1)
                     .pattern(" G ")
                     .pattern("CEC")
@@ -508,9 +508,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.SIEGE_ITEM, "TARDIS");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC, "Music Disc");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Radio - Drifting");
-        provider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
-        provider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
-        provider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
+        provider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Sonic Screwdriver");
+        //provider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
+        //provider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
         provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
         provider.addTranslation(AITItems.HAMMER, "Hammer");
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
@@ -568,6 +568,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.sonic.not_damaged", "TARDIS is not damaged");
         provider.addTranslation("message.ait.sonic.mode", "Mode: ");
         provider.addTranslation("message.ait.sonic.none", "None");
+        provider.addTranslation("message.ait.sonic.currenttype", "Current Type: ");
         provider.addTranslation("message.ait.remoteitem.warning4", "Target has been reset and updated, the device is now pointing towards your new target");
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
@@ -596,6 +597,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.eight", "Eighth");
 
         provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");
+        provider.addTranslation("screen.ait.sonicsettings.back", "Back");
 
         provider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         provider.addTranslation("screen.ait.security.leave_behind", "> Leave Behind");
@@ -637,9 +639,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Télécommande Stattenheim");
         aitLanguageProvider.addTranslation(AITItems.ARTRON_COLLECTOR, "Collecteur d’Artron ");
         aitLanguageProvider.addTranslation(AITItems.RIFT_SCANNER, "Scanneur de Faille");
-        aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Tournevis Sonique Mécanique");
-        aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Tournevis Sonique Renaissance");
-        aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Tournevis Sonique Coral");
+        aitLanguageProvider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Tournevis Sonique");
+        //aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Tournevis Sonique Renaissance");
+        //aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Tournevis Sonique Coral");
         aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
         aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
@@ -731,9 +733,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
         aitLanguageProvider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector");
         aitLanguageProvider.addTranslation(AITItems.RIFT_SCANNER, "escáner de Rift");
-        aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanical Sonic Screwdriver");
-        aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
-        aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
+        aitLanguageProvider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Sonic Screwdriver");
+        //aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
+        //aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
         aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
@@ -812,9 +814,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Fernbedienung");
         aitLanguageProvider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artronsammler");
         aitLanguageProvider.addTranslation(AITItems.RIFT_SCANNER, "Riss-Scanner");
-        aitLanguageProvider.addTranslation(AITItems.MECHANICAL_SONIC_SCREWDRIVER, "Mechanischer Schallschraubenzieher");
-        aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Schallschraubenzieher");
-        aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Korallen Schallschraubenzieher");
+        aitLanguageProvider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Schallschraubenzieher");
+        //aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Schallschraubenzieher");
+        //aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Korallen Schallschraubenzieher");
         aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
         aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
         aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");

@@ -67,10 +67,7 @@ import static mdteam.ait.AITMod.*;
 
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
-
     private static KeyBinding keyBinding;
-
-    private final Identifier PORTAL_EFFECT_SHADER = new Identifier(AITMod.MOD_ID, "shaders/core/portal_effect.json");
 
     @Override
     public void onInitializeClient() {
@@ -170,7 +167,6 @@ public class AITModClient implements ClientModInitializer {
 
                        exterior.getAnimation().setupAnimation(TardisTravel.State.values()[p]);
                     }));
-                    // this.setupAnimation(TardisTravel.State.values()[p]);
                 }
         );
 
@@ -207,8 +203,6 @@ public class AITModClient implements ClientModInitializer {
                 ClientTardisManager.getInstance().loadTardis(((LinkableBlockEntity) block).findTardis().get().getUuid(), (t) -> {});
             }
         });
-
-        // This entrypoint is suitable for setting up client-specific logic, such as rendering.
     }
 
 
@@ -231,7 +225,7 @@ public class AITModClient implements ClientModInitializer {
     public static Screen screenFromId(int id, @Nullable UUID tardis, @Nullable UUID console) {
         return switch (id) {
             default -> null;
-            case 0 -> new MonitorScreen(tardis, console); // todo new OwoMonitorScreen(tardis); god rest ye merry gentlemen
+            case 0 -> new MonitorScreen(tardis, console);
             case 1 -> null;
             case 2 -> new OwOInteriorSelectScreen(tardis, new MonitorScreen(tardis, console));
         };
@@ -258,72 +252,17 @@ public class AITModClient implements ClientModInitializer {
         });
     }
 
-    public void sonicModelPredicate() { // fixme lord give me strength - amen brother
-        ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.MECHANICAL_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 4 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 4 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F;
-        });
-        ModelPredicateProviderRegistry.register(AITItems.CORAL_SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            return SonicItem.findModeInt(itemStack) == 4 ? 1.0F : 0.0F;
-        });
+    public void sonicModelPredicate() {
+        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F);
+        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("sonic_type"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findTypeInt(itemStack) / 5f);
+        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F);
+        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F);
+        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F);
+        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 4 ? 1.0F : 0.0F);
     }
 
     public void waypointPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.WAYPOINT_CARTRIDGE, new Identifier("type"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
             if(itemStack.getItem() == AITItems.WAYPOINT_CARTRIDGE)
                 if(itemStack.getOrCreateNbt().contains(WaypointItem.POS_KEY))
                     return 1.0f;
@@ -331,18 +270,6 @@ public class AITModClient implements ClientModInitializer {
             else return 0.5f;
         });
     }
-
-
-    //@TODO Shader stuff, decide whether or not to use this or glScissor stuff. - Loqor
-	/*public void shaderStuffForBOTI() {
-		CoreShaderRegistrationCallback.EVENT.register(manager -> {
-			manager.register(PORTAL_EFFECT_SHADER, VertexFormats.POSITION_TEXTURE, ShaderProgram::attachReferencedShaders);
-		});
-	}
-
-	public ShaderProgram getShader() throws IOException {
-		return new FabricShaderProgram(MinecraftClient.getInstance().getResourceManager(), PORTAL_EFFECT_SHADER, VertexFormats.POSITION_TEXTURE);
-	}*/
 
     public void blockEntityRendererRegister() {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
@@ -403,6 +330,5 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.LARGE_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.MEDIUM_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.SMALL_ZEITON_BUD, RenderLayer.getCutout());
-        //map.putBlock(FMCBlocks.RADIO, RenderLayer.getCutout());
     }
 }

@@ -45,7 +45,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	public static final String PREV_MODE_KEY = "PreviousMode";
 	public static final String INACTIVE = "inactive";
 	public static final String SONIC_TYPE = "sonic_type";
-
 	public static final int SONIC_SFX_LENGTH = FlightUtil.convertSecondsToTicks(1.5);
 
 	public SonicItem(Settings settings) {
@@ -255,8 +254,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		return Mode.values()[mode];
 	}
 
-	public static SonicTypes intToSonicType(int mode) {
-		return SonicTypes.values()[mode];
+	public static SonicTypes intToSonicType(int type) {
+		return SonicTypes.values()[type];
 	}
 
 	// ew
@@ -295,11 +294,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 	@Override
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-		if (!Screen.hasShiftDown()) {
-			tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
-			return;
-		}
-
 		NbtCompound tag = stack.getOrCreateNbt();
 		String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
 				: Text.translatable("message.ait.sonic.none").getString();
@@ -315,11 +309,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		Mode mode = findPreviousMode(stack);
 		tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
 
-		tooltip.add(Text.translatable("message.ait.sonic.currenttype").formatted(Formatting.BLUE));
-		String capitalised = findSonicType(stack).asString().toLowerCase().substring(0, 1).toUpperCase() + tag.getString(SONIC_TYPE).toLowerCase().substring(1);
-		Text sonicType = Text.literal(capitalised).formatted(Formatting.GRAY);
-		tooltip.add(sonicType);
-
 		tooltip.add(
 				Text.literal("AU: ").formatted(Formatting.BLUE)
 						.append(Text.literal(
@@ -329,6 +318,11 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 						)
 		); // todo translatable + changing of colour based off fuel
 
+		if (!Screen.hasShiftDown()) {
+			tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
+			return;
+		}
+
 		if (tag.contains("tardis")) tooltip.add(ScreenTexts.EMPTY);
 
 		super.appendTooltip(stack, world, tooltip, context);
@@ -337,8 +331,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 			tooltip.add(Text.literal("Position: ").formatted(Formatting.BLUE));
 			tooltip.add(Text.literal("> " + position).formatted(Formatting.GRAY));
 		}
-
-		tooltip.add(ScreenTexts.EMPTY);
+		tooltip.add(Text.translatable("message.ait.sonic.currenttype").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
+		Text sonicType = Text.literal(findSonicType(stack).asString()).formatted(Formatting.DARK_GRAY, Formatting.ITALIC);
+		tooltip.add(sonicType);
 	}
 
 	public enum Mode implements StringIdentifiable {
@@ -450,7 +445,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	}
 
 	public enum SonicTypes implements StringIdentifiable {
-		DEFAULT,
+		PRIME,
 		MECHANICAL,
 		CORAL,
 		RENAISSANCE,
