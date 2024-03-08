@@ -1,11 +1,19 @@
 package mdteam.ait.core.blocks;
 
+import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.AITDimensions;
+import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
+import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -25,6 +33,20 @@ public class ConsoleGeneratorBlock extends HorizontalDirectionalBlock implements
 	@Override
 	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
 		return new ConsoleGeneratorBlockEntity(pos, state);
+	}
+
+	@Override
+	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+		if(world.isClient()) return;
+		Tardis tardis = TardisUtil.findTardisByInterior(pos, true);
+		if(tardis == null) return;
+		if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD && tardis.isGrowth()) {
+			// dont place yo
+			world.breakBlock(pos, true);
+			world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, new ItemStack(AITBlocks.CONSOLE_GENERATOR)));
+			return;
+		}
+		super.onPlaced(world, pos, state, placer, itemStack);
 	}
 
 	@Override

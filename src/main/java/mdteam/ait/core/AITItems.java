@@ -41,7 +41,7 @@ public class AITItems implements ItemRegistryContainer {
 
 	// Crafting items
 	public static final Item ZEITON_SHARD = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item CHARGED_ZEITON_CRYSTAL = new ChargedZeitonCrystalItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(16));
+	public static final Item CHARGED_ZEITON_CRYSTAL = new ChargedZeitonCrystalItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
 
 	// Waypoint-related
 	public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));

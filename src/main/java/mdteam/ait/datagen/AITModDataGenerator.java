@@ -64,6 +64,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE),
                             FabricRecipeProvider.conditionsFromItem(Items.REDSTONE))
             );
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_BLOCK, 1)
+                    .pattern("ZZ ")
+                    .pattern("ZZ ")
+                    .pattern("   ")
+                    .input('Z', AITItems.ZEITON_SHARD)
+                    .criterion(FabricRecipeProvider.hasItem(AITItems.ZEITON_SHARD), FabricRecipeProvider.conditionsFromItem(AITItems.ZEITON_SHARD)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, 1)
                     .pattern("GGG")
                     .pattern("GNG")
@@ -205,26 +211,20 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.SPRUCE_SLAB), FabricRecipeProvider.conditionsFromItem(Items.SPRUCE_SLAB))
                     .criterion(FabricRecipeProvider.hasItem(Items.BLACK_CONCRETE), FabricRecipeProvider.conditionsFromItem(Items.BLACK_CONCRETE)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.SONIC_SCREWDRIVER, 1)
-                    .pattern(" IE")
-                    .pattern("ICI")
-                    .pattern("BI ")
+                    .pattern(" QZ")
+                    .pattern("IRQ")
+                    .pattern("CI ")
                     .input('I', Items.IRON_INGOT)
-                    .input('E', Items.ENDER_EYE)
+                    .input('Q', Items.QUARTZ)
                     .input('C', Items.COMPARATOR)
-                    .input('B', Items.BLAZE_ROD)
+                    .input('Z', AITItems.ZEITON_SHARD)
+                    .input('R', Items.REDSTONE_BLOCK)
                     .group("sonic_item")
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE))
+                    .criterion(FabricRecipeProvider.hasItem(Items.QUARTZ), FabricRecipeProvider.conditionsFromItem(Items.QUARTZ))
                     .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
-                    .criterion(FabricRecipeProvider.hasItem(Items.BLAZE_ROD), FabricRecipeProvider.conditionsFromItem(Items.BLAZE_ROD)));
-            /*provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RENAISSANCE_SONIC_SCREWDRIVER, 1)
-                    .input(AITItems.CORAL_SONIC_SCREWDRIVER)
-                    .group("sonic_item")
-                    .criterion(FabricRecipeProvider.hasItem(AITItems.CORAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.CORAL_SONIC_SCREWDRIVER)));
-            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.CORAL_SONIC_SCREWDRIVER, 1)
-                    .input(AITItems.MECHANICAL_SONIC_SCREWDRIVER)
-                    .group("sonic_item")
-                    .criterion(FabricRecipeProvider.hasItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER), FabricRecipeProvider.conditionsFromItem(AITItems.MECHANICAL_SONIC_SCREWDRIVER)));*/
+                    .criterion(FabricRecipeProvider.hasItem(AITItems.ZEITON_SHARD), FabricRecipeProvider.conditionsFromItem(AITItems.ZEITON_SHARD))
+                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.CONSOLE_GENERATOR, 1)
                     .pattern(" G ")
                     .pattern("CEC")
