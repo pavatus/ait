@@ -568,7 +568,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.sonic.not_damaged", "TARDIS is not damaged");
         provider.addTranslation("message.ait.sonic.mode", "Mode: ");
         provider.addTranslation("message.ait.sonic.none", "None");
-        provider.addTranslation("message.ait.sonic.currenttype", "Current Type: ");
+        provider.addTranslation("message.ait.sonic.currenttype", "Current Casing: ");
         provider.addTranslation("message.ait.remoteitem.warning4", "Target has been reset and updated, the device is now pointing towards your new target");
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
@@ -775,7 +775,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged", "Handbrake disengaged, destination set to current position");
         aitLanguageProvider.addTranslation("message.ait.sonic.mode", "Mode: ");
         aitLanguageProvider.addTranslation("message.ait.sonic.none", "None");
-        aitLanguageProvider.addTranslation("message.ait.sonic.currenttype", "Current Type: ");
+        aitLanguageProvider.addTranslation("message.ait.sonic.currenttype", "Current Casing: ");
         aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4", "Target has been reset and updated, the device is now pointing towards your new target");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Key Type: ");

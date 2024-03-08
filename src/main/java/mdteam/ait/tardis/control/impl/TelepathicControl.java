@@ -91,7 +91,7 @@ public class TelepathicControl extends Control {
 		// TODO - create a tag "TardisStructureLikesTag" to save on performance + to make this code simpler
 
 		BlockPos found = null;
-		int radius = 500;
+		int radius = 256;
 
 		if (world.getRegistryKey() == World.NETHER) {
 
@@ -103,7 +103,7 @@ public class TelepathicControl extends Control {
 
 		} else if (world.getRegistryKey() == World.END) {
 
-			found = getEndVillage(world, source, radius);
+			found = getEndCity(world, source, radius);
 			if (found != null) return found;
 
 		} else if (world.getRegistryKey() == World.OVERWORLD) {
@@ -111,7 +111,7 @@ public class TelepathicControl extends Control {
 			found = getVillage(world, source, radius);
 			if (found != null) return found;
 
-			found = getDesertPyramid(world, source, radius);
+			/*found = getDesertPyramid(world, source, radius);
 			if (found != null) return found;
 
 			found = getJunglePyramid(world, source, radius);
@@ -124,7 +124,7 @@ public class TelepathicControl extends Control {
 			if (found != null) return found;
 
 			found = getStronghold(world, source, radius);
-			if (found != null) return found;
+			if (found != null) return found;*/
 
 		}
 
@@ -163,7 +163,7 @@ public class TelepathicControl extends Control {
 		return getStructure(world, pos, radius, StructureKeys.BASTION_REMNANT);
 	}
 
-	public static BlockPos getEndVillage(ServerWorld world, BlockPos pos, int radius) {
+	public static BlockPos getEndCity(ServerWorld world, BlockPos pos, int radius) {
 		return getStructure(world, pos, radius, StructureKeys.END_CITY);
 	}
 

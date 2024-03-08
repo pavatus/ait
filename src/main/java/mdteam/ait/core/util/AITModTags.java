@@ -4,12 +4,15 @@ import mdteam.ait.AITMod;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.StructureTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.gen.structure.Structure;
+import net.minecraft.world.gen.structure.StructureKeys;
 
 public class AITModTags {
 	public static class Blocks {
-		//public static final TagKey<Block> test = TagKey.of(RegistryKeys.BLOCK, new Identifier(AITMod.MOD_ID, "test"));
+		public static final TagKey<Block> SONIC_INTERACTABLE = createTag("sonic_interactable");
 
 		private static TagKey<Block> createTag(String name) {
 			return TagKey.of(RegistryKeys.BLOCK, new Identifier(AITMod.MOD_ID, name));
@@ -17,7 +20,7 @@ public class AITModTags {
 	}
 
 	public static class Items {
-		public static final TagKey<Item> SONIC_ITEM = TagKey.of(RegistryKeys.ITEM, new Identifier(AITMod.MOD_ID, "sonic_item"));
+		public static final TagKey<Item> SONIC_ITEM = createTag("sonic_item");
 
 		private static TagKey<Item> createTag(String name) {
 			return TagKey.of(RegistryKeys.ITEM, new Identifier(AITMod.MOD_ID, name));

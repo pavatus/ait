@@ -6,6 +6,7 @@ import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.managers.RiftChunkManager;
+import mdteam.ait.core.util.AITModTags;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
@@ -347,6 +348,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 			public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
 				BlockState blockState = world.getBlockState(pos);
 
+				if (!world.getBlockState(pos).isIn(AITModTags.Blocks.SONIC_INTERACTABLE)) return;
+
 				if (blockState.getBlock() == Blocks.IRON_DOOR || blockState.getBlock() == Blocks.IRON_TRAPDOOR) {
 					world.setBlockState(pos, blockState.with(Properties.OPEN, !blockState.get(Properties.OPEN)), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
 					world.emitGameEvent(player, blockState.get(Properties.OPEN) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
@@ -368,10 +371,19 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 				BlockEntity entity = world.getBlockEntity(pos);
 				Block block = world.getBlockState(pos).getBlock();
 
+				if (!world.getBlockState(pos).isIn(AITModTags.Blocks.SONIC_INTERACTABLE)) return;
+
 				if (block instanceof TntBlock tnt) {
 					TntBlock.primeTnt(world, pos);
 					world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
 					world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+					return;
+				}
+				if (block instanceof RedstoneLampBlock lamp) {
+					world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.4f + 0.8f);
+					world.setBlockState(pos, world.getBlockState(pos).with(Properties.LIT, !world.getBlockState(pos).get(Properties.LIT)), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+					world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+					return;
 				}
 			}
 		},
@@ -387,8 +399,12 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 					return;
 				}
 
-				if (world == TardisUtil.getTardisDimension() && tardis.getHandlers().getCrashData().isUnstable() || tardis.getHandlers().getCrashData().isToxic()) {
-					player.sendMessage(Text.literal("Repair time: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.DARK_RED, Formatting.ITALIC), true);
+				if (world == TardisUtil.getTardisDimension()) {
+					if(tardis.getHandlers().getCrashData().isUnstable() || tardis.getHandlers().getCrashData().isToxic()) {
+						player.sendMessage(Text.literal("Repair time: " + tardis.getHandlers().getCrashData().getRepairTicks()).formatted(Formatting.DARK_RED, Formatting.ITALIC), true);
+					} else {
+						player.sendMessage(Text.literal("AU: " + tardis.getHandlers().getFuel().getCurrentFuel()).formatted(Formatting.GOLD), true);
+					}
 				}
 			}
 		},

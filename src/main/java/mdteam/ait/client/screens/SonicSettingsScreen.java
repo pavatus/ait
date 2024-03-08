@@ -26,6 +26,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
+import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -150,17 +151,6 @@ public class SonicSettingsScreen extends ConsoleScreen {
             return;
         }
         if (getFromUUID(tardisId) != null) {
-            context.getMatrices().push();
-            context.drawCenteredTextWithShadow(
-                    this.textRenderer,
-                    nbt.getString(SonicItem.SONIC_TYPE), 0, 0,
-                    5636095);
-            context.drawCenteredTextWithShadow(
-                    this.textRenderer,
-                    (nbt.getString(SonicItem.SONIC_TYPE)),
-                    0, 0,
-                    0x00ffb3);
-            context.getMatrices().pop();
 
             MatrixStack stack = context.getMatrices();
 
@@ -171,12 +161,46 @@ public class SonicSettingsScreen extends ConsoleScreen {
 
             stack.push();
 
-            stack.translate(x, y, 0f);
-            stack.scale(scale, scale, scale);
+            if(!SonicItem.findSonicType(sonicCopy).equals(SonicItem.SonicTypes.MECHANICAL)) {
+                stack.translate(x, y, 0f);
+                stack.scale(scale, scale, scale);
+            } else {
+                float mechanicalScale = scale - 1.5f;
+                stack.translate(x + 10f, y + 10f, 0f);
+                stack.scale(mechanicalScale, mechanicalScale, mechanicalScale);
+            }
             DiffuseLighting.disableGuiDepthLighting();
             context.drawItem(sonicCopy,0, 0);
             DiffuseLighting.enableGuiDepthLighting();
 
+            stack.pop();
+
+            stack.push();
+            stack.translate(0, 0, 500f);
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    "Sonic Casing", x + 140, y + 10,
+                    Color.WHITE.getRGB());
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    SonicItem.findSonicType(sonicCopy).asString(), x + 140, y + 20,
+                    Color.CYAN.getRGB());
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    "Current AU", x + 140, y + 40,
+                    Color.WHITE.getRGB());
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    nbt.getDouble(SonicItem.FUEL_KEY) + " AU", x + 140, y + 50,
+                    Color.CYAN.getRGB());
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    "Linked TARDIS", x + 140, y + 70,
+                    Color.WHITE.getRGB());
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    nbt.getString("tardis").substring(0, 8), x + 140, y + 80,
+                    Color.CYAN.getRGB());
             stack.pop();
         }
     }

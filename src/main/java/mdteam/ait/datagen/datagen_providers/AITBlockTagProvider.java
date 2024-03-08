@@ -1,8 +1,10 @@
 package mdteam.ait.datagen.datagen_providers;
 
 import mdteam.ait.core.AITBlocks;
+import mdteam.ait.core.util.AITModTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 
@@ -37,5 +39,16 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 				.add(AITBlocks.MEDIUM_ZEITON_BUD)
 				.add(AITBlocks.SMALL_ZEITON_BUD)
 				.add(AITBlocks.MONITOR_BLOCK);
+
+		getOrCreateTagBuilder(AITModTags.Blocks.SONIC_INTERACTABLE)
+				.add(Blocks.IRON_DOOR)
+				.add(Blocks.IRON_TRAPDOOR)
+				.add(Blocks.TNT)
+				.add(Blocks.CAMPFIRE)
+				.add(Blocks.CANDLE)
+				.add(Blocks.CANDLE_CAKE)
+				.add(Blocks.REDSTONE_LAMP)
+				.add(AITBlocks.EXTERIOR_BLOCK)
+				.add(AITBlocks.CONSOLE_GENERATOR);
 	}
 }
