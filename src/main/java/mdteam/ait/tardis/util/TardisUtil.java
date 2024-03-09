@@ -123,16 +123,6 @@ public class TardisUtil {
 										.getTravel().getPosition().getWorld().getRegistryKey()),
 								tardis.getDoor().getExteriorPos());
 					}
-
-					if (tardis.isGrowth())
-						tardis.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.getInstance().get(new Identifier(AITMod.MOD_ID, "type_40")));
-
-                    /*ExteriorEnum[] values = ExteriorEnum.values();
-                    int nextIndex = (ServerTardisManager.getInstance().getTardis(uuid).getExterior().getType().ordinal() + 1) % values.length;
-                    ServerTardisManager.getInstance().getTardis(uuid).getExterior().setType(values[nextIndex]);
-                    WorldOps.updateIfOnServer(server.getWorld(ServerTardisManager.getInstance().getTardis(uuid)
-                                    .getTravel().getPosition().getWorld().getRegistryKey()),
-                            ServerTardisManager.getInstance().getTardis(uuid).getTravel().getPosition());*/
 				}
 		);
 		ServerPlayNetworking.registerGlobalReceiver(SNAP,

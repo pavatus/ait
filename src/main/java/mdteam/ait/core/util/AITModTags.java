@@ -21,6 +21,7 @@ public class AITModTags {
 
 	public static class Items {
 		public static final TagKey<Item> SONIC_ITEM = createTag("sonic_item");
+		public static final TagKey<Item> CLUSTER_MAX_HARVESTABLES = createTag("cluster_max_harvestables");
 
 		private static TagKey<Item> createTag(String name) {
 			return TagKey.of(RegistryKeys.ITEM, new Identifier(AITMod.MOD_ID, name));

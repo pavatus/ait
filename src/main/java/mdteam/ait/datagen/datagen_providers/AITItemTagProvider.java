@@ -25,7 +25,7 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
 				.add(AITItems.SONIC_SCREWDRIVER);
 		getOrCreateTagBuilder(ItemTags.CREEPER_DROP_MUSIC_DISCS)
 				.add(AITItems.DRIFTING_MUSIC_DISC);
-		getOrCreateTagBuilder(ItemTags.CLUSTER_MAX_HARVESTABLES)
+		getOrCreateTagBuilder(AITModTags.Items.CLUSTER_MAX_HARVESTABLES)
 				.add(AITItems.ZEITON_SHARD);
 	}
 }

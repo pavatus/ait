@@ -237,6 +237,18 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
                     .criterion(FabricRecipeProvider.hasItem(Items.END_CRYSTAL), FabricRecipeProvider.conditionsFromItem(Items.END_CRYSTAL))
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT)));
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.DETECTOR_BLOCK, 4)
+                    .pattern(" D ")
+                    .pattern("ICI")
+                    .pattern(" R ")
+                    .input('D', Items.DAYLIGHT_DETECTOR)
+                    .input('I', Items.IRON_INGOT)
+                    .input('C', Items.COMPARATOR)
+                    .input('R', Items.REDSTONE)
+                    .criterion(FabricRecipeProvider.hasItem(Items.DAYLIGHT_DETECTOR), FabricRecipeProvider.conditionsFromItem(Items.DAYLIGHT_DETECTOR))
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
+                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.DOOR_BLOCK, 1)
                     .pattern("GCG")
                     .pattern("CDC")

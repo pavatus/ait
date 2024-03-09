@@ -2,6 +2,7 @@ package mdteam.ait.datagen.datagen_providers.loot;
 
 import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITItems;
+import mdteam.ait.core.util.AITModTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.block.Blocks;
@@ -32,7 +33,7 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
 						.apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(4.0F)))
 						.apply(ApplyBonusLootFunction.oreDrops(Enchantments.FORTUNE))
 						.conditionally(MatchToolLootCondition.builder(ItemPredicate.Builder.create()
-								.tag(ItemTags.CLUSTER_MAX_HARVESTABLES))).alternatively(
+								.tag(AITModTags.Items.CLUSTER_MAX_HARVESTABLES))).alternatively(
 										this.applyExplosionDecay(block, ItemEntry.builder(AITItems.ZEITON_SHARD)
 												.apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(2.0F)))))));
 	}

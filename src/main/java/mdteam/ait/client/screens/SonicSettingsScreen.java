@@ -102,11 +102,11 @@ public class SonicSettingsScreen extends ConsoleScreen {
     }
 
     public void backToInteriorSettings() {
-        if(!tardis().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return;
         MinecraftClient.getInstance().setScreen(this.parent);
     }
 
     public void sendSonicChangePacket() {
+        if(!tardis().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return;
         tardis().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC).getOrCreateNbt().putInt(SonicItem.SONIC_TYPE, this.selectedSonic);
         ClientTardisUtil.changeSonicWithScreen(this.tardisId, this.selectedSonic);
     }
