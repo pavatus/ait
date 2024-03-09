@@ -1,16 +1,15 @@
-# 1.0.3 Official Release
-- Fixed respirators not rendering for some strange reason.
-- Fixed the sonic not being able to scan for rifts or charge in any other mode but inactive.
-- Made the controls highlight blue when holding the scanning sonic.
-- Removed HUD messages for controls that have reactive levers or buttons (handbrake, antigravs, etc.)
-- Perhaps fixed the player being able to fall and teleport back to the interior door.
-- Datapack desktops will now have working consoles, properly this time.
-- Sounds for controls only play when the control actually runs.
-- Added new TARDIS properties command.
-- Modified commands to make more sense.
-- Changed repairing: 1234 from just ticks to seconds.
-- Fixed sound effects at the exterior when repairing with a sonic.
-- Stacking issues with the siege mode TARDIS has been resolved.
-- With performance mods, the interior changing screen will no longer appear on top of other elements.
-- Fixed using the sonic in TARDIS mode to actually face the correct direction.
-- Added fixed translations.
+# 1.0.4 Official Release
+- Overhauled the sonic system.
+- Added a hud overlay to display which blocks are interactable with the Sonic.
+- There is only 1 sonic, and it's casing can be changed via the TARDIS console menu when the sonic is inserted called "sonic settings".
+- The sonic can now interact with more blocks!
+- The detector block now has a recipe.
+- The Zeiton cluster now drops zeiton shards.
+- The Zeiton block is now craftable via zeiton shards.
+- New default sonic by Kiseki.
+- Some new functionality for the sonic in different modes.
+- Fixed bug where people could skip the nether star/charged zeiton crystal.
+- The telepathic control has been debuffed to avoid server crashing.
+- Repair ticks have been correctly put to seconds and work properly now.
+- Growth will demat and remat on change of exterior, TARDIS will land if finished flight and interior is empty.
+- Creation date issue has been resolved, added time as well.
