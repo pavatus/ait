@@ -11,5 +11,5 @@
 - Fixed bug where people could skip the nether star/charged zeiton crystal.
 - The telepathic control has been debuffed to avoid server crashing.
 - Repair ticks have been correctly put to seconds and work properly now.
-- Growth will demat and remat on change of exterior, TARDIS will land if finished flight and interior is empty.
+- Growth will demat and remat on change of exterior, TARDIS will land if finished flight and the interior is empty.
 - Creation date issue has been resolved, added time as well.
