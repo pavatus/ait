@@ -72,7 +72,6 @@ public class AITMod implements ModInitializer {
 	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () ->
 			Icon.of(AITItems.TARDIS_ITEM)).disableDynamicTitle().build();
 	public static final Random RANDOM = new Random();
-
 	public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE, new Identifier(MOD_ID, "zeiton_geode"));
 
 	@Override
@@ -94,16 +93,6 @@ public class AITMod implements ModInitializer {
 		FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
-
-		/*LootTableEvents.MODIFY.register(((resourceManager, lootManager, id, tableBuilder, source) -> {
-			List<Identifier> lootTableIds = List.of(LootTables.ABANDONED_MINESHAFT_CHEST, LootTables.ANCIENT_CITY_CHEST, LootTables.ANCIENT_CITY_ICE_BOX_CHEST, LootTables.DESERT_PYRAMID_CHEST, LootTables.SIMPLE_DUNGEON_CHEST, LootTables.CAT_MORNING_GIFT_GAMEPLAY, LootTables.IGLOO_CHEST_CHEST, LootTables.BASTION_BRIDGE_CHEST);
-			if (source.isBuiltin() && lootTableIds.contains(id)) {
-				LootPool.Builder poolBuilder = LootPool.builder()
-						.with(ItemEntry.builder(AITItems.DRIFTING_MUSIC_DISC));
-
-				tableBuilder.pool(poolBuilder);
-			}
-		}));*/
 
 		TardisUtil.init();
 		TardisManager.getInstance();
