@@ -131,7 +131,6 @@ public class AITMod implements ModInitializer {
 			SetFuelCommand.register(dispatcher);
 			AddFuelCommand.register(dispatcher);
 			RemoveFuelCommand.register(dispatcher);
-			//RemoveTardisCommand.register(dispatcher); // @TODO make sure this works idk bro
 			SetRepairTicksCommand.register(dispatcher);
 			RiftChunkCommand.register(dispatcher);
 			SetNameCommand.register(dispatcher);
@@ -140,6 +139,7 @@ public class AITMod implements ModInitializer {
 			SetSiegeCommand.register(dispatcher);
 			LinkCommand.register(dispatcher);
 			PropertyCommand.register(dispatcher);
+			RemoveCommand.register(dispatcher);
 		}));
 
 		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {

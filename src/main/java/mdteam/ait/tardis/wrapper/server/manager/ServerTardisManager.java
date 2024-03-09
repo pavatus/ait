@@ -367,7 +367,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		return new File(TardisUtil.getSavePath() + "ait/");
 	}
 
-	private static File getSavePath(UUID uuid) {
+	public static File getSavePath(UUID uuid) {
 		return new File(getSavePath(), uuid + ".json");
 	}
 
