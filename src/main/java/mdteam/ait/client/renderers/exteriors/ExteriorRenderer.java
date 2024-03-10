@@ -11,6 +11,7 @@ import mdteam.ait.core.blocks.ExteriorBlock;
 import mdteam.ait.tardis.TardisExterior;
 import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -40,9 +41,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		if (entity.findTardis().isEmpty()) {
+		if (entity.findTardis().isEmpty())
 			return;
-		}
+
+		AbsoluteBlockPos.Directed exteriorPos = entity.findTardis().get().getHandlers().getExteriorPos();
+
+		if (exteriorPos == null)
+			return;
 
 		TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.findTardis().get().getExterior().getVariant());
@@ -70,8 +75,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		Identifier emission = exteriorVariant.emission();
 
 		float wrappedDegrees = MathHelper.wrapDegrees(MinecraftClient.getInstance().player.getHeadYaw() +
-				(entity.findTardis().get().getHandlers().getExteriorPos().getDirection() == Direction.NORTH ||
-						entity.findTardis().get().getHandlers().getExteriorPos().getDirection() == Direction.SOUTH ? f + 180f : f));
+				(exteriorPos.getDirection() == Direction.NORTH || exteriorPos.getDirection() == Direction.SOUTH ? f + 180f : f));
 
 		if (exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM)) {
 			texture = DoomConstants.getTextureForRotation(wrappedDegrees, entity.findTardis().get());
