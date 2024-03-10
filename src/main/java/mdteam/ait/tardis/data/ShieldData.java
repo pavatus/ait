@@ -9,6 +9,8 @@ import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -85,7 +87,7 @@ public class ShieldData extends TardisLink {
 
 		if (this.findTardis().get().getExterior().getExteriorPos() == null) return;
 
-		if (!this.areVisualShieldsActive()) return;
+		if (!this.areShieldsActive()) return;
 
 		Tardis tardis = this.findTardis().get();
 
@@ -99,13 +101,18 @@ public class ShieldData extends TardisLink {
 				.filter(entity -> !(entity instanceof ServerPlayerEntity player && player.isSpectator())) // Exclude players in spectator
 				.filter(entity -> !(entity instanceof PlayerEntity && Objects.equals(((PlayerEntity) entity).getOffHandStack().getOrCreateNbt().getString("tardis"), tardis.getUuid().toString()))) // Exclude players
 				.forEach(entity -> {
-					// Calculate the motion vector away from the exterior
-					Vec3d motion = this.getExteriorPos().toCenterPos().add(entity.getPos()).normalize().multiply(0.1f);
-					// Apply the motion to the entity
-					if(entity.squaredDistanceTo(this.getExteriorPos().toCenterPos()) <= 6f) {
-						entity.setVelocity(entity.getVelocity().add(motion));
-						entity.velocityDirty = true;
-						entity.velocityModified = true;
+					if(entity instanceof ServerPlayerEntity && entity.isSubmergedInWater()) {
+						((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 20, 3, true, false, false));
+					}
+					if(this.areVisualShieldsActive()) {
+						// Calculate the motion vector away from the exterior
+						Vec3d motion = this.getExteriorPos().toCenterPos().add(entity.getPos()).normalize().multiply(0.1f);
+						// Apply the motion to the entity
+						if (entity.squaredDistanceTo(this.getExteriorPos().toCenterPos()) <= 6f) {
+							entity.setVelocity(entity.getVelocity().add(motion));
+							entity.velocityDirty = true;
+							entity.velocityModified = true;
+						}
 					}
 				});
 	}
