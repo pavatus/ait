@@ -39,7 +39,7 @@ public class RealWorldCommand {
 		BlockPos spawnBlockPos = BlockPosArgumentType.getBlockPos(context, "spawn-position");
 		ServerPlayerEntity source = context.getSource().getPlayer();
 		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis-id"));
-		if (tardis == null || tardis.getTravel().getState() != TardisTravel.State.LANDED || source == null || source.getWorld().isClient()) return 0;
+		if (tardis == null || tardis.getTravel().getState() != TardisTravel.State.LANDED || source == null) return 0;
 		try {
 			TardisUtil.teleportOutside(tardis, source);
 			source.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));

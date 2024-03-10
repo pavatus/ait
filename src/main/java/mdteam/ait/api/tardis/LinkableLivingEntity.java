@@ -1,35 +1,31 @@
 package mdteam.ait.api.tardis;
 
 import mdteam.ait.AITMod;
-import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.core.util.UuidUtil;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import static mdteam.ait.tardis.util.TardisUtil.isClient;
-
-public abstract class LinkableEntity extends Entity {
+public abstract class LinkableLivingEntity extends LivingEntity {
     public static final TrackedData<Optional<UUID>> TARDIS_ID;
 
-    public LinkableEntity(EntityType<?> type, World world) {
-        super(type, world);
+    static {
+        TARDIS_ID = DataTracker.registerData(LinkableLivingEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     }
 
-    static {
-        TARDIS_ID = DataTracker.registerData(LinkableEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    protected LinkableLivingEntity(EntityType<? extends LivingEntity> entityType, World world) {
+        super(entityType, world);
     }
 
     @Override
@@ -54,6 +50,7 @@ public abstract class LinkableEntity extends Entity {
         if (TardisUtil.isClient()) {
             return ClientTardisManager.getInstance().getLookup().get(getTardisID());
         }
+
         return ServerTardisManager.getInstance().getTardis(getTardisID());
     }
 
@@ -63,6 +60,8 @@ public abstract class LinkableEntity extends Entity {
 
     @Override
     protected void initDataTracker() {
+        super.initDataTracker();
+
         this.dataTracker.startTracking(TARDIS_ID, Optional.empty());
     }
 }

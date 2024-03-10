@@ -12,6 +12,7 @@ import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
 import mdteam.ait.core.commands.*;
 import mdteam.ait.core.entities.ConsoleControlEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.core.managers.RiftChunkManager;
 import mdteam.ait.core.util.AITConfig;
@@ -296,6 +297,8 @@ public class AITMod implements ModInitializer {
 		});
 
 		AIT_ITEM_GROUP.initialize();
+
+		FabricDefaultAttributeRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, TardisRealEntity.createLivingAttributes());
 	}
 
 	public void entityAttributeRegister() {
