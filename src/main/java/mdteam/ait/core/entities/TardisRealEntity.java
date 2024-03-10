@@ -1,32 +1,18 @@
 package mdteam.ait.core.entities;
 
-import mdteam.ait.AITMod;
-import mdteam.ait.api.tardis.LinkableEntity;
 import mdteam.ait.api.tardis.LinkableLivingEntity;
-import mdteam.ait.core.AITBlocks;
 import mdteam.ait.core.AITEntityTypes;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.blocks.ExteriorBlock;
-import mdteam.ait.core.item.KeyItem;
-import mdteam.ait.core.item.SiegeTardisItem;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
-import mdteam.ait.tardis.data.DoorData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -35,26 +21,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class TardisRealEntity extends LinkableLivingEntity {
 
@@ -77,35 +53,6 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 		this.getPlayer().get().startRiding(this);
 	}
-
-	/*public static TardisRealEntity spawnFromExteriorBlockEntity(World world, BlockPos pos) {
-		BlockEntity block_entity = world.getBlockEntity(pos);
-		if (!(block_entity instanceof ExteriorBlockEntity exterior_block_entity))
-			throw new IllegalStateException("Failed to find the exterior block entity!");
-		if (exterior_block_entity.findTardis().isEmpty()) return null;
-		BlockState block_state = world.getBlockState(pos);
-		if (!(block_state.getBlock() instanceof ExteriorBlock))
-			throw new IllegalStateException("Failed to find the exterior block!");
-		TardisRealEntity tardis_real_entity = new TardisRealEntity(world, exterior_block_entity.findTardis().get().getUuid(), (double) pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, block_state);
-		PropertiesHandler.set(exterior_block_entity.findTardis().get(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
-		world.spawnEntity(tardis_real_entity);
-		tardis_real_entity.setRotation(block_state.get(ExteriorBlock.FACING).asRotation(), 0);
-		return tardis_real_entity;
-	}
-
-	public static void testSpawnFromExteriorBlockEntity(World world, BlockPos pos, BlockPos spawnPos) {
-		BlockEntity block_entity = world.getBlockEntity(pos);
-		if (!(block_entity instanceof ExteriorBlockEntity exterior_block_entity))
-			throw new IllegalStateException("Failed to find the exterior block entity!");
-		if (exterior_block_entity.findTardis().isEmpty()) return;
-		BlockState block_state = world.getBlockState(pos);
-		if (!(block_state.getBlock() instanceof ExteriorBlock))
-			throw new IllegalStateException("Failed to find the exterior block!");
-		TardisRealEntity tardis_real_entity = new TardisRealEntity(world, exterior_block_entity.findTardis().get().getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, block_state);
-		PropertiesHandler.set(exterior_block_entity.findTardis().get(), PropertiesHandler.IS_IN_REAL_FLIGHT, true);
-		world.spawnEntity(tardis_real_entity);
-		tardis_real_entity.setRotation(block_state.get(ExteriorBlock.FACING).asRotation(), 0f);
-	}*/
 
 	public static void spawnFromTardisId(World world, UUID tardisId, BlockPos spawnPos, PlayerEntity player) {
 		if(world.isClient()) return;
@@ -165,10 +112,13 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	@Override
 	protected Vec3d getControlledMovementInput(PlayerEntity controllingPlayer, Vec3d movementInput) {
 		float f = controllingPlayer.sidewaysSpeed;
-		float v = controllingPlayer.upwardSpeed;
 		float g = controllingPlayer.forwardSpeed;
 
-		return new Vec3d(f, 0, g);
+		double v = controllingPlayer.getVelocity().y;
+		if (v < 0 && !controllingPlayer.isSneaking())
+			v = 0;
+
+		return new Vec3d(f, v, g);
 	}
 
 	@Override
