@@ -217,6 +217,12 @@ public class TardisUtil {
 				pos.getZ() <= box.maxZ && pos.getZ() >= box.minZ;
 	}
 
+	public static boolean in3DBox(Box box, BlockPos pos) {
+		return pos.getX() <= box.maxX && pos.getX() >= box.minX &&
+				pos.getY() <= box.maxY && pos.getY() >= box.minY &&
+				pos.getZ() <= box.maxZ && pos.getZ() >= box.minZ;
+	}
+
 	public static boolean inBox(Corners corners, BlockPos pos) {
 		return inBox(corners.getBox(), pos);
 	}

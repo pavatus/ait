@@ -1,8 +1,11 @@
 package mdteam.ait.client.renderers.exteriors;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import mdteam.ait.AITMod;
 import mdteam.ait.client.models.exteriors.ExteriorModel;
 import mdteam.ait.client.models.exteriors.SiegeModeModel;
+import mdteam.ait.client.models.machines.ShieldsModel;
 import mdteam.ait.client.registry.ClientExteriorVariantRegistry;
 import mdteam.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import mdteam.ait.client.renderers.AITRenderLayers;
@@ -15,9 +18,7 @@ import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -32,6 +33,7 @@ import net.minecraft.util.math.RotationAxis;
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 	private ExteriorModel model;
 	private SiegeModeModel siege;
+	private ShieldsModel shieldsModel;
 	private final EntityRenderDispatcher dispatcher;
 
 
@@ -100,9 +102,11 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			AITMod.LOGGER.error("Failed to render siege mode", e);
 		}
 
+		// -------------------------------------------------------------------------------------------------------------------
+
 		String name = entity.findTardis().get().getHandlers().getStats().getName();
 		if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
-			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
+			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-180f));
 		}
 
 		if (model != null) {
@@ -117,6 +121,17 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			}
 		}
 		matrices.pop();
+
+		if (entity.findTardis().get().areShieldsActive()) {
+			matrices.push();
+			matrices.translate(0.5F, 0.0F, 0.5F);
+			float delta = ((tickDelta + MinecraftClient.getInstance().player.age) * 0.03f);
+			if(shieldsModel == null) shieldsModel = new ShieldsModel(ShieldsModel.getTexturedModelData().createModel());
+			VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEnergySwirl(this.getEnergySwirlTexture(), delta % 1.0F, (delta * 0.1F) % 1.0F));
+			shieldsModel.render(matrices, vertexConsumer, maxLight, overlay, 0f, 0.25f, 0.5f, 1f);
+			matrices.pop();
+		}
+
 		if (!entity.findTardis().get().getHandlers().getSonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) return;
 		ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get(SonicHandler.HAS_EXTERIOR_SONIC);
 		if (stack == null) return;
@@ -134,5 +149,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 	@Override
 	public boolean rendersOutsideBoundingBox(T blockEntity) {
 		return true;
+	}
+
+	public Identifier getEnergySwirlTexture() {
+		return new Identifier("textures/misc/forcefield.png");
 	}
 }

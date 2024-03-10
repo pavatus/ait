@@ -23,6 +23,7 @@ import mdteam.ait.tardis.TardisManager;
 import mdteam.ait.tardis.advancement.TardisCriterions;
 import mdteam.ait.tardis.data.InteriorChangingHandler;
 import mdteam.ait.tardis.data.ServerHumHandler;
+import mdteam.ait.tardis.data.ShieldData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.sound.HumSound;
 import mdteam.ait.tardis.util.FlightUtil;
@@ -257,6 +258,15 @@ public class AITMod implements ModInitializer {
 			TardisUtil.getServer().execute(() -> {
 				if (tardis == null) return;
 				PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.SHIELDS, (server, player, handler, buf, responseSender) -> {
+			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+			boolean shields = buf.readBoolean();
+			TardisUtil.getServer().execute(() -> {
+				if (tardis == null) return;
+				PropertiesHandler.set(tardis.getHandlers().getProperties(), ShieldData.IS_SHIELDED, shields);
 			});
 		});
 

@@ -2,6 +2,7 @@ package mdteam.ait.client.screens;
 
 import com.google.common.collect.Lists;
 import mdteam.ait.AITMod;
+import mdteam.ait.tardis.data.ShieldData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -56,6 +57,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
 		createTextButton(Text.translatable("screen.ait.security.leave_behind"), (button -> toggleLeaveBehind()));
 		createTextButton(Text.translatable("screen.ait.security.hostile_alarms"), (button -> toggleHostileAlarms()));
+		createTextButton(Text.literal("> Shields"), (button -> toggleShields()));
 	}
 
 	private void toggleLeaveBehind() {
@@ -75,6 +77,16 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		buf.writeBoolean(!PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE));
 
 		ClientPlayNetworking.send(PropertiesHandler.HOSTILEALARMS, buf);
+		updateTardis();
+	}
+
+	private void toggleShields() {
+		PacketByteBuf buf = PacketByteBufs.create();
+
+		buf.writeUuid(tardis().getUuid());
+		buf.writeBoolean(!PropertiesHandler.getBool(tardis().getHandlers().getProperties(), ShieldData.IS_SHIELDED));
+
+		ClientPlayNetworking.send(PropertiesHandler.SHIELDS, buf);
 		updateTardis();
 	}
 
@@ -110,9 +122,10 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		this.drawBackground(context);
 		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.LEAVE_BEHIND) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
 		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
+		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), ShieldData.IS_SHIELDED) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 4))), Color.ORANGE.getRGB(), false);
 		//
-		context.drawText(this.textRenderer, Text.literal("Date created:"), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 5))), 0xadcaf7, false);
-		context.drawText(this.textRenderer, Text.literal(this.tardis().getHandlers().getStats().getCreationString()), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 6))), 0xadcaf7, false);
+		context.drawText(this.textRenderer, Text.literal("Date created:"), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 6))), 0xadcaf7, false);
+		context.drawText(this.textRenderer, Text.literal(this.tardis().getHandlers().getStats().getCreationString()), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 7))), 0xadcaf7, false);
 		super.render(context, mouseX, mouseY, delta);
 	}
 

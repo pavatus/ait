@@ -6,6 +6,7 @@ import mdteam.ait.registry.DesktopRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisDesktopSchema;
 import mdteam.ait.tardis.data.FuelData;
+import mdteam.ait.tardis.data.ShieldData;
 import mdteam.ait.tardis.data.TardisCrashData;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -16,7 +17,7 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.UUID;
 
-public class PropertiesHandler { // todo move things out of properties
+public class PropertiesHandler {
 	// this is getting bloated
 	public static final String AUTO_LAND = "auto_land";
 	public static final String HUM_ENABLED = "hum_enabled";
@@ -43,6 +44,7 @@ public class PropertiesHandler { // todo move things out of properties
 	public static final String HOSTILE_PRESENCE_TOGGLE = "hostile_presence_toggle";
 	public static final Identifier LEAVEBEHIND = new Identifier(AITMod.MOD_ID, "leavebehind");
 	public static final Identifier HOSTILEALARMS = new Identifier(AITMod.MOD_ID, "hostilealarms");
+	public static final Identifier SHIELDS = new Identifier(AITMod.MOD_ID, "shields");
 
 	// Should these methods be in the holder instead?
 
@@ -237,6 +239,7 @@ public class PropertiesHandler { // todo move things out of properties
 		map.put(CONSOLE_DISABLED, false);
 		map.put(LEAVE_BEHIND, false);
 		map.put(HOSTILE_PRESENCE_TOGGLE, true);
+		map.put(ShieldData.IS_SHIELDED, false);
 		map.put(TardisCrashData.TARDIS_RECOVERY_STATE, TardisCrashData.State.NORMAL);
 		map.put(TardisCrashData.TARDIS_REPAIR_TICKS, 0);
 

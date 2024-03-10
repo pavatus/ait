@@ -235,6 +235,10 @@ public class Tardis {
 			enablePower();
 	}
 
+	public boolean areShieldsActive() {
+		return this.getHandlers().getShields().areShieldsActive();
+	}
+
 
 	public boolean isSiegeMode() {
 		return this.getHandlers().getSiege().isSiegeMode();

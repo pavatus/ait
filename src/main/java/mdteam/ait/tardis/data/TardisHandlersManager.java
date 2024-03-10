@@ -33,6 +33,7 @@ public class TardisHandlersManager extends TardisLink {
 	private StatsData stats;
 	private TardisCrashData crashData;
 	private SonicHandler sonic;
+	private ShieldData shields;
 
 	// private final SequenceHandler sequence;
 
@@ -56,6 +57,7 @@ public class TardisHandlersManager extends TardisLink {
 		this.stats = new StatsData(tardis);
 		this.crashData = new TardisCrashData(tardis);
 		this.sonic = new SonicHandler(tardis);
+		this.shields = new ShieldData(tardis);
 		// this.sequence = new SequenceHandler(tardisId);
 
 		generateTickables();
@@ -82,6 +84,7 @@ public class TardisHandlersManager extends TardisLink {
 		addTickable(getStats());
 		addTickable(getCrashData());
 		addTickable(getSonic());
+		addTickable(getShields());
 		// addTickable(getSequencing()); // todo sequences
 	}
 
@@ -292,5 +295,15 @@ public class TardisHandlersManager extends TardisLink {
 	public void setSonic(SonicHandler sonicHandler) {
 		this.sonic = sonicHandler;
 	}
-	// public SequenceHandler getSequencing() {return this.sequence;}
+
+	public ShieldData getShields() {
+		if (this.shields == null && this.findTardis().isPresent()) {
+			this.shields = new ShieldData(this.findTardis().get());
+		}
+		return this.shields;
+	}
+
+	public void setShields(ShieldData shieldData) {
+		this.shields = shieldData;
+	}
 }
