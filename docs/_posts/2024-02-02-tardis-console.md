@@ -23,7 +23,7 @@ Place the Console Generator in the TARDIS interior to select any of the unlocked
 To use the Console Generator, follow this easy guide:
 1. Right click on the Console Generator to change the **type** of console.
 2. Right click *while crouching* on the Console Generator to change the **variant**.
-3. Confirm the console by using a linked [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-02-02-sonic %}).
+3. Confirm the console by using a linked [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-03-09-sonic %}).
 
 
 
