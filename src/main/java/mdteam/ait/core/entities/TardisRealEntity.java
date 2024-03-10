@@ -119,8 +119,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		if (v < 0 && !controllingPlayer.isSneaking())
 			v = 0;
 
-		System.out.println("Y: " + v + " ground: "+ this.isOnGround());
-		return new Vec3d(f, v * 3.5f, g);
+		return new Vec3d(f, v * 4f, g);
 	}
 
 	@Override
