@@ -433,7 +433,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 				TardisTravel travel = tardis.getTravel();
 
-				AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, player.getHorizontalFacing());
+				AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, player.getHorizontalFacing().getOpposite());
 
 				if (!ExteriorAnimation.isNearTardis(player, tardis, 256)) {
 					travel.setDestination(target, true);
