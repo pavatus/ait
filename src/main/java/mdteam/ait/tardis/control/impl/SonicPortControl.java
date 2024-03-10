@@ -58,4 +58,9 @@ public class SonicPortControl extends Control {
 
 		return true;
 	}
+
+	@Override
+	public boolean shouldFailOnNoPower() {
+		return false;
+	}
 }
