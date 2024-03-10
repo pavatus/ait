@@ -70,15 +70,16 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		if(this.getPlayer().isEmpty()) return;
 		PlayerEntity user = this.getPlayer().get();
 		user.getAbilities().flying = true;
-		user.getAbilities().allowFlying = true;
+
 		boolean bl =  PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
+
 		if (bl) {
 			if (user.getWorld().isClient()) {
 				MinecraftClient client = MinecraftClient.getInstance();
 				client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
 				client.options.hudHidden = true;
 			} else {
-				if (user.isSneaking() && user.isOnGround()) {
+				if (user.isSneaking() && this.isOnGround()) {
 					getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(user.getBlockPos(), user.getWorld(), user.getHorizontalFacing()));
 					if(getTardis().getTravel().getState() == TardisTravel.State.LANDED) PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
 				}
@@ -118,7 +119,8 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		if (v < 0 && !controllingPlayer.isSneaking())
 			v = 0;
 
-		return new Vec3d(f, v, g);
+		System.out.println("Y: " + v + " ground: "+ this.isOnGround());
+		return new Vec3d(f, v * 3.5f, g);
 	}
 
 	@Override
