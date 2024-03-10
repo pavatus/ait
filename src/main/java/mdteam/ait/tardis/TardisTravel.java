@@ -365,9 +365,10 @@ public class TardisTravel extends TardisLink {
 		int random_int = random.nextInt(0, 2);
 		int up_or_down = random_int == 0 ? 1 : -1;
 		int random_change = random.nextInt(10, 100) * crash_intensity * up_or_down;
-		int new_x = getDestination().getX() + random_change;
-		int new_y = getDestination().getY();/*.getWorld().getTopY() - 1;*/
-		int new_z = getDestination().getZ() + random_change;
+		AbsoluteBlockPos.Directed percentageOfDestination = FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage());
+		int new_x = percentageOfDestination.getX() + random_change;
+		int new_y = percentageOfDestination.getY();
+		int new_z = percentageOfDestination.getZ() + random_change;
 		this.setCrashing(true);
 		this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getDirection()));
 		if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
