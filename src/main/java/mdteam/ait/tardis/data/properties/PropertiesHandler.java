@@ -45,6 +45,7 @@ public class PropertiesHandler {
 	public static final Identifier LEAVEBEHIND = new Identifier(AITMod.MOD_ID, "leavebehind");
 	public static final Identifier HOSTILEALARMS = new Identifier(AITMod.MOD_ID, "hostilealarms");
 	public static final Identifier SHIELDS = new Identifier(AITMod.MOD_ID, "shields");
+	public static final Identifier VISUAL_SHIELDS = new Identifier(AITMod.MOD_ID, "visual_shields");
 
 	// Should these methods be in the holder instead?
 

@@ -371,7 +371,7 @@ public class TardisTravel extends TardisLink {
 		int new_z = percentageOfDestination.getZ() + random_change;
 		this.setCrashing(true);
 		this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getDirection()));
-		if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
+		if (getDestination().getWorld() != null && getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
 			this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
 		}
 		this.crashAndMaterialise();

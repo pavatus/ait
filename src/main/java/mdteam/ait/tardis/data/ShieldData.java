@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 public class ShieldData extends TardisLink {
 	public static String IS_SHIELDED = "is_shielded";
+	public static String IS_VISUALLY_SHIELDED = "is_visually_shielded";
 
 	public ShieldData(Tardis tardis) {
 		super(tardis, "shield");
@@ -44,15 +45,33 @@ public class ShieldData extends TardisLink {
 		PropertiesHandler.set(this.findTardis().get(), IS_SHIELDED, false);
 	}
 
+	public void enableVisuals() {
+		if (this.findTardis().isEmpty()) return;
+
+		PropertiesHandler.set(this.findTardis().get(), IS_VISUALLY_SHIELDED, true);
+	}
+
+	public void disableVisuals() {
+		if (this.findTardis().isEmpty()) return;
+
+		PropertiesHandler.set(this.findTardis().get(), IS_VISUALLY_SHIELDED, false);
+	}
+
+	public void disableAll() {
+		this.disableVisuals();
+		this.disable();
+	}
+
 	public boolean areShieldsActive() {
 		if (this.findTardis().isEmpty()) return false;
 
 		return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), IS_SHIELDED);
 	}
 
-	public void toggle() {
-		if (areShieldsActive()) disable();
-		else enable();
+	public boolean areVisualShieldsActive() {
+		if (this.findTardis().isEmpty()) return false;
+
+		return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), IS_VISUALLY_SHIELDED);
 	}
 
 	@Override
@@ -60,13 +79,13 @@ public class ShieldData extends TardisLink {
 		super.tick(server);
 
 		if (this.findTardis().isEmpty() || this.areShieldsActive() && !this.findTardis().get().hasPower()) {
-			this.disable();
+			this.disableAll();
 			return;
 		}
 
 		if (this.findTardis().get().getExterior().getExteriorPos() == null) return;
 
-		if (!this.areShieldsActive()) return;
+		if (!this.areVisualShieldsActive()) return;
 
 		Tardis tardis = this.findTardis().get();
 
@@ -78,7 +97,7 @@ public class ShieldData extends TardisLink {
 				.stream()
 				.filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
 				.filter(entity -> !(entity instanceof ServerPlayerEntity player && player.isSpectator())) // Exclude players in spectator
-				.filter(entity -> !(entity instanceof PlayerEntity && Objects.equals(((PlayerEntity) entity).getMainHandStack().getOrCreateNbt().getString("tardis"), tardis.getUuid().toString()))) // Exclude players
+				.filter(entity -> !(entity instanceof PlayerEntity && Objects.equals(((PlayerEntity) entity).getOffHandStack().getOrCreateNbt().getString("tardis"), tardis.getUuid().toString()))) // Exclude players
 				.forEach(entity -> {
 					// Calculate the motion vector away from the exterior
 					Vec3d motion = this.getExteriorPos().toCenterPos().add(entity.getPos()).normalize().multiply(0.1f);

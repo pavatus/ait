@@ -122,7 +122,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		}
 		matrices.pop();
 
-		if (entity.findTardis().get().areShieldsActive()) {
+		if (entity.findTardis().get().areVisualShieldsActive()) {
 			matrices.push();
 			matrices.translate(0.5F, 0.0F, 0.5F);
 			float delta = ((tickDelta + MinecraftClient.getInstance().player.age) * 0.03f);

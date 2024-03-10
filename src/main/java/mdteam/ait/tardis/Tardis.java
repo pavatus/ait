@@ -239,6 +239,10 @@ public class Tardis {
 		return this.getHandlers().getShields().areShieldsActive();
 	}
 
+	public boolean areVisualShieldsActive() {
+		return this.getHandlers().getShields().areVisualShieldsActive();
+	}
+
 
 	public boolean isSiegeMode() {
 		return this.getHandlers().getSiege().isSiegeMode();

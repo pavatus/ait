@@ -270,6 +270,15 @@ public class AITMod implements ModInitializer {
 			});
 		});
 
+		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.VISUAL_SHIELDS, (server, player, handler, buf, responseSender) -> {
+			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
+			boolean shields = buf.readBoolean();
+			TardisUtil.getServer().execute(() -> {
+				if (tardis == null) return;
+				PropertiesHandler.set(tardis.getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED, tardis.areShieldsActive() && shields);
+			});
+		});
+
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
 			ServerPlayerEntity player = handler.getPlayer();
 
