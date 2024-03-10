@@ -1,5 +1,6 @@
 package mdteam.ait.tardis.control.impl;
 
+import io.wispforest.owo.ops.WorldOps;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.control.Control;
@@ -24,7 +25,9 @@ public class AntiGravsControl extends Control {
 			}
 		}
 		PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED));
-
+		if(tardis.getExterior().getExteriorPos() != null) {
+			WorldOps.updateIfOnServer(world, tardis.getExterior().getExteriorPos());
+		}
 		//messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED));
 		return true;
 	}
