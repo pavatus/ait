@@ -35,11 +35,11 @@ public class RemoveCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(AITMod.MOD_ID).then(literal("remove").requires(source -> source.hasPermissionLevel(2))
                 .then(argument("id", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-                        .executes(RemoveCommand::removeConcrete)))
+                        .executes(RemoveCommand::removeCommand)))
         );
     }
 
-    private static int removeConcrete(CommandContext<ServerCommandSource> context) {
+    private static int removeCommand(CommandContext<ServerCommandSource> context) {
         UUID uuid = UuidArgumentType.getUuid(context, "id");
         ServerCommandSource source = context.getSource();
 
