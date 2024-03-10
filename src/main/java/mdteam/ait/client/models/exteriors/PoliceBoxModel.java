@@ -142,6 +142,7 @@ public class PoliceBoxModel extends ExteriorModel {
 
 	@Override
 	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+		matrices.push();
 		matrices.scale(0.63F, 0.63F, 0.63F);
 		matrices.translate(0, -1.5f, 0);
 

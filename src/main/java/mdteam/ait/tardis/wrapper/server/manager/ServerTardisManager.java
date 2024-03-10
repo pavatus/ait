@@ -52,7 +52,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		ServerPlayNetworking.registerGlobalReceiver(
 				ClientTardisManager.ASK, (server, player, handler, buf, responseSender) -> {
 					UUID uuid = buf.readUuid();
-					if (player == null) return;
+					if (player == null || uuid == null) return;
 					this.sendTardis(player, uuid);
 					addSubscriberToTardis(player, uuid);
 				}

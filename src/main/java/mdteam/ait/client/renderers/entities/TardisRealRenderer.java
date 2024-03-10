@@ -43,6 +43,8 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 
 		if (model != null && !model.getClass().isInstance(modelClass)) model = null;
 
+		if (getModel(entity) == null || entity.getPlayer().isEmpty()) return;
+
 		matrices.push();
 		//Vec3d rotationVector = entity.getRotationVector();
 		//float pitch = (float) Math.toRadians(rotationVector.getX());
@@ -54,8 +56,7 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 		//matrices.multiply(quaternion);
 		//matrices.scale(1.0f, 1.0f, -1.0f);
 		//matrices.scale(1.0f, -1.0f, 1.0f);
-		if (getModel(entity) == null) return;
-		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(entity.getRotation(tickDelta)));
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getPlayer().get().isOnGround() ? entity.getPlayer().get().getHorizontalFacing().getOpposite().asRotation() : entity.getRotation(tickDelta) * 40));
 		matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(entity.getPitch()));
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 

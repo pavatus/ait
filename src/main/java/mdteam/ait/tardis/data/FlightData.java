@@ -55,7 +55,7 @@ public class FlightData extends TardisLink {
 
 	public boolean hasFinishedFlight() {
 		if (findTardis().isEmpty()) return false;
-		return this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 || findTardis().get().getTravel().isCrashing();
+		return this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 || findTardis().get().getTravel().isCrashing() || !PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 	}
 
 	private void onFlightFinished() {
@@ -76,7 +76,7 @@ public class FlightData extends TardisLink {
 
 		Tardis tardis = this.findTardis().get();
 
-		return PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()) || !TardisUtil.isInteriorNotEmpty(tardis); // todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
+		return PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()) || !PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT) || !TardisUtil.isInteriorNotEmpty(tardis); // todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
 	}
 
 	public void increaseFlightTime(int ticks) {
@@ -167,7 +167,9 @@ public class FlightData extends TardisLink {
 			this.setFlightTicks(this.getFlightTicks() + travel.getSpeed());
 		}
 
-		if (this.isInFlight() && this.hasFinishedFlight() && !TardisUtil.isInteriorNotEmpty(tardis)) {
+		//System.out.println(PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT));
+
+		if (!PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT) && this.isInFlight() && this.hasFinishedFlight() && !TardisUtil.isInteriorNotEmpty(tardis)) {
 			travel.materialise();
 		}
 	}

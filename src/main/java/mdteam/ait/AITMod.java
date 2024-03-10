@@ -119,6 +119,7 @@ public class AITMod implements ModInitializer {
 			SetLockedCommand.register(dispatcher);
 			GetInsideTardisCommand.register(dispatcher);
 			SetFuelCommand.register(dispatcher);
+			RealWorldCommand.register(dispatcher);
 			AddFuelCommand.register(dispatcher);
 			RemoveFuelCommand.register(dispatcher);
 			SetRepairTicksCommand.register(dispatcher);

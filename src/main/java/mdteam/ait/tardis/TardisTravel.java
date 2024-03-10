@@ -131,7 +131,9 @@ public class TardisTravel extends TardisLink {
 					this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
 				}
 			}
-			this.materialise();
+			if(!PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT)) {
+				this.materialise();
+			}
 		}
 		// Should we just disable autopilot if the speed goes above 1?
 		if (speed > 1 && state == State.FLIGHT && autopilot) {
@@ -409,6 +411,30 @@ public class TardisTravel extends TardisLink {
 		WorldOps.updateIfOnServer(destWorld, this.getDestination());
 	}
 
+	public void setStateAndLand(AbsoluteBlockPos.Directed pos) {
+		System.out.println("Hello?");
+		if (pos.getWorld().isClient() || findTardis().isEmpty()) {
+			return;
+		}
+		System.out.println("Le huh");
+		this.setState(State.LANDED);
+		deleteExterior();
+		ServerWorld destWorld = (ServerWorld) pos.getWorld();
+		ForcedChunkUtil.keepChunkLoaded(destWorld, pos);
+		ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
+		BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, pos.getDirection());
+		destWorld.setBlockState(pos, state);
+
+		// Create and add the exterior block entity at the destination
+		ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(pos, state);
+		destWorld.addBlockEntity(blockEntity);
+
+		// Set the position of the Tardis to the destination
+		this.setPosition(pos);
+		this.setDestination(pos);
+		WorldOps.updateIfOnServer(destWorld, pos);
+	}
+
 	/**
 	 * Materialises the Tardis, bringing it to the specified destination.
 	 * This method handles the logic of materialization, including sound effects, locking the Tardis, and setting the Tardis state.
@@ -421,7 +447,7 @@ public class TardisTravel extends TardisLink {
 
 		ServerTardis tardis = (ServerTardis) this.findTardis().get();
 
-		if (this.getState() != State.FLIGHT) return;
+		if (this.getState() != State.FLIGHT && PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT)) return;
 
 		// Disable autopilot
 		// PropertiesHandler.setAutoPilot(this.getTardis().get().getHandlers().getProperties(), false);
@@ -809,7 +835,7 @@ public class TardisTravel extends TardisLink {
 	public void setDestination(AbsoluteBlockPos.Directed pos, boolean withChecks) {
 		if (this.findTardis().isEmpty()) return;
 
-		if (Objects.equals(this.destination, pos)) return;
+		if (this.destination == null || Objects.equals(this.destination, pos)) return;
 
 		WorldBorder border = this.destination.getWorld().getWorldBorder();
 

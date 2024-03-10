@@ -77,9 +77,10 @@ public class RemoveCommand {
 
             if (file.exists())
                 file.delete();
+
+            ServerTardisManager.getInstance().getLookup().remove(uuid);
         });
 
-        ServerTardisManager.getInstance().getLookup().remove(uuid);
         source.sendFeedback(() -> Text.literal("TARDIS [" + uuid + "] removed"), true);
 
         return Command.SINGLE_SUCCESS;
