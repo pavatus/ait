@@ -43,6 +43,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
     public SonicSettingsScreen(UUID tardis, UUID console, Screen parent) {
         super(Text.translatable("screen.ait.sonicsettings.title"), tardis, console);
         this.parent = parent;
+        sendSonicChangePacket();
         updateTardis();
     }
 
