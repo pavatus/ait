@@ -31,7 +31,7 @@ To use the Console Generator, follow this easy guide:
 
 
 ## How do I use a TARDIS Console?
-If you're having a hard time finding the controls, you can use a [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-02-02-sonic %}). Alternatively, you're able to turn on debugging mode for viewing entity **hitboxes**, using F3+B which will toggle the debug **hitbox** mode.
+If you're having a hard time finding the controls, you can use a [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-03-09-sonic %}). Alternatively, you're able to turn on debugging mode for viewing entity **hitboxes**, using F3+B which will toggle the debug **hitbox** mode.
 
 Right or left click on any of the controls to activate them. Certain controls - like the **throttle** - need you to crouch to increment them fully up or fully down but will do normal increments while free-standing.
 
