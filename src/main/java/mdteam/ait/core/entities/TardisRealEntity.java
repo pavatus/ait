@@ -70,7 +70,9 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		user.getAbilities().flying = true;
 
 		boolean bl =  PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
-		this.getPlayer().get().startRiding(this);
+
+		if(!(this.getControllingPassenger() instanceof PlayerEntity) && this.getControllingPassenger() != user)
+			user.startRiding(this);
 
 		if (bl) {
 			if (user.getWorld().isClient()) {
