@@ -56,7 +56,7 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 		//matrices.multiply(quaternion);
 		//matrices.scale(1.0f, 1.0f, -1.0f);
 		//matrices.scale(1.0f, -1.0f, 1.0f);
-		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getPlayer().get().isOnGround() ? entity.getPlayer().get().getHorizontalFacing().getOpposite().asRotation() : entity.getRotation(tickDelta) * 40));
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.isOnGround() ? entity.getPlayer().get().getHorizontalFacing().getOpposite().asRotation() : entity.getRotation(tickDelta) * 70));
 		matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(entity.getPitch()));
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 

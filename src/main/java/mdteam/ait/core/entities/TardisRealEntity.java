@@ -9,6 +9,7 @@ import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -51,6 +52,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		this.setPosition(x, y, z);
 		this.setVelocity(Vec3d.ZERO);
 
+		if(this.getPlayer().isEmpty()) return;
 		this.getPlayer().get().startRiding(this);
 	}
 
@@ -79,7 +81,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
 				client.options.hudHidden = true;
 			} else {
-				if (user.isSneaking() && this.isOnGround()) {
+				if (Screen.hasShiftDown() && Screen.hasControlDown()) {
 					getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(user.getBlockPos(), user.getWorld(), user.getHorizontalFacing()));
 					if(getTardis().getTravel().getState() == TardisTravel.State.LANDED) PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
 				}
@@ -130,7 +132,13 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	@Nullable
 	@Override
 	public LivingEntity getControllingPassenger() {
+		if(this.getPlayer().isEmpty()) return null;
 		return this.getPlayer().get();
+	}
+
+	@Override
+	public double getMountedHeightOffset() {
+		return 0.2D;
 	}
 
 	@Override
@@ -176,6 +184,8 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	public void equipStack(EquipmentSlot slot, ItemStack stack) {
 
 	}
+
+
 
 	@Override
 	public void readNbt(NbtCompound nbt) {
