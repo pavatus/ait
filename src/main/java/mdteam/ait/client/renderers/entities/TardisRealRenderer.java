@@ -12,7 +12,9 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.Objects;
 
@@ -56,9 +58,11 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 		//matrices.multiply(quaternion);
 		//matrices.scale(1.0f, 1.0f, -1.0f);
 		//matrices.scale(1.0f, -1.0f, 1.0f);
-		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.isOnGround() ? entity.getPlayer().get().getHorizontalFacing().getOpposite().asRotation() : entity.getRotation(tickDelta) * 70));
-		matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(entity.getPitch()));
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(entity.getYaw()));
+		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) (Math.abs(entity.getVelocity().x) * 45f)));
+		System.out.println(entity.getVelocity().x);
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
+		this.model.getPart().setAngles(0, entity.isOnGround() ? entity.getPlayer().get().getHorizontalFacing().getOpposite().asRotation() : (entity.getRotation(tickDelta)) * entity.getMovementSpeed(), 0);
 
 
 		if (getModel(entity) == null) return;

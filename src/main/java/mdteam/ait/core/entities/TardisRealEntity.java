@@ -10,10 +10,12 @@ import mdteam.ait.tardis.util.TardisUtil;
 import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -21,6 +23,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec2f;
@@ -81,6 +85,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				if (user.isSneaking() && this.isOnGround()) {
 					getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(user.getBlockPos(), user.getWorld(), user.getHorizontalFacing()));
 					if(getTardis().getTravel().getState() == TardisTravel.State.LANDED) PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
+					user.dismountVehicle();
 				}
 			}
 		} else if (!getTardis().getTravel().inFlight()) {
@@ -111,8 +116,8 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 	@Override
 	protected Vec3d getControlledMovementInput(PlayerEntity controllingPlayer, Vec3d movementInput) {
-		float f = controllingPlayer.sidewaysSpeed;
-		float g = controllingPlayer.forwardSpeed;
+		float f = controllingPlayer.sidewaysSpeed * 1.25f;
+		float g = controllingPlayer.forwardSpeed * 1.25f;
 
 		double v = controllingPlayer.getVelocity().y;
 		if (v < 0 && !controllingPlayer.isSneaking())
@@ -126,9 +131,15 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		return (float)this.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
 	}
 
+	@Override
+	public double getMountedHeightOffset() {
+		return 0.5f;
+	}
+
 	@Nullable
 	@Override
 	public LivingEntity getControllingPassenger() {
+		if(this.getPlayer().isEmpty()) return null;
 		return this.getPlayer().get();
 	}
 
@@ -138,7 +149,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	}
 
 	public float getRotation(float tickDelta) {
-		return ((float) this.age + tickDelta) / 10.0f;
+		return ((float) this.age + tickDelta) / 20.0f;
 	}
 
 	@Override
@@ -191,5 +202,27 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	@Override
 	public boolean hasNoGravity() {
 		return true;
+	}
+
+	@Override
+	public boolean isInvulnerable() {
+		return true;
+	}
+
+	@Override
+	public boolean damage(DamageSource source, float amount) {
+		return super.damage(source, 0);
+	}
+
+	@Nullable
+	@Override
+	protected SoundEvent getHurtSound(DamageSource source) {
+		return SoundEvents.INTENTIONALLY_EMPTY;
+	}
+
+	@Nullable
+	@Override
+	protected SoundEvent getDeathSound() {
+		return SoundEvents.INTENTIONALLY_EMPTY;
 	}
 }
