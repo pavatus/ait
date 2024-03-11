@@ -48,5 +48,5 @@ You're also able to add your own custom desktops with [**datapacks**]({{ site.ba
 To change the TARDIS name, follow these steps:
 
 1. Rename a **name tag** to the desired nickname
-2. Right click the **renamed name tag** on the **Telepathic Circuits**.
+2. Right-click the **renamed name tag** on the **Telepathic Circuits**.
 3. Enjoy!

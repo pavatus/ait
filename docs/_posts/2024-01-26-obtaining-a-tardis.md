@@ -6,7 +6,7 @@ categories: ["Tardis", "Obtainment"]
 
 ## Growing A TARDIS Coral
 Some prior information, you will need to obtain **soul sand** and a **nether star**, 
-we suggest you read this [**rift chunk**]({{ site.baseurl }}{% post_url 2024-01-26-rift-chunk %}) webpage as it is nessesary to find one of these in the world before you can begin the process.
+we suggest you read this [**rift chunk**]({{ site.baseurl }}{% post_url 2024-01-26-rift-chunk %}) webpage as it is necessary to find one of these in the world before you can begin the process.
 To **grow** a TARDIS, follow these step-by-step instructions: 
 
 1. To start, you will need to craft a TARDIS Coral (top right).

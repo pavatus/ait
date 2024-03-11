@@ -7,7 +7,7 @@ categories: ["Specifics"]
 ## How do I get AIT's public release
 Currently, there is **no public release** for AIT's 1.20.1 fabric version
 
-When it is released, it will be [found on it's modrinth](https://modrinth.com/mod/ait)
+When it is released, it will be [found on it's Modrinth](https://modrinth.com/mod/ait)
 
 ---
 

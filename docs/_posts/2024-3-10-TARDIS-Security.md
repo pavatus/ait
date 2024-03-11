@@ -4,11 +4,11 @@ comments: true
 categories: ["Specifics"]
 ---
 # TARDIS Security Features
-Feel like locking the door isn't enough? No worries as if you go into your [**Console**]({{ site.baseurl }}{% post_url 2024-02-02-tardis-console %}) then hit **Settings** above the **Sonic Settings** you should see the **Security** button. Right clicking the button takes you to this menu...
+Feel like locking the door isn't enough? No worries as if you go into your [**Console**]({{ site.baseurl }}{% post_url 2024-02-02-tardis-console %}) then hit **Settings** above the **Sonic Settings** you should see the **Security** button. Right-clicking the button takes you to this menu...
 
 ![Security Menu](https://github.com/Loqor/ait/assets/152225935/1826db81-aa3d-49ea-abc9-4e5fa1f4910f)
 
-Here you can see when your TARDIS has been build and you can change some Security settings.
+Here you can see when your TARDIS has been built, and you can change some Security settings.
 
 ## Leave Behind
 When activating this feature any other guest that doesn't have a **TARDIS key** (that is linked to your TARDIS) should leave the person behind when taking off your TARDIS. This feature is inspired by the Doctor WHO episode "Blink"

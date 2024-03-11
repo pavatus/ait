@@ -21,8 +21,8 @@ Here is the crafting recipe for a Console Generator:
 Place the Console Generator in the TARDIS interior to select any of the unlocked consoles that exist.
 
 To use the Console Generator, follow this easy guide:
-1. Right click on the Console Generator to change the **type** of console.
-2. Right click *while crouching* on the Console Generator to change the **variant**.
+1. Right-click on the Console Generator to change the **type** of console.
+2. Right-click *while crouching* on the Console Generator to change the **variant**.
 3. Confirm the console by using a linked [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-03-09-sonic %}).
 
 
@@ -33,17 +33,17 @@ To use the Console Generator, follow this easy guide:
 ## How do I use a TARDIS Console?
 If you're having a hard time finding the controls, you can use a [**Sonic Screwdriver**]({{ site.baseurl }}{% post_url 2024-03-09-sonic %}). Alternatively, you're able to turn on debugging mode for viewing entity **hitboxes**, using F3+B which will toggle the debug **hitbox** mode.
 
-Right or left click on any of the controls to activate them. Certain controls - like the **throttle** - need you to crouch to increment them fully up or fully down but will do normal increments while free-standing.
+Right or left click on any of the controls to activate them. Certain controls - like the **throttle** - need you to crouch to increment them fully up or fully down but will do normal increments while freestanding.
 
 The **Increment Control** is a special control, however; it goes from 1-10-100-1000, and you can also crouch to decrease down instead of increasing up the scale.
 
-The **Coordinate System** (X, Y and Z) require you to right click to decrease the increment from the current position and require you to left click to increase the increment from the current position. 
+The **Coordinate System** (X, Y and Z) require you to right-click to decrease the increment from the current position and require you to left-click to increase the increment from the current position. 
 
-The **Dimension Control** will change the destination dimension from one dimension to another. Right click the control to change the dimension.
+The **Dimension Control** will change the destination dimension from one dimension to another. Right-click the control to change the dimension.
 
-The **Exterior Facing Control** will change which direction exterior faces next time you land ranging from North, East, South and West. Right click the control to change the facing clockwise.
+The **Exterior Facing Control** will change which direction exterior faces next time you land ranging from North, East, South and West. Right-click the control to change the facing clockwise.
 
-The **Fast Return Control** will set the destination coordinates to the last location the TARDIS landed. Right click the Fast Return control to activate fast return, click it again to set the destination to your current location.
+The **Fast Return Control** will set the destination coordinates to the last location the TARDIS landed. Right-click the Fast Return control to activate fast return, click it again to set the destination to your current location.
 
 The [**Protocol Controls**]({{ site.baseurl }}{% post_url 2024-01-01-TARDIS-Protocols %}) are explained in this webpage.
 
@@ -55,7 +55,7 @@ The **Power Control** switches the TARDIS engines off and turns the power off, r
 
 The **Alarm Control** switches the TARDIS alarms from active to inactive.
 
-The **Door Control** opens the TARDIS exterior doors when right clicked.
+The **Door Control** opens the TARDIS exterior doors when right-clicked.
 
 The **Door Lock** locks the TARDIS exterior doors, rendering them inoperable until unlocked either using a TARDIS key or using the door lock control once again.
 
