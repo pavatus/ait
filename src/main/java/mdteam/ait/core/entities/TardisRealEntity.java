@@ -69,10 +69,8 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		PlayerEntity user = this.getPlayer().get();
 		user.getAbilities().flying = true;
 
-		boolean bl =  PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
-
-		if(!(this.getControllingPassenger() instanceof PlayerEntity) && this.getControllingPassenger() != user)
-			user.startRiding(this);
+		boolean bl = PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
+		user.startRiding(this);
 
 		if (bl) {
 			if (user.getWorld().isClient()) {
@@ -177,8 +175,6 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	public void equipStack(EquipmentSlot slot, ItemStack stack) {
 
 	}
-
-
 
 	@Override
 	public void readNbt(NbtCompound nbt) {
