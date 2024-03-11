@@ -42,7 +42,7 @@ public class RealWorldCommand {
 		if (tardis == null || tardis.getTravel().getState() != TardisTravel.State.LANDED || source == null) return 0;
 		try {
 			TardisUtil.teleportOutside(tardis, source);
-			//source.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));
+			source.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));
 			TardisRealEntity.spawnFromTardisId(tardis.getExterior().getExteriorPos().getWorld(), tardis.getUuid(), spawnBlockPos, source);
 			Text textResponse = Text.translatable("command.ait.realworld.response").append(Text.literal(" " + spawnBlockPos.getX() + ", " + spawnBlockPos.getY() + ", " + spawnBlockPos.getZ()));
 			source.sendMessage(textResponse);
