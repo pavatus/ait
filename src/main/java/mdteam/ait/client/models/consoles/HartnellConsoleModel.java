@@ -8,6 +8,7 @@ import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
+import mdteam.ait.tardis.data.ShieldData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.model.*;
@@ -958,6 +959,9 @@ public class HartnellConsoleModel extends ConsoleModel {
 		// Anti Grav Control Movements
 		ModelPart antiGrav = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("sl_switch_1").getChild("bone33");
 		antiGrav.pivotX = !PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? antiGrav.pivotX : antiGrav.pivotX + 1;
+
+		ModelPart shield = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("sl_switch_6").getChild("bone57");
+		shield.pivotX = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED) ? shield.pivotX + 0.5f : shield.pivotX + 1 : shield.pivotX;
 
 		ModelPart siegeProtocol = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("sl_switch_5").getChild("bone56");
 		siegeProtocol.pivotX = !PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE) ? siegeProtocol.pivotX : siegeProtocol.pivotX + 1;

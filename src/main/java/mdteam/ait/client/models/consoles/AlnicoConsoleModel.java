@@ -7,6 +7,7 @@ import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.impl.SecurityControl;
 import mdteam.ait.tardis.control.impl.pos.IncrementManager;
 import mdteam.ait.tardis.data.FuelData;
+import mdteam.ait.tardis.data.ShieldData;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -849,6 +850,9 @@ public class AlnicoConsoleModel extends ConsoleModel {
 
 		ModelPart increment = alnico.getChild("section5").getChild("controls5").getChild("multiswitchpanel2").getChild("longswitch5");
 		increment.pitch = IncrementManager.increment(console.findTardis().get()) >= 10 ? IncrementManager.increment(console.findTardis().get()) >= 100 ? IncrementManager.increment(console.findTardis().get()) >= 1000 ? IncrementManager.increment(console.findTardis().get()) >= 10000 ? increment.pitch + 1.5f : increment.pitch + 1.25f : increment.pitch + 1f : increment.pitch + 0.5f : increment.pitch;
+
+		ModelPart shield = alnico.getChild("section5").getChild("controls5").getChild("multiswitchpanel2").getChild("longswitch8");
+		shield.pitch = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), ShieldData.IS_SHIELDED) ? shield.pitch + 1f : shield.pitch;
 
 		ModelPart landtype = alnico.getChild("section1").getChild("controls").getChild("tinyswitch2").getChild("bone2");
 		landtype.yaw = landtype.yaw + (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? 1.5708f : 0);
