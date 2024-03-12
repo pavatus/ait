@@ -59,7 +59,7 @@ The **Door Control** opens the TARDIS exterior doors when right-clicked.
 
 The **Door Lock** locks the TARDIS exterior doors, rendering them inoperable until unlocked either using a TARDIS key or using the door lock control once again.
 
-The [**Monitor Control**]({{ site.baseurl }}{% post_url 2024-1-31-Monitor %}) is explained more in this webpage.
+The [**Monitor Control**]({{ site.baseurl }}{% post_url 2024-3-12-Monitor %}) is explained more in this webpage.
 
 The **Refuel Control** requires the handbrake to be engaged. The refuel control will take in [**Artron Energy**]({{ site.baseurl }}{% post_url 2024-01-26-artron-energy %}) slowly when not in a [**Rift Chunk**]({{ site.baseurl }}{% post_url 2024-01-26-rift-chunk %}), if it is in a rift chunk then it increases refuel speed.
 
