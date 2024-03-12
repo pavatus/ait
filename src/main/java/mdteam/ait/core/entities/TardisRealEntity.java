@@ -41,6 +41,7 @@ import java.util.UUID;
 public class TardisRealEntity extends LinkableLivingEntity {
 
 	public static final TrackedData<Optional<UUID>> PLAYER_UUID;
+	public static final TrackedData<Optional<BlockPos>> PLAYER_INTERIOR_POSITION;
 	protected Vec3d lastVelocity;
 	private boolean shouldTriggerLandSound = false;
 
@@ -51,20 +52,22 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 	static {
 		PLAYER_UUID = DataTracker.registerData(TardisRealEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+		PLAYER_INTERIOR_POSITION = DataTracker.registerData(TardisRealEntity.class, TrackedDataHandlerRegistry.OPTIONAL_BLOCK_POS);
 	}
 
-	private TardisRealEntity(World world, UUID tardisID, double x, double y, double z, UUID playerUuid) {
+	private TardisRealEntity(World world, UUID tardisID, double x, double y, double z, UUID playerUuid, BlockPos pos) {
 		this(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, world);
 		this.dataTracker.set(TARDIS_ID, Optional.of(tardisID));
 		this.dataTracker.set(PLAYER_UUID, Optional.of(playerUuid));
+		this.dataTracker.set(PLAYER_INTERIOR_POSITION, Optional.of(pos));
 		this.setPosition(x, y, z);
 		this.setVelocity(Vec3d.ZERO);
 	}
 
-	public static void spawnFromTardisId(World world, UUID tardisId, BlockPos spawnPos, PlayerEntity player) {
+	public static void spawnFromTardisId(World world, UUID tardisId, BlockPos spawnPos, PlayerEntity player, BlockPos pos) {
 		if(world.isClient()) return;
 		Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisId);
-		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid());
+		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_IN_REAL_FLIGHT, true, true);
 		world.spawnEntity(tardisRealEntity);
 		tardisRealEntity.setRotation(tardis.getExterior().getExteriorPos().getDirection().asRotation(), 0);
@@ -112,7 +115,11 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				client.options.hudHidden = false;
 			} else {
 				user.clearStatusEffects();
-				TardisUtil.teleportInside(getTardis(), user);
+				if(this.getPlayerBlockPos().isEmpty()) {
+					TardisUtil.teleportInside(this.getTardis(), user);
+				} else {
+					TardisUtil.teleportToInteriorPosition(user, this.getPlayerBlockPos().get());
+				}
 				this.dataTracker.set(PLAYER_UUID, Optional.empty());
 				this.discard();
 			}
@@ -203,6 +210,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		super.initDataTracker();
 
 		this.dataTracker.startTracking(PLAYER_UUID, Optional.empty());
+		this.dataTracker.startTracking(PLAYER_INTERIOR_POSITION, Optional.empty());
 	}
 
 	@Override
@@ -230,6 +238,11 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	public Optional<PlayerEntity> getPlayer() {
 		if(this.getWorld() == null || this.dataTracker.get(PLAYER_UUID).isEmpty()) return Optional.empty();
 		return Optional.ofNullable(this.getWorld().getPlayerByUuid(this.dataTracker.get(PLAYER_UUID).get()));
+	}
+
+	public Optional<BlockPos> getPlayerBlockPos() {
+		if(this.getWorld() == null || this.dataTracker.get(PLAYER_INTERIOR_POSITION).isEmpty()) return Optional.empty();
+		return Optional.of(this.dataTracker.get(PLAYER_INTERIOR_POSITION).get());
 	}
 
 	@Override

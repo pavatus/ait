@@ -56,6 +56,8 @@ public class PlinthExteriorModel extends ExteriorModel {
 
 		matrices.translate(0, -1.5f, 0);
 
+		plinth.getChild("door").yaw = falling.getTardis().getHandlers().getDoor().isOpen() ? -1.75f : 0f;
+
 		super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 
 		matrices.pop();
@@ -67,6 +69,8 @@ public class PlinthExteriorModel extends ExteriorModel {
 		matrices.push();
 
 		matrices.translate(0, -1.5f, 0);
+
+		plinth.getChild("door").yaw = realEntity.getTardis().getHandlers().getDoor().isOpen() ? -1.75f : 0f;
 
 		super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 

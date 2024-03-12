@@ -64,8 +64,8 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 			double m = vec3d2.x * vec3d.z - vec3d2.z * vec3d.x;
 			double v = Math.signum(m) * Math.acos(l);
 			matrices.multiply(RotationAxis.POSITIVE_Y.rotation(entity.isOnGround() ? 0 : (float) v));
-			if(!entity.isOnGround()) this.model.getPart().setAngles((float) 0, ((entity.getRotation(tickDelta)) * 4), 0);
 		}
+		if(!entity.isOnGround()) this.model.getPart().setAngles((float) 0, ((entity.getRotation(tickDelta)) * 4), 0);
 		if(!entity.isOnGround()) matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) (entity.getVelocity().horizontalLength() * 45f)));
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 

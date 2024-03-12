@@ -1,13 +1,19 @@
 package mdteam.ait.tardis.control.impl;
 
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.Tardis;
+import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.control.Control;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
+import mdteam.ait.tardis.util.TardisUtil;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 
 public class AutoPilotControl extends Control {
 	public AutoPilotControl() {
@@ -23,6 +29,14 @@ public class AutoPilotControl extends Control {
 				this.addToControlSequence(tardis);
 				return false;
 			}
+		}
+
+		if(player.isSneaking() && tardis.getTravel().getState() == TardisTravel.State.LANDED) {
+			BlockPos pos = player.getBlockPos();
+			TardisUtil.teleportOutside(tardis, player);
+			player.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));
+			TardisRealEntity.spawnFromTardisId(tardis.getExterior().getExteriorPos().getWorld(), tardis.getUuid(), tardis.getExterior().getExteriorPos(), player, player.getBlockPos());
+			return true;
 		}
 
 		PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, !PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));

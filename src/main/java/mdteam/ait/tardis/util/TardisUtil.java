@@ -341,6 +341,13 @@ public class TardisUtil {
 		});
 	}
 
+	public static void teleportToInteriorPosition(Entity entity, BlockPos pos) {
+		if (entity instanceof ServerPlayerEntity player) {
+			WorldOps.teleportToWorld(player, (ServerWorld) TardisUtil.getTardisDimension(), new Vec3d(pos.getX(), pos.getY(), pos.getZ()), entity.getYaw(), player.getPitch());
+			player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+		}
+	}
+
 	private static void teleportWithDoorOffset(Entity entity, AbsoluteBlockPos.Directed pos) {
 		Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
 		SERVER.execute(() -> {
