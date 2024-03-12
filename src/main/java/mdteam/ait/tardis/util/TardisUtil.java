@@ -8,6 +8,7 @@ import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
 import mdteam.ait.core.blockentities.DoorBlockEntity;
 import mdteam.ait.core.blockentities.ExteriorBlockEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.core.events.ServerLoadEvent;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.core.item.SonicItem;
@@ -133,6 +134,19 @@ public class TardisUtil {
 					if (tardis.getHandlers().getOvergrown().isOvergrown()) return;
 
 					player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
+
+					if (player.getVehicle() instanceof TardisRealEntity real) {
+						DoorData.DoorStateEnum state = tardis.getDoor().getDoorState();
+						if (state == DoorData.DoorStateEnum.CLOSED || state == DoorData.DoorStateEnum.FIRST) {
+							DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+							if (tardis.getDoor().isDoubleDoor()) {
+								DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+							}
+						} else {
+							DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+						}
+						return;
+					}
 
 					BlockPos pos = player.getWorld().getRegistryKey() ==
 							TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();

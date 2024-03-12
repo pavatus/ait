@@ -2,6 +2,7 @@ package mdteam.ait.tardis.data;
 
 import mdteam.ait.api.tardis.LinkableItem;
 import mdteam.ait.core.entities.BaseControlEntity;
+import mdteam.ait.core.entities.FallingTardisEntity;
 import mdteam.ait.core.item.KeyItem;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.control.impl.SecurityControl;
@@ -99,6 +100,7 @@ public class ShieldData extends TardisLink {
 				.stream()
 				.filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
 				.filter(entity -> !(entity instanceof ServerPlayerEntity player && player.isSpectator())) // Exclude players in spectator
+				.filter(entity -> !(entity instanceof FallingTardisEntity falling && falling.getTardis() == tardis))
 				.filter(entity -> !(entity instanceof PlayerEntity && Objects.equals(((PlayerEntity) entity).getOffHandStack().getOrCreateNbt().getString("tardis"), tardis.getUuid().toString()))) // Exclude players
 				.forEach(entity -> {
 					if(entity instanceof ServerPlayerEntity && entity.isSubmergedInWater()) {

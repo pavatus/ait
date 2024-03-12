@@ -8,6 +8,7 @@ import mdteam.ait.client.renderers.monitors.MonitorRenderer;
 import mdteam.ait.client.renderers.wearables.AITHudOverlay;
 import mdteam.ait.core.*;
 import mdteam.ait.core.blockentities.ConsoleGeneratorBlockEntity;
+import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.core.item.*;
 import mdteam.ait.registry.*;
 import mdteam.ait.tardis.animation.ExteriorAnimation;
@@ -304,6 +305,10 @@ public class AITModClient implements ClientModInitializer {
                 if (keyBinding.isPressed()) {
                     if (!keyHeldDown) {
                         keyHeldDown = true;
+                        if (player.getVehicle() instanceof TardisRealEntity entity) {
+                            ClientTardisUtil.snapToOpenDoors(entity.getTardisID());
+                            return;
+                        }
                         ItemStack[] keys = KeyItem.getKeysInInventory(player);
                         for (ItemStack stack : keys) {
                             if (stack != null && stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {

@@ -2,6 +2,7 @@ package mdteam.ait.core.entities;
 
 import mdteam.ait.api.tardis.LinkableLivingEntity;
 import mdteam.ait.core.AITEntityTypes;
+import mdteam.ait.core.AITSounds;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisTravel;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
@@ -23,6 +24,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Arm;
@@ -39,9 +41,12 @@ import java.util.UUID;
 public class TardisRealEntity extends LinkableLivingEntity {
 
 	public static final TrackedData<Optional<UUID>> PLAYER_UUID;
+	protected Vec3d lastVelocity;
+	private boolean shouldTriggerLandSound = false;
 
 	public TardisRealEntity(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
+		this.lastVelocity = Vec3d.ZERO;
 	}
 
 	static {
@@ -62,16 +67,18 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid());
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_IN_REAL_FLIGHT, true, true);
 		world.spawnEntity(tardisRealEntity);
-		tardis.getTravel().toFlight();
 		tardisRealEntity.setRotation(tardis.getExterior().getExteriorPos().getDirection().asRotation(), 0);
+		player.getAbilities().flying = true;
+		player.getAbilities().allowFlying = true;
+		tardis.getTravel().toFlight();
 	}
 
 	@Override
 	public void tick() {
+		this.lastVelocity = this.getVelocity();
 		super.tick();
 		if(this.getPlayer().isEmpty()) return;
 		PlayerEntity user = this.getPlayer().get();
-		user.getAbilities().flying = true;
 
 		boolean bl = PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 		user.startRiding(this);
@@ -82,10 +89,20 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
 				client.options.hudHidden = true;
 			} else {
-				if (user.isSneaking() && this.isOnGround()) {
-					getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(user.getBlockPos(), user.getWorld(), user.getHorizontalFacing()));
-					if(getTardis().getTravel().getState() == TardisTravel.State.LANDED) PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
-					user.dismountVehicle();
+				if(this.isOnGround()) {
+					if(!shouldTriggerLandSound) {
+						this.getWorld().playSound(null, this.getBlockPos(), AITSounds.LAND_THUD, SoundCategory.NEUTRAL, 2F, 1F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+						user.getAbilities().flying = false;
+						shouldTriggerLandSound = true;
+					}
+					if (user.isSneaking()) {
+						getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(user.getBlockPos(), user.getWorld(), user.getHorizontalFacing()));
+						if (getTardis().getTravel().getState() == TardisTravel.State.LANDED)
+							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
+						user.dismountVehicle();
+					}
+				} else {
+					shouldTriggerLandSound = false;
 				}
 			}
 		} else if (!getTardis().getTravel().inFlight()) {
@@ -100,6 +117,10 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				this.discard();
 			}
 		}
+	}
+
+	public Vec3d lerpVelocity(float tickDelta) {
+		return this.lastVelocity.lerp(this.getVelocity(), tickDelta);
 	}
 
 	@Override
@@ -166,6 +187,18 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	}
 
 	@Override
+	public void onPlayerCollision(PlayerEntity player) {
+		if (this.getPlayer().isPresent()) {
+			if (player != this.getPlayer().get()) {
+				if(this.getTardis().getDoor().isOpen()) {
+					TardisUtil.teleportInside(this.getTardis(), player);
+				}
+			}
+		}
+		super.onPlayerCollision(player);
+	}
+
+	@Override
 	protected void initDataTracker() {
 		super.initDataTracker();
 
@@ -201,12 +234,27 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 	@Override
 	public boolean hasNoGravity() {
-		return true;
-	}
+		if(this.getPlayer().isEmpty()) return false;
+        return this.getPlayer().get().getAbilities().flying;
+    }
 
 	@Override
 	public boolean isInvulnerable() {
 		return true;
+	}
+
+	@Override
+	public boolean doesRenderOnFire() {
+		return false;
+	}
+
+	@Override
+	public void setOnFire(boolean onFire) {
+	}
+
+	@Override
+	public boolean isAttackable() {
+		return false;
 	}
 
 	@Override
@@ -218,6 +266,15 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	@Override
 	protected SoundEvent getHurtSound(DamageSource source) {
 		return SoundEvents.INTENTIONALLY_EMPTY;
+	}
+
+	@Override
+	protected void playBlockFallSound() {
+	}
+
+	@Override
+	public FallSounds getFallSounds() {
+		return new FallSounds(SoundEvents.INTENTIONALLY_EMPTY, SoundEvents.INTENTIONALLY_EMPTY);
 	}
 
 	@Nullable

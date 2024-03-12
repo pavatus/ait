@@ -31,15 +31,14 @@ public class RealWorldCommand {
 		dispatcher.register(literal(AITMod.MOD_ID)
 				.then(literal("real-world").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
 								.then(argument("tardis-id", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-										.then(argument("spawn-position", BlockPosArgumentType.blockPos())
-												.executes(RealWorldCommand::runSpawnRealTardisTestCommand)))));
+												.executes(RealWorldCommand::runSpawnRealTardisTestCommand))));
 	}
 
 	private static int runSpawnRealTardisTestCommand(CommandContext<ServerCommandSource> context) {
-		BlockPos spawnBlockPos = BlockPosArgumentType.getBlockPos(context, "spawn-position");
 		ServerPlayerEntity source = context.getSource().getPlayer();
 		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis-id"));
 		if (tardis == null || tardis.getTravel().getState() != TardisTravel.State.LANDED || source == null) return 0;
+		BlockPos spawnBlockPos = tardis.getExterior().getExteriorPos();
 		try {
 			TardisUtil.teleportOutside(tardis, source);
 			source.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));
