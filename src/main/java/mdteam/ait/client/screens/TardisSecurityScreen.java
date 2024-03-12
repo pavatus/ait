@@ -57,8 +57,8 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
 		createTextButton(Text.translatable("screen.ait.security.leave_behind"), (button -> toggleLeaveBehind()));
 		createTextButton(Text.translatable("screen.ait.security.hostile_alarms"), (button -> toggleHostileAlarms()));
-		createTextButton(Text.literal("> Shields"), (button -> toggleShields()));
-		createTextButton(Text.literal("> Visual Shields"), (button -> toggleVisualShields()));
+		/*createTextButton(Text.literal("> Shields"), (button -> toggleShields()));
+		createTextButton(Text.literal("> Visual Shields"), (button -> toggleVisualShields()));*/
 	}
 
 	private void toggleLeaveBehind() {
@@ -81,7 +81,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		updateTardis();
 	}
 
-	private void toggleShields() {
+	/*private void toggleShields() {
 		PacketByteBuf buf = PacketByteBufs.create();
 
 		buf.writeUuid(tardis().getUuid());
@@ -99,7 +99,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 
 		ClientPlayNetworking.send(PropertiesHandler.VISUAL_SHIELDS, buf);
 		updateTardis();
-	}
+	}*/
 
 	private <T extends ClickableWidget> void addButton(T button) {
 		this.addDrawableChild(button);

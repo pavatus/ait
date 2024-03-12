@@ -56,6 +56,7 @@ public class ToyotaType extends ConsoleTypeSchema {
 			new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.125f, 0.1125f), new Vector3f(0.0015624891966581345f, 0.737500574439764f, -0.7953125154599547f)),
 			new ControlTypes(new CloakControl(), EntityDimensions.changing(0.099999994f, 0.1125f), new Vector3f(0.8273437675088644f, 0.7500003837049007f, -0.16093750949949026f)),
 			new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.125f, 0.08749999f), new Vector3f(-1.0605468843132257f, 0.7624998083338141f, 0.21328125707805157f)),
+			new ControlTypes(new ShieldsControl(), EntityDimensions.changing(0.125f, 0.099999994f), new Vector3f(-0.21093748696148396f, 0.737499762326479f, -0.8250000029802322f)),
 	};
 
 	public ToyotaType() {
