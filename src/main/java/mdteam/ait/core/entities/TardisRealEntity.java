@@ -79,6 +79,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	@Override
 	public void tick() {
 		this.lastVelocity = this.getVelocity();
+		this.setRotation(0, 0);
 		super.tick();
 		if(this.getPlayer().isEmpty()) return;
 		PlayerEntity user = this.getPlayer().get();
@@ -151,7 +152,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		if (v < 0 && !controllingPlayer.isSneaking())
 			v = 0;
 
-		return new Vec3d(f, v * 4f, g);
+		return this.isOnGround() ? new Vec3d(0, 0, 0) : new Vec3d(f, v * 4f, g);
 	}
 
 	@Override
