@@ -1,6 +1,7 @@
 package mdteam.ait.client;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.renderers.VortexUtil;
 import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import mdteam.ait.client.renderers.decoration.PlaqueRenderer;
 import mdteam.ait.client.renderers.machines.ArtronCollectorRenderer;
@@ -41,6 +42,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
@@ -49,9 +51,11 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -69,6 +73,7 @@ import static mdteam.ait.AITMod.*;
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
+    private final VortexUtil vortex = new VortexUtil("space");
 
     @Override
     public void onInitializeClient() {
@@ -86,6 +91,17 @@ public class AITModClient implements ClientModInitializer {
         ClientExteriorVariantRegistry.getInstance().init();
         ClientConsoleVariantRegistry.getInstance().init();
         ClientDoorRegistry.init();
+
+        WorldRenderEvents.END.register(context -> {
+
+            try {
+                if (context.world().getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
+                    vortex.renderVortex(context);
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {

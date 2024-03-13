@@ -2,6 +2,7 @@ package mdteam.ait.client.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import mdteam.ait.AITMod;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;

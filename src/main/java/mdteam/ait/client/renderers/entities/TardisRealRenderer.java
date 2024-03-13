@@ -9,10 +9,7 @@ import mdteam.ait.core.entities.TardisRealEntity;
 import mdteam.ait.tardis.TardisExterior;
 import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -70,7 +67,7 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 
 		if (getModel(entity) == null) return;
-		getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, 1, 1, 1, 1, 1);
+		getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, 1, 1, 1, 1, 1);
 
 		if (exteriorVariantSchema.emission() != null && entity.getTardis().hasPower()) {
 			boolean alarms = PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);

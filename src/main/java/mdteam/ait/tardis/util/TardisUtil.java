@@ -65,6 +65,7 @@ public class TardisUtil {
 	private static MinecraftServer SERVER;
 	private static Path SAVE_PATH;
 	private static ServerWorld TARDIS_DIMENSION;
+	private static ServerWorld TIME_VORTEX;
 	public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
 	public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");
 
@@ -89,11 +90,16 @@ public class TardisUtil {
 			if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
 				TARDIS_DIMENSION = world;
 			}
+
+			if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
+				TIME_VORTEX = world;
+			}
 		});
 
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
 			SERVER = server;
 			TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
+			TIME_VORTEX = server.getWorld(AITDimensions.TIME_VORTEX_WORLD);
 		});
 
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
@@ -212,14 +218,11 @@ public class TardisUtil {
 	}
 
 	public static World getTardisDimension() {
-        /*if (isClient()) {
-            if (MinecraftClient.getInstance().world != null) {
-                if (MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
-                    return MinecraftClient.getInstance().world;
-                }
-            }
-        }*/
 		return TARDIS_DIMENSION;
+	}
+
+	public static World getTimeVortex() {
+		return TIME_VORTEX;
 	}
 
 	public static AbsoluteBlockPos.Directed createFromPlayer(PlayerEntity player) {
