@@ -10,6 +10,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author - ThePlaceHolder (someElseisHere), Loqor
@@ -153,5 +157,22 @@ public class VortexUtil {
 
     private float computeDistortionFactor(float time, int t) {
         return (float) (Math.sin(time * this.distortionSpeed * 2.0 * Math.PI + (13 - t) * this.distortionSeparationFactor) * this.distortionFactor) / 8;
+    }
+
+    public static class Branch {
+        public Vector3f start;
+        public Vector3f end;
+        public Vector3f direction;
+        public Branch parent;
+        public float thickness = 2.0f;
+        public List<Branch> _children = new ArrayList<>();
+        public List<Vector3f> _attractors = new ArrayList<>();
+
+        public Branch (Vector3f s, Vector3f e, Vector3f d, Branch p) {
+            start = s;
+            end = e;
+            direction = d;
+            parent = p;
+        }
     }
 }
