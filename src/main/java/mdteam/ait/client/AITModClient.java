@@ -56,6 +56,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -93,9 +94,8 @@ public class AITModClient implements ClientModInitializer {
         ClientDoorRegistry.init();
 
         WorldRenderEvents.END.register(context -> {
-
-            try {
-                if (context.world().getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
+            try (ClientWorld world = context.world()){
+                if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
                     vortex.renderVortex(context);
                 }
             } catch(Exception e) {

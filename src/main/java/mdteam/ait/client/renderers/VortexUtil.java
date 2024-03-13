@@ -18,18 +18,24 @@ import org.joml.Matrix4f;
  **/
 public class VortexUtil {
     public Identifier TEXTURE_LOCATION;
-    private float distortionSpeed = 0.5f;
-    private float distortionSeparationFactor = 32f;
-    private float distortionFactor = 2f;
-    private float scale = 21f;
-    private float rotationFactor = 1f;
+    private final float distortionSpeed;
+    private final float distortionSeparationFactor;
+    private final float distortionFactor;
+    private final float scale;
+    private final float rotationFactor;
+    private final float rotationSpeed;
+    private final float speed;
     private float time = 0;
-    private float rotationSpeed = 1.0f;
-    private float speed = 4f;
 
     public VortexUtil(String name/*, float distortionFactor*/) {
         TEXTURE_LOCATION = new Identifier(AITMod.MOD_ID, "textures/vortex/" + name + ".png");
-        //this.distortionFactor = distortionFactor;
+        this.distortionSpeed = 0.5f;
+        this.distortionSeparationFactor = 32f;
+        this.distortionFactor = 2;//distortionFactor;
+        this.scale = 21f;
+        this.rotationFactor = 1f;
+        this.rotationSpeed = 1f;
+        this.speed = 4f;
     }
 
     public void renderVortex(WorldRenderContext context) {
