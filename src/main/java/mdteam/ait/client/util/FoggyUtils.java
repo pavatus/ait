@@ -1,6 +1,7 @@
 package mdteam.ait.client.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import mdteam.ait.core.AITDimensions;
 import mdteam.ait.core.AITItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.FogShape;
@@ -29,5 +30,11 @@ public class FoggyUtils {
 			RenderSystem.setShaderFogColor(0.8f, 0.8f, 0.8f, MinecraftClient.getInstance().player
 					.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.RESPIRATOR ? 0.015f: 0.35f);
 		}
+		/*if(MinecraftClient.getInstance().world != null &&MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
+			RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));
+			RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 11, 32));
+			RenderSystem.setShaderFogShape(FogShape.SPHERE);
+			RenderSystem.setShaderFogColor(0.3f, 0.3f, 0.3f, 0.35f);
+		}*/
 	}
 }

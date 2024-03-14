@@ -1,6 +1,7 @@
 package mdteam.ait.client;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.client.renderers.TriangleTestingUtil;
 import mdteam.ait.client.renderers.VortexUtil;
 import mdteam.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import mdteam.ait.client.renderers.decoration.PlaqueRenderer;
@@ -98,6 +99,7 @@ public class AITModClient implements ClientModInitializer {
                 if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
                     vortex.renderVortex(context);
                 }
+                //TriangleTestingUtil.renderTriangle(context);
             } catch(Exception e) {
                 e.printStackTrace();
             }

@@ -73,6 +73,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		tardisRealEntity.setRotation(tardis.getExterior().getExteriorPos().getDirection().asRotation(), 0);
 		player.getAbilities().flying = true;
 		player.getAbilities().allowFlying = true;
+		player.getAbilities().setFlySpeed(player.getAbilities().getFlySpeed() * 1.5F);
 		tardis.getTravel().toFlight();
 	}
 
@@ -116,6 +117,9 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				client.options.hudHidden = false;
 			} else {
 				user.clearStatusEffects();
+				user.getAbilities().setFlySpeed(0.05F);
+				user.getAbilities().allowFlying = false;
+				user.getAbilities().flying = false;
 				if(this.getPlayerBlockPos().isEmpty()) {
 					TardisUtil.teleportInside(this.getTardis(), user);
 				} else {

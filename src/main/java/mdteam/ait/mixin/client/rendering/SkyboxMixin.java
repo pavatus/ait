@@ -26,6 +26,10 @@ public abstract class SkyboxMixin {
 			SkyboxUtil.renderTardisSky(matrices);
 			ci.cancel();
 		}
+		if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
+			SkyboxUtil.renderTardisSky(matrices);
+			ci.cancel();
+		}
 	}
 
 
