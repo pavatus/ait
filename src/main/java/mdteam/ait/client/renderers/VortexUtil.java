@@ -4,14 +4,17 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import mdteam.ait.AITMod;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
+import org.apache.commons.lang3.Validate;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +38,7 @@ public class VortexUtil {
         TEXTURE_LOCATION = new Identifier(AITMod.MOD_ID, "textures/vortex/" + name + ".png");
         this.distortionSpeed = 0.5f;
         this.distortionSeparationFactor = 32f;
-        this.distortionFactor = 2;//distortionFactor;
+        this.distortionFactor = 8;//distortionFactor;
         this.scale = 21f;
         this.rotationFactor = 1f;
         this.rotationSpeed = 1f;
@@ -56,24 +59,27 @@ public class VortexUtil {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
 
-        matrixStack.scale(scale, scale, 10);
+        matrixStack.scale(scale, scale, scale);
 
         float f0 = (float) Math.toDegrees(this.rotationFactor * Math.sin(time * this.rotationSpeed));
         float f2 = f0 / 90.0f - (int) (f0 / 90.0f);
-        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(f2 * 360.0f));
+        //matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(f2 * 360.0f));
+        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90f));
 
         MinecraftClient.getInstance().getTextureManager().bindTexture(TEXTURE_LOCATION);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
+
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 
         for (int i = 0 ; i < 36; ++i) {
-            this.renderSection(buffer, i, 4 * -this.speed,
+            this.renderSection(buffer, i, time * -this.speed,
                     (float) Math.sin(i * Math.PI / 36),
                     (float) Math.sin((i + 1) * Math.PI / 36), matrixStack.peek().getPositionMatrix());
         }
 
         tessellator.draw();
+
         RenderSystem.disableCull();
         RenderSystem.disableBlend();
         matrixStack.pop();
@@ -93,13 +99,13 @@ public class VortexUtil {
 
         float uPanelOffset = uOffset * panel;
 
-        addVertex(builder, matrix4f, 0f, -startScale + distortion, -zOffset, uOffset * panel, vPanelOffset);
+        addVertex(builder, matrix4f, 0f, -startScale + distortion, -zOffset, uPanelOffset, vPanelOffset);
 
-        addVertex(builder, matrix4f, 0f, -endScale + distortionPlusOne, -zOffset - 1, uOffset * panel, vOffset * panel + panelDistanceOffset);
+        addVertex(builder, matrix4f, 0f, -endScale + distortionPlusOne, -zOffset - 1, uPanelOffset, vOffset * panel + panelDistanceOffset);
 
-        addVertex(builder, matrix4f, endScale * -sqrt, endScale / -2f + distortionPlusOne, -zOffset - 1, uOffset * panel + panel, vOffset * panel + panelDistanceOffset);
+        addVertex(builder, matrix4f, endScale * -sqrt, endScale / -2f + distortionPlusOne, -zOffset - 1, uPanelOffset + panel, vOffset * panel + panelDistanceOffset);
 
-        addVertex(builder, matrix4f, startScale * -sqrt, startScale / -2f + distortion, -zOffset, uOffset * panel + panel, vPanelOffset);
+        addVertex(builder, matrix4f, startScale * -sqrt, startScale / -2f + distortion, -zOffset, uPanelOffset + panel, vPanelOffset);
 
         uOffset = 1;
 
@@ -167,6 +173,6 @@ public class VortexUtil {
     }
 
     private float computeDistortionFactor(float time, int t) {
-        return (float) (Math.sin(4 * this.distortionSpeed * 2.0 * Math.PI + (13 - t) * this.distortionSeparationFactor) * this.distortionFactor) / 8;
+        return (float) (Math.sin(8 * this.distortionSpeed * 2.0 * Math.PI + (13 - t) * this.distortionSeparationFactor) * this.distortionFactor) / 8;
     }
 }
