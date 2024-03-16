@@ -981,4 +981,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     public void generate_RU_RU_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.RU_RU))); // ru_ru (Russian Russia)
     }
+
+    public void generate_UK_UA_Language(FabricDataGenerator.Pack pack) {
+        pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.UK_UA))); // uk_ua (Ukrainian Ukraine)
+    }
 }
