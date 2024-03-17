@@ -54,7 +54,6 @@
 		"owo-lib": "*"
 	},
 	"suggests": {
-		"regeneration": "*",
 		"immersiveportals": "*",
 		"k9-mod": "*"
 	}
