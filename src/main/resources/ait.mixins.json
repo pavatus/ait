@@ -1,9 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "mdteam.ait.mixin",
+  "package": "loqor.ait.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "DismountEntityMixin",
     "server.ItemEntityMixin",
     "server.MinecraftServerMixin",
     "server.ServerPlayerInteractionManagerMixin",
