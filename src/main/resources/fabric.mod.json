@@ -28,18 +28,18 @@
 		"sources": "https://github.com/M-D-Team/ait-fabric-1.20.1/",
 		"issues": "https://github.com/M-D-Team/ait-fabric-1.20.1/issues"
 	},
-	"license": "MIT",
+	"license": "Apache-2.0",
 	"icon": "assets/ait/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"mdteam.ait.AITMod"
+			"loqor.ait.AITMod"
 		],
 		"client": [
-          "mdteam.ait.client.AITModClient"
+			"loqor.ait.client.AITModClient"
 		],
 		"fabric-datagen": [
-          "mdteam.ait.datagen.AITModDataGenerator"
+			"loqor.ait.datagen.AITModDataGenerator"
 		]
 	},
 	"mixins": [
