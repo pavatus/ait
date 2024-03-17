@@ -22,4 +22,5 @@ public enum LanguageType {
 	NDS_DE,
 	PT_BR,
 	RU_RU,
+    UK_UA,
 }

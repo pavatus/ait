@@ -25,7 +25,7 @@ Recommended to play with 8GB of RAM **minimum** singleplayer.
 
 Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 
-## Compatability
+## Compatibility
 
 ### If you have [Regeneration](https://modrinth.com/mod/regeneration)
 
