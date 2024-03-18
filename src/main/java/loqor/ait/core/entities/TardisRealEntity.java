@@ -1,6 +1,7 @@
 package loqor.ait.core.entities;
 
 import loqor.ait.api.tardis.LinkableLivingEntity;
+import loqor.ait.core.AITDamageTypes;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
@@ -11,6 +12,7 @@ import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -23,6 +25,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -93,20 +96,26 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
 				client.options.hudHidden = true;
 			} else {
-				if(this.isOnGround()) {
+				if(this.isOnGround() && !user.getAbilities().flying) {
 					if(!shouldTriggerLandSound) {
-						this.getWorld().playSound(null, this.getBlockPos(), AITSounds.LAND_THUD, SoundCategory.NEUTRAL, 2F, 1F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+						this.getWorld().playSound(null, this.getBlockPos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS, 2F, 1F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
 						user.getAbilities().flying = false;
+						DamageSource damage = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
+						this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity -> (!(entity instanceof PlayerEntity) || !entity.isSpectator() && !((PlayerEntity) entity).isCreative())).forEach((entity) -> {
+							if(entity != this.getControllingPassenger())
+								entity.damage(damage, 20.0f);
+						});
 						shouldTriggerLandSound = true;
 					}
 					if (user.isSneaking()) {
-						getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(user.getBlockPos(), user.getWorld(), user.getHorizontalFacing()));
+						getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(user.getBlockPos(), user.getWorld(), user.getHorizontalFacing().getOpposite()));
 						if (getTardis().getTravel().getState() == TardisTravel.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
 						user.dismountVehicle();
 					}
 				} else {
 					shouldTriggerLandSound = false;
+					user.getAbilities().allowFlying = true;
 				}
 			}
 		} else if (!getTardis().getTravel().inFlight()) {

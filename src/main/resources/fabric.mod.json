@@ -24,9 +24,9 @@
 		"TARDIS SFX for TARDIS Sounds"
 	],
 	"contact": {
-		"homepage": "https://m-d-team.github.io",
-		"sources": "https://github.com/M-D-Team/ait-fabric-1.20.1/",
-		"issues": "https://github.com/M-D-Team/ait-fabric-1.20.1/issues"
+		"homepage": "https://loqor.dev",
+		"sources": "https://github.com/Loqor/ait/",
+		"issues": "https://github.com/Loqor/ait/issues"
 	},
 	"license": "Apache-2.0",
 	"icon": "assets/ait/icon.png",

@@ -5,6 +5,7 @@ import loqor.ait.client.models.machines.ShieldsModel;
 import loqor.ait.client.registry.ClientExteriorVariantRegistry;
 import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
@@ -14,6 +15,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
@@ -58,18 +60,31 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 			double l = (vec3d2.x * vec3d.x + vec3d2.z * vec3d.z) / Math.sqrt(d * e);
 			double m = vec3d2.x * vec3d.z - vec3d2.z * vec3d.x;
 			double v = Math.signum(m) * Math.acos(l);
-			matrices.multiply(RotationAxis.POSITIVE_Y.rotation(entity.isOnGround() ? 0 : (float) v));
+			matrices.multiply(RotationAxis.POSITIVE_Y.rotation((float) v));
 		}
-		if(!entity.isOnGround()) this.model.getPart().setAngles((float) 0, ((entity.getRotation(tickDelta)) * 4), 0);
-		if(!entity.isOnGround()) matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) (entity.getVelocity().horizontalLength() * 45f)));
+		if(!entity.isOnGround()) {
+			if(!entity.getTardis().getDoor().isOpen()) {
+				this.model.getPart().setAngles((float) 0, ((entity.getRotation(tickDelta)) * 4), 0);
+				matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) (entity.getVelocity().horizontalLength() * 45f)));
+			} else {
+				matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
+				matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) (-entity.getVelocity().horizontalLength() * 45f)));
+			}
+		} else {
+			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(
+					(entity.getPlayer().get().getHorizontalFacing() == Direction.NORTH
+							|| entity.getPlayer().get().getHorizontalFacing() == Direction.SOUTH) ?
+							entity.getPlayer().get().getHorizontalFacing().asRotation() :
+							-entity.getPlayer().get().getHorizontalFacing().asRotation()));
+		}
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 
 		if (getModel(entity) == null) return;
-		getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, 1, 1, 1, 1, 1);
+		getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), entity.getWorld().getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light, 1, 1, 1, 1, 1);
 
 		if (exteriorVariantSchema.emission() != null && entity.getTardis().hasPower()) {
 			boolean alarms = PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
-			getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), light, 1, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
+			getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, 1, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
 		}
 
 		int maxLight = 0xF000F0;

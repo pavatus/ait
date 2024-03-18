@@ -441,7 +441,7 @@ public class TardisTravel extends TardisLink {
 
 		ServerTardis tardis = (ServerTardis) this.findTardis().get();
 
-		if (this.getState() != State.FLIGHT && PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT)) return;
+		if (this.getState() != State.FLIGHT) return;
 
 		// Disable autopilot
 		// PropertiesHandler.setAutoPilot(this.getTardis().get().getHandlers().getProperties(), false);

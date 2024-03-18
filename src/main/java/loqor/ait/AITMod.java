@@ -1,34 +1,35 @@
-package mdteam.ait;
+package loqor.ait;
 
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
-import mdteam.ait.api.tardis.TardisEvents;
-import mdteam.ait.compat.DependencyChecker;
-import mdteam.ait.compat.immersive.PortalsHandler;
-import mdteam.ait.core.*;
-import mdteam.ait.core.blockentities.ConsoleBlockEntity;
-import mdteam.ait.core.blockentities.ExteriorBlockEntity;
-import mdteam.ait.core.commands.*;
-import mdteam.ait.core.entities.ConsoleControlEntity;
-import mdteam.ait.core.item.SiegeTardisItem;
-import mdteam.ait.core.managers.RiftChunkManager;
-import mdteam.ait.core.util.AITConfig;
-import mdteam.ait.registry.*;
-import mdteam.ait.tardis.Tardis;
-import mdteam.ait.tardis.TardisDesktop;
-import mdteam.ait.tardis.TardisDesktopSchema;
-import mdteam.ait.tardis.TardisManager;
-import mdteam.ait.tardis.advancement.TardisCriterions;
-import mdteam.ait.tardis.data.InteriorChangingHandler;
-import mdteam.ait.tardis.data.ServerHumHandler;
-import mdteam.ait.tardis.data.ShieldData;
-import mdteam.ait.tardis.data.properties.PropertiesHandler;
-import mdteam.ait.tardis.sound.HumSound;
-import mdteam.ait.tardis.util.FlightUtil;
-import mdteam.ait.tardis.util.TardisUtil;
-import mdteam.ait.tardis.wrapper.server.ServerTardis;
-import mdteam.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.compat.DependencyChecker;
+import loqor.ait.compat.immersive.PortalsHandler;
+import loqor.ait.core.*;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.commands.*;
+import loqor.ait.core.entities.ConsoleControlEntity;
+import loqor.ait.core.entities.TardisRealEntity;
+import loqor.ait.core.item.SiegeTardisItem;
+import loqor.ait.core.managers.RiftChunkManager;
+import loqor.ait.core.util.AITConfig;
+import loqor.ait.registry.*;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisDesktop;
+import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.advancement.TardisCriterions;
+import loqor.ait.tardis.data.InteriorChangingHandler;
+import loqor.ait.tardis.data.ServerHumHandler;
+import loqor.ait.tardis.data.ShieldData;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.sound.HumSound;
+import loqor.ait.tardis.util.FlightUtil;
+import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -288,6 +289,7 @@ public class AITMod implements ModInitializer {
 
 	public void entityAttributeRegister() {
 		FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createControlAttributes());
+		FabricDefaultAttributeRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, TardisRealEntity.createLivingAttributes());
 	}
 
 	public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
