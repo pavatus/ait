@@ -137,6 +137,12 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				this.discard();
 			}
 		}
+
+		if(this.getTardis().getDoor().isOpen()) {
+			this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity -> (!(entity instanceof PlayerEntity) || !entity.isSpectator() && !((PlayerEntity) entity).isCreative())).forEach((entity) -> {
+				TardisUtil.teleportInside(this.getTardis(), entity);
+			});
+		}
 	}
 
 	public Vec3d lerpVelocity(float tickDelta) {

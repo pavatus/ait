@@ -13,7 +13,7 @@ import org.joml.Matrix4f;
 
 /**
  * @author - ThePlaceHolder (someElseisHere), Loqor
- * @implNote - Referenced from here, and originally from Dalek Mod 1.12 by my understanding. Will be replaced soon - this was just a good jumping off point.
+ * @implNote - Referenced from here, and originally from Dalek Mod 1.12 by my understanding. Will be replaced sometime in the near future - this was just a good jumping off point.
  * - <a href="https://github.com/someElseIsHere/DalekMod-TimeVortex/blob/master/src/main/java/org/theplaceholder/dmtv/client/vortex/Vortex.java">...</a>
  **/
 public class VortexUtil {

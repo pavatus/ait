@@ -92,7 +92,7 @@ public class AITModClient implements ClientModInitializer {
         ClientConsoleVariantRegistry.getInstance().init();
         ClientDoorRegistry.init();
 
-        WorldRenderEvents.END.register(context -> {
+        /*WorldRenderEvents.END.register(context -> {
             try (ClientWorld world = context.world()){
                 if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
                     vortex.renderVortex(context);
@@ -101,7 +101,7 @@ public class AITModClient implements ClientModInitializer {
             } catch(Exception e) {
                 e.printStackTrace();
             }
-        });
+        });*/
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {
