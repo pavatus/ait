@@ -1,4 +1,4 @@
-package mdteam.ait.core.item;
+package mdteam.ait.core.item.control;
 
 import mdteam.ait.core.entities.ConsoleControlEntity;
 import mdteam.ait.registry.ControlRegistry;
@@ -31,7 +31,7 @@ public abstract class ControlBlockItem extends BlockItem {
 
 	@Override
 	public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-		if (entity instanceof ConsoleControlEntity ce) {
+		if (!user.getWorld().isClient() && entity instanceof ConsoleControlEntity ce) {
 			setControl(stack, ce.getControl().getId());
 			return ActionResult.SUCCESS;
 		}

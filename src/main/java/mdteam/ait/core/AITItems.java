@@ -1,12 +1,12 @@
 package mdteam.ait.core;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
-import io.wispforest.owo.registration.annotations.AssignedName;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.item.*;
+import mdteam.ait.core.item.control.ControlBlockItem;
+import mdteam.ait.core.item.control.GenericControlBlockItem;
 import mdteam.ait.core.util.AITArmorMaterials;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.util.Rarity;
@@ -46,4 +46,7 @@ public class AITItems implements ItemRegistryContainer {
 	// Waypoint-related
 	public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
 	public static final Item DRIFTING_MUSIC_DISC = new MusicDiscItem(1, AITSounds.DRIFTING_MUSIC, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 169);
+
+	// Block controls
+	public static final Item BUTTON_CONTROL = new GenericControlBlockItem(AITBlocks.BUTTON_CONTROL_BLOCK, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 }

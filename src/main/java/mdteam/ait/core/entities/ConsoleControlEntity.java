@@ -4,6 +4,7 @@ import mdteam.ait.AITMod;
 import mdteam.ait.core.AITItems;
 import mdteam.ait.core.AITSounds;
 import mdteam.ait.core.blockentities.ConsoleBlockEntity;
+import mdteam.ait.core.item.control.ControlBlockItem;
 import mdteam.ait.core.util.DeltaTimeManager;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisConsole;
@@ -21,6 +22,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
@@ -111,7 +113,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	}
 
 	public Control getControl() {
-		if (control == null) return null;
+		if (control == null) return null; // exploding head emoji
 		return control;
 	}
 
@@ -214,9 +216,17 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
 	@Override
 	public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
+		ItemStack handStack = player.getStackInHand(hand);
+
 		if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
 			controlEditorHandler(player);
 			return ActionResult.SUCCESS;
+		}
+
+		handStack.useOnEntity(player, this, hand);
+
+		if (handStack.getItem() instanceof ControlBlockItem) {
+			return ActionResult.FAIL;
 		}
 
 		if (hand == Hand.MAIN_HAND)

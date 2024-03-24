@@ -5,6 +5,7 @@ import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
 import mdteam.ait.AITMod;
 import mdteam.ait.core.blocks.*;
 import mdteam.ait.core.blocks.DoorBlock;
+import mdteam.ait.core.blocks.control.ButtonControlBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.Instrument;
@@ -39,6 +40,10 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block LARGE_ZEITON_BUD = new AmethystClusterBlock(5, 3, FabricBlockSettings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.MEDIUM_AMETHYST_BUD).solid().luminance((state) -> 4).pistonBehavior(PistonBehavior.DESTROY));
     public static final Block MEDIUM_ZEITON_BUD = new AmethystClusterBlock(4, 3, FabricBlockSettings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.LARGE_AMETHYST_BUD).solid().luminance((state) -> 2).pistonBehavior(PistonBehavior.DESTROY));
     public static final Block SMALL_ZEITON_BUD = new AmethystClusterBlock(3, 4, FabricBlockSettings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.SMALL_AMETHYST_BUD).solid().luminance((state) -> 1).pistonBehavior(PistonBehavior.DESTROY));
+
+    // Control Blocks
+    @NoBlockItem
+    public static final Block BUTTON_CONTROL_BLOCK = new ButtonControlBlock(FabricBlockSettings.create().nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     /*public static final Block CONSOLE_ROOM_PORT_BLOCK = new ConsoleRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F, 6.0F));

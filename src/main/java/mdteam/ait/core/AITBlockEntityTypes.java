@@ -2,6 +2,7 @@ package mdteam.ait.core;
 
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import mdteam.ait.core.blockentities.*;
+import mdteam.ait.core.blockentities.control.ButtonControlBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
@@ -18,6 +19,7 @@ public class AITBlockEntityTypes implements AutoRegistryContainer<BlockEntityTyp
     public static BlockEntityType<DetectorBlockEntity> DETECTOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(DetectorBlockEntity::new, AITBlocks.DETECTOR_BLOCK).build();
     public static BlockEntityType<ArtronCollectorBlockEntity> ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(ArtronCollectorBlockEntity::new, AITBlocks.ARTRON_COLLECTOR_BLOCK).build();
     public static BlockEntityType<PlaqueBlockEntity> PLAQUE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(PlaqueBlockEntity::new, AITBlocks.PLAQUE_BLOCK).build();
+    public static BlockEntityType<ButtonControlBlockEntity> BUTTON_CONTROL_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(ButtonControlBlockEntity::new, AITBlocks.BUTTON_CONTROL_BLOCK).build();
     @Override
     public Registry<BlockEntityType<?>> getRegistry() {
         return Registries.BLOCK_ENTITY_TYPE;

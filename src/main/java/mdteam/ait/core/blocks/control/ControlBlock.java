@@ -1,8 +1,8 @@
-package mdteam.ait.core.blocks;
+package mdteam.ait.core.blocks.control;
 
 import mdteam.ait.core.blockentities.control.ControlBlockEntity;
 import mdteam.ait.core.blocks.types.HorizontalDirectionalBlock;
-import mdteam.ait.core.item.ControlBlockItem;
+import mdteam.ait.core.item.control.ControlBlockItem;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -28,9 +28,10 @@ public abstract class ControlBlock extends HorizontalDirectionalBlock implements
 
 	@Override
 	public Item asItem() {
-		// IMPLS NEED TO OVERRIDE THIS!
-		return super.asItem();
+		return this.getItem();
 	}
+
+	protected abstract ControlBlockItem getItem();
 
 	@Override
 	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
@@ -55,7 +56,7 @@ public abstract class ControlBlock extends HorizontalDirectionalBlock implements
 			}
 		}
 
-		return super.onUse(state, world, pos, player, hand, hit);
+		return ActionResult.SUCCESS;
 	}
 
 	@Override

@@ -1,14 +1,19 @@
 package mdteam.ait.core.blockentities.control;
 
-import mdteam.ait.core.item.ControlBlockItem;
+import mdteam.ait.core.item.control.ControlBlockItem;
+import mdteam.ait.core.util.DeltaTimeManager;
 import mdteam.ait.registry.ControlRegistry;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.control.Control;
+import mdteam.ait.tardis.control.impl.SecurityControl;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import mdteam.ait.tardis.link.LinkableBlockEntity;
+import mdteam.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
@@ -57,14 +62,48 @@ public abstract class ControlBlockEntity extends LinkableBlockEntity {
 
 	public boolean run(ServerPlayerEntity user, boolean isMine) {
 		if (this.getControl() != null) {
-			Optional<Tardis> tardis = this.findTardis();
+			Optional<Tardis> found = this.findTardis();
 
-			if (tardis.isEmpty()) return false;
+			if (found.isEmpty()) return false;
 
-			return this.control.runServer(tardis.get(), user, user.getServerWorld(), isMine);
+			ServerTardis tardis = (ServerTardis) found.get();
+
+			if ((control.shouldFailOnNoPower() && !tardis.hasPower()) || tardis.getHandlers().getSequenceHandler().isConsoleDisabled()) {
+				return false;
+			}
+
+			if (this.isOnDelay()) return false;
+
+			if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
+				this.createDelay(this.control.getDelayLength());
+			}
+
+			boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
+			if (!this.control.ignoresSecurity() && security) {
+				if (!SecurityControl.hasMatchingKey(user, tardis)) {
+					return false;
+				}
+			}
+
+			this.getWorld().playSound(null, pos, this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
+
+
+			return this.control.runServer(tardis, user, user.getServerWorld(), isMine);
 		}
 
 		return false;
+	}
+
+	public String createDelayId() {
+		return "delay-" + this.getControl().id + "-" + this.findTardis().get().getUuid();
+	}
+
+	public void createDelay(long millis) {
+		DeltaTimeManager.createDelay(createDelayId(), millis);
+	}
+
+	public boolean isOnDelay() {
+		return DeltaTimeManager.isStillWaitingOnDelay(createDelayId());
 	}
 
 	@Override
