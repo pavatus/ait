@@ -100,17 +100,20 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					if(!shouldTriggerLandSound) {
 						this.getWorld().playSound(null, this.getBlockPos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS, 2F, 1F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
 						user.getAbilities().flying = false;
-						DamageSource damage = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
-						this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity -> (!(entity instanceof PlayerEntity) || !entity.isSpectator() && !((PlayerEntity) entity).isCreative())).forEach((entity) -> {
-							if(entity != this.getControllingPassenger())
-								entity.damage(damage, 20.0f);
-						});
+						if(this.getTardis().getDoor().isClosed()) {
+							DamageSource damage = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
+							this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity -> (!(entity instanceof PlayerEntity) || !entity.isSpectator() && !((PlayerEntity) entity).isCreative())).forEach((entity) -> {
+								if (entity != this.getControllingPassenger())
+									entity.damage(damage, 20.0f);
+							});
+						}
 						shouldTriggerLandSound = true;
 					}
 					if (user.isSneaking()) {
 						getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(user.getBlockPos(), user.getWorld(), user.getHorizontalFacing().getOpposite()));
 						if (getTardis().getTravel().getState() == TardisTravel.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
+						PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, false);
 						user.dismountVehicle();
 					}
 				} else {

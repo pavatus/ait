@@ -76,7 +76,7 @@ public class FlightData extends TardisLink {
 
 		Tardis tardis = this.findTardis().get();
 
-		return PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()) || !PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT) || !TardisUtil.isInteriorNotEmpty(tardis); // todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
+		return (PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()) || !TardisUtil.isInteriorNotEmpty(tardis)) && !PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT); // todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
 	}
 
 	public void increaseFlightTime(int ticks) {

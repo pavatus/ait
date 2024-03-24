@@ -95,10 +95,8 @@ public class ShieldData extends TardisLink {
 						((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 20, 3, true, false, false));
 					}
 					if(this.areVisualShieldsActive()) {
-						// Calculate the motion vector away from the exterior
-						Vec3d motion = this.getExteriorPos().toCenterPos().add(entity.getPos()).normalize().multiply(0.1f);
-						// Apply the motion to the entity
 						if (entity.squaredDistanceTo(this.getExteriorPos().toCenterPos()) <= 6f) {
+							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(this.getExteriorPos().toCenterPos()).normalize().multiply(0.1f);
 							entity.setVelocity(entity.getVelocity().add(motion));
 							entity.velocityDirty = true;
 							entity.velocityModified = true;

@@ -351,22 +351,24 @@ public class TardisUtil {
 
 	private static void teleportWithDoorOffset(Entity entity, AbsoluteBlockPos.Directed pos) {
 		Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
-		SERVER.execute(() -> {
-			if (DependencyChecker.hasPortals()) {
-				PortalAPI.teleportEntity(entity, (ServerWorld) pos.getWorld(), vec);
-			} else {
-				if (entity instanceof ServerPlayerEntity player) {
-					WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
-					player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+		if(pos.getWorld() instanceof ServerWorld serverWorld) {
+			SERVER.execute(() -> {
+				if (DependencyChecker.hasPortals()) {
+					PortalAPI.teleportEntity(entity, serverWorld, vec);
 				} else {
-					if (entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
-						entity.refreshPositionAndAngles(vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, pos.getDirection().asRotation(), entity.getPitch());
+					if (entity instanceof ServerPlayerEntity player) {
+						WorldOps.teleportToWorld(player, serverWorld, vec, pos.getDirection().asRotation(), player.getPitch());
+						player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 					} else {
-						entity.teleport((ServerWorld) pos.getWorld(), vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, Set.of(), pos.getDirection().asRotation(), entity.getPitch());
+						if (entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
+							entity.refreshPositionAndAngles(vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, pos.getDirection().asRotation(), entity.getPitch());
+						} else {
+							entity.teleport(serverWorld, vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, Set.of(), pos.getDirection().asRotation(), entity.getPitch());
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
