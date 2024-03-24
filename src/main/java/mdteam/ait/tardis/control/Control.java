@@ -1,13 +1,16 @@
 package mdteam.ait.tardis.control;
 
+import mdteam.ait.AITMod;
+import mdteam.ait.registry.datapack.Identifiable;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisConsole;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 
-public class Control {
+public class Control implements Identifiable {
 
     /*public static HashMap<Integer, ControlAnimationState> animationStates = HartnellAnimations.animationStatePerControl(listOfControlAnimations());
 
@@ -46,6 +49,12 @@ public class Control {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	@Override
+	public Identifier id() {
+		// Temporary - should be changed in future
+		return new Identifier(AITMod.MOD_ID, this.getId());
 	}
 
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
