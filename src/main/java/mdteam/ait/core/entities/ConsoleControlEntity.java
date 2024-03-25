@@ -269,7 +269,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
 			control.runAnimation(tardis, (ServerPlayerEntity) player, (ServerWorld) world);
 
-			if (this.control.canRun(tardis, (ServerPlayerEntity) player)) return false;
+			if (!this.control.canRun(tardis, (ServerPlayerEntity) player)) return false;
 
 
 			if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {

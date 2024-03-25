@@ -68,7 +68,7 @@ public abstract class ControlBlockEntity extends LinkableBlockEntity {
 
 			ServerTardis tardis = (ServerTardis) found.get();
 
-			if (this.control.canRun(tardis, user)) return false;
+			if (!this.control.canRun(tardis, user)) return false;
 
 			if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
 				this.createDelay(this.control.getDelayLength());
