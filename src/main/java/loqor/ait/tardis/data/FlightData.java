@@ -13,8 +13,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 
-import static loqor.ait.tardis.util.FlightUtil.convertSecondsToTicks;
-
 public class FlightData extends TardisLink {
 	private static final String FLIGHT_TICKS_KEY = "flight_ticks";
 	private static final String TARGET_TICKS_KEY = "target_ticks";
@@ -24,7 +22,7 @@ public class FlightData extends TardisLink {
 		super(tardiz, "flight");
 		if (findTardis().isEmpty()) return;
 
-		// todo this doesnt seem to work.
+		// todo this doesn't seem to work.
 		TardisEvents.LANDED.register((tardis -> {
 			if (this.findTardis().isEmpty()) return;
 			if (!tardis.equals(this.findTardis().get())) return;
@@ -44,27 +42,29 @@ public class FlightData extends TardisLink {
 	}
 
 	private boolean isInFlight() {
-		if (findTardis().isEmpty()) return false;
+		if (this.findTardis().isEmpty()) return false;
 		return this.findTardis().get().getTravel().getState().equals(TardisTravel.State.FLIGHT) || this.findTardis().get().getTravel().getState().equals(TardisTravel.State.MAT);
 	}
 
 	private boolean isFlightTicking() {
-		if (findTardis().isEmpty()) return false;
+		if (this.findTardis().isEmpty()) return false;
 		return this.findTardis().get().getTravel().getState() == TardisTravel.State.FLIGHT && this.getTargetTicks() != 0;
 	}
 
 	public boolean hasFinishedFlight() {
 		if (findTardis().isEmpty()) return false;
-		return this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 || findTardis().get().getTravel().isCrashing() || !PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
+		return (this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 ||
+				findTardis().get().getTravel().isCrashing()) &&
+				!PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 	}
 
 	private void onFlightFinished() {
-		if (findTardis().isEmpty()) return;
+		if (this.findTardis().isEmpty()) return;
 
 		this.setFlightTicks(0);
 		this.setTargetTicks(0);
 
-		FlightUtil.playSoundAtConsole(findTardis().get(), SoundEvents.BLOCK_BELL_RESONATE); // temp sound
+		FlightUtil.playSoundAtConsole(this.findTardis().get(), SoundEvents.BLOCK_BELL_RESONATE); // temp sound
 
 		if (shouldAutoLand()) {
 			this.findTardis().get().getTravel().materialise();
@@ -88,7 +88,7 @@ public class FlightData extends TardisLink {
 	}
 
 	public int getDurationAsPercentage() {
-		if (findTardis().isEmpty()) return 0;
+		if (this.findTardis().isEmpty()) return 0;
 		if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0) {
 			if (this.findTardis().get().getTravel().getState() == TardisTravel.State.DEMAT) return 0;
 			// if (this.tardis().getTravel().getState() == TardisTravel.State.MAT) return 100;

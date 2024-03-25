@@ -33,6 +33,9 @@ public class ShieldsControl extends Control {
 				PropertiesHandler.set(tardis, ShieldData.IS_VISUALLY_SHIELDED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED));
 		} else {
 			PropertiesHandler.set(tardis, ShieldData.IS_SHIELDED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), ShieldData.IS_SHIELDED));
+			if(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED)) {
+				PropertiesHandler.set(tardis, ShieldData.IS_VISUALLY_SHIELDED, false);
+			}
 		}
 		this.soundEvent = player.isSneaking() ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : AITSounds.HANDBRAKE_LEVER_PULL;
 		if(tardis.getExterior().getExteriorPos() != null) {

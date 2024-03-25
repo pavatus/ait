@@ -148,7 +148,7 @@ public class TardisTravel extends TardisLink {
 	}
 
 	public void increaseSpeed() {
-		// Stop speed from going above 1 if autopilot is enabled and we're in flight
+		// Stop speed from going above 1 if autopilot is enabled, and we're in flight
 		if (this.getSpeed() + 1 > 1
 				&& this.getState() == State.FLIGHT
 				&& this.findTardis().isPresent()

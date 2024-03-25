@@ -91,7 +91,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		user.startRiding(this);
 
 		if (bl) {
-			if (user.getWorld().isClient()) {
+			if (user.getWorld().isClient() && MinecraftClient.getInstance().player == user) {
 				MinecraftClient client = MinecraftClient.getInstance();
 				client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
 				client.options.hudHidden = true;
@@ -122,7 +122,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				}
 			}
 		} else if (!getTardis().getTravel().inFlight()) {
-			if (user.getWorld().isClient()) {
+			if (user.getWorld().isClient() && MinecraftClient.getInstance().player == user) {
 				MinecraftClient client = MinecraftClient.getInstance();
 				client.options.setPerspective(Perspective.FIRST_PERSON);
 				client.options.hudHidden = false;
@@ -137,11 +137,12 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					TardisUtil.teleportToInteriorPosition(user, this.getPlayerBlockPos().get());
 				}
 				this.dataTracker.set(PLAYER_UUID, Optional.empty());
+				this.getTardis().getTravel().setState(TardisTravel.State.LANDED);
 				this.discard();
 			}
 		}
 
-		if(this.getTardis().getDoor().isOpen()) {
+		if(!this.getWorld().isClient() && this.getTardis().getDoor().isOpen()) {
 			this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity -> (!(entity instanceof PlayerEntity) || !entity.isSpectator() && !((PlayerEntity) entity).isCreative())).forEach((entity) -> {
 				TardisUtil.teleportInside(this.getTardis(), entity);
 			});

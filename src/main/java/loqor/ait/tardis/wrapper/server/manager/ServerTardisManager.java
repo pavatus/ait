@@ -285,7 +285,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 	}
 
 	private void sendTardis(@NotNull ServerPlayerEntity player, UUID uuid) {
-		this.sendTardis(player, this.getTardis(uuid));
+		Tardis tardis = this.getTardis(uuid);
+		if(tardis == null) return;
+		this.sendTardis(player, tardis);
 	}
 
 	private void sendTardis(@NotNull ServerPlayerEntity player, Tardis tardis) {
