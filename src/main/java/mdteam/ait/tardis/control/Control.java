@@ -1,9 +1,12 @@
 package mdteam.ait.tardis.control;
 
 import mdteam.ait.AITMod;
+import mdteam.ait.core.util.DeltaTimeManager;
 import mdteam.ait.registry.datapack.Identifiable;
 import mdteam.ait.tardis.Tardis;
 import mdteam.ait.tardis.TardisConsole;
+import mdteam.ait.tardis.control.impl.SecurityControl;
+import mdteam.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -106,6 +109,36 @@ public class Control implements Identifiable {
 
 	public boolean ignoresSecurity() {
 		return false;
+	}
+
+	public static String createDelayId(Control control, Tardis tardis) {
+		return "delay-" + control.id + "-" + tardis.getUuid();
+	}
+
+	public static void createDelay(Control control, Tardis tardis, long millis) {
+		DeltaTimeManager.createDelay(createDelayId(control, tardis), millis);
+	}
+	public static void createDelay(Control control, Tardis tardis) {
+		createDelay(control, tardis, control.getDelayLength());
+	}
+
+	public static boolean isOnDelay(Control control, Tardis tardis) {
+		return DeltaTimeManager.isStillWaitingOnDelay(createDelayId(control, tardis));
+	}
+
+	public boolean canRun(Tardis tardis, ServerPlayerEntity user) {
+		if ((this.shouldFailOnNoPower() && !tardis.hasPower()) || tardis.getHandlers().getSequenceHandler().isConsoleDisabled()) {
+			return false;
+		}
+
+		if (isOnDelay(this, tardis)) return false;
+
+		boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
+		if (!this.ignoresSecurity() && security) {
+			return SecurityControl.hasMatchingKey(user, tardis);
+		}
+
+		return true;
 	}
 
 	@Override

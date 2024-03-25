@@ -68,21 +68,10 @@ public abstract class ControlBlockEntity extends LinkableBlockEntity {
 
 			ServerTardis tardis = (ServerTardis) found.get();
 
-			if ((control.shouldFailOnNoPower() && !tardis.hasPower()) || tardis.getHandlers().getSequenceHandler().isConsoleDisabled()) {
-				return false;
-			}
-
-			if (this.isOnDelay()) return false;
+			if (this.control.canRun(tardis, user)) return false;
 
 			if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
 				this.createDelay(this.control.getDelayLength());
-			}
-
-			boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
-			if (!this.control.ignoresSecurity() && security) {
-				if (!SecurityControl.hasMatchingKey(user, tardis)) {
-					return false;
-				}
 			}
 
 			this.getWorld().playSound(null, pos, this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
@@ -94,16 +83,12 @@ public abstract class ControlBlockEntity extends LinkableBlockEntity {
 		return false;
 	}
 
-	public String createDelayId() {
-		return "delay-" + this.getControl().id + "-" + this.findTardis().get().getUuid();
-	}
-
 	public void createDelay(long millis) {
-		DeltaTimeManager.createDelay(createDelayId(), millis);
+		Control.createDelay(this.getControl(), this.findTardis().get(), millis);
 	}
 
 	public boolean isOnDelay() {
-		return DeltaTimeManager.isStillWaitingOnDelay(createDelayId());
+		return Control.isOnDelay(this.getControl(), this.findTardis().get());
 	}
 
 	@Override
