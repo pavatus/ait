@@ -43,6 +43,7 @@ public class CopperType extends ConsoleTypeSchema {
 			new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.099999994f, 0.074999996f), new Vector3f(-0.4492187686264515f, 0.5500003816559911f, 1.0890625165775418f)),
 			new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.15f, 0.1125f), new Vector3f(-0.01093751098960638f, 0.6125005725771189f, 0.8796875094994903f)),
 			new ControlTypes(new CloakControl(), EntityDimensions.changing(0.099999994f, 0.1375f), new Vector3f(-0.4976562522351742f, 0.9625003868713975f, 0.2890624972060323f)),
+			new ControlTypes(new ShieldsControl(), EntityDimensions.changing(0.125f, 0.08749999f), new Vector3f(-1.0855468846857548f, 0.6874998027458787f, -0.6242187554016709f)),
 	};
 
 	public CopperType() {

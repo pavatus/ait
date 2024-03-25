@@ -1,31 +1,34 @@
 package loqor.ait.client;
 
-import loqor.ait.AITMod;
-import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
-import loqor.ait.client.renderers.decoration.PlaqueRenderer;
-import loqor.ait.client.renderers.machines.ArtronCollectorRenderer;
-import loqor.ait.client.renderers.monitors.MonitorRenderer;
-import loqor.ait.client.renderers.wearables.AITHudOverlay;
-import loqor.ait.core.*;
-import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
-import loqor.ait.core.item.*;
-import loqor.ait.registry.*;
-import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.client.registry.ClientConsoleVariantRegistry;
 import loqor.ait.client.registry.ClientDoorRegistry;
-import loqor.ait.client.registry.ClientExteriorVariantRegistry;
+import loqor.ait.client.renderers.TriangleTestingUtil;
+import loqor.ait.client.renderers.VortexUtil;
+import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
+import loqor.ait.client.renderers.decoration.PlaqueRenderer;
 import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
 import loqor.ait.client.renderers.entities.TardisRealRenderer;
+import loqor.ait.client.renderers.wearables.AITHudOverlay;
+import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.core.*;
+import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.entities.TardisRealEntity;
+import loqor.ait.core.item.*;
+import loqor.ait.registry.*;
+import loqor.ait.AITMod;
+import loqor.ait.client.renderers.machines.ArtronCollectorRenderer;
+import loqor.ait.client.renderers.monitors.MonitorRenderer;
+import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.client.registry.ClientExteriorVariantRegistry;
 import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
 import loqor.ait.client.screens.MonitorScreen;
 import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
-import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.console.type.ConsoleTypeSchema;
 import loqor.ait.tardis.link.LinkableBlockEntity;
@@ -40,6 +43,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
@@ -51,6 +55,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -68,6 +73,7 @@ import static loqor.ait.AITMod.*;
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
+    private final VortexUtil vortex = new VortexUtil("space");
 
     @Override
     public void onInitializeClient() {
@@ -85,6 +91,17 @@ public class AITModClient implements ClientModInitializer {
         ClientExteriorVariantRegistry.getInstance().init();
         ClientConsoleVariantRegistry.getInstance().init();
         ClientDoorRegistry.init();
+
+        /*WorldRenderEvents.END.register(context -> {
+            try (ClientWorld world = context.world()){
+                if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
+                    vortex.renderVortex(context);
+                }
+                TriangleTestingUtil.renderTriangle(context);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        });*/
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {
@@ -304,6 +321,10 @@ public class AITModClient implements ClientModInitializer {
                 if (keyBinding.isPressed()) {
                     if (!keyHeldDown) {
                         keyHeldDown = true;
+                        if (player.getVehicle() instanceof TardisRealEntity entity) {
+                            ClientTardisUtil.snapToOpenDoors(entity.getTardisID());
+                            return;
+                        }
                         ItemStack[] keys = KeyItem.getKeysInInventory(player);
                         for (ItemStack stack : keys) {
                             if (stack != null && stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {

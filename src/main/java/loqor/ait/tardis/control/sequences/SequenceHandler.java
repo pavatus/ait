@@ -1,11 +1,11 @@
 package loqor.ait.tardis.control.sequences;
 
 import loqor.ait.registry.SequenceRegistry;
-import loqor.ait.tardis.Exclude;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.Exclude;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.TardisLink;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.particle.DustParticleEffect;

@@ -1,9 +1,9 @@
 package loqor.ait.client.registry;
 
-import loqor.ait.AITMod;
-import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.registry.console.ClientConsoleVariantSchema;
 import loqor.ait.client.registry.console.impl.*;
+import loqor.ait.AITMod;
+import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.registry.DatapackRegistry;
 import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.console.variant.DatapackConsole;

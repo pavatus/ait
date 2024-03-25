@@ -1,8 +1,5 @@
 package loqor.ait.registry;
 
-import loqor.ait.AITMod;
-import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
-import loqor.ait.tardis.exterior.variant.DatapackExterior;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.exterior.variant.booth.*;
 import loqor.ait.tardis.exterior.variant.box.*;
@@ -18,11 +15,14 @@ import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthDefaultVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthFireVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthSoulVariant;
-import loqor.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
-import loqor.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimDefaultVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimFireVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimSoulVariant;
+import loqor.ait.AITMod;
+import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
+import loqor.ait.tardis.exterior.variant.DatapackExterior;
+import loqor.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
+import loqor.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

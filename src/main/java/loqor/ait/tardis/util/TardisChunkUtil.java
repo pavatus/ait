@@ -1,10 +1,10 @@
 package loqor.ait.tardis.util;
 
-import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.compat.DependencyChecker;
+import loqor.ait.tardis.TardisTravel;
 import net.minecraft.server.world.ServerWorld;
 
 public class TardisChunkUtil {

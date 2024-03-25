@@ -5,6 +5,8 @@ import loqor.ait.client.models.monitors.CRTMonitorModel;
 import loqor.ait.core.blockentities.MonitorBlockEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.control.impl.DimensionControl;
+import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SkullBlock;
@@ -19,9 +21,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
-
-import static loqor.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
-import static loqor.ait.tardis.data.FuelData.TARDIS_MAX_FUEL;
 
 // Made with Blockbench 4.8.3
 // Exported for Minecraft version 1.17+ for Yarn
@@ -71,7 +70,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		AbsoluteBlockPos.Directed abpp = tardis.getTravel().getPosition();
 
 		String positionPosText = " " + abpp.getX() + ", " + abpp.getY() + ", " + abpp.getZ();
-		String positionDimensionText = " " + convertWorldValueToModified(abpp.getDimension().getValue());
+		String positionDimensionText = " " + DimensionControl.convertWorldValueToModified(abpp.getDimension().getValue());
 		String positionDirectionText = " " + abpp.getDirection().toString().toUpperCase();
 
 
@@ -83,7 +82,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		AbsoluteBlockPos.Directed abpd = tardis.getTravel().getDestination();
 
 		String destinationPosText = " " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
-		String destinationDimensionText = " " + convertWorldValueToModified(abpd.getDimension().getValue());
+		String destinationDimensionText = " " + DimensionControl.convertWorldValueToModified(abpd.getDimension().getValue());
 		String destinationDirectionText = " " + abpd.getDirection().toString().toUpperCase();
 
 		this.textRenderer.drawWithOutline(Text.of("✛").asOrderedText(), 0, 40, 0x00F0FF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
@@ -91,7 +90,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		this.textRenderer.drawWithOutline(Text.of(destinationDimensionText).asOrderedText(), 0, 56, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(destinationDirectionText).asOrderedText(), 0, 64, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
-		String fuelText = Math.round((tardis.getFuel() / TARDIS_MAX_FUEL) * 100) + "%";
+		String fuelText = Math.round((tardis.getFuel() / FuelData.TARDIS_MAX_FUEL) * 100) + "%";
 
 		this.textRenderer.drawWithOutline(Text.of("⛽").asOrderedText(), 0, 78, 0xFAF000, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(fuelText).asOrderedText(), 8, 78, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);

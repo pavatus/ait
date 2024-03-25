@@ -6,6 +6,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
+import loqor.ait.tardis.data.ShieldData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -916,6 +917,11 @@ public class SteamConsoleModel extends ConsoleModel {
 
 		ModelPart antigrav = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever3").getChild("bone19");
 		antigrav.roll = (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? 0.4363F : -0.5672F);
+
+		ModelPart shields = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever5").getChild("bone21");
+		shields.roll = (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(),
+				ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(),
+				ShieldData.IS_VISUALLY_SHIELDED) ? 0.0F : 0.4363F : -0.5672F);
 
 		ModelPart refueling = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever").getChild("bone23");
 		refueling.roll = (console.findTardis().get().isRefueling() ? 0.4363F : -0.5672F);

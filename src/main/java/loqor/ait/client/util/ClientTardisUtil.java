@@ -1,9 +1,9 @@
 package loqor.ait.client.util;
 
-import loqor.ait.AITMod;
 import loqor.ait.client.models.doors.DoorModel;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.registry.ClientDoorRegistry;
+import loqor.ait.AITMod;
 import loqor.ait.client.registry.ClientExteriorVariantRegistry;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.Tardis;

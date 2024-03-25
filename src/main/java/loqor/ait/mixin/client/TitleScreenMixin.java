@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
@@ -19,7 +20,9 @@ public abstract class TitleScreenMixin extends Screen {
 		super(title);
 	}
 
+	@Unique
 	private static final RotatingCubeMapRenderer NEWPANO = new RotatingCubeMapRenderer(new CubeMapRenderer(new Identifier(AITMod.MOD_ID, "textures/gui/title/background/panorama")));
+	@Unique
 	private static final Identifier AIT_CONFIG_TEX = new Identifier(AITMod.MOD_ID, "textures/gui/title/config.png");
 
 	//This modifies the panorama in the background

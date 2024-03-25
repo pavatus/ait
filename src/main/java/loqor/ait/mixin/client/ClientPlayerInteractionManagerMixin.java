@@ -21,7 +21,7 @@ public class ClientPlayerInteractionManagerMixin {
 	private MinecraftClient client;
 
 	@Inject(method = "breakBlock", at = @At(value = "HEAD"), cancellable = true)
-	public void breakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+	public void ait$breakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
 		World world = this.client.world;
 		if (world == null) return;
 		Block block = world.getBlockState(pos).getBlock();

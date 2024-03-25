@@ -12,7 +12,6 @@ import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import static loqor.ait.core.commands.TeleportInteriorCommand.TARDIS_SUGGESTION;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -21,7 +20,7 @@ public class SetLockedCommand {
 		dispatcher.register(literal(AITMod.MOD_ID)
 				.then(literal("set-locked")
 						.requires(source -> source.hasPermissionLevel(2))
-						.then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
+						.then(argument("tardis", UuidArgumentType.uuid()).suggests(TeleportInteriorCommand.TARDIS_SUGGESTION)
 								.then(argument("locked", BoolArgumentType.bool())
 										.executes(SetLockedCommand::runCommand))))
 		);

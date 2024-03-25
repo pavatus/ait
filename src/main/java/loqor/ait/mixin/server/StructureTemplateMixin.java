@@ -28,17 +28,16 @@ public abstract class StructureTemplateMixin {
 	private final List<StructureTemplate.StructureEntityInfo> entities = Lists.newArrayList();
 
 	@Redirect(method = "saveFromWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/structure/StructureTemplate;addEntitiesFromWorld(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;)V", ordinal = 0))
-	private void something(StructureTemplate instance, World world, BlockPos firstCorner, BlockPos secondCorner) {
-		List<Entity> list = world.getEntitiesByClass(Entity.class, new Box(firstCorner, secondCorner), (entityx) -> {
-			return !(entityx instanceof PlayerEntity) && !(entityx instanceof ConsoleControlEntity);
-		});
+	private void ait$saveFromWorld(StructureTemplate instance, World world, BlockPos firstCorner, BlockPos secondCorner) {
+		List<Entity> list = world.getEntitiesByClass(Entity.class, new Box(firstCorner, secondCorner), (entity) ->
+				!(entity instanceof PlayerEntity) && !(entity instanceof ConsoleControlEntity));
 		this.entities.clear();
 
 		Vec3d vec3d;
 		NbtCompound nbtCompound;
 		BlockPos blockPos;
-		for (Iterator var5 = list.iterator(); var5.hasNext(); this.entities.add(new StructureTemplate.StructureEntityInfo(vec3d, blockPos, nbtCompound.copy()))) {
-			Entity entity = (Entity) var5.next();
+		for (Iterator<Entity> var5 = list.iterator(); var5.hasNext(); this.entities.add(new StructureTemplate.StructureEntityInfo(vec3d, blockPos, nbtCompound.copy()))) {
+			Entity entity = var5.next();
 			vec3d = new Vec3d(entity.getX() - (double) firstCorner.getX(), entity.getY() - (double) firstCorner.getY(), entity.getZ() - (double) firstCorner.getZ());
 			nbtCompound = new NbtCompound();
 			entity.saveNbt(nbtCompound);

@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import java.util.Optional;
 import java.util.UUID;
 
-public class LinkableEntity extends Entity {
+public abstract class LinkableEntity extends Entity {
     public static final TrackedData<Optional<UUID>> TARDIS_ID;
 
     public LinkableEntity(EntityType<?> type, World world) {
@@ -60,13 +60,4 @@ public class LinkableEntity extends Entity {
     protected void initDataTracker() {
         this.dataTracker.startTracking(TARDIS_ID, Optional.empty());
     }
-
-    @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
-    }
-
-    @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
-    }
-
 }

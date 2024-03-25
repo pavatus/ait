@@ -1,7 +1,7 @@
 package loqor.ait.tardis.animation;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.AITMod;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.TardisTravel;
 

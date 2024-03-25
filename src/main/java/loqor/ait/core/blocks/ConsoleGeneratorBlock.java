@@ -1,9 +1,9 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockEntityProvider;

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class GameRendererMixin {
 
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;updateWorldIcon()V"))
-	public void render(CallbackInfo ci) {
+	public void ait$render(CallbackInfo ci) {
 		if (false) {
 			RenderSystem.disableBlend();
 			RenderSystem.disableDepthTest();

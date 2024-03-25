@@ -1,10 +1,10 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blockentities.CoralBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.managers.RiftChunkManager;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.registry.CategoryRegistry;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;

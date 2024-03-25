@@ -2,9 +2,9 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
+import loqor.ait.tardis.TardisTravel;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 

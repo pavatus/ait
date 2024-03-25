@@ -1,8 +1,8 @@
 package loqor.ait.tardis.animation;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.AITMod;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.util.NetworkUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;

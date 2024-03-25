@@ -52,6 +52,7 @@ public class AlnicoType extends ConsoleTypeSchema {
 			new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.22500002f, 0.22500002f), new Vector3f(0.701562499627471f, 0.3625005688518286f, 1.2007812643423676f)),
 			new ControlTypes(new CloakControl(), EntityDimensions.changing(0.15f, 0.15f), new Vector3f(0.7523437663912773f, 0.5250003803521395f, -0.9609375214204192f)),
 			new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.125f, 0.08749999f), new Vector3f(-1.0855468846857548f, 0.3874998027458787f, -0.6242187554016709f)),
+			new ControlTypes(new ShieldsControl(), EntityDimensions.changing(0.07499999f, 0.2875f), new Vector3f(-1.5359375067055225f, 0.11249975301325321f, -0.7250000014901161f)),
 	};
 
 	public AlnicoType() {

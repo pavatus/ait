@@ -8,6 +8,7 @@ import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.ShieldData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -858,6 +859,9 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		//Anti Gravity Control
 		ModelPart antigravs = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps1").getChild("pivot2");
 		antigravs.yaw = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? antigravs.yaw - 1.58f : antigravs.yaw;
+
+		ModelPart shield = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps2");
+		shield.yaw = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), ShieldData.IS_SHIELDED) ? shield.yaw - 1.58f : shield.yaw;
 
 		//Door Locking Mechanism Control
 		ModelPart doorlock = this.toyota.getChild("panel1").getChild("controls").getChild("smalllockernob").getChild("pivot3");

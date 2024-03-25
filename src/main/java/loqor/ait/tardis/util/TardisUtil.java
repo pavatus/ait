@@ -2,27 +2,29 @@ package loqor.ait.tardis.util;
 
 import io.wispforest.owo.ops.WorldOps;
 import loqor.ait.AITMod;
-import loqor.ait.compat.DependencyChecker;
+import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.events.ServerLoadEvent;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.registry.CategoryRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.pos.PosType;
-import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import loqor.ait.compat.DependencyChecker;
+import loqor.ait.tardis.TardisDesktop;
+import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.data.DoorData;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -55,14 +57,13 @@ import qouteall.imm_ptl.core.api.PortalAPI;
 import java.nio.file.Path;
 import java.util.*;
 
-import static loqor.ait.client.util.ClientTardisUtil.CHANGE_SONIC;
-
 @SuppressWarnings("unused")
 public class TardisUtil {
 	private static final Random RANDOM = new Random();
 	private static MinecraftServer SERVER;
 	private static Path SAVE_PATH;
 	private static ServerWorld TARDIS_DIMENSION;
+	private static ServerWorld TIME_VORTEX;
 	public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
 	public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");
 
@@ -87,17 +88,22 @@ public class TardisUtil {
 			if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
 				TARDIS_DIMENSION = world;
 			}
+
+			if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
+				TIME_VORTEX = world;
+			}
 		});
 
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
 			SERVER = server;
 			TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
+			TIME_VORTEX = server.getWorld(AITDimensions.TIME_VORTEX_WORLD);
 		});
 
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
 			SERVER = null;
 		});
-		ServerPlayNetworking.registerGlobalReceiver(CHANGE_SONIC, (server, player, handler, buf, responseSender) -> {
+		ServerPlayNetworking.registerGlobalReceiver(ClientTardisUtil.CHANGE_SONIC, (server, player, handler, buf, responseSender) -> {
 			UUID uuid = buf.readUuid();
 			int sonicType = buf.readInt();
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
@@ -132,6 +138,19 @@ public class TardisUtil {
 					if (tardis.getHandlers().getOvergrown().isOvergrown()) return;
 
 					player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
+
+					if (player.getVehicle() instanceof TardisRealEntity real) {
+						DoorData.DoorStateEnum state = tardis.getDoor().getDoorState();
+						if (state == DoorData.DoorStateEnum.CLOSED || state == DoorData.DoorStateEnum.FIRST) {
+							DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+							if (tardis.getDoor().isDoubleDoor()) {
+								DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+							}
+						} else {
+							DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+						}
+						return;
+					}
 
 					BlockPos pos = player.getWorld().getRegistryKey() ==
 							TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
@@ -197,14 +216,11 @@ public class TardisUtil {
 	}
 
 	public static World getTardisDimension() {
-        /*if (isClient()) {
-            if (MinecraftClient.getInstance().world != null) {
-                if (MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
-                    return MinecraftClient.getInstance().world;
-                }
-            }
-        }*/
 		return TARDIS_DIMENSION;
+	}
+
+	public static World getTimeVortex() {
+		return TIME_VORTEX;
 	}
 
 	public static AbsoluteBlockPos.Directed createFromPlayer(PlayerEntity player) {
@@ -326,24 +342,33 @@ public class TardisUtil {
 		});
 	}
 
+	public static void teleportToInteriorPosition(Entity entity, BlockPos pos) {
+		if (entity instanceof ServerPlayerEntity player) {
+			WorldOps.teleportToWorld(player, (ServerWorld) TardisUtil.getTardisDimension(), new Vec3d(pos.getX(), pos.getY(), pos.getZ()), entity.getYaw(), player.getPitch());
+			player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+		}
+	}
+
 	private static void teleportWithDoorOffset(Entity entity, AbsoluteBlockPos.Directed pos) {
 		Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
-		SERVER.execute(() -> {
-			if (DependencyChecker.hasPortals()) {
-				PortalAPI.teleportEntity(entity, (ServerWorld) pos.getWorld(), vec);
-			} else {
-				if (entity instanceof ServerPlayerEntity player) {
-					WorldOps.teleportToWorld(player, (ServerWorld) pos.getWorld(), vec, pos.getDirection().asRotation(), player.getPitch());
-					player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+		if(pos.getWorld() instanceof ServerWorld serverWorld) {
+			SERVER.execute(() -> {
+				if (DependencyChecker.hasPortals()) {
+					PortalAPI.teleportEntity(entity, serverWorld, vec);
 				} else {
-					if (entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
-						entity.refreshPositionAndAngles(vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, pos.getDirection().asRotation(), entity.getPitch());
+					if (entity instanceof ServerPlayerEntity player) {
+						WorldOps.teleportToWorld(player, serverWorld, vec, pos.getDirection().asRotation(), player.getPitch());
+						player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 					} else {
-						entity.teleport((ServerWorld) pos.getWorld(), vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, Set.of(), pos.getDirection().asRotation(), entity.getPitch());
+						if (entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
+							entity.refreshPositionAndAngles(vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, pos.getDirection().asRotation(), entity.getPitch());
+						} else {
+							entity.teleport(serverWorld, vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, Set.of(), pos.getDirection().asRotation(), entity.getPitch());
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {

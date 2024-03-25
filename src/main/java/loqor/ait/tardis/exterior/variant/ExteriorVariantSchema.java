@@ -1,13 +1,14 @@
 package loqor.ait.tardis.exterior.variant;
 
 import com.google.gson.*;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.registry.CategoryRegistry;
+import loqor.ait.registry.datapack.Identifiable;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
-import loqor.ait.registry.CategoryRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
-import loqor.ait.registry.datapack.Identifiable;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
@@ -76,7 +77,7 @@ public abstract class ExteriorVariantSchema implements Identifiable {
 	}
 
 	/**
-	 * The bounding box for this exterior, will be used in {@link loqor.ait.core.blocks.ExteriorBlock#getNormalShape(BlockState, BlockView, BlockPos)}
+	 * The bounding box for this exterior, will be used in {@link ExteriorBlock#getNormalShape(BlockState, BlockView, BlockPos)}
 	 *
 	 * @return
 	 */

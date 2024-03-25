@@ -121,7 +121,6 @@ public class DoorData extends TardisLink {
 
 		return this.isLeftOpen();
 	}
-
 	public boolean isClosed() {
 		return !isOpen();
 	}

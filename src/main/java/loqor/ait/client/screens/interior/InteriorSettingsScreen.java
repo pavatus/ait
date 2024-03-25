@@ -2,15 +2,16 @@ package loqor.ait.client.screens.interior;
 
 import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
-import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.HumsRegistry;
+import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.sound.HumSound;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static loqor.ait.tardis.TardisTravel.State.FLIGHT;
-import static loqor.ait.tardis.data.FuelData.TARDIS_MAX_FUEL;
 import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
 
 public class InteriorSettingsScreen extends ConsoleScreen {
@@ -224,7 +224,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		context.drawTexture(TEXTURE, left + 27, top + 133, 0, tardis().getFuel() > 250 ? 150 : 165, 99, 15);
 
 		// fuel markers @TODO come back and actually do the rest of it with the halves and the red parts too
-		for (int p = 0; p < Math.round((tardis().getFuel() / TARDIS_MAX_FUEL) * 12); ++p) {
+		for (int p = 0; p < Math.round((tardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 12); ++p) {
 			context.drawTexture(TEXTURE, left + 29 + (8 * p), top + 135, 99, 150, 7, 11);
 		}
 

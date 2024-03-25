@@ -6,12 +6,12 @@ import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
-import loqor.ait.compat.regen.RegenHandler;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.commands.*;
 import loqor.ait.core.entities.ConsoleControlEntity;
+import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.util.AITConfig;
@@ -75,7 +75,6 @@ public class AITMod implements ModInitializer {
 		HumsRegistry.init();
 		CreakRegistry.init();
 		SequenceRegistry.init();
-		ControlRegistry.init();
 
 		// These 3 have client registries which also need registering.
 		ConsoleVariantRegistry.getInstance().init();
@@ -101,9 +100,6 @@ public class AITMod implements ModInitializer {
 		// ip support
 		if (DependencyChecker.hasPortals())
 			PortalsHandler.init();
-
-		if (DependencyChecker.hasRegeneration())
-			RegenHandler.init();
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
 			TeleportInteriorCommand.register(dispatcher);
@@ -293,6 +289,7 @@ public class AITMod implements ModInitializer {
 
 	public void entityAttributeRegister() {
 		FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createControlAttributes());
+		FabricDefaultAttributeRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, TardisRealEntity.createLivingAttributes());
 	}
 
 	public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");

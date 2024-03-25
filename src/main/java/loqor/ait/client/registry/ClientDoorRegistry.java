@@ -1,8 +1,8 @@
 package loqor.ait.client.registry;
 
-import loqor.ait.AITMod;
 import loqor.ait.client.registry.door.ClientDoorSchema;
 import loqor.ait.client.registry.door.impl.*;
+import loqor.ait.AITMod;
 import loqor.ait.tardis.variant.door.DoorSchema;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;

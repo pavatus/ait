@@ -1,7 +1,7 @@
 package loqor.ait.client.renderers.decoration;
 
-import loqor.ait.AITMod;
 import loqor.ait.client.models.decoration.PlaqueModel;
+import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.PlaqueBlockEntity;
 import loqor.ait.core.blocks.PlaqueBlock;
 import loqor.ait.tardis.Tardis;

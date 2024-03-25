@@ -1,6 +1,7 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.core.entities.BaseControlEntity;
+import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -87,16 +88,15 @@ public class ShieldData extends TardisLink {
 				.stream()
 				.filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
 				.filter(entity -> !(entity instanceof ServerPlayerEntity player && player.isSpectator())) // Exclude players in spectator
+				.filter(entity -> !(entity instanceof FallingTardisEntity falling && falling.getTardis() == tardis))
 				.filter(entity -> !(entity instanceof PlayerEntity && Objects.equals(((PlayerEntity) entity).getOffHandStack().getOrCreateNbt().getString("tardis"), tardis.getUuid().toString()))) // Exclude players
 				.forEach(entity -> {
 					if(entity instanceof ServerPlayerEntity && entity.isSubmergedInWater()) {
 						((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 20, 3, true, false, false));
 					}
 					if(this.areVisualShieldsActive()) {
-						// Calculate the motion vector away from the exterior
-						Vec3d motion = this.getExteriorPos().toCenterPos().add(entity.getPos()).normalize().multiply(0.1f);
-						// Apply the motion to the entity
 						if (entity.squaredDistanceTo(this.getExteriorPos().toCenterPos()) <= 6f) {
+							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(this.getExteriorPos().toCenterPos()).normalize().multiply(0.1f);
 							entity.setVelocity(entity.getVelocity().add(motion));
 							entity.velocityDirty = true;
 							entity.velocityModified = true;

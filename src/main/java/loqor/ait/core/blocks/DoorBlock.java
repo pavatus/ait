@@ -1,8 +1,8 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
+import loqor.ait.core.AITBlockEntityTypes;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;

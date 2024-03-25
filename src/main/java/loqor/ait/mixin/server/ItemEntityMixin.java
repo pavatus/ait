@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ItemEntityMixin {
 
 	@Inject(method = "tick", at = @At("HEAD"))
-	private void tick(CallbackInfo ci) {
+	private void ait$tick(CallbackInfo ci) {
 		ItemEntity entity = (ItemEntity) (Object) this;
 		ItemStack stack = entity.getStack();
 

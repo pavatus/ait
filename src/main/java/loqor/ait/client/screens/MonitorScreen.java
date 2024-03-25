@@ -4,19 +4,20 @@ import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.registry.ClientExteriorVariantRegistry;
-import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
-import loqor.ait.client.screens.interior.InteriorSettingsScreen;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.registry.CategoryRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
-import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.control.impl.DimensionControl;
+import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.exterior.category.BoothCategory;
 import loqor.ait.tardis.exterior.category.ClassicCategory;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
+import loqor.ait.client.screens.interior.InteriorSettingsScreen;
+import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -38,7 +39,6 @@ import java.util.UUID;
 
 import static loqor.ait.tardis.TardisTravel.State.FLIGHT;
 import static loqor.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
-import static loqor.ait.tardis.data.FuelData.TARDIS_MAX_FUEL;
 
 public class MonitorScreen extends ConsoleScreen {
 	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/monitor_gui.png");
@@ -231,7 +231,7 @@ public class MonitorScreen extends ConsoleScreen {
 		if (!this.buttons.get(4).isHovered()) context.drawTexture(TEXTURE, i + 83, j + 31, 15, 197, 15, 30);
 
 		// fuel markers @TODO come back and actually do the rest of it with the halves and the red parts too
-		for (int p = 0; p < Math.round((getFromUUID(tardisId).getFuel() / TARDIS_MAX_FUEL) * 12); ++p) {
+		for (int p = 0; p < Math.round((getFromUUID(tardisId).getFuel() / FuelData.TARDIS_MAX_FUEL) * 12); ++p) {
 			context.drawTexture(TEXTURE, i + 3 + (8 * p), j + 131, 99, 150, 7, 11);
 		}
 
@@ -316,7 +316,7 @@ public class MonitorScreen extends ConsoleScreen {
 		String destinationText = dabpd.getX() + ", " + dabpd.getY() + ", " + dabpd.getZ();
 		String dDimensionText = convertWorldValueToModified(dabpd.getDimension().getValue());
 		String dDirectionText = dabpd.getDirection().toString().toUpperCase();
-		String fuelText = String.valueOf(Math.round((getFromUUID(tardisId).getFuel() / TARDIS_MAX_FUEL) * 100));
+		String fuelText = String.valueOf(Math.round((getFromUUID(tardisId).getFuel() / FuelData.TARDIS_MAX_FUEL) * 100));
 		String flightTimeText = (tardis().getTravel().getState() == TardisTravel.State.LANDED ? "0" : String.valueOf(tardis().getHandlers().getFlight().getDurationAsPercentage()));
 		// position
 		//context.drawText(this.textRenderer, Text.literal("Position"), (width / 2 - 64), (height / 2 - 46), 5636095, true);

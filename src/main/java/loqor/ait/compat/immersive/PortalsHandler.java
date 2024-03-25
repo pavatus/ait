@@ -2,7 +2,6 @@ package loqor.ait.compat.immersive;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.compat.DependencyChecker;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.DoorData;
@@ -10,6 +9,7 @@ import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.util.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.variant.door.DoorSchema;
+import loqor.ait.compat.DependencyChecker;
 import net.minecraft.util.math.Vec3d;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.PortalManipulation;

@@ -8,6 +8,7 @@ import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.ShieldData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -1409,6 +1410,10 @@ public class CoralConsoleModel extends ConsoleModel {
 		ModelPart siege = this.console.getChild("controls").getChild("p_ctrl_3").getChild("bone36").getChild("handbrake");
 
 		siege.roll = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE) ? siege.roll + 0.45f : siege.roll;
+
+		// Shields
+		ModelPart shield = this.console.getChild("controls").getChild("p_ctrl_4").getChild("bone41").getChild("pully").getChild("bone47");
+		shield.pivotX = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), ShieldData.IS_SHIELDED) ? shield.pivotX - 1 : shield.pivotX;
 
 		// Autopilot
 		ModelPart autopilot = this.console.getChild("controls").getChild("ctrl_4").getChild("bone15").getChild("switch24").getChild("bone19");

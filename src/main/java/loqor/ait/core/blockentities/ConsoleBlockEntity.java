@@ -1,7 +1,10 @@
 package loqor.ait.core.blockentities;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.*;
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITDimensions;
+import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.managers.RiftChunkManager;

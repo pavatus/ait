@@ -2,18 +2,16 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.tardis.TardisTravel;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
-
-import static loqor.ait.tardis.util.FlightUtil.convertSecondsToTicks;
 
 public class FlightData extends TardisLink {
 	private static final String FLIGHT_TICKS_KEY = "flight_ticks";
@@ -24,7 +22,7 @@ public class FlightData extends TardisLink {
 		super(tardiz, "flight");
 		if (findTardis().isEmpty()) return;
 
-		// todo this doesnt seem to work.
+		// todo this doesn't seem to work.
 		TardisEvents.LANDED.register((tardis -> {
 			if (this.findTardis().isEmpty()) return;
 			if (!tardis.equals(this.findTardis().get())) return;
@@ -44,27 +42,29 @@ public class FlightData extends TardisLink {
 	}
 
 	private boolean isInFlight() {
-		if (findTardis().isEmpty()) return false;
+		if (this.findTardis().isEmpty()) return false;
 		return this.findTardis().get().getTravel().getState().equals(TardisTravel.State.FLIGHT) || this.findTardis().get().getTravel().getState().equals(TardisTravel.State.MAT);
 	}
 
 	private boolean isFlightTicking() {
-		if (findTardis().isEmpty()) return false;
+		if (this.findTardis().isEmpty()) return false;
 		return this.findTardis().get().getTravel().getState() == TardisTravel.State.FLIGHT && this.getTargetTicks() != 0;
 	}
 
 	public boolean hasFinishedFlight() {
 		if (findTardis().isEmpty()) return false;
-		return this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 || findTardis().get().getTravel().isCrashing() || !PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
+		return (this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 ||
+				findTardis().get().getTravel().isCrashing()) &&
+				!PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 	}
 
 	private void onFlightFinished() {
-		if (findTardis().isEmpty()) return;
+		if (this.findTardis().isEmpty()) return;
 
 		this.setFlightTicks(0);
 		this.setTargetTicks(0);
 
-		FlightUtil.playSoundAtConsole(findTardis().get(), SoundEvents.BLOCK_BELL_RESONATE); // temp sound
+		FlightUtil.playSoundAtConsole(this.findTardis().get(), SoundEvents.BLOCK_BELL_RESONATE); // temp sound
 
 		if (shouldAutoLand()) {
 			this.findTardis().get().getTravel().materialise();
@@ -76,7 +76,7 @@ public class FlightData extends TardisLink {
 
 		Tardis tardis = this.findTardis().get();
 
-		return PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()) || !PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT) || !TardisUtil.isInteriorNotEmpty(tardis); // todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
+		return (PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()) || !TardisUtil.isInteriorNotEmpty(tardis)) && !PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT); // todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
 	}
 
 	public void increaseFlightTime(int ticks) {
@@ -88,7 +88,7 @@ public class FlightData extends TardisLink {
 	}
 
 	public int getDurationAsPercentage() {
-		if (findTardis().isEmpty()) return 0;
+		if (this.findTardis().isEmpty()) return 0;
 		if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0) {
 			if (this.findTardis().get().getTravel().getState() == TardisTravel.State.DEMAT) return 0;
 			// if (this.tardis().getTravel().getState() == TardisTravel.State.MAT) return 100;
@@ -182,7 +182,7 @@ public class FlightData extends TardisLink {
 				&& this.getDurationAsPercentage() < 100
 				&& travel.inFlight() && tardis.position() != tardis.destination() && !sequences.hasActiveSequence()) {
 			if (FlightUtil.getFlightDuration(tardis.position(),
-					tardis.destination()) > convertSecondsToTicks(5)) {
+					tardis.destination()) > FlightUtil.convertSecondsToTicks(5)) {
 				int rand = random.nextBetween(0, 460 / (tardis.getTravel().getSpeed() == 0 ? 1 : tardis.getTravel().getSpeed()));
 				if (rand == 7) {
 					sequences.triggerRandomSequence(true);

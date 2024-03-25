@@ -1,10 +1,10 @@
 package loqor.ait.client.registry.exterior.impl.growth;
 
+import loqor.ait.client.renderers.coral.CoralRenderer;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.coral.CoralGrowthExteriorModel;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
-import loqor.ait.client.renderers.coral.CoralRenderer;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 

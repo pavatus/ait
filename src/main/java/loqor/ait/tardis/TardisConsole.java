@@ -16,8 +16,6 @@ import net.minecraft.world.World;
 import java.util.Optional;
 import java.util.UUID;
 
-import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
-
 // TODO - move variant and type over to here
 public class TardisConsole extends TardisLink {
 	private static final int VALIDATE_TICK = 30 * 20;
@@ -78,7 +76,7 @@ public class TardisConsole extends TardisLink {
 		if (this.tardisId == null) {
 			if (!this.validate()) return Optional.empty();
 
-			Tardis found = findTardisByInterior(this.position(), !this.findEntity().get().getWorld().isClient());
+			Tardis found = TardisUtil.findTardisByInterior(this.position(), !this.findEntity().get().getWorld().isClient());
 			if (found != null)
 				this.setTardis(found);
 		}

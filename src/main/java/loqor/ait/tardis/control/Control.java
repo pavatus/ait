@@ -1,19 +1,13 @@
 package loqor.ait.tardis.control;
 
-import loqor.ait.AITMod;
-import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.registry.datapack.Identifiable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
-import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
 
-public class Control implements Identifiable {
+public class Control {
 
     /*public static HashMap<Integer, ControlAnimationState> animationStates = HartnellAnimations.animationStatePerControl(listOfControlAnimations());
 
@@ -52,12 +46,6 @@ public class Control implements Identifiable {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	@Override
-	public Identifier id() {
-		// Temporary - should be changed in future
-		return new Identifier(AITMod.MOD_ID, this.getId());
 	}
 
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
@@ -109,36 +97,6 @@ public class Control implements Identifiable {
 
 	public boolean ignoresSecurity() {
 		return false;
-	}
-
-	public static String createDelayId(Control control, Tardis tardis) {
-		return "delay-" + control.id + "-" + tardis.getUuid();
-	}
-
-	public static void createDelay(Control control, Tardis tardis, long millis) {
-		DeltaTimeManager.createDelay(createDelayId(control, tardis), millis);
-	}
-	public static void createDelay(Control control, Tardis tardis) {
-		createDelay(control, tardis, control.getDelayLength());
-	}
-
-	public static boolean isOnDelay(Control control, Tardis tardis) {
-		return DeltaTimeManager.isStillWaitingOnDelay(createDelayId(control, tardis));
-	}
-
-	public boolean canRun(Tardis tardis, ServerPlayerEntity user) {
-		if ((this.shouldFailOnNoPower() && !tardis.hasPower()) || tardis.getHandlers().getSequenceHandler().isConsoleDisabled()) {
-			return false;
-		}
-
-		if (isOnDelay(this, tardis)) return false;
-
-		boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
-		if (!this.ignoresSecurity() && security) {
-			return SecurityControl.hasMatchingKey(user, tardis);
-		}
-
-		return true;
 	}
 
 	@Override

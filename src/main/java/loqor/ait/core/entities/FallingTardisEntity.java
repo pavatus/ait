@@ -2,10 +2,10 @@ package loqor.ait.core.entities;
 
 import com.mojang.logging.LogUtils;
 import loqor.ait.client.util.ClientShakeUtil;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.AITDamageTypes;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;

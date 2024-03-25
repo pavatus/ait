@@ -1,8 +1,6 @@
 package loqor.ait.client.registry;
 
-import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
-import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.registry.exterior.impl.booth.*;
 import loqor.ait.client.registry.exterior.impl.box.*;
 import loqor.ait.client.registry.exterior.impl.capsule.ClientCapsuleDefaultVariant;
@@ -17,14 +15,16 @@ import loqor.ait.client.registry.exterior.impl.growth.ClientGrowthVariant;
 import loqor.ait.client.registry.exterior.impl.plinth.ClientPlinthDefaultVariant;
 import loqor.ait.client.registry.exterior.impl.plinth.ClientPlinthFireVariant;
 import loqor.ait.client.registry.exterior.impl.plinth.ClientPlinthSoulVariant;
-import loqor.ait.client.registry.exterior.impl.renegade.ClientRenegadeDefaultVariant;
-import loqor.ait.client.registry.exterior.impl.renegade.ClientRenegadeTronVariant;
 import loqor.ait.client.registry.exterior.impl.tardim.ClientTardimDefaultVariant;
 import loqor.ait.client.registry.exterior.impl.tardim.ClientTardimFireVariant;
 import loqor.ait.client.registry.exterior.impl.tardim.ClientTardimSoulVariant;
 import loqor.ait.registry.DatapackRegistry;
-import loqor.ait.tardis.exterior.variant.DatapackExterior;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.AITMod;
+import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
+import loqor.ait.client.registry.exterior.impl.renegade.ClientRenegadeDefaultVariant;
+import loqor.ait.client.registry.exterior.impl.renegade.ClientRenegadeTronVariant;
+import loqor.ait.tardis.exterior.variant.DatapackExterior;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;

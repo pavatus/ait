@@ -12,9 +12,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 
-import static loqor.ait.core.item.WaypointItem.getPos;
-import static loqor.ait.core.item.WaypointItem.setPos;
-
 public class LoadWaypointControl extends Control {
 	public LoadWaypointControl() {
 		super("load_waypoint");
@@ -30,10 +27,10 @@ public class LoadWaypointControl extends Control {
 		ItemStack itemStack = player.getMainHandStack();
 		if (!(itemStack.getItem() instanceof WaypointItem)) return false;
 
-		if (getPos(itemStack) == null) setPos(itemStack, tardis.getTravel().getPosition());
+		if (WaypointItem.getPos(itemStack) == null) WaypointItem.setPos(itemStack, tardis.getTravel().getPosition());
 
 		tardis.getHandlers().getWaypoints().markHasCartridge();
-		tardis.getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
+		tardis.getHandlers().getWaypoints().set(Waypoint.fromDirected(WaypointItem.getPos(itemStack)).setName(itemStack.getName().getString()), true);
 		player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
 		FlightUtil.playSoundAtConsole(tardis, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);

@@ -1,11 +1,11 @@
 package loqor.ait.core.blocks;
 
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.api.ICantBreak;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.HammerItem;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;

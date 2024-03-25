@@ -1,11 +1,11 @@
 package loqor.ait.core.blocks;
 
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.api.ICantBreak;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.registry.CategoryRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;

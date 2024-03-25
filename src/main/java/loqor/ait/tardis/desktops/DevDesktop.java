@@ -1,8 +1,8 @@
 package loqor.ait.tardis.desktops;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.desktops.textures.DesktopPreviewTexture;
+import loqor.ait.tardis.TardisDesktopSchema;
 import net.minecraft.util.Identifier;
 
 public class DevDesktop extends TardisDesktopSchema {

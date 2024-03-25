@@ -1,9 +1,9 @@
 package loqor.ait.datagen.datagen_providers;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITItems;
+import loqor.ait.AITMod;
 import loqor.ait.tardis.advancement.BreakVegetationCriterion;
 import loqor.ait.tardis.advancement.CrashCriterion;
 import loqor.ait.tardis.advancement.PlaceCoralCriterion;

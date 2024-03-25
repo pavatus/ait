@@ -1,7 +1,7 @@
 package loqor.ait.client.renderers.wearables;
 
-import loqor.ait.AITMod;
 import loqor.ait.client.models.wearables.RespiratorModel;
+import loqor.ait.AITMod;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.item.WearableArmorItem;
 import net.fabricmc.api.EnvType;

@@ -1,11 +1,11 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.tardis.AbstractTardisComponent;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTickable;
 import loqor.ait.tardis.util.AbsoluteBlockPos;
 import loqor.ait.tardis.util.SerialDimension;
 import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.AbstractTardisComponent;
+import loqor.ait.tardis.TardisTickable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;

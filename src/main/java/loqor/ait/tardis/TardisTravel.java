@@ -51,8 +51,6 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static loqor.ait.AITMod.AIT_CONFIG;
-
 // todo this class is like a monopoly, im gonna slash it into little corporate pieces
 public class TardisTravel extends TardisLink {
 	private static final String MAX_SPEED_KEY = "max_speed";
@@ -62,7 +60,7 @@ public class TardisTravel extends TardisLink {
 	private AbsoluteBlockPos.Directed destination;
 	private AbsoluteBlockPos.Directed lastPosition;
 	private boolean crashing = false;
-	private static final int CHECK_LIMIT = AIT_CONFIG.SEARCH_HEIGHT();
+	private static final int CHECK_LIMIT = AITMod.AIT_CONFIG.SEARCH_HEIGHT();
 	private static final Random random = new Random();
 
 	public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
@@ -150,7 +148,7 @@ public class TardisTravel extends TardisLink {
 	}
 
 	public void increaseSpeed() {
-		// Stop speed from going above 1 if autopilot is enabled and we're in flight
+		// Stop speed from going above 1 if autopilot is enabled, and we're in flight
 		if (this.getSpeed() + 1 > 1
 				&& this.getState() == State.FLIGHT
 				&& this.findTardis().isPresent()
@@ -443,7 +441,7 @@ public class TardisTravel extends TardisLink {
 
 		ServerTardis tardis = (ServerTardis) this.findTardis().get();
 
-		if (this.getState() != State.FLIGHT && PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT)) return;
+		if (this.getState() != State.FLIGHT) return;
 
 		// Disable autopilot
 		// PropertiesHandler.setAutoPilot(this.getTardis().get().getHandlers().getProperties(), false);

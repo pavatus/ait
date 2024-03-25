@@ -1,7 +1,7 @@
 package loqor.ait.mixin.client.rendering;
 
-import loqor.ait.core.item.WearableArmorItem;
 import loqor.ait.core.item.WearableItem;
+import loqor.ait.core.item.WearableArmorItem;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;

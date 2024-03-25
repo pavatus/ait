@@ -2,14 +2,14 @@ package loqor.ait.tardis.wrapper.server.manager;
 
 import com.google.gson.GsonBuilder;
 import loqor.ait.AITMod;
-import loqor.ait.compat.DependencyChecker;
-import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.*;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.compat.DependencyChecker;
+import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.tardis.util.*;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -285,7 +285,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 	}
 
 	private void sendTardis(@NotNull ServerPlayerEntity player, UUID uuid) {
-		this.sendTardis(player, this.getTardis(uuid));
+		Tardis tardis = this.getTardis(uuid);
+		if(tardis == null) return;
+		this.sendTardis(player, tardis);
 	}
 
 	private void sendTardis(@NotNull ServerPlayerEntity player, Tardis tardis) {

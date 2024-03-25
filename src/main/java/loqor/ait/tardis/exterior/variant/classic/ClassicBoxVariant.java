@@ -1,12 +1,12 @@
 package loqor.ait.tardis.exterior.variant.classic;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.registry.DoorRegistry;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.animation.PulsatingAnimation;
 import loqor.ait.tardis.exterior.category.ClassicCategory;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.AITMod;
+import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.animation.PulsatingAnimation;
 import loqor.ait.tardis.variant.door.ClassicDoorVariant;
 import loqor.ait.tardis.variant.door.DoorSchema;
 import net.minecraft.util.Identifier;

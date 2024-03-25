@@ -1,13 +1,13 @@
 package loqor.ait.tardis.data.properties;
 
 import com.google.gson.internal.LinkedTreeMap;
-import loqor.ait.AITMod;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.ShieldData;
 import loqor.ait.tardis.data.TardisCrashData;
+import loqor.ait.AITMod;
+import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.data.ShieldData;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.util.Identifier;
@@ -176,12 +176,10 @@ public class PropertiesHandler {
 		return getBool(holder, schema.id().getPath() + "_unlocked");
 	}
 
-	@Deprecated
 	public static void setAutoPilot(PropertiesHolder handler, boolean val) {
 		set(handler, AUTO_LAND, val);
 	}
 
-	@Deprecated
 	public static boolean willAutoPilot(PropertiesHolder holder) {
 		return getBool(holder, AUTO_LAND);
 	}

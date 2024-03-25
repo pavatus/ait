@@ -6,8 +6,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import loqor.ait.AITMod;
-import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.desktops.textures.DesktopPreviewTexture;
+import loqor.ait.tardis.TardisDesktopSchema;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;

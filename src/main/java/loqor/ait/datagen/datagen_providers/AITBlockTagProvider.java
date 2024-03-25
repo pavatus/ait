@@ -1,7 +1,7 @@
 package loqor.ait.datagen.datagen_providers;
 
-import loqor.ait.core.AITBlocks;
 import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.AITBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.block.Blocks;

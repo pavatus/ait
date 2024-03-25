@@ -119,6 +119,14 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 		boolean falling = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING);
 		if (falling) return;
 
+
+		// @TODO make it teleport the player to the vortex and have the tardis fly off in a random direction to simulate the "leaving behind" effect,
+		// @TODO letting the player be placed *near* the new tardis position that it selects after there are no players in the interior and the player has been sucked out.
+		/*if (tardis.getTravel().inFlight()) {
+			TardisUtil.teleportToVortex(tardis, entity);
+			return;
+		}*/
+
 		if (DependencyChecker.hasPortals() && tardis.getExterior().getVariant().hasPortals()) return;
 
 		TardisUtil.teleportOutside(tardis, entity);
