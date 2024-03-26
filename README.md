@@ -25,13 +25,8 @@ Recommended to play with 8GB of RAM **minimum** singleplayer.
 
 Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 
-## Compatability
+## Compatibility
 
-### If you have [Regeneration](https://modrinth.com/mod/regeneration)
-
-- Adds special functionality when you regenerate inside a tardis
-- Your TARDIS will panic, crashing and flying randomly.
-- Your TARDIS may randomly change interior or exterior
 ### If you have [Immersive Portals](https://modrinth.com/mod/immersiveportals)
 - Your TARDIS will be Bigger on the Inside (BOTI)
 - When you open the doors from the exterior you will be able to see the interior and vice versa
@@ -60,11 +55,11 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ---
 
 ## Thank You's:
-- DocArcane (Credit for the Steampunk console design)
-- Jeryn (Suff) (Help with code)
-- Bug1312 (Help with code)
 - MagicMan(?) (Help with modeling)
+- Bug1312 (Help with code)
+- DocArcane (Credit for the Steampunk console design)
 - Creativious (Help with code)
+- Jeryn (Suff) (Help with code)
 
 
 ## Links

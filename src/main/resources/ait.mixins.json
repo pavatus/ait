@@ -1,9 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "mdteam.ait.mixin",
+  "package": "loqor.ait.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "DismountEntityMixin",
     "server.ItemEntityMixin",
     "server.MinecraftServerMixin",
     "server.ServerPlayerInteractionManagerMixin",
@@ -18,9 +19,7 @@
     "client.rendering.GameRendererMixin",
     "client.rendering.HeadFeatureRendererMixin",
     "client.rendering.PlayerEntityRendererMixin",
-    "client.rendering.PlayerPoseRendererMixin",
-    "client.rendering.SkyboxMixin",
-    "client.rendering.WindowMixin"
+    "client.rendering.SkyboxMixin"
   ],
   "injectors": {
     "defaultRequire": 1
