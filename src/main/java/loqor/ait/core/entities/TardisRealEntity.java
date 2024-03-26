@@ -273,8 +273,8 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	@Override
 	public boolean hasNoGravity() {
 		if(this.getPlayer().isEmpty()) return false;
-        return this.getPlayer().get().getAbilities().flying;
-    }
+		return this.getPlayer().get().getAbilities().flying;
+	}
 
 	@Override
 	public boolean isInvulnerable() {

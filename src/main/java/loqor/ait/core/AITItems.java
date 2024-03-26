@@ -2,8 +2,9 @@ package loqor.ait.core;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
-import loqor.ait.core.item.*;
 import loqor.ait.AITMod;
+import loqor.ait.core.item.*;
+import loqor.ait.core.item.control.GenericControlBlockItem;
 import loqor.ait.core.util.AITArmorMaterials;
 import net.minecraft.item.Item;
 import net.minecraft.item.MusicDiscItem;
@@ -44,4 +45,7 @@ public class AITItems implements ItemRegistryContainer {
 	// Waypoint-related
 	public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
 	public static final Item DRIFTING_MUSIC_DISC = new MusicDiscItem(1, AITSounds.DRIFTING_MUSIC, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 169);
+
+	// Block controls
+	public static final Item BUTTON_CONTROL = new GenericControlBlockItem(AITBlocks.BUTTON_CONTROL_BLOCK, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 }

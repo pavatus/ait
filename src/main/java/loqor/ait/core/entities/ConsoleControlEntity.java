@@ -4,14 +4,12 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.console.type.ConsoleTypeSchema;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
-import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -21,6 +19,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
@@ -111,7 +110,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	}
 
 	public Control getControl() {
-		if (control == null) return null;
+		if (control == null) return null; // exploding head emoji
 		return control;
 	}
 
@@ -146,17 +145,12 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	public boolean isPartOfSequence() {
 		return this.dataTracker.get(PART_OF_SEQUENCE);
 	}
-
-	public String createDelayId() {
-		return "delay-" + this.getControl().id + "-" + this.getTardis().getUuid();
-	}
-
 	public void createDelay(long millis) {
-		DeltaTimeManager.createDelay(createDelayId(), millis);
+		Control.createDelay(this.getControl(), this.getTardis(), millis);
 	}
 
 	public boolean isOnDelay() {
-		return DeltaTimeManager.isStillWaitingOnDelay(createDelayId());
+		return Control.isOnDelay(this.getControl(), this.getTardis());
 	}
 
 	@Override
@@ -214,9 +208,17 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
 	@Override
 	public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
+		ItemStack handStack = player.getStackInHand(hand);
+
 		if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
 			controlEditorHandler(player);
 			return ActionResult.SUCCESS;
+		}
+
+		handStack.useOnEntity(player, this, hand);
+
+		if (handStack.getItem() instanceof ControlBlockItem) {
+			return ActionResult.FAIL;
 		}
 
 		if (hand == Hand.MAIN_HAND)
@@ -264,21 +266,11 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
 			control.runAnimation(tardis, (ServerPlayerEntity) player, (ServerWorld) world);
 
-			if ((control.shouldFailOnNoPower() && !tardis.hasPower()) || tardis.getHandlers().getSequenceHandler().isConsoleDisabled()) {
-				return false;
-			}
+			if (!this.control.canRun(tardis, (ServerPlayerEntity) player)) return false;
 
-			if (this.isOnDelay()) return false;
 
 			if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
 				this.createDelay(this.control.getDelayLength());
-			}
-
-			boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
-			if (!this.control.ignoresSecurity() && security) {
-				if (!SecurityControl.hasMatchingKey((ServerPlayerEntity) player, tardis)) {
-					return false;
-				}
 			}
 
 			if (this.consoleBlockPos != null)
