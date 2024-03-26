@@ -81,7 +81,9 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 	@Override
 	public void tick() {
-		this.lastVelocity = this.getVelocity();
+		if(this.getWorld().isClient()) {
+			this.lastVelocity = this.getVelocity();
+		}
 		this.setRotation(0, 0);
 		super.tick();
 		if(this.getPlayer().isEmpty()) return;
