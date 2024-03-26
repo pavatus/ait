@@ -88,6 +88,13 @@ public abstract class ControlBlockEntity extends LinkableBlockEntity {
 		return Control.isOnDelay(this.getControl(), this.findTardis().get());
 	}
 
+	/**
+	 * Whether the control has been used
+	 */
+	public boolean isBeingUsed() {
+		return this.isOnDelay();
+	}
+
 	@Override
 	public Optional<Tardis> findTardis() {
 		if (this.tardisId == null && this.hasWorld()) {
