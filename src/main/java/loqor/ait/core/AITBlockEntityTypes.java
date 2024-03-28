@@ -20,6 +20,8 @@ public class AITBlockEntityTypes implements AutoRegistryContainer<BlockEntityTyp
     public static BlockEntityType<ArtronCollectorBlockEntity> ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(ArtronCollectorBlockEntity::new, AITBlocks.ARTRON_COLLECTOR_BLOCK).build();
     public static BlockEntityType<PlaqueBlockEntity> PLAQUE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(PlaqueBlockEntity::new, AITBlocks.PLAQUE_BLOCK).build();
     public static BlockEntityType<ButtonControlBlockEntity> BUTTON_CONTROL_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(ButtonControlBlockEntity::new, AITBlocks.BUTTON_CONTROL_BLOCK).build();
+
+    public static BlockEntityType<WallMonitorBlockEntity> WALL_MONITOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(WallMonitorBlockEntity::new, AITBlocks.WALL_MONITOR_BLOCK).build();
     @Override
     public Registry<BlockEntityType<?>> getRegistry() {
         return Registries.BLOCK_ENTITY_TYPE;
