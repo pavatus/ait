@@ -544,6 +544,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
         provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
         provider.addTranslation(AITBlocks.PLAQUE_BLOCK, "TARDIS Plaque");
+        provider.addTranslation(AITBlocks.WALL_MONITOR_BLOCK, "Wall Monitor");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");

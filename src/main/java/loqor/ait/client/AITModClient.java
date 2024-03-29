@@ -12,6 +12,7 @@ import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
 import loqor.ait.client.renderers.entities.TardisRealRenderer;
+import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
 import loqor.ait.client.renderers.wearables.AITHudOverlay;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.*;
@@ -243,7 +244,7 @@ public class AITModClient implements ClientModInitializer {
         return switch (id) {
             default -> null;
             case 0 -> new MonitorScreen(tardis, console);
-            case 1 -> null;
+            //case 1 -> new EngineScreen(tardis);
             case 2 -> new OwOInteriorSelectScreen(tardis, new MonitorScreen(tardis, console));
         };
     }
@@ -297,6 +298,7 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.MONITOR_BLOCK_ENTITY_TYPE, MonitorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE, ArtronCollectorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.PLAQUE_BLOCK_ENTITY_TYPE, PlaqueRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.WALL_MONITOR_BLOCK_ENTITY_TYPE, WallMonitorRenderer::new);
     }
 
     public void entityRenderRegister() {
