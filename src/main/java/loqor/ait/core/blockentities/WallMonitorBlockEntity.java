@@ -20,7 +20,7 @@ import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
 public class WallMonitorBlockEntity extends LinkableBlockEntity {
 
     public WallMonitorBlockEntity(BlockPos pos, BlockState state) {
-        super(AITBlockEntityTypes.PLAQUE_BLOCK_ENTITY_TYPE, pos, state);
+        super(AITBlockEntityTypes.WALL_MONITOR_BLOCK_ENTITY_TYPE, pos, state);
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {

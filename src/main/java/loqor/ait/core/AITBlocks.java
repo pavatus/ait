@@ -25,6 +25,7 @@ public class AITBlocks implements BlockRegistryContainer {
             .instrument(Instrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
     public static final Block CONSOLE = new ConsoleBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
             .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.IGNORE));
+    public static final Block ENGINE_BLOCK = new EngineBlock(FabricBlockSettings.create().requiresTool().instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
     public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
             .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.DESTROY));
     public static final Block ARTRON_COLLECTOR_BLOCK = new ArtronCollectorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)

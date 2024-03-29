@@ -244,7 +244,7 @@ public class AITModClient implements ClientModInitializer {
         return switch (id) {
             default -> null;
             case 0 -> new MonitorScreen(tardis, console);
-            case 1 -> null;
+            //case 1 -> new EngineScreen(tardis);
             case 2 -> new OwOInteriorSelectScreen(tardis, new MonitorScreen(tardis, console));
         };
     }
