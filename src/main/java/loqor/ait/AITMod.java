@@ -14,6 +14,7 @@ import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.managers.RiftChunkManager;
+import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.util.AITConfig;
 import loqor.ait.registry.*;
 import loqor.ait.tardis.Tardis;
@@ -40,10 +41,12 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
@@ -67,6 +70,11 @@ public class AITMod implements ModInitializer {
 	public static final Random RANDOM = new Random();
 	public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE, new Identifier(MOD_ID, "zeiton_geode"));
 
+	public static final ScreenHandlerType<EngineScreenHandler> ENGINE_SCREEN_HANDLER;
+
+	static {
+		ENGINE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "engine"), EngineScreenHandler::new);
+	}
 	@Override
 	public void onInitialize() {
 		ConsoleRegistry.init();

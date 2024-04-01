@@ -14,6 +14,7 @@ import loqor.ait.client.renderers.entities.FallingTardisRenderer;
 import loqor.ait.client.renderers.entities.TardisRealRenderer;
 import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
 import loqor.ait.client.renderers.wearables.AITHudOverlay;
+import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
@@ -50,6 +51,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
@@ -86,6 +88,8 @@ public class AITModClient implements ClientModInitializer {
         chargedZeitonCrystalPredicate();
         waypointPredicate();
         setKeyBinding();
+
+        HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
 
         HudRenderCallback.EVENT.register(new AITHudOverlay());
 
