@@ -31,7 +31,10 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.boss.WitherEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.mob.WardenEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
@@ -360,6 +363,9 @@ public class TardisUtil {
 						WorldOps.teleportToWorld(player, serverWorld, vec, pos.getDirection().asRotation(), player.getPitch());
 						player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 					} else {
+						if(entity instanceof EnderDragonEntity
+								|| entity instanceof WitherEntity
+								|| entity instanceof WardenEntity) return;
 						if (entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
 							entity.refreshPositionAndAngles(vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, pos.getDirection().asRotation(), entity.getPitch());
 						} else {

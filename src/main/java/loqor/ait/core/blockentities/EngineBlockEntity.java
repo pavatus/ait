@@ -32,7 +32,7 @@ import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
 
 public class EngineBlockEntity extends LinkableBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
 
-	public static final DefaultedList<ItemStack> items = DefaultedList.ofSize(2, ItemStack.EMPTY);
+	private final DefaultedList<ItemStack> items = DefaultedList.ofSize(27, ItemStack.EMPTY);
 
 	public EngineBlockEntity(BlockPos pos, BlockState state) {
 		super(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, pos, state);
@@ -46,8 +46,10 @@ public class EngineBlockEntity extends LinkableBlockEntity implements NamedScree
 				return;
 			}
 		}
+
 		player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F, 1.0F);
 		NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
+		System.out.println(screenHandlerFactory);
 		if (screenHandlerFactory != null) {
 			player.openHandledScreen(screenHandlerFactory);
 		}
