@@ -19,6 +19,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.RavagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -37,9 +38,7 @@ import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
 public class CoralPlantBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
-
 	private final VoxelShape DEFAULT = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 16.0);
-
 	public static final int MAX_AGE = 7;
 	public static final IntProperty AGE;
 
@@ -90,7 +89,9 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
 		if (this.getAge(state) >= this.getMaxAge()) {
 			if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
-				createTardis(world, pos);
+				if(world.getBlockEntity(pos) instanceof CoralBlockEntity coral) {
+					createTardis(world, pos, coral.CREATOR_NAME);
+				}
 			} else {
 				createConsole(world, pos);
 			}
@@ -101,9 +102,9 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 		world.setBlockState(pos, AITBlocks.CONSOLE.getDefaultState());
 	}
 
-	private void createTardis(ServerWorld world, BlockPos pos) {
+	private void createTardis(ServerWorld world, BlockPos pos, String creatorName) {
 		// Create a new tardis
-		ServerTardis created = ServerTardisManager.getInstance().create(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), CategoryRegistry.getInstance().get(GrowthCategory.REFERENCE), ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE), DesktopRegistry.DEFAULT_CAVE, false);
+		ServerTardis created = ServerTardisManager.getInstance().createWithPlayerCreator(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), CategoryRegistry.getInstance().get(GrowthCategory.REFERENCE), ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE), DesktopRegistry.DEFAULT_CAVE, false, creatorName);
 
 		created.getHandlers().getFuel().setCurrentFuel(0);
 	}
@@ -113,6 +114,12 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 		super.onPlaced(world, pos, state, placer, itemStack);
 
 		if (!(world instanceof ServerWorld)) return;
+		if(world.getBlockEntity(pos) instanceof CoralBlockEntity coral) {
+			if(placer instanceof PlayerEntity entity) {
+				coral.CREATOR_NAME = entity.getDisplayName().getString();
+				coral.markDirty();
+			}
+		}
 		if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) || (!RiftChunkManager.isRiftChunk(pos) && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
 			// GET IT OUTTA HERE!!!
 			world.breakBlock(pos, true);

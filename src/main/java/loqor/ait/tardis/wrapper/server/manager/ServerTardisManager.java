@@ -184,6 +184,25 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		return tardis;
 	}
 
+	public ServerTardis createWithPlayerCreator(AbsoluteBlockPos.Directed pos, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked, String playerCreatorName) {
+		UUID uuid = UUID.randomUUID();
+
+		ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked); // todo removed "locked" param
+		this.lookup.put(uuid, tardis);
+
+		// todo this can be moved to init
+		tardis.getTravel().placeExterior();
+		tardis.getTravel().runAnimations();
+
+		tardis.getHandlers().getStats().markCreationDate();
+		tardis.getHandlers().getStats().setPlayerCreatorName(playerCreatorName);
+		tardis.getHandlers().getStats().markPlayerCreatorName();
+
+		this.saveTardis(tardis);
+
+		return tardis;
+	}
+
 	public Tardis getTardis(UUID uuid) {
 		if (uuid == null) return null; // ugh
 

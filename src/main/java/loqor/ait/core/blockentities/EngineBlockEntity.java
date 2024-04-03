@@ -32,7 +32,7 @@ import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
 
 public class EngineBlockEntity extends LinkableBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, SidedInventory {
 
-	private final DefaultedList<ItemStack> items = DefaultedList.ofSize(27, ItemStack.EMPTY);
+	private final DefaultedList<ItemStack> items = DefaultedList.ofSize(8, ItemStack.EMPTY);
 
 	public EngineBlockEntity(BlockPos pos, BlockState state) {
 		super(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, pos, state);

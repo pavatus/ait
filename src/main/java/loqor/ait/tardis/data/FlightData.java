@@ -164,7 +164,7 @@ public class FlightData extends TardisLink {
 				this.onFlightFinished();
 			}
 
-			this.setFlightTicks(this.getFlightTicks() + travel.getSpeed());
+			this.setFlightTicks(this.getFlightTicks() + (Math.max(travel.getSpeed() / 2, 1)));
 		}
 
 		//System.out.println(PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT));

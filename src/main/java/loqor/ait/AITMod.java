@@ -123,6 +123,7 @@ public class AITMod implements ModInitializer {
 			RiftChunkCommand.register(dispatcher);
 			SetNameCommand.register(dispatcher);
 			GetNameCommand.register(dispatcher);
+			GetCreatorCommand.register(dispatcher);
 			SetMaxSpeedCommand.register(dispatcher);
 			SetSiegeCommand.register(dispatcher);
 			LinkCommand.register(dispatcher);

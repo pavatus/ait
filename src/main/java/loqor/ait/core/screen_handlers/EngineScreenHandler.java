@@ -13,33 +13,41 @@ import net.minecraft.screen.slot.Slot;
 public class EngineScreenHandler extends ScreenHandler {
     private final Inventory inventory;
     public EngineScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(36));
+        this(syncId, playerInventory, new SimpleInventory(8));
     }
 
     public EngineScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(AITMod.ENGINE_SCREEN_HANDLER, syncId);
-        checkSize(inventory, 36);
+        checkSize(inventory, 8);
         this.inventory = inventory;
         //some inventories do custom logic when a player opens it.
         inventory.onOpen(playerInventory.player);
         //This will place the slot in the correct locations for a 3x3 Grid. The slots exist on both server and client!
         //This will not render the background of the slots however, this is the Screens job
-        int k;
+        int m;
         int l;
         //Our inventory
-        for (k = 0; k < 2; ++k) {
+        /*for (m = 0; m < 3; ++m) {
+            for (l = 0; l < 3; ++l) {
+                this.addSlot(new Slot(inventory, l + m * 3, 62 + l * 18, 17 + m * 18));
+            }
+        }*/
+        for (m = 0; m < 2; ++m) {
             for (l = 0; l < 4; ++l) {
-                this.addSlot(new ShulkerBoxSlot(inventory, (l + k * 4) + 27, 26 + l * 36, 24 + k * 23));
+                this.addSlot(new Slot(inventory, (l + m * 4), 26 + l * 36, 24 + m * 23));
             }
         }
-        for (k = 0; k < 3; ++k) {
+        //The player inventory
+        for (m = 0; m < 3; ++m) {
             for (l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + k * 9 + 9, 8 + l * 18, 84 + k * 18));
+                this.addSlot(new Slot(playerInventory, l + m * 9 + 9, 8 + l * 18, 84 + m * 18));
             }
         }
-        for (k = 0; k < 9; ++k) {
-            this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
+        //The player Hotbar
+        for (m = 0; m < 9; ++m) {
+            this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
         }
+
 
     }
 
