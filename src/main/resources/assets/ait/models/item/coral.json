@@ -303,14 +303,6 @@
 			"scale": [0.7, 0.7, 0.7]
 		}
 	},
-	"overrides": [
-		{"predicate": {"inactive": 1}, "model": "ait:item/sonic_predicates/coral_inactive"},
-		{"predicate": {"interaction": 0.5, "inactive": 0}, "model": "ait:item/sonic_predicates/coral_interaction_pulsing"},
-		{"predicate": {"interaction": 1, "inactive": 0}, "model": "ait:item/sonic_predicates/coral_interaction"},
-		{"predicate": {"overload": 1, "inactive": 0}, "model": "ait:item/sonic_predicates/coral_overload"},
-		{"predicate": {"scanning": 1, "inactive": 0}, "model": "ait:item/sonic_predicates/coral_scanning"},
-		{"predicate": {"tardis": 1, "inactive": 0}, "model": "ait:item/sonic_predicates/coral_tardis"}
-	],
 	"groups": [
 		{
 			"name": "top",

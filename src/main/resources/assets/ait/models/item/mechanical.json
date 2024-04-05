@@ -420,48 +420,5 @@
 			"rotation": [-180, 0, -180],
 			"scale": [0.7, 0.7, 0.7]
 		}
-	},
-	"overrides": [
-		{
-			"predicate": {
-				"inactive": 1
-			},
-			"model": "ait:item/sonic_predicates/mechanical_inactive"
-		},
-		{
-			"predicate": {
-				"interaction": 0.5,
-				"inactive": 0
-			},
-			"model": "ait:item/sonic_predicates/mechanical_interaction_pulsing"
-		},
-		{
-			"predicate": {
-				"interaction": 1,
-				"inactive": 0
-			},
-			"model": "ait:item/sonic_predicates/mechanical_interaction"
-		},
-		{
-			"predicate": {
-				"overload": 1,
-				"inactive": 0
-			},
-			"model": "ait:item/sonic_predicates/mechanical_overload"
-		},
-		{
-			"predicate": {
-				"scanning": 1,
-				"inactive": 0
-			},
-			"model": "ait:item/sonic_predicates/mechanical_scanning"
-		},
-		{
-			"predicate": {
-				"tardis": 1,
-				"inactive": 0
-			},
-			"model": "ait:item/sonic_predicates/mechanical_tardis"
-		}
-	]
+	}
 }

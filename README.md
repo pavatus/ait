@@ -6,10 +6,10 @@
 ![Modrinth Downloads](https://img.shields.io/modrinth/dt/ait?logo=modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait)
 ![CurseForge Downloads](https://img.shields.io/curseforge/dt/856138?logo=curseforge&color=red&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fadventures-in-time)
 
-![Wiki](https://img.shields.io/badge/wiki-grey?logo=gitbook&logoColor=white&link=https%3A%2F%2Fm-d-team.github.io%2Fait-fabric-1.20.1%2F)
+![Wiki](https://img.shields.io/badge/wiki-grey?logo=gitbook&logoColor=white&link=https%3A%2F%2Floqor.dev%2Fait%2F)
 
 
-**by [MDTeam](https://m-d-team.github.io/)**
+**by [Loqor](https://github.com/loqor/ait)**
 
 **Requires [OwoLib](https://modrinth.com/mod/owo-lib)**
 
@@ -25,13 +25,8 @@ Recommended to play with 8GB of RAM **minimum** singleplayer.
 
 Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 
-## Compatability
+## Compatibility
 
-### If you have [Regeneration](https://modrinth.com/mod/regeneration)
-
-- Adds special functionality when you regenerate inside a tardis
-- Your TARDIS will panic, crashing and flying randomly.
-- Your TARDIS may randomly change interior or exterior
 ### If you have [Immersive Portals](https://modrinth.com/mod/immersiveportals)
 - Your TARDIS will be Bigger on the Inside (BOTI)
 - When you open the doors from the exterior you will be able to see the interior and vice versa
@@ -39,14 +34,14 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ## Credits
 
 ### Developers:
-- Loqor (Owner, Developer)
-- Duzo (Head Developer)
-- Dr. Theo (Backend Developer)
+- Loqor
+- Duzo
+- Dr. Theo
 
 ---
 
 ### Artists:
-- Tright (Head Modeler)
+- Tright (Modeler)
 - b2bmrww2 (Modeler)
 - classic_account (Builder)
 - Monsterwaill (Animator)
@@ -59,24 +54,18 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 
 ---
 
-### Contributions:
-- TheVale (Co-Founder)
-- Tryzo (Ben) (Original Founder)
-
----
-
 ## Thank You's:
-- DocArcane (Credit for the Steampunk console design)
-- Craig (Suff) (Help with code)
-- Bug1312 (Help with code)
 - MagicMan(?) (Help with modeling)
+- Bug1312 (Help with code)
+- DocArcane (Credit for the Steampunk console design)
 - Creativious (Help with code)
+- Jeryn (Suff) (Help with code)
 
 
 ## Links
-[Wiki](https://m-d-team.github.io/ait-fabric-1.20.1/)
+[Wiki](https://loqor.dev/ait/)
 
-[Github](https://github.com/M-D-Team/ait-fabric-1.20.1/)
+[Github](https://github.com/loqor/ait/)
 
 [Curseforge](https://www.curseforge.com/minecraft/mc-mods/adventures-in-time)
 

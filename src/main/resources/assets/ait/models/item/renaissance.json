@@ -436,14 +436,6 @@
 		}
 	],
 	"gui_light": "front",
-	"overrides": [
-		{"predicate": {"inactive": 1}, "model": "ait:item/sonic_predicates/renaissance_inactive"},
-		{"predicate": {"interaction": 0.5, "inactive": 0}, "model": "ait:item/sonic_predicates/renaissance_interaction_pulsing"},
-		{"predicate": {"interaction": 1, "inactive": 0}, "model": "ait:item/sonic_predicates/renaissance_interaction"},
-		{"predicate": {"overload": 1, "inactive": 0}, "model": "ait:item/sonic_predicates/renaissance_overload"},
-		{"predicate": {"scanning": 1, "inactive": 0}, "model": "ait:item/sonic_predicates/renaissance_scanning"},
-		{"predicate": {"tardis": 1, "inactive": 0}, "model": "ait:item/sonic_predicates/renaissance_tardis"}
-	],
 	"display": {
 		"thirdperson_righthand": {
 			"translation": [0, 0.25, 0.75],
