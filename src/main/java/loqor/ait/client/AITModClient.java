@@ -1,8 +1,9 @@
 package loqor.ait.client;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.registry.ClientConsoleVariantRegistry;
 import loqor.ait.client.registry.ClientDoorRegistry;
-import loqor.ait.client.renderers.TriangleTestingUtil;
+import loqor.ait.client.registry.ClientExteriorVariantRegistry;
 import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
@@ -12,28 +13,29 @@ import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
 import loqor.ait.client.renderers.entities.TardisRealRenderer;
+import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
+import loqor.ait.client.renderers.machines.ArtronCollectorRenderer;
 import loqor.ait.client.renderers.machines.EngineRenderer;
+import loqor.ait.client.renderers.monitors.MonitorRenderer;
 import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
 import loqor.ait.client.renderers.wearables.AITHudOverlay;
 import loqor.ait.client.screens.EngineScreen;
+import loqor.ait.client.screens.MonitorScreen;
+import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.*;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.*;
 import loqor.ait.registry.*;
-import loqor.ait.AITMod;
-import loqor.ait.client.renderers.machines.ArtronCollectorRenderer;
-import loqor.ait.client.renderers.monitors.MonitorRenderer;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.client.registry.ClientExteriorVariantRegistry;
-import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
-import loqor.ait.client.screens.MonitorScreen;
-import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
-import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.console.type.ConsoleTypeSchema;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.api.ClientModInitializer;
@@ -46,7 +48,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
@@ -59,17 +60,17 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import static loqor.ait.AITMod.*;
@@ -325,27 +326,34 @@ public class AITModClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             ClientPlayerEntity player = client.player;
-            if (player != null) {
-                if (keyBinding.isPressed()) {
-                    if (!keyHeldDown) {
-                        keyHeldDown = true;
-                        if (player.getVehicle() instanceof TardisRealEntity entity) {
-                            ClientTardisUtil.snapToOpenDoors(entity.getTardisID());
-                            return;
-                        }
-                        ItemStack[] keys = KeyItem.getKeysInInventory(player);
-                        for (ItemStack stack : keys) {
-                            if (stack != null && stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
-                                NbtCompound tag = stack.getOrCreateNbt();
-                                if (!tag.contains("tardis")) {
-                                    return;
-                                }
-                                ClientTardisUtil.snapToOpenDoors(UUID.fromString(tag.getString("tardis")));
-                            }
-                        }
+
+            if (player == null)
+                return;
+
+            if (!keyBinding.isPressed()) {
+                keyHeldDown = false;
+                return;
+            }
+
+            if (!keyHeldDown) {
+                keyHeldDown = true;
+
+                if (player.getVehicle() instanceof TardisRealEntity entity) {
+                    ClientTardisUtil.snapToOpenDoors(entity.getTardisID());
+                    return;
+                }
+
+                Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
+
+                for (ItemStack stack : keys) {
+                    if (stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
+                        Tardis tardis = KeyItem.getTardis(stack);
+                        Loyalty loyalty = tardis.getHandlers().getLoyalties().get(player);
+
+                        //TODO: make a permissionhandler
+                        if (loyalty.level() > Loyalty.Type.PILOT.level)
+                            ClientTardisUtil.snapToOpenDoors(tardis);
                     }
-                } else {
-                    keyHeldDown = false;
                 }
             }
         });

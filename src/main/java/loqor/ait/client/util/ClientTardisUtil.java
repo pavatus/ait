@@ -45,9 +45,14 @@ public class ClientTardisUtil {
 		ClientPlayNetworking.send(CHANGE_SONIC, buf);
 	}
 
+	public static void snapToOpenDoors(Tardis tardis) {
+		snapToOpenDoors(tardis.getUuid());
+	}
+
 	public static void snapToOpenDoors(UUID uuid) {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeUuid(uuid);
+
 		ClientPlayNetworking.send(SNAP, buf);
 	}
 

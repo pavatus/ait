@@ -2,7 +2,7 @@ package loqor.ait.tardis.data.loyalty;
 
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TardisLink;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.HashMap;
@@ -26,11 +26,11 @@ public class LoyaltyHandler extends TardisLink {
         return this.data;
     }
 
-    public Loyalty get(ServerPlayerEntity player) {
+    public Loyalty get(PlayerEntity player) {
         return this.data.getOrDefault(player.getUuid(), new Loyalty(Loyalty.Type.NEUTRAL));
     }
 
-    public void set(ServerPlayerEntity player, Loyalty loyalty) {
+    public void set(PlayerEntity player, Loyalty loyalty) {
         this.data.put(player.getUuid(), loyalty);
         this.sync();
     }

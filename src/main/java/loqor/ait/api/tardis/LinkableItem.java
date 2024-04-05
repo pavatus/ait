@@ -49,7 +49,8 @@ public abstract class LinkableItem extends Item {
 	public static Tardis getTardis(ItemStack stack) {
 		NbtCompound nbt = stack.getOrCreateNbt();
 
-		if (!(nbt.contains("tardis"))) return null;
+		if (!(nbt.contains("tardis")))
+			return null;
 
 		UUID uuid = UUID.fromString(nbt.getString("tardis"));
 
