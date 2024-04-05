@@ -25,15 +25,15 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class KeyItem extends LinkableItem {
 	private final List<Protocols> protocols;
 
-
 	public KeyItem(Settings settings, Protocols... abs) {
 		super(settings.maxCount(1));
-		protocols = new ArrayList<>(List.of(abs));
+		this.protocols = List.of(abs);
 	}
 
 	public enum Protocols {
@@ -62,34 +62,40 @@ public class KeyItem extends LinkableItem {
 	}
 
 	public static ItemStack getFirstKeyStackInInventory(PlayerEntity player) {
-		// from playerinventory
-
 		for (ItemStack itemStack : player.getInventory().main) {
-			if (!itemStack.isEmpty() && itemStack.getItem() instanceof KeyItem key) {
+			if (!itemStack.isEmpty() && itemStack.getItem() instanceof KeyItem) {
 				return itemStack;
 			}
 		}
+
 		return null;
 	}
 
-	public static ItemStack[] getKeysInInventory(PlayerEntity player) {
+	public static Collection<ItemStack> getKeysInInventory(PlayerEntity player) {
 		List<ItemStack> items = new ArrayList<>();
-		for (ItemStack itemStack : player.getInventory().main) {
-			if (!itemStack.isEmpty() && itemStack.getItem() instanceof KeyItem key) {
-				items.add(itemStack);
+
+		for (ItemStack stack : player.getInventory().main) {
+			if (stack != null && stack.getItem() instanceof KeyItem) {
+				items.add(stack);
 			}
 		}
-		return items.toArray(new ItemStack[0]);
+
+		return items;
 	}
 
 	public static boolean hasMatchingKeyInInventory(PlayerEntity player, Tardis tardis) {
 		if (player.hasPermissionLevel(2)) return true; // extra check
-		ItemStack[] keys = getKeysInInventory(player);
+
+		Collection<ItemStack> keys = getKeysInInventory(player);
+
 		for (ItemStack stack : keys) {
-			if (stack == null) continue;
 			Tardis found = KeyItem.getTardis(stack);
-			if (found == null) continue;
-			if (found == tardis) return true;
+
+			if (found == null)
+				continue;
+
+			if (found == tardis)
+				return true;
 		}
 		return false;
 	}
@@ -164,6 +170,7 @@ public class KeyItem extends LinkableItem {
 			tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
 			return;
 		}
+
 		super.appendTooltip(stack, world, tooltip, context);
 	}
 }
