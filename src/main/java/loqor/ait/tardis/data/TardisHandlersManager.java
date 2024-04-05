@@ -4,7 +4,7 @@ import loqor.ait.tardis.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
-import loqor.ait.tardis.data.loyalty.LoyaltyData;
+import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import net.minecraft.server.MinecraftServer;
 
@@ -19,7 +19,7 @@ public class TardisHandlersManager extends TardisLink {
 	private DoorData door;
 	private PropertiesHolder properties;
 	private WaypointHandler waypoints;
-	private LoyaltyData loyalties;
+	private LoyaltyHandler loyalties;
 	private OvergrownData overgrown;
 	private ServerHumHandler hum;
 	private ServerAlarmHandler alarms;
@@ -43,11 +43,11 @@ public class TardisHandlersManager extends TardisLink {
 		this.door = new DoorData(tardis);
 		this.properties = new PropertiesHolder(tardis);
 		this.waypoints = new WaypointHandler(tardis);
-		this.loyalties = new LoyaltyData(tardis);
+		this.loyalties = new LoyaltyHandler(tardis);
 		this.overgrown = new OvergrownData(tardis);
 		this.hum = new ServerHumHandler(tardis);
-		alarms = new ServerAlarmHandler(tardis);
-		interior = new InteriorChangingHandler(tardis);
+		this.alarms = new ServerAlarmHandler(tardis);
+		this.interior = new InteriorChangingHandler(tardis);
 		this.sequenceHandler = new SequenceHandler(tardis);
 		this.fuel = new FuelData(tardis);
 		this.hads = new HADSData(tardis);
@@ -148,14 +148,14 @@ public class TardisHandlersManager extends TardisLink {
 		this.waypoints = waypoints;
 	}
 
-	public LoyaltyData getLoyalties() {
+	public LoyaltyHandler getLoyalties() {
 		if (this.loyalties == null && this.findTardis().isPresent()) {
-			this.loyalties = new LoyaltyData(this.findTardis().get());
+			this.loyalties = new LoyaltyHandler(this.findTardis().get());
 		}
 		return loyalties;
 	}
 
-	public void setLoyalties(LoyaltyData loyalties) {
+	public void setLoyalties(LoyaltyHandler loyalties) {
 		this.loyalties = loyalties;
 	}
 

@@ -6,17 +6,17 @@ public record Loyalty(int level, Type type) {
         this(type.level, type);
     }
 
-    public static Loyalty fromLevel(int level) {
-        level = Type.normalize(level);
-        return new Loyalty(level, Type.get(level));
-    }
-
     public Loyalty add(int level) {
         return Loyalty.fromLevel(this.level + level);
     }
 
     public Loyalty subtract(int level) {
         return Loyalty.fromLevel(this.level - level);
+    }
+
+    public static Loyalty fromLevel(int level) {
+        level = Type.normalize(level);
+        return new Loyalty(level, Type.get(level));
     }
 
     public enum Type {
