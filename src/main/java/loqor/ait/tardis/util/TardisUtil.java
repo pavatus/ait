@@ -18,6 +18,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -138,7 +139,12 @@ public class TardisUtil {
 					UUID uuid = buf.readUuid();
 					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-					if (tardis.getHandlers().getOvergrown().isOvergrown()) return;
+					//TODO: make a permissionhandler
+					if (tardis.getHandlers().getLoyalties().get(player).level() < Loyalty.Type.PILOT.level)
+						return;
+
+					if (tardis.getHandlers().getOvergrown().isOvergrown())
+						return;
 
 					player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
 
@@ -600,7 +606,8 @@ public class TardisUtil {
 		List<PlayerEntity> newList = new ArrayList<>();
 		for (PlayerEntity player : world.getServer().getPlayerManager().getPlayerList()) {
 			if (KeyItem.isKeyInInventory(player)) {
-				ItemStack[] keys = KeyItem.getKeysInInventory(player);
+				Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
+
 				for (ItemStack key : keys) {
 					if (KeyItem.getTardis(key) == tardis) {
 						newList.add(player);

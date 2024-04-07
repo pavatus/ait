@@ -1,37 +1,57 @@
 package loqor.ait.tardis.data.loyalty;
 
-public enum Loyalty {
-	REJECT("none", 0),
-	NEUTRAL("neutral", 25),
-	COMPANION("companion", 50),
-	PILOT("pilot", 75),
-	OWNER("owner", 100);
+public record Loyalty(int level, Type type) {
 
-	public final String id;
-	public final int level;
+    public Loyalty(Type type) {
+        this(type.level, type);
+    }
 
-	Loyalty(String id, int level) {
-		this.id = id;
-		this.level = level;
-	}
+    public Loyalty add(int level) {
+        return Loyalty.fromLevel(this.level + level);
+    }
 
-	public static Loyalty get(String id) {
-		for (Loyalty loyalty : Loyalty.values()) {
-			if (loyalty.id.equalsIgnoreCase(id)) return loyalty;
-		}
-		return null;
-	}
+    public Loyalty subtract(int level) {
+        return Loyalty.fromLevel(this.level - level);
+    }
 
-	public static Loyalty get(int level) {
-		Loyalty best = null;
+    public static Loyalty fromLevel(int level) {
+        level = Type.normalize(level);
+        return new Loyalty(level, Type.get(level));
+    }
 
-		for (Loyalty loyalty : Loyalty.values()) {
-			if (loyalty.level >= level) {
-				if (best == null) best = loyalty;
+    public enum Type {
+        REJECT(0),
+        NEUTRAL(25),
+        COMPANION(50),
+        PILOT(75),
+        OWNER(100);
 
-				if (loyalty.level >= best.level) best = loyalty;
-			}
-		}
-		return best;
-	}
+        public final int level;
+
+        Type(int start) {
+            this.level = start;
+        }
+
+        public static Type get(String id) {
+            return Type.valueOf(id.toUpperCase());
+        }
+
+        public static Type get(int level) {
+            level = Type.normalize(level);
+
+            for (int i = 0; i < values().length - 1; i++) {
+                Type current = values()[i];
+                Type next = values()[i + 1];
+
+                if (current.level <= level && level < next.level)
+                    return current;
+            }
+
+            return Type.OWNER;
+        }
+
+        public static int normalize(int level) {
+            return Math.min(Math.max(level, Type.REJECT.level), Type.OWNER.level);
+        }
+    }
 }
