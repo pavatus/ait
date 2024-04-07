@@ -24,7 +24,7 @@ public class ControlRegistry {
 	}
 
 	/**
-	 * Finds a control by its ID ( permission ) NOT its Identifier
+	 * Finds a control by its ID ( name ) NOT its Identifier
 	 * @param id the id to look for
 	 * @return the control found
 	 */

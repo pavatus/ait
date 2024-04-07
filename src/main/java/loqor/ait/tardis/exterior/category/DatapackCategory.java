@@ -16,7 +16,7 @@ public class DatapackCategory extends ExteriorCategorySchema {
 	public static final Codec<ExteriorCategorySchema> CODEC = RecordCodecBuilder.create(
 			instance -> instance.group(
 					Identifier.CODEC.fieldOf("id").forGetter(ExteriorCategorySchema::id),
-					Codec.STRING.fieldOf("permission").forGetter(ExteriorCategorySchema::name)
+					Codec.STRING.fieldOf("name").forGetter(ExteriorCategorySchema::name)
 			).apply(instance, DatapackCategory::new));
 
 	public DatapackCategory(Identifier id, String name) {

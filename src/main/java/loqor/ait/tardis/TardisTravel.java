@@ -731,7 +731,7 @@ public class TardisTravel extends TardisLink {
 		if (target == null) return; // i hate null shit
 
 		Random random = new Random();
-		BlockPos h = TardisUtil.getPlacedInteriorCentre(target); // bad variable permission
+		BlockPos h = TardisUtil.getPlacedInteriorCentre(target); // bad variable name
 		h = PosType.X.add(h, random.nextBoolean() ? -random.nextInt(8) : random.nextInt(8));
 		h = PosType.Z.add(h, random.nextBoolean() ? -random.nextInt(8) : random.nextInt(8));
 

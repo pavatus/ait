@@ -18,7 +18,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 public class GetCreatorCommand {
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		dispatcher.register(literal(AITMod.MOD_ID)
-				.then(literal("creator-permission")
+				.then(literal("creator-name")
 						.requires(source -> source.hasPermissionLevel(2))
 						.then(literal("get")
 								.then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
