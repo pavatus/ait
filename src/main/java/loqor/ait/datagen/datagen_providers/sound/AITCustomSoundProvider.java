@@ -29,13 +29,13 @@ public abstract class AITCustomSoundProvider implements DataProvider {
 			if (soundEventsHashMap.containsKey(soundName)) {
 				throw new RuntimeException("Duplicate sound event: " + soundName + " - Duplicate will be ignored!");
 			} else if (soundName.contains(" ")) {
-				throw new RuntimeException("Sound event name cannot contain spaces: " + soundName);
+				throw new RuntimeException("Sound event permission cannot contain spaces: " + soundName);
 			} else {
 				for (Character character : soundName.toCharArray()) {
 					if (Character.isTitleCase(character)) {
-						throw new RuntimeException("Sound event name cannot contain capital letters: " + soundName);
+						throw new RuntimeException("Sound event permission cannot contain capital letters: " + soundName);
 					} else if (Character.isUpperCase(character)) {
-						throw new RuntimeException("Sound event name cannot contain capital letters: " + soundName);
+						throw new RuntimeException("Sound event permission cannot contain capital letters: " + soundName);
 					}
 				}
 				soundEventsHashMap.put(soundName, soundEvents);

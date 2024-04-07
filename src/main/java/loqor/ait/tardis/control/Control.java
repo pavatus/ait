@@ -37,7 +37,7 @@ public class Control {
     }*/
 
 
-	public String id; // a name to represent the control
+	public String id; // a permission to represent the control
 
 	public Control(String id) {
 		this.setId(id);

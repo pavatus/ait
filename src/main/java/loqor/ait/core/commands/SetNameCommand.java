@@ -18,7 +18,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 public class SetNameCommand {
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		dispatcher.register(literal(AITMod.MOD_ID)
-				.then(literal("name")
+				.then(literal("permission")
 						.requires(source -> source.hasPermissionLevel(2))
 						.then(literal("set")
 								.then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)

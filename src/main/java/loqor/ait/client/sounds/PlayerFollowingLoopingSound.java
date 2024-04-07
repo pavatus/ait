@@ -5,7 +5,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 
-// fixme long name
+// fixme long permission
 
 public class PlayerFollowingLoopingSound extends LoopingSound {
 	public PlayerFollowingLoopingSound(SoundEvent soundEvent, SoundCategory soundCategory, float volume, float pitch) {

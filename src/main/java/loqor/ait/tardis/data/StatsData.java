@@ -20,10 +20,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-// is StatsData a good name for this class?
+// is StatsData a good permission for this class?
 public class StatsData extends TardisLink {
 	private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
-	private static final String NAME_KEY = "name";
+	private static final String NAME_KEY = "permission";
 	private static final String PLAYER_CREATOR_NAME_KEY = "player_creator_name";
 	private static List<String> NAME_CACHE;
 

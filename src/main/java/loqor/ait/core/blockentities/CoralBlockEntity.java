@@ -17,12 +17,12 @@ public class CoralBlockEntity extends BlockEntity {
 	@Override
 	public void readNbt(NbtCompound nbt) {
 		super.readNbt(nbt);
-		this.CREATOR_NAME = nbt.getString("name");
+		this.CREATOR_NAME = nbt.getString("permission");
 	}
 
 	@Override
 	protected void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
-		nbt.putString("name", this.CREATOR_NAME);
+		nbt.putString("permission", this.CREATOR_NAME);
 	}
 }
