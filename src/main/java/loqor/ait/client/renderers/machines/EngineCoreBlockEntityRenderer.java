@@ -86,7 +86,7 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
             matrixStack.push();
             matrixStack.translate(0.5F, 0.5F, 0.5F);
             matrixStack.multiply((new Quaternionf()).rotationY(h * 0.017453292F));
-            this.conduitShell.render(matrixStack, vertexConsumer, i, j);
+            this.conduitShell.render(matrixStack, vertexConsumer, i, j, 0.1f, 0.9f, 1, 1);
             matrixStack.pop();
         } else {
             h = coreBlockEntity.getRotation(f) * 57.295776F;
@@ -96,7 +96,7 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
             matrixStack.translate(0.5F, 0.3F + k * 0.2F, 0.5F);
             Vector3f vector3f = (new Vector3f(0.5F, 1.0F, 0.5F)).normalize();
             matrixStack.multiply((new Quaternionf()).rotationAxis(h * 0.017453292F, vector3f));
-            this.conduit.render(matrixStack, CAGE_TEXTURE.getVertexConsumer(vertexConsumerProvider, RenderLayer::getEntityCutoutNoCull), i, j);
+            this.conduit.render(matrixStack, CAGE_TEXTURE.getVertexConsumer(vertexConsumerProvider, RenderLayer::getEntityCutoutNoCull), i, j, 0.1f, 0.9f, 1, 1);
             matrixStack.pop();
             int l = coreBlockEntity.ticks / 66 % 3;
             matrixStack.push();
@@ -108,13 +108,13 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
             }
 
             VertexConsumer vertexConsumer2 = (l == 1 ? WIND_VERTICAL_TEXTURE : WIND_TEXTURE).getVertexConsumer(vertexConsumerProvider, RenderLayer::getEntityCutoutNoCull);
-            this.conduitWind.render(matrixStack, vertexConsumer2, i, j);
+            this.conduitWind.render(matrixStack, vertexConsumer2, i, j, 0.1f, 0.9f, 1, 1);
             matrixStack.pop();
             matrixStack.push();
             matrixStack.translate(0.5F, 0.5F, 0.5F);
             matrixStack.scale(0.875F, 0.875F, 0.875F);
             matrixStack.multiply((new Quaternionf()).rotationXYZ(3.1415927F, 0.0F, 3.1415927F));
-            this.conduitWind.render(matrixStack, vertexConsumer2, i, j);
+            this.conduitWind.render(matrixStack, vertexConsumer2, i, j, 0.1f, 0.9f, 1, 1);
             matrixStack.pop();
             Camera camera = this.dispatcher.camera;
             matrixStack.push();
@@ -124,7 +124,7 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
             matrixStack.multiply((new Quaternionf()).rotationYXZ(m * 0.017453292F, camera.getPitch() * 0.017453292F, 3.1415927F));
             float n = 1.3333334F;
             matrixStack.scale(1.3333334F, 1.3333334F, 1.3333334F);
-            this.conduitEye.render(matrixStack, (coreBlockEntity.isEyeOpen() ? OPEN_EYE_TEXTURE : CLOSED_EYE_TEXTURE).getVertexConsumer(vertexConsumerProvider, RenderLayer::getEntityCutoutNoCull), i, j);
+            this.conduitEye.render(matrixStack, (coreBlockEntity.isEyeOpen() ? OPEN_EYE_TEXTURE : CLOSED_EYE_TEXTURE).getVertexConsumer(vertexConsumerProvider, RenderLayer::getEntityCutoutNoCull), i, j, 0.1f, 0.9f, 1, 1);
             matrixStack.pop();
         }
     }

@@ -1,21 +1,19 @@
 package loqor.ait.core.blockentities;
-import com.google.common.collect.Lists;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
+import com.google.common.collect.Lists;
 import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -31,6 +29,11 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
 
 public class EngineCoreBlockEntity extends LinkableBlockEntity {
@@ -45,6 +48,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     @Nullable
     private UUID targetUuid;
     private long nextAmbientSoundTime;
+    public static final String HAS_ENGINE_CORE = "hasEngineCore";
 
     public EngineCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, pos, state);
@@ -88,6 +92,9 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     }
 
     public static void clientTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
+
+        if(blockEntity.findTardis().isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+
         ++blockEntity.ticks;
         long l = world.getTime();
         List<BlockPos> list = blockEntity.activatingBlocks;
@@ -105,6 +112,9 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
+
+        if(blockEntity.findTardis().isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+
         ++blockEntity.ticks;
         long l = world.getTime();
         List<BlockPos> list = blockEntity.activatingBlocks;
@@ -119,7 +129,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
             openEye(blockEntity, list);
             if (bl) {
                 givePlayersEffects(world, pos, list);
-                attackHostileEntity(world, pos, state, list, blockEntity);
+                //attackHostileEntity(world, pos, state, list, blockEntity);
             }
         }
 
@@ -182,7 +192,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
 
     private static void givePlayersEffects(World world, BlockPos pos, List<BlockPos> activatingBlocks) {
         int i = activatingBlocks.size();
-        int j = i / 7 * 16;
+        int j = i / 7 * 8;
         int k = pos.getX();
         int l = pos.getY();
         int m = pos.getZ();
@@ -190,15 +200,15 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
         List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, box);
         if (!list.isEmpty()) {
             for (PlayerEntity playerEntity : list) {
-                if (pos.isWithinDistance(playerEntity.getBlockPos(), j) && playerEntity.isTouchingWaterOrRain()) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.CONDUIT_POWER, 260, 0, true, true));
+                if (pos.isWithinDistance(playerEntity.getBlockPos(), j) && playerEntity.isTouchingWaterOrRain() && !playerEntity.getInventory().player.hasStackEquipped(EquipmentSlot.CHEST)) {
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 130, 0, true, true));
                 }
             }
 
         }
     }
 
-    private static void attackHostileEntity(World world, BlockPos pos, BlockState state, List<BlockPos> activatingBlocks, EngineCoreBlockEntity blockEntity) {
+    /*private static void attackHostileEntity(World world, BlockPos pos, BlockState state, List<BlockPos> activatingBlocks, EngineCoreBlockEntity blockEntity) {
         LivingEntity livingEntity = blockEntity.targetEntity;
         int i = activatingBlocks.size();
         if (i < 42) {
@@ -224,7 +234,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
             world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
         }
 
-    }
+    }*/
 
     private static void updateTargetEntity(World world, BlockPos pos, EngineCoreBlockEntity blockEntity) {
         if (blockEntity.targetUuid == null) {
@@ -299,10 +309,8 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
 
     static {
         ACTIVATING_BLOCKS = new Block[] {
-                Blocks.PRISMARINE,
-                Blocks.PRISMARINE_BRICKS,
-                Blocks.SEA_LANTERN,
-                Blocks.DARK_PRISMARINE
+                AITBlocks.ZEITON_BLOCK,
+                Blocks.MAGMA_BLOCK
         };
     }
 }

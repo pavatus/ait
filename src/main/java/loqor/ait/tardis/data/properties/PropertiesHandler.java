@@ -1,6 +1,7 @@
 package loqor.ait.tardis.data.properties;
 
 import com.google.gson.internal.LinkedTreeMap;
+import loqor.ait.core.blockentities.EngineCoreBlockEntity;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.FuelData;
@@ -241,7 +242,7 @@ public class PropertiesHandler {
 		map.put(ShieldData.IS_SHIELDED, false);
 		map.put(TardisCrashData.TARDIS_RECOVERY_STATE, TardisCrashData.State.NORMAL);
 		map.put(TardisCrashData.TARDIS_REPAIR_TICKS, 0);
-
+		map.put(EngineCoreBlockEntity.HAS_ENGINE_CORE, false);
 
 		unlockAllFreebies(map);
 		return map;

@@ -1,6 +1,9 @@
 package loqor.ait.core.blocks;
 
 import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITDimensions;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BeaconBlockEntity;
@@ -8,6 +11,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.ConduitBlockEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
@@ -69,13 +73,15 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
     }
 
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasCustomName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof BeaconBlockEntity) {
-                ((BeaconBlockEntity)blockEntity).setCustomName(itemStack.getName());
-            }
+        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
+            // dont place yo
+            world.breakBlock(pos, true);
+            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, new ItemStack(AITBlocks.ENGINE_CORE_BLOCK)));
+            return;
         }
-
+        if (world.getBlockEntity(pos) instanceof EngineCoreBlockEntity engineCoreBlockEntity) {
+            engineCoreBlockEntity.onPlaced(world, pos, state, placer, itemStack);
+        }
     }
 
     @Nullable
