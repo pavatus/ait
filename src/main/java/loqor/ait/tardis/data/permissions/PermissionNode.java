@@ -17,11 +17,23 @@ public record PermissionNode(String name, @Nullable PermissionNode parent, Map<S
             )
     );
 
+    @SafeVarargs
     private static PermissionNode create(String name, PermissionNode base, Function<PermissionNode, PermissionNode>... funcs) {
         PermissionNode parent = new PermissionNode(name, base, new HashMap<>());
 
         for (Function<PermissionNode, PermissionNode> func : funcs) {
             PermissionNode node = func.apply(parent);
+            parent.children.put(node.name, node);
+        }
+
+        return parent;
+    }
+
+    static PermissionNode create(String name, PermissionNode base, Permission... children) {
+        PermissionNode parent = new PermissionNode(name, base, new HashMap<>());
+
+        for (Permission child : children) {
+            PermissionNode node = child.node(parent);
             parent.children.put(node.name, node);
         }
 

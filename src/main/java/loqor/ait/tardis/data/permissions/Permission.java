@@ -1,8 +1,10 @@
 package loqor.ait.tardis.data.permissions;
 
+import java.util.Arrays;
+
 public record Permission(String name, Permission... children) {
 
     public PermissionNode node(PermissionNode parent) {
-        return new PermissionNode(name, parent, null);
+        return PermissionNode.create(name, parent, children);
     }
 }
