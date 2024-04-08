@@ -15,6 +15,7 @@ import loqor.ait.client.renderers.entities.FallingTardisRenderer;
 import loqor.ait.client.renderers.entities.TardisRealRenderer;
 import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
 import loqor.ait.client.renderers.machines.ArtronCollectorRenderer;
+import loqor.ait.client.renderers.machines.EngineCoreBlockEntityRenderer;
 import loqor.ait.client.renderers.machines.EngineRenderer;
 import loqor.ait.client.renderers.monitors.MonitorRenderer;
 import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
@@ -46,6 +47,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -306,6 +308,7 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.PLAQUE_BLOCK_ENTITY_TYPE, PlaqueRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WALL_MONITOR_BLOCK_ENTITY_TYPE, WallMonitorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, EngineRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, EngineCoreBlockEntityRenderer::new);
     }
 
     public void entityRenderRegister() {

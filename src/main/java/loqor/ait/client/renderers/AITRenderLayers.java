@@ -1,5 +1,7 @@
 package loqor.ait.client.renderers;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexFormat;
@@ -10,6 +12,7 @@ import net.minecraft.util.Util;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+@Environment(EnvType.CLIENT)
 public class AITRenderLayers extends RenderLayer {
 
 	private static final BiFunction<Identifier, Boolean, RenderLayer> TARDIS_EMISSION = Util.memoize((texture, affectsOutline) -> {
