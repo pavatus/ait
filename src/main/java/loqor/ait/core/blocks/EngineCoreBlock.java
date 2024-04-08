@@ -79,9 +79,10 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, new ItemStack(AITBlocks.ENGINE_CORE_BLOCK)));
             return;
         }
-        if (world.getBlockEntity(pos) instanceof EngineCoreBlockEntity engineCoreBlockEntity) {
+        super.onPlaced(world, pos, state, placer, itemStack);
+        /*if (world.getBlockEntity(pos) instanceof EngineCoreBlockEntity engineCoreBlockEntity) {
             engineCoreBlockEntity.onPlaced(world, pos, state, placer, itemStack);
-        }
+        }*/
     }
 
     @Nullable

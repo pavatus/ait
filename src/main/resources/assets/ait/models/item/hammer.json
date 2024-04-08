@@ -83,5 +83,19 @@
 			"rotation": [0, 0, -45],
 			"translation": [4.25, 4, 0]
 		}
-	}
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"toymakered": 0
+			},
+			"model": "ait:item/hammer"
+		},
+		{
+			"predicate": {
+				"toymakered": 1
+			},
+			"model": "ait:item/secrets/toymaker_hammer"
+		}
+	]
 }

@@ -91,6 +91,7 @@ public class AITModClient implements ClientModInitializer {
         riftScannerPredicate();
         chargedZeitonCrystalPredicate();
         waypointPredicate();
+        hammerPredicate();
         setKeyBinding();
 
         HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
@@ -294,6 +295,18 @@ public class AITModClient implements ClientModInitializer {
                     return 1.0f;
                 else return 0.5f;
             else return 0.5f;
+        });
+    }
+
+    public void hammerPredicate() {
+        ModelPredicateProviderRegistry.register(AITItems.HAMMER, new Identifier("toymakered"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if(itemStack.getItem() instanceof HammerItem) {
+                if(itemStack.getName().getString().equalsIgnoreCase("Toymaker Hammer"))
+                    return 1.0f;
+                else
+                    return 0.0f;
+            }
+            return 0.0F;
         });
     }
 

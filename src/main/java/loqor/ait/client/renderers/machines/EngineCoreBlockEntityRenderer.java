@@ -40,7 +40,6 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
     private final ModelPart conduitShell;
     private final ModelPart conduit;
     private final BlockEntityRenderDispatcher dispatcher;
-
     public EngineCoreBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
         this.dispatcher = ctx.getRenderDispatcher();
         this.conduitEye = EngineCoreBlockEntityRenderer.getEyeTexturedModelData().createModel();
