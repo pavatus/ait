@@ -77,12 +77,21 @@ public class PropertiesHandler {
 	}
 
 	public static Object get(PropertiesHolder holder, String key) {
-		if (!holder.getData().containsKey(key)) return null;
+		if (!holder.getData().containsKey(key))
+			return null;
 
 		return holder.getData().get(key);
 	}
-	public static Object get(Tardis tardis, String key) {
-		return get(tardis.getHandlers().getProperties(), key);
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getOrDefault(Tardis tardis, String key, T def) {
+		Object result = get(tardis.getHandlers().getProperties(), key);
+		return result != null ? (T) result : def;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T get(Tardis tardis, String key) {
+		return getOrDefault(tardis, key, null);
 	}
 
 	public static TardisDesktopSchema getDesktop(PropertiesHolder holder, String key) {

@@ -5,6 +5,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
+import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import net.minecraft.server.MinecraftServer;
 
@@ -34,6 +35,7 @@ public class TardisHandlersManager extends TardisLink {
 	private TardisCrashData crashData;
 	private SonicHandler sonic;
 	private ShieldData shields;
+	private PermissionHandler permissions;
 
 	// private final SequenceHandler sequence;
 
@@ -58,6 +60,7 @@ public class TardisHandlersManager extends TardisLink {
 		this.crashData = new TardisCrashData(tardis);
 		this.sonic = new SonicHandler(tardis);
 		this.shields = new ShieldData(tardis);
+		this.permissions = new PermissionHandler(tardis);
 		// this.sequence = new SequenceHandler(tardisId);
 
 		generateTickables();
@@ -305,5 +308,16 @@ public class TardisHandlersManager extends TardisLink {
 
 	public void setShields(ShieldData shieldData) {
 		this.shields = shieldData;
+	}
+
+	public PermissionHandler getPermissions() {
+		if (this.permissions == null && this.findTardis().isPresent())
+			this.permissions = new PermissionHandler(this.findTardis().get());
+
+		return this.permissions;
+	}
+
+	public void setPermissions(PermissionHandler permissions) {
+		this.permissions = permissions;
 	}
 }

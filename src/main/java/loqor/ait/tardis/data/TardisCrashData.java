@@ -42,8 +42,8 @@ public class TardisCrashData extends TardisLink {
 	public void tick(MinecraftServer server) {
 		super.tick(server);
 		if (this.findTardis().isEmpty()) return;
-		if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE) == null) {
-			PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE, State.NORMAL);
+		if (PropertiesHandler.get(findTardis().get(), TARDIS_RECOVERY_STATE) == null) {
+			PropertiesHandler.set(findTardis().get(), TARDIS_RECOVERY_STATE, State.NORMAL);
 		}
 
 		if (getRepairTicks() > 0) {
@@ -99,12 +99,6 @@ public class TardisCrashData extends TardisLink {
 
 	public TardisCrashData(Tardis tardis) {
 		super(tardis, "crash");
-
-		if (findTardis().isEmpty()) {
-		}
-        /*if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE) == null) {
-            PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE, State.NORMAL);
-        }*/
 	}
 
 	public State getState() {

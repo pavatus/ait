@@ -42,17 +42,6 @@ public class KeyItem extends LinkableItem {
 		PERCEPTION
 	}
 
-	public enum Permissions {
-		ATTUNE, // Permission to attune sonic or key to a tardis
-		CONSOLE, // Permission to use console
-		TRAVEL, // Permission to travel inside the tardis
-		CONTAINER, // Permission to open containers
-		PLACE, // Permission to place blocks
-		BREAK, // Permission to break blocks
-		INTERACT, // Permission to interact with blocks
-		CLOAK, // Permission to see through cloak
-	}
-
 	public boolean hasProtocol(Protocols var) {
 		return this.protocols.contains(var);
 	}
@@ -97,6 +86,7 @@ public class KeyItem extends LinkableItem {
 			if (found == tardis)
 				return true;
 		}
+
 		return false;
 	}
 

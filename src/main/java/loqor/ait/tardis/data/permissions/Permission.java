@@ -7,16 +7,36 @@ import java.util.function.Function;
 public record Permission(String name, Permission parent, Map<String, Permission> children) implements PermissionLike {
 
     public interface USE {
-        PermissionWrapper TRAVEL = new PermissionWrapper("travel");
-        PermissionWrapper ATTUNE = new PermissionWrapper("attune");
+        PermissionWrapper CONSOLE = new PermissionWrapper("console"); // Permission to use console
+        PermissionWrapper TRAVEL = new PermissionWrapper("travel"); // Permission to travel inside the tardis
+        PermissionWrapper ATTUNE = new PermissionWrapper("attune"); // Permission to attune sonic or key to a tardis
+    }
+
+    public interface MODIFY {
+        PermissionWrapper PLACE = new PermissionWrapper("place"); // Permission to place blocks
+        PermissionWrapper BREAK = new PermissionWrapper("break"); // Permission to break blocks
+        PermissionWrapper INTERACT = new PermissionWrapper("break"); // Permission to interact with blocks
+        PermissionWrapper CONTAINER = new PermissionWrapper("container"); // Permission to open containers
+    }
+
+    public interface SPECIAL {
+        PermissionWrapper CLOAK = new PermissionWrapper("cloak"); // Permission to see through cloak
     }
 
     private static final Permission PERMISSIONS = withChildren(
-            "tardis", null, base ->
-                    withChildren(
-                            "use", base,
-                            USE.TRAVEL, USE.ATTUNE
-                    )
+            "tardis", null,
+            base -> withChildren(
+                    "use", base,
+                    USE.CONSOLE, USE.TRAVEL, USE.ATTUNE
+            ),
+            base -> withChildren(
+                    "modify", base,
+                    MODIFY.PLACE, MODIFY.BREAK, MODIFY.INTERACT, MODIFY.CONTAINER
+            ),
+            base -> withChildren(
+                    "special", base,
+                    SPECIAL.CLOAK
+            )
     );
 
     @SafeVarargs

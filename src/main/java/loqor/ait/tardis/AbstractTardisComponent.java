@@ -28,7 +28,8 @@ public abstract class AbstractTardisComponent {
 	 * Server only
 	 */
 	protected void sync() {
-		if (TardisUtil.isClient()) return; // todo bad check, is deprecated
+		if (TardisUtil.isClient())
+			return; // todo bad check, is deprecated
 
 		ServerTardisManager.getInstance().sendToSubscribers(this);
 	}
