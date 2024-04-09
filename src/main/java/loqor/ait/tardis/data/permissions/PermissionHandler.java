@@ -14,11 +14,11 @@ public class PermissionHandler extends TardisLink {
         super(tardis, "permissions");
     }
 
-    public boolean check(ServerPlayerEntity player, PermissionNode permission) {
+    public boolean check(ServerPlayerEntity player, Permission permission) {
         return permissions.get(player.getUuid()).get(permission);
     }
 
-    public void set(ServerPlayerEntity player, PermissionNode permission, boolean value) {
+    public void set(ServerPlayerEntity player, Permission permission, boolean value) {
         permissions.getOrDefault(player.getUuid(), new PermissionMap())
                 .set(permission, value);
     }

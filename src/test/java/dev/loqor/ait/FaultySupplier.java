@@ -1,3 +1,5 @@
+package dev.loqor.ait;
+
 import java.util.function.Supplier;
 
 @FunctionalInterface
