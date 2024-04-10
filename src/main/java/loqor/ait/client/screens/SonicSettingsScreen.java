@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.sonic.SonicSchema;
+import loqor.ait.registry.SonicRegistry;
 import loqor.ait.tardis.data.SonicHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -48,7 +50,11 @@ public class SonicSettingsScreen extends ConsoleScreen {
 
     @Override
     protected void init() {
-        this.selectedSonic = tardis().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC).getOrCreateNbt().getInt(SonicItem.SONIC_TYPE);
+        NbtCompound nbt = tardis().getHandlers().getSonic()
+                .get(SonicHandler.HAS_CONSOLE_SONIC).getOrCreateNbt();
+
+        SonicSchema schema = SonicItem.findSchema(nbt);
+        this.selectedSonic = SonicRegistry.getInstance().indexOf(schema);
         this.top = (this.height - this.bgHeight) / 2; // this means everythings centered and scaling, same for below
         this.left = (this.width - this.bgWidth) / 2;
         this.createButtons();
@@ -93,7 +99,6 @@ public class SonicSettingsScreen extends ConsoleScreen {
                         this.textRenderer
                 )
         );
-
     }
 
     public void backToInteriorSettings() {
@@ -142,9 +147,9 @@ public class SonicSettingsScreen extends ConsoleScreen {
         ItemStack sonic = tardis().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC);
         NbtCompound nbt = sonic.getOrCreateNbt();
 
-        if(!nbt.contains(SonicItem.SONIC_TYPE)) {
+        if(!nbt.contains(SonicItem.SONIC_TYPE))
             return;
-        }
+
         if (getFromUUID(tardisId) != null) {
 
             MatrixStack stack = context.getMatrices();
@@ -152,11 +157,10 @@ public class SonicSettingsScreen extends ConsoleScreen {
             ItemStack sonicCopy = sonic.copy();
             NbtCompound copiedNbt = sonicCopy.getOrCreateNbt();
 
-            copiedNbt.putInt(SonicItem.SONIC_TYPE, this.selectedSonic);
-
+            copiedNbt.putString(SonicItem.SONIC_TYPE, SonicRegistry.getInstance().get(this.selectedSonic).id().toString());
             stack.push();
 
-            if(!SonicItem.findSonicType(sonicCopy).equals(SonicItem.SonicTypes.MECHANICAL)) {
+            if(!SonicItem.findSchema(sonicCopy).equals(SonicRegistry.MECHANICAL)) {
                 stack.translate(x, y, 0f);
                 stack.scale(scale, scale, scale);
             } else {
@@ -164,6 +168,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
                 stack.translate(x + 10f, y + 10f, 0f);
                 stack.scale(mechanicalScale, mechanicalScale, mechanicalScale);
             }
+
             DiffuseLighting.disableGuiDepthLighting();
             context.drawItem(sonicCopy,0, 0);
             DiffuseLighting.enableGuiDepthLighting();
@@ -178,7 +183,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
                     Color.WHITE.getRGB());
             context.drawCenteredTextWithShadow(
                     this.textRenderer,
-                    SonicItem.findSonicType(sonicCopy).asString(), x + 140, y + 20,
+                    SonicItem.findSchema(sonicCopy).name(), x + 140, y + 20,
                     Color.CYAN.getRGB());
             context.drawCenteredTextWithShadow(
                     this.textRenderer,
@@ -196,19 +201,17 @@ public class SonicSettingsScreen extends ConsoleScreen {
                     this.textRenderer,
                     nbt.getString("tardis").substring(0, 8), x + 140, y + 80,
                     Color.CYAN.getRGB());
+
             stack.pop();
         }
     }
 
     public void getNextSelectedSonic() {
-        int idx = SonicItem.SonicTypes.values()[this.selectedSonic].ordinal();
-        this.selectedSonic = idx + 1 >= SonicItem.SonicTypes.values().length ? 0 : idx + 1;
+        this.selectedSonic = this.selectedSonic + 1 >= SonicRegistry.getInstance().size() ? 0 : this.selectedSonic + 1;
     }
 
     public void getLastSelectedSonic() {
-        int idx = SonicItem.SonicTypes.values()[this.selectedSonic].ordinal();
-        System.out.println(idx - 1 < 0 ? SonicItem.SonicTypes.values().length - 1 : idx - 1);
-        this.selectedSonic = idx - 1 < 0 ? SonicItem.SonicTypes.values().length - 1 : idx - 1;
+        this.selectedSonic = this.selectedSonic - 1 < 0 ? SonicRegistry.getInstance().size() - 1 : this.selectedSonic - 1;
     }
 
     @Override

@@ -56,7 +56,6 @@ public class CategoryRegistry extends DatapackRegistry<ExteriorCategorySchema> {
 		if (INSTANCE == null) {
 			AITMod.LOGGER.info("CategoryRegistry was not initialized, Creating a new instance");
 			INSTANCE = new CategoryRegistry();
-			INSTANCE.init();
 		}
 
 		return INSTANCE;

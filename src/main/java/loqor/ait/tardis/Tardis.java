@@ -5,6 +5,7 @@ import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.item.TardisItemBuilder;
+import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.registry.DesktopRegistry;
@@ -187,6 +188,14 @@ public class Tardis {
 
 	public void unlockDesktop(TardisDesktopSchema schema) {
 		PropertiesHandler.setSchemaUnlocked(getHandlers().getProperties(), schema, true);
+	}
+
+	public boolean isSonicUnlocked(SonicSchema schema) {
+		return PropertiesHandler.isSonicUnlocked(getHandlers().getProperties(), schema);
+	}
+
+	public void unlockSonic(SonicSchema schema) {
+		PropertiesHandler.setSonicUnlocked(getHandlers().getProperties(), schema, true);
 	}
 
 	// for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta

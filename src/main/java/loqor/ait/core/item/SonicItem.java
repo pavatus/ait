@@ -3,13 +3,15 @@ package loqor.ait.core.item;
 import loqor.ait.api.tardis.ArtronHolderItem;
 import loqor.ait.api.tardis.LinkableItem;
 import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.util.AITModTags;
+import loqor.ait.registry.SonicRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.util.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
@@ -24,6 +26,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -206,11 +209,35 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		return nbtCompound.getInt(MODE_KEY);
 	}
 
-	public static int findTypeInt(ItemStack stack) {
-		NbtCompound nbtCompound = stack.getOrCreateNbt();
+	public static SonicSchema findSchema(NbtCompound nbtCompound) {
 		if (!nbtCompound.contains(SONIC_TYPE))
-			return 0;
-		return nbtCompound.getInt(SONIC_TYPE);
+			return SonicRegistry.PRIME;
+
+		fixSchemaId(nbtCompound);
+		Identifier id = Identifier.tryParse(nbtCompound.getString(SONIC_TYPE));
+
+		if (id == null)
+			return SonicRegistry.PRIME;
+
+		return SonicRegistry.getInstance().get(id);
+	}
+
+	public static SonicSchema findSchema(ItemStack stack) {
+		return findSchema(stack.getOrCreateNbt());
+	}
+
+	// converts the sonic type id to schema id
+	private static void fixSchemaId(NbtCompound compound) {
+		if (!compound.contains(SONIC_TYPE))
+			return;
+
+		if (compound.get(SONIC_TYPE).getType() != NbtElement.INT_TYPE)
+			return;
+
+		int id = compound.getInt(SONIC_TYPE);
+
+		compound.remove(SONIC_TYPE);
+		compound.putString(SONIC_TYPE, SonicRegistry.getInstance().get(id).id().toString());
 	}
 
 	public static void setMode(ItemStack stack, int mode) {
@@ -222,13 +249,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		setMode(stack, mode.ordinal());
 	}
 
-	public static void setType(ItemStack stack, int type) {
+	public static void setSchema(ItemStack stack, SonicSchema schema) {
 		NbtCompound nbtCompound = stack.getOrCreateNbt();
-		nbtCompound.putInt(SONIC_TYPE, type);
-	}
-
-	public static void setType(ItemStack stack, SonicTypes type) {
-		setMode(stack, type.ordinal());
+		nbtCompound.putString(SONIC_TYPE, schema.id().toString());
 	}
 
 	private static void setPreviousMode(ItemStack stack) {
@@ -254,17 +277,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		return Mode.values()[mode];
 	}
 
-	public static SonicTypes intToSonicType(int type) {
-		return SonicTypes.values()[type];
-	}
-
 	// ew
 	public static Mode findMode(ItemStack stack) {
 		return intToMode(findModeInt(stack));
-	}
-
-	public static SonicTypes findSonicType(ItemStack stack) {
-		return intToSonicType(findTypeInt(stack));
 	}
 
 	// Fuel
@@ -295,9 +310,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	@Override
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
 		NbtCompound tag = stack.getOrCreateNbt();
-		String text = tag.contains("tardis") ? tag.getString("tardis").substring(0, 8)
-				: Text.translatable("message.ait.sonic.none").getString();
-		String position = Text.translatable("message.ait.sonic.none").getString();
+        String position = Text.translatable("message.ait.sonic.none").getString();
+
 		if (tag.contains("tardis")) {
 			Tardis tardis = ClientTardisManager.getInstance().getTardis(UUID.fromString(tag.getString("tardis")));
 			if (tardis != null)
@@ -331,9 +345,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 			tooltip.add(Text.literal("Position: ").formatted(Formatting.BLUE));
 			tooltip.add(Text.literal("> " + position).formatted(Formatting.GRAY));
 		}
+
 		tooltip.add(Text.translatable("message.ait.sonic.currenttype").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
-		Text sonicType = Text.literal(findSonicType(stack).asString()).formatted(Formatting.DARK_GRAY, Formatting.ITALIC);
-		tooltip.add(sonicType);
+		tooltip.add(Text.literal(findSchema(stack).name()).formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
 	}
 
 	public enum Mode implements StringIdentifiable {
@@ -413,13 +427,15 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 				if (tardis == null) return;
 				if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exteriorBlockEntity) {
 					if (exteriorBlockEntity.findTardis().isEmpty()) return;
-					int repairticksleft = exteriorBlockEntity.findTardis().get().getHandlers().getCrashData().getRepairTicks();
-					int repairminutes = repairticksleft / 20 / 60;
-					if (repairticksleft == 0) {
+					int repairTicksLeft = exteriorBlockEntity.findTardis().get().getHandlers().getCrashData().getRepairTicks();
+					int repairMins = repairTicksLeft / 20 / 60;
+
+					if (repairTicksLeft == 0) {
 						player.sendMessage(Text.translatable("tardis.sonic.not_damaged").formatted(Formatting.GOLD), true); // Your tardis is not damaged
 						return;
 					}
-					player.sendMessage(Text.literal("You have " + repairminutes + (repairminutes == 1 ? " minute" : " minutes") + " of repair left.").formatted(Formatting.GOLD), true);
+
+					player.sendMessage(Text.literal("You have " + repairMins + (repairMins == 1 ? " minute" : " minutes") + " of repair left.").formatted(Formatting.GOLD), true);
 					return;
 				}
 				if (world == TardisUtil.getTardisDimension()) {
@@ -452,19 +468,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		}
 
 		public abstract void run(@Nullable Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack);
-
-		@Override
-		public String asString() {
-			return StringUtils.capitalize(this.toString().replace("_", " "));
-		}
-	}
-
-	public enum SonicTypes implements StringIdentifiable {
-		PRIME,
-		MECHANICAL,
-		CORAL,
-		RENAISSANCE,
-		FOB;
 
 		@Override
 		public String asString() {

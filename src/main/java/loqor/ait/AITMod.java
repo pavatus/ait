@@ -78,11 +78,13 @@ public class AITMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ConsoleRegistry.init();
-		DesktopRegistry.getInstance().init();
-		CategoryRegistry.getInstance();
 		HumsRegistry.init();
 		CreakRegistry.init();
 		SequenceRegistry.init();
+
+		DesktopRegistry.getInstance().init();
+		CategoryRegistry.getInstance().init();
+		SonicRegistry.getInstance().init();
 
 		// These 3 have client registries which also need registering.
 		ConsoleVariantRegistry.getInstance().init();

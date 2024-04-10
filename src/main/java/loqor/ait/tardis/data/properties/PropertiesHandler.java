@@ -2,6 +2,7 @@ package loqor.ait.tardis.data.properties;
 
 import com.google.gson.internal.LinkedTreeMap;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
+import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.FuelData;
@@ -183,6 +184,14 @@ public class PropertiesHandler {
 	}
 
 	public static boolean isSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema) {
+		return getBool(holder, schema.id().getPath() + "_unlocked");
+	}
+
+	public static void setSonicUnlocked(PropertiesHolder holder, SonicSchema schema, boolean value) {
+		set(holder, schema.id().getPath() + "_unlocked", value);
+	}
+
+	public static boolean isSonicUnlocked(PropertiesHolder holder, SonicSchema schema) {
 		return getBool(holder, schema.id().getPath() + "_unlocked");
 	}
 
