@@ -32,7 +32,6 @@ import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.*;
 import loqor.ait.registry.*;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.console.type.ConsoleTypeSchema;
@@ -47,7 +46,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -206,6 +204,10 @@ public class AITModClient implements ClientModInitializer {
             DesktopRegistry.getInstance().readFromServer(buf);
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(SonicRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
+            SonicRegistry.getInstance().readFromServer(buf);
+        });
+
         ClientPlayNetworking.registerGlobalReceiver(ExteriorVariantRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
             PacketByteBuf copy = PacketByteBufs.copy(buf);
 
@@ -281,7 +283,7 @@ public class AITModClient implements ClientModInitializer {
 
     public void sonicModelPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F);
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("sonic_type"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findTypeInt(itemStack) / 5f);
+        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("sonic_type"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findSchema(itemStack).model());
         ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F);
         ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F);
         ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F);
