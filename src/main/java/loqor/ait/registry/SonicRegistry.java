@@ -51,7 +51,7 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
             register(buf.decodeAsJson(DatapackSonic.CODEC));
         }
 
-        AITMod.LOGGER.info("Read {} desktops from server", size);
+        AITMod.LOGGER.info("Read {} sonics from server", size);
     }
 
     public static SonicRegistry getInstance() {
@@ -88,7 +88,7 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
 
             @Override
             public void reload(ResourceManager manager) {
-                DesktopRegistry.getInstance().clearCache();
+                SonicRegistry.getInstance().clearCache();
 
                 for (Identifier id : manager.findResources("sonic", filename -> filename.getPath().endsWith(".json")).keySet()) {
                     try (InputStream stream = manager.getResource(id).get().getInputStream()) {
@@ -120,7 +120,7 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
     }
 
     /**
-     * Unlocks all desktops for all tardises, usually when someone calls /reload as this wont be ran when the world starts
+     * Unlocks all sonics for all players, usually when someone calls /reload as this wont be ran when the world starts
      * bad but oh well
      */
     private void giveOutSonics() {

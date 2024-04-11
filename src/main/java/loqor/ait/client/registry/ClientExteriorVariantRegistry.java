@@ -94,6 +94,9 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 			}
 
 			@Override
+			public Identifier snowTexture() {return null;}
+
+			@Override
 			public Identifier emission() {
 				return variant.emission();
 			}

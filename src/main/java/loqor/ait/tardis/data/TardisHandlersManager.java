@@ -36,6 +36,7 @@ public class TardisHandlersManager extends TardisLink {
 	private SonicHandler sonic;
 	private ShieldData shields;
 	private PermissionHandler permissions;
+	private BiomeHandler biome;
 
 	// private final SequenceHandler sequence;
 
@@ -61,6 +62,7 @@ public class TardisHandlersManager extends TardisLink {
 		this.sonic = new SonicHandler(tardis);
 		this.shields = new ShieldData(tardis);
 		this.permissions = new PermissionHandler(tardis);
+		this.biome = new BiomeHandler(tardis);
 		// this.sequence = new SequenceHandler(tardisId);
 
 		generateTickables();
@@ -88,6 +90,7 @@ public class TardisHandlersManager extends TardisLink {
 		addTickable(getCrashData());
 		addTickable(getSonic());
 		addTickable(getShields());
+		addTickable(getBiomeHandler());
 		// addTickable(getSequencing()); // todo sequences
 	}
 
@@ -208,6 +211,13 @@ public class TardisHandlersManager extends TardisLink {
 			this.interior = new InteriorChangingHandler(this.findTardis().get());
 		}
 		return interior;
+	}
+
+	public BiomeHandler getBiomeHandler() {
+		if (this.biome == null && this.findTardis().isPresent()) {
+			this.biome = new BiomeHandler(this.findTardis().get());
+		}
+		return biome;
 	}
 
 	public SequenceHandler getSequenceHandler() {

@@ -33,7 +33,7 @@ public class AutoPilotControl extends Control {
 		}
 
 		// @TODO make a real world flight control.. later
-		/*if(player.isSneaking() && tardis.getTravel().getState() == TardisTravel.State.LANDED) {
+		if(player.isSneaking() && tardis.getTravel().getState() == TardisTravel.State.LANDED) {
 			if(tardis.getDoor().isOpen()) {
 				world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_CHAIN_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
 				return true;
@@ -44,7 +44,7 @@ public class AutoPilotControl extends Control {
 			player.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));
 			TardisRealEntity.spawnFromTardisId(tardis.getExterior().getExteriorPos().getWorld(), tardis.getUuid(), tardis.getExterior().getExteriorPos(), player, player.getBlockPos());
 			return true;
-		}*/
+		}
 
 		PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, !PropertiesHandler.willAutoPilot(tardis.getHandlers().getProperties()));
 
