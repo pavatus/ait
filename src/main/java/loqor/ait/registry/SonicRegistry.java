@@ -63,18 +63,13 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
         return INSTANCE;
     }
 
+    // The reason why those 2 are set in stone, is because the PRIME sonic is the default and the MECHANICAL one requires special rendering handling
     public static SonicSchema PRIME;
     public static SonicSchema MECHANICAL;
-    public static SonicSchema CORAL;
-    public static SonicSchema RENAISSANCE;
-    public static SonicSchema FOB;
 
     private void initSonics() {
         PRIME = register(new BuiltInSonic("prime", "Prime", 0));
         MECHANICAL = register(new BuiltInSonic("mechanical", "Mechanical", 1));
-        CORAL = register(new BuiltInSonic("coral", "Coral", 2));
-        RENAISSANCE = register(new BuiltInSonic("renaissance", "Renaissance", 3));
-        FOB = register(new BuiltInSonic("fob", "Fob", 4));
     }
 
     public int indexOf(SonicSchema schema) {

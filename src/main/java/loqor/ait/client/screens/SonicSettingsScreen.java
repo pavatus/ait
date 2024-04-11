@@ -106,11 +106,14 @@ public class SonicSettingsScreen extends ConsoleScreen {
     }
 
     public void sendSonicChangePacket() {
-        if(!tardis().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return;
-        tardis().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC).getOrCreateNbt().putInt(SonicItem.SONIC_TYPE, this.selectedSonic);
-        ClientTardisUtil.changeSonicWithScreen(this.tardisId, this.selectedSonic);
-    }
+        if(!tardis().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC))
+            return;
 
+        SonicSchema schema = SonicRegistry.getInstance().get(this.selectedSonic);
+
+        SonicItem.setSchema(tardis().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC), schema);
+        ClientTardisUtil.changeSonicWithScreen(this.tardisId, schema);
+    }
 
     private <T extends ClickableWidget> void addButton(T button) {
         this.addDrawableChild(button);
@@ -155,9 +158,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
             MatrixStack stack = context.getMatrices();
 
             ItemStack sonicCopy = sonic.copy();
-            NbtCompound copiedNbt = sonicCopy.getOrCreateNbt();
-
-            copiedNbt.putString(SonicItem.SONIC_TYPE, SonicRegistry.getInstance().get(this.selectedSonic).id().toString());
+            SonicItem.setSchema(sonicCopy, SonicRegistry.getInstance().get(this.selectedSonic));
             stack.push();
 
             if(!SonicItem.findSchema(sonicCopy).equals(SonicRegistry.MECHANICAL)) {

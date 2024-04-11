@@ -14,6 +14,7 @@ import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.registry.CategoryRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
+import loqor.ait.registry.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.control.impl.pos.PosType;
@@ -109,10 +110,10 @@ public class TardisUtil {
 		});
 		ServerPlayNetworking.registerGlobalReceiver(ClientTardisUtil.CHANGE_SONIC, (server, player, handler, buf, responseSender) -> {
 			UUID uuid = buf.readUuid();
-			int sonicType = buf.readInt();
+			Identifier id = buf.readIdentifier();
+
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-			tardis.getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC)
-					.getOrCreateNbt().putInt(SonicItem.SONIC_TYPE, sonicType);
+			SonicItem.setSchema(tardis.getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC), id); // here we trust in the server with all of our might
 		});
 		ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
 				(server, player, handler, buf, responseSender) -> {

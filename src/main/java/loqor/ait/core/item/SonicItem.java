@@ -1,5 +1,6 @@
 package loqor.ait.core.item;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.tardis.ArtronHolderItem;
 import loqor.ait.api.tardis.LinkableItem;
 import loqor.ait.core.AITBlocks;
@@ -181,7 +182,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 		nbt.putInt(MODE_KEY, 0);
 		nbt.putDouble(FUEL_KEY, getMaxFuel(stack));
-		nbt.putInt(SONIC_TYPE, 0);
+		nbt.putString(SONIC_TYPE, SonicRegistry.PRIME.id().toString());
 
 		return stack;
 	}
@@ -216,10 +217,19 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		fixSchemaId(nbtCompound);
 		Identifier id = Identifier.tryParse(nbtCompound.getString(SONIC_TYPE));
 
-		if (id == null)
+		if (id == null) {
+			AITMod.LOGGER.warn("Couldn't parse sonic id: '" + nbtCompound.getString(SONIC_TYPE) + "'");
 			return SonicRegistry.PRIME;
+		}
 
-		return SonicRegistry.getInstance().get(id);
+		SonicSchema schema = SonicRegistry.getInstance().get(id);
+
+		if (schema == null) {
+			AITMod.LOGGER.warn("Couldn't find sonic with id: '" + id + "'! Allowed options: " + SonicRegistry.getInstance().toList());
+			return SonicRegistry.PRIME;
+		}
+
+		return schema;
 	}
 
 	public static SonicSchema findSchema(ItemStack stack) {
@@ -234,6 +244,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		if (compound.get(SONIC_TYPE).getType() != NbtElement.INT_TYPE)
 			return;
 
+		AITMod.LOGGER.info("Fixing old sonic data...");
 		int id = compound.getInt(SONIC_TYPE);
 
 		compound.remove(SONIC_TYPE);
@@ -250,8 +261,12 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	}
 
 	public static void setSchema(ItemStack stack, SonicSchema schema) {
+		setSchema(stack, schema.id());
+	}
+
+	public static void setSchema(ItemStack stack, Identifier id) {
 		NbtCompound nbtCompound = stack.getOrCreateNbt();
-		nbtCompound.putString(SONIC_TYPE, schema.id().toString());
+		nbtCompound.putString(SONIC_TYPE, id.toString());
 	}
 
 	private static void setPreviousMode(ItemStack stack) {
