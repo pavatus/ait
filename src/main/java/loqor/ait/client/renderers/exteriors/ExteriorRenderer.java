@@ -9,6 +9,7 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.tardis.TardisExterior;
+import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.AbsoluteBlockPos;
@@ -85,6 +86,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f :
 				MinecraftClient.getInstance().player.getHeadYaw() + ((wrappedDegrees > -135 && wrappedDegrees < 135) ? 180f : 0f)));
 
+		if(/*PropertiesHandler.getBool(entity.findTardis().get().getHandlers().getProperties(), BiomeHandler.SNOWY) && */exteriorVariant.snowTexture() != null) {
+			texture = exteriorVariant.snowTexture();
+		}
 
 		// -------------------------------------------------------------------------------------------------------------------
 

@@ -18,6 +18,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
@@ -111,6 +113,12 @@ public class HammerItem extends SwordItem {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+		world.playSoundFromEntity(null, user, SoundEvents.ENTITY_DOLPHIN_HURT, SoundCategory.PLAYERS, 1f, 1f);
+		return super.use(world, user, hand);
 	}
 
 	@Override

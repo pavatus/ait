@@ -48,6 +48,7 @@ public abstract class ClientExteriorVariantSchema implements Identifiable {
 	}
 
 	public abstract Identifier texture();
+	public abstract Identifier snowTexture();
 
 	public abstract Identifier emission();
 
