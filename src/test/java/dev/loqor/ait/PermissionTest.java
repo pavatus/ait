@@ -10,11 +10,11 @@ public class PermissionTest {
     public static void main(String[] args) {
         PermissionMap map = new PermissionMap();
 
-        map.set(Permission.USE.TRAVEL, true);
-        map.set(Permission.USE.ATTUNE, false);
+        map.add(Permission.USE.TRAVEL);
+        map.add(Permission.USE.ATTUNE);
 
-        assertEquals(map.get(Permission.USE.ATTUNE), false);
-        assertEquals(map.get(Permission.USE.TRAVEL), true);
+        assertEquals(map.contains(Permission.USE.ATTUNE), false);
+        assertEquals(map.contains(Permission.USE.TRAVEL), true);
 
         assertEquals(Permission.from("tardis.use.travel"), Permission.USE.TRAVEL);
     }

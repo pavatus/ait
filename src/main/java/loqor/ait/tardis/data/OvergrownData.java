@@ -19,7 +19,7 @@ public class OvergrownData extends TardisLink {
 	private int ticks; // same as usual
 
 	public OvergrownData(Tardis tardis) {
-		super(tardis, "overgrown");
+		super(tardis, TypeId.OVERGROWN);
 	}
 
 	public int getTicks() {

@@ -98,7 +98,7 @@ public class TardisCrashData extends TardisLink {
 	}
 
 	public TardisCrashData(Tardis tardis) {
-		super(tardis, "crash");
+		super(tardis, TypeId.CRASH);
 	}
 
 	public State getState() {

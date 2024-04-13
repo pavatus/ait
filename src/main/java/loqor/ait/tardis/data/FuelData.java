@@ -21,7 +21,7 @@ public class FuelData extends TardisLink implements ArtronHolder {
 	public static final String REFUELING = "refueling";
 
 	public FuelData(Tardis tardis) {
-		super(tardis, "fuel");
+		super(tardis, TypeId.FUEL);
 	}
 
 	private static void createFuelSyncDelay(Tardis tardis) {

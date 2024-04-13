@@ -1,5 +1,5 @@
 {
-	"parent": "ait:item/sonic_screwdriver",
+	"parent": "ait:item/sonic/prime",
 	"textures": {
 		"0": "ait:item/sonic_tools/prime_inactive"
 	}

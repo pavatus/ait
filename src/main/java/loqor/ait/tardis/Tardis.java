@@ -10,6 +10,7 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.TardisHandlersManager;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
@@ -69,7 +70,6 @@ public class Tardis {
 		return uuid;
 	}
 
-
 	public TardisDesktop getDesktop() {
 		return desktop;
 	}
@@ -80,6 +80,10 @@ public class Tardis {
 
 	public DoorData getDoor() {
 		return this.getHandlers().getDoor();
+	}
+
+	public SonicHandler getSonic() {
+		return this.getHandlers().getSonic();
 	}
 
 	// dont use this

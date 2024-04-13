@@ -21,7 +21,7 @@ public class ShieldData extends TardisLink {
 	public static String IS_VISUALLY_SHIELDED = "is_visually_shielded";
 
 	public ShieldData(Tardis tardis) {
-		super(tardis, "shield");
+		super(tardis, TypeId.SHIELD);
 	}
 
 	public void enable() {

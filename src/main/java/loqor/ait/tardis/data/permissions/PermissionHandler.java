@@ -2,7 +2,6 @@ package loqor.ait.tardis.data.permissions;
 
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TardisLink;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.HashMap;
@@ -10,12 +9,11 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PermissionHandler extends TardisLink {
-    private final Map<UUID, PermissionMap> permissions;
-    private static final String KEY = "permissions";
+    private final Map<UUID, PermissionMap> data;
 
     public PermissionHandler(Tardis tardis, Map<UUID, PermissionMap> map) {
-        super(tardis, "permissions");
-        this.permissions = map;
+        super(tardis, TypeId.PERMISSIONS);
+        this.data = map;
     }
 
     public PermissionHandler(Tardis tardis) {
@@ -23,26 +21,31 @@ public class PermissionHandler extends TardisLink {
     }
 
     public boolean check(ServerPlayerEntity player, Permission permission) {
-        return this.getPermissionMap(player).get(permission);
+        return this.getPermissionMap(player).contains(permission);
     }
 
     public void set(ServerPlayerEntity player, Permission permission, boolean value) {
-        this.getPermissionMap(player).put(permission, value);
+        PermissionMap map = this.getPermissionMap(player);
+        System.out.println("got perm map");
+
+        if (value)
+            map.add(permission);
+        else
+            map.remove(permission);
+
+        System.out.println("aaaa");
         this.sync();
+        System.out.println("aaaaaaahhhh");
     }
 
     private PermissionMap getPermissionMap(ServerPlayerEntity player) {
-        PermissionMap result = permissions.get(player.getUuid());
+        PermissionMap result = data.get(player.getUuid());
 
         if (result != null)
             return result;
 
-        permissions.put(player.getUuid(), new PermissionMap());
-        return this.getPermissionMap(player);
-    }
-
-    @Override
-    protected void sync() {
-        PropertiesHandler.set(this.findTardis().get(), KEY, permissions);
+        result = new PermissionMap();
+        data.put(player.getUuid(), result);
+        return result;
     }
 }

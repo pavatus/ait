@@ -30,7 +30,7 @@ public class StatsData extends TardisLink {
 	private static final String DATE_KEY = "date";
 
 	public StatsData(Tardis tardis) {
-		super(tardis, "stats");
+		super(tardis, TypeId.STATS);
 	}
 
 	public String getName() {

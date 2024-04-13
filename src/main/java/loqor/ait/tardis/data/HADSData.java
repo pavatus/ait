@@ -18,7 +18,7 @@ import java.util.List;
 public class HADSData extends TardisLink {
 
 	public HADSData(Tardis tardis) {
-		super(tardis, "hads");
+		super(tardis, TypeId.HADS);
 	}
 
 	public boolean isHADSActive() {

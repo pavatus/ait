@@ -37,7 +37,8 @@ public class TardisDesktop extends TardisLink {
 	private final Corners corners;
 
 	public TardisDesktop(Tardis tardis, TardisDesktopSchema schema) {
-		super(tardis, "desktop");
+		super(tardis, TypeId.DESKTOP);
+
 		this.schema = schema;
 		this.corners = TardisUtil.findInteriorSpot();
 
@@ -45,7 +46,8 @@ public class TardisDesktop extends TardisLink {
 	}
 
 	public TardisDesktop(Tardis tardis, TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed door, AbsoluteBlockPos.Directed console) {
-		super(tardis, "desktop");
+		super(tardis, TypeId.DESKTOP);
+
 		this.schema = schema;
 		this.corners = corners;
 		this.doorPos = door;
@@ -73,14 +75,15 @@ public class TardisDesktop extends TardisLink {
 		for (BlockPos pos : this.iterateOverInterior()) {
 			entity = TardisUtil.getTardisDimension().getBlockEntity(pos);
 			if (entity == null) continue;
+
 			if (doorPos == null && entity instanceof DoorBlockEntity door) {
 				door.setTardis(this.findTardis().get());
 				continue;
 			}
+
 			if (consolePos == null && entity instanceof ConsoleBlockEntity console) {
 				console.setTardis(this.findTardis().get());
-				continue;
-			}
+            }
 		}
 	}
 
@@ -183,12 +186,14 @@ public class TardisDesktop extends TardisLink {
 	public void changeInterior(TardisDesktopSchema schema) {
 		long currentTime = System.currentTimeMillis();
 		this.schema = schema;
+
 		DesktopGenerator generator = new DesktopGenerator(this.schema);
 		BlockPos doorPos = generator.place((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
 		if (doorPos != null) {
 			this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
 			this.updateDoor();
 		}
+
 		AITMod.LOGGER.warn("Time taken to generate interior: " + (System.currentTimeMillis() - currentTime));
 	}
 

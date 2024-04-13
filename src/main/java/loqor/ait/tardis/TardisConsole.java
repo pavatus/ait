@@ -27,7 +27,7 @@ public class TardisConsole extends TardisLink {
 	private int ticks = 0;
 
 	protected TardisConsole(Tardis tardis, AbsoluteBlockPos pos, UUID uuid) {
-		super(tardis, "console");
+		super(tardis, TypeId.CONSOLE);
 		this.position = pos;
 		this.uuid = uuid;
 	}

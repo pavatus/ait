@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DatapackSonic extends SonicSchema {
@@ -18,11 +19,14 @@ public class DatapackSonic extends SonicSchema {
             instance -> instance.group(
                     Identifier.CODEC.fieldOf("id").forGetter(SonicSchema::id),
                     Codec.STRING.fieldOf("name").forGetter(SonicSchema::name),
-                    Codec.INT.fieldOf("model").forGetter(SonicSchema::model)
+                    Models.CODEC.fieldOf("models").forGetter(SonicSchema::models),
+
+                    Rendering.CODEC.optionalFieldOf("rendering")
+                            .forGetter(schema -> Optional.of(schema.rendering()))
             ).apply(instance, DatapackSonic::new));
 
-    public DatapackSonic(Identifier id, String name, int model) {
-        super(id, name, model);
+    public DatapackSonic(Identifier id, String name, Models models, Optional<Rendering> rendering) {
+        super(id, name, models, rendering.orElse(new Rendering()));
     }
 
     public static SonicSchema fromInputStream(InputStream stream) {

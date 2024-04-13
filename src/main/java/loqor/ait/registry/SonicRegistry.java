@@ -1,9 +1,9 @@
 package loqor.ait.registry;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.item.sonic.BuiltinSonic;
 import loqor.ait.core.item.sonic.DatapackSonic;
 import loqor.ait.core.item.sonic.SonicSchema;
-import loqor.ait.core.item.sonic.impl.BuiltInSonic;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -18,6 +18,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
+import java.util.function.Consumer;
+
+import static loqor.ait.AITMod.LOGGER;
 
 public class SonicRegistry extends DatapackRegistry<SonicSchema> {
 
@@ -63,18 +66,21 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
         return INSTANCE;
     }
 
-    // The reason why those 2 are set in stone, is because the PRIME sonic is the default and the MECHANICAL one requires special rendering handling
-    public static SonicSchema PRIME;
-    public static SonicSchema MECHANICAL;
-
-    private void initSonics() {
-        PRIME = register(new BuiltInSonic("prime", "Prime", 0));
-        MECHANICAL = register(new BuiltInSonic("mechanical", "Mechanical", 1));
-    }
+    public static SonicSchema DEFAULT;
 
     public int indexOf(SonicSchema schema) {
         return this.toList().indexOf(schema);
     }
+
+    /**
+     * THOSE FIELDS ARE ONLY USED WHEN THE REST OF THE RESOURCES ARE NOT INITIALIZED
+     * To not reload the game the second time, it's better to keep the builtin stuff semi-loaded
+     */
+    private SonicSchema PRIME = register(BuiltinSonic.create("prime"));
+    private SonicSchema MECHANICAL = register(BuiltinSonic.create("prime"));
+    private SonicSchema FOB = register(BuiltinSonic.create("prime"));
+    private SonicSchema CORAL = register(BuiltinSonic.create("prime"));
+    private SonicSchema RENAISSANCE = register(BuiltinSonic.create("prime"));
 
     public void init() {
         super.init();
@@ -88,7 +94,7 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
 
             @Override
             public void reload(ResourceManager manager) {
-                SonicRegistry.getInstance().clearCache();
+                SonicRegistry.this.clearCache();
 
                 for (Identifier id : manager.findResources("sonic", filename -> filename.getPath().endsWith(".json")).keySet()) {
                     try (InputStream stream = manager.getResource(id).get().getInputStream()) {
@@ -99,7 +105,7 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
                             continue;
                         }
 
-                        SonicRegistry.getInstance().register(created);
+                        SonicRegistry.this.register(created);
                         stream.close();
 
                         AITMod.LOGGER.info("Loaded datapack sonic " + created.id().toString());
@@ -114,22 +120,28 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
         });
     }
 
-    public void clearCache() {
-        REGISTRY.clear();
-        initSonics();
-    }
-
     /**
      * Unlocks all sonics for all players, usually when someone calls /reload as this wont be ran when the world starts
      * bad but oh well
      */
     private void giveOutSonics() {
+        DEFAULT = this.get(0);
+
         if (ServerTardisManager.getInstance() == null) return;
 
         for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
             for (SonicSchema schema : SonicRegistry.getInstance().toList()) {
                 tardis.unlockSonic(schema);
             }
+        }
+    }
+
+    public void populateModels(Consumer<Identifier> consumer) {
+        for (SonicSchema schema : REGISTRY.values()) {
+            SonicSchema.Models models = schema.models();
+            models.load(consumer);
+
+            LOGGER.info("Loading sonic '" + schema.id() + "' with models: " + models);
         }
     }
 }

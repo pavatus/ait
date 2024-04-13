@@ -1,5 +1,5 @@
 {
-	"parent": "ait:item/coral",
+	"parent": "ait:item/sonic/coral",
 	"textures": {
 		"0": "ait:item/sonic_tools/coral_tardis"
 	}

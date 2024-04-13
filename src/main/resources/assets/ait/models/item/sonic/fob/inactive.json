@@ -1,5 +1,5 @@
 {
-	"parent": "ait:item/fob",
+	"parent": "ait:item/sonic/fob",
 	"textures": {
 		"0": "ait:item/sonic_tools/fob_inactive"
 	}

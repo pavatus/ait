@@ -14,7 +14,7 @@ public class LoyaltyHandler extends TardisLink {
     private final Map<UUID, Loyalty> data;
 
     public LoyaltyHandler(Tardis tardis, HashMap<UUID, Loyalty> data) {
-        super(tardis, "loyalty");
+        super(tardis, TypeId.LOYALTY);
         this.data = data;
     }
 

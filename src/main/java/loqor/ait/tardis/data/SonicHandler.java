@@ -26,7 +26,7 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 	private int sfxTicks = 0; // Sonic use sound tick for exterior
 
 	public SonicHandler(Tardis tardis) {
-		super(tardis, "sonic");
+		super(tardis, TypeId.SONIC);
 	}
 
 	public boolean hasSonic(String sonic) {

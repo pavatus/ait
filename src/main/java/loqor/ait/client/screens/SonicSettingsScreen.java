@@ -150,25 +150,21 @@ public class SonicSettingsScreen extends ConsoleScreen {
         ItemStack sonic = tardis().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC);
         NbtCompound nbt = sonic.getOrCreateNbt();
 
-        if(!nbt.contains(SonicItem.SONIC_TYPE))
-            return;
-
         if (getFromUUID(tardisId) != null) {
-
             MatrixStack stack = context.getMatrices();
 
             ItemStack sonicCopy = sonic.copy();
-            SonicItem.setSchema(sonicCopy, SonicRegistry.getInstance().get(this.selectedSonic));
+            SonicSchema schema = SonicRegistry.getInstance().get(this.selectedSonic);
+
+            SonicItem.setSchema(sonicCopy, schema);
             stack.push();
 
-            if(!SonicItem.findSchema(sonicCopy).equals(SonicRegistry.MECHANICAL)) {
-                stack.translate(x, y, 0f);
-                stack.scale(scale, scale, scale);
-            } else {
-                float mechanicalScale = scale - 1.5f;
-                stack.translate(x + 10f, y + 10f, 0f);
-                stack.scale(mechanicalScale, mechanicalScale, mechanicalScale);
-            }
+            SonicSchema.Rendering rendering = schema.rendering();
+            SonicSchema.Rendering.Offset positionOffset = rendering.getPositionOffset();
+            SonicSchema.Rendering.Offset scaleOffset = rendering.getScaleOffset();
+
+            stack.translate(x + positionOffset.x(), y + positionOffset.y(), positionOffset.z());
+            stack.scale(scale + scaleOffset.x(), scale + scaleOffset.y(), scale + scaleOffset.z());
 
             DiffuseLighting.disableGuiDepthLighting();
             context.drawItem(sonicCopy,0, 0);

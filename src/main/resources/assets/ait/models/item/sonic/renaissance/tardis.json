@@ -1,5 +1,5 @@
 {
-	"parent": "ait:item/renaissance",
+	"parent": "ait:item/sonic/renaissance",
 	"textures": {
 		"0": "ait:item/sonic_tools/renaissance_tardis"
 	}

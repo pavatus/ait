@@ -27,7 +27,7 @@ public class SequenceHandler extends TardisLink {
 	private Sequence activeSequence;
 
 	public SequenceHandler(Tardis tardisId) {
-		super(tardisId, "sequence");
+		super(tardisId, TypeId.SEQUENCE);
 		recent = new RecentControls(tardisId.getUuid());
 		activeSequence = null;
 	}

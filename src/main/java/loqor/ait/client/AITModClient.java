@@ -4,6 +4,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.registry.ClientConsoleVariantRegistry;
 import loqor.ait.client.registry.ClientDoorRegistry;
 import loqor.ait.client.registry.ClientExteriorVariantRegistry;
+import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
@@ -30,6 +31,8 @@ import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.*;
+import loqor.ait.core.item.sonic.DatapackSonic;
+import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.core.util.UnclampedModelPredicateProvider;
 import loqor.ait.registry.*;
 import loqor.ait.tardis.Tardis;
@@ -46,11 +49,15 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -60,18 +67,34 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.json.JsonUnbakedModel;
+import net.minecraft.client.render.model.json.ModelOverrideList;
+import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ReloadableResourceManagerImpl;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.GlobalPos;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static loqor.ait.AITMod.*;
@@ -86,7 +109,6 @@ public class AITModClient implements ClientModInitializer {
         setupBlockRendering();
         blockEntityRendererRegister();
         entityRenderRegister();
-        sonicModelPredicate();
         riftScannerPredicate();
         chargedZeitonCrystalPredicate();
         waypointPredicate();
@@ -282,13 +304,21 @@ public class AITModClient implements ClientModInitializer {
         });
     }
 
-    public void sonicModelPredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F);
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("sonic_type"), (UnclampedModelPredicateProvider) (stack, world, entity, seed) -> stack.hasNbt() ? SonicItem.findSchema(stack).model() : 0.0F);
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F);
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F);
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F);
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 4 ? 1.0F : 0.0F);
+    public static void sonicModelPredicate() {
+        SonicRegistry.getInstance().populateModels(CustomItemRendering::load);
+
+        CustomItemRendering.register(new Identifier(MOD_ID, "sonic_screwdriver"), (model, stack, world, entity, seed) -> {
+            SonicItem.Mode mode = SonicItem.findMode(stack);
+            SonicSchema.Models models = SonicItem.findSchema(stack).models();
+
+            return switch (mode) {
+                case INACTIVE -> models.inactive();
+                case INTERACTION -> models.interaction();
+                case OVERLOAD -> models.overload();
+                case SCANNING -> models.scanning();
+                case TARDIS -> models.tardis();
+            };
+        });
     }
 
     public void waypointPredicate() {

@@ -182,7 +182,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 		nbt.putInt(MODE_KEY, 0);
 		nbt.putDouble(FUEL_KEY, getMaxFuel(stack));
-		nbt.putString(SONIC_TYPE, SonicRegistry.PRIME.id().toString());
+		nbt.putString(SONIC_TYPE, SonicRegistry.DEFAULT.id().toString());
 
 		return stack;
 	}
@@ -212,21 +212,21 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 	public static SonicSchema findSchema(NbtCompound nbtCompound) {
 		if (!nbtCompound.contains(SONIC_TYPE))
-			return SonicRegistry.PRIME;
+			return SonicRegistry.DEFAULT;
 
 		fixSchemaId(nbtCompound);
 		Identifier id = Identifier.tryParse(nbtCompound.getString(SONIC_TYPE));
 
 		if (id == null) {
 			AITMod.LOGGER.warn("Couldn't parse sonic id: '" + nbtCompound.getString(SONIC_TYPE) + "'");
-			return SonicRegistry.PRIME;
+			return SonicRegistry.DEFAULT;
 		}
 
 		SonicSchema schema = SonicRegistry.getInstance().get(id);
 
 		if (schema == null) {
 			AITMod.LOGGER.warn("Couldn't find sonic with id: '" + id + "'! Allowed options: " + SonicRegistry.getInstance().toList());
-			return SonicRegistry.PRIME;
+			return SonicRegistry.DEFAULT;
 		}
 
 		return schema;

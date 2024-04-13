@@ -1,25 +1,25 @@
 package loqor.ait.core.item.sonic;
 
-import com.google.gson.*;
-import loqor.ait.registry.ExteriorVariantRegistry;
-import loqor.ait.registry.SonicRegistry;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import loqor.ait.registry.datapack.Identifiable;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.InvalidIdentifierException;
 
-import java.lang.reflect.Type;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public abstract class SonicSchema implements Identifiable {
 
     private final Identifier id;
     private final String name;
-    private final int model;
+    private final Models models;
+    private final Rendering rendering;
 
-    protected SonicSchema(Identifier id, String name, int model) {
+    protected SonicSchema(Identifier id, String name, Models models, Rendering rendering) {
         this.id = id;
         this.name = name;
-        this.model = model;
+        this.models = models;
+        this.rendering = rendering;
     }
 
     @Override
@@ -31,8 +31,12 @@ public abstract class SonicSchema implements Identifiable {
         return name;
     }
 
-    public int model() {
-        return model;
+    public Models models() {
+        return models;
+    }
+
+    public Rendering rendering() {
+        return rendering;
     }
 
     @Override
@@ -46,28 +50,58 @@ public abstract class SonicSchema implements Identifiable {
         return o instanceof SonicSchema that && id.equals(that.id);
     }
 
-    public static Object serializer() {
-        return new Serializer();
+    public record Models(Identifier inactive, Identifier interaction, Identifier overload, Identifier scanning, Identifier tardis) {
+        static final Codec<Models> CODEC = RecordCodecBuilder.create(
+                instance -> instance.group(
+                        Identifier.CODEC.fieldOf("inactive").forGetter(Models::inactive),
+                        Identifier.CODEC.fieldOf("interaction").forGetter(Models::interaction),
+                        Identifier.CODEC.fieldOf("overload").forGetter(Models::overload),
+                        Identifier.CODEC.fieldOf("scanning").forGetter(Models::scanning),
+                        Identifier.CODEC.fieldOf("tardis").forGetter(Models::tardis)
+                ).apply(instance, Models::new)
+        );
+
+        public void load(Consumer<Identifier> consumer) {
+            consumer.accept(inactive);
+            consumer.accept(interaction);
+            consumer.accept(overload);
+            consumer.accept(scanning);
+            consumer.accept(tardis);
+        }
     }
 
-    private static class Serializer implements JsonSerializer<ExteriorVariantSchema>, JsonDeserializer<ExteriorVariantSchema> {
+    public record Rendering(Optional<Offset> positionOffset, Optional<Offset> scaleOffset) {
+        static final Codec<Rendering> CODEC = RecordCodecBuilder.create(
+                instance -> instance.group(
+                        Offset.CODEC.optionalFieldOf("position").forGetter(Rendering::positionOffset),
+                        Offset.CODEC.optionalFieldOf("scale").forGetter(Rendering::scaleOffset)
+                ).apply(instance, Rendering::new)
+        );
 
-        @Override
-        public ExteriorVariantSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Identifier id;
-
-            try {
-                id = new Identifier(json.getAsJsonPrimitive().getAsString());
-            } catch (InvalidIdentifierException e) {
-                id = SonicRegistry.PRIME.id();
-            }
-
-            return ExteriorVariantRegistry.getInstance().get(id);
+        public Rendering() {
+            this(Optional.of(new Offset()), Optional.of(new Offset()));
         }
 
-        @Override
-        public JsonElement serialize(ExteriorVariantSchema src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.id().toString());
+        public record Offset(float x, float y, float z) {
+            static final Codec<Offset> CODEC = RecordCodecBuilder.create(
+                    instance -> instance.group(
+                            Codec.FLOAT.fieldOf("x").forGetter(Offset::x),
+                            Codec.FLOAT.fieldOf("y").forGetter(Offset::y),
+                            Codec.FLOAT.fieldOf("z").forGetter(Offset::z)
+                    ).apply(instance, Offset::new)
+            );
+
+            public Offset() {
+                this(0, 0, 0);
+            }
+        }
+
+        public Offset getPositionOffset() {
+            return positionOffset.orElse(new Offset());
+        }
+
+        public Offset getScaleOffset() {
+            return scaleOffset.orElse(new Offset());
         }
     }
 }

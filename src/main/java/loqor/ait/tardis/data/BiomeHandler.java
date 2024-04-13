@@ -12,7 +12,7 @@ public class BiomeHandler extends TardisLink {
     public static final String SNOWY = "snowy";
 
     public BiomeHandler(Tardis tardis) {
-        super(tardis, "biome");
+        super(tardis, TypeId.BIOME);
     }
 
     @Override

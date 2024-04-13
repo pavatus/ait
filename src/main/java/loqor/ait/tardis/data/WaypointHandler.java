@@ -16,7 +16,7 @@ public class WaypointHandler extends TardisLink {
 	private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
 
 	public WaypointHandler(Tardis tardis) {
-		super(tardis, "waypoint");
+		super(tardis, TypeId.WAYPOINT);
 	}
 
 	public boolean hasCartridge() {

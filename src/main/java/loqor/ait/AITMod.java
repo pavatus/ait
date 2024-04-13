@@ -229,6 +229,7 @@ public class AITMod implements ModInitializer {
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			DesktopRegistry.getInstance().syncToClient(handler.getPlayer());
 			CategoryRegistry.getInstance().syncToClient(handler.getPlayer());
+			SonicRegistry.getInstance().syncToClient(handler.getPlayer());
 			ExteriorVariantRegistry.getInstance().syncToClient(handler.getPlayer());
 			ConsoleVariantRegistry.getInstance().syncToClient(handler.getPlayer());
 
