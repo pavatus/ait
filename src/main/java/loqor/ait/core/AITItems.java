@@ -43,5 +43,6 @@ public class AITItems implements ItemRegistryContainer {
 	public static final Item DRIFTING_MUSIC_DISC = new MusicDiscItem(1, AITSounds.DRIFTING_MUSIC, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 169);
 
 	// Block controls
-	public static final Item BUTTON_CONTROL = new GenericControlBlockItem(AITBlocks.BUTTON_CONTROL_BLOCK, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
+	//public static final Item BUTTON_CONTROL = new GenericControlBlockItem(AITBlocks.BUTTON_CONTROL_BLOCK, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 }

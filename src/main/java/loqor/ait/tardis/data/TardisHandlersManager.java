@@ -16,7 +16,6 @@ public class TardisHandlersManager extends TardisLink {
 	@Exclude
 	private List<TardisLink> tickables = new ArrayList<>();
 	// TODO - refactor of this class, i have ideas
-	// Yup
 	private DoorData door;
 	private PropertiesHolder properties;
 	private WaypointHandler waypoints;
@@ -37,9 +36,6 @@ public class TardisHandlersManager extends TardisLink {
 	private ShieldData shields;
 	private PermissionHandler permissions;
 	private BiomeHandler biome;
-
-	// private final SequenceHandler sequence;
-
 	public TardisHandlersManager(Tardis tardis) {
 		super(tardis, TypeId.HANDLERS);
 
@@ -63,7 +59,6 @@ public class TardisHandlersManager extends TardisLink {
 		this.shields = new ShieldData(tardis);
 		this.permissions = new PermissionHandler(tardis);
 		this.biome = new BiomeHandler(tardis);
-		// this.sequence = new SequenceHandler(tardisId);
 
 		generateTickables();
 	}
@@ -91,7 +86,6 @@ public class TardisHandlersManager extends TardisLink {
 		addTickable(getSonic());
 		addTickable(getShields());
 		addTickable(getBiomeHandler());
-		// addTickable(getSequencing()); // todo sequences
 	}
 
 	protected void addTickable(TardisLink var) {
@@ -101,7 +95,7 @@ public class TardisHandlersManager extends TardisLink {
 	/**
 	 * Called on the END of a servers tick
 	 *
-	 * @param server
+	 * @param server the current server
 	 */
 	public void tick(MinecraftServer server) {
 		if (tickables == null) generateTickables();
@@ -118,7 +112,7 @@ public class TardisHandlersManager extends TardisLink {
 	/**
 	 * Called on the START of a servers tick
 	 *
-	 * @param server
+	 * @param server the current server
 	 */
 	public void startTick(MinecraftServer server) {
 		if (tickables == null) generateTickables();
