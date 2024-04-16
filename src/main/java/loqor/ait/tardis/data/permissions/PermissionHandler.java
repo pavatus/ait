@@ -34,11 +34,7 @@ public class PermissionHandler extends TardisLink {
             map.remove(permission);
 
         System.out.println("aaaa");
-        this.sync(); //@TODO theo, with this, you dont have to sync anymore - if you use the
-        // PropertiesHandler, it can *sync a boolean value*. you do it above ^ with the value, so just do this
-        // logic somewhere else, and use the PropertiesHandler to sync the boolean value you set here, and then get it.
-        // The small problem, is that you'll need to store different keys for each permission, so, whether you like it or not, you will
-        // need to make it like that. Sorry not sorry.
+        this.sync();
         System.out.println("aaaaaaahhhh");
     }
 

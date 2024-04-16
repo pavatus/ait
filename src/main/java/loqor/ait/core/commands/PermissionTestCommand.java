@@ -56,13 +56,11 @@ public class PermissionTestCommand {
             Permission permission = Permission.from(StringArgumentType.getString(context, "permission"));
             boolean value = BoolArgumentType.getBool(context, "value");
 
-            context.getSource().getServer().execute(() -> {
-                boolean result = op.run(tardis, player, permission, value);
-                AITMod.LOGGER.debug(String.format(TEXT, op, permission.toString(), player.getName(), value, result));
-                context.getSource().sendMessage(Text.literal(
-                        String.format(TEXT, op, permission, player.getName(), value, result)
-                ));
-            });
+            boolean result = op.run(tardis, player, permission, value);
+            AITMod.LOGGER.debug(String.format(TEXT, op, permission.toString(), player.getName(), value, result));
+            context.getSource().sendMessage(Text.literal(
+                    String.format(TEXT, op, permission, player.getName(), value, result)
+            ));
         } catch (Exception e) {
             context.getSource().sendFeedback(() -> Text.literal(
                     "Failed to parse command! " + e.getMessage()
