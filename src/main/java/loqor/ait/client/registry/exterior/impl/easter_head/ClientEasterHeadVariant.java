@@ -28,10 +28,6 @@ public abstract class ClientEasterHeadVariant extends ClientExteriorVariantSchem
 	public Identifier texture() {
 		return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
 	}
-	@Override
-	public Identifier snowTexture() {
-		return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_snow.png");
-	}
 
 	@Override
 	public Identifier emission() {

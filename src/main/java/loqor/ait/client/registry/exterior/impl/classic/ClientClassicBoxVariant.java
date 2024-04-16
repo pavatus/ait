@@ -29,10 +29,6 @@ public abstract class ClientClassicBoxVariant extends ClientExteriorVariantSchem
 		return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
 	}
 
-	@Override
-	public Identifier snowTexture() {
-		return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_snow.png");
-	}
 
 	@Override
 	public Identifier emission() {

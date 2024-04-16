@@ -28,10 +28,6 @@ public class ClientDoomVariant extends ClientExteriorVariantSchema {
 	public Identifier texture() {
 		return DoomConstants.DOOM_FRONT_BACK;
 	}
-	@Override
-	public Identifier snowTexture() {
-		return null;
-	}
 
 	@Override
 	public Identifier emission() {

@@ -23,10 +23,6 @@ public class ClientGrowthVariant extends ClientExteriorVariantSchema {
 	public Identifier texture() {
 		return CoralRenderer.CORAL_GROWTH_TEXTURE;
 	}
-	@Override
-	public Identifier snowTexture() {
-		return null;
-	}
 
 	@Override
 	public Identifier emission() {

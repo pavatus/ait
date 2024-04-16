@@ -33,11 +33,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 	private ExteriorModel model;
 	private SiegeModeModel siege;
 	private ShieldsModel shieldsModel;
-	private final EntityRenderDispatcher dispatcher;
 
 
 	public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {
-		this.dispatcher = ctx.getEntityRenderDispatcher();
 	}
 
 	@Override
@@ -72,6 +70,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		if (MinecraftClient.getInstance().player == null) return;
 
+		//System.out.println(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey());
+
 		Identifier texture = exteriorVariant.texture();
 		Identifier emission = exteriorVariant.emission();
 
@@ -85,11 +85,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f :
 				MinecraftClient.getInstance().player.getHeadYaw() + ((wrappedDegrees > -135 && wrappedDegrees < 135) ? 180f : 0f)));
-
-		if(/*PropertiesHandler.getBool(entity.findTardis().get().getHandlers().getProperties(), BiomeHandler.SNOWY) && */exteriorVariant.snowTexture() != null) {
-			texture = exteriorVariant.snowTexture();
-		}
-
 		// -------------------------------------------------------------------------------------------------------------------
 
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
@@ -115,6 +110,10 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
 			if (entity.findTardis().get().getHandlers().getOvergrown().isOvergrown()) {
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.findTardis().get().getHandlers().getOvergrown().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+			}
+			Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey(), exteriorVariant.texture());
+			if (!texture.equals(biomeTexture)) {
+				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
 			}
 			if (emission != null && entity.findTardis().get().hasPower()) {
 				boolean alarms = PropertiesHandler.getBool(entity.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);

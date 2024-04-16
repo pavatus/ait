@@ -3,6 +3,7 @@ package loqor.ait.core.item.sonic;
 import loqor.ait.AITMod;
 import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.registry.SonicRegistry;
 import net.minecraft.util.Identifier;
 
 import static loqor.ait.AITMod.MOD_ID;
@@ -24,7 +25,7 @@ public class BuiltinSonic extends SonicSchema {
     }
 
     public static BuiltinSonic create(String id) {
-        Identifier[] identifiers = new Identifier[5];
+        Identifier[] identifiers = new Identifier[SonicRegistry.getInstance().size()];
 
         int i = 0;
         for (String sonic : SONICS) {
