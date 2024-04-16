@@ -13,6 +13,7 @@ import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.structure.OceanRuinStructure;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Locale;
 import java.util.Optional;
 
 public class BiomeHandler extends TardisLink {
@@ -44,15 +45,15 @@ public class BiomeHandler extends TardisLink {
         return PropertiesHandler.get(this.findTardis().get(), BIOME_KEY);
     }
 
-    public static Identifier biomeTypeFromKey(String biomeKey, Identifier texture) {
+    public static Identifier biomeTypeFromKey(String biomeKey, Identifier texture, Tardis tardis) {
         return switch(biomeKey) {
-            default -> BiomeType.DEFAULT.textureFromKey(texture);
-            case "snowy_taiga" -> BiomeType.SNOWY.textureFromKey(texture);
-            case "desert" -> BiomeType.SANDY.textureFromKey(texture);
-            case "mangrove_swamp" -> BiomeType.MUDDY.textureFromKey(texture);
-            case "the_end" -> BiomeType.CHORUS.textureFromKey(texture);
-            case "deep_dark" -> BiomeType.SCULK.textureFromKey(texture);
-            case "cherry_grove" -> BiomeType.CHERRY.textureFromKey(texture);
+            default -> BiomeType.DEFAULT.textureFromKey(texture, tardis);
+            case "snowy_taiga" -> BiomeType.SNOWY.textureFromKey(texture, tardis);
+            case "desert" -> BiomeType.SANDY.textureFromKey(texture, tardis);
+            case "mangrove_swamp" -> BiomeType.MUDDY.textureFromKey(texture, tardis);
+            case "the_end" -> BiomeType.CHORUS.textureFromKey(texture, tardis);
+            case "deep_dark" -> BiomeType.SCULK.textureFromKey(texture, tardis);
+            case "cherry_grove" -> BiomeType.CHERRY.textureFromKey(texture, tardis);
         };
     }
 
@@ -60,38 +61,74 @@ public class BiomeHandler extends TardisLink {
         DEFAULT(),
         SNOWY() {
             @Override
-            public Identifier textureFromKey(Identifier texture) {
-                return new Identifier(AITMod.MOD_ID, texture.getPath().replace(".png", "_snowy.png"));
+            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+                Identifier specific = new Identifier(AITMod.MOD_ID,
+                        texture.getPath().replace(".png", "_snowy.png"));
+                if(specific.getPath() == null) {
+                    return new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/" +
+                            tardis.getExterior().getCategory().name().toLowerCase() + "_snowy.png");
+                }
+                return specific;
             }
         },
         SCULK() {
             @Override
-            public Identifier textureFromKey(Identifier texture) {
-                return new Identifier(AITMod.MOD_ID, texture.getPath().replace(".png", "_sculk.png"));
+            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+                Identifier specific = new Identifier(AITMod.MOD_ID,
+                        texture.getPath().replace(".png", "_sculk.png"));
+                if(specific.getPath() == null) {
+                    return new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/" +
+                            tardis.getExterior().getCategory().name().toLowerCase() + "_sculk.png");
+                }
+                return specific;
             }
         },
         SANDY() {
             @Override
-            public Identifier textureFromKey(Identifier texture) {
-                return new Identifier(AITMod.MOD_ID, texture.getPath().replace(".png", "_sand.png"));
+            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+                Identifier specific = new Identifier(AITMod.MOD_ID,
+                        texture.getPath().replace(".png", "_sand.png"));
+                if(specific.getPath() == null) {
+                    return new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/" +
+                            tardis.getExterior().getCategory().name().toLowerCase() + "_sand.png");
+                }
+                return specific;
             }
         },
         MUDDY() {
             @Override
-            public Identifier textureFromKey(Identifier texture) {
-                return new Identifier(AITMod.MOD_ID, texture.getPath().replace(".png", "_mud.png"));
+            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+                Identifier specific = new Identifier(AITMod.MOD_ID,
+                        texture.getPath().replace(".png", "_mud.png"));
+                if(specific.getPath() == null) {
+                    return new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/" +
+                            tardis.getExterior().getCategory().name().toLowerCase() + "_mud.png");
+                }
+                return specific;
             }
         },
         CHORUS() {
             @Override
-            public Identifier textureFromKey(Identifier texture) {
-                return new Identifier(AITMod.MOD_ID, texture.getPath().replace(".png", "_chorus.png"));
+            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+                Identifier specific = new Identifier(AITMod.MOD_ID,
+                        texture.getPath().replace(".png", "_chorus.png"));
+                if(specific.getPath() == null) {
+                    return new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/" +
+                            tardis.getExterior().getCategory().name().toLowerCase() + "_chorus.png");
+                }
+                return specific;
             }
         },
         CHERRY() {
             @Override
-            public Identifier textureFromKey(Identifier texture) {
-                return new Identifier(AITMod.MOD_ID, texture.getPath().replace(".png", "_cherry.png"));
+            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+                Identifier specific = new Identifier(AITMod.MOD_ID,
+                        texture.getPath().replace(".png", "_cherry.png"));
+                if(specific.getPath() == null) {
+                    return new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/" +
+                            tardis.getExterior().getCategory().name().toLowerCase() + "_cherry.png");
+                }
+                return specific;
             }
         };
 
@@ -100,7 +137,7 @@ public class BiomeHandler extends TardisLink {
             return StringUtils.capitalize(this.toString().replace("_", " "));
         }
 
-        public Identifier textureFromKey(Identifier texture) {
+        public Identifier textureFromKey(Identifier texture, Tardis tardis) {
             return texture;
         };
     }
