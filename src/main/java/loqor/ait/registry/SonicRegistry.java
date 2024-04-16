@@ -72,16 +72,6 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
         return this.toList().indexOf(schema);
     }
 
-    /**
-     * THOSE FIELDS ARE ONLY USED WHEN THE REST OF THE RESOURCES ARE NOT INITIALIZED
-     * To not reload the game the second time, it's better to keep the builtin stuff semi-loaded
-     */
-    private SonicSchema PRIME = register(BuiltinSonic.create("prime"));
-    private SonicSchema MECHANICAL = register(BuiltinSonic.create("prime"));
-    private SonicSchema FOB = register(BuiltinSonic.create("prime"));
-    private SonicSchema CORAL = register(BuiltinSonic.create("prime"));
-    private SonicSchema RENAISSANCE = register(BuiltinSonic.create("prime"));
-
     public void init() {
         super.init();
 
@@ -137,6 +127,18 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
     }
 
     public void populateModels(Consumer<Identifier> consumer) {
+        if (REGISTRY.isEmpty()) {
+            /*
+             * THOSE FIELDS ARE ONLY USED WHEN THE REST OF THE RESOURCES ARE NOT INITIALIZED
+             * To not reload the game the second time, it's better to keep the builtin stuff semi-loaded
+             */
+            register(BuiltinSonic.create("prime"));
+            register(BuiltinSonic.create("mechanical"));
+            register(BuiltinSonic.create("fob"));
+            register(BuiltinSonic.create("coral"));
+            register(BuiltinSonic.create("renaissance"));
+        }
+
         for (SonicSchema schema : REGISTRY.values()) {
             SonicSchema.Models models = schema.models();
             models.load(consumer);

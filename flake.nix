@@ -8,28 +8,21 @@
   outputs = inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import inputs.systems;
-      perSystem = { config, self', pkgs, lib, system, ... }:
-        let
-          deps = with pkgs; [
-            libxkbcommon
-            libiconv
-            libGL
-
-            # WINIT_UNIX_BACKEND=wayland
-            wayland
-
-            # WINIT_UNIX_BACKEND=x11
-            xorg.libXcursor
-            xorg.libXrandr
-            xorg.libXi
-            xorg.libX11
-          ];
-        in
-        {
-          devShells.default = pkgs.mkShell {
-            buildInputs = deps;
-            LD_LIBRARY_PATH = "${lib.makeLibraryPath deps}";
-          };
-        };
+      perSystem = { config, self', pkgs, lib, system, ... }: {
+      devShells.default = pkgs.mkShell {
+        buildInpts = with pkgs; [
+          zulu17
+        ];
+        LD_LIBRARY_PATH = with pkgs; lib.makeLibraryPath [
+          libGL
+          glfw
+          openal
+          flite
+          libpulseaudio
+          udev
+          xorg.libXcursor
+        ];
+      };
     };
+  };
 }

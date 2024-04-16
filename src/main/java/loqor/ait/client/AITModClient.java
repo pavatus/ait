@@ -107,6 +107,7 @@ public class AITModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         setupBlockRendering();
+        sonicModelPredicate();
         blockEntityRendererRegister();
         entityRenderRegister();
         riftScannerPredicate();
@@ -229,6 +230,7 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(SonicRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
             SonicRegistry.getInstance().readFromServer(buf);
+            sonicModelPredicate();
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ExteriorVariantRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
@@ -256,7 +258,6 @@ public class AITModClient implements ClientModInitializer {
             }
         });
     }
-
 
     public static void openScreen(ServerPlayerEntity player, int id) {
         PacketByteBuf buf = PacketByteBufs.create();

@@ -8,6 +8,7 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class CustomItemRendering {
@@ -28,7 +29,8 @@ public class CustomItemRendering {
     }
 
     private static void appendPool(ModelLoadingPlugin.Context context) {
-        context.addModels(MODEL_POOL);
+        System.out.println("Appending model pool " + MODEL_POOL);
+        context.addModels(List.copyOf(MODEL_POOL));
         MODEL_POOL.clear();
     }
 
@@ -48,8 +50,6 @@ public class CustomItemRendering {
             ModelLoadingPlugin.register(context -> {
                 CustomItemRendering.appendPool(context);
                 context.addModels(item);
-
-                context.addModels(new Identifier("ait:item/sonic/renaissance/inactive"));
 
                 context.modifyModelAfterBake()
                         .register(this::transform);

@@ -61,7 +61,8 @@ public class PermissionTestCommand {
             context.getSource().sendMessage(Text.literal(
                     String.format(TEXT, op, permission, player.getName(), value, result)
             ));
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            e.printStackTrace();
             context.getSource().sendFeedback(() -> Text.literal(
                     "Failed to parse command! " + e.getMessage()
             ), false);
