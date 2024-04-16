@@ -28,10 +28,10 @@ public abstract class ControlBlock extends HorizontalDirectionalBlock implements
 
 	@Override
 	public Item asItem() {
-		return this.getItem();
+		return null;//this.getItem();
 	}
 
-	protected abstract ControlBlockItem getItem();
+	//protected abstract ControlBlockItem getItem();
 
 	@Override
 	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {

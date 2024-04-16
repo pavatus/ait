@@ -25,12 +25,12 @@ public class BuiltinSonic extends SonicSchema {
     }
 
     public static BuiltinSonic create(String id) {
-        Identifier[] identifiers = new Identifier[SonicRegistry.getInstance().size()];
+        Identifier[] identifiers = new Identifier[SONICS.length];
 
         int i = 0;
         for (String sonic : SONICS) {
             for (String mode : MODES) {
-                identifiers[i] = new Identifier(MOD_ID, prefix + sonic + "/" + mode);
+                identifiers[i >= 5 ? 4 : i] = new Identifier(MOD_ID, prefix + sonic + "/" + mode);
                 i++;
             }
         }
