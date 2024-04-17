@@ -21,21 +21,22 @@ public class PermissionHandler extends TardisLink {
     }
 
     public boolean check(ServerPlayerEntity player, Permission permission) {
-        return this.getPermissionMap(player).contains(permission);
+        return this.getPermissionMap(player).get(permission);
     }
 
-    public void set(ServerPlayerEntity player, Permission permission, boolean value) {
+    /**
+     *
+     * @param player
+     * @param permission
+     * @param value
+     * @return The value set.
+     */
+    public boolean set(ServerPlayerEntity player, Permission permission, boolean value) {
         PermissionMap map = this.getPermissionMap(player);
-        System.out.println("got perm map");
+        map.put(permission, value);
 
-        if (value)
-            map.add(permission);
-        else
-            map.remove(permission);
-
-        System.out.println("aaaa");
         this.sync();
-        System.out.println("aaaaaaahhhh");
+        return value;
     }
 
     private PermissionMap getPermissionMap(ServerPlayerEntity player) {

@@ -1,5 +1,5 @@
 package loqor.ait.tardis.data.permissions;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
-public class PermissionMap extends HashSet<PermissionLike> { }
+public class PermissionMap extends HashMap<PermissionLike, Boolean> { }

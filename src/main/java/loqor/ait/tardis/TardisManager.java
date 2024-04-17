@@ -8,6 +8,8 @@ import loqor.ait.AITMod;
 import loqor.ait.core.events.BlockEntityPreLoadEvent;
 import loqor.ait.core.util.gson.ItemStackSerializer;
 import loqor.ait.core.util.gson.NbtSerializer;
+import loqor.ait.tardis.data.permissions.Permission;
+import loqor.ait.tardis.data.permissions.PermissionLike;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -62,6 +64,7 @@ public abstract class TardisManager<T extends Tardis> {
 				.registerTypeAdapter(ConsoleTypeSchema.class, ConsoleTypeSchema.serializer())
 				.registerTypeAdapter(ConsoleVariantSchema.class, ConsoleVariantSchema.serializer())
 				.registerTypeAdapter(Corners.class, Corners.serializer())
+				.registerTypeAdapter(PermissionLike.class, Permission.serializer())
 				.registerTypeAdapter(NbtCompound.class, new NbtSerializer())
 				.registerTypeAdapter(ItemStack.class, new ItemStackSerializer());
 		builder = this.getGsonBuilder(builder);

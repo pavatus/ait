@@ -1,7 +1,9 @@
 package loqor.ait.tardis.data.permissions;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.*;
+
+import java.lang.reflect.Type;
+import java.util.*;
 import java.util.function.Function;
 
 public record Permission(String name, Permission parent, Map<String, Permission> children) implements PermissionLike {
@@ -23,7 +25,7 @@ public record Permission(String name, Permission parent, Map<String, Permission>
         PermissionWrapper CLOAK = new PermissionWrapper("cloak"); // Permission to see through cloak
     }
 
-    private static final Permission PERMISSIONS = withChildren(
+    public static final Permission LOOKUP = withChildren(
             "tardis", null,
             base -> withChildren(
                     "use", base,
@@ -38,6 +40,24 @@ public record Permission(String name, Permission parent, Map<String, Permission>
                     SPECIAL.CLOAK
             )
     );
+
+    public static void collect(Collection<String> result, Permission root) {
+        for (Permission permission : root.children.values()) {
+            if (permission.children == null || permission.children.isEmpty()) {
+                result.add(permission.getId());
+                continue;
+            }
+
+            collect(result, permission);
+        }
+    }
+
+    public static Collection<String> collect() {
+        Set<String> result = new HashSet<>();
+        collect(result, LOOKUP);
+
+        return result;
+    }
 
     @SafeVarargs
     public static Permission withChildren(String name, Permission parent, Function<Permission, Permission>... children) {
@@ -77,7 +97,7 @@ public record Permission(String name, Permission parent, Map<String, Permission>
     // e.g. tardis.use.attune
     public static Permission from(String id) {
         String[] parts = id.split("\\.");
-        Permission node = PERMISSIONS;
+        Permission node = LOOKUP;
 
         for (int i = 1; i < parts.length; i++) {
             node = node.children.get(parts[i]);
@@ -101,5 +121,27 @@ public record Permission(String name, Permission parent, Map<String, Permission>
     @Override
     public String toString() {
         return this.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getId().hashCode();
+    }
+
+    public static Object serializer() {
+        return new Serializer();
+    }
+
+    private static class Serializer implements JsonDeserializer<PermissionLike>, JsonSerializer<PermissionLike> {
+
+        @Override
+        public PermissionLike deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            return Permission.from(json.getAsString());
+        }
+
+        @Override
+        public JsonElement serialize(PermissionLike permission, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(permission.getId());
+        }
     }
 }
