@@ -18,7 +18,7 @@ import java.util.Optional;
 
 public class BiomeHandler extends TardisLink {
 
-    public static final String BIOME_KEY = "snowy";
+    public static final String BIOME_KEY = "biome_key";
 
     public BiomeHandler(Tardis tardis) {
         super(tardis, TypeId.BIOME);
