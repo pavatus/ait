@@ -104,7 +104,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			}
 			if(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey() != null) {
 				Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey(), exteriorVariant.texture(), entity.findTardis().get());
-				if (!texture.equals(biomeTexture)) {
+				if (!texture.equals(biomeTexture) && Identifier.isValid(biomeTexture.getPath())) {
 					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
 				}
 			}

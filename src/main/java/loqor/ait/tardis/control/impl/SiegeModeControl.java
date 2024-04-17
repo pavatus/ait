@@ -25,6 +25,8 @@ public class SiegeModeControl extends Control {
 			}
 		}
 
+		if (tardis.getTravel().isCrashing() || tardis.getTravel().inFlight()) return true;
+
 		tardis.setSiegeMode(!tardis.isSiegeMode());
 		PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, false);
 		Text enabled = Text.translatable("tardis.message.control.siege.enabled");
