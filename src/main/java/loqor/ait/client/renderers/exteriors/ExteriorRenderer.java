@@ -27,6 +27,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
+import java.io.File;
+
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 	private ExteriorModel model;
 	private SiegeModeModel siege;
@@ -104,7 +106,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			}
 			if(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey() != null) {
 				Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey(), exteriorVariant.texture(), entity.findTardis().get());
-				if (!texture.equals(biomeTexture) && Identifier.isValid(biomeTexture.getPath())) {
+				if (!texture.equals(biomeTexture)) {
 					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
 				}
 			}
