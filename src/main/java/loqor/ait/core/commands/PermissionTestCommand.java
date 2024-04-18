@@ -19,6 +19,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 import static loqor.ait.core.commands.TeleportInteriorCommand.TARDIS_SUGGESTION;
@@ -65,10 +66,19 @@ public class PermissionTestCommand {
     record CommonArgs(ServerCommandSource source, Tardis tardis, ServerPlayerEntity player, Permission permission) {
 
         public static CommonArgs create(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-            Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
+            UUID uuid = UuidArgumentType.getUuid(context, "tardis");
+            Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
+
+            if (tardis == null)
+                throw new CommandSyntaxException(CommandSyntaxException.BUILT_IN_EXCEPTIONS.literalIncorrect(), () -> "No tardis with id '" + uuid + "'");
+
             ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 
-            Permission permission = Permission.from(StringArgumentType.getString(context, "permission"));
+            String permissionId = StringArgumentType.getString(context, "permission");
+            Permission permission = Permission.from(permissionId);
+
+            if (permission == null)
+                throw new CommandSyntaxException(CommandSyntaxException.BUILT_IN_EXCEPTIONS.literalIncorrect(), () -> "No permission with id '" + permissionId + "'");
 
             return new CommonArgs(context.getSource(), tardis, player, permission);
         }
