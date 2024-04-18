@@ -10,6 +10,7 @@ import net.minecraft.util.Arm;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,14 +26,17 @@ public class HeldItemRendererMixin {
             return;
 
         PlayerEntity player = this.client.player;
-        ItemStack stack = arm == Arm.RIGHT ? player.getMainHandStack()
-                : player.getOffHandStack();
 
-        if (stack.getRegistryEntry().isIn(AITModTags.Items.NO_BOP)) {
+        if (noBop(player.getMainHandStack()) || noBop(player.getOffHandStack())) {
             int i = arm == Arm.RIGHT ? 1 : -1;
-            matrices.translate((float)i * 0.56F, -1.12F, -0.72F);
+            matrices.translate((float)i * 0.56F, -0.52F, -0.72F);
 
             ci.cancel();
         }
+    }
+
+    @Unique
+    private static boolean noBop(ItemStack stack) {
+        return stack.getRegistryEntry().isIn(AITModTags.Items.NO_BOP);
     }
 }
