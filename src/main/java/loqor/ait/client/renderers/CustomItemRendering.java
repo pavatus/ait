@@ -8,7 +8,6 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class CustomItemRendering {
@@ -28,12 +27,6 @@ public class CustomItemRendering {
         new Unit(item, override);
     }
 
-    private static void appendPool(ModelLoadingPlugin.Context context) {
-        System.out.println("Appending model pool " + MODEL_POOL);
-        context.addModels(List.copyOf(MODEL_POOL));
-        MODEL_POOL.clear();
-    }
-
     static class Unit {
 
         private final ModelIdentifier id;
@@ -48,8 +41,7 @@ public class CustomItemRendering {
             this.override = override;
 
             ModelLoadingPlugin.register(context -> {
-                CustomItemRendering.appendPool(context);
-                context.addModels(item);
+                context.addModels(MODEL_POOL);
 
                 context.modifyModelAfterBake()
                         .register(this::transform);

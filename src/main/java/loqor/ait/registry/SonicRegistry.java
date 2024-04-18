@@ -1,6 +1,7 @@
 package loqor.ait.registry;
 
 import loqor.ait.AITMod;
+import loqor.ait.client.AITModClient;
 import loqor.ait.core.item.sonic.BuiltinSonic;
 import loqor.ait.core.item.sonic.DatapackSonic;
 import loqor.ait.core.item.sonic.SonicSchema;
@@ -55,6 +56,7 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
         }
 
         AITMod.LOGGER.info("Read {} sonics from server", size);
+        AITModClient.sonicModelPredicate();
     }
 
     public static SonicRegistry getInstance() {
@@ -145,5 +147,6 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
 
             LOGGER.info("Loading sonic '" + schema.id() + "' with models: " + models);
         }
+
     }
 }

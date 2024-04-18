@@ -205,8 +205,10 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 	public static int findModeInt(ItemStack stack) {
 		NbtCompound nbtCompound = stack.getOrCreateNbt();
+
 		if (!nbtCompound.contains(MODE_KEY))
 			return 0;
+
 		return nbtCompound.getInt(MODE_KEY);
 	}
 

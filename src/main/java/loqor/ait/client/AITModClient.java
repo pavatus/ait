@@ -230,7 +230,6 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(SonicRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
             SonicRegistry.getInstance().readFromServer(buf);
-            sonicModelPredicate();
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ExteriorVariantRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {

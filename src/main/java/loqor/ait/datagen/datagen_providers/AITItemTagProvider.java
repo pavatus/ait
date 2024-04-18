@@ -19,7 +19,6 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
 
 	@Override
 	protected void configure(RegistryWrapper.WrapperLookup arg) {
-
 		// Items
 		getOrCreateTagBuilder(AITModTags.Items.SONIC_ITEM)
 				.add(AITItems.SONIC_SCREWDRIVER);
@@ -27,5 +26,7 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
 				.add(AITItems.DRIFTING_MUSIC_DISC);
 		getOrCreateTagBuilder(AITModTags.Items.CLUSTER_MAX_HARVESTABLES)
 				.add(AITItems.ZEITON_SHARD);
+		getOrCreateTagBuilder(AITModTags.Items.NO_BOP)
+				.add(AITItems.SONIC_SCREWDRIVER);
 	}
 }
