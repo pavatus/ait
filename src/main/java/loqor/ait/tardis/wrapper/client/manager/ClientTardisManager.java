@@ -5,17 +5,14 @@ import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
 import loqor.ait.AITMod;
 import loqor.ait.client.sounds.ClientSoundManager;
-import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.tardis.*;
-import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.AbstractTardisComponent;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.util.AbsoluteBlockPos;
 import loqor.ait.tardis.util.SerialDimension;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -23,7 +20,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
-import java.util.*;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public class ClientTardisManager extends TardisManager<ClientTardis> {
@@ -33,11 +31,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 	public static final Identifier LET_KNOW_UNLOADED = new Identifier("ait", "let_know_unloaded");
 	private static ClientTardisManager instance;
 
-	// Are all these maps necessary? What are they even for??
-	public final Map<ConsoleBlockEntity, Tardis> consoleToTardis = new HashMap<>();
-	public final Map<ExteriorBlockEntity, Tardis> exteriorToTardis = new HashMap<>();
-	public final Map<DoorBlockEntity, Tardis> interiorDoorToTardis = new HashMap<>();
-	public final List<UUID> loadedTardises = new ArrayList<>();
 	private final Multimap<UUID, Consumer<ClientTardis>> subscribers = ArrayListMultimap.create();
 
 	public ClientTardisManager() {
@@ -96,21 +89,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		ClientTardisManager.getInstance().sync(buf.readUuid(), buf);
 	}
 
-	private void update(ClientTardis tardis, String header, String json) {
-		AITMod.LOGGER.info("Updating " + header); // remove this
-		switch (header) {
-			case "desktop" ->
-					tardis.setDesktop(ClientTardisManager.getInstance().gson.fromJson(json, TardisDesktop.class));
-			case "door" -> tardis.setDoor(ClientTardisManager.getInstance().gson.fromJson(json, DoorData.class));
-			case "exterior" ->
-					tardis.setExterior(ClientTardisManager.getInstance().gson.fromJson(json, TardisExterior.class));
-			case "travel" ->
-					tardis.setTravel(ClientTardisManager.getInstance().gson.fromJson(json, TardisTravel.class));
-			case "sonic" ->
-					tardis.setSonic(ClientTardisManager.getInstance().gson.fromJson(json, SonicHandler.class));
-		}
-	}
-
 	private void updateProperties(ClientTardis tardis, String key, String type, String value) {
 		//AITMod.LOGGER.info("Updating Properties " + key + " to " + value); // remove this
 		switch (type) {
@@ -125,22 +103,23 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
 	private void update(UUID uuid, PacketByteBuf buf) {
 		if (!ClientTardisManager.getInstance().getLookup().containsKey(uuid)) {
-			ClientTardisManager.getInstance().getTardis(uuid, t -> {
-			}); // force ASK
+			ClientTardisManager.getInstance().getTardis(uuid, t -> {}); // force ASK
 			return;
 		}
 
 		ClientTardis tardis = ClientTardisManager.getInstance().getLookup().get(uuid);
-		String header = buf.readString();
 
-		if (header.equals("properties")) {
+		AbstractTardisComponent.TypeId typeId = buf.readEnumConstant(AbstractTardisComponent.TypeId.class);
+
+		if (typeId == AbstractTardisComponent.TypeId.PROPERTIES) {
 			ClientTardisManager.getInstance().updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
 			return;
 		}
 
-		String json = buf.readString();
+		AbstractTardisComponent.Type<?> header = typeId.getType();
 
-		ClientTardisManager.getInstance().update(tardis, header, json);
+		String json = buf.readString();
+		header.unsafeSet(tardis, this.gson.fromJson(json, header.clazz()));
 	}
 
 	private void update(PacketByteBuf buf) {
@@ -164,10 +143,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		data.writeUuid(uuid);
 
 		ClientPlayNetworking.send(ASK, data);
-	}
-
-	public void letKnowUnloaded(UUID uuid) {
-		ClientPlayNetworking.send(LET_KNOW_UNLOADED, PacketByteBufs.create().writeUuid(uuid));
 	}
 
 	private void onTick(MinecraftClient client) {

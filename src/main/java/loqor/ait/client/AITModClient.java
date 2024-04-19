@@ -1,8 +1,10 @@
 package loqor.ait.client;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.registry.ClientConsoleVariantRegistry;
 import loqor.ait.client.registry.ClientDoorRegistry;
-import loqor.ait.client.renderers.TriangleTestingUtil;
+import loqor.ait.client.registry.ClientExteriorVariantRegistry;
+import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
@@ -12,25 +14,32 @@ import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
 import loqor.ait.client.renderers.entities.TardisRealRenderer;
+import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
+import loqor.ait.client.renderers.machines.ArtronCollectorRenderer;
+import loqor.ait.client.renderers.machines.EngineCoreBlockEntityRenderer;
+import loqor.ait.client.renderers.machines.EngineRenderer;
+import loqor.ait.client.renderers.monitors.MonitorRenderer;
+import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
 import loqor.ait.client.renderers.wearables.AITHudOverlay;
+import loqor.ait.client.screens.EngineScreen;
+import loqor.ait.client.screens.MonitorScreen;
+import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.*;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.*;
+import loqor.ait.core.item.sonic.DatapackSonic;
+import loqor.ait.core.item.sonic.SonicSchema;
+import loqor.ait.core.util.UnclampedModelPredicateProvider;
 import loqor.ait.registry.*;
-import loqor.ait.AITMod;
-import loqor.ait.client.renderers.machines.ArtronCollectorRenderer;
-import loqor.ait.client.renderers.monitors.MonitorRenderer;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.client.registry.ClientExteriorVariantRegistry;
-import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
-import loqor.ait.client.screens.MonitorScreen;
-import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
-import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.console.type.ConsoleTypeSchema;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.api.ClientModInitializer;
@@ -40,32 +49,52 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.json.JsonUnbakedModel;
+import net.minecraft.client.render.model.json.ModelOverrideList;
+import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ReloadableResourceManagerImpl;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.GlobalPos;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static loqor.ait.AITMod.*;
@@ -78,13 +107,16 @@ public class AITModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         setupBlockRendering();
+        sonicModelPredicate();
         blockEntityRendererRegister();
         entityRenderRegister();
-        sonicModelPredicate();
         riftScannerPredicate();
         chargedZeitonCrystalPredicate();
         waypointPredicate();
+        hammerPredicate();
         setKeyBinding();
+
+        HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
 
         HudRenderCallback.EVENT.register(new AITHudOverlay());
 
@@ -196,6 +228,10 @@ public class AITModClient implements ClientModInitializer {
             DesktopRegistry.getInstance().readFromServer(buf);
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(SonicRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
+            SonicRegistry.getInstance().readFromServer(buf);
+        });
+
         ClientPlayNetworking.registerGlobalReceiver(ExteriorVariantRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
             PacketByteBuf copy = PacketByteBufs.copy(buf);
 
@@ -222,7 +258,6 @@ public class AITModClient implements ClientModInitializer {
         });
     }
 
-
     public static void openScreen(ServerPlayerEntity player, int id) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeInt(id);
@@ -243,7 +278,7 @@ public class AITModClient implements ClientModInitializer {
         return switch (id) {
             default -> null;
             case 0 -> new MonitorScreen(tardis, console);
-            case 1 -> null;
+            //case 1 -> new EngineScreen(tardis);
             case 2 -> new OwOInteriorSelectScreen(tardis, new MonitorScreen(tardis, console));
         };
     }
@@ -269,13 +304,21 @@ public class AITModClient implements ClientModInitializer {
         });
     }
 
-    public void sonicModelPredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("inactive"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 0 ? 1.0F : 0.0F);
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("sonic_type"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findTypeInt(itemStack) / 5f);
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("interaction"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 1 ? 1.0F : 0.0F);
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("overload"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 2 ? 1.0F : 0.0F);
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 3 ? 1.0F : 0.0F);
-        ModelPredicateProviderRegistry.register(AITItems.SONIC_SCREWDRIVER, new Identifier("tardis"), (itemStack, clientWorld, livingEntity, integer) -> SonicItem.findModeInt(itemStack) == 4 ? 1.0F : 0.0F);
+    public static void sonicModelPredicate() {
+        SonicRegistry.getInstance().populateModels(CustomItemRendering::load);
+
+        CustomItemRendering.register(new Identifier(MOD_ID, "sonic_screwdriver"), (model, stack, world, entity, seed) -> {
+            SonicItem.Mode mode = SonicItem.findMode(stack);
+            SonicSchema.Models models = SonicItem.findSchema(stack).models();
+
+            return switch (mode) {
+                case INACTIVE -> models.inactive();
+                case INTERACTION -> models.interaction();
+                case OVERLOAD -> models.overload();
+                case SCANNING -> models.scanning();
+                case TARDIS -> models.tardis();
+            };
+        });
     }
 
     public void waypointPredicate() {
@@ -288,6 +331,18 @@ public class AITModClient implements ClientModInitializer {
         });
     }
 
+    public void hammerPredicate() {
+        ModelPredicateProviderRegistry.register(AITItems.HAMMER, new Identifier("toymakered"), (itemStack, clientWorld, livingEntity, integer) -> {
+            if(itemStack.getItem() instanceof HammerItem) {
+                if(itemStack.getName().getString().equalsIgnoreCase("Toymaker Hammer"))
+                    return 1.0f;
+                else
+                    return 0.0f;
+            }
+            return 0.0F;
+        });
+    }
+
     public void blockEntityRendererRegister() {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE, ConsoleGeneratorRenderer::new);
@@ -297,6 +352,9 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.MONITOR_BLOCK_ENTITY_TYPE, MonitorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE, ArtronCollectorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.PLAQUE_BLOCK_ENTITY_TYPE, PlaqueRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.WALL_MONITOR_BLOCK_ENTITY_TYPE, WallMonitorRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, EngineRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, EngineCoreBlockEntityRenderer::new);
     }
 
     public void entityRenderRegister() {
@@ -317,27 +375,34 @@ public class AITModClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             ClientPlayerEntity player = client.player;
-            if (player != null) {
-                if (keyBinding.isPressed()) {
-                    if (!keyHeldDown) {
-                        keyHeldDown = true;
-                        if (player.getVehicle() instanceof TardisRealEntity entity) {
-                            ClientTardisUtil.snapToOpenDoors(entity.getTardisID());
-                            return;
-                        }
-                        ItemStack[] keys = KeyItem.getKeysInInventory(player);
-                        for (ItemStack stack : keys) {
-                            if (stack != null && stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
-                                NbtCompound tag = stack.getOrCreateNbt();
-                                if (!tag.contains("tardis")) {
-                                    return;
-                                }
-                                ClientTardisUtil.snapToOpenDoors(UUID.fromString(tag.getString("tardis")));
-                            }
-                        }
+
+            if (player == null)
+                return;
+
+            if (!keyBinding.isPressed()) {
+                keyHeldDown = false;
+                return;
+            }
+
+            if (!keyHeldDown) {
+                keyHeldDown = true;
+
+                if (player.getVehicle() instanceof TardisRealEntity entity) {
+                    ClientTardisUtil.snapToOpenDoors(entity.getTardisID());
+                    return;
+                }
+
+                Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
+
+                for (ItemStack stack : keys) {
+                    if (stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
+                        Tardis tardis = KeyItem.getTardis(stack);
+                        Loyalty loyalty = tardis.getHandlers().getLoyalties().get(player);
+
+                        //TODO: make a permissionhandler
+                        if (loyalty.level() > Loyalty.Type.PILOT.level)
+                            ClientTardisUtil.snapToOpenDoors(tardis);
                     }
-                } else {
-                    keyHeldDown = false;
                 }
             }
         });

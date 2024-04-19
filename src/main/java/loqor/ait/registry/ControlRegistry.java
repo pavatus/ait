@@ -20,7 +20,7 @@ public class ControlRegistry {
 	public static final SimpleRegistry<Control> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<Control>ofRegistry(new Identifier(AITMod.MOD_ID, "control"))).buildAndRegister();
 
 	public static Control register(Control control) {
-		return Registry.register(REGISTRY, control.id(), control);
+		return Registry.register(REGISTRY, control.getId(), control);
 	}
 
 	/**

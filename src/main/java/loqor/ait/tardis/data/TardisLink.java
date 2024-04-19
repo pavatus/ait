@@ -14,7 +14,8 @@ import net.minecraft.world.World;
 
 // todo move everything over to TardisComponent
 public abstract class TardisLink extends AbstractTardisComponent implements TardisTickable {
-	public TardisLink(Tardis tardis, String id) {
+
+	public TardisLink(Tardis tardis, TypeId id) {
 		super(tardis, id);
 	}
 

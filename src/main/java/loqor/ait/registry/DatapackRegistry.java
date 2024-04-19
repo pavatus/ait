@@ -36,6 +36,7 @@ public abstract class DatapackRegistry<T extends Identifiable> {
 
 	// todo idk how well this works..
 	public T get(int index) {
+		// pretty sure there's no need for a #toList call...
 		return toList().get(index);
 	}
 

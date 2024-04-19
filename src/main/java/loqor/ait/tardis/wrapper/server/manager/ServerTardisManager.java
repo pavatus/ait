@@ -58,14 +58,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		);
 
 		ServerPlayNetworking.registerGlobalReceiver(
-				ClientTardisManager.LET_KNOW_UNLOADED, (server, player, handler, buf, responseSender) -> {
-					UUID uuid = buf.readUuid();
-					if (player == null) return;
-					removeSubscriberToTardis(player, uuid);
-				}
-		);
-
-		ServerPlayNetworking.registerGlobalReceiver(
 				ClientTardisManager.ASK_POS, (server, player, handler, buf, responseSender) -> {
 					BlockPos pos = AbsoluteBlockPos.fromNbt(buf.readNbt());
 					UUID uuid = null;
@@ -86,7 +78,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 
 		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset + save
 
-		// ServerLifecycleEvents.SERVER_STARTED.register(server -> this.loadTardises());
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			// fixme would this cause lag?
 			for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
@@ -95,17 +86,21 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 
 			tick(server);
 		});
+
 		ServerTickEvents.END_WORLD_TICK.register(world -> {
 			// fixme lag?
 			for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
 				tardis.tick(world);
 			}
+
 			tick(world);
 		});
+
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
 			for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
 				tardis.startTick(server);
 			}
+
 			startTick(server);
 		});
 	}
@@ -178,6 +173,25 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		tardis.getTravel().runAnimations();
 
 		tardis.getHandlers().getStats().markCreationDate();
+
+		this.saveTardis(tardis);
+
+		return tardis;
+	}
+
+	public ServerTardis createWithPlayerCreator(AbsoluteBlockPos.Directed pos, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked, String playerCreatorName) {
+		UUID uuid = UUID.randomUUID();
+
+		ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked); // todo removed "locked" param
+		this.lookup.put(uuid, tardis);
+
+		// todo this can be moved to init
+		tardis.getTravel().placeExterior();
+		tardis.getTravel().runAnimations();
+
+		tardis.getHandlers().getStats().markCreationDate();
+		tardis.getHandlers().getStats().setPlayerCreatorName(playerCreatorName);
+		tardis.getHandlers().getStats().markPlayerCreatorName();
 
 		this.saveTardis(tardis);
 
@@ -258,7 +272,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		PacketByteBuf data = PacketByteBufs.create();
 
 		data.writeUuid(tardis);
-		data.writeString("properties");
+		data.writeEnumConstant(AbstractTardisComponent.TypeId.PROPERTIES);
 
 		data.writeString(key);
 		data.writeString(type);
@@ -273,10 +287,10 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		this.updateTardis(player, uuid, component.getId(), this.gson.toJson(component));
 	}
 
-	private void updateTardis(@NotNull ServerPlayerEntity player, UUID uuid, String header, String json) {
+	private void updateTardis(@NotNull ServerPlayerEntity player, UUID uuid, AbstractTardisComponent.TypeId header, String json) {
 		PacketByteBuf data = PacketByteBufs.create();
 		data.writeUuid(uuid);
-		data.writeString(header);
+		data.writeEnumConstant(header);
 		data.writeString(json);
 
 		ServerPlayNetworking.send(player, UPDATE, data);

@@ -32,6 +32,7 @@ public class AutoPilotControl extends Control {
 			}
 		}
 
+		// @TODO make a real world flight control.. later
 		if(player.isSneaking() && tardis.getTravel().getState() == TardisTravel.State.LANDED) {
 			if(tardis.getDoor().isOpen()) {
 				world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_CHAIN_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);

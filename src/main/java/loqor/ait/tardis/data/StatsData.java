@@ -23,13 +23,14 @@ import java.util.Optional;
 // is StatsData a good name for this class?
 public class StatsData extends TardisLink {
 	private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
-	private static final String NAME_KEY = "name";
+	private static final String NAME_KEY = "permission";
+	private static final String PLAYER_CREATOR_NAME_KEY = "player_creator_name";
 	private static List<String> NAME_CACHE;
 
 	private static final String DATE_KEY = "date";
 
 	public StatsData(Tardis tardis) {
-		super(tardis, "stats");
+		super(tardis, TypeId.STATS);
 	}
 
 	public String getName() {
@@ -45,9 +46,28 @@ public class StatsData extends TardisLink {
 		return name;
 	}
 
+	public String getPlayerCreatorName() {
+		if (findTardis().isEmpty()) return "";
+
+		String name = (String) PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), PLAYER_CREATOR_NAME_KEY);
+
+		if (name == null) {
+			name = getRandomName();
+			this.setPlayerCreatorName(name);
+		}
+
+		return name;
+	}
+
+
 	public void setName(String name) {
 		if (findTardis().isEmpty()) return;
 		PropertiesHandler.set(findTardis().get(), NAME_KEY, name);
+	}
+
+	public void setPlayerCreatorName(String name) {
+		if (findTardis().isEmpty()) return;
+		PropertiesHandler.set(findTardis().get(), PLAYER_CREATOR_NAME_KEY, name);
 	}
 
 	public static String fixupName(String name) {
@@ -131,5 +151,10 @@ public class StatsData extends TardisLink {
 		if (findTardis().isEmpty()) return;
 		PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), DATE_KEY,
 				DateFormat.getDateTimeInstance(DateFormat.LONG, 3).format(Date.from(Instant.now())));
+	}
+
+	public void markPlayerCreatorName() {
+		if(findTardis().isEmpty()) return;
+		PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), PLAYER_CREATOR_NAME_KEY, this.getPlayerCreatorName());
 	}
 }

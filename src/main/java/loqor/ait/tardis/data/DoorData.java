@@ -31,7 +31,7 @@ public class DoorData extends TardisLink {
 	public DoorStateEnum tempInteriorState;
 
 	public DoorData(Tardis tardis) {
-		super(tardis, "door");
+		super(tardis, TypeId.DOOR);
 	}
 
 	@Override

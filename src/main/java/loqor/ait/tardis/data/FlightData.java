@@ -19,7 +19,7 @@ public class FlightData extends TardisLink {
 	private static final Random random = Random.create();
 
 	public FlightData(Tardis tardiz) {
-		super(tardiz, "flight");
+		super(tardiz, TypeId.FLIGHT);
 		if (findTardis().isEmpty()) return;
 
 		// todo this doesn't seem to work.
@@ -164,7 +164,7 @@ public class FlightData extends TardisLink {
 				this.onFlightFinished();
 			}
 
-			this.setFlightTicks(this.getFlightTicks() + travel.getSpeed());
+			this.setFlightTicks(this.getFlightTicks() + (Math.max(travel.getSpeed() / 2, 1)));
 		}
 
 		//System.out.println(PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT));

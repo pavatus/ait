@@ -27,7 +27,7 @@ public class InteriorChangingHandler extends TardisLink {
 	private int ticks; // this shouldnt rly be stored in propertieshandler, will cause packet spam
 
 	public InteriorChangingHandler(Tardis tardis) {
-		super(tardis, "interior-changing");
+		super(tardis, TypeId.INTERIOR_CHANGE);
 	}
 
 	private void setGenerating(boolean var) {

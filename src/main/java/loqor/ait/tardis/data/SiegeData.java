@@ -20,7 +20,7 @@ public class SiegeData extends TardisLink {
 	public static final String HELD_KEY = "siege_held_uuid";
 
 	public SiegeData(Tardis tardis) {
-		super(tardis, "siege");
+		super(tardis, TypeId.SIEGE);
 	}
 
 	public boolean isSiegeMode() {

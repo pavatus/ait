@@ -19,7 +19,7 @@ public class ServerHumHandler extends TardisLink {
 	private HumSound current;
 
 	public ServerHumHandler(Tardis tardisId) {
-		super(tardisId, "hum");
+		super(tardisId, TypeId.HUM);
 	}
 
 	public HumSound getHum() {

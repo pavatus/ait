@@ -2,6 +2,7 @@ package loqor.ait.tardis.wrapper.client;
 
 import loqor.ait.tardis.*;
 import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.data.TardisHandlersManager;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.data.DoorData;
@@ -33,5 +34,9 @@ public class ClientTardis extends Tardis {
 
 	public void setDoor(DoorData door) {
 		this.getHandlers().setDoor(door);
+	}
+
+	public void setHandlers(TardisHandlersManager handlers) {
+		this.handlers = handlers;
 	}
 }

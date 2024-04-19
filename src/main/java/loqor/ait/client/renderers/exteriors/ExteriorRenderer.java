@@ -3,23 +3,22 @@ package loqor.ait.client.renderers.exteriors;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
+import loqor.ait.client.models.machines.ShieldsModel;
 import loqor.ait.client.registry.ClientExteriorVariantRegistry;
 import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.tardis.TardisExterior;
+import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.AbsoluteBlockPos;
-import loqor.ait.client.models.machines.ShieldsModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -28,16 +27,14 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
+import java.io.File;
+
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 	private ExteriorModel model;
 	private SiegeModeModel siege;
 	private ShieldsModel shieldsModel;
-	private final EntityRenderDispatcher dispatcher;
 
-
-	public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {
-		this.dispatcher = ctx.getEntityRenderDispatcher();
-	}
+	public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {}
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
@@ -49,15 +46,14 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		if (exteriorPos == null)
 			return;
 
-		TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.findTardis().get().getExterior().getVariant());
 		TardisExterior tardisExterior = entity.findTardis().get().getExterior();
 
-		if (tardisExterior == null) return;
+		if (tardisExterior == null || exteriorVariant == null) return;
 
 		Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
 
-		if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.
+		if (model != null && !(model.getClass().isInstance(modelClass)))
 			model = null;
 
 		if (model == null)
@@ -85,9 +81,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f :
 				MinecraftClient.getInstance().player.getHeadYaw() + ((wrappedDegrees > -135 && wrappedDegrees < 135) ? 180f : 0f)));
 
-
-		// -------------------------------------------------------------------------------------------------------------------
-
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 		try {
 			if (entity.findTardis().get().isSiegeMode()) {
@@ -100,8 +93,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			AITMod.LOGGER.error("Failed to render siege mode", e);
 		}
 
-		// -------------------------------------------------------------------------------------------------------------------
-
 		String name = entity.findTardis().get().getHandlers().getStats().getName();
 		if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
 			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-180f));
@@ -109,8 +100,15 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		if (model != null) {
 			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
+			// @TODO uhhh, should we make it so the biome textures are the overgrowth per biome, or should they be separate? - Loqor
 			if (entity.findTardis().get().getHandlers().getOvergrown().isOvergrown()) {
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.findTardis().get().getHandlers().getOvergrown().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+			}
+			if(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey() != null) {
+				Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey(), exteriorVariant.texture(), entity.findTardis().get());
+				if (!texture.equals(biomeTexture)) {
+					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
+				}
 			}
 			if (emission != null && entity.findTardis().get().hasPower()) {
 				boolean alarms = PropertiesHandler.getBool(entity.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
@@ -132,9 +130,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		if (!entity.findTardis().get().getHandlers().getSonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) return;
 		ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get(SonicHandler.HAS_EXTERIOR_SONIC);
-		if (stack == null) return;
+		if (stack == null || entity.getWorld() == null) return;
 		matrices.push();
-		//matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + sonicItemRotations(exteriorVariant)[0]));
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + exteriorVariant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());
 		matrices.translate(exteriorVariant.sonicItemTranslations().x(), exteriorVariant.sonicItemTranslations().y(), exteriorVariant.sonicItemTranslations().z());
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(exteriorVariant.sonicItemRotations()[1]));

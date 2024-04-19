@@ -6,6 +6,7 @@ import loqor.ait.client.registry.ClientDoorRegistry;
 import loqor.ait.AITMod;
 import loqor.ait.client.registry.ClientExteriorVariantRegistry;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.util.TardisUtil;
@@ -38,16 +39,21 @@ public class ClientTardisUtil {
 		ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);
 	}
 
-	public static void changeSonicWithScreen(UUID uuid, int sonic_type) {
+	public static void changeSonicWithScreen(UUID uuid, SonicSchema schema) {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeUuid(uuid);
-		buf.writeInt(sonic_type);
+		buf.writeIdentifier(schema.id());
 		ClientPlayNetworking.send(CHANGE_SONIC, buf);
+	}
+
+	public static void snapToOpenDoors(Tardis tardis) {
+		snapToOpenDoors(tardis.getUuid());
 	}
 
 	public static void snapToOpenDoors(UUID uuid) {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeUuid(uuid);
+
 		ClientPlayNetworking.send(SNAP, buf);
 	}
 

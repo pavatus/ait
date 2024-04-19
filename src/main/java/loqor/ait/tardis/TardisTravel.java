@@ -64,13 +64,13 @@ public class TardisTravel extends TardisLink {
 	private static final Random random = new Random();
 
 	public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-		super(tardis, "travel");
+		super(tardis, TypeId.TRAVEL);
 		this.position = pos;
 		if (this.lastPosition == null) this.lastPosition = pos;
 	}
 
 	public TardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
-		super(tardis, "travel");
+		super(tardis, TypeId.TRAVEL);
 		this.position = pos;
 		if (this.lastPosition == null) this.lastPosition = pos;
 		this.destination = dest;

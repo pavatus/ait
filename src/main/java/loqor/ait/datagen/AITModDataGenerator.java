@@ -292,6 +292,17 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
                     .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE)));
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.WALL_MONITOR_BLOCK, 1)
+                    .pattern("QIQ")
+                    .pattern("IBI")
+                    .pattern("QIQ")
+                    .input('Q', Items.QUARTZ)
+                    .input('I', Items.IRON_INGOT)
+                    .input('B', Items.ENDER_EYE)
+                    .criterion(FabricRecipeProvider.hasItem(Items.QUARTZ), FabricRecipeProvider.conditionsFromItem(Items.QUARTZ))
+                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RESPIRATOR, 1)
                     .pattern("NNN")
                     .pattern("SPS")
@@ -544,6 +555,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
         provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
         provider.addTranslation(AITBlocks.PLAQUE_BLOCK, "TARDIS Plaque");
+        provider.addTranslation(AITBlocks.WALL_MONITOR_BLOCK, "Wall Monitor");
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");

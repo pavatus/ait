@@ -9,6 +9,7 @@ import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.util.Identifier;
 
 public class ConsoleRegistry {
+
 	public static final SimpleRegistry<ConsoleTypeSchema> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<ConsoleTypeSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "console"))).buildAndRegister();
 
 	public static ConsoleTypeSchema register(ConsoleTypeSchema schema) {

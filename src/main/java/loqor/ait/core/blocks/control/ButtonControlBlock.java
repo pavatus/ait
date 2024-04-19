@@ -13,10 +13,10 @@ public class ButtonControlBlock extends ControlBlock {
 		super(settings);
 	}
 
-	@Override
+	/*@Override
 	protected ControlBlockItem getItem() {
 		return (ControlBlockItem) AITItems.BUTTON_CONTROL;
-	}
+	}*/
 
 	@Nullable
 	@Override

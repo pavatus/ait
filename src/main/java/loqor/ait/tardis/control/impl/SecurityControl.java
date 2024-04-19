@@ -12,6 +12,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class SecurityControl extends Control {
@@ -71,13 +72,17 @@ public class SecurityControl extends Control {
 	public static boolean hasMatchingKey(ServerPlayerEntity player, Tardis tardis) {
 		if (player.hasPermissionLevel(2)) return true;
 		if (!KeyItem.isKeyInInventory(player)) return false;
-		ItemStack[] keys = KeyItem.getKeysInInventory(player);
+
+		Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
 
 		for (ItemStack stack : keys) {
-			if (stack == null) continue;
 			Tardis found = KeyItem.getTardis(stack);
-			if (found == null) continue;
-			if (found == tardis) return true;
+
+			if (found == null)
+				continue;
+
+			if (found == tardis)
+				return true;
 		}
 		return false;
 	}

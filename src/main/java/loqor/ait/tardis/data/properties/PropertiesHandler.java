@@ -1,6 +1,8 @@
 package loqor.ait.tardis.data.properties;
 
 import com.google.gson.internal.LinkedTreeMap;
+import loqor.ait.core.blockentities.EngineCoreBlockEntity;
+import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.FuelData;
@@ -76,12 +78,21 @@ public class PropertiesHandler {
 	}
 
 	public static Object get(PropertiesHolder holder, String key) {
-		if (!holder.getData().containsKey(key)) return null;
+		if (!holder.getData().containsKey(key))
+			return null;
 
 		return holder.getData().get(key);
 	}
-	public static Object get(Tardis tardis, String key) {
-		return get(tardis.getHandlers().getProperties(), key);
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getOrDefault(Tardis tardis, String key, T def) {
+		Object result = get(tardis.getHandlers().getProperties(), key);
+		return result != null ? (T) result : def;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T get(Tardis tardis, String key) {
+		return getOrDefault(tardis, key, null);
 	}
 
 	public static TardisDesktopSchema getDesktop(PropertiesHolder holder, String key) {
@@ -176,6 +187,14 @@ public class PropertiesHandler {
 		return getBool(holder, schema.id().getPath() + "_unlocked");
 	}
 
+	public static void setSonicUnlocked(PropertiesHolder holder, SonicSchema schema, boolean value) {
+		set(holder, schema.id().getPath() + "_unlocked", value);
+	}
+
+	public static boolean isSonicUnlocked(PropertiesHolder holder, SonicSchema schema) {
+		return getBool(holder, schema.id().getPath() + "_unlocked");
+	}
+
 	public static void setAutoPilot(PropertiesHolder handler, boolean val) {
 		set(handler, AUTO_LAND, val);
 	}
@@ -241,7 +260,7 @@ public class PropertiesHandler {
 		map.put(ShieldData.IS_SHIELDED, false);
 		map.put(TardisCrashData.TARDIS_RECOVERY_STATE, TardisCrashData.State.NORMAL);
 		map.put(TardisCrashData.TARDIS_REPAIR_TICKS, 0);
-
+		map.put(EngineCoreBlockEntity.HAS_ENGINE_CORE, false);
 
 		unlockAllFreebies(map);
 		return map;

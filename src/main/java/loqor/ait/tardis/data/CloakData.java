@@ -8,7 +8,7 @@ public class CloakData extends TardisLink {
 	public static String CLOAKED = "is_cloaked";
 
 	public CloakData(Tardis tardis) {
-		super(tardis, "cloak");
+		super(tardis, TypeId.CLOAK);
 	}
 
 	public void enable() {

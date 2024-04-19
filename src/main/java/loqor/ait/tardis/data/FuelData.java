@@ -21,7 +21,7 @@ public class FuelData extends TardisLink implements ArtronHolder {
 	public static final String REFUELING = "refueling";
 
 	public FuelData(Tardis tardis) {
-		super(tardis, "fuel");
+		super(tardis, TypeId.FUEL);
 	}
 
 	private static void createFuelSyncDelay(Tardis tardis) {
@@ -107,9 +107,9 @@ public class FuelData extends TardisLink implements ArtronHolder {
 		if (state == TardisTravel.State.LANDED && this.isRefueling() && this.getCurrentFuel() < FuelData.TARDIS_MAX_FUEL && (!isRefuelOnDelay(tardis))) {
 			if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) > 0) {
 				RiftChunkManager.setArtronLevels(world, pos, RiftChunkManager.getArtronLevels(world, pos) - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
-				addFuel(5);
+				addFuel(9);
 			} else {
-				addFuel(1);
+				addFuel(7);
 			}
 			createRefuelDelay(tardis);
 		}

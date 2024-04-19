@@ -14,10 +14,12 @@ import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.registry.CategoryRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
+import loqor.ait.registry.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -31,7 +33,10 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.boss.WitherEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.mob.WardenEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
@@ -105,10 +110,10 @@ public class TardisUtil {
 		});
 		ServerPlayNetworking.registerGlobalReceiver(ClientTardisUtil.CHANGE_SONIC, (server, player, handler, buf, responseSender) -> {
 			UUID uuid = buf.readUuid();
-			int sonicType = buf.readInt();
+			Identifier id = buf.readIdentifier();
+
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-			tardis.getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC)
-					.getOrCreateNbt().putInt(SonicItem.SONIC_TYPE, sonicType);
+			SonicItem.setSchema(tardis.getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC), id); // here we trust in the server with all of our might
 		});
 		ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
 				(server, player, handler, buf, responseSender) -> {
@@ -135,7 +140,12 @@ public class TardisUtil {
 					UUID uuid = buf.readUuid();
 					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-					if (tardis.getHandlers().getOvergrown().isOvergrown()) return;
+					//TODO: make a permissionhandler
+					if (tardis.getHandlers().getLoyalties().get(player).level() < Loyalty.Type.PILOT.level)
+						return;
+
+					if (tardis.getHandlers().getOvergrown().isOvergrown())
+						return;
 
 					player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
 
@@ -360,6 +370,9 @@ public class TardisUtil {
 						WorldOps.teleportToWorld(player, serverWorld, vec, pos.getDirection().asRotation(), player.getPitch());
 						player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 					} else {
+						if(entity instanceof EnderDragonEntity
+								|| entity instanceof WitherEntity
+								|| entity instanceof WardenEntity) return;
 						if (entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
 							entity.refreshPositionAndAngles(vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, pos.getDirection().asRotation(), entity.getPitch());
 						} else {
@@ -594,7 +607,8 @@ public class TardisUtil {
 		List<PlayerEntity> newList = new ArrayList<>();
 		for (PlayerEntity player : world.getServer().getPlayerManager().getPlayerList()) {
 			if (KeyItem.isKeyInInventory(player)) {
-				ItemStack[] keys = KeyItem.getKeysInInventory(player);
+				Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
+
 				for (ItemStack key : keys) {
 					if (KeyItem.getTardis(key) == tardis) {
 						newList.add(player);

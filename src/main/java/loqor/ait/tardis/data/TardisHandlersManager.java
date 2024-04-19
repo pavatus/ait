@@ -4,7 +4,8 @@ import loqor.ait.tardis.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
-import loqor.ait.tardis.data.loyalty.LoyaltyData;
+import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
+import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import net.minecraft.server.MinecraftServer;
 
@@ -15,11 +16,10 @@ public class TardisHandlersManager extends TardisLink {
 	@Exclude
 	private List<TardisLink> tickables = new ArrayList<>();
 	// TODO - refactor of this class, i have ideas
-	// Yup
 	private DoorData door;
 	private PropertiesHolder properties;
 	private WaypointHandler waypoints;
-	private LoyaltyData loyalties;
+	private LoyaltyHandler loyalties;
 	private OvergrownData overgrown;
 	private ServerHumHandler hum;
 	private ServerAlarmHandler alarms;
@@ -34,20 +34,19 @@ public class TardisHandlersManager extends TardisLink {
 	private TardisCrashData crashData;
 	private SonicHandler sonic;
 	private ShieldData shields;
-
-	// private final SequenceHandler sequence;
-
+	private PermissionHandler permissions;
+	private BiomeHandler biome;
 	public TardisHandlersManager(Tardis tardis) {
-		super(tardis, "handlers");
+		super(tardis, TypeId.HANDLERS);
 
 		this.door = new DoorData(tardis);
 		this.properties = new PropertiesHolder(tardis);
 		this.waypoints = new WaypointHandler(tardis);
-		this.loyalties = new LoyaltyData(tardis);
+		this.loyalties = new LoyaltyHandler(tardis);
 		this.overgrown = new OvergrownData(tardis);
 		this.hum = new ServerHumHandler(tardis);
-		alarms = new ServerAlarmHandler(tardis);
-		interior = new InteriorChangingHandler(tardis);
+		this.alarms = new ServerAlarmHandler(tardis);
+		this.interior = new InteriorChangingHandler(tardis);
 		this.sequenceHandler = new SequenceHandler(tardis);
 		this.fuel = new FuelData(tardis);
 		this.hads = new HADSData(tardis);
@@ -58,7 +57,8 @@ public class TardisHandlersManager extends TardisLink {
 		this.crashData = new TardisCrashData(tardis);
 		this.sonic = new SonicHandler(tardis);
 		this.shields = new ShieldData(tardis);
-		// this.sequence = new SequenceHandler(tardisId);
+		this.permissions = new PermissionHandler(tardis);
+		this.biome = new BiomeHandler(tardis);
 
 		generateTickables();
 	}
@@ -85,7 +85,7 @@ public class TardisHandlersManager extends TardisLink {
 		addTickable(getCrashData());
 		addTickable(getSonic());
 		addTickable(getShields());
-		// addTickable(getSequencing()); // todo sequences
+		addTickable(getBiomeHandler());
 	}
 
 	protected void addTickable(TardisLink var) {
@@ -95,7 +95,7 @@ public class TardisHandlersManager extends TardisLink {
 	/**
 	 * Called on the END of a servers tick
 	 *
-	 * @param server
+	 * @param server the current server
 	 */
 	public void tick(MinecraftServer server) {
 		if (tickables == null) generateTickables();
@@ -112,7 +112,7 @@ public class TardisHandlersManager extends TardisLink {
 	/**
 	 * Called on the START of a servers tick
 	 *
-	 * @param server
+	 * @param server the current server
 	 */
 	public void startTick(MinecraftServer server) {
 		if (tickables == null) generateTickables();
@@ -148,14 +148,14 @@ public class TardisHandlersManager extends TardisLink {
 		this.waypoints = waypoints;
 	}
 
-	public LoyaltyData getLoyalties() {
+	public LoyaltyHandler getLoyalties() {
 		if (this.loyalties == null && this.findTardis().isPresent()) {
-			this.loyalties = new LoyaltyData(this.findTardis().get());
+			this.loyalties = new LoyaltyHandler(this.findTardis().get());
 		}
 		return loyalties;
 	}
 
-	public void setLoyalties(LoyaltyData loyalties) {
+	public void setLoyalties(LoyaltyHandler loyalties) {
 		this.loyalties = loyalties;
 	}
 
@@ -205,6 +205,13 @@ public class TardisHandlersManager extends TardisLink {
 			this.interior = new InteriorChangingHandler(this.findTardis().get());
 		}
 		return interior;
+	}
+
+	public BiomeHandler getBiomeHandler() {
+		if (this.biome == null && this.findTardis().isPresent()) {
+			this.biome = new BiomeHandler(this.findTardis().get());
+		}
+		return biome;
 	}
 
 	public SequenceHandler getSequenceHandler() {
@@ -305,5 +312,16 @@ public class TardisHandlersManager extends TardisLink {
 
 	public void setShields(ShieldData shieldData) {
 		this.shields = shieldData;
+	}
+
+	public PermissionHandler getPermissions() {
+		if (this.permissions == null && this.findTardis().isPresent())
+			this.permissions = new PermissionHandler(this.findTardis().get());
+
+		return this.permissions;
+	}
+
+	public void setPermissions(PermissionHandler permissions) {
+		this.permissions = permissions;
 	}
 }

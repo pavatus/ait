@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/run/current-system/sw/bin/bash
 
 #
 # Copyright © 2015-2021 the original authors.
