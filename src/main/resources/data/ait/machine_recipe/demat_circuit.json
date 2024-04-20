@@ -1,0 +1,10 @@
+{
+  "id": "ait:demat_circuit",
+  "output": {"id": "ait:dematerialization_circuit", "Count": 1},
+  "input": [
+    {"id": "minecraft:iron_ingot", "Count": 1},
+    {"id": "ait:condenser", "Count": 1},
+    {"id": "ait:inductor", "Count": 1},
+    {"id": "minecraft:emerald", "Count": 1}
+  ]
+}

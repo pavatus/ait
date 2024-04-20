@@ -23,6 +23,8 @@ public class AITBlockEntityTypes implements AutoRegistryContainer<BlockEntityTyp
     public static BlockEntityType<EngineBlockEntity> ENGINE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(EngineBlockEntity::new, AITBlocks.ENGINE_BLOCK).build();
     public static BlockEntityType<WallMonitorBlockEntity> WALL_MONITOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(WallMonitorBlockEntity::new, AITBlocks.WALL_MONITOR_BLOCK).build();
     public static BlockEntityType<EngineCoreBlockEntity> ENGINE_CORE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(EngineCoreBlockEntity::new, AITBlocks.ENGINE_CORE_BLOCK).build();
+    public static BlockEntityType<MachineCasingBlockEntity> MACHINE_CASING_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(MachineCasingBlockEntity::new, AITBlocks.MACHINE_CASING).build();
+
     @Override
     public Registry<BlockEntityType<?>> getRegistry() {
         return Registries.BLOCK_ENTITY_TYPE;

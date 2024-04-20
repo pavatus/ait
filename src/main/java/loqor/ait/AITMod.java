@@ -81,6 +81,7 @@ public class AITMod implements ModInitializer {
 		DesktopRegistry.getInstance().init();
 		CategoryRegistry.getInstance().init();
 		SonicRegistry.getInstance().init();
+		MachineRecipeRegistry.getInstance().init();
 		HumsRegistry.init();
 		CreakRegistry.init();
 		SequenceRegistry.init();

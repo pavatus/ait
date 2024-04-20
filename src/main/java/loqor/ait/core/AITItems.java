@@ -5,6 +5,9 @@ import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import loqor.ait.AITMod;
 import loqor.ait.core.item.*;
 import loqor.ait.core.item.control.GenericControlBlockItem;
+import loqor.ait.core.item.part.MachinePartItem;
+import loqor.ait.core.item.part.link.FluidLinkItem;
+import loqor.ait.core.item.part.link.MercurialLinkItem;
 import loqor.ait.core.util.AITArmorMaterials;
 import net.minecraft.item.Item;
 import net.minecraft.item.MusicDiscItem;
@@ -35,8 +38,24 @@ public class AITItems implements ItemRegistryContainer {
 	public static final Item ZEITON_SHARD = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 	public static final Item CHARGED_ZEITON_CRYSTAL = new ChargedZeitonCrystalItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
 
+	// Machine parts
+	public static final Item ARTRON_FLUID_LINK = new FluidLinkItem(FluidLinkItem.Type.ARTRON, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item DATA_FLUID_LINK = new FluidLinkItem(FluidLinkItem.Type.DATA, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item VORTEX_FLUID_LINK = new FluidLinkItem(FluidLinkItem.Type.VORTEX, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
+	public static final Item ARTRON_MERCURIAL_LINK = new MercurialLinkItem(MercurialLinkItem.Type.ARTRON, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item DATA_MERCURIAL_LINK = new MercurialLinkItem(MercurialLinkItem.Type.DATA, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item VORTEX_MERCURIAL_LINK = new MercurialLinkItem(MercurialLinkItem.Type.VORTEX, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
+	public static final Item CONDENSER = new MachinePartItem(MachinePartItem.Type.CONDENSER, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item MANIPULATOR = new MachinePartItem(MachinePartItem.Type.MANIPULATOR, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item BULB = new MachinePartItem(MachinePartItem.Type.BULB, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item INDUCTOR = new MachinePartItem(MachinePartItem.Type.INDUCTOR, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
+
 	// Components
-	// public static final Item FLUID_LINK = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item DEMATERIALIZATION_CIRCUIT = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
 
 	// Waypoint-related
 	public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
