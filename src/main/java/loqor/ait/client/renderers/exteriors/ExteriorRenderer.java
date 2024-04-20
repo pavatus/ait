@@ -1,5 +1,6 @@
 package loqor.ait.client.renderers.exteriors;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
@@ -62,6 +63,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		BlockState blockState = entity.getCachedState();
 		float f = blockState.get(ExteriorBlock.FACING).asRotation();
 		int maxLight = 0xF000F0;
+
 		matrices.push();
 		matrices.translate(0.5, 0, 0.5);
 

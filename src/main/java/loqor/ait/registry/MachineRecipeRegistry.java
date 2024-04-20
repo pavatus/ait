@@ -1,6 +1,7 @@
 package loqor.ait.registry;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.blockentities.MachineCasingBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -45,12 +46,12 @@ public class MachineRecipeRegistry extends DatapackRegistry<MachineRecipeSchema>
 			register(buf.decodeAsJson(DatapackMachineRecipe.CODEC));
 		}
 
-		AITMod.LOGGER.info("Read {} desktops from server", size);
+		AITMod.LOGGER.info("Read {} datapack machine recipes from server", size);
 	}
 
 	public Optional<MachineRecipeSchema> findMatching(Set<ItemStack> set) {
 		for (MachineRecipeSchema schema : REGISTRY.values()) {
-			if (Objects.equals(schema.input(), set))
+			if (MachineCasingBlockEntity.itemStackComparison(set, schema.input()))
 				return Optional.of(schema);
 		}
 

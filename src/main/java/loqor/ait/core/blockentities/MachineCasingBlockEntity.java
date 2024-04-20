@@ -52,7 +52,26 @@ public class MachineCasingBlockEntity extends BlockEntity {
             return;
         }
 
-        this.parts.add(stack.copyWithCount(1));
+        this.parts.add(new ItemStack(stack.copyWithCount(1).getItem()));
         stack.decrement(1);
+    }
+
+    public static boolean itemStackComparison(Set<ItemStack> as, Set<ItemStack> bs) {
+        boolean found;
+        for (ItemStack a : as) {
+            found = false;
+            for (ItemStack b : bs) {
+                if (ItemStack.areItemsEqual(a, b)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
