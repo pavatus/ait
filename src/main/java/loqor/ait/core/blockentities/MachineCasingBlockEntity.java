@@ -2,7 +2,9 @@ package loqor.ait.core.blockentities;
 
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITItems;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.util.AITModTags;
 import loqor.ait.registry.MachineRecipeRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -10,6 +12,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -26,7 +29,6 @@ public class MachineCasingBlockEntity extends BlockEntity {
     }
 
     public void onUse(World world, ItemStack stack, PlayerEntity player) {
-        System.out.println("AAA");
         if (stack.isEmpty() && player.isSneaking()) {
             if (this.parts.isEmpty())
                 return;
@@ -41,9 +43,10 @@ public class MachineCasingBlockEntity extends BlockEntity {
         }
 
         // Should this be in SonicItem.Mode.INTERACTION?
-        if (stack.getItem() == AITItems.SONIC_SCREWDRIVER && SonicItem.findMode(stack) == SonicItem.Mode.INTERACTION) {
-            System.out.println("bzbzbzbzbzbz");
+        if (SonicItem.isSonic(stack) && SonicItem.findMode(stack) == SonicItem.Mode.INTERACTION) {
             MachineRecipeRegistry.getInstance().findMatching(this.parts).ifPresent(schema -> {
+                SonicItem.playSonicSounds(player);
+
                 world.spawnEntity(new ItemEntity(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), schema.output()));
                 world.setBlockState(this.pos, Blocks.AIR.getDefaultState());
                 this.markRemoved();
@@ -52,26 +55,7 @@ public class MachineCasingBlockEntity extends BlockEntity {
             return;
         }
 
-        this.parts.add(new ItemStack(stack.copyWithCount(1).getItem()));
+        this.parts.add(stack.copyWithCount(1));
         stack.decrement(1);
-    }
-
-    public static boolean itemStackComparison(Set<ItemStack> as, Set<ItemStack> bs) {
-        boolean found;
-        for (ItemStack a : as) {
-            found = false;
-            for (ItemStack b : bs) {
-                if (ItemStack.areItemsEqual(a, b)) {
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

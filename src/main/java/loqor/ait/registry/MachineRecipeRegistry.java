@@ -1,10 +1,7 @@
 package loqor.ait.registry;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.blockentities.MachineCasingBlockEntity;
-import loqor.ait.tardis.util.TardisUtil;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import loqor.ait.core.util.StackUtil;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.item.ItemStack;
@@ -15,43 +12,53 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.Optional;
+import java.util.Set;
 
 public class MachineRecipeRegistry extends DatapackRegistry<MachineRecipeSchema> {
-	public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_machines");
+	//public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_machines");
 	private static MachineRecipeRegistry INSTANCE;
 
 	public void syncToEveryone() {
-		if (TardisUtil.getServer() == null) return;
+		/*if (TardisUtil.getServer() == null) return;
 
 		for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
 			syncToClient(player);
-		}
+		}*/
 	}
 
 	public void syncToClient(ServerPlayerEntity player) {
-		PacketByteBuf buf = PacketByteBufs.create();
+		/*PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeInt(REGISTRY.size());
 		for (MachineRecipeSchema schema : REGISTRY.values()) {
 			buf.encodeAsJson(DatapackMachineRecipe.CODEC, schema);
 		}
-		ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
+		ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);*/
 	}
 
 	public void readFromServer(PacketByteBuf buf) {
-		REGISTRY.clear();
+		/*REGISTRY.clear();
 		int size = buf.readInt();
 
 		for (int i = 0; i < size; i++) {
 			register(buf.decodeAsJson(DatapackMachineRecipe.CODEC));
 		}
 
-		AITMod.LOGGER.info("Read {} datapack machine recipes from server", size);
+		AITMod.LOGGER.info("Read {} datapack machine recipes from server", size);*/
 	}
 
 	public Optional<MachineRecipeSchema> findMatching(Set<ItemStack> set) {
 		for (MachineRecipeSchema schema : REGISTRY.values()) {
-			if (MachineCasingBlockEntity.itemStackComparison(set, schema.input()))
+			if (StackUtil.equals(set, schema.input()))
+				return Optional.of(schema);
+		}
+
+		return Optional.empty();
+	}
+
+	public Optional<MachineRecipeSchema> findMatching(ItemStack result) {
+		for (MachineRecipeSchema schema : REGISTRY.values()) {
+			if (ItemStack.areItemsEqual(schema.output(), result))
 				return Optional.of(schema);
 		}
 
@@ -98,12 +105,8 @@ public class MachineRecipeRegistry extends DatapackRegistry<MachineRecipeSchema>
 					}
 				}
 
-				syncToEveryone();
+				//syncToEveryone();
 			}
 		});
-	}
-
-	public void clearCache() {
-		REGISTRY.clear();
 	}
 }

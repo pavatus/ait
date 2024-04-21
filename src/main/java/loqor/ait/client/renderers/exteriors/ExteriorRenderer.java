@@ -1,6 +1,5 @@
 package loqor.ait.client.renderers.exteriors;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
@@ -27,8 +26,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
-
-import java.io.File;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 	private ExteriorModel model;

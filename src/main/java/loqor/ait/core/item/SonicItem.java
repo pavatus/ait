@@ -203,6 +203,10 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		setPreviousMode(stack);
 	}
 
+	public static boolean isSonic(ItemStack stack) {
+		return stack.getRegistryEntry().isIn(AITModTags.Items.SONIC_ITEM);
+	}
+
 	public static int findModeInt(ItemStack stack) {
 		NbtCompound nbtCompound = stack.getOrCreateNbt();
 

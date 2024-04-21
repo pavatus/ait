@@ -5,6 +5,7 @@ import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import loqor.ait.AITMod;
 import loqor.ait.core.item.*;
 import loqor.ait.core.item.control.GenericControlBlockItem;
+import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.item.part.MachinePartItem;
 import loqor.ait.core.item.part.link.FluidLinkItem;
 import loqor.ait.core.item.part.link.MercurialLinkItem;
@@ -54,7 +55,7 @@ public class AITItems implements ItemRegistryContainer {
 
 
 	// Components
-	public static final Item DEMATERIALIZATION_CIRCUIT = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item DEMATERIALIZATION_CIRCUIT = new MachineItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
 
 	// Waypoint-related
