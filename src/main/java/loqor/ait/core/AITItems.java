@@ -64,5 +64,5 @@ public class AITItems implements ItemRegistryContainer {
 
 	// Block controls
 
-	public static final Item BUTTON_CONTROL = new GenericControlBlockItem(AITBlocks.BUTTON_CONTROL_BLOCK, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	//public static final Item BUTTON_CONTROL = new GenericControlBlockItem(AITBlocks.BUTTON_CONTROL_BLOCK, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 }

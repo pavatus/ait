@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "ait:item/wall_monitor_block"
+    "layer0": "ait:item/engine_block"
   }
 }
