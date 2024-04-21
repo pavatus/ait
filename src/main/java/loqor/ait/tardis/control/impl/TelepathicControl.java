@@ -36,7 +36,7 @@ public class TelepathicControl extends Control {
 
 		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
 			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis);
+				this.addToControlSequence(tardis, player);
 				return false;
 			}
 		}
@@ -63,7 +63,7 @@ public class TelepathicControl extends Control {
 			if (!player.isCreative())
 				hand.decrement(1);
 
-			this.addToControlSequence(tardis);
+			this.addToControlSequence(tardis, player);
 			return true;
 		}
 

@@ -23,7 +23,7 @@ public class RefuelerControl extends Control {
 		if (tardis.isGrowth()) return false;
 		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
 			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis);
+				this.addToControlSequence(tardis, player);
 				return false;
 			}
 		}

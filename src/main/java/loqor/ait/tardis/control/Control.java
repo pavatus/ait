@@ -1,10 +1,12 @@
 package loqor.ait.tardis.control;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -63,8 +65,11 @@ public class Control {
 		return runServer(tardis, player, world, leftClick);
 	}
 
-	public void addToControlSequence(Tardis tardis) {
+	public void addToControlSequence(Tardis tardis, ServerPlayerEntity player) {
 		tardis.getHandlers().getSequenceHandler().add(this);
+		if(AITMod.RANDOM.nextInt(0, 20) == 4) {
+			tardis.getHandlers().getLoyalties().addLevel(player, 1);
+		}
 	}
 
 	public SoundEvent getSound() {
