@@ -3,6 +3,7 @@ package loqor.ait.tardis.data;
 import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -89,7 +90,7 @@ public class ShieldData extends TardisLink {
 				.filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
 				.filter(entity -> !(entity instanceof ServerPlayerEntity player && player.isSpectator())) // Exclude players in spectator
 				.filter(entity -> !(entity instanceof FallingTardisEntity falling && falling.getTardis() == tardis))
-				.filter(entity -> !(entity instanceof PlayerEntity && Objects.equals(((PlayerEntity) entity).getOffHandStack().getOrCreateNbt().getString("tardis"), tardis.getUuid().toString()))) // Exclude players
+				.filter(entity -> !(entity instanceof PlayerEntity player && tardis.getHandlers().getLoyalties().get(player).level() >= Loyalty.Type.PILOT.level))
 				.forEach(entity -> {
 					if(entity instanceof ServerPlayerEntity && entity.isSubmergedInWater()) {
 						((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 20, 3, true, false, false));

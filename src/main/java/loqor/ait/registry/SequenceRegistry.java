@@ -57,12 +57,13 @@ public class SequenceRegistry {
 	public static Sequence COURSE_CORRECT;
 	public static Sequence GROUND_UNSTABLE;
 	public static Sequence INCREMENT_SCALE_RECALCULATION_NECESSARY;
+	public static Sequence SMALL_DEBRIS_FIELD;
 
 	// TODO flight staging
-	public static Sequence TAKE_OFF;
+	/*public static Sequence TAKE_OFF;
 	public static Sequence ENTER_VORTEX;
 	public static Sequence EXIT_VORTEX;
-	public static Sequence LANDING;
+	public static Sequence LANDING;*/
 
 
 	public static void init() {
@@ -257,13 +258,22 @@ public class SequenceRegistry {
 				}), 80L, Text.literal("Increment scale error! Recalculation necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new IncrementControl()));
 
-		TAKE_OFF = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "take_off"), (finishedTardis -> {
+		SMALL_DEBRIS_FIELD = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "small_debris_field"), (finishedTardis -> {
+					finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
+					finishedTardis.addFuel(random.nextBetween(45, 125));
+				}), (missedTardis -> {
+					missedTardis.removeFuel(random.nextBetween(45, 125));
+				}), 80L, Text.literal("Small debris field!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+				new IncrementControl(), new ShieldsControl()));
+
+		/*TAKE_OFF = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "take_off"), (finishedTardis -> {
 					finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
 					finishedTardis.addFuel(random.nextBetween(45, 125));
 				}), (missedTardis -> {
 					missedTardis.removeFuel(random.nextBetween(45, 125));
 				}), 80L, Text.literal("Takeoff sequence initiated...").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new IncrementControl()));
+
 		ENTER_VORTEX = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "enter_vortex"), (finishedTardis -> {
 					finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
 					finishedTardis.addFuel(random.nextBetween(45, 125));
@@ -271,6 +281,7 @@ public class SequenceRegistry {
 					missedTardis.removeFuel(random.nextBetween(45, 125));
 				}), 80L, Text.literal("Vortex entrance found!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new IncrementControl()));
+
 		EXIT_VORTEX = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "exit_vortex"), (finishedTardis -> {
 					finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
 					finishedTardis.addFuel(random.nextBetween(45, 125));
@@ -278,12 +289,13 @@ public class SequenceRegistry {
 					missedTardis.removeFuel(random.nextBetween(45, 125));
 				}), 80L, Text.literal("Vortex exit found!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new IncrementControl()));
+
 		LANDING = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "landing"), (finishedTardis -> {
 					finishedTardis.getHandlers().getFlight().decreaseFlightTime(30);
 					finishedTardis.addFuel(random.nextBetween(45, 125));
 				}), (missedTardis -> {
 					missedTardis.removeFuel(random.nextBetween(45, 125));
 				}), 80L, Text.literal("Landing sequence initiated...").formatted(Formatting.ITALIC, Formatting.YELLOW),
-				new IncrementControl()));
+				new IncrementControl()));*/
 	}
 }

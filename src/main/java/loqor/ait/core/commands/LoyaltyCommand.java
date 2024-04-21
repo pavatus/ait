@@ -2,7 +2,6 @@ package loqor.ait.core.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -32,7 +31,7 @@ public class LoyaltyCommand {
                         .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
                                 .then(argument("player", EntityArgumentType.player())
                                         .executes(LoyaltyCommand::get)
-                                        .then(argument("value", BoolArgumentType.bool())
+                                        .then(argument("value", IntegerArgumentType.integer())
                                                 .executes(LoyaltyCommand::set))
                                 )
                         )

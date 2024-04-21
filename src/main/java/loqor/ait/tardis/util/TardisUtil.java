@@ -140,7 +140,8 @@ public class TardisUtil {
 					UUID uuid = buf.readUuid();
 					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-					//TODO: make a permissionhandler
+					System.out.println(tardis.getHandlers().getLoyalties().get(player).level());
+
 					if (tardis.getHandlers().getLoyalties().get(player).level() < Loyalty.Type.PILOT.level)
 						return;
 

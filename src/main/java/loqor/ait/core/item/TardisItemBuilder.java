@@ -8,6 +8,7 @@ import loqor.ait.registry.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
@@ -106,7 +107,8 @@ public class TardisItemBuilder extends Item {
 				return ActionResult.SUCCESS;
 			}
 
-			ServerTardisManager.getInstance().create(pos, CategoryRegistry.getInstance().get(this.exterior), findRandomVariant(CategoryRegistry.getInstance().get(this.exterior)), DesktopRegistry.getInstance().get(this.desktop), false);
+			Tardis tardis = ServerTardisManager.getInstance().create(pos, CategoryRegistry.getInstance().get(this.exterior), findRandomVariant(CategoryRegistry.getInstance().get(this.exterior)), DesktopRegistry.getInstance().get(this.desktop), false);
+			tardis.getHandlers().getLoyalties().set(player, Loyalty.fromLevel(100));
 			context.getStack().decrement(1);
 		}
 
