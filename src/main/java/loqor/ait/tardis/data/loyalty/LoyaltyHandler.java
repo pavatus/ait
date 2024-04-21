@@ -30,9 +30,11 @@ public class LoyaltyHandler extends TardisLink {
         return this.data.getOrDefault(player.getUuid(), new Loyalty(Loyalty.Type.NEUTRAL));
     }
 
-    public void set(PlayerEntity player, Loyalty loyalty) {
+    public Loyalty set(PlayerEntity player, Loyalty loyalty) {
         this.data.put(player.getUuid(), loyalty);
         this.sync();
+
+        return loyalty;
     }
 
     public void update(ServerPlayerEntity player, Function<Loyalty, Loyalty> consumer) {

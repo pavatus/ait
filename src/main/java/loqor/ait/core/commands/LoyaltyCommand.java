@@ -3,16 +3,14 @@ package loqor.ait.core.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.suggestion.SuggestionProvider;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.permissions.Permission;
-import loqor.ait.tardis.data.permissions.PermissionHandler;
+import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -26,21 +24,16 @@ import static loqor.ait.core.commands.TeleportInteriorCommand.TARDIS_SUGGESTION;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
-public class PermissionTestCommand {
-
-    public static final SuggestionProvider<ServerCommandSource> PERMISSION = (context, builder) ->
-            CommandSource.suggestMatching(Permission.collect(), builder);
+public class LoyaltyCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(AITMod.MOD_ID)
                 .then(literal("permission").requires(source -> source.hasPermissionLevel(2))
                         .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
                                 .then(argument("player", EntityArgumentType.player())
-                                        .then(argument("permission", StringArgumentType.string()).suggests(PERMISSION)
-                                                .executes(PermissionTestCommand::get)
-                                                .then(argument("value", BoolArgumentType.bool())
-                                                        .executes(PermissionTestCommand::set))
-                                        )
+                                        .executes(LoyaltyCommand::get)
+                                        .then(argument("value", BoolArgumentType.bool())
+                                                .executes(LoyaltyCommand::set))
                                 )
                         )
                 )
@@ -49,21 +42,22 @@ public class PermissionTestCommand {
 
     private static int set(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         CommonArgs args = CommonArgs.create(context);
-        boolean value = BoolArgumentType.getBool(context, "value");
+        int value = IntegerArgumentType.getInteger(context, "value");
 
-        args.run("ait.command.permission.set", "Set permission '%s' for player %s to '%s'",
-                handler -> handler.set(args.player, args.permission, value));
+        args.run("ait.command.permission.set", "Set loyalty for player %s to rank %s level %s",
+                handler -> handler.set(args.player, Loyalty.fromLevel(value)));
 
         return Command.SINGLE_SUCCESS;
     }
 
     private static int get(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         CommonArgs args = CommonArgs.create(context);
-        return args.run("ait.command.permission.get", "Permission check '%s' for player %s: '%s'",
-                handler -> handler.check(args.player, args.permission)) ? 1 : 0;
+
+        return args.run("ait.command.permission.get", "Player %s has rank %s with level %s",
+                handler -> handler.get(args.player)).level();
     }
 
-    record CommonArgs(ServerCommandSource source, Tardis tardis, ServerPlayerEntity player, Permission permission) {
+    record CommonArgs(ServerCommandSource source, Tardis tardis, ServerPlayerEntity player) {
 
         public static CommonArgs create(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
             UUID uuid = UuidArgumentType.getUuid(context, "tardis");
@@ -74,20 +68,14 @@ public class PermissionTestCommand {
 
             ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 
-            String permissionId = StringArgumentType.getString(context, "permission");
-            Permission permission = Permission.from(permissionId);
-
-            if (permission == null)
-                throw new CommandSyntaxException(CommandSyntaxException.BUILT_IN_EXCEPTIONS.literalIncorrect(), () -> "No permission with id '" + permissionId + "'");
-
-            return new CommonArgs(context.getSource(), tardis, player, permission);
+            return new CommonArgs(context.getSource(), tardis, player);
         }
 
-        public boolean run(String key, String fallback, Function<PermissionHandler, Boolean> func) {
-            boolean result = func.apply(this.tardis.getHandlers().getPermissions());
+        public Loyalty run(String key, String fallback, Function<LoyaltyHandler, Loyalty> func) {
+            Loyalty result = func.apply(this.tardis.getHandlers().getLoyalties());
 
             this.source.sendFeedback(() -> Text.translatableWithFallback(
-                    key, fallback, this.permission, this.player.getName(), result
+                    key, fallback, this.player.getName(), result.type(), result.level()
             ), false);
 
             return result;
