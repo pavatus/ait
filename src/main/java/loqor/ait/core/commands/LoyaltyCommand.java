@@ -28,7 +28,7 @@ public class LoyaltyCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("permission").requires(source -> source.hasPermissionLevel(2))
+                .then(literal("loyalty").requires(source -> source.hasPermissionLevel(2))
                         .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
                                 .then(argument("player", EntityArgumentType.player())
                                         .executes(LoyaltyCommand::get)
@@ -44,7 +44,7 @@ public class LoyaltyCommand {
         CommonArgs args = CommonArgs.create(context);
         int value = IntegerArgumentType.getInteger(context, "value");
 
-        args.run("ait.command.permission.set", "Set loyalty for player %s to rank %s level %s",
+        args.run("ait.command.loyalty.set", "Set loyalty for player %s to rank %s level %s",
                 handler -> handler.set(args.player, Loyalty.fromLevel(value)));
 
         return Command.SINGLE_SUCCESS;
@@ -53,7 +53,7 @@ public class LoyaltyCommand {
     private static int get(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         CommonArgs args = CommonArgs.create(context);
 
-        return args.run("ait.command.permission.get", "Player %s has rank %s with level %s",
+        return args.run("ait.command.loyalty.get", "Player %s has rank %s with level %s",
                 handler -> handler.get(args.player)).level();
     }
 
