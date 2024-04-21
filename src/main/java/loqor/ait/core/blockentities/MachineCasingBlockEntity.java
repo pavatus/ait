@@ -42,7 +42,7 @@ public class MachineCasingBlockEntity extends BlockEntity {
             return;
         }
 
-        // Should this be in SonicItem.Mode.INTERACTION?
+        // Should this be in SonicItem.Mode.INTERACTION? nah, it's fineeeee
         if (SonicItem.isSonic(stack) && SonicItem.findMode(stack) == SonicItem.Mode.INTERACTION) {
             MachineRecipeRegistry.getInstance().findMatching(this.parts).ifPresent(schema -> {
                 SonicItem.playSonicSounds(player);

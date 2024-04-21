@@ -129,7 +129,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 			world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
 			cycleMode(stack);
 
-			this.removeFuel(stack);
+			//this.removeFuel(stack);
 
 			return true;
 		}

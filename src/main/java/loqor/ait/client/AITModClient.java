@@ -399,7 +399,7 @@ public class AITModClient implements ClientModInitializer {
                         Tardis tardis = KeyItem.getTardis(stack);
                         Loyalty loyalty = tardis.getHandlers().getLoyalties().get(player);
 
-                        //TODO: make a permissionhandler
+                        //TODO: make a permissionhandler - yayy we have one :)
                         if (loyalty.level() > Loyalty.Type.PILOT.level)
                             ClientTardisUtil.snapToOpenDoors(tardis);
                     }
@@ -416,5 +416,6 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.LARGE_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.MEDIUM_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.SMALL_ZEITON_BUD, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.MACHINE_CASING, RenderLayer.getTranslucent());
     }
 }
