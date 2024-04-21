@@ -81,21 +81,32 @@ public class SequenceHandler extends TardisLink {
 	}
 
 	private void compareToSequences() {
+
 		if (this.findTardis().isEmpty() || this.getActiveSequence() == null) return;
-		if (this.recent == null)
+
+		if (this.recent == null) {
+
 			this.recent = new RecentControls(this.findTardis().get().getUuid());
+
+		}
 		if (this.getActiveSequence().isFinished(this.recent)) {
+
 			recent.clear();
 			this.getActiveSequence().execute(this.findTardis().get());
 			completedControlEffects(this.findTardis().get());
 			this.setActiveSequence(null, true);
+
 		} else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
+
 			recent.clear();
 			this.getActiveSequence().executeMissed(this.findTardis().get());
 			missedControlEffects(this.findTardis().get());
 			this.setActiveSequence(null, true);
+
 		} else if (recent.size() >= this.getActiveSequence().getControls().size()) {
+
 			recent.clear();
+
 		}
 	}
 
