@@ -8,6 +8,7 @@ import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -98,7 +99,13 @@ public class ShieldData extends TardisLink {
 					if(this.areVisualShieldsActive()) {
 						if (entity.squaredDistanceTo(this.getExteriorPos().toCenterPos()) <= 6f) {
 							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(this.getExteriorPos().toCenterPos()).normalize().multiply(0.1f);
-							entity.setVelocity(entity.getVelocity().add(motion));
+							if(entity instanceof ProjectileEntity projectile) {
+								projectile.setVelocity(0, 0, 0);
+								projectile.velocityDirty = true;
+								projectile.velocityModified = true;
+								return;
+							}
+							entity.setVelocity(entity.getVelocity().add(motion.multiply(2f)));
 							entity.velocityDirty = true;
 							entity.velocityModified = true;
 						}
