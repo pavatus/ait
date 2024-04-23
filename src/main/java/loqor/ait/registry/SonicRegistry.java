@@ -112,14 +112,16 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
         });
     }
 
-    /**
-     * Unlocks all sonics for all players, usually when someone calls /reload as this wont be ran when the world starts
-     * bad but oh well
-     */
-    private void giveOutSonics() {
-        DEFAULT = this.get(0);
+    @Override
+    public void clearCache() {
+        super.clearCache();
 
-        if (ServerTardisManager.getInstance() == null) return;
+        DEFAULT = register(BuiltinSonic.create("prime", "Prime"));
+    }
+
+    private void giveOutSonics() {
+        if (ServerTardisManager.getInstance() == null)
+            return;
 
         for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
             for (SonicSchema schema : SonicRegistry.getInstance().toList()) {
@@ -134,11 +136,10 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
              * THOSE FIELDS ARE ONLY USED WHEN THE REST OF THE RESOURCES ARE NOT INITIALIZED
              * To not reload the game the second time, it's better to keep the builtin stuff semi-loaded
              */
-            register(BuiltinSonic.create("prime"));
-            register(BuiltinSonic.create("mechanical"));
-            register(BuiltinSonic.create("fob"));
-            register(BuiltinSonic.create("coral"));
-            register(BuiltinSonic.create("renaissance"));
+            register(BuiltinSonic.create("mechanical", null));
+            register(BuiltinSonic.create("fob", null));
+            register(BuiltinSonic.create("coral", null));
+            register(BuiltinSonic.create("renaissance", null));
         }
 
         for (SonicSchema schema : REGISTRY.values()) {
@@ -147,6 +148,5 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
 
             LOGGER.info("Loading sonic '" + schema.id() + "' with models: " + models);
         }
-
     }
 }
