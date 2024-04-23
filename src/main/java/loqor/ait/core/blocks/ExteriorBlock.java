@@ -66,6 +66,16 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
 		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
 	}
+	@Override
+
+	public boolean emitsRedstonePower(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
+		return 15;
+	}
 
 	@Override
 	public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {

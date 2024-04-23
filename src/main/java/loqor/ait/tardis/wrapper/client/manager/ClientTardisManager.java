@@ -119,6 +119,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		AbstractTardisComponent.Type<?> header = typeId.getType();
 
 		String json = buf.readString();
+		if(header == null) return;
 		header.unsafeSet(tardis, this.gson.fromJson(json, header.clazz()));
 	}
 
