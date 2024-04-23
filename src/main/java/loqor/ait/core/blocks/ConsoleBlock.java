@@ -116,6 +116,17 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 	}
 
 	@Override
+
+	public boolean emitsRedstonePower(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
+		return 15;
+	}
+
+	@Override
 	public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
 		if (entity instanceof PlayerEntity player) {
 			Random random = new Random();

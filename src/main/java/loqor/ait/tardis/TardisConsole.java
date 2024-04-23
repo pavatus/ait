@@ -11,6 +11,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.Optional;
@@ -83,6 +85,7 @@ public class TardisConsole extends TardisLink {
 		return super.findTardis();
 	}
 
+
 	public boolean validate() {
 		if (this.shouldRemove()) {
 			AITMod.LOGGER.warn("Removing " + this.uuid() + " from desktop as it was invalid");
@@ -108,6 +111,7 @@ public class TardisConsole extends TardisLink {
 	public void tick(MinecraftServer server) {
 		super.tick(server);
 	}
+
 
 	/**
 	 * Tick from the {@link ConsoleBlockEntity#tick(World, BlockPos, BlockState, ConsoleBlockEntity)}
