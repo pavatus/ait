@@ -1,20 +1,22 @@
 package loqor.ait.registry;
 
 import com.google.gson.*;
+import loqor.ait.core.util.StackUtil;
 import loqor.ait.registry.datapack.Identifiable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
 import java.lang.reflect.Type;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MachineRecipeSchema implements Identifiable {
 
     private final Identifier id;
     private final ItemStack output;
-    private final Set<ItemStack> input;
+    private final List<ItemStack> input;
 
-    public MachineRecipeSchema(Identifier id, ItemStack output, Set<ItemStack> input) {
+    public MachineRecipeSchema(Identifier id, ItemStack output, List<ItemStack> input) {
         this.id = id;
         this.output = output;
         this.input = input;
@@ -22,12 +24,13 @@ public class MachineRecipeSchema implements Identifiable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() == null) return false;
+        if (this == o)
+            return true;
 
-        MachineRecipeSchema that = (MachineRecipeSchema) o;
+        if (o instanceof MachineRecipeSchema other)
+            return this.id.equals(other.id);
 
-        return id.equals(that.id);
+        return false;
     }
 
     public Identifier id() {
@@ -38,8 +41,12 @@ public class MachineRecipeSchema implements Identifiable {
         return output;
     }
 
-    public Set<ItemStack> input() {
+    public List<ItemStack> input() {
         return this.input;
+    }
+
+    public MachineRecipeSchema copy() {
+        return new MachineRecipeSchema(this.id, this.output.copy(), StackUtil.copy(this.input, ArrayList::new));
     }
 
     public static Object serializer() {

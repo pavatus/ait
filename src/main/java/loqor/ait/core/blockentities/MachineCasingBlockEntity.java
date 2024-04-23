@@ -1,28 +1,28 @@
 package loqor.ait.core.blockentities;
 
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITItems;
-import loqor.ait.core.AITSounds;
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.util.StackUtil;
 import loqor.ait.registry.MachineRecipeRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class MachineCasingBlockEntity extends BlockEntity {
 
-    private final Set<ItemStack> parts = new HashSet<>();
+    private final Deque<ItemStack> parts = new ArrayDeque<>();
 
     public MachineCasingBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.MACHINE_CASING_ENTITY_TYPE, pos, state);
@@ -33,29 +33,52 @@ public class MachineCasingBlockEntity extends BlockEntity {
             if (this.parts.isEmpty())
                 return;
 
-            Iterator<ItemStack> iterator = parts.iterator();
+            StackUtil.spawn(world, this.pos, parts.pop(), true);
+            return;
+        }
 
-            ItemStack type = iterator.next();
-            iterator.remove();
-
-            world.spawnEntity(new ItemEntity(world, this.pos.getX(), this.pos.getY() + 1, this.pos.getZ(), type));
+        if (!SonicItem.isSonic(stack)) {
+            this.parts.push(stack.copyWithCount(1));
+            stack.decrement(1);
             return;
         }
 
         // Should this be in SonicItem.Mode.INTERACTION? nah, it's fineeeee
-        if (SonicItem.isSonic(stack) && SonicItem.findMode(stack) == SonicItem.Mode.INTERACTION) {
+        if (SonicItem.findMode(stack) == SonicItem.Mode.INTERACTION) {
             MachineRecipeRegistry.getInstance().findMatching(this.parts).ifPresent(schema -> {
                 SonicItem.playSonicSounds(player);
 
-                world.spawnEntity(new ItemEntity(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), schema.output()));
-                world.setBlockState(this.pos, Blocks.AIR.getDefaultState());
+                StackUtil.spawn(world, this.pos, schema.output(), true);
+                StackUtil.spawn(world, this.pos, new ItemStack(AITBlocks.MACHINE_CASING.asItem()));
+
+                world.removeBlock(this.pos, false);
                 this.markRemoved();
             });
-
-            return;
         }
+    }
 
-        this.parts.add(stack.copyWithCount(1));
-        stack.decrement(1);
+    public void onBreak(World world) {
+        StackUtil.scatter(world, pos.up(1), this.parts);
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        StackUtil.writeUnordered(nbt, this.parts);
+    }
+
+    @Override
+    protected void writeNbt(NbtCompound nbt) {
+        StackUtil.readUnordered(nbt, this.parts);
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        return createNbt();
     }
 }

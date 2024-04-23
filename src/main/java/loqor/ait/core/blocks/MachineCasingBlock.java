@@ -33,6 +33,14 @@ public class MachineCasingBlock extends Block implements BlockEntityProvider {
         return ActionResult.CONSUME;
     }
 
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (world.getBlockEntity(pos) instanceof MachineCasingBlockEntity casing)
+            casing.onBreak(world);
+
+        super.onBreak(world, pos, state, player);
+    }
+
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {

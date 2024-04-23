@@ -12,45 +12,23 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 public class MachineRecipeRegistry extends DatapackRegistry<MachineRecipeSchema> {
-	//public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_machines");
+
 	private static MachineRecipeRegistry INSTANCE;
 
-	public void syncToEveryone() {
-		/*if (TardisUtil.getServer() == null) return;
+	public void syncToEveryone() { }
 
-		for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
-			syncToClient(player);
-		}*/
-	}
+	public void syncToClient(ServerPlayerEntity player) { }
 
-	public void syncToClient(ServerPlayerEntity player) {
-		/*PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeInt(REGISTRY.size());
-		for (MachineRecipeSchema schema : REGISTRY.values()) {
-			buf.encodeAsJson(DatapackMachineRecipe.CODEC, schema);
-		}
-		ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);*/
-	}
+	public void readFromServer(PacketByteBuf buf) { }
 
-	public void readFromServer(PacketByteBuf buf) {
-		/*REGISTRY.clear();
-		int size = buf.readInt();
-
-		for (int i = 0; i < size; i++) {
-			register(buf.decodeAsJson(DatapackMachineRecipe.CODEC));
-		}
-
-		AITMod.LOGGER.info("Read {} datapack machine recipes from server", size);*/
-	}
-
-	public Optional<MachineRecipeSchema> findMatching(Set<ItemStack> set) {
+	public Optional<MachineRecipeSchema> findMatching(Collection<ItemStack> set) {
 		for (MachineRecipeSchema schema : REGISTRY.values()) {
 			if (StackUtil.equals(set, schema.input()))
-				return Optional.of(schema);
+				return Optional.of(schema.copy());
 		}
 
 		return Optional.empty();
@@ -59,7 +37,7 @@ public class MachineRecipeRegistry extends DatapackRegistry<MachineRecipeSchema>
 	public Optional<MachineRecipeSchema> findMatching(ItemStack result) {
 		for (MachineRecipeSchema schema : REGISTRY.values()) {
 			if (ItemStack.areItemsEqual(schema.output(), result))
-				return Optional.of(schema);
+				return Optional.of(schema.copy());
 		}
 
 		return Optional.empty();

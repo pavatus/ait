@@ -4,7 +4,6 @@ import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.*;
@@ -14,9 +13,12 @@ import loqor.ait.core.commands.*;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SiegeTardisItem;
+import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.util.AITConfig;
+import loqor.ait.core.util.StackUtil;
 import loqor.ait.registry.*;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
@@ -38,29 +40,28 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.PlacedFeature;
-import net.minecraft.world.level.WorldGenSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -284,6 +285,23 @@ public class AITMod implements ModInitializer {
 			TardisUtil.getServer().execute(() -> {
 				if (tardis == null) return;
 				PropertiesHandler.set(tardis.getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED, tardis.areShieldsActive() && shields);
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(MachineItem.MACHINE_DISASSEMBLE, (server, player, handler, buf, responseSender) -> {
+			ItemStack machine = buf.readItemStack();
+
+			Optional<MachineRecipeSchema> schema = MachineRecipeRegistry.getInstance().findMatching(machine);
+
+			if (schema.isEmpty())
+				return;
+
+			// this should ALWAYS be executed on the main thread
+			server.execute(() -> {
+				SonicItem.playSonicSounds(player);
+				MachineItem.disassemble(player, machine, schema.get());
+
+				StackUtil.playBreak(player);
 			});
 		});
 
