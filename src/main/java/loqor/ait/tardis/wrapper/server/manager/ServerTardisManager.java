@@ -2,14 +2,14 @@ package loqor.ait.tardis.wrapper.server.manager;
 
 import com.google.gson.GsonBuilder;
 import loqor.ait.AITMod;
+import loqor.ait.compat.DependencyChecker;
+import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.*;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
-import loqor.ait.compat.DependencyChecker;
-import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.tardis.util.*;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -17,11 +17,9 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +34,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ServerTardisManager extends TardisManager<ServerTardis> implements TardisTickable {
+public class ServerTardisManager extends TardisManager<ServerTardis> {
 
 	public static final Identifier SEND = new Identifier("ait", "send_tardis");
 	public static final Identifier UPDATE = new Identifier("ait", "update_tardis");
@@ -46,12 +44,13 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 	private final ConcurrentHashMap<UUID, List<UUID>> buffers = new ConcurrentHashMap<>(); // buffer for sending tardises
 
 	public ServerTardisManager() {
-		this.loadTardises();
-
 		ServerPlayNetworking.registerGlobalReceiver(
 				ClientTardisManager.ASK, (server, player, handler, buf, responseSender) -> {
 					UUID uuid = buf.readUuid();
-					if (player == null || uuid == null) return;
+
+					if (player == null || uuid == null)
+						return;
+
 					this.sendTardis(player, uuid);
 					addSubscriberToTardis(player, uuid);
 				}
@@ -61,6 +60,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 				ClientTardisManager.ASK_POS, (server, player, handler, buf, responseSender) -> {
 					BlockPos pos = AbsoluteBlockPos.fromNbt(buf.readNbt());
 					UUID uuid = null;
+
 					for (Tardis tardis : this.getLookup().values()) {
 						if (!tardis.getTravel().getPosition().equals(pos)) continue;
 
@@ -79,29 +79,23 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset + save
 
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
-			// fixme would this cause lag?
 			for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
 				tardis.tick(server);
 			}
 
-			tick(server);
+			this.tickBuffer(server);
 		});
 
 		ServerTickEvents.END_WORLD_TICK.register(world -> {
-			// fixme lag?
 			for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
 				tardis.tick(world);
 			}
-
-			tick(world);
 		});
 
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
 			for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
 				tardis.startTick(server);
 			}
-
-			startTick(server);
 		});
 	}
 
@@ -121,51 +115,10 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		}
 	}
 
-	/**
-	 * Removes a subscriber from the TARDIS
-	 *
-	 * @param serverPlayerEntity the player to remove from the subscribers list
-	 * @param tardisUUID         the UUID of the TARDIS
-	 */
-	private void removeSubscriberToTardis(ServerPlayerEntity serverPlayerEntity, UUID tardisUUID) {
-		if (!this.subscribers.containsKey(tardisUUID))
-			return; // If the Tardis does not have any subscribers ignore this
-
-		List<UUID> old_uuids = this.subscribers.get(tardisUUID);
-		int i_to_remove = -1;
-
-		for (int i = 0; i < old_uuids.size(); i++) {
-			if (old_uuids.get(i).equals(serverPlayerEntity.getUuid())) {
-				i_to_remove = i;
-				break;
-			}
-		}
-
-		if (i_to_remove == -1) return; // If the player is not in the list ignore this
-
-		old_uuids.remove(i_to_remove);
-		if (old_uuids.isEmpty()) {
-			this.subscribers.remove(tardisUUID);
-		} else {
-			this.subscribers.put(tardisUUID, old_uuids); // update the subscriber list in case any other subscriber was added or removed during this operation
-		}
-	}
-
-	/**
-	 * Removes all subscribers from the TARDIS
-	 *
-	 * @param tardisUUID the TARDIS UUID
-	 */
-	private void removeAllSubscribersFromTardis(UUID tardisUUID) {
-		this.subscribers.replace(tardisUUID, new CopyOnWriteArrayList<>());
-	}
-
 	public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
 		UUID uuid = UUID.randomUUID();
 
 		ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked); // todo removed "locked" param
-		// tardis.setFuelCount(1000); // Default fuel count is 100 - cant be set here causes issues. set in PropertiesHandler instead
-		//this.saveTardis(tardis);
 		this.lookup.put(uuid, tardis);
 
 		// todo this can be moved to init
@@ -175,7 +128,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		tardis.getHandlers().getStats().markCreationDate();
 
 		this.saveTardis(tardis);
-
 		return tardis;
 	}
 
@@ -199,7 +151,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 	}
 
 	public Tardis getTardis(UUID uuid) {
-		if (uuid == null) return null; // ugh
+		if (uuid == null)
+			return null; // ugh
 
 		if (this.lookup.containsKey(uuid))
 			return this.lookup.get(uuid);
@@ -212,7 +165,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		consumer.accept(this.loadTardis(uuid));
 	}
 
-
 	@Override
 	public GsonBuilder getGsonBuilder(GsonBuilder builder) {
 		builder.registerTypeAdapter(SerialDimension.class, SerialDimension.serializer());
@@ -223,9 +175,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		instance = new ServerTardisManager();
 	}
 
-
 	public void sendToSubscribers(Tardis tardis) {
-		// todo this likely needs refactoring
+		// todo this likely needs refactoring // yes, yes it does.
 //        if (tardis == null) return;
 //        if (!this.subscribers.containsKey(tardis.getUuid())) return;
 //        MinecraftServer mc = TardisUtil.getServer();
@@ -394,7 +345,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		return instance;
 	}
 
-	public void loadTardises() {
+	@Deprecated
+	private void loadTardises() {
 		File[] saved = ServerTardisManager.getSavePath().listFiles();
 
 		if (saved == null)
@@ -426,8 +378,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 
 			ServerTardis tardis = this.gson.fromJson(json, ServerTardis.class);
 			tardis.init(true);
-			this.lookup.put(tardis.getUuid(), tardis);
 
+			this.lookup.put(tardis.getUuid(), tardis);
 			return tardis;
 		} catch (IOException e) {
 			AITMod.LOGGER.warn("Failed to load tardis with uuid {}!", file);
@@ -500,7 +452,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 	}
 
 	private void tickBuffer(MinecraftServer server) {
-		if (this.buffers.isEmpty()) return;
+		if (this.buffers.isEmpty())
+			return;
 
 		for (Iterator<UUID> it = this.buffers.keys().asIterator(); it.hasNext(); ) {
 			UUID playerId = it.next();
@@ -508,11 +461,13 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 
 			if (player == null
 					|| !this.buffers.containsKey(playerId)
-					|| isAskOnDelay(player)) continue;
+					|| isAskOnDelay(player))
+				continue;
 
 			List<UUID> tardisIds = this.buffers.get(playerId);
 
-			if (tardisIds == null || tardisIds.isEmpty()) continue;
+			if (tardisIds == null || tardisIds.isEmpty())
+				continue;
 
 			List<UUID> copyOfTardisIds = new CopyOnWriteArrayList<>(tardisIds);
 
@@ -526,42 +481,20 @@ public class ServerTardisManager extends TardisManager<ServerTardis> implements 
 		}
 	}
 
-	@Override
-	public void tick(MinecraftServer server) {
-		this.tickBuffer(server);
-	}
-
-	@Override
-	public void tick(ServerWorld world) {
-
-	}
-
-	@Override
-	public void tick(MinecraftClient client) {
-		// this will never be called
-	}
-
-	@Override
-	public void startTick(MinecraftServer server) {
-
-	}
-
 	public void onShutdown(MinecraftServer server) {
-		// todo clean up this
-
 		// force all dematting to go flight and all matting to go land
 		for (Tardis tardis : this.getLookup().values()) {
 			// stop forcing all chunks
 			TardisChunkUtil.stopForceExteriorChunk(tardis);
+			TardisTravel.State state = tardis.getTravel().getState();
 
-			if (tardis.getTravel().getState() == TardisTravel.State.DEMAT) {
+			if (state == TardisTravel.State.DEMAT) {
 				tardis.getTravel().toFlight();
-			} else if (tardis.getTravel().getState() == TardisTravel.State.MAT) {
+			} else if (state == TardisTravel.State.MAT) {
 				tardis.getTravel().forceLand();
 			}
 
 			tardis.getDoor().closeDoors();
-
 			if (DependencyChecker.hasPortals())
 				PortalsHandler.removePortals(tardis);
 		}

@@ -47,8 +47,8 @@ public abstract class ExteriorVariantSchema implements Identifiable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() == null) return false;
+		if (this == o)
+			return true;
 
 		ExteriorVariantSchema that = (ExteriorVariantSchema) o;
 

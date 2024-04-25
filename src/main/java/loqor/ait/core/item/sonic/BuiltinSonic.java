@@ -20,13 +20,11 @@ public class BuiltinSonic extends SonicSchema {
     public static BuiltinSonic create(String id, String name) {
         Identifier[] identifiers = new Identifier[MODES.length];
 
-        int i = 0;
-        for (String mode : MODES) {
-            identifiers[i] = new Identifier(MOD_ID, prefix + id + "/" + mode);
-            i++;
+        for (int i = 0; i < MODES.length; i++) {
+            identifiers[i] = new Identifier(MOD_ID, prefix + id + "/" + MODES[i]);
         }
 
-        return new BuiltinSonic(new Identifier(AITMod.MOD_ID, id), null, new Models(
+        return new BuiltinSonic(new Identifier(AITMod.MOD_ID, id), name, new Models(
                 identifiers[0], identifiers[1], identifiers[2], identifiers[3], identifiers[4]
         ));
     }

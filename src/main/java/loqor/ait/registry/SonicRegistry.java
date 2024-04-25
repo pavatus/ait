@@ -116,7 +116,7 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
     public void clearCache() {
         super.clearCache();
 
-        DEFAULT = register(BuiltinSonic.create("prime", null));
+        DEFAULT = register(BuiltinSonic.create("prime", "Prime"));
     }
 
     private void giveOutSonics() {
@@ -131,10 +131,12 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
     }
 
     public void populateModels(Consumer<Identifier> consumer) {
-        if (REGISTRY.isEmpty()) {
+        // the default sonic (prime) is ALWAYS registered
+        if (REGISTRY.size() == 1) {
             /*
              * THOSE FIELDS ARE ONLY USED WHEN THE REST OF THE RESOURCES ARE NOT INITIALIZED
              * To not reload the game the second time, it's better to keep the builtin stuff semi-loaded
+             * Shouldn't be a problem for custom sonics though, since they will require a resourcepack.
              */
             register(BuiltinSonic.create("copper", null));
             register(BuiltinSonic.create("mechanical", null));

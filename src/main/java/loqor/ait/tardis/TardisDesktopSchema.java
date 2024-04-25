@@ -4,6 +4,7 @@ import com.google.gson.*;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.datapack.Identifiable;
 import loqor.ait.tardis.control.impl.DimensionControl;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.desktops.textures.DesktopPreviewTexture;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.world.ServerWorld;
@@ -14,26 +15,26 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 public abstract class TardisDesktopSchema implements Identifiable {
+
 	private final Identifier id;
 	private final DesktopPreviewTexture preview;
+	private final Loyalty loyalty;
 
-	public TardisDesktopSchema(Identifier id, DesktopPreviewTexture texture) {
+	protected TardisDesktopSchema(Identifier id, DesktopPreviewTexture texture, Loyalty loyalty) {
 		this.id = id;
 		this.preview = texture;
-	}
-
-	public TardisDesktopSchema(Identifier id) {
-		this(id, new DesktopPreviewTexture(id));
+		this.loyalty = loyalty;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() == null) return false;
+		if (this == o)
+			return true;
 
-		TardisDesktopSchema that = (TardisDesktopSchema) o;
+		if (o instanceof TardisDesktopSchema that)
+			return id.equals(that.id);
 
-		return id.equals(that.id);
+		return false;
 	}
 
 	public Identifier id() {
@@ -46,6 +47,10 @@ public abstract class TardisDesktopSchema implements Identifiable {
 
 	public DesktopPreviewTexture previewTexture() {
 		return this.preview;
+	}
+
+	public Loyalty getRequirement() {
+		return loyalty;
 	}
 
 	/**

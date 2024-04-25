@@ -6,22 +6,27 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import loqor.ait.AITMod;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.desktops.textures.DesktopPreviewTexture;
 import loqor.ait.tardis.TardisDesktopSchema;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DatapackDesktop extends TardisDesktopSchema {
 	public static final Codec<TardisDesktopSchema> CODEC = RecordCodecBuilder.create(
 			instance -> instance.group(
-					Identifier.CODEC.fieldOf("id").forGetter(TardisDesktopSchema::id)
+					Identifier.CODEC.fieldOf("id").forGetter(TardisDesktopSchema::id),
+					Loyalty.CODEC.optionalFieldOf("loyalty")
+							.forGetter(schema -> Optional.of(schema.getRequirement()))
 			).apply(instance, (DatapackDesktop::new)));
 
-	public DatapackDesktop(Identifier id) {
-		super(id, new DesktopPreviewTexture(DesktopPreviewTexture.pathFromDesktopId(id)));
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	public DatapackDesktop(Identifier id, Optional<Loyalty> loyalty) {
+		super(id, new DesktopPreviewTexture(DesktopPreviewTexture.pathFromDesktopId(id)), loyalty.orElse(Loyalty.MIN));
 	}
 
 	public static TardisDesktopSchema fromInputStream(InputStream stream) {
