@@ -1,7 +1,9 @@
 package loqor.ait.registry;
 
 import loqor.ait.AITMod;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.desktops.DatapackDesktop;
 import loqor.ait.tardis.desktops.DefaultCaveDesktop;
 import loqor.ait.tardis.desktops.DevDesktop;
@@ -19,6 +21,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
+import java.util.function.Consumer;
 
 public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 	public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_desktops");
@@ -52,7 +55,22 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 		AITMod.LOGGER.info("Read {} desktops from server", size);
 	}
 
-	public static DatapackRegistry<TardisDesktopSchema> getInstance() {
+	public void unlock(Tardis tardis, Loyalty loyalty, Consumer<TardisDesktopSchema> consumer) {
+		for (TardisDesktopSchema schema : REGISTRY.values()) {
+			if (!schema.getRequirement().biggerEquals(loyalty))
+				continue;
+
+			if (tardis.isDesktopUnlocked(schema))
+				continue;
+
+			tardis.unlockDesktop(schema);
+
+			if (consumer != null)
+				consumer.accept(schema);
+		}
+	}
+
+	public static DesktopRegistry getInstance() {
 		if (INSTANCE == null) {
 			AITMod.LOGGER.debug("DesktopRegistry was not initialized, Creating a new instance");
 			INSTANCE = new DesktopRegistry();
@@ -95,6 +113,7 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 
 						DesktopRegistry.getInstance().register(created);
 						stream.close();
+
 						AITMod.LOGGER.info("Loaded datapack desktop " + created.id().toString());
 					} catch (Exception e) {
 						AITMod.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
@@ -113,17 +132,15 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 	}
 
 	/**
-	 * Unlocks all desktops for all tardises, usually when someone calls /reload as this wont be ran when the world starts
+	 * Unlocks all free desktops for all tardises, usually when someone calls /reload as this wont be ran when the world starts
 	 * bad but oh well
 	 */
 	private void giveOutDesktops() {
-		if (ServerTardisManager.getInstance() == null) return;
+		if (ServerTardisManager.getInstance() == null)
+			return;
 
 		for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
-			for (TardisDesktopSchema schema : DesktopRegistry.getInstance().toList()) {
-				System.out.println(schema);
-				tardis.unlockDesktop(schema);
-			}
+			this.unlock(tardis, Loyalty.MIN, null);
 		}
 	}
 }
