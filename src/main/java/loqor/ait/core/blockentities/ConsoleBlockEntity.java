@@ -84,7 +84,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 			nbt.putString("variant", variant.toString());
 		if (parent != null) {
 			nbt.put("parent", NbtHelper.fromUuid(parent));
-
+		}
 
 		super.writeNbt(nbt);
 	}
