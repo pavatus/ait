@@ -123,6 +123,7 @@ public class TardisHandlersManager extends TardisLink {
 				generateTickables();
 				return;
 			}
+
 			ticker.startTick(server);
 		}
 	}
