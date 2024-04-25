@@ -86,6 +86,7 @@ public class TardisHandlersManager extends TardisLink {
 		addTickable(getSonic());
 		addTickable(getShields());
 		addTickable(getBiomeHandler());
+		addTickable(getLoyalties());
 	}
 
 	protected void addTickable(TardisLink var) {

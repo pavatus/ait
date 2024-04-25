@@ -1,13 +1,15 @@
 package loqor.ait.tardis.data.loyalty;
 
+import loqor.ait.AITMod;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TardisLink;
+import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 public class LoyaltyHandler extends TardisLink {
@@ -35,6 +37,21 @@ public class LoyaltyHandler extends TardisLink {
         this.sync();
 
         return loyalty;
+    }
+
+    @Override
+    public void tick(ServerWorld world) {
+        super.tick(world);
+        if(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
+            Optional<Tardis> tardis = this.findTardis();
+            if(tardis.isEmpty()) return;
+            List<ServerPlayerEntity> list = TardisUtil.getPlayersInInterior(tardis.get());
+            for(ServerPlayerEntity player : list) {
+                this.addLevel(player, (this.get(player).level() >= Loyalty.Type.NEUTRAL.level &&
+                        this.get(player).level() < Loyalty.Type.COMPANION.level &&
+                        AITMod.RANDOM.nextInt(0, 40) == 14) ? 1 : 0);
+            }
+        }
     }
 
     public void update(ServerPlayerEntity player, Function<Loyalty, Loyalty> consumer) {
