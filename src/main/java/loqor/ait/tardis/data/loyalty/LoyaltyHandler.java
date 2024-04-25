@@ -2,6 +2,7 @@ package loqor.ait.tardis.data.loyalty;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.tardis.util.TardisUtil;
@@ -58,7 +59,19 @@ public class LoyaltyHandler extends TardisLink {
         Loyalty current = this.get(player);
         current = consumer.apply(current);
 
+        unlockInteriorViaLoyalty(current);
+
         this.set(player, current);
+    }
+
+    public void unlockInteriorViaLoyalty(Loyalty loyalty) {
+        Optional<Tardis> tardis = this.findTardis();
+
+        if(loyalty.level() == Loyalty.Type.PILOT.level &&
+                tardis.isPresent() &&
+                !tardis.get().isDesktopUnlocked(DesktopRegistry.DEV)) {
+            tardis.get().unlockDesktop(DesktopRegistry.DEV);
+        }
     }
 
     public void subLevel(ServerPlayerEntity player, int level) {
