@@ -9,6 +9,10 @@ import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.util.*;
 import java.util.function.Function;
@@ -58,19 +62,23 @@ public class LoyaltyHandler extends TardisLink {
     public void update(ServerPlayerEntity player, Function<Loyalty, Loyalty> consumer) {
         Loyalty current = this.get(player);
         current = consumer.apply(current);
-
-        unlockInteriorViaLoyalty(current);
-
+        unlockInteriorViaLoyalty(player, current);
         this.set(player, current);
     }
 
-    public void unlockInteriorViaLoyalty(Loyalty loyalty) {
+    public void unlockInteriorViaLoyalty(ServerPlayerEntity player, Loyalty loyalty) {
         Optional<Tardis> tardis = this.findTardis();
 
         if(loyalty.level() == Loyalty.Type.PILOT.level &&
                 tardis.isPresent() &&
                 !tardis.get().isDesktopUnlocked(DesktopRegistry.DEV)) {
+
             tardis.get().unlockDesktop(DesktopRegistry.DEV);
+
+            player.getServerWorld().playSound(null, player.getBlockPos(),
+                    SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 1.0F, 1.0F);
+            player.sendMessage(Text.literal(DesktopRegistry.DEV.name() + " unlocked!")
+                    .formatted(Formatting.BOLD, Formatting.ITALIC, Formatting.GOLD), false);
         }
     }
 
