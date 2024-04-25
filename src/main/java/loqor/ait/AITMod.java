@@ -16,6 +16,8 @@ import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.util.AITConfig;
+import loqor.ait.core.util.bsp.BTreeGenerator;
+import loqor.ait.core.util.bsp.BinaryTree;
 import loqor.ait.registry.*;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
@@ -51,6 +53,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.PlacedFeature;
 import org.slf4j.Logger;
@@ -77,6 +80,12 @@ public class AITMod implements ModInitializer {
 	}
 	@Override
 	public void onInitialize() {
+		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
+			BinaryTree btree = new BinaryTree(new Vec3d(0, 100, 0));
+			BTreeGenerator bTreeGenerator = new BTreeGenerator(server.getWorld(AITDimensions.TIME_VORTEX_WORLD));
+			bTreeGenerator.gen(btree);
+		});
+
 		ConsoleRegistry.init();
 		DesktopRegistry.getInstance().init();
 		CategoryRegistry.getInstance().init();
