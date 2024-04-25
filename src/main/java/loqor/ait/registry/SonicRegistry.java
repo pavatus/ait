@@ -116,7 +116,7 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
     public void clearCache() {
         super.clearCache();
 
-        DEFAULT = register(BuiltinSonic.create("prime", null));
+        DEFAULT = register(BuiltinSonic.create("prime", "Prime"));
     }
 
     private void giveOutSonics() {
