@@ -28,7 +28,7 @@ import java.util.Random;
 
 public class TardisItemBuilder extends Item {
 
-	public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "type_40"); //new Identifier(AITMod.MOD_ID, "war");
+	public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "meridian"); //new Identifier(AITMod.MOD_ID, "war");
 	public static final Identifier DEFAULT_EXTERIOR = CapsuleCategory.REFERENCE;
 
 	private final Identifier exterior;
@@ -51,7 +51,7 @@ public class TardisItemBuilder extends Item {
 
 	public static ExteriorVariantSchema findRandomVariant(ExteriorCategorySchema exterior) {
 		Random rnd = new Random();
-		if (ExteriorVariantRegistry.withParent(exterior).size() == 0) {
+		if (ExteriorVariantRegistry.withParent(exterior).isEmpty()) {
 			AITMod.LOGGER.error("Variants for " + exterior + " are empty! Panicking!!!!");
 			return ExteriorVariantRegistry.BOX_DEFAULT;
 		}
