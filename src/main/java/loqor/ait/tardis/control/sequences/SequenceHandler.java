@@ -66,7 +66,7 @@ public class SequenceHandler extends TardisLink {
 
 	public void triggerRandomSequence(boolean setTicksTo0) {
 		if (setTicksTo0) ticks = 0;
-		int rand = Random.create().nextBetween(0, SequenceRegistry.REGISTRY.size() - 4);
+		int rand = Random.create().nextBetween(0, SequenceRegistry.REGISTRY.size()/* - 4*/);
 		Sequence sequence = SequenceRegistry.REGISTRY.get(rand);
 		if (sequence == null) return;
 		this.activeSequence = sequence/* == SequenceRegistry.TAKE_OFF
