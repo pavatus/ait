@@ -15,17 +15,10 @@ import net.minecraft.util.math.Vec3d;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class RenegadeVariant extends ExteriorVariantSchema {
-	private final String name;
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/renegade/renegade_";
 
-	protected RenegadeVariant(String name, String modId) {
-		super(RenegadeCategory.REFERENCE, new Identifier(modId, "exterior/renegade/" + name));
-
-		this.name = name;
-	}
-
 	protected RenegadeVariant(String name) {
-		this(name, AITMod.MOD_ID);
+		super(name, RenegadeCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/renegade/" + name));
 	}
 
 	@Override

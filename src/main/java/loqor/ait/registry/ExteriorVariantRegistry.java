@@ -1,5 +1,10 @@
 package loqor.ait.registry;
 
+import loqor.ait.AITMod;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
+import loqor.ait.tardis.exterior.variant.DatapackExterior;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.exterior.variant.booth.*;
 import loqor.ait.tardis.exterior.variant.box.*;
@@ -15,15 +20,14 @@ import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthDefaultVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthFireVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthSoulVariant;
+import loqor.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
+import loqor.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimDefaultVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimFireVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimSoulVariant;
-import loqor.ait.AITMod;
-import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
-import loqor.ait.tardis.exterior.variant.DatapackExterior;
-import loqor.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
-import loqor.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
 import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -38,6 +42,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 // TODO - Move this over to a datapack compatible state like DesktopRegistry and then add datapack support
 /*
@@ -54,12 +59,10 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 	public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_exterior_variants");
 	private static ExteriorVariantRegistry INSTANCE;
 
-	public static ExteriorVariantSchema registerStatic(ExteriorVariantSchema schema) {
-		return ExteriorVariantRegistry.getInstance().register(schema);
-	}
-
 	public void syncToEveryone() {
-		if (TardisUtil.getServer() == null) return;
+		if (TardisUtil.getServer() == null)
+			return;
+
 		for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
 			syncToClient(player);
 		}
@@ -74,13 +77,13 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 				buf.encodeAsJson(DatapackExterior.CODEC, variant);
 				continue;
 			}
-            /*if (schema.categoryId() == null) {
-                AITMod.LOGGER.error("Exterior variant " + schema.id() + " has null category!");
-                AITMod.LOGGER.error("Temporarily returning, fix this code!!!"); // todo
-                continue;
-            }*/
-			buf.encodeAsJson(DatapackExterior.CODEC, new DatapackExterior(schema.id(), schema.categoryId(), schema.id(), DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, false));
+
+			buf.encodeAsJson(DatapackExterior.CODEC, new DatapackExterior(
+					schema.name(), schema.id(), schema.categoryId(), schema.id(), DatapackExterior.DEFAULT_TEXTURE,
+					DatapackExterior.DEFAULT_TEXTURE, false, schema.getRequirement())
+			);
 		}
+
 		ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
 	}
 
@@ -101,7 +104,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 		AITMod.LOGGER.info("Read {} exterior variants from server", size);
 	}
 
-	public static DatapackRegistry<ExteriorVariantSchema> getInstance() {
+	public static ExteriorVariantRegistry getInstance() {
 		if (INSTANCE == null) {
 			AITMod.LOGGER.debug("ExteriorVariantRegistry was not initialized, Creating a new instance");
 			INSTANCE = new ExteriorVariantRegistry();
@@ -152,7 +155,6 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 	public static ExteriorVariantSchema BOOTH_SOUL;
 	public static ExteriorVariantSchema BOOTH_VINTAGE;
 	public static ExteriorVariantSchema BOOTH_BLUE;
-	public static ExteriorVariantSchema COOB; // dont use : (
 	public static ExteriorVariantSchema HEAD_DEFAULT;
 	public static ExteriorVariantSchema HEAD_SOUL;
 	public static ExteriorVariantSchema HEAD_FIRE;
@@ -165,8 +167,6 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 	public static ExteriorVariantSchema RENEGADE_TRON;
 
 	private void registerDefaults() {
-		// todo make this not static
-
 		// TARDIM
 		TARDIM_DEFAULT = register(new TardimDefaultVariant());
 		TARDIM_FIRE = register(new TardimFireVariant());
@@ -199,9 +199,6 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 		BOOTH_VINTAGE = register(new BoothVintageVariant());
 		BOOTH_BLUE = register(new BoothBlueVariant());
 
-		// funny
-		// COOB = register(new RedCoobVariant()); // fixme CUBE HAS BEEN REMOVED, REPEAT, CUBE HAS BEEN REMOVED. DO NOT PANIC!!
-
 		// Easter Head
 		HEAD_DEFAULT = register(new EasterHeadDefaultVariant());
 		HEAD_SOUL = register(new EasterHeadSoulVariant());
@@ -223,10 +220,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 		RENEGADE_TRON = register(new RenegadeTronVariant());
 	}
 
-	// AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
 	public void init() {
-
-
 		// Reading from Datapacks
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
 			@Override
@@ -257,7 +251,36 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 				}
 
 				syncToEveryone();
+				giveOutExteriors();
 			}
 		});
+	}
+
+	public void unlock(Tardis tardis, Loyalty loyalty, Consumer<ExteriorVariantSchema> consumer) {
+		for (ExteriorVariantSchema schema : REGISTRY.values()) {
+			if (!schema.getRequirement().biggerEquals(loyalty))
+				continue;
+
+			if (tardis.isExteriorUnlocked(schema))
+				continue;
+
+			tardis.unlockExterior(schema);
+
+			if (consumer != null)
+				consumer.accept(schema);
+		}
+	}
+
+	/**
+	 * Unlocks all free exteriors for all tardises, usually when someone calls /reload as this wont be ran when the world starts
+	 * bad but oh well
+	 */
+	private void giveOutExteriors() {
+		if (ServerTardisManager.getInstance() == null)
+			return;
+
+		for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
+			this.unlock(tardis, Loyalty.MIN, null);
+		}
 	}
 }

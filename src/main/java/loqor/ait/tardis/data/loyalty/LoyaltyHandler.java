@@ -3,6 +3,8 @@ package loqor.ait.tardis.data.loyalty;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.registry.DesktopRegistry;
+import loqor.ait.registry.ExteriorVariantRegistry;
+import loqor.ait.registry.datapack.Nameable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.tardis.util.TardisUtil;
@@ -73,12 +75,16 @@ public class LoyaltyHandler extends TardisLink {
         if (tardis.isEmpty())
             return;
 
-        DesktopRegistry.getInstance().unlock(tardis.get(), loyalty, schema -> {
-            player.getServerWorld().playSound(null, player.getBlockPos(),
-                    SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 1.0F, 1.0F);
-            player.sendMessage(Text.literal(DesktopRegistry.DEV.name() + " unlocked!")
-                    .formatted(Formatting.BOLD, Formatting.ITALIC, Formatting.GOLD), false);
-        });
+        DesktopRegistry.getInstance().unlock(tardis.get(), loyalty, schema -> this.playUnlockEffects(player, schema));
+        ExteriorVariantRegistry.getInstance().unlock(tardis.get(), loyalty, schema -> this.playUnlockEffects(player, schema));
+    }
+
+    private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {
+        player.getServerWorld().playSound(null, player.getBlockPos(),
+                SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 1.0F, 1.0F);
+
+        player.sendMessage(Text.literal(nameable.name() + " unlocked!")
+                .formatted(Formatting.BOLD, Formatting.ITALIC, Formatting.GOLD), false);
     }
 
     public void subLevel(ServerPlayerEntity player, int level) {

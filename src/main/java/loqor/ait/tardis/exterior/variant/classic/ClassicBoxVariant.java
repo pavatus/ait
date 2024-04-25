@@ -15,13 +15,10 @@ import net.minecraft.util.math.Vec3d;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class ClassicBoxVariant extends ExteriorVariantSchema {
-	private final String name;
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/classic/classic_";
 
 	protected ClassicBoxVariant(String name, String modId) {
-		super(ClassicCategory.REFERENCE, new Identifier(modId, "exterior/classic/" + name));
-
-		this.name = name;
+		super(name, ClassicCategory.REFERENCE, new Identifier(modId, "exterior/classic/" + name));
 	}
 
 	protected ClassicBoxVariant(String name) {

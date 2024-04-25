@@ -15,17 +15,10 @@ import net.minecraft.util.math.Vec3d;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class PlinthVariant extends ExteriorVariantSchema {
-	private final String name;
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/plinth/plinth_";
 
-	protected PlinthVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-		super(PlinthCategory.REFERENCE, new Identifier(modId, "exterior/plinth/" + name));
-
-		this.name = name;
-	}
-
 	protected PlinthVariant(String name) {
-		this(name, AITMod.MOD_ID);
+		super(name, PlinthCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/plinth/" + name));
 	}
 
 	@Override

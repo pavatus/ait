@@ -13,20 +13,18 @@ import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DatapackDesktop extends TardisDesktopSchema {
 	public static final Codec<TardisDesktopSchema> CODEC = RecordCodecBuilder.create(
 			instance -> instance.group(
 					Identifier.CODEC.fieldOf("id").forGetter(TardisDesktopSchema::id),
-					Loyalty.CODEC.optionalFieldOf("loyalty")
-							.forGetter(schema -> Optional.of(schema.getRequirement()))
+					Loyalty.CODEC.optionalFieldOf("loyalty", Loyalty.MIN)
+							.forGetter(TardisDesktopSchema::getRequirement)
 			).apply(instance, (DatapackDesktop::new)));
 
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	public DatapackDesktop(Identifier id, Optional<Loyalty> loyalty) {
-		super(id, new DesktopPreviewTexture(DesktopPreviewTexture.pathFromDesktopId(id)), loyalty.orElse(Loyalty.MIN));
+	public DatapackDesktop(Identifier id, Loyalty loyalty) {
+		super(id, new DesktopPreviewTexture(DesktopPreviewTexture.pathFromDesktopId(id)), loyalty);
 	}
 
 	public static TardisDesktopSchema fromInputStream(InputStream stream) {

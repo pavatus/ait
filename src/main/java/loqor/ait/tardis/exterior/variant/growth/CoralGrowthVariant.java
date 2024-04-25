@@ -17,7 +17,7 @@ public class CoralGrowthVariant extends ExteriorVariantSchema {
 	public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/coral_growth");
 
 	public CoralGrowthVariant() {
-		super(GrowthCategory.REFERENCE, REFERENCE);
+		super("coral_growth", GrowthCategory.REFERENCE, REFERENCE);
 	}
 
 	@Override

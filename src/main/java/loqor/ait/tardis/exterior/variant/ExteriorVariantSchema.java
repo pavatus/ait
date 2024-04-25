@@ -9,8 +9,10 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.registry.ExteriorVariantRegistry;
+import loqor.ait.registry.datapack.Nameable;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.variant.door.DoorSchema;
 import net.minecraft.block.BlockState;
@@ -36,13 +38,27 @@ import java.lang.reflect.Type;
  * @author duzo
  * @see ExteriorVariantRegistry
  */
-public abstract class ExteriorVariantSchema implements Identifiable {
+public abstract class ExteriorVariantSchema implements Identifiable, Nameable {
+	private final String name;
 	private final Identifier category;
 	private final Identifier id;
+	private final Loyalty loyalty;
 
-	protected ExteriorVariantSchema(Identifier category, Identifier id) {
+	protected ExteriorVariantSchema(String name, Identifier category, Identifier id, Loyalty loyalty) {
+		this.name = name;
 		this.category = category;
+
 		this.id = id;
+		this.loyalty = loyalty;
+	}
+
+	protected ExteriorVariantSchema(String name, Identifier category, Identifier id) {
+		this(name, category, id, Loyalty.MIN);
+	}
+
+	@Override
+	public String name() {
+		return this.name;
 	}
 
 	@Override
@@ -50,10 +66,10 @@ public abstract class ExteriorVariantSchema implements Identifiable {
 		if (this == o)
 			return true;
 
-		ExteriorVariantSchema that = (ExteriorVariantSchema) o;
-
-		return id.equals(that.id);
+		return o instanceof ExteriorVariantSchema other && id.equals(other.id);
 	}
+
+
 
 	public MatSound getSound(TardisTravel.State state) {
 		return switch (state) {
@@ -62,6 +78,10 @@ public abstract class ExteriorVariantSchema implements Identifiable {
 			case DEMAT -> AITSounds.DEMAT_ANIM;
 			case MAT -> AITSounds.MAT_ANIM;
 		};
+	}
+
+	public Loyalty getRequirement() {
+		return loyalty;
 	}
 
 	public Identifier categoryId() {
@@ -78,8 +98,6 @@ public abstract class ExteriorVariantSchema implements Identifiable {
 
 	/**
 	 * The bounding box for this exterior, will be used in {@link ExteriorBlock#getNormalShape(BlockState, BlockView, BlockPos)}
-	 *
-	 * @return
 	 */
 	public VoxelShape bounding(Direction dir) {
 		return null;

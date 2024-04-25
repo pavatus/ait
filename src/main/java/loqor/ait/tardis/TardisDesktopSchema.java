@@ -3,6 +3,7 @@ package loqor.ait.tardis;
 import com.google.gson.*;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.datapack.Identifiable;
+import loqor.ait.registry.datapack.Nameable;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.desktops.textures.DesktopPreviewTexture;
@@ -14,7 +15,7 @@ import net.minecraft.util.Identifier;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
-public abstract class TardisDesktopSchema implements Identifiable {
+public abstract class TardisDesktopSchema implements Identifiable, Nameable {
 
 	private final Identifier id;
 	private final DesktopPreviewTexture preview;
@@ -41,9 +42,10 @@ public abstract class TardisDesktopSchema implements Identifiable {
 		return id;
 	}
 
+	@Override
 	public String name() {
 		return DimensionControl.convertWorldValueToModified(id().getPath());
-	} // temp ish
+	}
 
 	public DesktopPreviewTexture previewTexture() {
 		return this.preview;

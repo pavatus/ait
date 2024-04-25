@@ -15,17 +15,10 @@ import net.minecraft.util.math.Vec3d;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class PoliceBoxVariant extends ExteriorVariantSchema {
-	private final String name;
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/police_box/police_box_";
 
-	protected PoliceBoxVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-		super(PoliceBoxCategory.REFERENCE, new Identifier(modId, "exterior/police_box/" + name));
-
-		this.name = name;
-	}
-
-	protected PoliceBoxVariant(String name) {
-		this(name, AITMod.MOD_ID);
+	protected PoliceBoxVariant(String name) { // idk why i added the modid bit i dont use it later lol
+		super(name, PoliceBoxCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/police_box/" + name));
 	}
 
 	@Override

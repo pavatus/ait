@@ -11,6 +11,7 @@ import loqor.ait.AITMod;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.variant.door.DoorSchema;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -31,31 +32,22 @@ public class DatapackExterior extends ExteriorVariantSchema {
 
 	public static final Codec<DatapackExterior> CODEC = RecordCodecBuilder.create(
 			instance -> instance.group(
+					Codec.STRING.optionalFieldOf("name", "Undefined").forGetter(ExteriorVariantSchema::name),
 					Identifier.CODEC.fieldOf("id").forGetter(ExteriorVariantSchema::id),
 					Identifier.CODEC.fieldOf("category").forGetter(ExteriorVariantSchema::categoryId),
 					Identifier.CODEC.fieldOf("parent").forGetter(DatapackExterior::getParentId),
 					Identifier.CODEC.fieldOf("texture").forGetter(DatapackExterior::texture),
 					Identifier.CODEC.fieldOf("emission").forGetter(DatapackExterior::emission),
-					Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack)
+					Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack),
+					Loyalty.CODEC.optionalFieldOf("loyalty", Loyalty.MIN).forGetter(DatapackExterior::getRequirement)
 			).apply(instance, DatapackExterior::new));
 
-//    public static final Codec<ExteriorVariantSchema> CODEC_DEFAULT = RecordCodecBuilder.create(
-//            instance -> instance.group(
-//                    Identifier.CODEC.fieldOf("id").forGetter(ExteriorVariantSchema::id),
-//                    Identifier.CODEC.fieldOf("category").forGetter(ExteriorVariantSchema::categoryId)
-//            ).apply(instance, DatapackVariant::new)
-//    );
-
-	public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, boolean isDatapack) {
-		super(category, id);
+	public DatapackExterior(String name, Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, boolean isDatapack, Loyalty loyalty) {
+		super(name, category, id, loyalty);
 		this.parent = parent;
 		this.texture = texture;
 		this.emission = emission;
 		this.initiallyDatapack = isDatapack;
-	}
-
-	public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission) {
-		this(id, category, parent, texture, emission, true);
 	}
 
 	public static DatapackExterior fromInputStream(InputStream stream) {

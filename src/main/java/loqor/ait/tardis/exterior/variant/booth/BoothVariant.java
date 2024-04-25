@@ -15,13 +15,10 @@ import net.minecraft.util.math.Vec3d;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class BoothVariant extends ExteriorVariantSchema {
-	private final String name;
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/booth/booth_";
 
 	protected BoothVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-		super(BoothCategory.REFERENCE, new Identifier(modId, "exterior/booth/" + name));
-
-		this.name = name;
+		super(name, BoothCategory.REFERENCE, new Identifier(modId, "exterior/booth/" + name));
 	}
 
 	protected BoothVariant(String name) {

@@ -202,6 +202,14 @@ public class Tardis {
 		PropertiesHandler.setSonicUnlocked(getHandlers().getProperties(), schema, true);
 	}
 
+	public boolean isExteriorUnlocked(ExteriorVariantSchema schema) {
+		return PropertiesHandler.isExteriorUnlocked(getHandlers().getProperties(), schema);
+	}
+
+	public void unlockExterior(ExteriorVariantSchema schema) {
+		PropertiesHandler.setExteriorUnlocked(getHandlers().getProperties(), schema, true);
+	}
+
 	// for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta
 	// this should stop basic features of the tardis from happening
 	public boolean isGrowth() {

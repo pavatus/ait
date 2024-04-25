@@ -84,7 +84,8 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	public ClientExteriorVariantSchema getCurrentVariant() {
-		if (Objects.equals(currentVariant, ClientExteriorVariantRegistry.CORAL_GROWTH)) changeCategory(true);
+		if (Objects.equals(currentVariant, ClientExteriorVariantRegistry.CORAL_GROWTH))
+			changeCategory(true);
 
 		if (currentVariant == null)
 			if (!getFromUUID(tardisId).getExterior().getCategory().equals(getCategory())) {
@@ -140,12 +141,13 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	public void sendExteriorPacket() {
-		if (getFromUUID(tardisId) != null) {
-			if (this.getCategory() != getFromUUID(tardisId).getExterior().getCategory() || this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant()) {
-				ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
-						this.getCategory().id().toString(), this.getCurrentVariant().id().toString(),
-						this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant());
-			}
+		if (getFromUUID(tardisId) == null)
+			return;
+
+		if (this.getCategory() != getFromUUID(tardisId).getExterior().getCategory() || this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant()) {
+			ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
+					this.getCategory().id().toString(), this.getCurrentVariant().id().toString(),
+					this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant());
 		}
 	}
 

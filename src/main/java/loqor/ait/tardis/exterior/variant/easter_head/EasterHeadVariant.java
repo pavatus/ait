@@ -13,17 +13,10 @@ import net.minecraft.util.Identifier;
 
 // a useful class for creating easter_head variants as they all have the same filepath you know
 public abstract class EasterHeadVariant extends ExteriorVariantSchema {
-	private final String name;
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/easter_head/easter_head_";
 
-	protected EasterHeadVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-		super(EasterHeadCategory.REFERENCE, new Identifier(modId, "exterior/easter_head/" + name));
-
-		this.name = name;
-	}
-
 	protected EasterHeadVariant(String name) {
-		this(name, AITMod.MOD_ID);
+		super(name, EasterHeadCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/easter_head/" + name));
 	}
 
 	@Override

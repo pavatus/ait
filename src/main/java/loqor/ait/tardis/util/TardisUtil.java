@@ -12,6 +12,7 @@ import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.events.ServerLoadEvent;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.util.StackUtil;
 import loqor.ait.registry.CategoryRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
 import loqor.ait.registry.SonicRegistry;
@@ -21,6 +22,7 @@ import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import loqor.ait.compat.DependencyChecker;
@@ -123,12 +125,19 @@ public class TardisUtil {
 					String variantValue = buf.readString();
 					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
+					ExteriorVariantSchema schema = ExteriorVariantRegistry.getInstance().get(Identifier.tryParse(variantValue));
+
+					if (!tardis.isExteriorUnlocked(schema)) // nuh uh
+						return;
+
+					server.execute(() -> StackUtil.playBreak(player));
+
 					tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
 					WorldOps.updateIfOnServer(server.getWorld(tardis
 									.getTravel().getPosition().getWorld().getRegistryKey()),
 							tardis.getDoor().getExteriorPos());
 					if (variantChange) {
-						tardis.getExterior().setVariant(ExteriorVariantRegistry.getInstance().get(Identifier.tryParse(variantValue)));
+						tardis.getExterior().setVariant(schema);
 						WorldOps.updateIfOnServer(server.getWorld(tardis
 										.getTravel().getPosition().getWorld().getRegistryKey()),
 								tardis.getDoor().getExteriorPos());

@@ -10,6 +10,7 @@ import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.data.ShieldData;
+import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.util.Identifier;
@@ -192,6 +193,14 @@ public class PropertiesHandler {
 	}
 
 	public static boolean isSonicUnlocked(PropertiesHolder holder, SonicSchema schema) {
+		return getBool(holder, schema.id().getPath() + "_unlocked");
+	}
+
+	public static void setExteriorUnlocked(PropertiesHolder holder, ExteriorVariantSchema schema, boolean value) {
+		set(holder, schema.id().getPath() + "_unlocked", value);
+	}
+
+	public static boolean isExteriorUnlocked(PropertiesHolder holder, ExteriorVariantSchema schema) {
 		return getBool(holder, schema.id().getPath() + "_unlocked");
 	}
 
