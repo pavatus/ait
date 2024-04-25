@@ -140,9 +140,9 @@ public class TardisUtil {
 					UUID uuid = buf.readUuid();
 					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-					System.out.println(tardis.getHandlers().getLoyalties().get(player).level());
+					//System.out.println(tardis.getHandlers().getLoyalties().get(player).level());
 
-					if (tardis.getHandlers().getLoyalties().get(player).level() < Loyalty.Type.PILOT.level)
+					if (tardis.getHandlers().getLoyalties().get(player).level() <= Loyalty.Type.PILOT.level)
 						return;
 
 					if (tardis.getHandlers().getOvergrown().isOvergrown())
