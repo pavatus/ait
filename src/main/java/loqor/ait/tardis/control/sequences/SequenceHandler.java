@@ -8,9 +8,11 @@ import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -25,6 +27,7 @@ public class SequenceHandler extends TardisLink {
 	private int ticks = 0;
 	@Exclude
 	private Sequence activeSequence;
+	private ServerPlayerEntity player;
 
 	public SequenceHandler(Tardis tardisId) {
 		super(tardisId, TypeId.SEQUENCE);
@@ -32,10 +35,11 @@ public class SequenceHandler extends TardisLink {
 		activeSequence = null;
 	}
 
-	public void add(Control control) {
+	public void add(Control control, ServerPlayerEntity player) {
 		if (this.getActiveSequence() == null || recent == null) return;
 		recent.add(control);
 		ticks = 0;
+		this.player = player;
 		this.doesControlIndexMatch(control);
 		this.compareToSequences();
 	}
@@ -99,7 +103,7 @@ public class SequenceHandler extends TardisLink {
 		} else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
 
 			recent.clear();
-			this.getActiveSequence().executeMissed(this.findTardis().get());
+			this.getActiveSequence().executeMissed(this.findTardis().get(), this.player);
 			missedControlEffects(this.findTardis().get());
 			this.setActiveSequence(null, true);
 

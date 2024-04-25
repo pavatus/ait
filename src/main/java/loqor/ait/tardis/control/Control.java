@@ -67,7 +67,7 @@ public class Control {
 	}
 
 	public void addToControlSequence(Tardis tardis, ServerPlayerEntity player) {
-		tardis.getHandlers().getSequenceHandler().add(this);
+		tardis.getHandlers().getSequenceHandler().add(this, player);
 		if(AITMod.RANDOM.nextInt(0, 20) == 4) {
 			tardis.getHandlers().getLoyalties().addLevel(player, 1);
 			for (TardisConsole console : tardis.getDesktop().getConsoles()) {
