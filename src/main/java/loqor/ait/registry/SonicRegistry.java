@@ -116,7 +116,7 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
     public void clearCache() {
         super.clearCache();
 
-        DEFAULT = register(BuiltinSonic.create("prime", "Prime"));
+        DEFAULT = register(BuiltinSonic.create("prime", null));
     }
 
     private void giveOutSonics() {
@@ -136,6 +136,7 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
              * THOSE FIELDS ARE ONLY USED WHEN THE REST OF THE RESOURCES ARE NOT INITIALIZED
              * To not reload the game the second time, it's better to keep the builtin stuff semi-loaded
              */
+            register(BuiltinSonic.create("copper", null));
             register(BuiltinSonic.create("mechanical", null));
             register(BuiltinSonic.create("fob", null));
             register(BuiltinSonic.create("coral", null));

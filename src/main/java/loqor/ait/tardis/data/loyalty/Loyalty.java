@@ -21,10 +21,10 @@ public record Loyalty(int level, Type type) {
 
     public enum Type {
         REJECT(0),
-        NEUTRAL(25),
-        COMPANION(50),
-        PILOT(75),
-        OWNER(100);
+        NEUTRAL(10),
+        COMPANION(35),
+        PILOT(60),
+        OWNER(95);
 
         public final int level;
 

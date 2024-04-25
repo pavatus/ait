@@ -1,0 +1,6 @@
+{
+	"parent": "ait:item/sonic/copper",
+	"textures": {
+		"0": "ait:item/sonic_tools/copper_tardis"
+	}
+}

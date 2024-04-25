@@ -26,7 +26,7 @@ public class DatapackMachineRecipe extends MachineRecipeSchema {
             ).apply(instance, (DatapackMachineRecipe::new)));
 
     public DatapackMachineRecipe(Identifier id, ItemStack output, List<ItemStack> input) {
-        super(id, output, new HashSet<>(input));
+        super(id, output, new ArrayList<>(input));
     }
 
     public static MachineRecipeSchema fromInputStream(InputStream stream) {
