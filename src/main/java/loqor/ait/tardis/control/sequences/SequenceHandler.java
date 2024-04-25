@@ -36,12 +36,19 @@ public class SequenceHandler extends TardisLink {
 		recent = new RecentControls(tardisId.getUuid());
 		activeSequence = null;
 	}
+	public void setActivePlayer(ServerPlayerEntity player) {
+		this.playerUUID = player.getUuid();
+	}
+
+	public ServerPlayerEntity getActivePlayer() {
+		return (ServerPlayerEntity) TardisUtil.getTardisDimension().getPlayerByUuid(this.playerUUID);
+	}
 
 	public void add(Control control, ServerPlayerEntity player) {
 		if (this.getActiveSequence() == null || recent == null) return;
 		recent.add(control);
 		ticks = 0;
-		this.playerUUID = player.getUuid();
+		this.setActivePlayer(player);
 		this.doesControlIndexMatch(control);
 		this.compareToSequences();
 	}
@@ -105,8 +112,7 @@ public class SequenceHandler extends TardisLink {
 		} else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
 
 			recent.clear();
-			System.out.println(TardisUtil.getTardisDimension().getPlayerByUuid(this.playerUUID));
-			this.getActiveSequence().executeMissed(this.findTardis().get(), (ServerPlayerEntity) TardisUtil.getTardisDimension().getPlayerByUuid(this.playerUUID));
+			this.getActiveSequence().executeMissed(this.findTardis().get(), this.getActivePlayer());
 			missedControlEffects(this.findTardis().get());
 			this.setActiveSequence(null, true);
 

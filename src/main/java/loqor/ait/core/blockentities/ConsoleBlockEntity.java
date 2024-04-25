@@ -84,7 +84,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 			nbt.putString("variant", variant.toString());
 		if (parent != null) {
 			nbt.put("parent", NbtHelper.fromUuid(parent));
-		}
+
 
 		super.writeNbt(nbt);
 	}
@@ -369,7 +369,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	public void setDesktop(TardisDesktop desktop) {
 		if (this.getWorld() == null || this.getWorld().isClient()) return;
 
-		AITMod.LOGGER.info("Linking destkop " + this.findTardis().get().getUuid());
+		AITMod.LOGGER.info("Linking desktop " + this.findTardis().get().getUuid());
 
 		this.findParent();
 	}
