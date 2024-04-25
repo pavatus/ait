@@ -21,13 +21,15 @@ import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import java.util.UUID;
+
 public class SequenceHandler extends TardisLink {
 	@Exclude
 	private RecentControls recent;
 	private int ticks = 0;
 	@Exclude
 	private Sequence activeSequence;
-	private ServerPlayerEntity player;
+	private UUID playerUUID;
 
 	public SequenceHandler(Tardis tardisId) {
 		super(tardisId, TypeId.SEQUENCE);
@@ -39,7 +41,7 @@ public class SequenceHandler extends TardisLink {
 		if (this.getActiveSequence() == null || recent == null) return;
 		recent.add(control);
 		ticks = 0;
-		this.player = player;
+		this.playerUUID = player.getUuid();
 		this.doesControlIndexMatch(control);
 		this.compareToSequences();
 	}
@@ -103,7 +105,8 @@ public class SequenceHandler extends TardisLink {
 		} else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
 
 			recent.clear();
-			this.getActiveSequence().executeMissed(this.findTardis().get(), this.player);
+			System.out.println(TardisUtil.getTardisDimension().getPlayerByUuid(this.playerUUID));
+			this.getActiveSequence().executeMissed(this.findTardis().get(), (ServerPlayerEntity) TardisUtil.getTardisDimension().getPlayerByUuid(this.playerUUID));
 			missedControlEffects(this.findTardis().get());
 			this.setActiveSequence(null, true);
 

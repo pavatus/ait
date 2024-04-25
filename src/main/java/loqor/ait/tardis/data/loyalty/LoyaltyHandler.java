@@ -69,7 +69,7 @@ public class LoyaltyHandler extends TardisLink {
     public void unlockInteriorViaLoyalty(ServerPlayerEntity player, Loyalty loyalty) {
         Optional<Tardis> tardis = this.findTardis();
 
-        if(loyalty.level() == Loyalty.Type.PILOT.level &&
+        if(loyalty.level() >= Loyalty.Type.PILOT.level &&
                 tardis.isPresent() &&
                 !tardis.get().isDesktopUnlocked(DesktopRegistry.DEV)) {
 
