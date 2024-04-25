@@ -1,8 +1,6 @@
 // Andrij Glyko <nitrogenesis.developer@gmail.com>
 // v0.1, 2024-04-25
 
-:toc:
-
 image::https://github.com/M-D-Team/ait-fabric-1.20.1/blob/main/src/main/resources/assets/ait/textures/gui/title/aitlogo.png?raw=true[AIT Logo]
 
 image::https://img.shields.io/github/v/release/M-D-Team/ait-fabric-1.20.1?include_prereleases[Github Release]
@@ -13,6 +11,8 @@ image::https://img.shields.io/badge/wiki-grey?logo=gitbook&logoColor=white&link=
 
 - AIT створено https://github.com/loqor/ait[*Loqor*]
 - AIT потребує https://modrinth.com/mod/owo-lib[*owolib*]
+
+:toc:
 
 == Підсумки
 
