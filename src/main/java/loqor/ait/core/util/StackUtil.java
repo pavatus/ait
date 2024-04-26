@@ -70,12 +70,8 @@ public class StackUtil {
         }
     }
 
-    public static void scatter(World world, BlockPos pos, Collection<ItemStack> stacks, boolean center) {
-        scatter(world, center ? pos.toCenterPos() : (Position) pos, stacks);
-    }
-
     public static void scatter(World world, BlockPos pos, Collection<ItemStack> stacks) {
-        scatter(world, pos, stacks, false);
+        scatter(world, pos.toCenterPos(), stacks);
     }
 
     public static NbtCompound writeUnordered(NbtCompound nbt, Collection<ItemStack> stacks) {

@@ -264,6 +264,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 			if (tardis.isExteriorUnlocked(schema))
 				continue;
 
+			AITMod.LOGGER.debug("Unlocked exterior " + schema.id() + " for tardis [" + tardis.getUuid() + "]");
 			tardis.unlockExterior(schema);
 
 			if (consumer != null)

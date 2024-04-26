@@ -138,6 +138,7 @@ public class AITMod implements ModInitializer {
 			RemoveCommand.register(dispatcher);
 			PermissionCommand.register(dispatcher);
 			LoyaltyCommand.register(dispatcher);
+			UnlockExteriorsCommand.register(dispatcher);
 		}));
 
 		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {

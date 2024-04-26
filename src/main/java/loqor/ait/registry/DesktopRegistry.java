@@ -63,6 +63,7 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 			if (tardis.isDesktopUnlocked(schema))
 				continue;
 
+			AITMod.LOGGER.debug("Unlocked desktop " + schema.id() + " for tardis [" + tardis.getUuid() + "]");
 			tardis.unlockDesktop(schema);
 
 			if (consumer != null)

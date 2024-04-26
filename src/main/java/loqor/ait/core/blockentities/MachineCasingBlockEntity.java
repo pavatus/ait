@@ -47,17 +47,18 @@ public class MachineCasingBlockEntity extends BlockEntity {
         if (SonicItem.findMode(stack) == SonicItem.Mode.INTERACTION) {
             MachineRecipeRegistry.getInstance().findMatching(this.parts).ifPresent(schema -> {
                 SonicItem.playSonicSounds(player);
-
                 StackUtil.spawn(world, this.pos, schema.output(), true);
-                StackUtil.spawn(world, this.pos, new ItemStack(AITBlocks.MACHINE_CASING.asItem()));
 
                 world.removeBlock(this.pos, false);
                 this.markRemoved();
             });
+
+            SonicItem.setMode(stack, SonicItem.Mode.INACTIVE);
         }
     }
 
     public void onBreak(World world) {
+        this.parts.add(new ItemStack(AITBlocks.MACHINE_CASING.asItem())); // don't care about the parts now anyway
         StackUtil.scatter(world, pos.up(1), this.parts);
     }
 
