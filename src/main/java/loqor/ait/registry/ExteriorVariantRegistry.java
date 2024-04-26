@@ -251,7 +251,6 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 				}
 
 				syncToEveryone();
-				giveOutExteriors();
 			}
 		});
 	}
@@ -269,19 +268,6 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 
 			if (consumer != null)
 				consumer.accept(schema);
-		}
-	}
-
-	/**
-	 * Unlocks all free exteriors for all tardises, usually when someone calls /reload as this wont be ran when the world starts
-	 * bad but oh well
-	 */
-	private void giveOutExteriors() {
-		if (ServerTardisManager.getInstance() == null)
-			return;
-
-		for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
-			this.unlock(tardis, Loyalty.MIN, null);
 		}
 	}
 }

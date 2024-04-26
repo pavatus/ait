@@ -119,6 +119,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		UUID uuid = UUID.randomUUID();
 
 		ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked); // todo removed "locked" param
+		tardis.init();
+
 		this.lookup.put(uuid, tardis);
 
 		// todo this can be moved to init
@@ -126,7 +128,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		tardis.getTravel().runAnimations();
 
 		tardis.getHandlers().getStats().markCreationDate();
-
 		this.saveTardis(tardis);
 		return tardis;
 	}

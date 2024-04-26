@@ -122,7 +122,6 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 				}
 
 				syncToEveryone();
-				giveOutDesktops();
 			}
 		});
 	}
@@ -130,18 +129,5 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 	public void clearCache() {
 		REGISTRY.clear();
 		initAitDesktops(); // i know we're "clearing" but we need the AIT Desktops no?
-	}
-
-	/**
-	 * Unlocks all free desktops for all tardises, usually when someone calls /reload as this wont be ran when the world starts
-	 * bad but oh well
-	 */
-	private void giveOutDesktops() {
-		if (ServerTardisManager.getInstance() == null)
-			return;
-
-		for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
-			this.unlock(tardis, Loyalty.MIN, null);
-		}
 	}
 }

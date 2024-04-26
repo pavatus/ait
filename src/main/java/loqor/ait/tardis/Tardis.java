@@ -130,10 +130,7 @@ public class Tardis {
 	}
 
 	public void init(boolean dirty) {
-		// this.init(this.getTravel(), dirty);
-		// this.init(this.getDesktop(), dirty);
-		// this.init(this.getExterior(), dirty);
-		// this.init(this.getDoor(), dirty);
+
 	}
 
 	private void init(AbstractTardisComponent component, boolean dirty) {
