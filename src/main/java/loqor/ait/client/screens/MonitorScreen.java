@@ -1,6 +1,7 @@
 package loqor.ait.client.screens;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.registry.ClientExteriorVariantRegistry;
@@ -20,19 +21,19 @@ import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
