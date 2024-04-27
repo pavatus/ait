@@ -79,21 +79,15 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset + save
 
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
-			for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
+			for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
 				tardis.tick(server);
 			}
 
 			this.tickBuffer(server);
 		});
 
-		ServerTickEvents.END_WORLD_TICK.register(world -> {
-			for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
-				tardis.tick(world);
-			}
-		});
-
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
-			for (Tardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
+			for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
 				tardis.startTick(server);
 			}
 		});
