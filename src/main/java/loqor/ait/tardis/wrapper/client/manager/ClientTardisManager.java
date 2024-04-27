@@ -149,7 +149,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 	private void onTick(MinecraftClient client) {
 		if (client.player == null || client.world == null) return;
 
-		for (Tardis tardis : ClientTardisManager.getInstance().getLookup().values()) {
+		for (ClientTardis tardis : ClientTardisManager.getInstance().getLookup().values()) {
 			tardis.tick(client);
 		}
 
