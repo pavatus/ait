@@ -1,6 +1,7 @@
 package loqor.ait.registry;
 
 import loqor.ait.AITMod;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.console.type.ConsoleTypeSchema;
 import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.console.variant.DatapackConsole;
@@ -17,8 +18,11 @@ import loqor.ait.tardis.console.variant.steam.SteamVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaBlueVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaLegacyVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaVariant;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.variant.DatapackExterior;
+import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -33,6 +37,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchema> {
 	public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_console_variants");
@@ -86,7 +91,7 @@ public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchem
 		AITMod.LOGGER.info("Read {} console variants from server", size);
 	}
 
-	public static DatapackRegistry<ConsoleVariantSchema> getInstance() {
+	public static ConsoleVariantRegistry getInstance() {
 		if (INSTANCE == null) {
 			AITMod.LOGGER.debug("ConsoleVariantRegistry was not initialized, Creating a new instance");
 			INSTANCE = new ConsoleVariantRegistry();
@@ -194,5 +199,24 @@ public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchem
 				syncToEveryone();
 			}
 		});
+	}
+
+	public void unlock(Tardis tardis, Loyalty loyalty, Consumer<ConsoleVariantSchema> consumer) {
+		if (!(tardis instanceof ServerTardis serverTardis))
+			return;
+
+		for (ConsoleVariantSchema schema : REGISTRY.values()) {
+			if (!schema.getRequirement().biggerEquals(loyalty))
+				continue;
+
+			if (serverTardis.isConsoleUnlocked(schema))
+				continue;
+
+			AITMod.LOGGER.debug("Unlocked exterior " + schema.id() + " for tardis [" + tardis.getUuid() + "]");
+			serverTardis.unlockConsole(schema);
+
+			if (consumer != null)
+				consumer.accept(schema);
+		}
 	}
 }

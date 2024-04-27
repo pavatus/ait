@@ -69,8 +69,6 @@ public abstract class ExteriorVariantSchema implements Identifiable, Nameable {
 		return o instanceof ExteriorVariantSchema other && id.equals(other.id);
 	}
 
-
-
 	public MatSound getSound(TardisTravel.State state) {
 		return switch (state) {
 			case LANDED, CRASH -> AITSounds.LANDED_ANIM;

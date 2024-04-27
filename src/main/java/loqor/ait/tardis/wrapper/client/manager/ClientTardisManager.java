@@ -28,7 +28,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
 	public static final Identifier ASK = new Identifier("ait", "ask_tardis");
 	public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
-	public static final Identifier LET_KNOW_UNLOADED = new Identifier("ait", "let_know_unloaded");
 	private static ClientTardisManager instance;
 
 	private final Multimap<UUID, Consumer<ClientTardis>> subscribers = ArrayListMultimap.create();
@@ -147,9 +146,10 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 	}
 
 	private void onTick(MinecraftClient client) {
-		if (client.player == null || client.world == null) return;
+		if (client.player == null || client.world == null)
+			return;
 
-		for (Tardis tardis : ClientTardisManager.getInstance().getLookup().values()) {
+		for (ClientTardis tardis : ClientTardisManager.getInstance().getLookup().values()) {
 			tardis.tick(client);
 		}
 

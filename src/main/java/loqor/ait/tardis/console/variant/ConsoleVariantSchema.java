@@ -5,7 +5,10 @@ import loqor.ait.AITMod;
 import loqor.ait.registry.ConsoleRegistry;
 import loqor.ait.registry.ConsoleVariantRegistry;
 import loqor.ait.registry.datapack.Identifiable;
+import loqor.ait.registry.datapack.Nameable;
 import loqor.ait.tardis.console.type.ConsoleTypeSchema;
+import loqor.ait.tardis.control.impl.DimensionControl;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
@@ -24,23 +27,33 @@ import java.lang.reflect.Type;
  * @author duzo
  * @see ConsoleVariantRegistry#REGISTRY
  */
-public abstract class ConsoleVariantSchema implements Identifiable {
+public abstract class ConsoleVariantSchema implements Identifiable, Nameable {
 	private final Identifier parent;
 	private final Identifier id;
+	private final Loyalty loyalty;
 
-	protected ConsoleVariantSchema(Identifier parent, Identifier id) {
+	protected ConsoleVariantSchema(Identifier parent, Identifier id, Loyalty loyalty) {
 		this.parent = parent;
 		this.id = id;
+		this.loyalty = loyalty;
+	}
+
+	protected ConsoleVariantSchema(Identifier parent, Identifier id) {
+		this(parent, id, Loyalty.MIN);
+	}
+
+	@Override
+	public String name() {
+		return DimensionControl.convertWorldValueToModified(id().getPath());
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() == null) return false;
+		if (this == o)
+			return true;
 
-		ConsoleVariantSchema that = (ConsoleVariantSchema) o;
-
-		return id.equals(that.id);
+		return o instanceof ConsoleVariantSchema other
+				&& id.equals(other.id);
 	}
 
 	protected Identifier parentId() {
@@ -53,6 +66,10 @@ public abstract class ConsoleVariantSchema implements Identifiable {
 
 	public Identifier id() {
 		return id;
+	}
+
+	public Loyalty getRequirement() {
+		return loyalty;
 	}
 
 	public static Object serializer() {

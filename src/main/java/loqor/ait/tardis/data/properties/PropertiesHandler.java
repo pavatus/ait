@@ -7,6 +7,7 @@ import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.datapack.Identifiable;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.AITMod;
@@ -184,6 +185,14 @@ public class PropertiesHandler {
 
 	public static void setSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema, boolean val) {
 		set(holder, schema.id().getPath() + "_unlocked", val);
+	}
+
+	public static void setConsoleUnlocked(PropertiesHolder holder, ConsoleVariantSchema schema, boolean value) {
+		set(holder, schema.id().getPath() + "_unlocked", value);
+	}
+
+	public static boolean isConsoleUnlocked(PropertiesHolder holder, ConsoleVariantSchema schema) {
+		return getBool(holder, schema.id().getPath() + "_unlocked");
 	}
 
 	public static boolean isSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema) {

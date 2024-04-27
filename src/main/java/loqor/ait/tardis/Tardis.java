@@ -9,6 +9,7 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
+import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.SonicHandler;
@@ -181,6 +182,10 @@ public class Tardis {
 
 	public boolean isExteriorUnlocked(ExteriorVariantSchema schema) {
 		return PropertiesHandler.isExteriorUnlocked(getHandlers().getProperties(), schema);
+	}
+
+	public boolean isConsoleUnlocked(ConsoleVariantSchema schema) {
+		return PropertiesHandler.isConsoleUnlocked(getHandlers().getProperties(), schema);
 	}
 
 	// for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta

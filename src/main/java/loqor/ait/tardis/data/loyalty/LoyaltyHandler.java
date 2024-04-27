@@ -2,6 +2,7 @@ package loqor.ait.tardis.data.loyalty;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.registry.ConsoleVariantRegistry;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
 import loqor.ait.registry.datapack.Nameable;
@@ -79,6 +80,7 @@ public class LoyaltyHandler extends TardisLink {
         if (!(tardis.get() instanceof ServerTardis serverTardis))
             return;
 
+        ConsoleVariantRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
         DesktopRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
         ExteriorVariantRegistry.getInstance().unlock(tardis.get(), loyalty, schema -> this.playUnlockEffects(player, schema));
     }

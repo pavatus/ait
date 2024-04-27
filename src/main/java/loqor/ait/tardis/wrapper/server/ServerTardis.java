@@ -5,9 +5,11 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
+import loqor.ait.registry.ConsoleVariantRegistry;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
@@ -45,6 +47,7 @@ public class ServerTardis extends Tardis {
 		//  so it'd make sense if we could check if the data was saved with an earlier version (so it needs to unlock the default stuff)
 		// 	different solution: make default stuff just be unlocked without the properties stuff
 		if (!dirty) {
+			ConsoleVariantRegistry.getInstance().unlock(this, Loyalty.MIN, null);
 			ExteriorVariantRegistry.getInstance().unlock(this, Loyalty.MIN, null);
 			DesktopRegistry.getInstance().unlock(this, Loyalty.MIN, null);
 		}
@@ -60,6 +63,10 @@ public class ServerTardis extends Tardis {
 
 	public void unlockDesktop(TardisDesktopSchema schema) {
 		PropertiesHandler.setSchemaUnlocked(getHandlers().getProperties(), schema, true);
+	}
+
+	public void unlockConsole(ConsoleVariantSchema schema) {
+		PropertiesHandler.setConsoleUnlocked(getHandlers().getProperties(), schema, true);
 	}
 
 	public void startTick(MinecraftServer server) {
