@@ -8,6 +8,7 @@ import loqor.ait.AITMod;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.IdentifierArgumentType;
@@ -37,7 +38,7 @@ public class UnlockInteriorsCommand {
 
 	private static int runCommand(CommandContext<ServerCommandSource> context) {
 		ServerPlayerEntity source = context.getSource().getPlayer();
-		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
+		ServerTardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
 		TardisDesktopSchema schema = DesktopRegistry.getInstance().get(IdentifierArgumentType.getIdentifier(context, "interior"));
 
 		if (tardis == null || source == null || schema == null)

@@ -1,9 +1,11 @@
 package loqor.ait.tardis.data.properties;
 
 import com.google.gson.internal.LinkedTreeMap;
+import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
 import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.registry.DesktopRegistry;
+import loqor.ait.registry.datapack.Identifiable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.TardisCrashData;
@@ -200,7 +202,7 @@ public class PropertiesHandler {
 		set(holder, schema.id().getPath() + "_unlocked", value);
 	}
 
-	public static boolean isExteriorUnlocked(PropertiesHolder holder, ExteriorVariantSchema schema) {
+	public static boolean isExteriorUnlocked(PropertiesHolder holder, Identifiable schema) {
 		return getBool(holder, schema.id().getPath() + "_unlocked");
 	}
 

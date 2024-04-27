@@ -151,7 +151,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		return tardis;
 	}
 
-	public Tardis getTardis(UUID uuid) {
+	public ServerTardis getTardis(UUID uuid) {
 		if (uuid == null)
 			return null; // ugh
 

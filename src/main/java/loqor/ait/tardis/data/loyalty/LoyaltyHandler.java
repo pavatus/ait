@@ -8,6 +8,7 @@ import loqor.ait.registry.datapack.Nameable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -75,7 +76,10 @@ public class LoyaltyHandler extends TardisLink {
         if (tardis.isEmpty())
             return;
 
-        DesktopRegistry.getInstance().unlock(tardis.get(), loyalty, schema -> this.playUnlockEffects(player, schema));
+        if (!(tardis.get() instanceof ServerTardis serverTardis))
+            return;
+
+        DesktopRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
         ExteriorVariantRegistry.getInstance().unlock(tardis.get(), loyalty, schema -> this.playUnlockEffects(player, schema));
     }
 
@@ -87,11 +91,11 @@ public class LoyaltyHandler extends TardisLink {
                 .formatted(Formatting.BOLD, Formatting.ITALIC, Formatting.GOLD), false);
     }
 
-    public void subLevel(ServerPlayerEntity player, int level) {
-        this.update(player, loyalty -> loyalty.subtract(level));
-    }
-
     public void addLevel(ServerPlayerEntity player, int level) {
         this.update(player, loyalty -> loyalty.add(level));
+    }
+
+    public void subLevel(ServerPlayerEntity player, int level) {
+        this.addLevel(player, -level);
     }
 }

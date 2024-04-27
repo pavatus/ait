@@ -1,21 +1,21 @@
 package loqor.ait.tardis;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.item.TardisItemBuilder;
 import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.registry.DesktopRegistry;
+import loqor.ait.registry.ExteriorVariantRegistry;
+import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.TardisHandlersManager;
-import loqor.ait.AITMod;
-import loqor.ait.core.AITSounds;
-import loqor.ait.registry.ExteriorVariantRegistry;
-import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
@@ -181,30 +181,17 @@ public class Tardis {
 		this.getHandlers().getHADS().setIsInDanger(danger);
 	}
 
-	// unlock destop stuff
-	// kill me.
+	// todo: move this to ClientTardis and ServerTardis respectively.
 	public boolean isDesktopUnlocked(TardisDesktopSchema schema) {
 		return PropertiesHandler.isSchemaUnlocked(getHandlers().getProperties(), schema);
-	}
-
-	public void unlockDesktop(TardisDesktopSchema schema) {
-		PropertiesHandler.setSchemaUnlocked(getHandlers().getProperties(), schema, true);
 	}
 
 	public boolean isSonicUnlocked(SonicSchema schema) {
 		return PropertiesHandler.isSonicUnlocked(getHandlers().getProperties(), schema);
 	}
 
-	public void unlockSonic(SonicSchema schema) {
-		PropertiesHandler.setSonicUnlocked(getHandlers().getProperties(), schema, true);
-	}
-
 	public boolean isExteriorUnlocked(ExteriorVariantSchema schema) {
 		return PropertiesHandler.isExteriorUnlocked(getHandlers().getProperties(), schema);
-	}
-
-	public void unlockExterior(ExteriorVariantSchema schema) {
-		PropertiesHandler.setExteriorUnlocked(getHandlers().getProperties(), schema, true);
 	}
 
 	// for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta

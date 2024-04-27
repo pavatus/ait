@@ -6,8 +6,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import loqor.ait.AITMod;
 import loqor.ait.registry.ExteriorVariantRegistry;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.IdentifierArgumentType;
@@ -37,7 +37,7 @@ public class UnlockExteriorsCommand {
 
 	private static int runCommand(CommandContext<ServerCommandSource> context) {
 		ServerPlayerEntity source = context.getSource().getPlayer();
-		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
+		ServerTardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
 		ExteriorVariantSchema schema = ExteriorVariantRegistry.getInstance().get(IdentifierArgumentType.getIdentifier(context, "exterior"));
 
 		if (tardis == null || source == null || schema == null)

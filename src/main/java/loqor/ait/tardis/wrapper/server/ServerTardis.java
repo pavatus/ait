@@ -1,9 +1,11 @@
 package loqor.ait.tardis.wrapper.server;
 
+import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -34,5 +36,17 @@ public class ServerTardis extends Tardis {
 			ExteriorVariantRegistry.getInstance().unlock(this, Loyalty.MIN, null);
 			DesktopRegistry.getInstance().unlock(this, Loyalty.MIN, null);
 		}
+	}
+
+	public void unlockExterior(ExteriorVariantSchema schema) {
+		PropertiesHandler.setExteriorUnlocked(getHandlers().getProperties(), schema, true);
+	}
+
+	public void unlockSonic(SonicSchema schema) {
+		PropertiesHandler.setSonicUnlocked(getHandlers().getProperties(), schema, true);
+	}
+
+	public void unlockDesktop(TardisDesktopSchema schema) {
+		PropertiesHandler.setSchemaUnlocked(getHandlers().getProperties(), schema, true);
 	}
 }

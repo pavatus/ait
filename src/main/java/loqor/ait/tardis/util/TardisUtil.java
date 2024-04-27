@@ -3,6 +3,7 @@ package loqor.ait.tardis.util;
 import io.wispforest.owo.ops.WorldOps;
 import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
@@ -15,20 +16,19 @@ import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.registry.CategoryRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
-import loqor.ait.registry.SonicRegistry;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.pos.PosType;
+import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import loqor.ait.compat.DependencyChecker;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.data.DoorData;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -123,7 +123,7 @@ public class TardisUtil {
 					Identifier exteriorValue = Identifier.tryParse(buf.readString());
 					boolean variantChange = buf.readBoolean();
 					String variantValue = buf.readString();
-					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
+					ServerTardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
 					ExteriorVariantSchema schema = ExteriorVariantRegistry.getInstance().get(Identifier.tryParse(variantValue));
 
@@ -148,8 +148,6 @@ public class TardisUtil {
 				(server, player, handler, buf, responseSender) -> {
 					UUID uuid = buf.readUuid();
 					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-
-					//System.out.println(tardis.getHandlers().getLoyalties().get(player).level());
 
 					if (tardis.getHandlers().getLoyalties().get(player).level() <= Loyalty.Type.PILOT.level)
 						return;

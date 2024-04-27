@@ -256,15 +256,18 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 	}
 
 	public void unlock(Tardis tardis, Loyalty loyalty, Consumer<ExteriorVariantSchema> consumer) {
+		if (!(tardis instanceof ServerTardis serverTardis))
+			return;
+
 		for (ExteriorVariantSchema schema : REGISTRY.values()) {
 			if (!schema.getRequirement().biggerEquals(loyalty))
 				continue;
 
-			if (tardis.isExteriorUnlocked(schema))
+			if (serverTardis.isExteriorUnlocked(schema))
 				continue;
 
 			AITMod.LOGGER.debug("Unlocked exterior " + schema.id() + " for tardis [" + tardis.getUuid() + "]");
-			tardis.unlockExterior(schema);
+			serverTardis.unlockExterior(schema);
 
 			if (consumer != null)
 				consumer.accept(schema);

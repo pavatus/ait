@@ -55,7 +55,7 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 		AITMod.LOGGER.info("Read {} desktops from server", size);
 	}
 
-	public void unlock(Tardis tardis, Loyalty loyalty, Consumer<TardisDesktopSchema> consumer) {
+	public void unlock(ServerTardis tardis, Loyalty loyalty, Consumer<TardisDesktopSchema> consumer) {
 		for (TardisDesktopSchema schema : REGISTRY.values()) {
 			if (!schema.getRequirement().biggerEquals(loyalty))
 				continue;
