@@ -261,9 +261,13 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX, float delta) {
+
 		tickForSpin++;
+        boolean isExtUnlocked = tardis().isExteriorUnlocked(this.getCurrentVariant().parent());
+
 		if (getFromUUID(tardisId) != null) {
 			if (this.getCategory() == null || this.getCurrentVariant() == null) return;
+
 			context.getMatrices().push();
 			context.getMatrices().translate(0, 0, 50f);
 			context.drawCenteredTextWithShadow(
@@ -277,9 +281,24 @@ public class MonitorScreen extends ConsoleScreen {
 					(width / 2 - 29), (height / 2 + 26),
 					0x00ffb3);
 			context.getMatrices().pop();
+
+            context.getMatrices().push();
+            context.getMatrices().translate(0, 0, 50f);
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    convertCategoryNameToProper(this.getCategory().name()), (width / 2 - 54), (height / 2 + 41),
+                    5636095);
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    (isExtUnlocked) ? "" : "\uD83D\uDD12",
+                    (width / 2 - 29), (height / 2 + 26),
+                    0x00ffb3);
+            context.getMatrices().pop();
+
 			ExteriorModel model = this.getCurrentVariant().model();
 			MatrixStack stack = context.getMatrices();
 			// @TODO definitely make better in the near future, especially the weird shadow stuff with the exterior
+
 			stack.push();
 			stack.translate(x, this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 11 : y, 0f);
 			if (this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE))
@@ -289,9 +308,10 @@ public class MonitorScreen extends ConsoleScreen {
 			else stack.scale(-scale, scale, scale);
 			stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) tickForSpin / 1200L) * 360.0f));
 			DiffuseLighting.disableGuiDepthLighting();
-			model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+			model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, 1);
 			DiffuseLighting.enableGuiDepthLighting();
 			stack.pop();
+
 			stack.push();
 			stack.translate(0, 0, -50f);
 			stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
