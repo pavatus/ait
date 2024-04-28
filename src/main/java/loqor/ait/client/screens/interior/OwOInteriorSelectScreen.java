@@ -6,7 +6,7 @@ import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import loqor.ait.AITMod;
-import loqor.ait.registry.DesktopRegistry;
+import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.TardisDesktopSchema;

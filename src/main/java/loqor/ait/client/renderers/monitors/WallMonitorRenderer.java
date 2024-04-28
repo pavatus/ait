@@ -2,14 +2,13 @@ package loqor.ait.client.renderers.monitors;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.decoration.PlaqueModel;
-import loqor.ait.core.blockentities.PlaqueBlockEntity;
 import loqor.ait.core.blockentities.WallMonitorBlockEntity;
 import loqor.ait.core.blocks.PlaqueBlock;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;

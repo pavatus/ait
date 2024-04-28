@@ -1,8 +1,9 @@
 package loqor.ait.tardis.console.type;
 
 import loqor.ait.AITMod;
-import loqor.ait.registry.ConsoleVariantRegistry;
-import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.control.impl.*;
 import loqor.ait.tardis.control.impl.pos.IncrementControl;

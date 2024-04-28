@@ -1,16 +1,16 @@
 package loqor.ait.tardis.wrapper.client;
 
-import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
+import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.tardis.*;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.TardisHandlersManager;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.UUID;

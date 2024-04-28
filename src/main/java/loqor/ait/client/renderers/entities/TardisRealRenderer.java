@@ -2,8 +2,8 @@ package loqor.ait.client.renderers.entities;
 
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.machines.ShieldsModel;
-import loqor.ait.client.registry.ClientExteriorVariantRegistry;
-import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.entities.TardisRealEntity;

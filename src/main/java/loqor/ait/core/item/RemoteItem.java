@@ -2,7 +2,7 @@ package loqor.ait.core.item;
 
 import loqor.ait.api.tardis.LinkableItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;

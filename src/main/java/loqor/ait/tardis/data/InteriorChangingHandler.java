@@ -2,7 +2,7 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.registry.DesktopRegistry;
+import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;

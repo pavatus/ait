@@ -2,7 +2,7 @@ package loqor.ait.registry.unlockable;
 
 import com.mojang.serialization.Codec;
 import loqor.ait.AITMod;
-import loqor.ait.registry.DatapackRegistry;
+import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.loyalty.Loyalty;

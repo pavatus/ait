@@ -1,8 +1,8 @@
 package loqor.ait.tardis;
 
 import com.google.gson.*;
-import loqor.ait.registry.DesktopRegistry;
-import loqor.ait.registry.datapack.Nameable;
+import loqor.ait.registry.impl.DesktopRegistry;
+import loqor.ait.core.data.base.Nameable;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.data.loyalty.Loyalty;

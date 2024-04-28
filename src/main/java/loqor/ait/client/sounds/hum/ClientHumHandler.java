@@ -3,7 +3,7 @@ package loqor.ait.client.sounds.hum;
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.registry.HumsRegistry;
+import loqor.ait.registry.impl.HumsRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;

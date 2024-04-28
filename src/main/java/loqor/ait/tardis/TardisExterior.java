@@ -2,11 +2,11 @@ package loqor.ait.tardis;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.registry.CategoryRegistry;
-import loqor.ait.registry.ExteriorVariantRegistry;
+import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.data.TardisLink;
-import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import net.minecraft.block.entity.BlockEntity;
 
 import java.util.Optional;

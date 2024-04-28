@@ -1,20 +1,15 @@
 package loqor.ait.tardis.data.properties;
 
 import com.google.gson.internal.LinkedTreeMap;
-import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
-import loqor.ait.core.item.sonic.SonicSchema;
-import loqor.ait.registry.DesktopRegistry;
-import loqor.ait.registry.datapack.Identifiable;
+import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.util.Identifier;

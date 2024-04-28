@@ -4,7 +4,7 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.util.StackUtil;
-import loqor.ait.registry.MachineRecipeRegistry;
+import loqor.ait.registry.impl.MachineRecipeRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;

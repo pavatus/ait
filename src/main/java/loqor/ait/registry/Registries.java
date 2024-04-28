@@ -2,6 +2,9 @@ package loqor.ait.registry;
 
 import loqor.ait.AITMod;
 import loqor.ait.registry.datapack.SimpleDatapackRegistry;
+import loqor.ait.registry.impl.*;
+import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 import java.util.ArrayList;
 import java.util.List;

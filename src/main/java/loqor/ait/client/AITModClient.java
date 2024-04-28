@@ -1,9 +1,9 @@
 package loqor.ait.client;
 
 import loqor.ait.AITMod;
-import loqor.ait.client.registry.ClientConsoleVariantRegistry;
-import loqor.ait.client.registry.ClientDoorRegistry;
-import loqor.ait.client.registry.ClientExteriorVariantRegistry;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
+import loqor.ait.registry.impl.door.ClientDoorRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
@@ -29,14 +29,17 @@ import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.RiftTarget;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.*;
-import loqor.ait.core.item.sonic.SonicSchema;
-import loqor.ait.registry.*;
+import loqor.ait.core.data.schema.SonicSchema;
+import loqor.ait.registry.Registries;
+import loqor.ait.registry.impl.SonicRegistry;
+import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.console.type.ConsoleTypeSchema;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -84,6 +87,8 @@ public class AITModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        Registries.getInstance().subscribe(Registries.InitType.CLIENT);
+
         setupBlockRendering();
         sonicModelPredicate();
         blockEntityRendererRegister();
@@ -101,8 +106,6 @@ public class AITModClient implements ClientModInitializer {
         ClientExteriorVariantRegistry.getInstance().init();
         ClientConsoleVariantRegistry.getInstance().init();
         ClientDoorRegistry.init();
-
-        Registries.getInstance().subscribe(Registries.InitType.CLIENT);
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {

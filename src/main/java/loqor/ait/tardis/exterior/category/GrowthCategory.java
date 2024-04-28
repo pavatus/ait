@@ -1,6 +1,7 @@
 package loqor.ait.tardis.exterior.category;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import net.minecraft.util.Identifier;
 
 public class GrowthCategory extends ExteriorCategorySchema {

@@ -2,11 +2,11 @@ package loqor.ait.client.util;
 
 import loqor.ait.client.models.doors.DoorModel;
 import loqor.ait.client.models.exteriors.ExteriorModel;
-import loqor.ait.client.registry.ClientDoorRegistry;
+import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.AITMod;
-import loqor.ait.client.registry.ClientExteriorVariantRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.item.sonic.SonicSchema;
+import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.util.TardisUtil;

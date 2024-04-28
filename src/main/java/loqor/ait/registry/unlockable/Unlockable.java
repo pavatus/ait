@@ -1,6 +1,6 @@
 package loqor.ait.registry.unlockable;
 
-import loqor.ait.registry.datapack.Identifiable;
+import loqor.ait.core.data.base.Identifiable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 
 public interface Unlockable extends Identifiable {

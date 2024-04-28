@@ -3,7 +3,7 @@ package loqor.ait.client.renderers.consoles;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleGeneratorModel;
 import loqor.ait.client.models.consoles.ConsoleModel;
-import loqor.ait.client.registry.ClientConsoleVariantRegistry;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.tardis.Tardis;

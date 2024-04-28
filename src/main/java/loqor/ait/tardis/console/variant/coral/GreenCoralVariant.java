@@ -2,7 +2,7 @@ package loqor.ait.tardis.console.variant.coral;
 
 import loqor.ait.AITMod;
 import loqor.ait.tardis.console.type.CoralType;
-import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
+import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import net.minecraft.util.Identifier;
 
 public class GreenCoralVariant extends ConsoleVariantSchema {

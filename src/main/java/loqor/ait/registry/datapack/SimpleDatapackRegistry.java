@@ -2,8 +2,7 @@ package loqor.ait.registry.datapack;
 
 import com.mojang.serialization.Codec;
 import loqor.ait.AITMod;
-import loqor.ait.registry.DatapackRegistry;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.core.data.base.Identifiable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

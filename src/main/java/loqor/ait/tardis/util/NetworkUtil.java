@@ -1,6 +1,7 @@
 package loqor.ait.tardis.util;
 
 import loqor.ait.api.tardis.LinkableItem;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

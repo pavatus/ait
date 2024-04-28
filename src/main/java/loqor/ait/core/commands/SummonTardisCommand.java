@@ -6,7 +6,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.argument.BlockPosArgumentType;

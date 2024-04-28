@@ -3,7 +3,7 @@ package loqor.ait.tardis.util.desktop.structures;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.util.Corners;
+import loqor.ait.core.data.Corners;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;

@@ -3,7 +3,7 @@ package loqor.ait.core.item.part;
 import loqor.ait.AITMod;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.util.AITModTags;
-import loqor.ait.registry.MachineRecipeSchema;
+import loqor.ait.core.data.schema.MachineRecipeSchema;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

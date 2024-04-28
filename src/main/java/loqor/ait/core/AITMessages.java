@@ -2,7 +2,7 @@ package loqor.ait.core;
 
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

@@ -1,15 +1,15 @@
 package loqor.ait.tardis.exterior.variant.tardim;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.registry.DoorRegistry;
+import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.category.TardimCategory;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.animation.PulsatingAnimation;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
-import loqor.ait.tardis.variant.door.DoorSchema;
-import loqor.ait.tardis.variant.door.TardimDoorVariant;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.tardis.door.TardimDoorVariant;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;

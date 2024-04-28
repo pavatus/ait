@@ -2,10 +2,10 @@ package loqor.ait.tardis.data.loyalty;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.registry.ConsoleVariantRegistry;
-import loqor.ait.registry.DesktopRegistry;
-import loqor.ait.registry.ExteriorVariantRegistry;
-import loqor.ait.registry.datapack.Nameable;
+import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import loqor.ait.registry.impl.DesktopRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import loqor.ait.core.data.base.Nameable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.tardis.util.TardisUtil;
