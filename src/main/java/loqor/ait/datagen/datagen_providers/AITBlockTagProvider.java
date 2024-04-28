@@ -82,6 +82,7 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 				.add(Blocks.BLACK_CANDLE_CAKE)
 				.add(Blocks.REDSTONE_LAMP)
 				.add(AITBlocks.EXTERIOR_BLOCK)
-				.add(AITBlocks.CONSOLE_GENERATOR);
+				.add(AITBlocks.CONSOLE_GENERATOR)
+				.add(AITBlocks.MACHINE_CASING);
 	}
 }

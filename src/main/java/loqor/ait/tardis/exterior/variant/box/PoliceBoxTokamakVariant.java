@@ -1,8 +1,8 @@
 package loqor.ait.tardis.exterior.variant.box;
 
-import loqor.ait.registry.DoorRegistry;
-import loqor.ait.tardis.variant.door.DoorSchema;
-import loqor.ait.tardis.variant.door.PoliceBoxTokamakDoorVariant;
+import loqor.ait.registry.impl.door.DoorRegistry;
+import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.tardis.door.PoliceBoxTokamakDoorVariant;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 

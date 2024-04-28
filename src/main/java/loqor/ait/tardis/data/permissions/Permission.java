@@ -11,7 +11,7 @@ public record Permission(String name, Permission parent, Map<String, Permission>
     public interface USE {
         PermissionWrapper CONSOLE = new PermissionWrapper("console"); // Permission to use console
         PermissionWrapper TRAVEL = new PermissionWrapper("travel"); // Permission to travel inside the tardis
-        PermissionWrapper ATTUNE = new PermissionWrapper("attune"); // Permission to attune sonic or key to a tardis
+        PermissionWrapper LINK = new PermissionWrapper("link"); // Permission to attune sonic or key to a tardis
     }
 
     public interface MODIFY {
@@ -19,25 +19,30 @@ public record Permission(String name, Permission parent, Map<String, Permission>
         PermissionWrapper BREAK = new PermissionWrapper("break"); // Permission to break blocks
         PermissionWrapper INTERACT = new PermissionWrapper("break"); // Permission to interact with blocks
         PermissionWrapper CONTAINER = new PermissionWrapper("container"); // Permission to open containers
+
+        PermissionWrapper DESKTOP = new PermissionWrapper("desktop");
+        PermissionWrapper EXTERIOR = new PermissionWrapper("exterior");
     }
 
     public interface SPECIAL {
         PermissionWrapper CLOAK = new PermissionWrapper("cloak"); // Permission to see through cloak
+        PermissionWrapper SNAP = new PermissionWrapper("snap");
     }
 
     public static final Permission LOOKUP = withChildren(
             "tardis", null,
             base -> withChildren(
                     "use", base,
-                    USE.CONSOLE, USE.TRAVEL, USE.ATTUNE
+                    USE.CONSOLE, USE.TRAVEL, USE.LINK
             ),
             base -> withChildren(
                     "modify", base,
-                    MODIFY.PLACE, MODIFY.BREAK, MODIFY.INTERACT, MODIFY.CONTAINER
+                    MODIFY.PLACE, MODIFY.BREAK, MODIFY.INTERACT, MODIFY.CONTAINER,
+                    MODIFY.DESKTOP, MODIFY.EXTERIOR
             ),
             base -> withChildren(
                     "special", base,
-                    SPECIAL.CLOAK
+                    SPECIAL.CLOAK, SPECIAL.SNAP
             )
     );
 

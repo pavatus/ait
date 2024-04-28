@@ -3,36 +3,35 @@ package loqor.ait.client.screens;
 import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
-import loqor.ait.client.registry.ClientExteriorVariantRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.registry.CategoryRegistry;
-import loqor.ait.registry.ExteriorVariantRegistry;
+import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.exterior.category.BoothCategory;
 import loqor.ait.tardis.exterior.category.ClassicCategory;
-import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
-import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.screens.interior.InteriorSettingsScreen;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DimensionControl;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -84,7 +83,8 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	public ClientExteriorVariantSchema getCurrentVariant() {
-		if (Objects.equals(currentVariant, ClientExteriorVariantRegistry.CORAL_GROWTH)) changeCategory(true);
+		if (Objects.equals(currentVariant, ClientExteriorVariantRegistry.CORAL_GROWTH))
+			changeCategory(true);
 
 		if (currentVariant == null)
 			if (!getFromUUID(tardisId).getExterior().getCategory().equals(getCategory())) {
@@ -140,12 +140,13 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	public void sendExteriorPacket() {
-		if (getFromUUID(tardisId) != null) {
-			if (this.getCategory() != getFromUUID(tardisId).getExterior().getCategory() || this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant()) {
-				ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
-						this.getCategory().id().toString(), this.getCurrentVariant().id().toString(),
-						this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant());
-			}
+		if (getFromUUID(tardisId) == null)
+			return;
+
+		if (this.getCategory() != getFromUUID(tardisId).getExterior().getCategory() || this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant()) {
+			ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
+					this.getCategory().id().toString(), this.getCurrentVariant().id().toString(),
+					this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant());
 		}
 	}
 
@@ -258,37 +259,56 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX, float delta) {
+		MatrixStack stack = context.getMatrices();
+
 		tickForSpin++;
+
 		if (getFromUUID(tardisId) != null) {
 			if (this.getCategory() == null || this.getCurrentVariant() == null) return;
-			context.getMatrices().push();
-			context.getMatrices().translate(0, 0, 50f);
+
+			boolean isExtUnlocked = tardis().isUnlocked(this.getCurrentVariant().parent());
+
+			stack.push();
+			stack.translate(0, 0, 50f);
 			context.drawCenteredTextWithShadow(
 					this.textRenderer,
 					convertCategoryNameToProper(this.getCategory().name()), (width / 2 - 54), (height / 2 + 41),
 					5636095);
-			List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParentToList(this.getCategory());
+
+			List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(this.getCategory());
 			context.drawCenteredTextWithShadow(
 					this.textRenderer,
-					(list.indexOf(this.getCurrentVariant().parent()) + 1) + "/" + ExteriorVariantRegistry.withParentToList(this.getCategory()).size(),
+					(list.indexOf(this.getCurrentVariant().parent()) + 1) + "/" + ExteriorVariantRegistry.withParent(this.getCategory()).size(),
 					(width / 2 - 29), (height / 2 + 26),
 					0x00ffb3);
-			context.getMatrices().pop();
+			stack.pop();
+
+            stack.push();
+			stack.translate(0, 0, 50f);
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    (isExtUnlocked) ? "" : "\uD83D\uDD12",
+                    x, y,
+					Color.WHITE.getRGB());
+            stack.pop();
+
 			ExteriorModel model = this.getCurrentVariant().model();
-			MatrixStack stack = context.getMatrices();
-			// @TODO definitely make better in the near future, especially the weird shadow stuff with the exterior
+
 			stack.push();
 			stack.translate(x, this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 11 : y, 0f);
-			if (this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE))
+			if (this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE)) {
 				stack.scale(-12, 12, 12);
-			else if (this.getCategory() == CategoryRegistry.getInstance().get(BoothCategory.REFERENCE))
+			} else if (this.getCategory() == CategoryRegistry.getInstance().get(BoothCategory.REFERENCE)) {
 				stack.scale(-scale, scale, scale);
-			else stack.scale(-scale, scale, scale);
+			} else {
+				stack.scale(-scale, scale, scale);
+			}
 			stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) tickForSpin / 1200L) * 360.0f));
 			DiffuseLighting.disableGuiDepthLighting();
-			model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+			model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, 1);
 			DiffuseLighting.enableGuiDepthLighting();
 			stack.pop();
+
 			stack.push();
 			stack.translate(0, 0, -50f);
 			stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
@@ -342,10 +362,11 @@ public class MonitorScreen extends ConsoleScreen {
 		int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
 		int j = ((this.width - this.backgroundWidth) / 2);
 		// background behind the tardis and gallifreyan text
-		context.getMatrices().push();
-		context.getMatrices().translate(0, 0, -100f);
+		MatrixStack stack = context.getMatrices();
+		stack.push();
+		stack.translate(0, 0, -100f);
 		context.drawTexture(TEXTURE, j + 4, i + 32, 80, 180, 93, 76);
-		context.getMatrices().pop();
+		stack.pop();
 		this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f, 176, delta);
 		this.drawBackground(context, delta, mouseX, mouseY);
 		// todo manually adjusting all these values are annoying me

@@ -1,6 +1,6 @@
 package loqor.ait.tardis.sound;
 
-import loqor.ait.registry.HumsRegistry;
+import loqor.ait.registry.impl.HumsRegistry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 

@@ -5,15 +5,16 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.registry.ConsoleRegistry;
-import loqor.ait.registry.ConsoleVariantRegistry;
-import loqor.ait.tardis.console.type.ConsoleTypeSchema;
-import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
+import loqor.ait.registry.impl.console.ConsoleRegistry;
+import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
+import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -25,15 +26,20 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 import static loqor.ait.core.blockentities.ConsoleBlockEntity.nextConsole;
 import static loqor.ait.core.blockentities.ConsoleBlockEntity.nextVariant;
+import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
 
-public class ConsoleGeneratorBlockEntity extends BlockEntity {
+public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
 	public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_gen_type");
 	public static final Identifier SYNC_VARIANT = new Identifier(AITMod.MOD_ID, "sync_gen_variant");
 	private Identifier type;
@@ -51,12 +57,12 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 
 		if (stack.getItem() instanceof SonicItem) {
 
-			this.createConsole();
+			this.createConsole(player);
 
 			return;
 		} else if (stack.isOf(Items.BLAZE_POWDER)) {
 
-			this.createConsole();
+			this.createConsole(player);
 
 			stack.decrement(1);
 
@@ -80,16 +86,34 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 			nbt.putString("variant", this.variant.toString());
 	}
 
-	private void createConsole() {
+	private void createConsole(PlayerEntity player) {
 		ConsoleBlockEntity consoleBlockEntity = new ConsoleBlockEntity(pos, AITBlocks.CONSOLE.getDefaultState());
 
 		consoleBlockEntity.setType(this.getConsoleSchema());
 		consoleBlockEntity.setVariant(this.getConsoleVariant());
 
-		this.getWorld().setBlockState(this.pos, AITBlocks.CONSOLE.getDefaultState());
-		this.getWorld().addBlockEntity(consoleBlockEntity);
+		if(world == null) return;
+
+		if(this.findTardis().isPresent() && !this.findTardis().get().isUnlocked(this.getConsoleVariant())) {
+			player.sendMessage(Text.literal("This console is not unlocked yet!").formatted(Formatting.ITALIC), true);
+			world.playSound(null, this.pos, SoundEvents.ENTITY_GLOW_ITEM_FRAME_BREAK, SoundCategory.BLOCKS, 0.5f, 1.0f);
+			return;
+		}
+
+		world.setBlockState(this.pos, AITBlocks.CONSOLE.getDefaultState());
+		world.addBlockEntity(consoleBlockEntity);
 
 		world.playSound(null, this.pos, SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 0.5f, 1.0f);
+	}
+
+	@Override
+	public Optional<Tardis> findTardis() {
+		if (this.tardisId == null) {
+			Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
+			if (found != null)
+				this.setTardis(found);
+		}
+		return super.findTardis();
 	}
 
 	public ConsoleTypeSchema getConsoleSchema() {
@@ -135,7 +159,8 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 	}
 
 	private void syncType() {
-		if (!hasWorld() || world.isClient()) return;
+		if (!hasWorld() || world.isClient())
+			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
 
@@ -148,7 +173,8 @@ public class ConsoleGeneratorBlockEntity extends BlockEntity {
 	}
 
 	private void syncVariant() {
-		if (!hasWorld() || world.isClient()) return;
+		if (!hasWorld() || world.isClient())
+			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
 

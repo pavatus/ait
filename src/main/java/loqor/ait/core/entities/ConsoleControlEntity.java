@@ -7,7 +7,7 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
-import loqor.ait.tardis.console.type.ConsoleTypeSchema;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
 import net.minecraft.block.entity.BlockEntity;

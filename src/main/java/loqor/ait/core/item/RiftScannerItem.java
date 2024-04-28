@@ -29,9 +29,9 @@ public class RiftScannerItem extends Item {
 		if (!isSearchOnDelay((ServerPlayerEntity) user)) {
 			createSearchDelay((ServerPlayerEntity) user);
 			createNewTarget((ServerWorld) world, new ChunkPos(user.getBlockPos()), user.getStackInHand(hand));
-			user.sendMessage(Text.literal("riftchunk.tracking"), true); // Tracking rift!
+			user.sendMessage(Text.translatable("riftchunk.ait.tracking"), true); // Tracking rift!
 		} else {
-			user.sendMessage(Text.literal("riftchunk.cooldown"), true); // Rift search is on cooldown
+			user.sendMessage(Text.translatable("riftchunk.ait.cooldown"), true); // Rift search is on cooldown
 		}
 
 		return TypedActionResult.success(user.getStackInHand(hand));

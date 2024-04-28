@@ -1,6 +1,19 @@
 package loqor.ait.tardis.data.loyalty;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import java.util.Optional;
+
 public record Loyalty(int level, Type type) {
+
+    public static final Codec<Loyalty> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    Codec.STRING.optionalFieldOf("type").forGetter(loyalty -> Optional.of(loyalty.type.toString())),
+                    Codec.INT.optionalFieldOf("level").forGetter(loyalty -> Optional.of(loyalty.level))
+            ).apply(instance, (Loyalty::deserialize)));
+
+    public static final Loyalty MIN = new Loyalty(Type.REJECT);
 
     public Loyalty(Type type) {
         this(type.level, type);
@@ -14,16 +27,38 @@ public record Loyalty(int level, Type type) {
         return Loyalty.fromLevel(this.level - level);
     }
 
+    public boolean greaterOrEqual(Loyalty other) {
+        return other.level >= this.level;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        return obj instanceof Loyalty other && this.level == other.level;
+    }
+
     public static Loyalty fromLevel(int level) {
         level = Type.normalize(level);
         return new Loyalty(level, Type.get(level));
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static Loyalty deserialize(Type type, Optional<Integer> level) {
+        return level.map(Loyalty::fromLevel).orElseGet(() -> new Loyalty(type)); // it's one way or another
+    }
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static Loyalty deserialize(Optional<String> type, Optional<Integer> level) {
+        return deserialize(type.map(Type::valueOf).orElse(null), level);
+    }
+
     public enum Type {
         REJECT(0),
-        NEUTRAL(25),
-        COMPANION(50),
-        PILOT(75),
+        NEUTRAL(10),
+        COMPANION(35),
+        PILOT(60),
         OWNER(100);
 
         public final int level;

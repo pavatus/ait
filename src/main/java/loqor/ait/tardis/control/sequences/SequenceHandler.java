@@ -1,9 +1,9 @@
 package loqor.ait.tardis.control.sequences;
 
-import loqor.ait.registry.SequenceRegistry;
+import loqor.ait.registry.impl.SequenceRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.Exclude;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.tardis.util.FlightUtil;
@@ -11,6 +11,7 @@ import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -19,23 +20,34 @@ import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import java.util.UUID;
+
 public class SequenceHandler extends TardisLink {
 	@Exclude
 	private RecentControls recent;
 	private int ticks = 0;
 	@Exclude
 	private Sequence activeSequence;
+	private UUID playerUUID;
 
 	public SequenceHandler(Tardis tardisId) {
 		super(tardisId, TypeId.SEQUENCE);
 		recent = new RecentControls(tardisId.getUuid());
 		activeSequence = null;
 	}
+	public void setActivePlayer(ServerPlayerEntity player) {
+		this.playerUUID = player.getUuid();
+	}
 
-	public void add(Control control) {
+	public ServerPlayerEntity getActivePlayer() {
+		return (ServerPlayerEntity) TardisUtil.getTardisDimension().getPlayerByUuid(this.playerUUID);
+	}
+
+	public void add(Control control, ServerPlayerEntity player) {
 		if (this.getActiveSequence() == null || recent == null) return;
 		recent.add(control);
 		ticks = 0;
+		this.setActivePlayer(player);
 		this.doesControlIndexMatch(control);
 		this.compareToSequences();
 	}
@@ -62,13 +74,13 @@ public class SequenceHandler extends TardisLink {
 
 	public void triggerRandomSequence(boolean setTicksTo0) {
 		if (setTicksTo0) ticks = 0;
-		int rand = Random.create().nextBetween(0, SequenceRegistry.REGISTRY.size() - 4);
+		int rand = Random.create().nextBetween(0, SequenceRegistry.REGISTRY.size()/* - 4*/);
 		Sequence sequence = SequenceRegistry.REGISTRY.get(rand);
 		if (sequence == null) return;
-		this.activeSequence = sequence == SequenceRegistry.TAKE_OFF
+		this.activeSequence = sequence/* == SequenceRegistry.TAKE_OFF
 				|| sequence == SequenceRegistry.ENTER_VORTEX
 				|| sequence == SequenceRegistry.EXIT_VORTEX
-				|| sequence == SequenceRegistry.LANDING ? null : sequence;
+				|| sequence == SequenceRegistry.LANDING ? null : sequence*/;
 		if (findTardis().isEmpty() || this.activeSequence == null) return;
 		FlightUtil.playSoundAtConsole(findTardis().get(), SoundEvents.BLOCK_BEACON_POWER_SELECT);
 		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(findTardis().get()));
@@ -81,21 +93,32 @@ public class SequenceHandler extends TardisLink {
 	}
 
 	private void compareToSequences() {
+
 		if (this.findTardis().isEmpty() || this.getActiveSequence() == null) return;
-		if (this.recent == null)
+
+		if (this.recent == null) {
+
 			this.recent = new RecentControls(this.findTardis().get().getUuid());
+
+		}
 		if (this.getActiveSequence().isFinished(this.recent)) {
+
 			recent.clear();
 			this.getActiveSequence().execute(this.findTardis().get());
 			completedControlEffects(this.findTardis().get());
 			this.setActiveSequence(null, true);
+
 		} else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
+
 			recent.clear();
-			this.getActiveSequence().executeMissed(this.findTardis().get());
+			this.getActiveSequence().executeMissed(this.findTardis().get(), this.getActivePlayer());
 			missedControlEffects(this.findTardis().get());
 			this.setActiveSequence(null, true);
+
 		} else if (recent.size() >= this.getActiveSequence().getControls().size()) {
+
 			recent.clear();
+
 		}
 	}
 

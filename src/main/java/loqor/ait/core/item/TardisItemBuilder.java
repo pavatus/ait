@@ -2,16 +2,15 @@ package loqor.ait.core.item;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.registry.CategoryRegistry;
-import loqor.ait.registry.DesktopRegistry;
-import loqor.ait.registry.ExteriorVariantRegistry;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.registry.impl.DesktopRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
-import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,11 +22,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public class TardisItemBuilder extends Item {
 
-	public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "type_40"); //new Identifier(AITMod.MOD_ID, "war");
+	public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "meridian");
 	public static final Identifier DEFAULT_EXTERIOR = CapsuleCategory.REFERENCE;
 
 	private final Identifier exterior;
@@ -46,36 +43,6 @@ public class TardisItemBuilder extends Item {
 
 	public TardisItemBuilder(Settings settings) {
 		this(settings, DEFAULT_EXTERIOR);
-	}
-
-	public static ExteriorVariantSchema findRandomVariant(ExteriorCategorySchema exterior) {
-		Random rnd = new Random();
-		if (ExteriorVariantRegistry.withParent(exterior).size() == 0) {
-			AITMod.LOGGER.error("Variants for " + exterior + " are empty! Panicking!!!!");
-			return ExteriorVariantRegistry.BOX_DEFAULT;
-		}
-		int randomized = rnd.nextInt(Math.abs(ExteriorVariantRegistry.withParent(exterior).size()));
-		return (ExteriorVariantSchema) ExteriorVariantRegistry.withParent(exterior).toArray()[randomized];
-	}
-
-	public static ExteriorCategorySchema findRandomExterior() {
-		Random rnd = new Random();
-		int randomized = rnd.nextInt(Math.abs(CategoryRegistry.getInstance().size()));
-		return CategoryRegistry.getInstance().toArrayList().get(randomized) == CategoryRegistry.CORAL_GROWTH ? CategoryRegistry.TARDIM : CategoryRegistry.getInstance().toArrayList().get(randomized);
-	}
-
-	public static TardisDesktopSchema findRandomDesktop() {
-		Random rnd = new Random();
-		int randomized = rnd.nextInt(Math.abs(DesktopRegistry.getInstance().size()));
-		return DesktopRegistry.getInstance().toArrayList().get(randomized);
-	}
-
-	public static TardisDesktopSchema findRandomDesktop(Tardis tardis) { // todo this may cause looping crashes
-		TardisDesktopSchema found = findRandomDesktop();
-
-		if (tardis.isDesktopUnlocked(found) && !found.equals(DesktopRegistry.DEFAULT_CAVE)) return found;
-
-		return findRandomDesktop(tardis);
 	}
 
 	@Override
@@ -106,7 +73,12 @@ public class TardisItemBuilder extends Item {
 				return ActionResult.SUCCESS;
 			}
 
-			ServerTardisManager.getInstance().create(pos, CategoryRegistry.getInstance().get(this.exterior), findRandomVariant(CategoryRegistry.getInstance().get(this.exterior)), DesktopRegistry.getInstance().get(this.desktop), false);
+			ExteriorCategorySchema category = CategoryRegistry.getInstance().get(this.exterior);
+			ExteriorVariantSchema exterior = ExteriorVariantRegistry.getInstance().pickRandomWithParent(category);
+
+			TardisDesktopSchema desktop = DesktopRegistry.getInstance().get(this.desktop);
+
+			ServerTardisManager.getInstance().create(pos, category, exterior, desktop, false);
 			context.getStack().decrement(1);
 		}
 

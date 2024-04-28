@@ -2,10 +2,11 @@ package loqor.ait.tardis;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.item.TardisItemBuilder;
+import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.data.TardisLink;
-import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import net.minecraft.block.entity.BlockEntity;
 
 import java.util.Optional;
@@ -22,12 +23,8 @@ public class TardisExterior extends TardisLink {
 
 	public ExteriorCategorySchema getCategory() {
 		if (exterior == null) {
-			AITMod.LOGGER.error("Exterior Category was null! Changing to a random one.."); // AHH PANIC AGAIN
-			setType(TardisItemBuilder.findRandomExterior());
-
-			//if (this.findTardis().isPresent() && this.findTardis().get() instanceof ClientTardis) {
-			//    ClientTardisManager.getInstance().loadTardis(this.findTardis().get().getUuid(), t -> {});
-			//}
+			AITMod.LOGGER.error("Exterior Category was null! Changing to a random one...");
+			this.setType(CategoryRegistry.getInstance().getRandom());
 		}
 
 		return exterior;
@@ -35,8 +32,11 @@ public class TardisExterior extends TardisLink {
 
 	public ExteriorVariantSchema getVariant() {
 		if (variant == null) {
-			AITMod.LOGGER.error("Variant was null! Changing to a random one.."); // AHH PANIC I BROKE VERYTHIGN!??
-			setVariant(TardisItemBuilder.findRandomVariant(getCategory()));
+			AITMod.LOGGER.error("Variant was null! Changing to a random one...");
+
+			AITMod.LOGGER.info("TARDIS: " + this.findTardis());
+			this.setVariant(ExteriorVariantRegistry.getInstance().getRandom()); // this.findTardis().get()
+			AITMod.LOGGER.warn(this.variant.toString());
 		}
 
 		return variant;
@@ -47,8 +47,9 @@ public class TardisExterior extends TardisLink {
 
 		if (exterior != getVariant().category()) {
 			AITMod.LOGGER.error("Force changing exterior variant to a random one to ensure it matches!");
-			setVariant(TardisItemBuilder.findRandomVariant(exterior));
+			setVariant(ExteriorVariantRegistry.getInstance().pickRandomWithParent(exterior));
 		}
+
 		if (findTardis().isEmpty()) {
 			findTardis().get().getDoor().closeDoors();
 		}
@@ -66,11 +67,13 @@ public class TardisExterior extends TardisLink {
 	}
 
 	public Optional<ExteriorBlockEntity> findExteriorBlock() {
-		if (findTardis().isEmpty()) return Optional.empty();
+		if (this.findTardis().isEmpty())
+			return Optional.empty();
 
 		BlockEntity found = this.getExteriorPos().getWorld().getBlockEntity(this.getExteriorPos());
 
-		if (!(found instanceof ExteriorBlockEntity)) return Optional.empty();
+		if (!(found instanceof ExteriorBlockEntity))
+			return Optional.empty();
 
 		return Optional.of((ExteriorBlockEntity) found);
 	}

@@ -1,8 +1,8 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.tardis.Exclude;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTickable;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
@@ -86,6 +86,7 @@ public class TardisHandlersManager extends TardisLink {
 		addTickable(getSonic());
 		addTickable(getShields());
 		addTickable(getBiomeHandler());
+		addTickable(getLoyalties());
 	}
 
 	protected void addTickable(TardisLink var) {
@@ -122,6 +123,7 @@ public class TardisHandlersManager extends TardisLink {
 				generateTickables();
 				return;
 			}
+
 			ticker.startTick(server);
 		}
 	}

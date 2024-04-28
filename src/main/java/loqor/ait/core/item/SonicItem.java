@@ -6,14 +6,14 @@ import loqor.ait.api.tardis.LinkableItem;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.item.sonic.SonicSchema;
+import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.util.AITModTags;
-import loqor.ait.registry.SonicRegistry;
+import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -129,7 +129,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 			world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
 			cycleMode(stack);
 
-			this.removeFuel(stack);
+			//this.removeFuel(stack);
 
 			return true;
 		}
@@ -203,6 +203,10 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		setPreviousMode(stack);
 	}
 
+	public static boolean isSonic(ItemStack stack) {
+		return stack.getRegistryEntry().isIn(AITModTags.Items.SONIC_ITEM);
+	}
+
 	public static int findModeInt(ItemStack stack) {
 		NbtCompound nbtCompound = stack.getOrCreateNbt();
 
@@ -250,7 +254,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		int id = compound.getInt(SONIC_TYPE);
 
 		compound.remove(SONIC_TYPE);
-		compound.putString(SONIC_TYPE, SonicRegistry.getInstance().get(id).id().toString());
+		compound.putString(SONIC_TYPE, SonicRegistry.getInstance().toList().get(id).id().toString());
 	}
 
 	public static void setMode(ItemStack stack, int mode) {

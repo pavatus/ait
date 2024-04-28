@@ -4,7 +4,7 @@ import loqor.ait.core.item.WaypointItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.util.FlightUtil;
-import loqor.ait.tardis.util.Waypoint;
+import loqor.ait.core.data.Waypoint;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;

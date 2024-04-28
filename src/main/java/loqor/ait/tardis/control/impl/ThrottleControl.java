@@ -20,7 +20,7 @@ public class ThrottleControl extends Control {
 
 		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
 			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis);
+				this.addToControlSequence(tardis, player);
 			}
 		}
 
@@ -41,6 +41,11 @@ public class ThrottleControl extends Control {
 			} else {
 				travel.decreaseSpeed();
 			}
+		}
+
+		if(tardis.getHandlers().getSequenceHandler().getActivePlayer() == null &&
+				travel.getState() == TardisTravel.State.DEMAT) {
+			tardis.getHandlers().getSequenceHandler().setActivePlayer(player);
 		}
 
 		return true;

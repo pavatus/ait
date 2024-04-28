@@ -37,6 +37,7 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 - Loqor
 - Duzo
 - Dr. Theo
+- Nitrogenesis
 
 ---
 

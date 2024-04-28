@@ -1,9 +1,11 @@
 package loqor.ait.tardis;
 
 import com.google.gson.*;
-import loqor.ait.registry.DesktopRegistry;
-import loqor.ait.registry.datapack.Identifiable;
+import loqor.ait.registry.impl.DesktopRegistry;
+import loqor.ait.core.data.base.Nameable;
+import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.control.impl.DimensionControl;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.desktops.textures.DesktopPreviewTexture;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.world.ServerWorld;
@@ -13,36 +15,37 @@ import net.minecraft.util.Identifier;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
-public abstract class TardisDesktopSchema implements Identifiable {
+public abstract class TardisDesktopSchema implements Unlockable, Nameable {
+
 	private final Identifier id;
 	private final DesktopPreviewTexture preview;
+	private final Loyalty loyalty;
 
-	public TardisDesktopSchema(Identifier id, DesktopPreviewTexture texture) {
+	protected TardisDesktopSchema(Identifier id, DesktopPreviewTexture texture, Loyalty loyalty) {
 		this.id = id;
 		this.preview = texture;
-	}
-
-	public TardisDesktopSchema(Identifier id) {
-		this(id, new DesktopPreviewTexture(id));
+		this.loyalty = loyalty;
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() == null) return false;
-
-		TardisDesktopSchema that = (TardisDesktopSchema) o;
-
-		return id.equals(that.id);
-	}
-
 	public Identifier id() {
 		return id;
 	}
 
+	@Override
 	public String name() {
 		return DimensionControl.convertWorldValueToModified(id().getPath());
-	} // temp ish
+	}
+
+	@Override
+	public Loyalty getRequirement() {
+		return loyalty;
+	}
+
+	@Override
+	public UnlockType unlockType() {
+		return UnlockType.DESKTOP;
+	}
 
 	public DesktopPreviewTexture previewTexture() {
 		return this.preview;
@@ -66,6 +69,17 @@ public abstract class TardisDesktopSchema implements Identifiable {
 		return new Identifier(
 				id.getNamespace(), "interiors/" + id.getPath()
 		);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+
+		if (o instanceof TardisDesktopSchema that)
+			return id.equals(that.id);
+
+		return false;
 	}
 
 	public static Object serializer() {

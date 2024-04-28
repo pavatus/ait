@@ -1,10 +1,10 @@
 package loqor.ait.tardis.wrapper.server;
 
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.tardis.TardisExterior;
-import loqor.ait.tardis.TardisTickable;
+import loqor.ait.tardis.base.TardisTickable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;

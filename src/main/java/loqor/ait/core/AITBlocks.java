@@ -26,8 +26,8 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block CONSOLE = new ConsoleBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
             .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.IGNORE));
 
-    @NoBlockItem
     public static final Block ENGINE_BLOCK = new EngineBlock(FabricBlockSettings.create().requiresTool().instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
+    @NoBlockItem
     public static final Block ENGINE_CORE_BLOCK = new EngineCoreBlock(AbstractBlock.Settings.create().mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT).strength(3.0F).luminance((state) -> 15).nonOpaque());
     public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
             .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.DESTROY));
@@ -45,6 +45,9 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block LARGE_ZEITON_BUD = new AmethystClusterBlock(5, 3, FabricBlockSettings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.MEDIUM_AMETHYST_BUD).solid().luminance((state) -> 4).pistonBehavior(PistonBehavior.DESTROY));
     public static final Block MEDIUM_ZEITON_BUD = new AmethystClusterBlock(4, 3, FabricBlockSettings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.LARGE_AMETHYST_BUD).solid().luminance((state) -> 2).pistonBehavior(PistonBehavior.DESTROY));
     public static final Block SMALL_ZEITON_BUD = new AmethystClusterBlock(3, 4, FabricBlockSettings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.SMALL_AMETHYST_BUD).solid().luminance((state) -> 1).pistonBehavior(PistonBehavior.DESTROY));
+
+    // Machines
+    public static final Block MACHINE_CASING = new MachineCasingBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
 
     // Control Blocks
     @NoBlockItem

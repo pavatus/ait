@@ -7,7 +7,7 @@ import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.NameTagItem;
 import net.minecraft.registry.Registry;
@@ -36,7 +36,7 @@ public class TelepathicControl extends Control {
 
 		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
 			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis);
+				this.addToControlSequence(tardis, player);
 				return false;
 			}
 		}
@@ -63,7 +63,7 @@ public class TelepathicControl extends Control {
 			if (!player.isCreative())
 				hand.decrement(1);
 
-			this.addToControlSequence(tardis);
+			this.addToControlSequence(tardis, player);
 			return true;
 		}
 

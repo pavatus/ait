@@ -3,7 +3,7 @@ package loqor.ait.tardis.control;
 import loqor.ait.core.blocks.ConsoleBlock;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.console.type.ConsoleTypeSchema;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;

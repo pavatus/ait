@@ -2,6 +2,7 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -9,6 +10,7 @@ import loqor.ait.tardis.TardisTravel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 
 // use this as reference for starting other looping sounds on the exterior
@@ -54,7 +56,8 @@ public class ServerAlarmHandler extends TardisLink {
 		// @TODO make a new control that makes it (by default) detect hostile entities in the interior plus a check when it's been cleared of all hostile entities - Loqor
 		if (!isEnabled() && PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE)) {
 			for (Entity entity : TardisUtil.getEntitiesInInterior(findTardis().get(), 200)) {
-				if (entity instanceof HostileEntity && !entity.hasCustomName()) {
+				if ((entity instanceof HostileEntity && !entity.hasCustomName()) || entity instanceof ServerPlayerEntity player &&
+						tardis.getHandlers().getLoyalties().get(player).level() == Loyalty.Type.REJECT.level) {
 					this.enable();
 				}
 			}

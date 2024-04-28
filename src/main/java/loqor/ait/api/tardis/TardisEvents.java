@@ -1,7 +1,7 @@
 package loqor.ait.api.tardis;
 
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 

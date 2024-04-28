@@ -3,10 +3,12 @@ package loqor.ait.tardis.data;
 import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -89,7 +91,7 @@ public class ShieldData extends TardisLink {
 				.filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
 				.filter(entity -> !(entity instanceof ServerPlayerEntity player && player.isSpectator())) // Exclude players in spectator
 				.filter(entity -> !(entity instanceof FallingTardisEntity falling && falling.getTardis() == tardis))
-				.filter(entity -> !(entity instanceof PlayerEntity && Objects.equals(((PlayerEntity) entity).getOffHandStack().getOrCreateNbt().getString("tardis"), tardis.getUuid().toString()))) // Exclude players
+				.filter(entity -> !(entity instanceof PlayerEntity player && tardis.getHandlers().getLoyalties().get(player).level() >= Loyalty.Type.PILOT.level))
 				.forEach(entity -> {
 					if(entity instanceof ServerPlayerEntity && entity.isSubmergedInWater()) {
 						((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 20, 3, true, false, false));
@@ -97,7 +99,13 @@ public class ShieldData extends TardisLink {
 					if(this.areVisualShieldsActive()) {
 						if (entity.squaredDistanceTo(this.getExteriorPos().toCenterPos()) <= 6f) {
 							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(this.getExteriorPos().toCenterPos()).normalize().multiply(0.1f);
-							entity.setVelocity(entity.getVelocity().add(motion));
+							if(entity instanceof ProjectileEntity projectile) {
+								projectile.setVelocity(0, 0, 0);
+								projectile.velocityDirty = true;
+								projectile.velocityModified = true;
+								return;
+							}
+							entity.setVelocity(entity.getVelocity().add(motion.multiply(2f)));
 							entity.velocityDirty = true;
 							entity.velocityModified = true;
 						}

@@ -2,14 +2,13 @@ package loqor.ait.client.renderers.monitors;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.decoration.PlaqueModel;
-import loqor.ait.core.blockentities.PlaqueBlockEntity;
 import loqor.ait.core.blockentities.WallMonitorBlockEntity;
 import loqor.ait.core.blocks.PlaqueBlock;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -98,7 +97,7 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
 
         this.textRenderer.drawWithOutline(Text.of(positionPosText).asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(positionPosText) / 2), 35, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(positionDimensionText).asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(positionDimensionText) / 2), 46, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
-        this.textRenderer.drawWithOutline(Text.of(arrow).asOrderedText(), (18 - xVal) - ((float) this.textRenderer.getWidth(arrow) / 2), 37, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
+        this.textRenderer.drawWithOutline(Text.of(arrow).asOrderedText(), (18 - xVal) - ((float) this.textRenderer.getWidth(arrow) / 2), 42, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of("-===========-").asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth("-===========-") / 2), 55, 0x00F0FF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(destinationPosText).asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(destinationPosText) / 2), 67, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(destinationDimensionText).asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(positionDimensionText) / 2), 78, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);

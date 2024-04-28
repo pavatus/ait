@@ -4,7 +4,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -24,7 +24,7 @@ public class DimensionControl extends Control {
 
 		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
 			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis);
+				this.addToControlSequence(tardis, player);
 				return false;
 			}
 		}

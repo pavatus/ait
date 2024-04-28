@@ -4,8 +4,8 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.client.models.machines.ShieldsModel;
-import loqor.ait.client.registry.ClientExteriorVariantRegistry;
-import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
@@ -13,7 +13,7 @@ import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -26,8 +26,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
-
-import java.io.File;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 	private ExteriorModel model;
@@ -62,6 +60,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		BlockState blockState = entity.getCachedState();
 		float f = blockState.get(ExteriorBlock.FACING).asRotation();
 		int maxLight = 0xF000F0;
+
 		matrices.push();
 		matrices.translate(0.5, 0, 0.5);
 
@@ -104,7 +103,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			if (entity.findTardis().get().getHandlers().getOvergrown().isOvergrown()) {
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.findTardis().get().getHandlers().getOvergrown().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
 			}
-			if(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey() != null) {
+			if(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
 				Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey(), exteriorVariant.texture(), entity.findTardis().get());
 				if (!texture.equals(biomeTexture)) {
 					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);

@@ -12,6 +12,7 @@ public class AITSounds implements AutoRegistryContainer<SoundEvent> {
 	public static final SoundEvent SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/secret_music"));
 	public static final SoundEvent EVEN_MORE_SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/even_more_secret_music"));
 	public static final SoundEvent DRIFTING_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/drifting_by_radio"));
+	public static final SoundEvent MERCURY_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/mercury_by_nitrogenesis"));
 
 	// TARDIS
 	public static final SoundEvent DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/demat"));

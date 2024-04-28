@@ -2,8 +2,9 @@ package loqor.ait.tardis;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.data.TardisLink;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -83,6 +84,7 @@ public class TardisConsole extends TardisLink {
 		return super.findTardis();
 	}
 
+
 	public boolean validate() {
 		if (this.shouldRemove()) {
 			AITMod.LOGGER.warn("Removing " + this.uuid() + " from desktop as it was invalid");
@@ -108,6 +110,7 @@ public class TardisConsole extends TardisLink {
 	public void tick(MinecraftServer server) {
 		super.tick(server);
 	}
+
 
 	/**
 	 * Tick from the {@link ConsoleBlockEntity#tick(World, BlockPos, BlockState, ConsoleBlockEntity)}

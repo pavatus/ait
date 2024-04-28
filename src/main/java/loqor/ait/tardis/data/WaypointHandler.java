@@ -3,9 +3,9 @@ package loqor.ait.tardis.data;
 import loqor.ait.core.item.WaypointItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
-import loqor.ait.tardis.util.Waypoint;
+import loqor.ait.core.data.Waypoint;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 
