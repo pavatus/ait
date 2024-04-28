@@ -59,7 +59,7 @@ public record Loyalty(int level, Type type) {
         NEUTRAL(10),
         COMPANION(35),
         PILOT(60),
-        OWNER(95);
+        OWNER(100);
 
         public final int level;
 

@@ -46,7 +46,7 @@ public class ServerTardis extends Tardis {
 		// 	i dont think that unlocking the default stuff for every tardis loaded is a good thing to do
 		//  so it'd make sense if we could check if the data was saved with an earlier version (so it needs to unlock the default stuff)
 		// 	different solution: make default stuff just be unlocked without the properties stuff
-		if (!dirty) {
+		if (!dirty && this.getTravel().findTardis().isPresent()) {
 			ConsoleVariantRegistry.getInstance().unlock(this, Loyalty.MIN, null);
 			ExteriorVariantRegistry.getInstance().unlock(this, Loyalty.MIN, null);
 			DesktopRegistry.getInstance().unlock(this, Loyalty.MIN, null);
