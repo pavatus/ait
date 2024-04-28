@@ -15,7 +15,6 @@ import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -95,7 +94,7 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
 
 		if(world == null) return;
 
-		if(this.findTardis().isPresent() && !this.findTardis().get().isConsoleUnlocked(this.getConsoleVariant())) {
+		if(this.findTardis().isPresent() && !this.findTardis().get().isUnlocked(this.getConsoleVariant())) {
 			player.sendMessage(Text.literal("This console is not unlocked yet!").formatted(Formatting.ITALIC), true);
 			world.playSound(null, this.pos, SoundEvents.ENTITY_GLOW_ITEM_FRAME_BREAK, SoundCategory.BLOCKS, 0.5f, 1.0f);
 			return;
@@ -160,7 +159,8 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
 	}
 
 	private void syncType() {
-		if (!hasWorld() || world.isClient()) return;
+		if (!hasWorld() || world.isClient())
+			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
 
@@ -173,7 +173,8 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
 	}
 
 	private void syncVariant() {
-		if (!hasWorld() || world.isClient()) return;
+		if (!hasWorld() || world.isClient())
+			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
 

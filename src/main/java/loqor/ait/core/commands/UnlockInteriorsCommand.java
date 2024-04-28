@@ -41,10 +41,11 @@ public class UnlockInteriorsCommand {
 		ServerTardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
 		TardisDesktopSchema schema = DesktopRegistry.getInstance().get(IdentifierArgumentType.getIdentifier(context, "interior"));
 
+		// TODO: improve feedback
 		if (tardis == null || source == null || schema == null)
 			return 0;
 
-		tardis.unlockDesktop(schema);
+		tardis.unlock(schema);
 
 		source.sendMessage(Text.literal("Granted [" + tardis.getUuid() + "] " + schema.name() + " interior"), true);
 		return Command.SINGLE_SUCCESS;

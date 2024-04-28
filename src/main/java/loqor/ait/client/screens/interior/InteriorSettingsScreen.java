@@ -1,18 +1,17 @@
 package loqor.ait.client.screens.interior;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
+import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.HumsRegistry;
-import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.sound.HumSound;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -22,7 +21,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -379,6 +377,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private boolean isCurrentUnlocked() {
-		return tardis().isDesktopUnlocked(this.selectedDesktop);
+		return this.tardis().isUnlocked(this.selectedDesktop);
 	}
 }

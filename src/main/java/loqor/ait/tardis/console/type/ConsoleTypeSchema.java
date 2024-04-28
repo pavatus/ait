@@ -5,7 +5,6 @@ import loqor.ait.registry.ConsoleRegistry;
 import loqor.ait.registry.ConsoleVariantRegistry;
 import loqor.ait.registry.datapack.Identifiable;
 import loqor.ait.registry.datapack.Nameable;
-import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
@@ -55,7 +54,7 @@ public abstract class ConsoleTypeSchema implements Identifiable, Nameable {
 	 * The default console for this category
 	 */
 	public ConsoleVariantSchema getDefaultVariant() {
-		return ConsoleVariantRegistry.withParentToList(this).get(0);
+		return ConsoleVariantRegistry.withParent(this).get(0);
 	}
 
 	public static Object serializer() {

@@ -38,6 +38,8 @@ import java.util.function.Consumer;
 
 public abstract class TardisManager<T extends Tardis> {
 	public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "ask_tardis");
+	public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
+
 	public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_tardis");
 	public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_tardis");
 
@@ -157,7 +159,6 @@ public abstract class TardisManager<T extends Tardis> {
 	public Tardis getTardis(UUID uuid) {
 		return this.getTardis(uuid, false);
 	}
-
 
 	public boolean hasTardis(UUID uuid) {
 		return this.lookup.containsKey(uuid);

@@ -3,14 +3,11 @@ package loqor.ait.tardis;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
-import loqor.ait.core.item.TardisItemBuilder;
-import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
-import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.SonicHandler;
@@ -275,7 +272,7 @@ public class Tardis {
 					this.enablePower();
 					entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
 					entity.getWorld().playSound(null, this.getExterior().getExteriorPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
-					this.getHandlers().getInteriorChanger().queueInteriorChange(TardisItemBuilder.findRandomDesktop(this));
+					this.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.getInstance().getRandom(this));
 					if (this.getHandlers().getInteriorChanger().isGenerating()) {
 						entity.discard();
 					}

@@ -6,9 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import loqor.ait.AITMod;
 import loqor.ait.registry.ConsoleVariantRegistry;
-import loqor.ait.registry.ExteriorVariantRegistry;
 import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.CommandSource;
@@ -42,10 +40,11 @@ public class UnlockConsolesCommand {
 		ServerTardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
 		ConsoleVariantSchema schema = ConsoleVariantRegistry.getInstance().get(IdentifierArgumentType.getIdentifier(context, "console"));
 
+		// TODO: improve feedback
 		if (tardis == null || source == null || schema == null)
 			return 0;
 
-		tardis.unlockConsole(schema);
+		tardis.unlock(schema);
 
 		source.sendMessage(Text.literal("Granted [" + tardis.getUuid() + "] " + schema.name() + " console"), true);
 		return Command.SINGLE_SUCCESS;

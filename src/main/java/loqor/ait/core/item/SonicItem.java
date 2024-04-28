@@ -254,7 +254,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		int id = compound.getInt(SONIC_TYPE);
 
 		compound.remove(SONIC_TYPE);
-		compound.putString(SONIC_TYPE, SonicRegistry.getInstance().get(id).id().toString());
+		compound.putString(SONIC_TYPE, SonicRegistry.getInstance().toList().get(id).id().toString());
 	}
 
 	public static void setMode(ItemStack stack, int mode) {

@@ -6,58 +6,35 @@ import loqor.ait.core.item.sonic.BuiltinSonic;
 import loqor.ait.core.item.sonic.DatapackSonic;
 import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
-import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-import java.io.InputStream;
 import java.util.function.Consumer;
 
 import static loqor.ait.AITMod.LOGGER;
 
 public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
 
-    public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_sonics");
     private static SonicRegistry INSTANCE;
 
-    public void syncToEveryone() {
-        if (TardisUtil.getServer() == null) return;
-
-        for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
-            syncToClient(player);
-        }
+    protected SonicRegistry() {
+        super(DatapackSonic::fromInputStream, DatapackSonic.CODEC, "sonic", true);
     }
 
-    public void syncToClient(ServerPlayerEntity player) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(REGISTRY.size());
-
-        for (SonicSchema schema : REGISTRY.values()) {
-            buf.encodeAsJson(DatapackSonic.CODEC, schema);
-        }
-
-        ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
+    @Override
+    public SonicSchema fallback() {
+        return SonicRegistry.DEFAULT;
     }
 
     public void readFromServer(PacketByteBuf buf) {
-        REGISTRY.clear();
-        int size = buf.readInt();
-
-        for (int i = 0; i < size; i++) {
-            register(buf.decodeAsJson(DatapackSonic.CODEC));
-        }
-
-        AITMod.LOGGER.info("Read {} sonics from server", size);
+        super.readFromServer(buf);
         AITModClient.sonicModelPredicate();
+    }
+
+    @Override
+    protected void defaults() {
+        // why does this work?
+        DEFAULT = register(BuiltinSonic.create("prime", "Prime"));
     }
 
     public static SonicRegistry getInstance() {
@@ -70,50 +47,6 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
     }
 
     public static SonicSchema DEFAULT;
-
-    public int indexOf(SonicSchema schema) {
-        return this.toList().indexOf(schema);
-    }
-
-    public void init() {
-        super.init();
-
-        // Reading from datapacks
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-            @Override
-            public Identifier getFabricId() {
-                return new Identifier(AITMod.MOD_ID, "sonic");
-            }
-
-            @Override
-            public void reload(ResourceManager manager) {
-                SonicRegistry.this.clearCache();
-
-                // why does this work?
-                DEFAULT = register(BuiltinSonic.create("prime", "Prime"));
-
-                for (Identifier id : manager.findResources("sonic", filename -> filename.getPath().endsWith(".json")).keySet()) {
-                    try (InputStream stream = manager.getResource(id).get().getInputStream()) {
-                        SonicSchema created = DatapackSonic.fromInputStream(stream);
-
-                        if (created == null) {
-                            stream.close();
-                            continue;
-                        }
-
-                        SonicRegistry.this.register(created);
-                        stream.close();
-
-                        AITMod.LOGGER.info("Loaded datapack sonic " + created.id().toString());
-                    } catch (Exception e) {
-                        AITMod.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
-                    }
-                }
-
-                syncToEveryone();
-            }
-        });
-    }
 
     public void populateModels(Consumer<Identifier> consumer) {
         // the default sonic (prime) is ALWAYS registered

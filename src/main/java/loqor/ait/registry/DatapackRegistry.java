@@ -6,20 +6,20 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A registry which is compatible with datapack registering
  */
-public abstract class DatapackRegistry<T extends Identifiable> {
+public abstract class DatapackRegistry<T extends Identifiable> implements Registry {
+
+	protected static final Random RANDOM = new Random();
 	protected final HashMap<Identifier, T> REGISTRY = new HashMap<>();
 
-	public DatapackRegistry() {
-		// this.init();
-	}
+	public abstract T fallback();
 
 	public T register(T schema) {
 		return register(schema, schema.id());
@@ -30,22 +30,31 @@ public abstract class DatapackRegistry<T extends Identifiable> {
 		return schema;
 	}
 
+	protected static <T> T getRandom(List<T> elements, Random random, T fallback) {
+		if (elements.isEmpty())
+			return fallback;
+
+		int randomized = random.nextInt(
+				elements.size()
+		);
+
+		return elements.get(randomized);
+	}
+
+	public T getRandom(Random random) {
+		return DatapackRegistry.getRandom(this.toList(), random, this.fallback());
+	}
+
+	public T getRandom() {
+		return this.getRandom(RANDOM);
+	}
+
 	public T get(Identifier id) {
 		return REGISTRY.get(id);
 	}
 
-	// todo idk how well this works..
-	public T get(int index) {
-		// pretty sure there's no need for a #toList call...
-		return toList().get(index);
-	}
-
 	public List<T> toList() {
 		return List.copyOf(REGISTRY.values());
-	}
-
-	public ArrayList<T> toArrayList() {
-		return new ArrayList<>(REGISTRY.values());
 	}
 
 	public Iterator<T> iterator() {
@@ -57,10 +66,11 @@ public abstract class DatapackRegistry<T extends Identifiable> {
 	}
 
 	public void syncToEveryone() {
-		if (TardisUtil.getServer() == null) return;
+		if (TardisUtil.getServer() == null)
+			return;
 
 		for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
-			syncToClient(player);
+			this.syncToClient(player);
 		}
 	}
 
@@ -68,6 +78,7 @@ public abstract class DatapackRegistry<T extends Identifiable> {
 
 	public abstract void readFromServer(PacketByteBuf buf);
 
+	@Override
 	public void init() {
 		this.clearCache();
 	}

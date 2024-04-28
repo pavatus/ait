@@ -6,13 +6,13 @@ import com.google.gson.GsonBuilder;
 import loqor.ait.AITMod;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.tardis.AbstractTardisComponent;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.AbsoluteBlockPos;
 import loqor.ait.tardis.util.SerialDimension;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -20,25 +20,23 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class ClientTardisManager extends TardisManager<ClientTardis> {
-
-	public static final Identifier ASK = new Identifier("ait", "ask_tardis");
-	public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
 	private static ClientTardisManager instance;
 
 	private final Multimap<UUID, Consumer<ClientTardis>> subscribers = ArrayListMultimap.create();
 
 	public ClientTardisManager() {
-		ClientPlayNetworking.registerGlobalReceiver(ServerTardisManager.SEND,
+		ClientPlayNetworking.registerGlobalReceiver(SEND,
 				(client, handler, buf, responseSender) -> ClientTardisManager.getInstance().sync(buf)
 		);
 
-		ClientPlayNetworking.registerGlobalReceiver(ServerTardisManager.UPDATE,
-				(client, handler, buf, responseSender) -> ClientTardisManager.getInstance().update(buf));
+		ClientPlayNetworking.registerGlobalReceiver(UPDATE,
+				(client, handler, buf, responseSender) -> ClientTardisManager.getInstance().update(buf)
+		);
 
 		ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
 	}
@@ -48,17 +46,16 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		PacketByteBuf data = PacketByteBufs.create();
 		data.writeUuid(uuid);
 
-		ClientTardisManager.getInstance().subscribers.put(uuid, consumer);
+		this.subscribers.put(uuid, consumer);
 
-		if (MinecraftClient.getInstance().getNetworkHandler() == null) return;
+		if (MinecraftClient.getInstance().getNetworkHandler() == null)
+			return;
 
 		ClientPlayNetworking.send(ASK, data);
 	}
 
 	/**
-	 * Asks the server for a tardis at an exterior position.
-	 *
-	 * @param pos
+	 * Asks the server for a tardis at an exterior position
 	 */
 	public void askTardis(AbsoluteBlockPos pos) {
 		PacketByteBuf data = PacketByteBufs.create();
@@ -68,28 +65,27 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 	}
 
 	private void sync(UUID uuid, String json) {
-		ClientTardis tardis = ClientTardisManager.getInstance().gson.fromJson(json, ClientTardis.class);
+		ClientTardis tardis = this.gson.fromJson(json, ClientTardis.class);
 
 		synchronized (this) {
-			ClientTardisManager.getInstance().getLookup().put(uuid, tardis);
+			this.lookup.put(uuid, tardis);
 			AITMod.LOGGER.info("RECIEVED TARDIS: " + uuid);
 
-			for (Consumer<ClientTardis> consumer : ClientTardisManager.getInstance().subscribers.removeAll(uuid)) {
+			for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
 				consumer.accept(tardis);
 			}
 		}
 	}
 
 	private void sync(UUID uuid, PacketByteBuf buf) {
-		ClientTardisManager.getInstance().sync(uuid, buf.readString());
+		this.sync(uuid, buf.readString());
 	}
 
 	private void sync(PacketByteBuf buf) {
-		ClientTardisManager.getInstance().sync(buf.readUuid(), buf);
+		this.sync(buf.readUuid(), buf);
 	}
 
 	private void updateProperties(ClientTardis tardis, String key, String type, String value) {
-		//AITMod.LOGGER.info("Updating Properties " + key + " to " + value); // remove this
 		switch (type) {
 			case "string" -> PropertiesHandler.set(tardis, key, value, false);
 			case "boolean" -> PropertiesHandler.set(tardis, key, Boolean.parseBoolean(value), false);
@@ -101,17 +97,16 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 	}
 
 	private void update(UUID uuid, PacketByteBuf buf) {
-		if (!ClientTardisManager.getInstance().getLookup().containsKey(uuid)) {
-			ClientTardisManager.getInstance().getTardis(uuid, t -> {}); // force ASK
+		if (!this.lookup.containsKey(uuid)) {
+			this.getTardis(uuid, t -> {}); // force ASK
 			return;
 		}
 
-		ClientTardis tardis = ClientTardisManager.getInstance().getLookup().get(uuid);
-
+		ClientTardis tardis = this.lookup.get(uuid);
 		AbstractTardisComponent.TypeId typeId = buf.readEnumConstant(AbstractTardisComponent.TypeId.class);
 
 		if (typeId == AbstractTardisComponent.TypeId.PROPERTIES) {
-			ClientTardisManager.getInstance().updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
+			this.updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
 			return;
 		}
 
@@ -123,7 +118,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 	}
 
 	private void update(PacketByteBuf buf) {
-		ClientTardisManager.getInstance().update(buf.readUuid(), buf);
+		this.update(buf.readUuid(), buf);
 	}
 
 	@Override
@@ -149,7 +144,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		if (client.player == null || client.world == null)
 			return;
 
-		for (ClientTardis tardis : ClientTardisManager.getInstance().getLookup().values()) {
+		for (ClientTardis tardis : this.lookup.values()) {
 			tardis.tick(client);
 		}
 
@@ -158,16 +153,11 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
 	@Override
 	public void reset() {
-		ClientTardisManager.getInstance().subscribers.clear();
+		this.subscribers.clear();
 		super.reset();
 	}
 
 	public static ClientTardisManager getInstance() {
 		return instance;
-	}
-
-	@Override
-	public Map<UUID, ClientTardis> getLookup() {
-		return super.getLookup();
 	}
 }

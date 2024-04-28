@@ -45,8 +45,9 @@ public class ClientTardis extends Tardis {
 		this.handlers = handlers;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean isExteriorUnlocked(ClientExteriorVariantSchema schema) {
-		return PropertiesHandler.isExteriorUnlocked(getHandlers().getProperties(), schema);
+		return PropertiesHandler.isUnlocked(this, schema.id());
 	}
 
 	public void tick(MinecraftClient client) {

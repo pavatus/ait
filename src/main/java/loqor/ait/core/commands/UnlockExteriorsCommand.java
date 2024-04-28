@@ -9,6 +9,7 @@ import loqor.ait.registry.ExteriorVariantRegistry;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.command.argument.UuidArgumentType;
@@ -40,10 +41,11 @@ public class UnlockExteriorsCommand {
 		ServerTardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
 		ExteriorVariantSchema schema = ExteriorVariantRegistry.getInstance().get(IdentifierArgumentType.getIdentifier(context, "exterior"));
 
+		// TODO: improve feedback
 		if (tardis == null || source == null || schema == null)
 			return 0;
 
-		tardis.unlockExterior(schema);
+		tardis.unlock(schema);
 
 		source.sendMessage(Text.literal("Granted [" + tardis.getUuid() + "] " + schema.name() + " exterior"), true);
 		return Command.SINGLE_SUCCESS;

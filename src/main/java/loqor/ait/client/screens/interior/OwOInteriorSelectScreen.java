@@ -122,7 +122,8 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
 	private void nextDesktop() {
 		this.selectedDesktop = nextDesktop(this.selectedDesktop);
 
-		if (!isCurrentUnlocked()) nextDesktop(); // ooo incursion crash
+		if (!this.isCurrentUnlocked())
+			nextDesktop(); // ooo incursion crash
 	}
 
 	private static TardisDesktopSchema previousDesktop(TardisDesktopSchema current) {
@@ -136,7 +137,8 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
 	private void previousDesktop() {
 		this.selectedDesktop = previousDesktop(this.selectedDesktop);
 
-		if (!isCurrentUnlocked()) previousDesktop(); // ooo incursion crash
+		if (!this.isCurrentUnlocked())
+			previousDesktop(); // ooo incursion crash
 	}
 
 	@Override
@@ -147,9 +149,10 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
 
 	private void renderDesktop(DrawContext context) {
 		if (this.selectedDesktop == null) {
-			this.selectedDesktop = DesktopRegistry.getInstance().get(0);
+			this.selectedDesktop = DesktopRegistry.getInstance().toList().get(0);
 			AITMod.LOGGER.debug(String.valueOf(DesktopRegistry.getInstance().size()));
 		}
+
 		if (Objects.equals(this.selectedDesktop, DesktopRegistry.DEFAULT_CAVE)) this.nextDesktop();
 
 		context.drawCenteredTextWithShadow(
@@ -168,6 +171,6 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
 	}
 
 	private boolean isCurrentUnlocked() {
-		return tardis().isDesktopUnlocked(this.selectedDesktop);
+		return this.tardis().isUnlocked(this.selectedDesktop);
 	}
 }

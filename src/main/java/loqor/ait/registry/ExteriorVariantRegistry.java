@@ -1,6 +1,7 @@
 package loqor.ait.registry;
 
 import loqor.ait.AITMod;
+import loqor.ait.client.registry.ClientExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.variant.DatapackExterior;
@@ -24,40 +25,32 @@ import loqor.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimDefaultVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimFireVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimSoulVariant;
-import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantSchema> {
-
-	public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_exterior_variants");
 	private static ExteriorVariantRegistry INSTANCE;
 
-	public void syncToEveryone() {
-		if (TardisUtil.getServer() == null)
-			return;
+	protected ExteriorVariantRegistry() {
+		super(DatapackExterior::fromInputStream, null, "exterior", true);
+	}
 
-		for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
-			syncToClient(player);
-		}
+	@Override
+	public ExteriorVariantSchema fallback() {
+		return ExteriorVariantRegistry.BOX_DEFAULT;
 	}
 
 	@Override
 	public void syncToClient(ServerPlayerEntity player) {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeInt(REGISTRY.size());
+
 		for (ExteriorVariantSchema schema : REGISTRY.values()) {
 			if (schema instanceof DatapackExterior variant) {
 				buf.encodeAsJson(DatapackExterior.CODEC, variant);
@@ -70,20 +63,25 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 			);
 		}
 
-		ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
+		ServerPlayNetworking.send(player, this.packet, buf);
 	}
 
 	@Override
 	public void readFromServer(PacketByteBuf buf) {
+		PacketByteBuf copy = PacketByteBufs.copy(buf);
+		ClientExteriorVariantRegistry.getInstance().readFromServer(copy);
+
 		REGISTRY.clear();
-		registerDefaults();
+		this.defaults();
+
 		int size = buf.readInt();
 
-		DatapackExterior variant;
-
 		for (int i = 0; i < size; i++) {
-			variant = buf.decodeAsJson(DatapackExterior.CODEC);
-			if (!variant.wasDatapack()) continue;
+			DatapackExterior variant = buf.decodeAsJson(DatapackExterior.CODEC);
+
+			if (!variant.wasDatapack())
+				continue;
+
 			register(variant);
 		}
 
@@ -99,24 +97,23 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 		return INSTANCE;
 	}
 
-	public static Collection<ExteriorVariantSchema> withParent(ExteriorCategorySchema parent) {
+	public static List<ExteriorVariantSchema> withParent(ExteriorCategorySchema parent) {
 		List<ExteriorVariantSchema> list = new ArrayList<>();
 
 		for (ExteriorVariantSchema schema : ExteriorVariantRegistry.getInstance().REGISTRY.values()) {
-			if (schema.category().equals(parent)) list.add(schema);
+			if (schema.category().equals(parent))
+				list.add(schema);
 		}
 
 		return list;
 	}
 
-	public static List<ExteriorVariantSchema> withParentToList(ExteriorCategorySchema parent) {
-		List<ExteriorVariantSchema> list = new ArrayList<>();
+	public ExteriorVariantSchema pickRandomWithParent(ExteriorCategorySchema parent, Random random) {
+		return DatapackRegistry.getRandom(ExteriorVariantRegistry.withParent(parent), random, this.fallback());
+	}
 
-		for (ExteriorVariantSchema schema : ExteriorVariantRegistry.getInstance().REGISTRY.values()) {
-			if (schema.category().equals(parent)) list.add(schema);
-		}
-
-		return list;
+	public ExteriorVariantSchema pickRandomWithParent(ExteriorCategorySchema parent) {
+		return this.pickRandomWithParent(parent, RANDOM);
 	}
 
 	public static ExteriorVariantSchema TARDIM_DEFAULT;
@@ -152,7 +149,8 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 	public static ExteriorVariantSchema RENEGADE_DEFAULT;
 	public static ExteriorVariantSchema RENEGADE_TRON;
 
-	private void registerDefaults() {
+	@Override
+	protected void defaults() {
 		// TARDIM
 		TARDIM_DEFAULT = register(new TardimDefaultVariant());
 		TARDIM_FIRE = register(new TardimFireVariant());
@@ -204,41 +202,5 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 		// Renegade
 		RENEGADE_DEFAULT = register(new RenegadeDefaultVariant());
 		RENEGADE_TRON = register(new RenegadeTronVariant());
-	}
-
-	public void init() {
-		// Reading from Datapacks
-		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-			@Override
-			public Identifier getFabricId() {
-				return new Identifier(AITMod.MOD_ID, "exterior");
-			}
-
-			@Override
-			public void reload(ResourceManager manager) {
-				ExteriorVariantRegistry.getInstance().clearCache();
-				registerDefaults();
-
-				for (Identifier id : manager.findResources("exterior", filename -> filename.getPath().endsWith(".json")).keySet()) {
-					try (InputStream stream = manager.getResource(id).get().getInputStream()) {
-						ExteriorVariantSchema created = DatapackExterior.fromInputStream(stream);
-
-						if (created == null) {
-							stream.close();
-							continue;
-						}
-
-						ExteriorVariantRegistry.getInstance().register(created);
-						stream.close();
-
-						AITMod.LOGGER.info("Loaded datapack exterior variant " + created.id().toString());
-					} catch (Exception e) {
-						AITMod.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
-					}
-				}
-
-				syncToEveryone();
-			}
-		});
 	}
 }

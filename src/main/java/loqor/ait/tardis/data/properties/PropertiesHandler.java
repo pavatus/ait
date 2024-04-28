@@ -123,7 +123,7 @@ public class PropertiesHandler {
 		if (holder.getData().get(key) instanceof LinkedTreeMap map) {
 			if (map.get("namespace") == null || map.get("path") == null) {
 				AITMod.LOGGER.error("namespace/path was null! Panic - I'm giving back the default desktop id, lets hope this doesnt cause a crash..");
-				return DesktopRegistry.getInstance().get(0).id();
+				return DesktopRegistry.getInstance().toList().get(0).id();
 			}
 
 			return Identifier.of((String) map.get("namespace"), (String) map.get("path"));
@@ -188,8 +188,16 @@ public class PropertiesHandler {
 		set(tardis, unlockable.id().getPath() + "_unlocked", value, true);
 	}
 
+	/**
+	 * @apiNote ONLY USE THIS IF YOU KNOW WHAT YOU'RE DOING
+	 */
+	@Deprecated
+	public static boolean isUnlocked(Tardis tardis, Identifier id) {
+		return getBool(tardis.getHandlers().getProperties(), id.getPath() + "_unlocked");
+	}
+
 	public static boolean isUnlocked(Tardis tardis, Unlockable unlockable) {
-		return getBool(tardis.getHandlers().getProperties(), unlockable.id().getPath() + "_unlocked");
+		return isUnlocked(tardis, unlockable.id());
 	}
 
 	public static void setAutoPilot(PropertiesHolder handler, boolean val) {

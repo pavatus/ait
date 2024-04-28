@@ -102,16 +102,7 @@ public class AITModClient implements ClientModInitializer {
         ClientConsoleVariantRegistry.getInstance().init();
         ClientDoorRegistry.init();
 
-        /*WorldRenderEvents.END.register(context -> {
-            try (ClientWorld world = context.world()){
-                if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
-                    vortex.renderVortex(context);
-                }
-                TriangleTestingUtil.renderTriangle(context);
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        });*/
+        Registries.getInstance().subscribe(Registries.InitType.CLIENT);
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {
@@ -199,32 +190,6 @@ public class AITModClient implements ClientModInitializer {
         // does all this clientplaynetwrokigng shite really have to go in here, theres probably somewhere else it can go right??
         ClientPlayNetworking.registerGlobalReceiver(AITMessages.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) -> {
             client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(DesktopRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
-            DesktopRegistry.getInstance().readFromServer(buf);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(SonicRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
-            SonicRegistry.getInstance().readFromServer(buf);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ExteriorVariantRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
-            PacketByteBuf copy = PacketByteBufs.copy(buf);
-
-            ClientExteriorVariantRegistry.getInstance().readFromServer(buf);
-            ExteriorVariantRegistry.getInstance().readFromServer(copy);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ConsoleVariantRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
-            PacketByteBuf copy = PacketByteBufs.copy(buf);
-
-            ClientConsoleVariantRegistry.getInstance().readFromServer(buf);
-            ConsoleVariantRegistry.getInstance().readFromServer(copy);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(CategoryRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
-           CategoryRegistry.getInstance().readFromServer(buf);
         });
 
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {

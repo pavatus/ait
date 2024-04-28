@@ -24,12 +24,11 @@ public abstract class ExteriorCategorySchema implements Identifiable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() == null) return false;
+		if (this == o)
+			return true;
 
-		ExteriorCategorySchema that = (ExteriorCategorySchema) o;
-
-		return id.equals(that.id);
+		return o instanceof ExteriorCategorySchema other
+				&& id.equals(other.id);
 	}
 
 	public Identifier id() {
@@ -44,7 +43,7 @@ public abstract class ExteriorCategorySchema implements Identifiable {
 	 * The default exterior for this category
 	 */
 	public ExteriorVariantSchema getDefaultVariant() {
-		return ExteriorVariantRegistry.withParentToList(this).get(0);
+		return ExteriorVariantRegistry.withParent(this).get(0);
 	}
 
 	@Deprecated // Replace with the exteriors own hasPortals method, they need to override it

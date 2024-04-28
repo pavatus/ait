@@ -269,7 +269,7 @@ public class MonitorScreen extends ConsoleScreen {
 		if (getFromUUID(tardisId) != null) {
 			if (this.getCategory() == null || this.getCurrentVariant() == null) return;
 
-			boolean isExtUnlocked = tardis().isExteriorUnlocked(this.getCurrentVariant().parent());
+			boolean isExtUnlocked = tardis().isUnlocked(this.getCurrentVariant().parent());
 
 			stack.push();
 			stack.translate(0, 0, 50f);
@@ -277,10 +277,11 @@ public class MonitorScreen extends ConsoleScreen {
 					this.textRenderer,
 					convertCategoryNameToProper(this.getCategory().name()), (width / 2 - 54), (height / 2 + 41),
 					5636095);
-			List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParentToList(this.getCategory());
+
+			List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(this.getCategory());
 			context.drawCenteredTextWithShadow(
 					this.textRenderer,
-					(list.indexOf(this.getCurrentVariant().parent()) + 1) + "/" + ExteriorVariantRegistry.withParentToList(this.getCategory()).size(),
+					(list.indexOf(this.getCurrentVariant().parent()) + 1) + "/" + ExteriorVariantRegistry.withParent(this.getCategory()).size(),
 					(width / 2 - 29), (height / 2 + 26),
 					0x00ffb3);
 			stack.pop();

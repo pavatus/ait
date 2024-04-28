@@ -1,5 +1,6 @@
 package loqor.ait.tardis;
 
+import loqor.ait.AITMod;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.TardisHandlersManager;

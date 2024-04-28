@@ -54,7 +54,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
                 .get(SonicHandler.HAS_CONSOLE_SONIC).getOrCreateNbt();
 
         SonicSchema schema = SonicItem.findSchema(nbt);
-        this.selectedSonic = SonicRegistry.getInstance().indexOf(schema);
+        this.selectedSonic = SonicRegistry.getInstance().toList().indexOf(schema);
         this.top = (this.height - this.bgHeight) / 2; // this means everythings centered and scaling, same for below
         this.left = (this.width - this.bgWidth) / 2;
         this.createButtons();
@@ -109,7 +109,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
         if(!tardis().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC))
             return;
 
-        SonicSchema schema = SonicRegistry.getInstance().get(this.selectedSonic);
+        SonicSchema schema = SonicRegistry.getInstance().toList().get(this.selectedSonic);
 
         SonicItem.setSchema(tardis().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC), schema);
         ClientTardisUtil.changeSonicWithScreen(this.tardisId, schema);
@@ -154,7 +154,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
             MatrixStack stack = context.getMatrices();
 
             ItemStack sonicCopy = sonic.copy();
-            SonicSchema schema = SonicRegistry.getInstance().get(this.selectedSonic);
+            SonicSchema schema = SonicRegistry.getInstance().toList().get(this.selectedSonic);
 
             SonicItem.setSchema(sonicCopy, schema);
             stack.push();

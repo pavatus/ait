@@ -68,7 +68,6 @@ import java.util.UUID;
 public class AITMod implements ModInitializer {
 	public static final String MOD_ID = "ait";
 	public static final Logger LOGGER = LoggerFactory.getLogger("ait");
-	public static final Boolean DEBUG = true;
 	public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
 	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () ->
 			Icon.of(AITItems.TARDIS_ITEM)).disableDynamicTitle().build();
@@ -80,20 +79,15 @@ public class AITMod implements ModInitializer {
 	static {
 		ENGINE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "engine"), EngineScreenHandler::new);
 	}
+
 	@Override
 	public void onInitialize() {
 		ConsoleRegistry.init();
-		DesktopRegistry.getInstance().init();
-		CategoryRegistry.getInstance().init();
-		SonicRegistry.getInstance().init();
-		MachineRecipeRegistry.getInstance().init();
 		HumsRegistry.init();
 		CreakRegistry.init();
 		SequenceRegistry.init();
 
-		// These 3 have client registries which also need registering.
-		ConsoleVariantRegistry.getInstance().init();
-		ExteriorVariantRegistry.getInstance().init();
+		Registries.getInstance().subscribe(Registries.InitType.COMMON);
 		DoorRegistry.init();
 
 		FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
@@ -194,7 +188,6 @@ public class AITMod implements ModInitializer {
 				FlightUtil.playSoundAtConsole(tardis, AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
 			}
 
-
 			// disabling protocols
 			PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, false);
 			PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
@@ -234,16 +227,6 @@ public class AITMod implements ModInitializer {
 
 			tardis.getHandlers().getHum().setHum(hum);
 		}));
-
-		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			DesktopRegistry.getInstance().syncToClient(handler.getPlayer());
-			CategoryRegistry.getInstance().syncToClient(handler.getPlayer());
-			SonicRegistry.getInstance().syncToClient(handler.getPlayer());
-			ExteriorVariantRegistry.getInstance().syncToClient(handler.getPlayer());
-			ConsoleVariantRegistry.getInstance().syncToClient(handler.getPlayer());
-
-			ServerTardisManager.getInstance().onPlayerJoin(handler.getPlayer());
-		});
 
 		ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
