@@ -46,6 +46,9 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block MEDIUM_ZEITON_BUD = new AmethystClusterBlock(4, 3, FabricBlockSettings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.LARGE_AMETHYST_BUD).solid().luminance((state) -> 2).pistonBehavior(PistonBehavior.DESTROY));
     public static final Block SMALL_ZEITON_BUD = new AmethystClusterBlock(3, 4, FabricBlockSettings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.SMALL_AMETHYST_BUD).solid().luminance((state) -> 1).pistonBehavior(PistonBehavior.DESTROY));
 
+    public static final Block PLUGBOARD = new PlugBoardBlock(FabricBlockSettings.create().solid().noCollision().strength(1.0f));
+    public static final Block RADIO = new RadioBlock(FabricBlockSettings.create().nonOpaque());
+
     // Machines
     public static final Block MACHINE_CASING = new MachineCasingBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
 
