@@ -9,11 +9,13 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
+import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.TardisHandlersManager;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
@@ -171,21 +173,8 @@ public class Tardis {
 		this.getHandlers().getHADS().setIsInDanger(danger);
 	}
 
-	// todo: move this to ClientTardis and ServerTardis respectively.
-	public boolean isDesktopUnlocked(TardisDesktopSchema schema) {
-		return PropertiesHandler.isSchemaUnlocked(getHandlers().getProperties(), schema);
-	}
-
-	public boolean isSonicUnlocked(SonicSchema schema) {
-		return PropertiesHandler.isSonicUnlocked(getHandlers().getProperties(), schema);
-	}
-
-	public boolean isExteriorUnlocked(ExteriorVariantSchema schema) {
-		return PropertiesHandler.isExteriorUnlocked(getHandlers().getProperties(), schema);
-	}
-
-	public boolean isConsoleUnlocked(ConsoleVariantSchema schema) {
-		return PropertiesHandler.isConsoleUnlocked(getHandlers().getProperties(), schema);
+	public boolean isUnlocked(Unlockable unlockable) {
+		return unlockable.getRequirement() == Loyalty.MIN || PropertiesHandler.isUnlocked(this, unlockable);
 	}
 
 	// for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta

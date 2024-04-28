@@ -1,7 +1,7 @@
 package loqor.ait.registry;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.registry.unlockable.UnlockableRegistry;
 import loqor.ait.tardis.console.type.ConsoleTypeSchema;
 import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.console.variant.DatapackConsole;
@@ -18,10 +18,8 @@ import loqor.ait.tardis.console.variant.steam.SteamVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaBlueVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaLegacyVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaVariant;
-import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.variant.DatapackExterior;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -36,9 +34,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 
-public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchema> {
+public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSchema> {
 	public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_console_variants");
 	private static ConsoleVariantRegistry INSTANCE;
 
@@ -58,18 +55,16 @@ public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchem
 	public void syncToClient(ServerPlayerEntity player) {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeInt(REGISTRY.size());
+
 		for (ConsoleVariantSchema schema : REGISTRY.values()) {
 			if (schema instanceof DatapackConsole variant) {
 				buf.encodeAsJson(DatapackConsole.CODEC, variant);
 				continue;
 			}
-            /*if (schema.parent() == null) {
-                AITMod.LOGGER.error("Console variant " + schema.id() + " has null category!");
-                AITMod.LOGGER.error("Temporarily returning, fix this code!!!"); // todo
-                continue;
-            }*/
+
 			buf.encodeAsJson(DatapackConsole.CODEC, new DatapackConsole(schema.id(), schema.parent().id(), DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, false));
 		}
+
 		ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
 	}
 
@@ -161,11 +156,8 @@ public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchem
 		STEAM = registerStatic(new SteamVariant());
 		STEAM_CHERRY = registerStatic(new SteamCherryVariant());
 	}
-
-	// AAAAAAAAAAAAAAAAAAAAAAAAAAA SO MANY VARIABLE
+	
 	public void init() {
-
-
 		// Reading from Datapacks
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
 			@Override
@@ -198,22 +190,5 @@ public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchem
 				syncToEveryone();
 			}
 		});
-	}
-
-	public void unlock(Tardis tardis, Loyalty loyalty, Consumer<ConsoleVariantSchema> consumer) {
-		if (!(tardis instanceof ServerTardis serverTardis))
-			return;
-
-		for (ConsoleVariantSchema schema : REGISTRY.values()) {
-
-			if (!schema.getRequirement().greaterOrEqual(loyalty) || serverTardis.isConsoleUnlocked(schema))
-				continue;
-
-			AITMod.LOGGER.debug("Unlocked exterior " + schema.id() + " for tardis [" + tardis.getUuid() + "]");
-			serverTardis.unlockConsole(schema);
-
-			if (consumer != null)
-				consumer.accept(schema);
-		}
 	}
 }

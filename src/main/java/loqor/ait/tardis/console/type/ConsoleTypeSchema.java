@@ -4,6 +4,8 @@ import com.google.gson.*;
 import loqor.ait.registry.ConsoleRegistry;
 import loqor.ait.registry.ConsoleVariantRegistry;
 import loqor.ait.registry.datapack.Identifiable;
+import loqor.ait.registry.datapack.Nameable;
+import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
@@ -12,7 +14,7 @@ import net.minecraft.util.InvalidIdentifierException;
 
 import java.lang.reflect.Type;
 
-public abstract class ConsoleTypeSchema implements Identifiable {
+public abstract class ConsoleTypeSchema implements Identifiable, Nameable {
 	private final Identifier id;
 	private final String name;
 
@@ -23,18 +25,19 @@ public abstract class ConsoleTypeSchema implements Identifiable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() == null) return false;
+		if (this == o)
+			return true;
 
-		ConsoleTypeSchema that = (ConsoleTypeSchema) o;
-
-		return id.equals(that.id);
+		return o instanceof ConsoleTypeSchema schema
+				&& id.equals(schema.id);
 	}
 
+	@Override
 	public Identifier id() {
 		return this.id;
 	}
 
+	@Override
 	public String name() {
 		return this.name;
 	}

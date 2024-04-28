@@ -6,6 +6,7 @@ import loqor.ait.core.blockentities.EngineCoreBlockEntity;
 import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.datapack.Identifiable;
+import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
 import loqor.ait.tardis.data.FuelData;
@@ -183,40 +184,12 @@ public class PropertiesHandler {
 		return (UUID) holder.getData().get(key);
 	}
 
-	public static void setSchemaUnlocked(Tardis tardis, TardisDesktopSchema schema, boolean val) {
-		if(tardis != null)
-			set(tardis, schema.id().getPath() + "_unlocked", val, true);
+	public static void setUnlocked(Tardis tardis, Unlockable unlockable, boolean value) {
+		set(tardis, unlockable.id().getPath() + "_unlocked", value, true);
 	}
 
-	public static void setConsoleUnlocked(Tardis tardis, ConsoleVariantSchema schema, boolean value) {
-		if(tardis != null)
-			set(tardis, schema.id().getPath() + "_unlocked", value, true);
-	}
-
-	public static boolean isConsoleUnlocked(PropertiesHolder holder, ConsoleVariantSchema schema) {
-		return getBool(holder, schema.id().getPath() + "_unlocked");
-	}
-
-	public static boolean isSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema) {
-		return getBool(holder, schema.id().getPath() + "_unlocked");
-	}
-
-	public static void setSonicUnlocked(Tardis tardis, SonicSchema schema, boolean value) {
-		if(tardis != null)
-			set(tardis, schema.id().getPath() + "_unlocked", value, true);
-	}
-
-	public static boolean isSonicUnlocked(PropertiesHolder holder, SonicSchema schema) {
-		return getBool(holder, schema.id().getPath() + "_unlocked");
-	}
-
-	public static void setExteriorUnlocked(Tardis tardis, ExteriorVariantSchema schema, boolean value) {
-		if(tardis != null)
-			set(tardis, schema.id().getPath() + "_unlocked", value, true);
-	}
-
-	public static boolean isExteriorUnlocked(PropertiesHolder holder, Identifiable schema) {
-		return getBool(holder, schema.id().getPath() + "_unlocked");
+	public static boolean isUnlocked(Tardis tardis, Unlockable unlockable) {
+		return getBool(tardis.getHandlers().getProperties(), unlockable.id().getPath() + "_unlocked");
 	}
 
 	public static void setAutoPilot(PropertiesHolder handler, boolean val) {

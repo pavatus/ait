@@ -5,6 +5,7 @@ import loqor.ait.client.AITModClient;
 import loqor.ait.core.item.sonic.BuiltinSonic;
 import loqor.ait.core.item.sonic.DatapackSonic;
 import loqor.ait.core.item.sonic.SonicSchema;
+import loqor.ait.registry.unlockable.UnlockableRegistry;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -23,7 +24,7 @@ import java.util.function.Consumer;
 
 import static loqor.ait.AITMod.LOGGER;
 
-public class SonicRegistry extends DatapackRegistry<SonicSchema> {
+public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
 
     public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_sonics");
     private static SonicRegistry INSTANCE;
@@ -88,6 +89,9 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
             public void reload(ResourceManager manager) {
                 SonicRegistry.this.clearCache();
 
+                // why does this work?
+                DEFAULT = register(BuiltinSonic.create("prime", "Prime"));
+
                 for (Identifier id : manager.findResources("sonic", filename -> filename.getPath().endsWith(".json")).keySet()) {
                     try (InputStream stream = manager.getResource(id).get().getInputStream()) {
                         SonicSchema created = DatapackSonic.fromInputStream(stream);
@@ -107,27 +111,8 @@ public class SonicRegistry extends DatapackRegistry<SonicSchema> {
                 }
 
                 syncToEveryone();
-                giveOutSonics();
             }
         });
-    }
-
-    @Override
-    public void clearCache() {
-        super.clearCache();
-
-        DEFAULT = register(BuiltinSonic.create("prime", "Prime"));
-    }
-
-    private void giveOutSonics() {
-        if (ServerTardisManager.getInstance() == null)
-            return;
-
-        for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
-            for (SonicSchema schema : SonicRegistry.getInstance().toList()) {
-                tardis.unlockSonic(schema);
-            }
-        }
     }
 
     public void populateModels(Consumer<Identifier> consumer) {

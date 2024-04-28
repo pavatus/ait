@@ -1,8 +1,7 @@
 package loqor.ait.registry;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.registry.unlockable.UnlockableRegistry;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.variant.DatapackExterior;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
@@ -26,7 +25,6 @@ import loqor.ait.tardis.exterior.variant.tardim.TardimDefaultVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimFireVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimSoulVariant;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -41,19 +39,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 
-// TODO - Move this over to a datapack compatible state like DesktopRegistry and then add datapack support
-/*
-    Example of json layout
-    {
-        "category": "ait:police_box",
-        "texture": "ait:exterior/coral.png",
-        "emission": "ait:exterior/coral_emission.png",
-        "parent": "ait:toyota" // this will be what portal placement and the model of the variant
-    }
- */
-public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSchema> {
+public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantSchema> {
 
 	public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_exterior_variants");
 	private static ExteriorVariantRegistry INSTANCE;
@@ -243,6 +230,7 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 
 						ExteriorVariantRegistry.getInstance().register(created);
 						stream.close();
+
 						AITMod.LOGGER.info("Loaded datapack exterior variant " + created.id().toString());
 					} catch (Exception e) {
 						AITMod.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
@@ -252,22 +240,5 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 				syncToEveryone();
 			}
 		});
-	}
-
-	public void unlock(Tardis tardis, Loyalty loyalty, Consumer<ExteriorVariantSchema> consumer) {
-		if (!(tardis instanceof ServerTardis serverTardis))
-			return;
-
-		for (ExteriorVariantSchema schema : REGISTRY.values()) {
-
-			if (!schema.getRequirement().greaterOrEqual(loyalty) || serverTardis.isExteriorUnlocked(schema))
-				continue;
-
-			AITMod.LOGGER.debug("Unlocked exterior " + schema.id() + " for tardis [" + tardis.getUuid() + "]");
-			serverTardis.unlockExterior(schema);
-
-			if (consumer != null)
-				consumer.accept(schema);
-		}
 	}
 }

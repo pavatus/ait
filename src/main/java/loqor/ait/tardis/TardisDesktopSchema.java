@@ -2,8 +2,8 @@ package loqor.ait.tardis;
 
 import com.google.gson.*;
 import loqor.ait.registry.DesktopRegistry;
-import loqor.ait.registry.datapack.Identifiable;
 import loqor.ait.registry.datapack.Nameable;
+import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.desktops.textures.DesktopPreviewTexture;
@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
-public abstract class TardisDesktopSchema implements Identifiable, Nameable {
+public abstract class TardisDesktopSchema implements Unlockable, Nameable {
 
 	private final Identifier id;
 	private final DesktopPreviewTexture preview;
@@ -28,16 +28,6 @@ public abstract class TardisDesktopSchema implements Identifiable, Nameable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-
-		if (o instanceof TardisDesktopSchema that)
-			return id.equals(that.id);
-
-		return false;
-	}
-
 	public Identifier id() {
 		return id;
 	}
@@ -47,12 +37,18 @@ public abstract class TardisDesktopSchema implements Identifiable, Nameable {
 		return DimensionControl.convertWorldValueToModified(id().getPath());
 	}
 
-	public DesktopPreviewTexture previewTexture() {
-		return this.preview;
-	}
-
+	@Override
 	public Loyalty getRequirement() {
 		return loyalty;
+	}
+
+	@Override
+	public UnlockType unlockType() {
+		return UnlockType.DESKTOP;
+	}
+
+	public DesktopPreviewTexture previewTexture() {
+		return this.preview;
 	}
 
 	/**
@@ -73,6 +69,17 @@ public abstract class TardisDesktopSchema implements Identifiable, Nameable {
 		return new Identifier(
 				id.getNamespace(), "interiors/" + id.getPath()
 		);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+
+		if (o instanceof TardisDesktopSchema that)
+			return id.equals(that.id);
+
+		return false;
 	}
 
 	public static Object serializer() {

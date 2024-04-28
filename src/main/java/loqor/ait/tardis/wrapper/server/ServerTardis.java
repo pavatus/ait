@@ -2,24 +2,23 @@ package loqor.ait.tardis.wrapper.server;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.item.sonic.SonicSchema;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.registry.ConsoleVariantRegistry;
 import loqor.ait.registry.DesktopRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
+import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
+import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.tardis.util.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisChunkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundCategory;
@@ -53,20 +52,8 @@ public class ServerTardis extends Tardis {
 		}
 	}
 
-	public void unlockExterior(ExteriorVariantSchema schema) {
-		PropertiesHandler.setExteriorUnlocked(this, schema, true);
-	}
-
-	public void unlockSonic(SonicSchema schema) {
-		PropertiesHandler.setSonicUnlocked(this, schema, true);
-	}
-
-	public void unlockDesktop(TardisDesktopSchema schema) {
-		PropertiesHandler.setSchemaUnlocked(this, schema, true);
-	}
-
-	public void unlockConsole(ConsoleVariantSchema schema) {
-		PropertiesHandler.setConsoleUnlocked(this, schema, true);
+	public void unlock(Unlockable unlockable) {
+		PropertiesHandler.setUnlocked(this, unlockable, true);
 	}
 
 	public void startTick(MinecraftServer server) {

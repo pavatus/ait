@@ -1,13 +1,12 @@
 package loqor.ait.registry;
 
 import loqor.ait.AITMod;
+import loqor.ait.registry.unlockable.UnlockableRegistry;
 import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.desktops.DatapackDesktop;
 import loqor.ait.tardis.desktops.DefaultCaveDesktop;
 import loqor.ait.tardis.desktops.DevDesktop;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -19,14 +18,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
-import java.util.function.Consumer;
 
-public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
+public class DesktopRegistry extends UnlockableRegistry<TardisDesktopSchema> {
 	public static final Identifier SYNC_TO_CLIENT = new Identifier(AITMod.MOD_ID, "sync_desktops");
 	private static DesktopRegistry INSTANCE;
 
 	public void syncToEveryone() {
-		if (TardisUtil.getServer() == null) return;
+		if (TardisUtil.getServer() == null)
+			return;
 
 		for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
 			syncToClient(player);
@@ -36,9 +35,11 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 	public void syncToClient(ServerPlayerEntity player) {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeInt(REGISTRY.size());
+
 		for (TardisDesktopSchema schema : REGISTRY.values()) {
 			buf.encodeAsJson(DatapackDesktop.CODEC, schema);
 		}
+
 		ServerPlayNetworking.send(player, SYNC_TO_CLIENT, buf);
 	}
 
@@ -51,20 +52,6 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 		}
 
 		AITMod.LOGGER.info("Read {} desktops from server", size);
-	}
-
-	public void unlock(ServerTardis tardis, Loyalty loyalty, Consumer<TardisDesktopSchema> consumer) {
-		for (TardisDesktopSchema schema : REGISTRY.values()) {
-
-			if (!schema.getRequirement().greaterOrEqual(loyalty) || tardis.isDesktopUnlocked(schema))
-				continue;
-
-			AITMod.LOGGER.debug("Unlocked desktop " + schema.id() + " for tardis [" + tardis.getUuid() + "]");
-			tardis.unlockDesktop(schema);
-
-			if (consumer != null)
-				consumer.accept(schema);
-		}
 	}
 
 	public static DesktopRegistry getInstance() {
@@ -98,6 +85,7 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 			@Override
 			public void reload(ResourceManager manager) {
 				DesktopRegistry.getInstance().clearCache();
+				DesktopRegistry.getInstance().initAitDesktops(); // i know we're "clearing" but we need the AIT Desktops no?
 
 				for (Identifier id : manager.findResources("desktop", filename -> filename.getPath().endsWith(".json")).keySet()) {
 					try (InputStream stream = manager.getResource(id).get().getInputStream()) {
@@ -120,10 +108,5 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 				syncToEveryone();
 			}
 		});
-	}
-
-	public void clearCache() {
-		REGISTRY.clear();
-		initAitDesktops(); // i know we're "clearing" but we need the AIT Desktops no?
 	}
 }

@@ -1,15 +1,15 @@
 package loqor.ait.tardis.exterior.variant;
 
 import com.google.gson.*;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.registry.CategoryRegistry;
-import loqor.ait.registry.datapack.Identifiable;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.sounds.MatSound;
+import loqor.ait.registry.CategoryRegistry;
 import loqor.ait.registry.ExteriorVariantRegistry;
 import loqor.ait.registry.datapack.Nameable;
+import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.data.loyalty.Loyalty;
@@ -38,7 +38,7 @@ import java.lang.reflect.Type;
  * @author duzo
  * @see ExteriorVariantRegistry
  */
-public abstract class ExteriorVariantSchema implements Identifiable, Nameable {
+public abstract class ExteriorVariantSchema implements Unlockable, Nameable {
 	private final String name;
 	private final Identifier category;
 	private final Identifier id;
@@ -62,11 +62,18 @@ public abstract class ExteriorVariantSchema implements Identifiable, Nameable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
+	public Identifier id() {
+		return id;
+	}
 
-		return o instanceof ExteriorVariantSchema other && id.equals(other.id);
+	@Override
+	public Loyalty getRequirement() {
+		return loyalty;
+	}
+
+	@Override
+	public UnlockType unlockType() {
+		return UnlockType.EXTERIOR;
 	}
 
 	public MatSound getSound(TardisTravel.State state) {
@@ -78,20 +85,12 @@ public abstract class ExteriorVariantSchema implements Identifiable, Nameable {
 		};
 	}
 
-	public Loyalty getRequirement() {
-		return loyalty;
-	}
-
 	public Identifier categoryId() {
 		return this.category;
 	}
 
 	public ExteriorCategorySchema category() {
 		return CategoryRegistry.getInstance().get(this.categoryId());
-	}
-
-	public Identifier id() {
-		return id;
 	}
 
 	/**
@@ -119,6 +118,14 @@ public abstract class ExteriorVariantSchema implements Identifiable, Nameable {
 
 	public double portalHeight() {
 		return 2d;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+
+		return o instanceof ExteriorVariantSchema other && id.equals(other.id);
 	}
 
 	public static Object serializer() {

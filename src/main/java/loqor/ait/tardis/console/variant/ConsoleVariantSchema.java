@@ -4,8 +4,8 @@ import com.google.gson.*;
 import loqor.ait.AITMod;
 import loqor.ait.registry.ConsoleRegistry;
 import loqor.ait.registry.ConsoleVariantRegistry;
-import loqor.ait.registry.datapack.Identifiable;
 import loqor.ait.registry.datapack.Nameable;
+import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.console.type.ConsoleTypeSchema;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.data.loyalty.Loyalty;
@@ -27,7 +27,7 @@ import java.lang.reflect.Type;
  * @author duzo
  * @see ConsoleVariantRegistry#REGISTRY
  */
-public abstract class ConsoleVariantSchema implements Identifiable, Nameable {
+public abstract class ConsoleVariantSchema implements Unlockable, Nameable {
 	private final Identifier parent;
 	private final Identifier id;
 	private final Loyalty loyalty;
@@ -48,12 +48,18 @@ public abstract class ConsoleVariantSchema implements Identifiable, Nameable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
+	public Identifier id() {
+		return id;
+	}
 
-		return o instanceof ConsoleVariantSchema other
-				&& id.equals(other.id);
+	@Override
+	public Loyalty getRequirement() {
+		return loyalty;
+	}
+
+	@Override
+	public UnlockType unlockType() {
+		return UnlockType.CONSOLE;
 	}
 
 	protected Identifier parentId() {
@@ -64,12 +70,13 @@ public abstract class ConsoleVariantSchema implements Identifiable, Nameable {
 		return ConsoleRegistry.REGISTRY.get(this.parentId());
 	}
 
-	public Identifier id() {
-		return id;
-	}
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
 
-	public Loyalty getRequirement() {
-		return loyalty;
+		return o instanceof ConsoleVariantSchema other
+				&& id.equals(other.id);
 	}
 
 	public static Object serializer() {
