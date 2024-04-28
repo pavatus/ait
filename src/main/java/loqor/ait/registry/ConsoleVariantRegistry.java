@@ -20,7 +20,6 @@ import loqor.ait.tardis.console.variant.toyota.ToyotaLegacyVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaVariant;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.variant.DatapackExterior;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -206,10 +205,8 @@ public class ConsoleVariantRegistry extends DatapackRegistry<ConsoleVariantSchem
 			return;
 
 		for (ConsoleVariantSchema schema : REGISTRY.values()) {
-			if (!schema.getRequirement().biggerEquals(loyalty))
-				continue;
 
-			if (serverTardis.isConsoleUnlocked(schema))
+			if (!schema.getRequirement().greaterOrEqual(loyalty) || serverTardis.isConsoleUnlocked(schema))
 				continue;
 
 			AITMod.LOGGER.debug("Unlocked exterior " + schema.id() + " for tardis [" + tardis.getUuid() + "]");

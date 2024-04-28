@@ -33,6 +33,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -261,15 +262,17 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX, float delta) {
+		MatrixStack stack = context.getMatrices();
 
 		tickForSpin++;
-        boolean isExtUnlocked = tardis().isExteriorUnlocked(this.getCurrentVariant().parent());
 
 		if (getFromUUID(tardisId) != null) {
 			if (this.getCategory() == null || this.getCurrentVariant() == null) return;
 
-			context.getMatrices().push();
-			context.getMatrices().translate(0, 0, 50f);
+			boolean isExtUnlocked = tardis().isExteriorUnlocked(this.getCurrentVariant().parent());
+
+			stack.push();
+			stack.translate(0, 0, 50f);
 			context.drawCenteredTextWithShadow(
 					this.textRenderer,
 					convertCategoryNameToProper(this.getCategory().name()), (width / 2 - 54), (height / 2 + 41),
@@ -280,32 +283,28 @@ public class MonitorScreen extends ConsoleScreen {
 					(list.indexOf(this.getCurrentVariant().parent()) + 1) + "/" + ExteriorVariantRegistry.withParentToList(this.getCategory()).size(),
 					(width / 2 - 29), (height / 2 + 26),
 					0x00ffb3);
-			context.getMatrices().pop();
+			stack.pop();
 
-            context.getMatrices().push();
-            context.getMatrices().translate(0, 0, 50f);
-            context.drawCenteredTextWithShadow(
-                    this.textRenderer,
-                    convertCategoryNameToProper(this.getCategory().name()), (width / 2 - 54), (height / 2 + 41),
-                    5636095);
+            stack.push();
+			stack.translate(0, 0, 50f);
             context.drawCenteredTextWithShadow(
                     this.textRenderer,
                     (isExtUnlocked) ? "" : "\uD83D\uDD12",
-                    (width / 2 - 29), (height / 2 + 26),
-                    0x00ffb3);
-            context.getMatrices().pop();
+                    x, y,
+					Color.WHITE.getRGB());
+            stack.pop();
 
 			ExteriorModel model = this.getCurrentVariant().model();
-			MatrixStack stack = context.getMatrices();
-			// @TODO definitely make better in the near future, especially the weird shadow stuff with the exterior
 
 			stack.push();
 			stack.translate(x, this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 11 : y, 0f);
-			if (this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE))
+			if (this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE)) {
 				stack.scale(-12, 12, 12);
-			else if (this.getCategory() == CategoryRegistry.getInstance().get(BoothCategory.REFERENCE))
+			} else if (this.getCategory() == CategoryRegistry.getInstance().get(BoothCategory.REFERENCE)) {
 				stack.scale(-scale, scale, scale);
-			else stack.scale(-scale, scale, scale);
+			} else {
+				stack.scale(-scale, scale, scale);
+			}
 			stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) tickForSpin / 1200L) * 360.0f));
 			DiffuseLighting.disableGuiDepthLighting();
 			model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, 1);
@@ -365,10 +364,11 @@ public class MonitorScreen extends ConsoleScreen {
 		int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
 		int j = ((this.width - this.backgroundWidth) / 2);
 		// background behind the tardis and gallifreyan text
-		context.getMatrices().push();
-		context.getMatrices().translate(0, 0, -100f);
+		MatrixStack stack = context.getMatrices();
+		stack.push();
+		stack.translate(0, 0, -100f);
 		context.drawTexture(TEXTURE, j + 4, i + 32, 80, 180, 93, 76);
-		context.getMatrices().pop();
+		stack.pop();
 		this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f, 176, delta);
 		this.drawBackground(context, delta, mouseX, mouseY);
 		// todo manually adjusting all these values are annoying me

@@ -43,7 +43,7 @@ public class LoyaltyHandler extends TardisLink {
 
     public Loyalty set(PlayerEntity player, Loyalty loyalty) {
         this.data.put(player.getUuid(), loyalty);
-        this.sync();
+        this.unlockInteriorViaLoyalty((ServerPlayerEntity) player, loyalty); // safe cast because this should only be called on server anyway
 
         return loyalty;
     }
@@ -74,20 +74,17 @@ public class LoyaltyHandler extends TardisLink {
     public void unlockInteriorViaLoyalty(ServerPlayerEntity player, Loyalty loyalty) {
         Optional<Tardis> tardis = this.findTardis();
 
-        if (tardis.isEmpty())
-            return;
-
-        if (!(tardis.get() instanceof ServerTardis serverTardis))
+        if (tardis.isEmpty() || !(tardis.get() instanceof ServerTardis serverTardis))
             return;
 
         ConsoleVariantRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
         DesktopRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        ExteriorVariantRegistry.getInstance().unlock(tardis.get(), loyalty, schema -> this.playUnlockEffects(player, schema));
+        ExteriorVariantRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
     }
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {
         player.getServerWorld().playSound(null, player.getBlockPos(),
-                SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 0.2F, 1.0F);
 
         player.sendMessage(Text.literal(nameable.name() + " unlocked!")
                 .formatted(Formatting.BOLD, Formatting.ITALIC, Formatting.GOLD), false);

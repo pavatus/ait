@@ -2,6 +2,7 @@ package loqor.ait.tardis.exterior.variant.capsule;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.registry.DoorRegistry;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.animation.ExteriorAnimation;

@@ -2,6 +2,7 @@ package loqor.ait.tardis.exterior.variant.classic;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.registry.DoorRegistry;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.category.ClassicCategory;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.AITMod;
@@ -18,7 +19,7 @@ public abstract class ClassicBoxVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/classic/classic_";
 
 	protected ClassicBoxVariant(String name, String modId) {
-		super(name, ClassicCategory.REFERENCE, new Identifier(modId, "exterior/classic/" + name));
+		super(name, ClassicCategory.REFERENCE, new Identifier(modId, "exterior/classic/" + name), new Loyalty(Loyalty.Type.OWNER));
 	}
 
 	protected ClassicBoxVariant(String name) {

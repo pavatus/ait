@@ -2,6 +2,7 @@ package loqor.ait.tardis.exterior.variant.tardim;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.registry.DoorRegistry;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.category.TardimCategory;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.animation.ExteriorAnimation;
@@ -18,7 +19,7 @@ public abstract class TardimVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/tardim/tardim_";
 
 	protected TardimVariant(String name) {
-		super(name, TardimCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/tardim/" + name));
+		super(name, TardimCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/tardim/" + name), new Loyalty(Loyalty.Type.OWNER));
 	}
 
 	@Override

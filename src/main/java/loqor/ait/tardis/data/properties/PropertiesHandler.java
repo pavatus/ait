@@ -183,12 +183,14 @@ public class PropertiesHandler {
 		return (UUID) holder.getData().get(key);
 	}
 
-	public static void setSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema, boolean val) {
-		set(holder, schema.id().getPath() + "_unlocked", val);
+	public static void setSchemaUnlocked(Tardis tardis, TardisDesktopSchema schema, boolean val) {
+		if(tardis != null)
+			set(tardis, schema.id().getPath() + "_unlocked", val, true);
 	}
 
-	public static void setConsoleUnlocked(PropertiesHolder holder, ConsoleVariantSchema schema, boolean value) {
-		set(holder, schema.id().getPath() + "_unlocked", value);
+	public static void setConsoleUnlocked(Tardis tardis, ConsoleVariantSchema schema, boolean value) {
+		if(tardis != null)
+			set(tardis, schema.id().getPath() + "_unlocked", value, true);
 	}
 
 	public static boolean isConsoleUnlocked(PropertiesHolder holder, ConsoleVariantSchema schema) {
@@ -199,16 +201,18 @@ public class PropertiesHandler {
 		return getBool(holder, schema.id().getPath() + "_unlocked");
 	}
 
-	public static void setSonicUnlocked(PropertiesHolder holder, SonicSchema schema, boolean value) {
-		set(holder, schema.id().getPath() + "_unlocked", value);
+	public static void setSonicUnlocked(Tardis tardis, SonicSchema schema, boolean value) {
+		if(tardis != null)
+			set(tardis, schema.id().getPath() + "_unlocked", value, true);
 	}
 
 	public static boolean isSonicUnlocked(PropertiesHolder holder, SonicSchema schema) {
 		return getBool(holder, schema.id().getPath() + "_unlocked");
 	}
 
-	public static void setExteriorUnlocked(PropertiesHolder holder, ExteriorVariantSchema schema, boolean value) {
-		set(holder, schema.id().getPath() + "_unlocked", value);
+	public static void setExteriorUnlocked(Tardis tardis, ExteriorVariantSchema schema, boolean value) {
+		if(tardis != null)
+			set(tardis, schema.id().getPath() + "_unlocked", value, true);
 	}
 
 	public static boolean isExteriorUnlocked(PropertiesHolder holder, Identifiable schema) {

@@ -5,6 +5,7 @@ import loqor.ait.registry.DoorRegistry;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.animation.PulsatingAnimation;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.category.RenegadeCategory;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.variant.door.DoorSchema;
@@ -18,7 +19,7 @@ public abstract class RenegadeVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/renegade/renegade_";
 
 	protected RenegadeVariant(String name) {
-		super(name, RenegadeCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/renegade/" + name));
+		super(name, RenegadeCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/renegade/" + name), new Loyalty(Loyalty.Type.PILOT));
 	}
 
 	@Override

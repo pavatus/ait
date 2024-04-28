@@ -54,19 +54,19 @@ public class ServerTardis extends Tardis {
 	}
 
 	public void unlockExterior(ExteriorVariantSchema schema) {
-		PropertiesHandler.setExteriorUnlocked(getHandlers().getProperties(), schema, true);
+		PropertiesHandler.setExteriorUnlocked(this, schema, true);
 	}
 
 	public void unlockSonic(SonicSchema schema) {
-		PropertiesHandler.setSonicUnlocked(getHandlers().getProperties(), schema, true);
+		PropertiesHandler.setSonicUnlocked(this, schema, true);
 	}
 
 	public void unlockDesktop(TardisDesktopSchema schema) {
-		PropertiesHandler.setSchemaUnlocked(getHandlers().getProperties(), schema, true);
+		PropertiesHandler.setSchemaUnlocked(this, schema, true);
 	}
 
 	public void unlockConsole(ConsoleVariantSchema schema) {
-		PropertiesHandler.setConsoleUnlocked(getHandlers().getProperties(), schema, true);
+		PropertiesHandler.setConsoleUnlocked(this, schema, true);
 	}
 
 	public void startTick(MinecraftServer server) {

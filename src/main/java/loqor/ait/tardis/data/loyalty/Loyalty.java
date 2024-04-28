@@ -27,12 +27,8 @@ public record Loyalty(int level, Type type) {
         return Loyalty.fromLevel(this.level - level);
     }
 
-    public boolean bigger(Loyalty other) {
-        return this.level > other.level;
-    }
-
-    public boolean biggerEquals(Loyalty other) {
-        return this.bigger(other) || this.equals(other);
+    public boolean greaterOrEqual(Loyalty other) {
+        return other.level >= this.level;
     }
 
     @Override

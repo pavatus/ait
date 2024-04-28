@@ -5,6 +5,7 @@ import loqor.ait.registry.DoorRegistry;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.animation.PulsatingAnimation;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.category.PlinthCategory;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.variant.door.DoorSchema;
@@ -18,7 +19,7 @@ public abstract class PlinthVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/plinth/plinth_";
 
 	protected PlinthVariant(String name) {
-		super(name, PlinthCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/plinth/" + name));
+		super(name, PlinthCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/plinth/" + name), new Loyalty(Loyalty.Type.COMPANION));
 	}
 
 	@Override

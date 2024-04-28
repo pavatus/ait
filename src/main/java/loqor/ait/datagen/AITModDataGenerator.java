@@ -394,6 +394,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addSound("music/secret_music", AITSounds.SECRET_MUSIC);
             provider.addSound("music/even_more_secret_music", AITSounds.EVEN_MORE_SECRET_MUSIC);
             provider.addSound("music/drifting_by_radio", AITSounds.DRIFTING_MUSIC);
+            provider.addSound("music/mercury_by_nitrogenesis", AITSounds.MERCURY_MUSIC);
 
 
             // TARDIS
@@ -530,6 +531,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.SIEGE_ITEM, "TARDIS");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC, "Music Disc");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Radio - Drifting");
+        provider.addTranslation(AITItems.MERCURY_MUSIC_DISC, "Music Disc");
+        provider.addTranslation(AITItems.MERCURY_MUSIC_DISC.getTranslationKey() + ".desc", "Nitrogenesis - Mercury");
         provider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Sonic Screwdriver");
         //provider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
         //provider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");

@@ -1,6 +1,7 @@
 package loqor.ait.client.screens.interior;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
@@ -21,6 +22,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
+import net.minecraft.client.texture.NativeImage;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;

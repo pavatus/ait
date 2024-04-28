@@ -2,6 +2,7 @@ package loqor.ait.tardis.exterior.variant.booth;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.registry.DoorRegistry;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.category.BoothCategory;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.animation.ExteriorAnimation;
@@ -18,7 +19,7 @@ public abstract class BoothVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/booth/booth_";
 
 	protected BoothVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-		super(name, BoothCategory.REFERENCE, new Identifier(modId, "exterior/booth/" + name));
+		super(name, BoothCategory.REFERENCE, new Identifier(modId, "exterior/booth/" + name), new Loyalty(Loyalty.Type.COMPANION));
 	}
 
 	protected BoothVariant(String name) {

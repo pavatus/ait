@@ -1,7 +1,6 @@
 package loqor.ait.registry;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.desktops.DatapackDesktop;
@@ -9,7 +8,6 @@ import loqor.ait.tardis.desktops.DefaultCaveDesktop;
 import loqor.ait.tardis.desktops.DevDesktop;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -57,10 +55,8 @@ public class DesktopRegistry extends DatapackRegistry<TardisDesktopSchema> {
 
 	public void unlock(ServerTardis tardis, Loyalty loyalty, Consumer<TardisDesktopSchema> consumer) {
 		for (TardisDesktopSchema schema : REGISTRY.values()) {
-			if (!schema.getRequirement().biggerEquals(loyalty))
-				continue;
 
-			if (tardis.isDesktopUnlocked(schema))
+			if (!schema.getRequirement().greaterOrEqual(loyalty) || tardis.isDesktopUnlocked(schema))
 				continue;
 
 			AITMod.LOGGER.debug("Unlocked desktop " + schema.id() + " for tardis [" + tardis.getUuid() + "]");

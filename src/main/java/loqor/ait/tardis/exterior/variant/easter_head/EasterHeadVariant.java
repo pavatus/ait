@@ -5,6 +5,7 @@ import loqor.ait.registry.DoorRegistry;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.animation.PulsatingAnimation;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.category.EasterHeadCategory;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.tardis.variant.door.DoorSchema;
@@ -16,7 +17,7 @@ public abstract class EasterHeadVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/easter_head/easter_head_";
 
 	protected EasterHeadVariant(String name) {
-		super(name, EasterHeadCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/easter_head/" + name));
+		super(name, EasterHeadCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/easter_head/" + name), new Loyalty(Loyalty.Type.PILOT));
 	}
 
 	@Override

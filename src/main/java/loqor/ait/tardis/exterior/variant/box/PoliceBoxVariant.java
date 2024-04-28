@@ -2,6 +2,7 @@ package loqor.ait.tardis.exterior.variant.box;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.registry.DoorRegistry;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
 import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
 import loqor.ait.AITMod;
@@ -18,7 +19,7 @@ public abstract class PoliceBoxVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/police_box/police_box_";
 
 	protected PoliceBoxVariant(String name) { // idk why i added the modid bit i dont use it later lol
-		super(name, PoliceBoxCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/police_box/" + name));
+		super(name, PoliceBoxCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/police_box/" + name), new Loyalty(Loyalty.Type.PILOT));
 	}
 
 	@Override

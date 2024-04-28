@@ -27,7 +27,6 @@ import loqor.ait.tardis.exterior.variant.tardim.TardimFireVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimSoulVariant;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -260,10 +259,8 @@ public class ExteriorVariantRegistry extends DatapackRegistry<ExteriorVariantSch
 			return;
 
 		for (ExteriorVariantSchema schema : REGISTRY.values()) {
-			if (!schema.getRequirement().biggerEquals(loyalty))
-				continue;
 
-			if (serverTardis.isExteriorUnlocked(schema))
+			if (!schema.getRequirement().greaterOrEqual(loyalty) || serverTardis.isExteriorUnlocked(schema))
 				continue;
 
 			AITMod.LOGGER.debug("Unlocked exterior " + schema.id() + " for tardis [" + tardis.getUuid() + "]");

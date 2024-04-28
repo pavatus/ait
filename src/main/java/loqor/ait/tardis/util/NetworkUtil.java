@@ -61,7 +61,7 @@ public class NetworkUtil {
 	}
 
 	public static Collection<ServerPlayerEntity> getPlayersNearExterior(Tardis tardis) {
-		return getTracking(tardis.getTravel().getPosition());
+		return getTracking(tardis.getExterior().getExteriorPos());
 	}
 
 	public static void sendToLinked(Tardis tardis, Identifier id, PacketByteBuf buf) {
