@@ -625,6 +625,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");
         provider.addTranslation("screen.ait.sonicsettings.back", "Back");
 
+
         provider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         provider.addTranslation("screen.ait.security.leave_behind", "> Leave Behind");
         provider.addTranslation("screen.ait.security.hostile_alarms", "> Hostile Alarms");
@@ -635,6 +636,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("command.ait.riftchunk.setlevel", "Set artron levels in rift chunk to: ");
         provider.addTranslation("command.ait.riftchunk.cannotgetlevel", "This chunk is not a rift chunk, so you can't get the artron levels of it");
         provider.addTranslation("command.ait.riftchunk.getlevel", "AU in rift chunk: ");
+        provider.addTranslation("riftchunk.ait.tracking", "Rift Tracking");
+        provider.addTranslation("riftchunk.ait.cooldown", "Rift tracking is on cooldown");
         provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
         provider.addTranslation("waypoint.position.tooltip", "Position");
         provider.addTranslation("waypoint.dimension.tooltip", "Dimension");
