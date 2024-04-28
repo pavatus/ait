@@ -613,7 +613,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.monitor.traveltime", "Travel Time");
         provider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
         provider.addTranslation("screen.ait.interiorsettings.back", "> Back");
-        provider.addTranslation("screen.ait.interiorsettings.security", "> Security Options");
+        provider.addTranslation("screen.ait.security.button", "> Security Options");
         provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
         provider.addTranslation("screen.ait.interiorsettings.cacheconsole", "> Cache Console");
 
