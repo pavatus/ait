@@ -11,9 +11,9 @@ public class PermissionTest {
         PermissionMap map = new PermissionMap();
 
         map.add(Permission.USE.TRAVEL);
-        map.add(Permission.USE.ATTUNE);
+        map.add(Permission.USE.LINK);
 
-        assertEquals(map.contains(Permission.USE.ATTUNE), false);
+        assertEquals(map.contains(Permission.USE.LINK), false);
         assertEquals(map.contains(Permission.USE.TRAVEL), true);
 
         assertEquals(Permission.from("tardis.use.travel"), Permission.USE.TRAVEL);

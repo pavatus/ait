@@ -2,10 +2,10 @@ package loqor.ait.client.renderers.doors;
 
 import loqor.ait.client.models.doors.DoomDoorModel;
 import loqor.ait.client.models.doors.DoorModel;
-import loqor.ait.client.registry.ClientDoorRegistry;
-import loqor.ait.client.registry.ClientExteriorVariantRegistry;
-import loqor.ait.client.registry.door.ClientDoorSchema;
-import loqor.ait.client.registry.exterior.ClientExteriorVariantSchema;
+import loqor.ait.registry.impl.door.ClientDoorRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import loqor.ait.core.data.schema.door.ClientDoorSchema;
+import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;

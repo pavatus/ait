@@ -1,7 +1,7 @@
 package loqor.ait.core.blockentities.control;
 
 import loqor.ait.core.item.control.ControlBlockItem;
-import loqor.ait.registry.ControlRegistry;
+import loqor.ait.registry.impl.ControlRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.link.LinkableBlockEntity;

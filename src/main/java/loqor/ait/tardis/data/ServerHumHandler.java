@@ -1,7 +1,7 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
-import loqor.ait.registry.HumsRegistry;
+import loqor.ait.registry.impl.HumsRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.TardisUtil;

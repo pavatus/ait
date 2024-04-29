@@ -6,7 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -16,7 +16,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -73,12 +75,17 @@ public class RemoveCommand {
 
         // Delete the file. File system operations are costly!
         EXECUTOR.execute(() -> {
-            File file = ServerTardisManager.getSavePath(uuid);
+            try {
+                Path file = ServerTardisManager.getSavePath(context.getSource().getServer(), uuid, "json");
 
-            if (file.exists())
-                file.delete();
+                if (Files.exists(file)) {
+                    Files.delete(file);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
-            ServerTardisManager.getInstance().getLookup().remove(uuid);
+            ServerTardisManager.getInstance().remove(uuid);
         });
 
         source.sendFeedback(() -> Text.literal("TARDIS [" + uuid + "] removed"), true);

@@ -2,7 +2,7 @@ package loqor.ait.client.screens.interior;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.screens.TardisScreen;
-import loqor.ait.registry.DesktopRegistry;
+import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.TardisDesktopSchema;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -31,7 +31,7 @@ public class InteriorSelectScreen extends TardisScreen {
 
 	private TardisDesktopSchema selectedDesktop;
 
-	// loqor DONT rewrite with owo lib : (
+
 	public InteriorSelectScreen(UUID tardis, Screen parent) {
 		super(Text.translatable("screen.ait.interor_select.title"), tardis);
 		this.parent = parent;
@@ -52,10 +52,6 @@ public class InteriorSelectScreen extends TardisScreen {
 
 		super.init();
 	}
-
-	// private static TardisDesktopSchema findFirstSchema() {
-	//     return DesktopRegistry.get(0);
-	// }
 
 	private void createButtons() {
 		this.addButton(
@@ -153,7 +149,7 @@ public class InteriorSelectScreen extends TardisScreen {
 	}
 
 	private boolean isCurrentUnlocked() {
-		return tardis().isDesktopUnlocked(this.selectedDesktop);
+		return this.tardis().isUnlocked(this.selectedDesktop);
 	}
 
 	@Override

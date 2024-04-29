@@ -10,7 +10,7 @@ import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;

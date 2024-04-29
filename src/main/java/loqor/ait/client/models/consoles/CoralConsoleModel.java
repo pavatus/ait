@@ -2,7 +2,7 @@ package loqor.ait.client.models.consoles;
 
 import loqor.ait.client.animation.console.coral.CoralAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.registry.ConsoleVariantRegistry;
+import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.SecurityControl;

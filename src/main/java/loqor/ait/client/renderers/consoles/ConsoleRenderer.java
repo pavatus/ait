@@ -1,8 +1,8 @@
 package loqor.ait.client.renderers.consoles;
 
 import loqor.ait.client.models.consoles.ConsoleModel;
-import loqor.ait.client.registry.ClientConsoleVariantRegistry;
-import loqor.ait.client.registry.console.ClientConsoleVariantSchema;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
+import loqor.ait.core.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.data.SonicHandler;

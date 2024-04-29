@@ -3,14 +3,17 @@ package loqor.ait.tardis.control.sequences;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// should this be an interface?
+// should this be an interface? - No :)
 public class Sequence {
 	public Identifier id() {
 		return new Identifier(AITMod.MOD_ID, "sequence");
@@ -39,7 +42,11 @@ public class Sequence {
 	public void execute(Tardis tardis) {
 	}
 
-	public void executeMissed(Tardis tardis) {
+	public void executeMissed(Tardis tardis, @Nullable ServerPlayerEntity player) {
+		if(player != null) {
+			LoyaltyHandler loyaltyHandler = tardis.getHandlers().getLoyalties();
+			loyaltyHandler.get(player).subtract(2);
+		}
 	}
 
 	public Text sequenceStartMessage() {
@@ -106,7 +113,7 @@ public class Sequence {
 		}
 
 		@Override
-		public void executeMissed(Tardis tardis) {
+		public void executeMissed(Tardis tardis, @Nullable ServerPlayerEntity player) {
 			this.executeMissed.run(tardis);
 		}
 

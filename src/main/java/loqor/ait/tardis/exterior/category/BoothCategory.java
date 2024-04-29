@@ -1,8 +1,9 @@
 package loqor.ait.tardis.exterior.category;
 
 import loqor.ait.AITMod;
-import loqor.ait.registry.ExteriorVariantRegistry;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import net.minecraft.util.Identifier;
 
 public class BoothCategory extends ExteriorCategorySchema {

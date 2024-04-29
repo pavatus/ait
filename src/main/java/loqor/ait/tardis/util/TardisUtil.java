@@ -3,30 +3,33 @@ package loqor.ait.tardis.util;
 import io.wispforest.owo.ops.WorldOps;
 import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.Corners;
 import loqor.ait.core.entities.TardisRealEntity;
-import loqor.ait.core.events.ServerLoadEvent;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.registry.CategoryRegistry;
-import loqor.ait.registry.ExteriorVariantRegistry;
-import loqor.ait.registry.SonicRegistry;
+import loqor.ait.core.util.StackUtil;
+import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.pos.PosType;
+import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import loqor.ait.compat.DependencyChecker;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.data.DoorData;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -52,21 +55,24 @@ import net.minecraft.structure.StructureTemplate;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import qouteall.imm_ptl.core.api.PortalAPI;
 
-import java.nio.file.Path;
 import java.util.*;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
 	private static final Random RANDOM = new Random();
+
+	/**
+	 * @deprecated do NOT use this method.
+	 */
+	@Deprecated
 	private static MinecraftServer SERVER;
-	private static Path SAVE_PATH;
+
 	private static ServerWorld TARDIS_DIMENSION;
 	private static ServerWorld TIME_VORTEX;
 	public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
@@ -79,10 +85,6 @@ public class TardisUtil {
 			if (world.getRegistryKey() == World.OVERWORLD) {
 				SERVER = null;
 			}
-		});
-
-		ServerLoadEvent.LOAD.register(server -> {
-			SAVE_PATH = server.getSavePath(WorldSavePath.ROOT);
 		});
 
 		ServerWorldEvents.LOAD.register((server, world) -> {
@@ -108,6 +110,7 @@ public class TardisUtil {
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
 			SERVER = null;
 		});
+
 		ServerPlayNetworking.registerGlobalReceiver(ClientTardisUtil.CHANGE_SONIC, (server, player, handler, buf, responseSender) -> {
 			UUID uuid = buf.readUuid();
 			Identifier id = buf.readIdentifier();
@@ -121,14 +124,22 @@ public class TardisUtil {
 					Identifier exteriorValue = Identifier.tryParse(buf.readString());
 					boolean variantChange = buf.readBoolean();
 					String variantValue = buf.readString();
-					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
+					ServerTardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
+
+					ExteriorVariantSchema schema = ExteriorVariantRegistry.getInstance().get(Identifier.tryParse(variantValue));
+
+					// no hax
+					if (!tardis.isUnlocked(schema))
+						return;
+
+					server.execute(() -> StackUtil.playBreak(player));
 
 					tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
 					WorldOps.updateIfOnServer(server.getWorld(tardis
 									.getTravel().getPosition().getWorld().getRegistryKey()),
 							tardis.getDoor().getExteriorPos());
 					if (variantChange) {
-						tardis.getExterior().setVariant(ExteriorVariantRegistry.getInstance().get(Identifier.tryParse(variantValue)));
+						tardis.getExterior().setVariant(schema);
 						WorldOps.updateIfOnServer(server.getWorld(tardis
 										.getTravel().getPosition().getWorld().getRegistryKey()),
 								tardis.getDoor().getExteriorPos());
@@ -140,8 +151,7 @@ public class TardisUtil {
 					UUID uuid = buf.readUuid();
 					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-					//TODO: make a permissionhandler
-					if (tardis.getHandlers().getLoyalties().get(player).level() < Loyalty.Type.PILOT.level)
+					if (tardis.getHandlers().getLoyalties().get(player).level() <= Loyalty.Type.PILOT.level)
 						return;
 
 					if (tardis.getHandlers().getOvergrown().isOvergrown())
@@ -205,22 +215,26 @@ public class TardisUtil {
 		);
 	}
 
+	/**
+	 * @deprecated do NOT use this method.
+	 */
+	@Deprecated
 	public static MinecraftServer getServer() {
 		return SERVER;
 	}
 
-	public static Path getSavePath() {
-		if (SAVE_PATH == null && SERVER != null) {
-			SAVE_PATH = SERVER.getSavePath(WorldSavePath.ROOT);
-		}
-
-		return SAVE_PATH;
-	}
-
+	/**
+	 * @deprecated do NOT use this method.
+	 */
+	@Deprecated
 	public static boolean isClient() {
 		return !TardisUtil.isServer();
 	}
 
+	/**
+	 * @deprecated do NOT use this method.
+	 */
+	@Deprecated
 	public static boolean isServer() {
 		return SERVER != null;
 	}
@@ -385,14 +399,19 @@ public class TardisUtil {
 	}
 
 	public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
-		if (TardisManager.getInstance(isServer) == null) {
+		TardisManager<?> manager = TardisManager.getInstance(isServer);
+
+		if (manager == null) {
 			AITMod.LOGGER.error("TardisManager is NULL in findTardisByInterior");
 			AITMod.LOGGER.error("Called server side? " + isServer);
 
 			return null;
 		}
-		if (TardisManager.getInstance(isServer).getLookup() == null) return null;
-		for (Tardis tardis : TardisManager.getInstance(isServer).getLookup().values()) {;
+
+		if (manager.getLookup() == null)
+			return null;
+
+		for (Tardis tardis : manager.getLookup().values()) {;
 			if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos))
 				return tardis;
 		}

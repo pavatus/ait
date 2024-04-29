@@ -8,18 +8,18 @@ import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.managers.RiftChunkManager;
-import loqor.ait.registry.ConsoleRegistry;
-import loqor.ait.registry.ConsoleVariantRegistry;
+import loqor.ait.registry.impl.console.ConsoleRegistry;
+import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.console.type.ConsoleTypeSchema;
-import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.link.LinkableBlockEntity;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -335,7 +335,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	public static ConsoleVariantSchema nextVariant(ConsoleVariantSchema current) {
-		List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParentToList(current.parent());
+		List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParent(current.parent());
 
 		int idx = list.indexOf(current);
 		if (idx < 0 || idx + 1 == list.size()) return list.get(0);
@@ -369,7 +369,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	public void setDesktop(TardisDesktop desktop) {
 		if (this.getWorld() == null || this.getWorld().isClient()) return;
 
-		AITMod.LOGGER.info("Linking destkop " + this.findTardis().get().getUuid());
+		AITMod.LOGGER.info("Linking desktop " + this.findTardis().get().getUuid());
 
 		this.findParent();
 	}
@@ -501,14 +501,14 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 		if (tardis.getHandlers().getCrashData().isToxic() || tardis.getHandlers().getCrashData().isUnstable()) {
 			((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
-					pos.getZ() + 0.5f, 20, 0, 0, 0, 0.025f);
+					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.025f);
 			((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 1, 0, 0.05f, 0, 0.025f);
 		}
 
 		if (tardis.getHandlers().getCrashData().isToxic()) {
 			((ServerWorld) world).spawnParticles(new DustColorTransitionParticleEffect(
-							new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 2),
+							new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 1),
 					pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 1, random.nextBoolean() ? 0.5f : -0.5f, 3f, random.nextBoolean() ? 0.5f : -0.5f, 0.025f);
 		}

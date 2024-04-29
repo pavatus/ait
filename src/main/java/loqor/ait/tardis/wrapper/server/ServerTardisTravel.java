@@ -2,9 +2,9 @@ package loqor.ait.tardis.wrapper.server;
 
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTickable;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;

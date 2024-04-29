@@ -1,9 +1,9 @@
 package loqor.ait.client;
 
 import loqor.ait.AITMod;
-import loqor.ait.client.registry.ClientConsoleVariantRegistry;
-import loqor.ait.client.registry.ClientDoorRegistry;
-import loqor.ait.client.registry.ClientExteriorVariantRegistry;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
+import loqor.ait.registry.impl.door.ClientDoorRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.TriangleTestingUtil;
 import loqor.ait.client.renderers.VortexUtil;
@@ -30,16 +30,17 @@ import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.RiftTarget;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.*;
-import loqor.ait.core.item.sonic.DatapackSonic;
-import loqor.ait.core.item.sonic.SonicSchema;
-import loqor.ait.core.util.UnclampedModelPredicateProvider;
-import loqor.ait.registry.*;
+import loqor.ait.core.data.schema.SonicSchema;
+import loqor.ait.registry.Registries;
+import loqor.ait.registry.impl.SonicRegistry;
+import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.console.type.ConsoleTypeSchema;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -50,16 +51,12 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -69,34 +66,18 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.json.JsonUnbakedModel;
-import net.minecraft.client.render.model.json.ModelOverrideList;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.resource.ReloadableResourceManagerImpl;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.GlobalPos;
-import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import java.io.InputStream;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 import static loqor.ait.AITMod.*;
@@ -108,6 +89,8 @@ public class AITModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        Registries.getInstance().subscribe(Registries.InitType.CLIENT);
+
         setupBlockRendering();
         sonicModelPredicate();
         blockEntityRendererRegister();
@@ -125,17 +108,6 @@ public class AITModClient implements ClientModInitializer {
         ClientExteriorVariantRegistry.getInstance().init();
         ClientConsoleVariantRegistry.getInstance().init();
         ClientDoorRegistry.init();
-
-//        WorldRenderEvents.END.register(context -> {
-//            try (ClientWorld world = context.world()){
-//                if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
-//                    vortex.renderVortex(context);
-//                }
-//                TriangleTestingUtil.renderTriangle(context);
-//            } catch(Exception e) {
-//                e.printStackTrace();
-//            }
-//        });
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {
@@ -204,7 +176,6 @@ public class AITModClient implements ClientModInitializer {
             if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console) console.setVariant(id);
         });
 
-
         ClientPlayNetworking.registerGlobalReceiver(ExteriorAnimation.UPDATE,
                 (client, handler, buf, responseSender) -> {
                     int p = buf.readInt();
@@ -224,32 +195,6 @@ public class AITModClient implements ClientModInitializer {
         // does all this clientplaynetwrokigng shite really have to go in here, theres probably somewhere else it can go right??
         ClientPlayNetworking.registerGlobalReceiver(AITMessages.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) -> {
             client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(DesktopRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
-            DesktopRegistry.getInstance().readFromServer(buf);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(SonicRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
-            SonicRegistry.getInstance().readFromServer(buf);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ExteriorVariantRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
-            PacketByteBuf copy = PacketByteBufs.copy(buf);
-
-            ClientExteriorVariantRegistry.getInstance().readFromServer(buf);
-            ExteriorVariantRegistry.getInstance().readFromServer(copy);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ConsoleVariantRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
-            PacketByteBuf copy = PacketByteBufs.copy(buf);
-
-            ClientConsoleVariantRegistry.getInstance().readFromServer(buf);
-            ConsoleVariantRegistry.getInstance().readFromServer(copy);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(CategoryRegistry.SYNC_TO_CLIENT, (client, handler, buf, responseSender) -> {
-           CategoryRegistry.getInstance().readFromServer(buf);
         });
 
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
@@ -302,6 +247,7 @@ public class AITModClient implements ClientModInitializer {
                     return 0.0f;
                 }
             }
+
             return 0.0F;
         });
     }
@@ -401,7 +347,7 @@ public class AITModClient implements ClientModInitializer {
                         Tardis tardis = KeyItem.getTardis(stack);
                         Loyalty loyalty = tardis.getHandlers().getLoyalties().get(player);
 
-                        //TODO: make a permissionhandler
+                        //TODO: make a permissionhandler - yayy we have one :)
                         if (loyalty.level() > Loyalty.Type.PILOT.level)
                             ClientTardisUtil.snapToOpenDoors(tardis);
                     }
@@ -418,5 +364,6 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.LARGE_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.MEDIUM_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.SMALL_ZEITON_BUD, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.MACHINE_CASING, RenderLayer.getTranslucent());
     }
 }

@@ -2,8 +2,8 @@ package loqor.ait.core.item;
 
 import loqor.ait.core.AITItems;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
-import loqor.ait.tardis.util.Waypoint;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.Waypoint;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;

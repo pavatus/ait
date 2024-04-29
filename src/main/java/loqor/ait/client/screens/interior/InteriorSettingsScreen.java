@@ -2,16 +2,16 @@ package loqor.ait.client.screens.interior;
 
 import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
+import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
 import loqor.ait.client.sounds.ClientSoundManager;
-import loqor.ait.registry.DesktopRegistry;
-import loqor.ait.registry.HumsRegistry;
-import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.client.screens.ConsoleScreen;
+import loqor.ait.registry.impl.DesktopRegistry;
+import loqor.ait.registry.impl.HumsRegistry;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.sound.HumSound;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -377,6 +377,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private boolean isCurrentUnlocked() {
-		return tardis().isDesktopUnlocked(this.selectedDesktop);
+		return this.tardis().isUnlocked(this.selectedDesktop);
 	}
 }

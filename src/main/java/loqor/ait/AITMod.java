@@ -13,9 +13,17 @@ import loqor.ait.core.commands.*;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SiegeTardisItem;
+import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.util.AITConfig;
+import loqor.ait.core.util.StackUtil;
+import loqor.ait.registry.Registries;
+import loqor.ait.registry.impl.*;
+import loqor.ait.registry.impl.console.ConsoleRegistry;
+import loqor.ait.core.data.schema.MachineRecipeSchema;
+import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.core.util.bsp.BTreeGenerator;
 import loqor.ait.core.util.bsp.BinaryTree;
 import loqor.ait.registry.*;
@@ -45,6 +53,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -60,13 +69,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
 public class AITMod implements ModInitializer {
 	public static final String MOD_ID = "ait";
 	public static final Logger LOGGER = LoggerFactory.getLogger("ait");
-	public static final Boolean DEBUG = true;
 	public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
 	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () ->
 			Icon.of(AITItems.TARDIS_ITEM)).disableDynamicTitle().build();
@@ -78,6 +87,7 @@ public class AITMod implements ModInitializer {
 	static {
 		ENGINE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "engine"), EngineScreenHandler::new);
 	}
+
 	@Override
 	public void onInitialize() {
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
@@ -91,16 +101,11 @@ public class AITMod implements ModInitializer {
 		});
 
 		ConsoleRegistry.init();
-		DesktopRegistry.getInstance().init();
-		CategoryRegistry.getInstance().init();
-		SonicRegistry.getInstance().init();
 		HumsRegistry.init();
 		CreakRegistry.init();
 		SequenceRegistry.init();
 
-		// These 3 have client registries which also need registering.
-		ConsoleVariantRegistry.getInstance().init();
-		ExteriorVariantRegistry.getInstance().init();
+		Registries.getInstance().subscribe(Registries.InitType.COMMON);
 		DoorRegistry.init();
 
 		FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
@@ -143,7 +148,10 @@ public class AITMod implements ModInitializer {
 			LinkCommand.register(dispatcher);
 			PropertyCommand.register(dispatcher);
 			RemoveCommand.register(dispatcher);
-			PermissionTestCommand.register(dispatcher);
+			PermissionCommand.register(dispatcher);
+			LoyaltyCommand.register(dispatcher);
+			UnlockExteriorsCommand.register(dispatcher);
+			UnlockConsolesCommand.register(dispatcher);
 		}));
 
 		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {
@@ -198,7 +206,6 @@ public class AITMod implements ModInitializer {
 				FlightUtil.playSoundAtConsole(tardis, AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
 			}
 
-
 			// disabling protocols
 			PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, false);
 			PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
@@ -238,16 +245,6 @@ public class AITMod implements ModInitializer {
 
 			tardis.getHandlers().getHum().setHum(hum);
 		}));
-
-		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			DesktopRegistry.getInstance().syncToClient(handler.getPlayer());
-			CategoryRegistry.getInstance().syncToClient(handler.getPlayer());
-			SonicRegistry.getInstance().syncToClient(handler.getPlayer());
-			ExteriorVariantRegistry.getInstance().syncToClient(handler.getPlayer());
-			ConsoleVariantRegistry.getInstance().syncToClient(handler.getPlayer());
-
-			ServerTardisManager.getInstance().onPlayerJoin(handler.getPlayer());
-		});
 
 		ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
@@ -291,6 +288,23 @@ public class AITMod implements ModInitializer {
 			TardisUtil.getServer().execute(() -> {
 				if (tardis == null) return;
 				PropertiesHandler.set(tardis.getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED, tardis.areShieldsActive() && shields);
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(MachineItem.MACHINE_DISASSEMBLE, (server, player, handler, buf, responseSender) -> {
+			ItemStack machine = buf.readItemStack();
+
+			Optional<MachineRecipeSchema> schema = MachineRecipeRegistry.getInstance().findMatching(machine);
+
+			if (schema.isEmpty())
+				return;
+
+			// this should ALWAYS be executed on the main thread
+			server.execute(() -> {
+				SonicItem.playSonicSounds(player);
+				MachineItem.disassemble(player, machine, schema.get());
+
+				StackUtil.playBreak(player);
 			});
 		});
 

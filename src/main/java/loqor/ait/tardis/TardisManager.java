@@ -5,20 +5,21 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import loqor.ait.AITMod;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.BlockEntityPreLoadEvent;
 import loqor.ait.core.util.gson.ItemStackSerializer;
 import loqor.ait.core.util.gson.NbtSerializer;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
-import loqor.ait.tardis.exterior.category.ExteriorCategorySchema;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import loqor.ait.tardis.console.type.ConsoleTypeSchema;
-import loqor.ait.tardis.console.variant.ConsoleVariantSchema;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.tardis.link.Linkable;
-import loqor.ait.tardis.util.Corners;
+import loqor.ait.core.data.Corners;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.variant.door.DoorSchema;
+import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -38,6 +39,8 @@ import java.util.function.Consumer;
 
 public abstract class TardisManager<T extends Tardis> {
 	public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "ask_tardis");
+	public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
+
 	public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_tardis");
 	public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_tardis");
 
@@ -67,6 +70,7 @@ public abstract class TardisManager<T extends Tardis> {
 				.registerTypeAdapter(PermissionLike.class, Permission.serializer())
 				.registerTypeAdapter(NbtCompound.class, new NbtSerializer())
 				.registerTypeAdapter(ItemStack.class, new ItemStackSerializer());
+		// TODO replace the type adapters with CODECs. Why do the same job twice?
 		builder = this.getGsonBuilder(builder);
 		this.gson = builder.create();
 	}
@@ -157,7 +161,6 @@ public abstract class TardisManager<T extends Tardis> {
 	public Tardis getTardis(UUID uuid) {
 		return this.getTardis(uuid, false);
 	}
-
 
 	public boolean hasTardis(UUID uuid) {
 		return this.lookup.containsKey(uuid);

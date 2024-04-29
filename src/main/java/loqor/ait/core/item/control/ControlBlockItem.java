@@ -1,7 +1,7 @@
 package loqor.ait.core.item.control;
 
 import loqor.ait.core.entities.ConsoleControlEntity;
-import loqor.ait.registry.ControlRegistry;
+import loqor.ait.registry.impl.ControlRegistry;
 import loqor.ait.tardis.control.Control;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;

@@ -2,8 +2,8 @@ package loqor.ait.tardis.data.properties;
 
 import com.google.gson.internal.LinkedTreeMap;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
-import loqor.ait.core.item.sonic.SonicSchema;
-import loqor.ait.registry.DesktopRegistry;
+import loqor.ait.registry.impl.DesktopRegistry;
+import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.TardisCrashData;
@@ -118,7 +118,7 @@ public class PropertiesHandler {
 		if (holder.getData().get(key) instanceof LinkedTreeMap map) {
 			if (map.get("namespace") == null || map.get("path") == null) {
 				AITMod.LOGGER.error("namespace/path was null! Panic - I'm giving back the default desktop id, lets hope this doesnt cause a crash..");
-				return DesktopRegistry.getInstance().get(0).id();
+				return DesktopRegistry.getInstance().toList().get(0).id();
 			}
 
 			return Identifier.of((String) map.get("namespace"), (String) map.get("path"));
@@ -179,20 +179,20 @@ public class PropertiesHandler {
 		return (UUID) holder.getData().get(key);
 	}
 
-	public static void setSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema, boolean val) {
-		set(holder, schema.id().getPath() + "_unlocked", val);
+	public static void setUnlocked(Tardis tardis, Unlockable unlockable, boolean value) {
+		set(tardis, unlockable.id().getPath() + "_unlocked", value, true);
 	}
 
-	public static boolean isSchemaUnlocked(PropertiesHolder holder, TardisDesktopSchema schema) {
-		return getBool(holder, schema.id().getPath() + "_unlocked");
+	/**
+	 * @apiNote ONLY USE THIS IF YOU KNOW WHAT YOU'RE DOING
+	 */
+	@Deprecated
+	public static boolean isUnlocked(Tardis tardis, Identifier id) {
+		return getBool(tardis.getHandlers().getProperties(), id.getPath() + "_unlocked");
 	}
 
-	public static void setSonicUnlocked(PropertiesHolder holder, SonicSchema schema, boolean value) {
-		set(holder, schema.id().getPath() + "_unlocked", value);
-	}
-
-	public static boolean isSonicUnlocked(PropertiesHolder holder, SonicSchema schema) {
-		return getBool(holder, schema.id().getPath() + "_unlocked");
+	public static boolean isUnlocked(Tardis tardis, Unlockable unlockable) {
+		return isUnlocked(tardis, unlockable.id());
 	}
 
 	public static void setAutoPilot(PropertiesHolder handler, boolean val) {

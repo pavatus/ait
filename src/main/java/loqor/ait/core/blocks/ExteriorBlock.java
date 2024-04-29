@@ -6,13 +6,13 @@ import loqor.ait.api.ICantBreak;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
-import loqor.ait.registry.CategoryRegistry;
-import loqor.ait.registry.ExteriorVariantRegistry;
+import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.util.AbsoluteBlockPos;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.*;
@@ -65,6 +65,16 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		super(settings.nonOpaque());
 
 		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+	}
+	@Override
+
+	public boolean emitsRedstonePower(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
+		return 15;
 	}
 
 	@Override

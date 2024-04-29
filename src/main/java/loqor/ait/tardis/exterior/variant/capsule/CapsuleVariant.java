@@ -1,27 +1,24 @@
 package loqor.ait.tardis.exterior.variant.capsule;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.registry.DoorRegistry;
+import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.animation.PulsatingAnimation;
-import loqor.ait.tardis.exterior.variant.ExteriorVariantSchema;
-import loqor.ait.tardis.variant.door.CapsuleDoorVariant;
-import loqor.ait.tardis.variant.door.DoorSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.tardis.door.CapsuleDoorVariant;
+import loqor.ait.core.data.schema.door.DoorSchema;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class CapsuleVariant extends ExteriorVariantSchema {
-	private final String name;
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/capsule/capsule_";
 
 	protected CapsuleVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-		super(CapsuleCategory.REFERENCE, new Identifier(modId, "exterior/capsule/" + name));
-
-		this.name = name;
+		super(name, CapsuleCategory.REFERENCE, new Identifier(modId, "exterior/capsule/" + name));
 	}
 
 	protected CapsuleVariant(String name) {
