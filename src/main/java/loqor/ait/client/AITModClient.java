@@ -75,6 +75,7 @@ import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -251,6 +252,7 @@ public class AITModClient implements ClientModInitializer {
     }
 
     public static void sonicModelPredicate() {
+        LOGGER.warn(SonicRegistry.getInstance().toList().toString());
         SonicRegistry.getInstance().populateModels(CustomItemRendering::load);
 
         CustomItemRendering.register(new Identifier(MOD_ID, "sonic_screwdriver"), (model, stack, world, entity, seed) -> {

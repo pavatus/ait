@@ -1,1 +1,19 @@
-{}
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ait:item/zeiton_shard"
+  },
+  "overrides": [
+    {"model": "ait:item/sonic/copper"},
+    {"model": "ait:item/sonic/coral"},
+    {"model": "ait:item/sonic/fob"},
+    {"model": "ait:item/sonic/mechanical"},
+    {"model": "ait:item/sonic/prime"},
+    {"model": "ait:item/sonic/prime"},
+    {"model": "ait:item/sonic/prime/inactive"},
+    {"model": "ait:item/sonic/prime/interaction"},
+    {"model": "ait:item/sonic/prime/overload"},
+    {"model": "ait:item/sonic/prime/scanning"},
+    {"model": "ait:item/sonic/renaissance"}
+  ]
+}

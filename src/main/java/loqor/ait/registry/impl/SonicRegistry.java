@@ -2,10 +2,13 @@ package loqor.ait.registry.impl;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.AITModClient;
+import loqor.ait.client.renderers.BakedModelEditor;
+import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.core.data.schema.BuiltinSonic;
 import loqor.ait.core.data.datapack.DatapackSonic;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 

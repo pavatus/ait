@@ -126,14 +126,14 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked); // todo removed "locked" param
 		tardis.init();
 
-		this.lookup.put(uuid, tardis);
-
 		// todo this can be moved to init
 		tardis.getTravel().placeExterior();
 		tardis.getTravel().runAnimations();
 
 		tardis.getHandlers().getStats().markCreationDate();
-		this.saveTardis(TardisUtil.getServer(), tardis);
+
+		new Thread(() -> this.saveTardis(TardisUtil.getServer(), tardis));
+		this.lookup.put(uuid, tardis);
 		return tardis;
 	}
 
@@ -378,7 +378,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
 	private ServerTardis loadTardis(MinecraftServer server, UUID uuid) {
 		try {
-			Path file = ServerTardisManager.getSavePath(server, uuid, "old");
+			Path file = ServerTardisManager.getSavePath(server, uuid, "json");
 			String json = Files.readString(file);
 
 			ServerTardis tardis = this.gson.fromJson(json, ServerTardis.class);

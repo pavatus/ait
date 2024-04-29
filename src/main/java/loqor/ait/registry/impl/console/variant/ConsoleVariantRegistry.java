@@ -31,7 +31,7 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 	private static ConsoleVariantRegistry INSTANCE;
 
 	protected ConsoleVariantRegistry() {
-		super(DatapackConsole::fromInputStream, null, "console_variant", "console", true);
+		super(DatapackConsole::fromInputStream, null, "console_variants", "console", true);
 	}
 
 	public static ConsoleVariantSchema registerStatic(ConsoleVariantSchema schema) {
