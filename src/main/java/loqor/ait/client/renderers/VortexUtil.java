@@ -93,19 +93,6 @@ public class VortexUtil {
             return;
         }
 
-        while (buffer.hasRemaining()) {
-            double x, y, z;
-            try {
-                x = buffer.getDouble();
-                y = buffer.getDouble();
-                z = buffer.getDouble();
-            } catch (BufferUnderflowException e) {
-                AITMod.LOGGER.error("Data loading failed: Invalid Vec3d save format: {}", e.getMessage());
-                return;
-            }
-            Vec3d vec = new Vec3d(x, y, z);
-            this.splines.add(vec);
-        }
     }
 
     public void renderVortex(WorldRenderContext context) {

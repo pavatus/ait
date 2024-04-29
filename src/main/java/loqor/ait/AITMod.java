@@ -20,6 +20,7 @@ import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.util.AITConfig;
 import loqor.ait.core.util.StackUtil;
+import loqor.ait.core.util.vortex.ServerVortexDataHandler;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
@@ -93,6 +94,8 @@ public class AITMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ServerVortexDataHandler.subscribeServer();
+
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
 			LOGGER.info("Time vortex data presence check...");
 

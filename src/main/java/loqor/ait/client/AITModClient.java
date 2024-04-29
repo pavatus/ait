@@ -1,6 +1,7 @@
 package loqor.ait.client;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.util.vortex.ServerVortexDataHandler;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
@@ -89,6 +90,8 @@ public class AITModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
+        ServerVortexDataHandler.init();
+        ServerVortexDataHandler.subscribeClient();
 
         setupBlockRendering();
         sonicModelPredicate();
