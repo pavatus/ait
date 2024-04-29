@@ -2,6 +2,7 @@ package loqor.ait.core.util.bsp;
 
 import loqor.ait.AITMod;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Random;
@@ -24,18 +25,41 @@ public class BTreeGenerator {
 
     // 'magic number' my ass
     private void genLhs(BinaryTree.Node node, Vec3d prevPos) {
-        int offset = this.rng.nextInt(256 * 3);
-        node.addLeft(new Vec3d(prevPos.x - offset * 0.5, prevPos.y, prevPos.z - offset * 0.6));
+        node.addLeft(this.genData(prevPos, 0));
     }
 
     private void genRhs(BinaryTree.Node node, Vec3d prevPos) {
-        int offset = this.rng.nextInt(256 * 3);
-        node.addRight(new Vec3d(prevPos.x + offset * 0.6, prevPos.y, prevPos.z - offset * 0.7));
+        node.addRight(this.genData(prevPos, 1));
     }
 
     private void genBoth(BinaryTree.Node node, Vec3d prevPos) {
         this.genLhs(node, prevPos);
         this.genRhs(node, prevPos);
+    }
+
+    private Vec3d genData(Vec3d prev, int side) {
+        int offset = this.rng.nextInt(256 * 3);
+        Vec3d out = null;
+
+        switch (side) {
+            case 0 -> out = new Vec3d(prev.x - offset * 0.5, prev.y, prev.z - offset * 0.6);
+            case 1 -> out = new Vec3d(prev.x + offset * 0.6, prev.y, prev.z - offset * 0.7);
+        }
+        return out;
+    }
+
+    private void genFor(BinaryTree.Node node, Vec3d prevPos) {
+        // 0 - generate left hand side
+        // 1 - generate right hand side
+        // 2 - generate both
+        int genSide = this.rng.nextInt(3);
+
+        switch (genSide) {
+            case 0 -> this.genLhs(node, prevPos);
+            case 1 -> this.genRhs(node, prevPos);
+            case 2 -> this.genBoth(node, prevPos);
+            default -> AITMod.LOGGER.error("How the fuck did that happen? How did you do that?");
+        }
     }
 
     public void gen(BinaryTree binaryTree) {
@@ -46,31 +70,23 @@ public class BTreeGenerator {
         this.binaryTree = binaryTree;
         this.bTreeInorderIterator = new BTreeInorderIterator(this.binaryTree.rootNode);
 
-        BinaryTree.Node node = this.binaryTree.rootNode;
+        BinaryTree.Node node = this.binaryTree.getRootNode();
         Vec3d prevPos = node.getData();
+
+        // Generate for the root node first so the BTII doesn't break
+        this.genFor(node, prevPos);
 
         int depth = 0;
 
-        while (true) {
-            if (depth == maxDepth)
-                return;
-
-            // 0 - generate left hand side
-            // 1 - generate right hand side
-            // 2 - generate both
-            int genSide = this.rng.nextInt(3);
-
-            switch (genSide) {
-                case 0 -> genLhs(node, prevPos);
-                case 1 -> genRhs(node, prevPos);
-                case 2 -> genBoth(node, prevPos);
-                default -> AITMod.LOGGER.error("How the fuck did that happen? How did you do that?");
-            }
+        while (depth != maxDepth) {
             if (this.bTreeInorderIterator.hasNext()) {
                 node = this.bTreeInorderIterator.next();
             } else {
-                node = new BinaryTree.Node(prevPos);
+                node.left = new BinaryTree.Node(this.genData(prevPos, 0));
+                node = node.left;
             }
+            this.genFor(node, prevPos);
+            prevPos = node.getData();
             depth += 1;
         }
     }

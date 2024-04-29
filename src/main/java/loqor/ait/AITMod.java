@@ -4,6 +4,7 @@ import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.*;
@@ -74,6 +75,8 @@ import java.util.Random;
 import java.util.UUID;
 
 public class AITMod implements ModInitializer {
+	private VortexUtil vortex;
+
 	public static final String MOD_ID = "ait";
 	public static final Logger LOGGER = LoggerFactory.getLogger("ait");
 	public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
@@ -91,13 +94,27 @@ public class AITMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
-			LOGGER.info("Vortex generation initiated");
-			BinaryTree btree = new BinaryTree(new Vec3d(0, 100, 0));
-			BTreeGenerator bTreeGenerator = new BTreeGenerator(server.getWorld(AITDimensions.TIME_VORTEX_WORLD));
-			bTreeGenerator.gen(btree);
-			LOGGER.info("Vortex generation finished");
-			LOGGER.info("Printing values...");
-			btree.debugPrint();
+			LOGGER.info("Time vortex data presence check...");
+
+			if (!VortexUtil.isDataGenerated(server)) {
+				LOGGER.info("Time vortex data has not yet been generated, generation initiated.");
+
+				BinaryTree vortexTree = new BinaryTree(new Vec3d(0, 100, 0));
+				BTreeGenerator vortexGenerator = new BTreeGenerator(server.getWorld(AITDimensions.TIME_VORTEX_WORLD));
+
+				vortexGenerator.gen(vortexTree);
+				LOGGER.info("Time vortex data generation has been finished, total nodes: {}", BinaryTree.Node.getChildrenCount(vortexTree.getRootNode()));
+				LOGGER.info("Saving time vortex data...");
+
+				vortexTree.saveTree(server);
+			}
+			LOGGER.info("Time vortex data has been already generated, generation aborted.");
+			LOGGER.info("Loading vortex data...");
+
+			this.vortex = new VortexUtil(server, "space");
+			this.vortex.loadData(server);
+
+			LOGGER.info("Vortex data loaded");
 		});
 
 		ConsoleRegistry.init();

@@ -85,7 +85,6 @@ import static loqor.ait.AITMod.*;
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
-    private final VortexUtil vortex = new VortexUtil("space");
 
     @Override
     public void onInitializeClient() {
