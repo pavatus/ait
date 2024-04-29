@@ -81,9 +81,13 @@ public class AITMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
+			LOGGER.info("Vortex generation initiated");
 			BinaryTree btree = new BinaryTree(new Vec3d(0, 100, 0));
 			BTreeGenerator bTreeGenerator = new BTreeGenerator(server.getWorld(AITDimensions.TIME_VORTEX_WORLD));
 			bTreeGenerator.gen(btree);
+			LOGGER.info("Vortex generation finished");
+			LOGGER.info("Printing values...");
+			btree.debugPrint();
 		});
 
 		ConsoleRegistry.init();

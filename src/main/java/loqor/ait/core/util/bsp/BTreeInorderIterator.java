@@ -9,6 +9,7 @@ public class BTreeInorderIterator {
     Stack<Node> traversal;
 
     public BTreeInorderIterator(Node root) {
+        this.traversal = new Stack<Node>();
         this.moveLeft(root);
     }
 

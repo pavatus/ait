@@ -1,5 +1,6 @@
 package loqor.ait.core.util.bsp;
 
+import loqor.ait.AITMod;
 import net.minecraft.util.math.Vec3d;
 
 public class BinaryTree {
@@ -47,5 +48,19 @@ public class BinaryTree {
 
     public BinaryTree(Vec3d root_data) {
         this.rootNode = new Node(root_data);
+    }
+
+    public void debugPrint() {
+        BTreeInorderIterator it = new BTreeInorderIterator(this.rootNode);
+
+        Node node = this.rootNode;
+        int i = 0;
+
+        while (node != null) {
+            Vec3d d = node.getData();
+            AITMod.LOGGER.info(String.format("BinaryTree: Node {%d}, value: [{%e}, {%e}, {%e}]", i, d.x, d.y, d.z));
+            node = it.next();
+            i++;
+        }
     }
 }

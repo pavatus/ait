@@ -66,7 +66,11 @@ public class BTreeGenerator {
                 case 2 -> genBoth(node, prevPos);
                 default -> AITMod.LOGGER.error("How the fuck did that happen? How did you do that?");
             }
-            node = this.bTreeInorderIterator.next();
+            if (this.bTreeInorderIterator.hasNext()) {
+                node = this.bTreeInorderIterator.next();
+            } else {
+                node = new BinaryTree.Node(prevPos);
+            }
             depth += 1;
         }
     }
