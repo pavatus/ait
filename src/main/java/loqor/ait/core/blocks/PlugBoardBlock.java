@@ -1,8 +1,10 @@
 package loqor.ait.core.blocks;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import loqor.ait.core.blockentities.PlugBoardBlockEntity;
+import loqor.ait.core.data.ShapeMap;
+import loqor.ait.core.util.ShapeUtil;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -18,28 +20,71 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
-public class PlugBoardBlock extends Block {
+@SuppressWarnings("deprecation")
+public class PlugBoardBlock extends Block implements BlockEntityProvider {
 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+    public static final DirectionProperty FACING = Properties.FACING;
 
-    private static final Map<Direction, VoxelShape> FACING_TO_SHAPE = Maps.newEnumMap(ImmutableMap.of(
-            Direction.NORTH, Block.createCuboidShape(0.0, 4.5, 14.0, 16.0, 12.5, 16.0),
-            Direction.SOUTH, Block.createCuboidShape(0.0, 4.5, 0.0, 16.0, 12.5, 2.0),
-            Direction.EAST, Block.createCuboidShape(0.0, 4.5, 0.0, 2.0, 12.5, 16.0),
-            Direction.WEST, Block.createCuboidShape(14.0, 4.5, 0.0, 16.0, 12.5, 16.0))
-    );
+    private static final VoxelShape BUTTON = ShapeUtil.rect(5, 4, 12.5, 1, 1, 1.5);
+    private static final VoxelShape SHAPE = ShapeUtil.rect(4, 2, 14, 8, 12, 2);
+    private static final ShapeMap FACING_TO_SHAPE;
+
+    public static final Handle<Context>[] HANDLES = new Handle[12];
+
+    static {
+        List<VoxelShape> buttons = new ArrayList<>();
+        buttons.addAll(side(0));
+        buttons.addAll(side(5));
+
+        VoxelShape all = VoxelShapes.union(SHAPE, buttons.toArray(new VoxelShape[0]));
+        FACING_TO_SHAPE = ShapeUtil.rotations(Direction.NORTH, all).build();
+
+        for (int i = 0; i < buttons.size(); i++) {
+            VoxelShape button = buttons.get(i);
+            final int index = i;
+
+            HANDLES[i] = new Handle<>(ShapeUtil.rotations(Direction.NORTH, button)
+                    .build(), ctx -> ctx.entity.onClick(ctx.player, ctx.hand, index)
+            );
+        }
+    }
+
+    private static List<VoxelShape> side(int y) {
+        List<VoxelShape> result = new ArrayList<>(6);
+
+        result.addAll(row(y));
+        result.addAll(row(y + 2));
+        return result;
+    }
+
+    private static List<VoxelShape> row(int y) {
+        List<VoxelShape> elements = new ArrayList<>();
+        double x = 1;
+
+        for (int i = 0; i < 3; i++) {
+            elements.add(button(x, y));
+            x += 1.5;
+        }
+
+        return elements;
+    }
+
+    private static VoxelShape button(double x, double y) {
+        return BUTTON.offset(x / 16, y / 16, 0);
+    }
 
     public PlugBoardBlock(Settings settings) {
         super(settings);
@@ -48,7 +93,16 @@ public class PlugBoardBlock extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        return super.onUse(state, world, pos, player, hand, hit);
+        if (!(world.getBlockEntity(pos) instanceof PlugBoardBlockEntity casing))
+            return ActionResult.FAIL;
+
+        Context context = new Context(player, hand, casing);
+
+        for (Handle<Context> handle : HANDLES) {
+            handle.check(hit, state.get(FACING), context);
+        }
+
+        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -90,15 +144,6 @@ public class PlugBoardBlock extends Block {
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    public float getRotationDegrees(BlockState state) {
-        return state.get(FACING).asRotation();
-    }
-
-    public Vec3d getCenter(BlockState state) {
-        VoxelShape voxelShape = FACING_TO_SHAPE.get(state.get(FACING));
-        return voxelShape.getBoundingBox().getCenter();
-    }
-
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
@@ -122,14 +167,22 @@ public class PlugBoardBlock extends Block {
         return super.getFluidState(state);
     }
 
-    record Handle(Function<Direction, VoxelShape> shape) {
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new PlugBoardBlockEntity(pos, state);
+    }
 
-        public boolean check(BlockHitResult hit, BlockState state) {
+    public record Context(PlayerEntity player, Hand hand, PlugBoardBlockEntity entity) { }
+
+    public record Handle<T>(ShapeMap shape, Consumer<T> runnable) {
+
+        public void check(BlockHitResult hit, Direction direction, T t) {
             double mouseX = (hit.getPos().x * 16) - (hit.getBlockPos().getX() * 16);
             double mouseY = (hit.getPos().y * 16) - (hit.getBlockPos().getY() * 16);
             double mouseZ = (hit.getPos().z * 16) - (hit.getBlockPos().getZ() * 16);
 
-            VoxelShape s = shape.apply(state.get(FACING));
+            VoxelShape s = shape.get(direction);
 
             double minX = s.getMin(Direction.Axis.X);
             double maxX = s.getMax(Direction.Axis.X);
@@ -138,9 +191,6 @@ public class PlugBoardBlock extends Block {
             double minZ = s.getMin(Direction.Axis.Z);
             double maxZ = s.getMax(Direction.Axis.Z);
 
-            // DOWN: >= 0 <= 0 + 2
-            // UP: >= 16 <= 18
-            //
             boolean checkX = mouseX >= (minX * 16)
                     && mouseX <= (maxX * 16);
 
@@ -150,8 +200,8 @@ public class PlugBoardBlock extends Block {
             boolean checkZ = mouseZ >= (minZ * 16)
                     && mouseZ <= (maxZ * 16);
 
-            return checkX && checkY && checkZ;
+            if (checkX && checkY && checkZ)
+                this.runnable.accept(t);
         }
-
     }
 }

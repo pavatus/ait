@@ -54,17 +54,17 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
         );
     }
 
-    public void onServerInit() {
+    /**
+     * @implNote Currently not implemented as there's no dedicated server-side logic
+     */
+    public void onServerInit() { }
+
+    public void onCommonInit() {
         if (!this.sync)
             return;
 
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            this.syncToClient(handler.getPlayer());
-        });
-    }
-
-    public void onCommonInit() {
-
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server)
+                -> this.syncToClient(handler.getPlayer()));
     }
 
     @Override
@@ -99,7 +99,7 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
         int size = buf.readInt();
 
         for (int i = 0; i < size; i++) {
-            register(buf.decodeAsJson(this.codec));
+            this.register(buf.decodeAsJson(this.codec));
         }
 
         AITMod.LOGGER.info("Read {} " + this.name + " from server", size);
@@ -141,8 +141,6 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
                 }
 
                 this.register(created);
-                stream.close();
-
                 AITMod.LOGGER.info("Loaded datapack " + this.name + " " + created.id().toString());
             } catch (Exception e) {
                 AITMod.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);

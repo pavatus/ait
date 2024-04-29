@@ -44,7 +44,6 @@ public class CustomItemRendering {
 
             ModelLoadingPlugin.register(context -> {
                 context.addModels(MODEL_POOL);
-                AITMod.LOGGER.warn("MODEL POOL: "+ MODEL_POOL);
 
                 context.modifyModelAfterBake()
                         .register(this::transform);

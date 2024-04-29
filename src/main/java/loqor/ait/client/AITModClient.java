@@ -1,6 +1,7 @@
 package loqor.ait.client;
 
 import loqor.ait.AITMod;
+import loqor.ait.client.renderers.machines.PlugBoardRenderer;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
@@ -252,7 +253,6 @@ public class AITModClient implements ClientModInitializer {
     }
 
     public static void sonicModelPredicate() {
-        LOGGER.warn(SonicRegistry.getInstance().toList().toString());
         SonicRegistry.getInstance().populateModels(CustomItemRendering::load);
 
         CustomItemRendering.register(new Identifier(MOD_ID, "sonic_screwdriver"), (model, stack, world, entity, seed) -> {
@@ -303,6 +303,7 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WALL_MONITOR_BLOCK_ENTITY_TYPE, WallMonitorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, EngineRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, EngineCoreBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.PLUGBOARD_ENTITY_TYPE, PlugBoardRenderer::new);
     }
 
     public void entityRenderRegister() {

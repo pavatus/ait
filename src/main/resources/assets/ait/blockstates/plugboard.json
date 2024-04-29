@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "ait:block/plugboard",
+      "y": 180
+    },
+    "facing=north": {
+      "model": "ait:block/plugboard",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "ait:block/plugboard",
+      "y": 270
+    },
+    "facing=west": {
+      "model": "ait:block/plugboard",
+      "y": 0
+    },
+    "facing=up": {
+      "model": "ait:block/plugboard",
+      "y": 0
+    },
+    "facing=down": {
+      "model": "ait:block/plugboard",
+      "y": 0
+    }
+  }
+}

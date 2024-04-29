@@ -57,7 +57,6 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 			buf.encodeAsJson(DatapackConsole.CODEC, new DatapackConsole(schema.id(), schema.parent().id(), DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, false));
 		}
 
-		AITMod.LOGGER.info("S->C " + buf);
 		ServerPlayNetworking.send(player, this.packet, buf);
 	}
 

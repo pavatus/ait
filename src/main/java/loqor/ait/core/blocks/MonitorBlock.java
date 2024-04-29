@@ -12,7 +12,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
-import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -35,17 +34,6 @@ public class MonitorBlock extends BlockWithEntity implements BlockEntityProvider
 		this.setDefaultState(this.stateManager.getDefaultState().with(ROTATION, 0));
 	}
 
-	public VoxelShape eastShape() {
-		VoxelShape shape = VoxelShapes.empty();
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.6875, 0.125, 0.125, 0.875, 0.875, 0.875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.125, 0.25, 0.15625, 0.6875, 0.8125, 0.84375), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.625, 0.125, 0.15625, 0.6875, 0.25, 0.84375), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.125, 0.125, 0.1875, 0.625, 0.25, 0.8125), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.375, 0.0625, 0.375, 0.625, 0.125, 0.625), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.25, 0, 0.25, 0.75, 0.0625, 0.75), BooleanBiFunction.OR);
-		return shape;
-	}
-
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
 		return SHAPE;
@@ -55,7 +43,6 @@ public class MonitorBlock extends BlockWithEntity implements BlockEntityProvider
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
 		return SHAPE;
 	}
-
 
 	@Override
 	public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {

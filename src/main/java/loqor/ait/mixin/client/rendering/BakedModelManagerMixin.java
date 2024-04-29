@@ -1,6 +1,7 @@
 package loqor.ait.mixin.client.rendering;
 
 import loqor.ait.client.renderers.BakedModelEditor;
+import net.fabricmc.fabric.api.client.model.loading.v1.FabricBakedModelManager;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedModelManager;
 import net.minecraft.client.util.ModelIdentifier;
@@ -16,10 +17,12 @@ public abstract class BakedModelManagerMixin implements BakedModelEditor {
     @Shadow
     private Map<Identifier, BakedModel> models;
 
-    @Shadow public abstract BakedModel getModel(ModelIdentifier id);
+    @Override @Shadow public abstract BakedModel getModel(ModelIdentifier id);
 
     @Override
-    public abstract BakedModel getModel(Identifier id);
+    public BakedModel ait$getModel(Identifier identifier) {
+        return ((FabricBakedModelManager) this).getModel(identifier);
+    }
 
     @Override
     public void ait$setModel(Identifier identifier, BakedModel model) {
