@@ -12,6 +12,7 @@ import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
@@ -40,8 +41,6 @@ public class TardisDesktop extends TardisLink {
 
 		this.schema = schema;
 		this.corners = TardisUtil.findInteriorSpot();
-
-		this.changeInterior(schema);
 	}
 
 	public TardisDesktop(TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed door, AbsoluteBlockPos.Directed console) {
@@ -56,6 +55,9 @@ public class TardisDesktop extends TardisLink {
 	@Override
 	public void init(Tardis tardis, boolean deserialized) {
 		super.init(tardis, deserialized);
+
+		if (this.tardis() instanceof ServerTardis && !deserialized)
+			this.changeInterior(schema);
 
 		if (this.consoles == null)
 			return;
@@ -85,7 +87,7 @@ public class TardisDesktop extends TardisLink {
 			return; // no need to relink
 
 		BlockEntity entity;
-		for (BlockPos pos : this.iterateOverInterior()) {
+		for (BlockPos pos : this.iterateOverInterior()) { // FIXME this is bullshit
 			entity = TardisUtil.getTardisDimension().getBlockEntity(pos);
 			if (entity == null) continue;
 
@@ -198,6 +200,7 @@ public class TardisDesktop extends TardisLink {
 
 		DesktopGenerator generator = new DesktopGenerator(this.schema);
 		BlockPos doorPos = generator.place((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
+
 		if (doorPos != null) {
 			this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
 			this.updateDoor();
