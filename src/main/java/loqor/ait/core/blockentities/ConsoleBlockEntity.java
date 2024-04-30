@@ -136,7 +136,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 		Optional<Tardis> found = super.findTardis();
 
-		if (found.isEmpty()) refindTardis();
+		if (found.isEmpty())
+			refindTardis();
 
 		return found;
 	}
@@ -195,11 +196,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	public void setTardis(Tardis tardis) {
-		if (tardis == null) {
-			return;
-		}
-
-		this.tardisId = tardis.getUuid();
+		super.setTardis(tardis);
+		this.markDirty();
 		// force re-link a desktop if it's not null
 		this.linkDesktop();
 	}

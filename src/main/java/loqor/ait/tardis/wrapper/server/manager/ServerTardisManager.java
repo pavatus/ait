@@ -248,7 +248,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 	}
 
 	private void sendTardis(@NotNull ServerPlayerEntity player, Tardis tardis) {
-		if (tardis == null || this.gson == null) return;
+		if (tardis == null || this.gson == null)
+			return;
+
 		this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
 	}
 
@@ -260,9 +262,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 			this.addToBuffer(player, uuid);
 			return;
 		}
-
-		// Is this really necessary? On servers it results in unnecessary console spam. - Loqor
-		//AITMod.LOGGER.info("SENDING TARDIS " + uuid + " TO " + player.getName().getString());
 
 		PacketByteBuf data = PacketByteBufs.create();
 		data.writeUuid(uuid);
