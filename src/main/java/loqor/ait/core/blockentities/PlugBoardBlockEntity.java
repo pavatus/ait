@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
@@ -80,7 +81,7 @@ public class PlugBoardBlockEntity extends BlockEntity {
         this.links.clear();
 
         for (int i = 0; i < 12; i++) {
-            this.links.add(null);
+            this.links.add(new ItemStack(Items.AIR));
         }
     }
 

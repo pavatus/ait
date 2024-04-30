@@ -55,8 +55,8 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 				console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(variant.emission(), true)), maxLight, overlay, 1, 1, 1, 1);
 		}
 		matrices.pop();
-		if (!entity.findTardis().get().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return;
-		ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC);
+		if (!entity.findTardis().get().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return;
+		ItemStack stack = entity.findTardis().get().sonic().get(SonicHandler.HAS_CONSOLE_SONIC);
 		if(stack == null) return;
 		matrices.push();
 		matrices.translate(variant.sonicItemTranslations().x(), variant.sonicItemTranslations().y(), variant.sonicItemTranslations().z());

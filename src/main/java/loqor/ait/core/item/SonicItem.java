@@ -6,14 +6,15 @@ import loqor.ait.api.tardis.LinkableItem;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -27,7 +28,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -216,15 +216,17 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		return nbtCompound.getInt(MODE_KEY);
 	}
 
-	public static SonicSchema findSchema(NbtCompound nbtCompound) {
-		if (!nbtCompound.contains(SONIC_TYPE))
+	public static SonicSchema findSchema(NbtCompound nbt) {
+		if (!nbt.contains(SONIC_TYPE))
 			return SonicRegistry.DEFAULT;
 
-		fixSchemaId(nbtCompound);
-		Identifier id = Identifier.tryParse(nbtCompound.getString(SONIC_TYPE));
+		if (LegacyUtil.shouldFixSonicType(nbt))
+			LegacyUtil.fixSonicType(nbt);
+
+		Identifier id = Identifier.tryParse(nbt.getString(SONIC_TYPE));
 
 		if (id == null) {
-			AITMod.LOGGER.warn("Couldn't parse sonic id: '" + nbtCompound.getString(SONIC_TYPE) + "'");
+			AITMod.LOGGER.warn("Couldn't parse sonic id: '" + nbt.getString(SONIC_TYPE) + "'");
 			return SonicRegistry.DEFAULT;
 		}
 
@@ -240,21 +242,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 	public static SonicSchema findSchema(ItemStack stack) {
 		return findSchema(stack.getOrCreateNbt());
-	}
-
-	// converts the sonic type id to schema id
-	private static void fixSchemaId(NbtCompound compound) {
-		if (!compound.contains(SONIC_TYPE))
-			return;
-
-		if (compound.get(SONIC_TYPE).getType() != NbtElement.INT_TYPE)
-			return;
-
-		AITMod.LOGGER.info("Fixing old sonic data...");
-		int id = compound.getInt(SONIC_TYPE);
-
-		compound.remove(SONIC_TYPE);
-		compound.putString(SONIC_TYPE, SonicRegistry.getInstance().toList().get(id).id().toString());
 	}
 
 	public static void setMode(ItemStack stack, int mode) {

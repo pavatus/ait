@@ -58,9 +58,9 @@ public class PlaqueRenderer<T extends PlaqueBlockEntity> implements BlockEntityR
         float xVal = 0;
         matrices.translate(xVal, -35f, 35f);
 
-        this.textRenderer.drawWithOutline(Text.of(tardis.getHandlers().getStats().getCreationString()).asOrderedText(), xVal - ((float) this.textRenderer.getWidth(tardis.getHandlers().getStats().getCreationString()) / 2), 35, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
+        this.textRenderer.drawWithOutline(Text.of(tardis.stats().getCreationString()).asOrderedText(), xVal - ((float) this.textRenderer.getWidth(tardis.stats().getCreationString()) / 2), 35, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of("-========-").asOrderedText(), xVal - ((float) this.textRenderer.getWidth("-========-") / 2), 55, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
-        this.textRenderer.drawWithOutline(Text.of(tardis.getHandlers().getStats().getName()).asOrderedText(), xVal - ((float) this.textRenderer.getWidth(tardis.getHandlers().getStats().getName()) / 2), 75, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
+        this.textRenderer.drawWithOutline(Text.of(tardis.stats().getName()).asOrderedText(), xVal - ((float) this.textRenderer.getWidth(tardis.stats().getName()) / 2), 75, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
 
         matrices.pop();
     }

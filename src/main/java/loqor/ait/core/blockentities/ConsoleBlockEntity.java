@@ -296,7 +296,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 			TardisConsole found = desktop.findConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
 
 			if (found == null) {
-				found = new TardisConsole(this.findTardis().get(), new AbsoluteBlockPos(this.getPos(), this.getWorld()));
+				found = new TardisConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
+				found.init(this.findTardis().get(), false);
 				desktop.addConsole(found);
 			}
 
@@ -460,7 +461,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 		this.findParent().ifPresent(parent -> parent.tickConsole(this));
 
-		SequenceHandler handler = this.findTardis().get().getHandlers().getSequenceHandler();
+		SequenceHandler handler = this.findTardis().get().sequence();
 
 		if(this.findTardis().get().getTravel().inFlight() || this.findTardis().get().getTravel().isMaterialising()) {
 			if (handler.hasActiveSequence() && handler.getActiveSequence() != null) {
@@ -499,14 +500,14 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 					pos.getZ() + 0.5f, 1, 0, 0, 0, 0.01f);
 		}
 
-		if (tardis.getHandlers().getCrashData().isToxic() || tardis.getHandlers().getCrashData().isUnstable()) {
+		if (tardis.crash().isToxic() || tardis.crash().isUnstable()) {
 			((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.025f);
 			((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 1, 0, 0.05f, 0, 0.025f);
 		}
 
-		if (tardis.getHandlers().getCrashData().isToxic()) {
+		if (tardis.crash().isToxic()) {
 			((ServerWorld) world).spawnParticles(new DustColorTransitionParticleEffect(
 							new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 1),
 					pos.getX() + 0.5f, pos.getY() + 1.25,

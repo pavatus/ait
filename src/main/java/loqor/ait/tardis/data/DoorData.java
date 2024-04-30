@@ -30,8 +30,8 @@ public class DoorData extends TardisLink {
 	public DoorStateEnum tempExteriorState; // this is the previous state before it was changed, used for checking when the door has been changed so the animation can start. Set on server, used on client
 	public DoorStateEnum tempInteriorState;
 
-	public DoorData(Tardis tardis) {
-		super(tardis, TypeId.DOOR);
+	public DoorData() {
+		super(Id.DOOR);
 	}
 
 	@Override
@@ -46,9 +46,8 @@ public class DoorData extends TardisLink {
 	 * Moves entities in the Tardis interior towards the door.
 	 */
 	private void succ() {
-		if (findTardis().isEmpty()) return;
 		// Get all entities in the Tardis interior
-		TardisUtil.getLivingEntitiesInInterior(findTardis().get())
+		TardisUtil.getLivingEntitiesInInterior(tardis())
 				.stream()
 				.filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
 				.filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
@@ -64,9 +63,13 @@ public class DoorData extends TardisLink {
 	}
 
 	private boolean shouldSucc() {
-		if (this.findTardis().isEmpty() || getDoorPos() == null) return false;
-		return (findTardis().get().getTravel().getState() != LANDED &&
-				findTardis().get().getTravel().getState() != MAT) && !this.findTardis().get().areShieldsActive() && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(findTardis().get().getDesktop().getDoorPos()) instanceof DoorBlockEntity;
+		if (getDoorPos() == null)
+			return false;
+
+		return (tardis().getTravel().getState() != LANDED && tardis().getTravel().getState() != MAT)
+				&& !this.tardis().areShieldsActive() && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(
+						tardis().getDesktop().getDoorPos()
+		) instanceof DoorBlockEntity;
 	}
 
 	// Remember to this.sync() for these setters!!
@@ -97,20 +100,12 @@ public class DoorData extends TardisLink {
 		this.sync();
 	}
 
-	public void setLockedAndDoors(boolean var) {
-		this.setLocked(var);
-
-		this.setLeftRot(var);
-		this.setRightRot(var);
-	}
-
 	public boolean locked() {
 		return this.locked;
 	}
 
 	public boolean isDoubleDoor() {
-		if (findTardis().isEmpty()) return false;
-		return findTardis().get().getExterior().getVariant().door().isDouble();
+		return tardis().getExterior().getVariant().door().isDouble();
 	}
 
 	// fixme all these open methods are terrible
@@ -149,37 +144,22 @@ public class DoorData extends TardisLink {
 	}
 
 	public void setDoorState(DoorStateEnum var) {
-		if (findTardis().isEmpty()) return;
 		if (var != doorState) {
 			tempExteriorState = this.doorState;
 			tempInteriorState = this.doorState;
 
 			// if the last state ( doorState ) was closed and the new state ( var ) is open, fire the event
 			if (doorState == DoorStateEnum.CLOSED) {
-				TardisEvents.DOOR_OPEN.invoker().onOpen(findTardis().get());
+				TardisEvents.DOOR_OPEN.invoker().onOpen(tardis());
 			}
 			// if the last state was open and the new state is closed, fire the event
 			if (doorState != DoorStateEnum.CLOSED && var == DoorStateEnum.CLOSED) {
-				TardisEvents.DOOR_CLOSE.invoker().onClose(findTardis().get());
+				TardisEvents.DOOR_CLOSE.invoker().onClose(tardis());
 			}
 		}
 
 		this.doorState = var;
 		this.sync();
-	}
-
-	/**
-	 * Called when the exterior gets unloaded as that'll stop the animation meaning we need to make sure to restart it when it gets reloaded.
-	 */
-	public void clearExteriorAnimationState() {
-		tempExteriorState = null;
-	}
-
-	/**
-	 * Called when the interior door gets unloaded as that'll stop the animation meaning we need to make sure to restart it when it gets reloaded.
-	 */
-	public void clearInteriorAnimationState() {
-		tempInteriorState = null;
 	}
 
 	public DoorStateEnum getDoorState() {
@@ -188,11 +168,6 @@ public class DoorData extends TardisLink {
 
 	public DoorStateEnum getAnimationExteriorState() {
 		return tempExteriorState;
-	}
-
-	// fixme / needs testing, because we can have multiple interior doors im concerned about syncing issues and them overwriting eachother. Someone test
-	public DoorStateEnum getAnimationInteriorState() {
-		return tempInteriorState;
 	}
 
 	public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
@@ -267,18 +242,14 @@ public class DoorData extends TardisLink {
 		}
 
 		if (tardis.getLockedTardis() || tardis.getHandlers().getSonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
-			//if (pos != null)
-			//world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.6F, 1F);
 			if (player != null && pos != null) {
 				player.sendMessage(Text.literal("\uD83D\uDD12"), true);
 				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
 				tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
 			}
+
 			return false;
 		}
-
-		// if (tardis.getTravel().getState() == DEMAT || tardis.getTravel().getState() == MAT)
-		//     return false;
 
 		DoorData door = tardis.getDoor();
 
@@ -320,11 +291,10 @@ public class DoorData extends TardisLink {
 	public static boolean lockTardis(boolean locked, Tardis tardis, @Nullable ServerPlayerEntity player, boolean forced) {
 		if (tardis.getLockedTardis() == locked) return true;
 
-		if (!forced) {
-			if (tardis.getTravel().getState() == DEMAT || tardis.getTravel().getState() == MAT) return false;
-		}
-		tardis.setLockedTardis(locked);
+		if (!forced && (tardis.getTravel().getState() == DEMAT || tardis.getTravel().getState() == MAT))
+			return false;
 
+		tardis.setLockedTardis(locked);
 		DoorData door = tardis.getDoor();
 
 		if (door == null)

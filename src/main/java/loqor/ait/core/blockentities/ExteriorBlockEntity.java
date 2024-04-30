@@ -10,7 +10,9 @@ import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
@@ -66,13 +68,13 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 		if (tardis.isGrowth())
 			return;
 
-		SonicHandler handler = this.findTardis().get().getHandlers().getSonic();
+		SonicHandler handler = this.findTardis().get().sonic();
 		boolean hasSonic = handler.hasSonic(SonicHandler.HAS_EXTERIOR_SONIC);
 		boolean shouldEject = player.isSneaking();
 
 		if (player.getMainHandStack().getItem() instanceof KeyItem
 				&& !tardis.isSiegeMode()
-				&& !tardis.getHandlers().getInteriorChanger().isGenerating()) {
+				&& !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()) {
 			ItemStack key = player.getMainHandStack();
 			NbtCompound tag = key.getOrCreateNbt();
 			if (!tag.contains("tardis")) {
@@ -95,15 +97,15 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 				world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 				return;
 			}
-			player.sendMessage(Text.translatable("tardis.exterior.sonic.repairing").append(Text.literal(": " + tardis.getHandlers().getCrashData().getRepairTicksAsSeconds() + "s").formatted(Formatting.BOLD, Formatting.GOLD)), true);
+			player.sendMessage(Text.translatable("tardis.exterior.sonic.repairing").append(Text.literal(": " + tardis.crash().getRepairTicksAsSeconds() + "s").formatted(Formatting.BOLD, Formatting.GOLD)), true);
 			return;
 		}
 
 		if (player.getMainHandStack().getItem() instanceof SonicItem &&
 				!tardis.isSiegeMode() &&
-				!tardis.getHandlers().getInteriorChanger().isGenerating() &&
+				!tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating() &&
 				!tardis.getDoor().isOpen()
-				&& tardis.getHandlers().getCrashData().getRepairTicks() > 0) {
+				&& tardis.crash().getRepairTicks() > 0) {
 			ItemStack sonic = player.getMainHandStack();
 			NbtCompound tag = sonic.getOrCreateNbt();
 			if (!tag.contains("tardis")) {
@@ -184,7 +186,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 			((ExteriorBlock) blockState.getBlock()).tryFall(blockState, (ServerWorld) world, pos);
 		}
 
-		boolean previouslyLocked = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED);
+		boolean previouslyLocked = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED);
 
 		if (!world.isClient()
 				&& !previouslyLocked

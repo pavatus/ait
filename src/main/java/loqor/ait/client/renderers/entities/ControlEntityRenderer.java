@@ -153,8 +153,8 @@ public class ControlEntityRenderer
 		if (entity.getWorld() == null || !entity.getWorld().isClient())
 			return false;
 		if (entity.getTardis() == null) return false;
-		if (!entity.getTardis().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return false;
-		ItemStack sonic = entity.getTardis().getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC);
+		if (!entity.getTardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return false;
+		ItemStack sonic = entity.getTardis().sonic().get(SonicHandler.HAS_CONSOLE_SONIC);
 		if(sonic == null) return false;
 		NbtCompound nbt = sonic.getOrCreateNbt();
 		return nbt.contains(SonicItem.MODE_KEY) && (nbt.getInt(SonicItem.PREV_MODE_KEY) == 3 || nbt.getInt(SonicItem.MODE_KEY) == 3);

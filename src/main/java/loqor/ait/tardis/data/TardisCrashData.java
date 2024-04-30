@@ -41,27 +41,29 @@ public class TardisCrashData extends TardisLink {
 	@Override
 	public void tick(MinecraftServer server) {
 		super.tick(server);
-		if (this.findTardis().isEmpty()) return;
-		if (PropertiesHandler.get(findTardis().get(), TARDIS_RECOVERY_STATE) == null) {
-			PropertiesHandler.set(findTardis().get(), TARDIS_RECOVERY_STATE, State.NORMAL);
+
+		if (PropertiesHandler.get(tardis(), TARDIS_RECOVERY_STATE) == null) {
+			PropertiesHandler.set(tardis(), TARDIS_RECOVERY_STATE, State.NORMAL);
 		}
 
 		if (getRepairTicks() > 0) {
-			setRepairTicks(this.findTardis().get().isRefueling() ? getRepairTicks() - 10 : getRepairTicks() - 1);
+			setRepairTicks(this.tardis().isRefueling() ? getRepairTicks() - 10 : getRepairTicks() - 1);
 		}
 		if (getRepairTicks() <= 0 && State.NORMAL == getState()) return;
-		ServerTardis tardis = (ServerTardis) this.findTardis().get();
+		ServerTardis tardis = (ServerTardis) this.tardis();
+		ServerAlarmHandler alarms = tardis.handler(Id.ALARMS);
+
 		if (getRepairTicks() <= 0) {
 			setState(State.NORMAL);
-			tardis.getHandlers().getAlarms().disable();
+			alarms.disable();
 			return;
 		}
 		if (getState() != State.NORMAL) {
-			tardis.getHandlers().getAlarms().enable();
+			alarms.enable();
 		}
 		if (getRepairTicks() < UNSTABLE_TICK_START_THRESHOLD && State.UNSTABLE != getState() && getRepairTicks() > 0) {
 			setState(State.UNSTABLE);
-			tardis.getHandlers().getAlarms().disable();
+			alarms.disable();
 		}
 		AbsoluteBlockPos.Directed exteriorPosition = tardis.getTravel().getExteriorPos();
 		double x = directionToInteger(exteriorPosition.getDirection())[0];
@@ -97,26 +99,24 @@ public class TardisCrashData extends TardisLink {
 		DeltaTimeManager.createDelay(DELAY_ID_START + tardis.getUuid().toString(), (long) TimeUtil.secondsToMilliseconds(2));
 	}
 
-	public TardisCrashData(Tardis tardis) {
-		super(tardis, TypeId.CRASH);
+	public TardisCrashData() {
+		super(Id.CRASH_DATA);
 	}
 
 	public State getState() {
-		if (findTardis().isEmpty() || PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE) == null)
+		if (PropertiesHandler.get(tardis().properties(), TARDIS_RECOVERY_STATE) == null)
 			return State.NORMAL;
-		if (PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE) instanceof State)
-			return (State) PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE);
-		return State.valueOf((String) PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE));
+		if (PropertiesHandler.get(tardis().properties(), TARDIS_RECOVERY_STATE) instanceof State)
+			return (State) PropertiesHandler.get(tardis().properties(), TARDIS_RECOVERY_STATE);
+		return State.valueOf((String) PropertiesHandler.get(tardis().properties(), TARDIS_RECOVERY_STATE));
 	}
 
 	public void setState(State state) {
-		if (findTardis().isEmpty()) return;
-		PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_RECOVERY_STATE, state);
+		PropertiesHandler.set(tardis().properties(), TARDIS_RECOVERY_STATE, state);
 	}
 
-	public Integer getRepairTicks() { // what kind of madman uses Integer instead of int
-		if (findTardis().isEmpty()) return 0;
-		return PropertiesHandler.getInt(findTardis().get().getHandlers().getProperties(), TARDIS_REPAIR_TICKS);
+	public Integer getRepairTicks() {
+		return PropertiesHandler.getInt(tardis().properties(), TARDIS_REPAIR_TICKS);
 	}
 
 	public int getRepairTicksAsSeconds() {
@@ -124,17 +124,15 @@ public class TardisCrashData extends TardisLink {
 	}
 
 	public void setRepairTicks(Integer ticks) {
-		if (findTardis().isEmpty()) return;
 		if (ticks > MAX_REPAIR_TICKS) {
 			setRepairTicks(MAX_REPAIR_TICKS);
 			return;
 		}
-		PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_REPAIR_TICKS, ticks);
+		PropertiesHandler.set(tardis().properties(), TARDIS_REPAIR_TICKS, ticks);
 	}
 
 	public void addRepairTicks(Integer ticks) {
-		if (findTardis().isEmpty()) return;
-		PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), TARDIS_REPAIR_TICKS, getRepairTicks() + ticks);
+		PropertiesHandler.set(tardis().properties(), TARDIS_REPAIR_TICKS, getRepairTicks() + ticks);
 	}
 
 	public double[] directionToInteger(Direction direction) {

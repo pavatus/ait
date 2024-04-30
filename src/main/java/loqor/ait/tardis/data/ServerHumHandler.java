@@ -2,7 +2,6 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
 import loqor.ait.registry.impl.HumsRegistry;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -12,14 +11,13 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-// Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
 public class ServerHumHandler extends TardisLink {
 	public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_hum");
 	public static final Identifier RECEIVE = new Identifier(AITMod.MOD_ID, "receive_hum");
 	private HumSound current;
 
-	public ServerHumHandler(Tardis tardisId) {
-		super(tardisId, TypeId.HUM);
+	public ServerHumHandler() {
+		super(Id.HUM);
 	}
 
 	public HumSound getHum() {
@@ -39,9 +37,8 @@ public class ServerHumHandler extends TardisLink {
 	private void updateClientHum() {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeIdentifier(this.current.sound().getId());
-		if (this.findTardis().isEmpty()) return;
 
-		for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.findTardis().get())) { // is bad? fixme
+		for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.tardis())) {
 			ServerPlayNetworking.send((ServerPlayerEntity) player, SEND, buf);
 		}
 	}

@@ -15,23 +15,20 @@ public class WaypointHandler extends TardisLink {
 	public static final String HAS_CARTRIDGE = "has_cartridge";
 	private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
 
-	public WaypointHandler(Tardis tardis) {
-		super(tardis, TypeId.WAYPOINT);
+	public WaypointHandler() {
+		super(Id.WAYPOINTS);
 	}
 
 	public boolean hasCartridge() {
-		if (this.findTardis().isEmpty()) return false;
-		return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), HAS_CARTRIDGE);
+		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), HAS_CARTRIDGE);
 	}
 
 	public void markHasCartridge() {
-		if (this.findTardis().isEmpty()) return;
-		PropertiesHandler.set(this.findTardis().get(), HAS_CARTRIDGE, true);
+		PropertiesHandler.set(this.tardis(), HAS_CARTRIDGE, true);
 	}
 
 	private void clearCartridge() {
-		if (this.findTardis().isEmpty()) return;
-		PropertiesHandler.set(this.findTardis().get(), HAS_CARTRIDGE, false);
+		PropertiesHandler.set(this.tardis(), HAS_CARTRIDGE, false);
 	}
 
 	/**
@@ -65,17 +62,18 @@ public class WaypointHandler extends TardisLink {
 	}
 
 	public void gotoWaypoint() {
-		if (findTardis().isEmpty() || !this.hasWaypoint())
+		if (!this.hasWaypoint())
 			return; // todo move this check to the DEMAT event so the fail to takeoff happens
 
-		PropertiesHandler.setAutoPilot(this.findTardis().get().getHandlers().getProperties(), true);
-		FlightUtil.travelTo(findTardis().get(), this.get());
+		PropertiesHandler.setAutoPilot(this.tardis().getHandlers().getProperties(), true);
+		FlightUtil.travelTo(tardis(), this.get());
 	}
 
 	public void setDestination() {
-		if (findTardis().isEmpty() || !this.hasWaypoint()) return;
+		if (!this.hasWaypoint())
+			return;
 
-		this.findTardis().get().getTravel().setDestination(this.get(), true);
+		this.tardis().getTravel().setDestination(this.get(), true);
 	}
 
 	public void spawnItem() {
@@ -86,11 +84,13 @@ public class WaypointHandler extends TardisLink {
 	}
 
 	public void spawnItem(Waypoint waypoint) {
-		if (findTardis().isEmpty() || !this.hasCartridge()) return;
+		if (!this.hasCartridge())
+			return;
 
-		Tardis tardis = this.findTardis().get();
+		Tardis tardis = this.tardis();
 
-		if (tardis.getDesktop().findCurrentConsole().isEmpty()) return;
+		if (tardis.getDesktop().findCurrentConsole().isEmpty())
+			return;
 
 		spawnItem(waypoint, tardis.getDesktop().findCurrentConsole().get().position());
 		this.clearCartridge();
@@ -100,9 +100,8 @@ public class WaypointHandler extends TardisLink {
 		return WaypointItem.create(waypoint);
 	}
 
-	public static ItemEntity spawnItem(Waypoint waypoint, AbsoluteBlockPos pos) {
+	public static void spawnItem(Waypoint waypoint, AbsoluteBlockPos pos) {
 		ItemEntity entity = new ItemEntity(pos.getWorld(), pos.getX(), pos.getY(), pos.getZ(), createWaypointItem(waypoint));
 		pos.getWorld().spawnEntity(entity);
-		return entity;
 	}
 }

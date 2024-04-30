@@ -14,6 +14,7 @@ import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.util.gson.ItemStackSerializer;
 import loqor.ait.core.util.gson.NbtSerializer;
+import loqor.ait.tardis.data.TardisHandlersManager;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
 import loqor.ait.tardis.link.Linkable;
@@ -64,7 +65,8 @@ public abstract class TardisManager<T extends Tardis> {
 				.registerTypeAdapter(Corners.class, Corners.serializer())
 				.registerTypeAdapter(PermissionLike.class, Permission.serializer())
 				.registerTypeAdapter(NbtCompound.class, new NbtSerializer())
-				.registerTypeAdapter(ItemStack.class, new ItemStackSerializer());
+				.registerTypeAdapter(ItemStack.class, new ItemStackSerializer())
+				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer());
 
 		if (!AITMod.AIT_CONFIG.MINIFY_JSON())
             builder.setPrettyPrinting();

@@ -5,7 +5,8 @@ import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
 import loqor.ait.AITMod;
 import loqor.ait.client.sounds.ClientSoundManager;
-import loqor.ait.tardis.base.AbstractTardisComponent;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
@@ -66,10 +67,11 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
 	private void sync(UUID uuid, String json) {
 		ClientTardis tardis = this.gson.fromJson(json, ClientTardis.class);
+		tardis.init(true);
 
 		synchronized (this) {
 			this.lookup.put(uuid, tardis);
-			AITMod.LOGGER.info("RECIEVED TARDIS: " + uuid);
+			AITMod.LOGGER.info("Received TARDIS: " + uuid);
 
 			for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
 				consumer.accept(tardis);
@@ -103,18 +105,20 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		}
 
 		ClientTardis tardis = this.lookup.get(uuid);
-		AbstractTardisComponent.TypeId typeId = buf.readEnumConstant(AbstractTardisComponent.TypeId.class);
+		TardisComponent.Id typeId = buf.readEnumConstant(TardisComponent.Id.class);
 
-		if (typeId == AbstractTardisComponent.TypeId.PROPERTIES) {
+		if (typeId == TardisComponent.Id.PROPERTIES) {
 			this.updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
 			return;
 		}
 
-		AbstractTardisComponent.Type<?> header = typeId.getType();
-
+		TardisComponent.Type<?> header = typeId.getType();
 		String json = buf.readString();
-		if(header == null) return;
-		header.unsafeSet(tardis, this.gson.fromJson(json, header.clazz()));
+
+		if(header == null)
+			return;
+
+		header.unsafeSet(tardis, this.gson.fromJson(json, typeId.clazz()));
 	}
 
 	private void update(PacketByteBuf buf) {
@@ -123,7 +127,9 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
 	@Override
 	protected GsonBuilder getGsonBuilder(GsonBuilder builder) {
-		builder.registerTypeAdapter(SerialDimension.class, new SerialDimension.ClientSerializer());
+		builder.registerTypeAdapter(SerialDimension.class, new SerialDimension.ClientSerializer())
+				.registerTypeAdapter(Tardis.class, ClientTardis.creator());
+
 		return builder;
 	}
 

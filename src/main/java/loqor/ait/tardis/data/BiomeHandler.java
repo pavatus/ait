@@ -3,50 +3,38 @@ package loqor.ait.tardis.data;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeKeys;
-import net.minecraft.world.gen.structure.OceanRuinStructure;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.File;
-import java.util.Locale;
-import java.util.Optional;
 
 public class BiomeHandler extends TardisLink {
 
     public static final String BIOME_KEY = "biome_key";
 
-    public BiomeHandler(Tardis tardis) {
-        super(tardis, TypeId.BIOME);
+    public BiomeHandler() {
+        super(Id.BIOME);
     }
 
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
-        if(this.findTardis().isEmpty()) return;
-        this.setBiome(this.findTardis().get());
+        this.setBiome(this.tardis());
     }
 
     public void setBiome(Tardis tardis) {
         if(tardis.getExterior().getExteriorPos() == null) return;
         World world = tardis.getExterior().getExteriorPos().getWorld();
-        if(world.isClient()) return;
-        PropertiesHandler.set(tardis,
-                BIOME_KEY,
-                world.getBiome(tardis.position()).getKey().get().getValue().getPath());
+
+        if(world.isClient())
+            return;
+
+        PropertiesHandler.set(tardis, BIOME_KEY, world.getBiome(tardis.position()).getKey().get().getValue().getPath());
     }
 
     public String getBiomeKey() {
-        if(this.findTardis().isEmpty()) return null;
-        return PropertiesHandler.get(this.findTardis().get(), BIOME_KEY);
+        return PropertiesHandler.get(this.tardis(), BIOME_KEY);
     }
 
     public static Identifier biomeTypeFromKey(String biomeKey, Identifier texture, Tardis tardis) {

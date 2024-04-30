@@ -281,10 +281,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		return false;
 	}
 
-	private static String getDelayId(Tardis tardis) {
-		return "tardis-" + tardis.getUuid() + "-control";
-	}
-
 	// clearly loqor has trust issues with running this so i do too so im overwriting it to do what he did fixme pls
 	public Tardis getTardis(World world) {
 		if (!(this.consoleBlockPos != null && this.control != null && world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))

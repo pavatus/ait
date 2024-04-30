@@ -6,7 +6,6 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -67,9 +66,9 @@ public class Control {
 	}
 
 	public void addToControlSequence(Tardis tardis, ServerPlayerEntity player) {
-		tardis.getHandlers().getSequenceHandler().add(this, player);
+		tardis.sequence().add(this, player);
 		if(AITMod.RANDOM.nextInt(0, 20) == 4) {
-			tardis.getHandlers().getLoyalties().addLevel(player, 1);
+			tardis.loyalty().addLevel(player, 1);
 			for (TardisConsole console : tardis.getDesktop().getConsoles()) {
 				player.getServerWorld().spawnParticles(ParticleTypes.HEART, console.position().toCenterPos().getX(), console.position().toCenterPos().getY() + 1, console.position().toCenterPos().getZ(), 1, 0f, 1F, 0f, 5.0F);
 			}
@@ -127,13 +126,13 @@ public class Control {
 	}
 
 	public boolean canRun(Tardis tardis, ServerPlayerEntity user) {
-		if ((this.shouldFailOnNoPower() && !tardis.hasPower()) || tardis.getHandlers().getSequenceHandler().isConsoleDisabled()) {
+		if ((this.shouldFailOnNoPower() && !tardis.hasPower()) || tardis.sequence().isConsoleDisabled()) {
 			return false;
 		}
 
 		if (isOnDelay(this, tardis)) return false;
 
-		boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
+		boolean security = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY);
 		if (!this.ignoresSecurity() && security) {
 			return SecurityControl.hasMatchingKey(user, tardis);
 		}

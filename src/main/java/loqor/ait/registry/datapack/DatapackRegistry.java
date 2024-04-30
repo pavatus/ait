@@ -80,7 +80,7 @@ public abstract class DatapackRegistry<T extends Identifiable> implements Regist
 	public abstract void readFromServer(PacketByteBuf buf);
 
 	@Override
-	public void init() {
+	public void onCommonInit() {
 		this.clearCache();
 	}
 

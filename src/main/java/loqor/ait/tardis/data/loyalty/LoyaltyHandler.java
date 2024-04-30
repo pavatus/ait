@@ -24,13 +24,13 @@ import java.util.function.Function;
 public class LoyaltyHandler extends TardisLink {
     private final Map<UUID, Loyalty> data;
 
-    public LoyaltyHandler(Tardis tardis, HashMap<UUID, Loyalty> data) {
-        super(tardis, TypeId.LOYALTY);
+    public LoyaltyHandler(HashMap<UUID, Loyalty> data) {
+        super(Id.LOYALTY);
         this.data = data;
     }
 
-    public LoyaltyHandler(Tardis tardis) {
-        this(tardis, new HashMap<>());
+    public LoyaltyHandler() {
+        this(new HashMap<>());
     }
 
     public Map<UUID, Loyalty> data() {
@@ -52,9 +52,9 @@ public class LoyaltyHandler extends TardisLink {
     public void tick(ServerWorld world) {
         super.tick(world);
         if(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
-            Optional<Tardis> tardis = this.findTardis();
-            if(tardis.isEmpty()) return;
-            List<ServerPlayerEntity> list = TardisUtil.getPlayersInInterior(tardis.get());
+            Tardis tardis = this.tardis();
+
+            List<ServerPlayerEntity> list = TardisUtil.getPlayersInInterior(tardis);
             for(ServerPlayerEntity player : list) {
                 this.addLevel(player, (this.get(player).level() >= Loyalty.Type.NEUTRAL.level &&
                         this.get(player).level() < Loyalty.Type.COMPANION.level &&
@@ -72,9 +72,9 @@ public class LoyaltyHandler extends TardisLink {
     }
 
     public void unlockInteriorViaLoyalty(ServerPlayerEntity player, Loyalty loyalty) {
-        Optional<Tardis> tardis = this.findTardis();
+        Tardis tardis = this.tardis();
 
-        if (tardis.isEmpty() || !(tardis.get() instanceof ServerTardis serverTardis))
+        if (!(tardis instanceof ServerTardis serverTardis))
             return;
 
         ConsoleVariantRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));

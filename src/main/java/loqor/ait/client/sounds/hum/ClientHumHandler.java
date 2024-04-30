@@ -5,6 +5,7 @@ import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.registry.impl.HumsRegistry;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.sound.HumSound;
@@ -50,7 +51,7 @@ public class ClientHumHandler extends SoundHandler {
 	public LoopingSound getHum() {
 		if (this.current == null) {
 			if (this.tardis() == null) return null;
-			this.current = (LoopingSound) findSoundByEvent(this.tardis().getHandlers().getHum().getHum().sound());
+			this.current = (LoopingSound) findSoundByEvent(this.tardis().<ServerHumHandler>handler(TardisComponent.Id.HUM).getHum().sound());
 		}
 
 		return this.current;
@@ -118,7 +119,7 @@ public class ClientHumHandler extends SoundHandler {
 	}
 
 	public boolean isEnabled() {
-		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.HUM_ENABLED);
+		return PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.HUM_ENABLED);
 	}
 
 	public void tick(MinecraftClient client) {

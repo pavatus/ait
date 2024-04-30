@@ -10,7 +10,9 @@ import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.HumsRegistry;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.sound.HumSound;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -88,9 +90,9 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
 		createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole"), (button -> sendCachePacket()));
 		createTextButton(Text.translatable("screen.ait.security.button"), (button -> toSecurityScreen()));
-		createTextButton(Text.translatable("screen.ait.sonic.button").formatted(tardis().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC) ? Formatting.WHITE : Formatting.GRAY),
+		createTextButton(Text.translatable("screen.ait.sonic.button").formatted(tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC) ? Formatting.WHITE : Formatting.GRAY),
 				(button -> {
-					if(tardis().getHandlers().getSonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) {
+					if(tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) {
 						toSonicScreen();
 					}
 				}));
@@ -228,7 +230,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 			context.drawTexture(TEXTURE, left + 29 + (8 * p), top + 135, 99, 150, 7, 11);
 		}
 
-		int progress = tardis().getHandlers().getFlight().getDurationAsPercentage();
+		int progress = tardis().flight().getDurationAsPercentage();
 
 		for (int index = 0; index < 5; index++) {
 			int rangeStart = index * 20;
@@ -278,7 +280,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private HumSound getHumSound() {
-		return tardis().getHandlers().getHum().getHum();
+		return tardis().<ServerHumHandler>handler(TardisComponent.Id.HUM).getHum();
 	}
 
 	private void applyHum() {

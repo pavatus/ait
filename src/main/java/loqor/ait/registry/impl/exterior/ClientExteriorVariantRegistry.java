@@ -37,7 +37,6 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 		if (INSTANCE == null) {
 			AITMod.LOGGER.info("ClientExteriorVariantRegistry was not initialized, Creating a new instance");
 			INSTANCE = new ClientExteriorVariantRegistry();
-			INSTANCE.init();
 		}
 
 		return INSTANCE;
@@ -149,7 +148,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 	public static ClientExteriorVariantSchema RENEGADE_TRON;
 
 	@Override
-	public void init() {
+	public void onClientInit() {
 		// TARDIM
 		TARDIM_DEFAULT = register(new ClientTardimDefaultVariant());
 		TARDIM_FIRE = register(new ClientTardimFireVariant());

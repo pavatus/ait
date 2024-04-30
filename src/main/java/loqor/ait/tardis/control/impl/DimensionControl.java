@@ -21,9 +21,8 @@ public class DimensionControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-
-		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+		if (tardis.sequence().hasActiveSequence()) {
+			if (tardis.sequence().controlPartOfSequence(this)) {
 				this.addToControlSequence(tardis, player);
 				return false;
 			}

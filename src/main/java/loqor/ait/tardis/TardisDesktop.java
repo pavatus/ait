@@ -6,11 +6,12 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.Corners;
+import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
@@ -22,8 +23,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -33,11 +32,11 @@ public class TardisDesktop extends TardisLink {
 	private TardisDesktopSchema schema;
 	private AbsoluteBlockPos.Directed doorPos;
 	private AbsoluteBlockPos.Directed consolePos;
-	private ConcurrentLinkedQueue<TardisConsole> consoles; // TODO - this may cause concurrent modification exceptions, needs tests and fixes.
+	private ConcurrentLinkedQueue<TardisConsole> consoles;
 	private final Corners corners;
 
-	public TardisDesktop(Tardis tardis, TardisDesktopSchema schema) {
-		super(tardis, TypeId.DESKTOP);
+	public TardisDesktop(TardisDesktopSchema schema) {
+		super(Id.DESKTOP);
 
 		this.schema = schema;
 		this.corners = TardisUtil.findInteriorSpot();
@@ -45,8 +44,8 @@ public class TardisDesktop extends TardisLink {
 		this.changeInterior(schema);
 	}
 
-	public TardisDesktop(Tardis tardis, TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed door, AbsoluteBlockPos.Directed console) {
-		super(tardis, TypeId.DESKTOP);
+	public TardisDesktop(TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed door, AbsoluteBlockPos.Directed console) {
+		super(Id.DESKTOP);
 
 		this.schema = schema;
 		this.corners = corners;
@@ -54,22 +53,33 @@ public class TardisDesktop extends TardisLink {
 		this.consolePos = console;
 	}
 
+	@Override
+	public void init(Tardis tardis, boolean deserialized) {
+		super.init(tardis, deserialized);
+
+		for (TardisConsole console : this.consoles) {
+			console.init(tardis, deserialized);
+		}
+	}
+
 	public TardisDesktopSchema getSchema() {
 		return schema;
 	}
 
 	public AbsoluteBlockPos.Directed getInteriorDoorPos() {
-		if (this.doorPos == null && this.findTardis().isPresent()) {
+		if (this.doorPos == null)
 			linkToInteriorBlocks();
-		}
 
 		return doorPos;
 	}
 
 	// bad laggy bad bad but i cant be botehredddddd
 	private void linkToInteriorBlocks() {
-		if (TardisUtil.isClient()) return;
-		if (doorPos != null && consolePos != null) return; // no need to relink
+		if (this.tardis() instanceof ClientTardis)
+			return;
+
+		if (doorPos != null && consolePos != null)
+			return; // no need to relink
 
 		BlockEntity entity;
 		for (BlockPos pos : this.iterateOverInterior()) {
@@ -77,19 +87,20 @@ public class TardisDesktop extends TardisLink {
 			if (entity == null) continue;
 
 			if (doorPos == null && entity instanceof DoorBlockEntity door) {
-				door.setTardis(this.findTardis().get());
+				door.setTardis(this.tardis());
 				continue;
 			}
 
 			if (consolePos == null && entity instanceof ConsoleBlockEntity console) {
-				console.setTardis(this.findTardis().get());
+				console.setTardis(this.tardis());
             }
 		}
 	}
 
 	@Deprecated(forRemoval = true)
 	public AbsoluteBlockPos.Directed getConsolePos() {
-		if (consolePos == null && this.findTardis().isPresent()) linkToInteriorBlocks();
+		if (consolePos == null)
+			linkToInteriorBlocks();
 
 		return consolePos;
 	}
@@ -153,10 +164,7 @@ public class TardisDesktop extends TardisLink {
 	}
 
 	public void setInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
-		// before we do this we need to make sure to delete the old portals, but how?! by registering to this event
-		if (findTardis().isPresent())
-			TardisEvents.DOOR_MOVE.invoker().onMove(findTardis().get(), pos);
-
+		TardisEvents.DOOR_MOVE.invoker().onMove(tardis(), pos);
 		this.doorPos = pos;
 	}
 
@@ -178,9 +186,7 @@ public class TardisDesktop extends TardisLink {
 
 		// this is needed for door and console initialization. when we call #setTardis(ITardis) the desktop field is still null.
 		door.setDesktop(this);
-		if (findTardis().isEmpty()) return;
-		//console.setDesktop(this);
-		door.setTardis(findTardis().get());
+		door.setTardis(tardis());
 	}
 
 	public void changeInterior(TardisDesktopSchema schema) {
@@ -217,31 +223,16 @@ public class TardisDesktop extends TardisLink {
 
 		ConsoleGeneratorBlockEntity generator = new ConsoleGeneratorBlockEntity(consolePos, AITBlocks.CONSOLE_GENERATOR.getDefaultState());
 
-		// todo the console is always null
-		if (dim.getBlockEntity(consolePos) instanceof ConsoleBlockEntity entity) {
+		if (dim.getBlockEntity(consolePos) instanceof ConsoleBlockEntity entity)
 			entity.killControls();
-
-			// todo this doesnt send to client or something
-			// generator.changeConsole(console.getVariant());
-			// generator.changeConsole(console.getConsoleSchema());
-			// generator.markDirty();
-		}
 
 		dim.removeBlock(consolePos, false);
 		dim.removeBlockEntity(consolePos);
-
 
 		dim.setBlockState(consolePos, AITBlocks.CONSOLE_GENERATOR.getDefaultState(), Block.NOTIFY_ALL);
 		dim.addBlockEntity(generator);
 
 		this.removeConsole(console);
-	}
-
-
-	private List<BlockPos> getBlockPosListFromCorners() {
-		List<BlockPos> blockPosList = new ArrayList<>();
-		this.iterateOverInterior().forEach((blockPosList::add));
-		return blockPosList;
 	}
 
 	private Iterable<BlockPos> iterateOverInterior() {

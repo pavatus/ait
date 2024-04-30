@@ -19,51 +19,44 @@ import java.util.UUID;
 public class SiegeData extends TardisLink {
 	public static final String HELD_KEY = "siege_held_uuid";
 
-	public SiegeData(Tardis tardis) {
-		super(tardis, TypeId.SIEGE);
+	public SiegeData() {
+		super(Id.SIEGE);
 	}
 
 	public boolean isSiegeMode() {
-		if (findTardis().isEmpty()) return false;
-		return PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
+		return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
 	}
 
 	public boolean isSiegeBeingHeld() {
-		if (findTardis().isEmpty()) return false;
-		return findTardis().get().getHandlers().getProperties().getData().containsKey(HELD_KEY) &&
-				PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), HELD_KEY) != null;
+		return tardis().getHandlers().getProperties().getData().containsKey(HELD_KEY) &&
+				PropertiesHandler.get(tardis().getHandlers().getProperties(), HELD_KEY) != null;
 	}
 
 	public UUID getHeldPlayerUUID() {
-		if (!isSiegeBeingHeld()) return null;
-		if (findTardis().isEmpty()) return null;
+		if (!isSiegeBeingHeld())
+			return null;
 
-		return PropertiesHandler.getUUID(findTardis().get().getHandlers().getProperties(), HELD_KEY);
+		return PropertiesHandler.getUUID(tardis().getHandlers().getProperties(), HELD_KEY);
 	}
 
 	public ServerPlayerEntity getHeldPlayer() {
-		if (isClient()) return null;
-
 		return TardisUtil.getServer().getPlayerManager().getPlayer(getHeldPlayerUUID());
 	}
 
 	public void setSiegeBeingHeld(UUID playerId) {
-		if (findTardis().isEmpty()) return;
-		if (playerId != null) findTardis().get().getHandlers().getAlarms().enable();
+		if (playerId != null)
+			tardis().getHandlers().getAlarms().enable();
 
-		PropertiesHandler.set(findTardis().get(), HELD_KEY, playerId);
+		PropertiesHandler.set(tardis(), HELD_KEY, playerId);
 	}
 
 	public int getTimeInSiegeMode() {
-		if (findTardis().isEmpty()) return 0;
-		return PropertiesHandler.getInt(findTardis().get().getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME);
+		return PropertiesHandler.getInt(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME);
 	}
 
 	// todo this is getting bloateed, merge some if statements together
 	public void setSiegeMode(boolean b) {
-		if (findTardis().isEmpty()) return;
-
-		Tardis tardis = this.findTardis().get();
+		Tardis tardis = this.tardis();
 
 		if (tardis.getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL))
 			return; // The required amount of fuel to enable/disable siege mode
@@ -98,20 +91,19 @@ public class SiegeData extends TardisLink {
 	@Override
 	public void tick(MinecraftServer server) {
 		super.tick(server);
-		if (findTardis().isEmpty()) return;
-		if (findTardis().get().isSiegeBeingHeld() && findTardis().get().getExterior().findExteriorBlock().isPresent()) {
-			findTardis().get().setSiegeBeingHeld(null);
-		}
 
-		int siegeTime = findTardis().get().getTimeInSiegeMode() + 1;
-		PropertiesHandler.set(findTardis().get(), PropertiesHandler.SIEGE_TIME, findTardis().get().isSiegeMode() ? siegeTime : 0, false);
+		if (this.isSiegeBeingHeld() && tardis().getExterior().findExteriorBlock().isPresent())
+			this.setSiegeBeingHeld(null);
 
-		if (!findTardis().get().isSiegeMode()) return;
+		int siegeTime = this.getTimeInSiegeMode() + 1;
+		PropertiesHandler.set(tardis(), PropertiesHandler.SIEGE_TIME, tardis().isSiegeMode() ? siegeTime : 0, false);
+
+		if (!tardis().isSiegeMode()) return;
 
 		// todo add more downsides the longer you are in siege mode as it is meant to fail systems and kill you and that
 		// for example, this starts to freeze the player (like we see in the episode) after a minute (change the length if too short) and only if its on the ground, to stop people from just slaughtering lol
-		if (findTardis().get().getTimeInSiegeMode() > (60 * 20) && !findTardis().get().isSiegeBeingHeld()) {
-			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(findTardis().get())) {
+		if (this.getTimeInSiegeMode() > (60 * 20) && !this.isSiegeBeingHeld()) {
+			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis())) {
 				if (!player.isAlive()) continue;
 				if (hasLeatherArmour(player)) {
 					if (player.getFrozenTicks() > player.getMinFreezeDamageTicks())
@@ -123,7 +115,7 @@ public class SiegeData extends TardisLink {
 				player.setFrozenTicks(player.getFrozenTicks() + 2);
 			}
 		} else {
-			for (PlayerEntity player : TardisUtil.getPlayersInInterior(findTardis().get())) {
+			for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis())) {
 				// something tells meee this will cause laggg
 				if (player.getFrozenTicks() > player.getMinFreezeDamageTicks())
 					player.setFrozenTicks(0);

@@ -10,8 +10,11 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.tardis.TardisExterior;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
+import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
@@ -92,7 +95,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			AITMod.LOGGER.error("Failed to render siege mode", e);
 		}
 
-		String name = entity.findTardis().get().getHandlers().getStats().getName();
+		String name = entity.findTardis().get().<StatsData>handler(TardisComponent.Id.STATS).getName();
 		if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
 			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-180f));
 		}
@@ -100,17 +103,17 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		if (model != null) {
 			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
 			// @TODO uhhh, should we make it so the biome textures are the overgrowth per biome, or should they be separate? - Loqor
-			if (entity.findTardis().get().getHandlers().getOvergrown().isOvergrown()) {
-				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.findTardis().get().getHandlers().getOvergrown().getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+			if (entity.findTardis().get().<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
+				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.findTardis().get().<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
 			}
-			if(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-				Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.findTardis().get().getHandlers().getBiomeHandler().getBiomeKey(), exteriorVariant.texture(), entity.findTardis().get());
+			if(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+				Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey(), exteriorVariant.texture(), entity.findTardis().get());
 				if (!texture.equals(biomeTexture)) {
 					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
 				}
 			}
 			if (emission != null && entity.findTardis().get().hasPower()) {
-				boolean alarms = PropertiesHandler.getBool(entity.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
+				boolean alarms = PropertiesHandler.getBool(entity.findTardis().get().properties(), PropertiesHandler.ALARM_ENABLED);
 
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(emission, true)), maxLight, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
 			}
@@ -127,8 +130,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			matrices.pop();
 		}
 
-		if (!entity.findTardis().get().getHandlers().getSonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) return;
-		ItemStack stack = entity.findTardis().get().getHandlers().getSonic().get(SonicHandler.HAS_EXTERIOR_SONIC);
+		if (!entity.findTardis().get().sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) return;
+		ItemStack stack = entity.findTardis().get().sonic().get(SonicHandler.HAS_EXTERIOR_SONIC);
 		if (stack == null || entity.getWorld() == null) return;
 		matrices.push();
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + exteriorVariant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());

@@ -1,53 +1,54 @@
 package loqor.ait.tardis.wrapper.client;
 
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
+import com.google.gson.InstanceCreator;
 import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.tardis.*;
-import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.data.TardisHandlersManager;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisDesktop;
+import loqor.ait.tardis.TardisExterior;
+import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorData;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.client.MinecraftClient;
 
-import java.util.UUID;
+import java.lang.reflect.Type;
 
-// Things saved here will likely get overwritten.
 public class ClientTardis extends Tardis {
-	public ClientTardis(UUID uuid, AbsoluteBlockPos.Client pos, TardisDesktopSchema schema, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType, boolean locked) {
-		super(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), tardis -> new ClientTardisExterior(tardis, exteriorType, variantType));
+
+	/**
+	 * @deprecated NEVER EVER use this constructor. It's for GSON to call upon deserialization!
+	 */
+	@Deprecated
+	@SuppressWarnings("unused")
+	private ClientTardis() {
+		super();
 	}
 
 	public void setDesktop(TardisDesktop desktop) {
+		desktop.setTardis(this);
 		this.desktop = desktop;
 	}
 
 	public void setTravel(TardisTravel travel) {
+		travel.setTardis(this);
 		this.travel = travel;
 	}
 
-	public void setSonic(SonicHandler sonicHandler) {
-		this.handlers.setSonic(sonicHandler);
+	public void setSonic(SonicHandler sonic) {
+		sonic.setTardis(this);
+		this.handlers.set(TardisComponent.Id.SONIC, sonic);
 	}
 
 	public void setExterior(TardisExterior exterior) {
+		exterior.setTardis(this);
 		this.exterior = exterior;
 	}
 
 	public void setDoor(DoorData door) {
-		this.getHandlers().setDoor(door);
-	}
-
-	public void setHandlers(TardisHandlersManager handlers) {
-		this.handlers = handlers;
-	}
-
-	@SuppressWarnings("deprecation")
-	public boolean isExteriorUnlocked(ClientExteriorVariantSchema schema) {
-		return PropertiesHandler.isUnlocked(this, schema.id());
+		door.setTardis(this);
+		this.handlers.set(TardisComponent.Id.DOOR, door);
 	}
 
 	public void tick(MinecraftClient client) {
@@ -59,6 +60,18 @@ public class ClientTardis extends Tardis {
 		if (this.equals(ClientTardisUtil.getCurrentTardis())) {
 			ClientTardisUtil.tickPowerDelta();
 			ClientTardisUtil.tickAlarmDelta();
+		}
+	}
+
+	public static Object creator() {
+		return new ClientTardisCreator();
+	}
+
+	static class ClientTardisCreator implements InstanceCreator<ClientTardis> {
+
+		@Override
+		public ClientTardis createInstance(Type type) {
+			return new ClientTardis();
 		}
 	}
 }

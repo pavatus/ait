@@ -30,7 +30,6 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 		if (INSTANCE == null) {
 			AITMod.LOGGER.info("ClientConsoleVariantRegistry was not initialized, Creating a new instance");
 			INSTANCE = new ClientConsoleVariantRegistry();
-			INSTANCE.init();
 		}
 
 		return INSTANCE;
@@ -130,7 +129,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 	public static ClientConsoleVariantSchema STEAM;
 	public static ClientConsoleVariantSchema STEAM_CHERRY;
 
-	public void init() {
+	@Override
+	public void onClientInit() {
 		// Hartnell variants
 		HARTNELL = register(new ClientHartnellVariant());
 		HARTNELL_KELT = register(new ClientKeltHartnellVariant());

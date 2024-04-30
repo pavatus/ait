@@ -3,14 +3,12 @@ package loqor.ait.registry.datapack;
 import com.mojang.serialization.Codec;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Identifiable;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
@@ -59,6 +57,18 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
     public void onServerInit() { }
 
     public void onCommonInit() {
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+            @Override
+            public Identifier getFabricId() {
+                return SimpleDatapackRegistry.this.name;
+            }
+
+            @Override
+            public void reload(ResourceManager manager) {
+                SimpleDatapackRegistry.this.reload(manager);
+            }
+        });
+
         if (!this.sync)
             return;
 
@@ -108,22 +118,6 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
 
     protected T read(InputStream stream) {
         return this.deserializer.apply(stream);
-    }
-
-    public void init() {
-        super.init();
-
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-            @Override
-            public Identifier getFabricId() {
-                return SimpleDatapackRegistry.this.name;
-            }
-
-            @Override
-            public void reload(ResourceManager manager) {
-                SimpleDatapackRegistry.this.reload(manager);
-            }
-        });
     }
 
     protected void reload(ResourceManager manager) {
