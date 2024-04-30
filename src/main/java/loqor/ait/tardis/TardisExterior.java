@@ -33,10 +33,7 @@ public class TardisExterior extends TardisLink {
 	public ExteriorVariantSchema getVariant() {
 		if (variant == null) {
 			AITMod.LOGGER.error("Variant was null! Changing to a random one...");
-
-			AITMod.LOGGER.info("TARDIS: " + this.findTardis());
-			this.setVariant(ExteriorVariantRegistry.getInstance().getRandom()); // this.findTardis().get()
-			AITMod.LOGGER.warn(this.variant.toString());
+			this.setVariant(ExteriorVariantRegistry.getInstance().getRandom(this.findTardis().get()));
 		}
 
 		return variant;

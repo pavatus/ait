@@ -2,8 +2,8 @@ package loqor.ait.registry.impl;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.AITModClient;
-import loqor.ait.core.data.schema.BuiltinSonic;
 import loqor.ait.core.data.datapack.DatapackSonic;
+import loqor.ait.core.data.schema.BuiltinSonic;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
 import net.minecraft.network.PacketByteBuf;

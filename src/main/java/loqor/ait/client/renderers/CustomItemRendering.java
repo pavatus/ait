@@ -1,8 +1,10 @@
 package loqor.ait.client.renderers;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.renderers.model.OverriddenBakedModel;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;

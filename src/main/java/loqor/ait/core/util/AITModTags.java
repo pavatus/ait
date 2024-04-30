@@ -21,6 +21,7 @@ public class AITModTags {
 		public static final TagKey<Item> CLUSTER_MAX_HARVESTABLES = createTag("cluster_max_harvestables");
 
 		public static final TagKey<Item> NO_BOP = createTag("no_bop");
+		public static final TagKey<Item> LINK = createTag("link"); // TODO use the tag instead of the item instanceof
 
 		private static TagKey<Item> createTag(String name) {
 			return TagKey.of(RegistryKeys.ITEM, new Identifier(AITMod.MOD_ID, name));

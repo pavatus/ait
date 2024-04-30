@@ -23,7 +23,7 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
 
 	@Override
 	public ExteriorCategorySchema getRandom(Random random) {
-		ExteriorCategorySchema schema = super.getRandom();
+		ExteriorCategorySchema schema = super.getRandom(random);
 
 		return schema == CategoryRegistry.CORAL_GROWTH
 				? CategoryRegistry.TARDIM : schema;

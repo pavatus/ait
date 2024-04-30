@@ -15,7 +15,10 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+
+import java.util.function.Function;
 
 import static java.lang.Double.NaN;
 import static loqor.ait.core.blocks.RadioBlock.*;
@@ -147,5 +150,38 @@ public class AITRadioBlockEntity extends BlockEntity {
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+    }
+
+    record Handle(Function<Direction, VoxelShape> shape) {
+
+        public boolean check(BlockHitResult hit, BlockState state) {
+            double mouseX = (hit.getPos().x * 16) - (hit.getBlockPos().getX() * 16);
+            double mouseY = (hit.getPos().y * 16) - (hit.getBlockPos().getY() * 16);
+            double mouseZ = (hit.getPos().z * 16) - (hit.getBlockPos().getZ() * 16);
+
+            VoxelShape s = shape.apply(state.get(FACING));
+
+            double minX = s.getMin(Direction.Axis.X);
+            double maxX = s.getMax(Direction.Axis.X);
+            double minY = s.getMin(Direction.Axis.Y);
+            double maxY = s.getMax(Direction.Axis.Y);
+            double minZ = s.getMin(Direction.Axis.Z);
+            double maxZ = s.getMax(Direction.Axis.Z);
+
+            // DOWN: >= 0 <= 0 + 2
+            // UP: >= 16 <= 18
+            //
+            boolean checkX = mouseX >= (minX * 16)
+                    && mouseX <= (maxX * 16);
+
+            boolean checkY = mouseY >= (minY * 16)
+                    && mouseY <= (maxY * 16);
+
+            boolean checkZ = mouseZ >= (minZ * 16)
+                    && mouseZ <= (maxZ * 16);
+
+            return checkX && checkY && checkZ;
+        }
+
     }
 }

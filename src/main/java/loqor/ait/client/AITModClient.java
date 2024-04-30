@@ -1,6 +1,7 @@
 package loqor.ait.client;
 
 import loqor.ait.AITMod;
+import loqor.ait.client.renderers.machines.PlugBoardRenderer;
 import loqor.ait.core.util.vortex.client.ClientVortexDataHandler;
 import loqor.ait.core.util.vortex.server.ServerVortexDataHandler;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
@@ -76,6 +77,7 @@ import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -304,6 +306,7 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WALL_MONITOR_BLOCK_ENTITY_TYPE, WallMonitorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, EngineRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, EngineCoreBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.PLUGBOARD_ENTITY_TYPE, PlugBoardRenderer::new);
     }
 
     public void entityRenderRegister() {

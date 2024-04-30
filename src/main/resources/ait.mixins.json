@@ -15,6 +15,7 @@
     "client.ClientPlayerInteractionManagerMixin",
     "client.DefaultLogoMixin",
     "client.TitleScreenMixin",
+    "client.rendering.BakedModelManagerMixin",
     "client.rendering.BGRendererMixin",
     "client.rendering.GameRendererMixin",
     "client.rendering.HeadFeatureRendererMixin",

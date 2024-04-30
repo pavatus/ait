@@ -3,6 +3,7 @@ package loqor.ait.core.util;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.sound.SoundEvents;
@@ -52,12 +53,8 @@ public class StackUtil {
         world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack));
     }
 
-    public static void spawn(World world, BlockPos pos, ItemStack stack, boolean center) {
-        spawn(world, center ? pos.toCenterPos() : (Position) pos, stack);
-    }
-
     public static void spawn(World world, BlockPos pos, ItemStack stack) {
-        spawn(world, pos, stack, false);
+        spawn(world, pos.toCenterPos(), stack);
     }
 
     public static void playBreak(PlayerEntity player) {
@@ -78,12 +75,13 @@ public class StackUtil {
         NbtList nbtList = new NbtList();
 
         for (ItemStack stack : stacks) {
-            if (!stack.isEmpty()) {
-                NbtCompound nbtCompound = new NbtCompound();
+            if (stack == null || stack.isEmpty())
+                continue;
 
-                stack.writeNbt(nbtCompound);
-                nbtList.add(nbtCompound);
-            }
+            NbtCompound nbtCompound = new NbtCompound();
+
+            stack.writeNbt(nbtCompound);
+            nbtList.add(nbtCompound);
         }
 
         if (!nbtList.isEmpty())
@@ -98,11 +96,39 @@ public class StackUtil {
         for (int i = 0; i < stacks.size(); i++) {
             ItemStack stack = stacks.get(i);
 
+            if (stack == null)
+                stack = new ItemStack(Items.AIR);
+
             if (stack.isEmpty())
                 continue;
 
             NbtCompound nbtCompound = new NbtCompound();
             nbtCompound.putByte("Slot", (byte)i);
+
+            stack.writeNbt(nbtCompound);
+            nbtList.add(nbtCompound);
+        }
+
+        if (!nbtList.isEmpty())
+            nbt.put("Items", nbtList);
+
+        return nbt;
+    }
+
+    public static NbtCompound write(NbtCompound nbt, ItemStack... stacks) {
+        NbtList nbtList = new NbtList();
+
+        for (int i = 0; i < stacks.length; i++) {
+            ItemStack stack = stacks[i];
+
+            if (stack == null)
+                stack = new ItemStack(Items.AIR);
+
+            if (stack.isEmpty())
+                continue;
+
+            NbtCompound nbtCompound = new NbtCompound();
+            nbtCompound.putByte("Slot", (byte) i);
 
             stack.writeNbt(nbtCompound);
             nbtList.add(nbtCompound);
@@ -125,6 +151,22 @@ public class StackUtil {
                 stacks.set(j, ItemStack.fromNbt(nbtCompound));
             }
         }
+    }
+
+    public static ItemStack[] read(NbtCompound nbt) {
+        NbtList nbtList = nbt.getList("Items", 10);
+        ItemStack[] stacks = new ItemStack[nbtList.size()];
+
+        for(int i = 0; i < nbtList.size(); i++) {
+            NbtCompound nbtCompound = nbtList.getCompound(i);
+            int j = nbtCompound.getByte("Slot") & 255;
+
+            if (j < stacks.length) {
+                stacks[j] = ItemStack.fromNbt(nbtCompound);
+            }
+        }
+
+        return stacks;
     }
 
     public static void readUnordered(NbtCompound nbt, Collection<ItemStack> stacks) {

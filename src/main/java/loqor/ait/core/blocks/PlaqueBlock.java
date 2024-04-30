@@ -33,7 +33,6 @@ public class PlaqueBlock extends HorizontalDirectionalBlock implements BlockEnti
         return rotateShape(Direction.NORTH, state.get(FACING), SHAPE);
     }
 
-
     @Override
     public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
         return false;
