@@ -18,6 +18,14 @@ import java.nio.file.Paths;
 public class BinaryTree {
     protected Node rootNode;
 
+    public BTreeInorderIterator iterator() {
+        return new BTreeInorderIterator(this.getRootNode());
+    }
+
+    public int byteSize() {
+        return Node.getChildrenCount(this.getRootNode()) * 3 * Long.BYTES;
+    }
+
     public static class Node {
         Node left;
         Node right;
@@ -78,7 +86,7 @@ public class BinaryTree {
     }
 
     public ByteBuffer toNioByteBuffer() {
-        int size = Node.getChildrenCount(this.getRootNode()) * 3 * Double.BYTES;
+        int size = this.byteSize() * 8;
         AITMod.LOGGER.info(String.format("Saving BinaryTree with arbitrary size of %d", size));
 
         BTreeInorderIterator it = new BTreeInorderIterator(this.getRootNode());
@@ -87,10 +95,10 @@ public class BinaryTree {
         Node node = this.getRootNode();
 
         while (node != null) {
-            buffer.putDouble(node.getData().getX());
-            buffer.putDouble(node.getData().getY());
-            buffer.putDouble(node.getData().getZ());
-
+            buffer.putDouble(node.getData().x)
+                    .putDouble(node.getData().y)
+                    .putDouble(node.getData().z)
+                    .rewind();
             node = it.next();
         }
         return buffer;

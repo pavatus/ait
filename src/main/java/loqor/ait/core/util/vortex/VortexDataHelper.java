@@ -3,16 +3,16 @@ package loqor.ait.core.util.vortex;
 import loqor.ait.AITMod;
 import net.minecraft.util.Identifier;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class VortexDataHelper {
     public static final String VORTEX_DATA_SERVER_CACHE_PATH = "vortex/vortex.dat";
-    public static final String VORTEX_DATA_CLIENT_CACHE_PATH = ".ait/cache/vortex";
+    public static final String VORTEX_DATA_CLIENT_CACHE_PATH = ".cache/ait/vortex";
     public static final Identifier SYNC_PACKET = new Identifier(AITMod.MOD_ID, "vortex_sync");
     public static final Identifier REQUEST_SYNC_PACKET = new Identifier(AITMod.MOD_ID, "request_vortex_sync");
 
@@ -29,6 +29,7 @@ public class VortexDataHelper {
             ByteBuffer buffer = ByteBuffer.allocateDirect((int)dataFd.length());
 
             dataFc.read(buffer);
+            dataFc.close();
 
             data = VortexData.deserialize(buffer);
         } catch (Exception e) {
@@ -42,15 +43,16 @@ public class VortexDataHelper {
         Stores VortexData object to a file.
      */
     public static void storeVortexData(Path path, VortexData data) {
-        File dataFd = path.toFile();
-
-        try {
-            FileChannel dataFc = new FileOutputStream(dataFd, false).getChannel();
-            int bytes = dataFc.write(data.serialize());
-            dataFc.close();
-        } catch (Exception e) {
-            AITMod.LOGGER.error("ServerVortexDataHelper: Vortex data storage failure: {}", e.getMessage());
+        File fd = path.toFile();
+        try (FileChannel fc = new FileOutputStream(fd).getChannel()) {
+            try  {
+                fc.write(data.serialize());
+                fc.close();
+            } catch (IOException e) {
+                AITMod.LOGGER.error("VortexDataHelper: Storage failure due to I/O exception: {}", e.getMessage());
+            }
+        } catch (IOException e) {
+            AITMod.LOGGER.error("VortexDataHelper: Storage failed, no such file or directory: {}", e.getMessage());
         }
     }
-
 }

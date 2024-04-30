@@ -4,7 +4,6 @@ package loqor.ait.core.util.vortex.server;
 import loqor.ait.AITMod;
 import loqor.ait.core.util.vortex.VortexData;
 import loqor.ait.core.util.vortex.VortexDataHelper;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,8 +11,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class ServerVortexDataHandler {
-
-
     /*
         Registers a callback for receiving a VortexData object request from client. Must only
         be called by the server.

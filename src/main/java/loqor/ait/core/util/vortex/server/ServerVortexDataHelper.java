@@ -3,6 +3,7 @@ package loqor.ait.core.util.vortex.server;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.util.bsp.BTreeGenerator;
+import loqor.ait.core.util.bsp.BTreeInorderIterator;
 import loqor.ait.core.util.bsp.BinaryTree;
 import loqor.ait.core.util.vortex.VortexData;
 import loqor.ait.core.util.vortex.VortexDataHelper;
@@ -11,7 +12,9 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 
+import java.nio.ByteBuffer;
 import java.nio.file.Path;
+import java.util.Iterator;
 
 public class ServerVortexDataHelper {
 
@@ -63,7 +66,11 @@ public class ServerVortexDataHelper {
         );
         AITMod.LOGGER.info("ServerVortexDataHelper: Serialising vortex data");
 
-        VortexData vortexData = VortexData.deserialize(vortexTree.toNioByteBuffer());
+        ByteBuffer vortexDataBuffer = vortexTree.toNioByteBuffer();
+        VortexData vortexData = VortexData.deserialize(vortexDataBuffer);
+
+        assert vortexData != null;
+
         AITMod.LOGGER.info("ServerVortexDataHelper: VortexData object received, tree serialised");
         return vortexData;
     }

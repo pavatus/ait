@@ -11,11 +11,11 @@ import java.util.Iterator;
 
 public record VortexData(ArrayList<Vec3d> positions) {
     public int byteSize() {
-        return this.positions.size() * 3 * Double.BYTES;
+        return this.positions.size() * 3 * Double.BYTES * 8;
     }
 
     public static VortexData deserialize(ByteBuffer buffer) {
-        ArrayList<Vec3d> data = new ArrayList<Vec3d>();
+        ArrayList<Vec3d> data = new ArrayList<>();
 
         while (buffer.hasRemaining()) {
             double x, y, z;
@@ -24,11 +24,10 @@ public record VortexData(ArrayList<Vec3d> positions) {
                 y = buffer.getDouble();
                 z = buffer.getDouble();
             } catch (BufferUnderflowException e) {
-                AITMod.LOGGER.error("VortexData: Serialisation failed: Invalid Vec3d save format: {}", e.getMessage());
+                AITMod.LOGGER.error("VortexData: Deserialization failed: Invalid Vec3d save format: {}", e.getMessage());
                 return null;
             }
-            Vec3d vec = new Vec3d(x, y, z);
-            data.add(vec);
+            data.add(new Vec3d(x, y, z));
         }
         return new VortexData(data);
     }
@@ -43,9 +42,9 @@ public record VortexData(ArrayList<Vec3d> positions) {
         ByteBuffer buffer = ByteBuffer.allocateDirect(this.byteSize());
 
         while (it.hasNext()) {
-            buffer.putDouble(current.getX());
-            buffer.putDouble(current.getY());
-            buffer.putDouble(current.getZ());
+            buffer.putDouble(current.x);
+            buffer.putDouble(current.y);
+            buffer.putDouble(current.z);
         }
         return buffer;
     }
