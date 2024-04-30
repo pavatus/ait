@@ -35,9 +35,7 @@ public class VortexUtil {
     private final float speed;
     private float time = 0;
 
-    public ArrayList<Vec3d> splines;
-
-    public VortexUtil(MinecraftServer server, String name/*, float distortionFactor*/) {
+    public VortexUtil(String name/*, float distortionFactor*/) {
         TEXTURE_LOCATION = new Identifier(AITMod.MOD_ID, "textures/vortex/" + name + ".png");
         this.distortionSpeed = 0.5f;
         this.distortionSeparationFactor = 32f;
@@ -46,53 +44,6 @@ public class VortexUtil {
         this.rotationFactor = 1f;
         this.rotationSpeed = 1f;
         this.speed = 4f;
-
-        if (!isDataGenerated(server)) {
-            AITMod.LOGGER.error("VortexUtil: Vortex position data is not generated! Aborting...");
-            return;
-        }
-        this.splines = new ArrayList<Vec3d>();
-    }
-
-    public static boolean isDataGenerated(MinecraftServer server) {
-        return ServerTardisManager.getRootSavePath(server).resolve("vortex/vortex.dat").toFile().exists();
-    }
-
-    private ByteBuffer loadBytes(MinecraftServer server) {
-        if (!isDataGenerated(server))
-            return null;
-
-        File vortexDataFd = ServerTardisManager.getRootSavePath(server).resolve("vortex/vortex.dat").toFile();
-        ByteBuffer buffer = ByteBuffer.allocateDirect((int)vortexDataFd.length());
-        InputStream is;
-
-        try {
-            is = new FileInputStream(vortexDataFd);
-        } catch (FileNotFoundException e) {
-            AITMod.LOGGER.error("Unable to load vortex data: {}", e.getMessage());
-            return null;
-        }
-
-        int b;
-        try {
-            while ((b = is.read()) != -1) {
-                buffer.put((byte) b);
-            }
-        } catch (IOException e) {
-            AITMod.LOGGER.error("Unable to load data from the vortex data file, I/O exception: {}", e.getMessage());
-            return null;
-        }
-        return buffer;
-    }
-
-    public void loadData(MinecraftServer server) {
-        ByteBuffer buffer = this.loadBytes(server);
-
-        if (buffer == null) {
-            AITMod.LOGGER.error("Unexpected error: loadBytes() returned null");
-            return;
-        }
-
     }
 
     public void renderVortex(WorldRenderContext context) {

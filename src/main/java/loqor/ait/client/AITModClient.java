@@ -1,13 +1,12 @@
 package loqor.ait.client;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.util.vortex.ServerVortexDataHandler;
+import loqor.ait.core.util.vortex.client.ClientVortexDataHandler;
+import loqor.ait.core.util.vortex.server.ServerVortexDataHandler;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.client.renderers.CustomItemRendering;
-import loqor.ait.client.renderers.TriangleTestingUtil;
-import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
@@ -55,7 +54,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
@@ -90,8 +88,9 @@ public class AITModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
-        ServerVortexDataHandler.init();
-        ServerVortexDataHandler.subscribeClient();
+
+        ClientVortexDataHandler.init();
+        ClientVortexDataHandler.subscribe();
 
         setupBlockRendering();
         sonicModelPredicate();

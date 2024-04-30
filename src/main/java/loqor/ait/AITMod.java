@@ -20,7 +20,7 @@ import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.util.AITConfig;
 import loqor.ait.core.util.StackUtil;
-import loqor.ait.core.util.vortex.ServerVortexDataHandler;
+import loqor.ait.core.util.vortex.server.ServerVortexDataHandler;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
@@ -28,7 +28,6 @@ import loqor.ait.core.data.schema.MachineRecipeSchema;
 import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.core.util.bsp.BTreeGenerator;
 import loqor.ait.core.util.bsp.BinaryTree;
-import loqor.ait.registry.*;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
@@ -76,8 +75,6 @@ import java.util.Random;
 import java.util.UUID;
 
 public class AITMod implements ModInitializer {
-	private VortexUtil vortex;
-
 	public static final String MOD_ID = "ait";
 	public static final Logger LOGGER = LoggerFactory.getLogger("ait");
 	public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
@@ -94,31 +91,7 @@ public class AITMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ServerVortexDataHandler.subscribeServer();
-
-		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
-			LOGGER.info("Time vortex data presence check...");
-
-			if (!VortexUtil.isDataGenerated(server)) {
-				LOGGER.info("Time vortex data has not yet been generated, generation initiated.");
-
-				BinaryTree vortexTree = new BinaryTree(new Vec3d(0, 100, 0));
-				BTreeGenerator vortexGenerator = new BTreeGenerator(server.getWorld(AITDimensions.TIME_VORTEX_WORLD));
-
-				vortexGenerator.gen(vortexTree);
-				LOGGER.info("Time vortex data generation has been finished, total nodes: {}", BinaryTree.Node.getChildrenCount(vortexTree.getRootNode()));
-				LOGGER.info("Saving time vortex data...");
-
-				vortexTree.saveTree(server);
-			}
-			LOGGER.info("Time vortex data has been already generated, generation aborted.");
-			LOGGER.info("Loading vortex data...");
-
-			this.vortex = new VortexUtil(server, "space");
-			this.vortex.loadData(server);
-
-			LOGGER.info("Vortex data loaded");
-		});
+		ServerVortexDataHandler.subscribe();
 
 		ConsoleRegistry.init();
 		HumsRegistry.init();
