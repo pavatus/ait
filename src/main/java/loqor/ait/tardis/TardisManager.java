@@ -5,26 +5,21 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import loqor.ait.AITMod;
+import loqor.ait.core.data.Corners;
 import loqor.ait.core.data.base.Exclude;
-import loqor.ait.core.events.BlockEntityPreLoadEvent;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
+import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.util.gson.ItemStackSerializer;
 import loqor.ait.core.util.gson.NbtSerializer;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
-import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
-import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.tardis.link.Linkable;
-import loqor.ait.core.data.Corners;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.loader.api.FabricLoader;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -38,6 +33,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public abstract class TardisManager<T extends Tardis> {
+
 	public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "ask_tardis");
 	public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
 
@@ -59,7 +55,6 @@ public abstract class TardisManager<T extends Tardis> {
 						return false;
 					}
 				})
-				.setPrettyPrinting()
 				.registerTypeAdapter(TardisDesktopSchema.class, TardisDesktopSchema.serializer())
 				.registerTypeAdapter(ExteriorVariantSchema.class, ExteriorVariantSchema.serializer())
 				.registerTypeAdapter(DoorSchema.class, DoorSchema.serializer())
@@ -70,36 +65,15 @@ public abstract class TardisManager<T extends Tardis> {
 				.registerTypeAdapter(PermissionLike.class, Permission.serializer())
 				.registerTypeAdapter(NbtCompound.class, new NbtSerializer())
 				.registerTypeAdapter(ItemStack.class, new ItemStackSerializer());
+
+		if (!AITMod.AIT_CONFIG.MINIFY_JSON())
+            builder.setPrettyPrinting();
+
 		// TODO replace the type adapters with CODECs. Why do the same job twice?
-		builder = this.getGsonBuilder(builder);
-		this.gson = builder.create();
+		this.gson = this.getGsonBuilder(builder).create();
 	}
 
-	public static void init() {
-		// nicked this off theo
-
-		// this will re-register the client tardis manager on every join (that includes local worlds as well)
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			ClientPlayConnectionEvents.INIT.register((handler, client) -> ClientTardisManager.init());
-		}
-
-		// this is a race between what happens first:
-		// if it's a world with tardises - then we need to initialize server tardis manager before any of the block entities load
-		BlockEntityPreLoadEvent.LOAD.register(() -> {
-			if (ServerTardisManager.getInstance() == null) {
-				ServerTardisManager.init();
-			}
-		});
-
-		// if it's a brand-new world without any tardises - then there's no need to run ahead of the train and break things
-		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-			if (ServerTardisManager.getInstance() == null) {
-				ServerTardisManager.init();
-			}
-		});
-	}
-
-	public GsonBuilder getGsonBuilder(GsonBuilder builder) {
+	protected GsonBuilder getGsonBuilder(GsonBuilder builder) {
 		return builder;
 	}
 
@@ -138,12 +112,16 @@ public abstract class TardisManager<T extends Tardis> {
 	}
 
 	/**
-	 * Gets the ClientTardis if its in the lookup, should only be called if you are 100% sure the client has this tardis.
+	 * Gets the ClientTardis if it's in the lookup, should only be called if you are 100% sure the client has this tardis.
 	 *
-	 * @param uuid
-	 * @param performAsk Whether to ask for this tardis if we dont have it
-	 * @return
+	 * @deprecated This method is stupid. Use {@link TardisManager#getTardis(UUID, Consumer)} instead.
+	 * Why is it stupid? Because {@link TardisManager#getTardis(UUID, Consumer)} will yield the same results,
+	 * given that the client has this tardis!
+	 *
+	 * @param uuid The UUID of the tardis
+	 * @param performAsk Whether to ask for this tardis if we don't have it
 	 */
+	@Deprecated
 	public Tardis getTardis(UUID uuid, boolean performAsk) {
 		if (!this.hasTardis(uuid)) {
 			AITMod.LOGGER.error("Called getTardis() on a tardis that hasnt been synced!");
@@ -158,6 +136,10 @@ public abstract class TardisManager<T extends Tardis> {
 		return this.lookup.get(uuid);
 	}
 
+	/**
+	 * @deprecated This method SHOULD NOT be in {@link ClientTardisManager}. It should be exclusive to {@link ServerTardisManager}
+	 */
+	@Deprecated
 	public Tardis getTardis(UUID uuid) {
 		return this.getTardis(uuid, false);
 	}

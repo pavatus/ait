@@ -7,13 +7,18 @@ import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
-import loqor.ait.core.events.ServerCrashEvent;
-import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.tardis.*;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.core.events.ServerCrashEvent;
+import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.AbstractTardisComponent;
-import loqor.ait.tardis.util.*;
+import loqor.ait.tardis.util.NetworkUtil;
+import loqor.ait.tardis.util.TardisChunkUtil;
+import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -39,6 +44,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ServerTardisManager extends TardisManager<ServerTardis> {
+
 	private static ServerTardisManager instance;
 	// Changed from MultiMap to HashMap to fix some concurrent issues, maybe
 	private final ConcurrentHashMap<UUID, List<UUID>> subscribers = new ConcurrentHashMap<>(); // fixme most of the issues with tardises on client when the world gets reloaded is because the subscribers dont get readded so the client stops getting informed, either save this somehow or make sure the client reasks on load.
@@ -124,6 +130,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		UUID uuid = UUID.randomUUID();
 
 		ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked); // todo removed "locked" param
+		this.lookup.put(uuid, tardis);
+
 		tardis.init();
 
 		// todo this can be moved to init
@@ -132,8 +140,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
 		tardis.getHandlers().getStats().markCreationDate();
 
-		new Thread(() -> this.saveTardis(TardisUtil.getServer(), tardis));
-		this.lookup.put(uuid, tardis);
+		this.saveTardis(TardisUtil.getServer(), tardis);
 		return tardis;
 	}
 
@@ -172,7 +179,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 	}
 
 	@Override
-	public GsonBuilder getGsonBuilder(GsonBuilder builder) {
+	protected GsonBuilder getGsonBuilder(GsonBuilder builder) {
 		builder.registerTypeAdapter(SerialDimension.class, SerialDimension.serializer());
 		return builder;
 	}

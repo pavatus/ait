@@ -10,6 +10,7 @@ import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.commands.*;
+import loqor.ait.core.data.schema.MachineRecipeSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SiegeTardisItem;
@@ -22,12 +23,10 @@ import loqor.ait.core.util.StackUtil;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
-import loqor.ait.core.data.schema.MachineRecipeSchema;
 import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.advancement.TardisCriterions;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
@@ -101,8 +100,7 @@ public class AITMod implements ModInitializer {
 		FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
 
 		TardisUtil.init();
-		TardisManager.getInstance();
-		TardisManager.init();
+		ServerTardisManager.init();
 		RiftChunkManager.init();
 		TardisCriterions.init();
 

@@ -1,10 +1,13 @@
 package loqor.ait.registry;
 
-import loqor.ait.AITMod;
-import loqor.ait.registry.datapack.SimpleDatapackRegistry;
-import loqor.ait.registry.impl.*;
+import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.registry.impl.DesktopRegistry;
+import loqor.ait.registry.impl.MachineRecipeRegistry;
+import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +29,14 @@ public class Registries {
     }
 
     public void subscribe(InitType env) {
+        if (env == InitType.CLIENT && FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT)
+            throw new UnsupportedOperationException("Cannot call onInitializeClient while not running a client!");
+
         for (Registry registry : registries) {
-            AITMod.LOGGER.info("Delegating to " + registry.getClass().getName());
             if (env == InitType.COMMON)
                 registry.init();
 
-            if (registry instanceof SimpleDatapackRegistry<?> simple)
-                env.init(simple);
+            env.init(registry);
         }
     }
 
@@ -44,17 +48,17 @@ public class Registries {
     }
 
     public enum InitType {
-        CLIENT(SimpleDatapackRegistry::onClientInit),
-        SERVER(SimpleDatapackRegistry::onServerInit),
-        COMMON(SimpleDatapackRegistry::onCommonInit);
+        CLIENT(Registry::onClientInit),
+        SERVER(Registry::onServerInit),
+        COMMON(Registry::onCommonInit); // handled in #init
 
-        private final Consumer<SimpleDatapackRegistry<?>> consumer;
+        private final Consumer<Registry> consumer;
 
-        InitType(Consumer<SimpleDatapackRegistry<?>> consumer) {
+        InitType(Consumer<Registry> consumer) {
             this.consumer = consumer;
         }
 
-        public void init(SimpleDatapackRegistry<?> registry) {
+        public void init(Registry registry) {
             this.consumer.accept(registry);
         }
     }

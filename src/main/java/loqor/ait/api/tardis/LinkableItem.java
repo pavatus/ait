@@ -28,21 +28,27 @@ public abstract class LinkableItem extends Item {
 	public void link(ItemStack stack, UUID uuid) {
 		NbtCompound nbt = stack.getOrCreateNbt();
 
+		// FIXME why the fuck is it a string?
 		nbt.putString("tardis", uuid.toString());
 	}
 
 	@Override
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
 		NbtCompound nbt = stack.getOrCreateNbt();
-		if (!nbt.contains("tardis")) return;
+
+		if (!nbt.contains("tardis"))
+			return;
+
 		if (nbt.contains("tardis")) {
 			Tardis tardis = ClientTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")), true);
+
 			if (tardis != null) {
 				tooltip.add(Text.literal("TARDIS: ").formatted(Formatting.BLUE));
 				tooltip.add(Text.literal("> " + tardis.getHandlers().getStats().getName()));
 				tooltip.add(Text.literal("> " + tardis.getUuid().toString().substring(0, 8)).formatted(Formatting.DARK_GRAY));
 			}
 		}
+
 		super.appendTooltip(stack, world, tooltip, context);
 	}
 

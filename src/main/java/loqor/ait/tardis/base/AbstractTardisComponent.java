@@ -46,8 +46,7 @@ public abstract class AbstractTardisComponent {
 		ServerTardisManager.getInstance().sendToSubscribers(this);
 	}
 
-	public void init() {
-	}
+	public void init() { }
 
 	public Init getInitMode() {
 		return Init.ALWAYS;
@@ -64,10 +63,13 @@ public abstract class AbstractTardisComponent {
 			if (!ClientTardisManager.getInstance().hasTardis(this.tardisId)) {
 				if (this.tardisId != null)
 					ClientTardisManager.getInstance().loadTardis(this.tardisId, tardis -> {});
+
 				return Optional.empty();
 			}
+
 			return Optional.of(ClientTardisManager.getInstance().getTardis(this.tardisId));
 		}
+
 		return Optional.ofNullable(ServerTardisManager.getInstance().getTardis(this.tardisId));
 	}
 

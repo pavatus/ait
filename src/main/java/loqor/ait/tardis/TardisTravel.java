@@ -893,13 +893,15 @@ public class TardisTravel extends TardisLink {
 	}
 
 	public void placeExterior() {
-
-		if (this.findTardis().isEmpty()) return;
+		if (this.findTardis().isEmpty())
+			return;
 
 		this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(ExteriorBlock.FACING, this.position.getDirection()));
+
 		ExteriorBlockEntity exterior = new ExteriorBlockEntity(
 				this.position, this.position.getBlockState()
 		);
+
 		exterior.setTardis(this.findTardis().get());
 		this.position.addBlockEntity(exterior);
 	}

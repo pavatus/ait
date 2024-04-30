@@ -38,20 +38,6 @@ public class ServerTardis extends Tardis {
 		ServerTardisManager.getInstance().sendToSubscribers(this);
 	}
 
-	@Override
-	public void init(boolean dirty) {
-		// FIXME we need to put like, a special meta file in the .ait folder
-		// 	that will indicate what was the version that was used to save the data.
-		// 	i dont think that unlocking the default stuff for every tardis loaded is a good thing to do
-		//  so it'd make sense if we could check if the data was saved with an earlier version (so it needs to unlock the default stuff)
-		// 	different solution: make default stuff just be unlocked without the properties stuff
-		if (!dirty && this.getTravel().findTardis().isPresent()) {
-			ConsoleVariantRegistry.getInstance().unlock(this, Loyalty.MIN, null);
-			ExteriorVariantRegistry.getInstance().unlock(this, Loyalty.MIN, null);
-			DesktopRegistry.getInstance().unlock(this, Loyalty.MIN, null);
-		}
-	}
-
 	public void unlock(Unlockable unlockable) {
 		PropertiesHandler.setUnlocked(this, unlockable, true);
 	}

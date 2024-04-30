@@ -13,6 +13,7 @@ public class AITConfigModel {
 	public int SEARCH_HEIGHT = 64;
 	public double ASK_DELAY = 1.0;
 	public double force_sync_delay = 10;
+	public boolean MINIFY_JSON = false;
 	@SectionHeader("Client")
 	public float INTERIOR_HUM_VOLUME = 0.2f;
 	public boolean CUSTOM_MENU = true;
