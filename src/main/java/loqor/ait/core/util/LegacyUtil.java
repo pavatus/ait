@@ -19,10 +19,8 @@ public class LegacyUtil {
     private static final Map<String, TardisComponent.Id> LEGACY_IDS = Map.of(
             "loyalties", TardisComponent.Id.LOYALTY,
             "crashData", TardisComponent.Id.CRASH_DATA,
-            "CRASH", TardisComponent.Id.CRASH_DATA,
             "sequenceHandler", TardisComponent.Id.SEQUENCE
     );
-
 
     public static TardisComponent.Id getLegacyId(String raw) {
         return LEGACY_IDS.get(raw);
