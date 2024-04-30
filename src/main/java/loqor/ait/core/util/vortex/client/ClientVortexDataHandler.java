@@ -15,6 +15,9 @@ public class ClientVortexDataHandler {
      */
     public static void init() {
         ClientPlayConnectionEvents.JOIN.register(((handler, sender, client) -> {
+            if (handler.getServerInfo() == null)
+                return;
+
             if (ClientVortexDataHelper.isVortexDataCached(handler.getServerInfo().address))
                 return;
             ClientPlayNetworking.send(VortexDataHelper.REQUEST_SYNC_PACKET, PacketByteBufs.create());

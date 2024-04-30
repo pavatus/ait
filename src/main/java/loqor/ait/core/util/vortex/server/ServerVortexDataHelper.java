@@ -72,7 +72,7 @@ public class ServerVortexDataHelper {
         Registers a callback for SERVER_STARTED event to check if the vortex data is present,
         and if not, generates and stores it.
      */
-    public static void subscribeServerDataGenerator() {
+    public static void subscribeDataGenerator() {
         ServerLifecycleEvents.SERVER_STARTED.register((server -> {
             if (isVortexDataPresent(server)) {
                 AITMod.LOGGER.info("ServerVortexDataHelper: Found VortexData present in server world directory");

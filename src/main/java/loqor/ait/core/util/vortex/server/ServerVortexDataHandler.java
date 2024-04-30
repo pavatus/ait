@@ -4,6 +4,7 @@ package loqor.ait.core.util.vortex.server;
 import loqor.ait.AITMod;
 import loqor.ait.core.util.vortex.VortexData;
 import loqor.ait.core.util.vortex.VortexDataHelper;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +19,7 @@ public class ServerVortexDataHandler {
         be called by the server.
      */
     public static void subscribe() {
+        ServerVortexDataHelper.subscribeDataGenerator();
         ServerPlayNetworking.registerGlobalReceiver(VortexDataHelper.REQUEST_SYNC_PACKET,
                 (((server, player, handler, buf, responseSender) -> {
                     ServerVortexDataHandler.sendSyncPacketTo(player);
@@ -47,8 +49,4 @@ public class ServerVortexDataHandler {
                 vortexData.byteSize()
         );
     }
-
-
-
-    private static void subscribeGenerator() {}
 }
