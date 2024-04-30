@@ -1,10 +1,9 @@
 package loqor.ait.tardis.wrapper.server;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
@@ -14,11 +13,10 @@ import net.minecraft.sound.SoundEvent;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
-//TODO: istg duzo :))))
 public class ServerTardisTravel extends TardisTravel implements TardisTickable {
 
-	public ServerTardisTravel(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-		super(tardis, pos);
+	public ServerTardisTravel(AbsoluteBlockPos.Directed pos) {
+		super(pos);
 	}
 
 	@Override

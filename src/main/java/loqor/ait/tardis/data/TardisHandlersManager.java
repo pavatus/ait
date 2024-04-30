@@ -1,96 +1,72 @@
 package loqor.ait.tardis.data;
 
+import com.google.gson.*;
+import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
+import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
+import loqor.ait.tardis.util.EnumMap;
 import net.minecraft.server.MinecraftServer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class TardisHandlersManager extends TardisLink {
+
 	@Exclude
-	private List<TardisLink> tickables = new ArrayList<>();
-	// TODO - refactor of this class, i have ideas
-	private DoorData door;
-	private PropertiesHolder properties;
-	private WaypointHandler waypoints;
-	private LoyaltyHandler loyalties;
-	private OvergrownData overgrown;
-	private ServerHumHandler hum;
-	private ServerAlarmHandler alarms;
-	private InteriorChangingHandler interior;
-	private SequenceHandler sequenceHandler;
-	private FuelData fuel;
-	private HADSData hads;
-	private FlightData flight;
-	private SiegeData siege;
-	private CloakData cloak;
-	private StatsData stats;
-	private TardisCrashData crashData;
-	private SonicHandler sonic;
-	private ShieldData shields;
-	private PermissionHandler permissions;
-	private BiomeHandler biome;
-	public TardisHandlersManager(Tardis tardis) {
-		super(tardis, TypeId.HANDLERS);
+	private final EnumMap<Id, TardisComponent> handlers = new EnumMap<>(Id::values, TardisComponent[]::new);
 
-		this.door = new DoorData(tardis);
-		this.properties = new PropertiesHolder(tardis);
-		this.waypoints = new WaypointHandler(tardis);
-		this.loyalties = new LoyaltyHandler(tardis);
-		this.overgrown = new OvergrownData(tardis);
-		this.hum = new ServerHumHandler(tardis);
-		this.alarms = new ServerAlarmHandler(tardis);
-		this.interior = new InteriorChangingHandler(tardis);
-		this.sequenceHandler = new SequenceHandler(tardis);
-		this.fuel = new FuelData(tardis);
-		this.hads = new HADSData(tardis);
-		this.flight = new FlightData(tardis);
-		this.siege = new SiegeData(tardis);
-		this.cloak = new CloakData(tardis);
-		this.stats = new StatsData(tardis);
-		this.crashData = new TardisCrashData(tardis);
-		this.sonic = new SonicHandler(tardis);
-		this.shields = new ShieldData(tardis);
-		this.permissions = new PermissionHandler(tardis);
-		this.biome = new BiomeHandler(tardis);
+	public TardisHandlersManager() {
+        super(Id.HANDLERS);
+    }
 
-		generateTickables();
+	@Override
+	public void init(Tardis tardis, boolean deserialized) {
+		super.init(tardis, deserialized);
+
+		this.createHandler(new DoorData());
+		this.createHandler(new PropertiesHolder());
+		this.createHandler(new WaypointHandler());
+		this.createHandler(new LoyaltyHandler());
+		this.createHandler(new OvergrownData());
+		this.createHandler(new ServerHumHandler());
+		this.createHandler(new ServerAlarmHandler());
+		this.createHandler(new InteriorChangingHandler());
+		this.createHandler(new SequenceHandler());
+		this.createHandler(new FuelData());
+		this.createHandler(new HADSData());
+		this.createHandler(new FlightData());
+		this.createHandler(new SiegeData());
+		this.createHandler(new CloakData());
+		this.createHandler(new StatsData());
+		this.createHandler(new TardisCrashData());
+		this.createHandler(new SonicHandler());
+		this.createHandler(new ShieldData());
+		this.createHandler(new BiomeHandler());
+		this.createHandler(new PermissionHandler());
+
+		this.forEach(component -> component.init(
+				tardis, deserialized)
+		);
 	}
 
-	private void generateTickables() {
-		if (tickables == null) tickables = new ArrayList<>();
+	private void forEach(Consumer<TardisComponent> consumer) {
+		for (TardisComponent component : this.handlers.values()) {
+			if (component == null)
+				continue;
 
-		tickables.clear();
-
-		addTickable(getDoor());
-		addTickable(getProperties());
-		addTickable(getWaypoints());
-		addTickable(getLoyalties());
-		addTickable(getOvergrown());
-		addTickable(getHum());
-		addTickable(getAlarms());
-		addTickable(getInteriorChanger());
-		addTickable(getSequenceHandler());
-		addTickable(getFuel());
-		addTickable(getHADS());
-		addTickable(getFlight());
-		addTickable(getSiege());
-		addTickable(getStats());
-		addTickable(getCrashData());
-		addTickable(getSonic());
-		addTickable(getShields());
-		addTickable(getBiomeHandler());
-		addTickable(getLoyalties());
+			consumer.accept(component);
+		}
 	}
 
-	protected void addTickable(TardisLink var) {
-		tickables.add(var);
+	private void createHandler(TardisComponent component) {
+		this.handlers.put(component.getId(), component);
 	}
 
 	/**
@@ -99,15 +75,12 @@ public class TardisHandlersManager extends TardisLink {
 	 * @param server the current server
 	 */
 	public void tick(MinecraftServer server) {
-		if (tickables == null) generateTickables();
-
-		for (TardisTickable ticker : tickables) {
-			if (ticker == null) {
-				generateTickables();
+		this.forEach(component -> {
+			if (!(component instanceof TardisTickable tickable))
 				return;
-			} // RAHHH I DONT CARE ABOUT PERFORMACNE, REGERNEATE IT ALLLL
-			ticker.tick(server);
-		}
+
+			tickable.tick(server);
+		});
 	}
 
 	/**
@@ -116,214 +89,147 @@ public class TardisHandlersManager extends TardisLink {
 	 * @param server the current server
 	 */
 	public void startTick(MinecraftServer server) {
-		if (tickables == null) generateTickables();
-
-		for (TardisTickable ticker : tickables) {
-			if (ticker == null) {
-				generateTickables();
+		this.forEach(component -> {
+			if (!(component instanceof TardisTickable tickable))
 				return;
+
+			tickable.startTick(server);
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends TardisComponent> T get(Id id) {
+		return (T) this.handlers.get(id);
+	}
+
+	public <T extends TardisComponent> void set(Id id, T t) {
+		this.handlers.put(id, t);
+	}
+
+	@Deprecated
+	public SonicHandler getSonic() {
+		return this.tardis().sonic();
+	}
+
+	@Deprecated
+	public StatsData getStats() {
+		return this.tardis().stats();
+	}
+
+	@Deprecated
+	public DoorData getDoor() {
+		return this.tardis().getDoor();
+	}
+
+	@Deprecated
+	public PropertiesHolder getProperties() {
+		return this.tardis().properties();
+	}
+
+	@Deprecated
+	public CloakData getCloak() {
+		return this.get(Id.CLOAK);
+	}
+
+	@Deprecated
+	public ServerAlarmHandler getAlarms() {
+		return this.tardis().alarm();
+	}
+
+	@Deprecated
+	public WaypointHandler getWaypoints() {
+		return this.tardis().waypoint();
+	}
+
+	@Deprecated
+	public SequenceHandler getSequenceHandler() {
+		return this.tardis().sequence();
+	}
+
+	@Deprecated
+	public FlightData getFlight() {
+		return this.tardis().flight();
+	}
+
+	@Deprecated
+	public FuelData getFuel() {
+		return this.tardis().fuel();
+	}
+
+	@Deprecated
+	public TardisCrashData getCrashData() {
+		return this.tardis().crash();
+	}
+
+	@Deprecated
+	public SiegeData getSiege() {
+		return this.get(Id.SIEGE);
+	}
+
+	@Deprecated
+	public LoyaltyHandler getLoyalties() {
+		return this.tardis().loyalty();
+	}
+
+	@Deprecated
+	public OvergrownData getOvergrown() {
+		return this.get(Id.OVERGROWN);
+	}
+
+	@Deprecated
+	public PermissionHandler getPermissions() {
+		return this.get(Id.PERMISSIONS);
+	}
+
+	@Deprecated
+	public InteriorChangingHandler getInteriorChanger() {
+		return this.get(Id.INTERIOR);
+	}
+
+	public static Object serializer() {
+		return new Serializer();
+	}
+
+	static class Serializer implements JsonSerializer<TardisHandlersManager>, JsonDeserializer<TardisHandlersManager>  {
+
+		@Override
+		public TardisHandlersManager deserialize(JsonElement json, java.lang.reflect.Type type, JsonDeserializationContext context) throws JsonParseException {
+			TardisHandlersManager manager = new TardisHandlersManager();
+			Map<String, JsonElement> map = json.getAsJsonObject().asMap();
+
+			boolean legacy = LegacyUtil.isHandlersLegacy(map);
+
+			for (Map.Entry<String, JsonElement> entry : map.entrySet()) {
+				String key = entry.getKey();
+				JsonElement element = entry.getValue();
+
+				// Skip legacy entries like "tardisId".
+				if (LegacyUtil.isLegacyComponent(element))
+					continue;
+
+				Id id = legacy ? LegacyUtil.getLegacyId(key) : Id.valueOf(key);
+
+				if (id == null) {
+					AITMod.LOGGER.error("Can't find a component id with name '{}'!", entry.getKey());
+					throw new NullPointerException("id is null.");
+				}
+
+				manager.set(id, context.deserialize(element, id.clazz()));
 			}
 
-			ticker.startTick(server);
-		}
-	}
-
-	public PropertiesHolder getProperties() {
-		if (this.properties == null && this.findTardis().isPresent()) {
-			this.properties = new PropertiesHolder(this.findTardis().get());
-		}
-		return properties;
-	}
-
-	public void setProperties(PropertiesHolder properties) {
-		this.properties = properties;
-	}
-
-	public WaypointHandler getWaypoints() {
-		if (this.waypoints == null && this.findTardis().isPresent()) {
-			this.waypoints = new WaypointHandler(this.findTardis().get());
-		}
-		return waypoints;
-	}
-
-	public void setWaypoints(WaypointHandler waypoints) {
-		this.waypoints = waypoints;
-	}
-
-	public LoyaltyHandler getLoyalties() {
-		if (this.loyalties == null && this.findTardis().isPresent()) {
-			this.loyalties = new LoyaltyHandler(this.findTardis().get());
-		}
-		return loyalties;
-	}
-
-	public void setLoyalties(LoyaltyHandler loyalties) {
-		this.loyalties = loyalties;
-	}
-
-	public DoorData getDoor() {
-		if (this.door == null && this.findTardis().isPresent()) {
-			this.door = new DoorData(this.findTardis().get());
-		}
-		return door;
-	}
-
-	public void setDoor(DoorData door) {
-		this.door = door;
-	}
-
-	public OvergrownData getOvergrown() {
-		if (this.overgrown == null && this.findTardis().isPresent()) {
-			this.overgrown = new OvergrownData(this.findTardis().get());
-		}
-		return overgrown;
-	}
-
-	public void setOvergrown(OvergrownData overgrown) {
-		this.overgrown = overgrown;
-	}
-
-	public ServerHumHandler getHum() {
-		if (this.hum == null && this.findTardis().isPresent()) {
-			this.hum = new ServerHumHandler(this.findTardis().get());
+			return manager;
 		}
 
-		return this.hum;
-	}
+		@Override
+		public JsonElement serialize(TardisHandlersManager manager, java.lang.reflect.Type type, JsonSerializationContext context) {
+			JsonObject result = new JsonObject();
 
-	public ServerAlarmHandler getAlarms() {
-		if (this.alarms == null && this.findTardis().isPresent()) {
-			this.alarms = new ServerAlarmHandler(this.findTardis().get());
+			manager.forEach(component -> result.add(
+					component.getId().toString(),
+					context.serialize(component)
+			));
+
+			return result;
 		}
-		return alarms;
-	}
-
-	public void setAlarms(ServerAlarmHandler alarms) {
-		this.alarms = alarms;
-	}
-
-	public InteriorChangingHandler getInteriorChanger() {
-		if (this.interior == null && this.findTardis().isPresent()) {
-			this.interior = new InteriorChangingHandler(this.findTardis().get());
-		}
-		return interior;
-	}
-
-	public BiomeHandler getBiomeHandler() {
-		if (this.biome == null && this.findTardis().isPresent()) {
-			this.biome = new BiomeHandler(this.findTardis().get());
-		}
-		return biome;
-	}
-
-	public SequenceHandler getSequenceHandler() {
-		if (this.sequenceHandler == null && this.findTardis().isPresent()) {
-			this.sequenceHandler = new SequenceHandler(this.findTardis().get());
-		}
-		return sequenceHandler;
-	}
-
-	public FuelData getFuel() {
-		if (this.fuel == null && this.findTardis().isPresent()) {
-			this.fuel = new FuelData(this.findTardis().get());
-		}
-		return fuel;
-	}
-
-	public void setFuel(FuelData fuel) {
-		this.fuel = fuel;
-	}
-
-	public HADSData getHADS() {
-		if (this.hads == null && this.findTardis().isPresent()) {
-			this.hads = new HADSData(this.findTardis().get());
-		}
-		return hads;
-	}
-
-	public void setHADS(HADSData hads) {
-		this.hads = hads;
-	}
-
-	public FlightData getFlight() {
-		if (this.flight == null && this.findTardis().isPresent()) {
-			this.flight = new FlightData(this.findTardis().get());
-		}
-
-		return flight;
-	}
-
-	public void setFlight(FlightData flight) {
-		this.flight = flight;
-	}
-
-	public SiegeData getSiege() {
-		if (this.siege == null && this.findTardis().isPresent()) {
-			this.siege = new SiegeData(this.findTardis().get());
-		}
-		return this.siege;
-	}
-
-	public void setSiege(SiegeData siege) {
-		this.siege = siege;
-	}
-
-	public CloakData getCloak() {
-		if (this.cloak == null && this.findTardis().isPresent()) {
-			this.cloak = new CloakData(this.findTardis().get());
-		}
-		return this.cloak;
-	}
-
-	public StatsData getStats() {
-		if (this.stats == null && this.findTardis().isPresent()) {
-			this.stats = new StatsData(this.findTardis().get());
-			addTickable(this.stats);
-		}
-		return this.stats;
-	}
-
-	public void setCrashData(TardisCrashData crashData) {
-		this.crashData = crashData;
-	}
-
-	public TardisCrashData getCrashData() {
-		if (this.crashData == null && this.findTardis().isPresent()) {
-			this.crashData = new TardisCrashData(this.findTardis().get());
-		}
-		return this.crashData;
-	}
-
-	public SonicHandler getSonic() {
-		if (this.sonic == null && this.findTardis().isPresent()) {
-			this.sonic = new SonicHandler(this.findTardis().get());
-		}
-		return this.sonic;
-	}
-
-	public void setSonic(SonicHandler sonicHandler) {
-		this.sonic = sonicHandler;
-	}
-
-	public ShieldData getShields() {
-		if (this.shields == null && this.findTardis().isPresent()) {
-			this.shields = new ShieldData(this.findTardis().get());
-		}
-		return this.shields;
-	}
-
-	public void setShields(ShieldData shieldData) {
-		this.shields = shieldData;
-	}
-
-	public PermissionHandler getPermissions() {
-		if (this.permissions == null && this.findTardis().isPresent())
-			this.permissions = new PermissionHandler(this.findTardis().get());
-
-		return this.permissions;
-	}
-
-	public void setPermissions(PermissionHandler permissions) {
-		this.permissions = permissions;
 	}
 }

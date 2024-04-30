@@ -29,14 +29,12 @@ public class StatsData extends TardisLink {
 
 	private static final String DATE_KEY = "date";
 
-	public StatsData(Tardis tardis) {
-		super(tardis, TypeId.STATS);
+	public StatsData() {
+		super(Id.STATS);
 	}
 
 	public String getName() {
-		if (findTardis().isEmpty()) return "";
-
-		String name = (String) PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), NAME_KEY);
+		String name = (String) PropertiesHandler.get(tardis().getHandlers().getProperties(), NAME_KEY);
 
 		if (name == null) {
 			name = getRandomName();
@@ -47,9 +45,7 @@ public class StatsData extends TardisLink {
 	}
 
 	public String getPlayerCreatorName() {
-		if (findTardis().isEmpty()) return "";
-
-		String name = (String) PropertiesHandler.get(findTardis().get().getHandlers().getProperties(), PLAYER_CREATOR_NAME_KEY);
+		String name = (String) PropertiesHandler.get(tardis().getHandlers().getProperties(), PLAYER_CREATOR_NAME_KEY);
 
 		if (name == null) {
 			name = getRandomName();
@@ -61,13 +57,11 @@ public class StatsData extends TardisLink {
 
 
 	public void setName(String name) {
-		if (findTardis().isEmpty()) return;
-		PropertiesHandler.set(findTardis().get(), NAME_KEY, name);
+		PropertiesHandler.set(tardis(), NAME_KEY, name);
 	}
 
 	public void setPlayerCreatorName(String name) {
-		if (findTardis().isEmpty()) return;
-		PropertiesHandler.set(findTardis().get(), PLAYER_CREATOR_NAME_KEY, name);
+		PropertiesHandler.set(tardis(), PLAYER_CREATOR_NAME_KEY, name);
 	}
 
 	public static String fixupName(String name) {
@@ -121,9 +115,7 @@ public class StatsData extends TardisLink {
 	}
 
 	public Date getCreationDate() {
-		if (this.findTardis().isEmpty()) return Date.from(Instant.now());
-
-		Tardis tardis=  this.findTardis().get();
+		Tardis tardis = this.tardis();
 
 		if (PropertiesHandler.get(tardis.getHandlers().getProperties(), DATE_KEY) == null) {
 			AITMod.LOGGER.error(tardis.getUuid().toString() + " was missing creation date! Resetting to now");
@@ -148,13 +140,11 @@ public class StatsData extends TardisLink {
 	}
 
 	public void markCreationDate() {
-		if (findTardis().isEmpty()) return;
-		PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), DATE_KEY,
+		PropertiesHandler.set(tardis().getHandlers().getProperties(), DATE_KEY,
 				DateFormat.getDateTimeInstance(DateFormat.LONG, 3).format(Date.from(Instant.now())));
 	}
 
 	public void markPlayerCreatorName() {
-		if(findTardis().isEmpty()) return;
-		PropertiesHandler.set(findTardis().get().getHandlers().getProperties(), PLAYER_CREATOR_NAME_KEY, this.getPlayerCreatorName());
+		PropertiesHandler.set(tardis().getHandlers().getProperties(), PLAYER_CREATOR_NAME_KEY, this.getPlayerCreatorName());
 	}
 }

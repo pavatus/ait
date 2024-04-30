@@ -4,6 +4,8 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.CloakData;
 import loqor.ait.tardis.util.NetworkUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -46,7 +48,7 @@ public abstract class ExteriorAnimation {
 			this.setupAnimation(exterior.findTardis().get().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 			return 1f;
 		}
-		if (this.exterior.findTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.exterior.findTardis().get().getHandlers().getCloak().isEnabled()) {
+		if (this.exterior.findTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.exterior.findTardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled()) {
 			return 0.105f;
 		}
 

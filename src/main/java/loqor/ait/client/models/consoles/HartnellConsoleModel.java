@@ -4,8 +4,10 @@ import loqor.ait.AITMod;
 import loqor.ait.client.animation.console.hartnell.HartnellAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
+import loqor.ait.tardis.data.CloakData;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.TardisTravel;
@@ -882,13 +884,13 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Handbrake Control Movements
 		ModelPart handbrake = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_2").getChild("bone46");
-		handbrake.roll = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? handbrake.roll + 1 : handbrake.roll;
+		handbrake.roll = PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.HANDBRAKE) ? handbrake.roll + 1 : handbrake.roll;
 
 		// Power Control Movements
 		ModelPart powerControl = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("m_lever_3").getChild("bone142");
 		ModelPart rotor = this.bone.getChild("rotor");
-		powerControl.roll = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ? powerControl.roll + 1 : powerControl.roll;
-		rotor.pivotY = !PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ? rotor.pivotY + 5 : rotor.pivotY;
+		powerControl.roll = PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.HAS_POWER) ? powerControl.roll + 1 : powerControl.roll;
+		rotor.pivotY = !PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.HAS_POWER) ? rotor.pivotY + 5 : rotor.pivotY;
 
 		// Door Control Movements
 		ModelPart doorControl = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ctrl_panel_3").getChild("bone123");
@@ -918,24 +920,24 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		ModelPart cloak = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("ctrl_panel_2").getChild("bone108");
 		ModelPart cloakLight = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("ind_lamp_15").getChild("bone101");
-		cloak.yaw = console.findTardis().get().getHandlers().getCloak().isEnabled() ? cloak.yaw + 1.575f : cloak.yaw;
-		cloakLight.pivotY = console.findTardis().get().getHandlers().getCloak().isEnabled() ? cloakLight.pivotY : cloakLight.pivotY + 1;
+		cloak.yaw = console.findTardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled() ? cloak.yaw + 1.575f : cloak.yaw;
+		cloakLight.pivotY = console.findTardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled() ? cloakLight.pivotY : cloakLight.pivotY + 1;
 
 		// Ground Search Control Movements
 		ModelPart groundSearch = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("s_knob");
-		groundSearch.pivotZ = !PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pivotZ - 1.5f : groundSearch.pivotZ;
+		groundSearch.pivotZ = !PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pivotZ - 1.5f : groundSearch.pivotZ;
 
 		// Hail Mary Control Movements
 		ModelPart hailMary = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("s_lever").getChild("bone61");
-		hailMary.roll = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HAIL_MARY) ? hailMary.roll + 1.75f : hailMary.roll;
+		hailMary.roll = PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.HAIL_MARY) ? hailMary.roll + 1.75f : hailMary.roll;
 		ModelPart hailMaryWarningLight = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("sym_lamp").getChild("bone97");
-		hailMaryWarningLight.pivotY = !PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HAIL_MARY) ? hailMaryWarningLight.pivotY : hailMaryWarningLight.pivotY + 1;
+		hailMaryWarningLight.pivotY = !PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.HAIL_MARY) ? hailMaryWarningLight.pivotY : hailMaryWarningLight.pivotY + 1;
 
 		// Hads Alarm Control Movements
 		ModelPart hadsAlarms = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("s_lever_6").getChild("bone143");
 		ModelPart hadsAlarmsLightsOne = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("sym_lamp4").getChild("bone145");
 		ModelPart hadsAlarmsLightsTwo = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("sym_lamp5").getChild("bone141");
-		if (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)) {
+		if (PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.ALARM_ENABLED)) {
 			hadsAlarms.roll = hadsAlarms.roll + 1.75f;
 			hadsAlarmsLightsOne.pivotY = hadsAlarmsLightsOne.pivotY;
 			hadsAlarmsLightsTwo.pivotY = hadsAlarmsLightsTwo.pivotY;
@@ -946,7 +948,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 		}
 
 		ModelPart security = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("s_lever_7").getChild("bone144");
-		security.roll = (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY)) ? security.roll + 1.75f : security.roll;
+		security.roll = (PropertiesHandler.getBool(console.findTardis().get().properties(), SecurityControl.SECURITY_KEY)) ? security.roll + 1.75f : security.roll;
 
 		// Increment Control Movements
 		ModelPart increment = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_crank_3").getChild("bone74");
@@ -958,17 +960,17 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Anti Grav Control Movements
 		ModelPart antiGrav = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("sl_switch_1").getChild("bone33");
-		antiGrav.pivotX = !PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? antiGrav.pivotX : antiGrav.pivotX + 1;
+		antiGrav.pivotX = !PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? antiGrav.pivotX : antiGrav.pivotX + 1;
 
 		ModelPart shield = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("sl_switch_6").getChild("bone57");
-		shield.pivotX = PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED) ? shield.pivotX + 0.5f : shield.pivotX + 1 : shield.pivotX;
+		shield.pivotX = PropertiesHandler.getBool(console.findTardis().get().properties(), ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(console.findTardis().get().properties(), ShieldData.IS_VISUALLY_SHIELDED) ? shield.pivotX + 0.5f : shield.pivotX + 1 : shield.pivotX;
 
 		ModelPart siegeProtocol = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("sl_switch_5").getChild("bone56");
-		siegeProtocol.pivotX = !PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE) ? siegeProtocol.pivotX : siegeProtocol.pivotX + 1;
+		siegeProtocol.pivotX = !PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.SIEGE_MODE) ? siegeProtocol.pivotX : siegeProtocol.pivotX + 1;
 
 		// Auto Pilot Control Movements
 		ModelPart autoPilot = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("st_switch").getChild("bone26");
-		autoPilot.yaw = !PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? autoPilot.yaw + 1 : autoPilot.yaw;
+		autoPilot.yaw = !PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.AUTO_LAND) ? autoPilot.yaw + 1 : autoPilot.yaw;
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}

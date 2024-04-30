@@ -28,9 +28,11 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.advancement.TardisCriterions;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.ShieldData;
+import loqor.ait.tardis.data.SiegeData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.FlightUtil;
@@ -153,7 +155,7 @@ public class AITMod implements ModInitializer {
 		}));
 
 		TardisEvents.DEMAT.register((tardis -> {
-			if (tardis.isGrowth() || tardis.getHandlers().getInteriorChanger().isGenerating() || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
+			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating() || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
 				return true; // cancelled
 
 			if (tardis.getDoor().isOpen() /*|| !tardis.getDoor().locked()*/)
@@ -167,7 +169,7 @@ public class AITMod implements ModInitializer {
 
 		TardisEvents.MAT.register((tardis -> {
 			// Check that the tardis has finished flight
-			boolean flightDone = tardis.getHandlers().getFlight().hasFinishedFlight();
+			boolean flightDone = tardis.flight().hasFinishedFlight();
 
 			// Check if the Tardis is on cooldown
 			boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
@@ -185,6 +187,7 @@ public class AITMod implements ModInitializer {
 		}));
 
 		TardisEvents.OUT_OF_FUEL.register(Tardis::disablePower);
+
 		TardisEvents.LOSE_POWER.register((tardis -> {
 			if (TardisUtil.getTardisDimension() != null) {
 				FlightUtil.playSoundAtConsole(tardis, AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
@@ -196,6 +199,7 @@ public class AITMod implements ModInitializer {
 			PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
 			PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
 		}));
+
 		TardisEvents.REGAIN_POWER.register((tardis -> {
 			FlightUtil.playSoundAtConsole(tardis, AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
 		}));
@@ -216,25 +220,29 @@ public class AITMod implements ModInitializer {
 			if (tardis == null || desktop == null) return;
 
 			// nuh uh no interior changing during flight
-			if(tardis.getTravel().inFlight()) return;
+			if(tardis.getTravel().inFlight())
+				return;
 
-			tardis.getHandlers().getInteriorChanger().queueInteriorChange(desktop);
+			tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).queueInteriorChange(desktop);
 		}));
 
 		ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE, ((server, player, handler, buf, responseSender) -> {
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
 			HumSound hum = HumSound.fromName(buf.readString(), buf.readString());
 
-			if (tardis == null || hum == null) return;
+			if (tardis == null || hum == null)
+				return;
 
-			tardis.getHandlers().getHum().setHum(hum);
+			tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).setHum(hum);
 		}));
 
 		ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
 			UUID console = buf.readUuid();
-			TardisUtil.getServer().execute(() -> {
-				if (tardis == null) return;
+			server.execute(() -> {
+				if (tardis == null)
+					return;
+
 				tardis.getDesktop().cacheConsole(console);
 			});
 		});
@@ -242,36 +250,46 @@ public class AITMod implements ModInitializer {
 		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.LEAVEBEHIND, (server, player, handler, buf, responseSender) -> {
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
 			boolean behind = buf.readBoolean();
-			TardisUtil.getServer().execute(() -> {
-				if (tardis == null) return;
-				PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.LEAVE_BEHIND, behind);
+			server.execute(() -> {
+				if (tardis == null)
+					return;
+
+				PropertiesHandler.set(tardis.properties(), PropertiesHandler.LEAVE_BEHIND, behind);
 			});
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.HOSTILEALARMS, (server, player, handler, buf, responseSender) -> {
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
 			boolean hostile = buf.readBoolean();
-			TardisUtil.getServer().execute(() -> {
-				if (tardis == null) return;
-				PropertiesHandler.set(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
+			server.execute(() -> {
+				if (tardis == null)
+					return;
+
+				PropertiesHandler.set(tardis.properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
 			});
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.SHIELDS, (server, player, handler, buf, responseSender) -> {
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
 			boolean shields = buf.readBoolean();
-			TardisUtil.getServer().execute(() -> {
-				if (tardis == null) return;
-				PropertiesHandler.set(tardis.getHandlers().getProperties(), ShieldData.IS_SHIELDED, shields);
+
+			server.execute(() -> {
+				if (tardis == null)
+					return;
+
+				PropertiesHandler.set(tardis.properties(), ShieldData.IS_SHIELDED, shields);
 			});
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.VISUAL_SHIELDS, (server, player, handler, buf, responseSender) -> {
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
 			boolean shields = buf.readBoolean();
-			TardisUtil.getServer().execute(() -> {
-				if (tardis == null) return;
-				PropertiesHandler.set(tardis.getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED, tardis.areShieldsActive() && shields);
+
+			server.execute(() -> {
+				if (tardis == null)
+					return;
+
+				PropertiesHandler.set(tardis.properties(), ShieldData.IS_VISUALLY_SHIELDED, tardis.areShieldsActive() && shields);
 			});
 		});
 
@@ -297,7 +315,7 @@ public class AITMod implements ModInitializer {
 
 			for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
 				if (!tardis.isSiegeMode()) continue;
-				if (!Objects.equals(tardis.getHandlers().getSiege().getHeldPlayerUUID(), player.getUuid())) continue;
+				if (!Objects.equals(tardis.<SiegeData>handler(TardisComponent.Id.SIEGE).getHeldPlayerUUID(), player.getUuid())) continue;
 
 				SiegeTardisItem.placeTardis(tardis, SiegeTardisItem.fromEntity(player));
 			}

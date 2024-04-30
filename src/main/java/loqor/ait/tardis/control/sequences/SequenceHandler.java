@@ -30,11 +30,18 @@ public class SequenceHandler extends TardisLink {
 	private Sequence activeSequence;
 	private UUID playerUUID;
 
-	public SequenceHandler(Tardis tardisId) {
-		super(tardisId, TypeId.SEQUENCE);
-		recent = new RecentControls(tardisId.getUuid());
+	public SequenceHandler() {
+		super(Id.SEQUENCE);
+	}
+
+	@Override
+	public void init(Tardis tardis, boolean deserialized) {
+		super.init(tardis, deserialized);
+
+		recent = new RecentControls(tardis.getUuid());
 		activeSequence = null;
 	}
+
 	public void setActivePlayer(ServerPlayerEntity player) {
 		this.playerUUID = player.getUuid();
 	}
@@ -66,25 +73,29 @@ public class SequenceHandler extends TardisLink {
 	}
 
 	public void setActiveSequence(@Nullable Sequence sequence, boolean setTicksTo0) {
-		if (setTicksTo0) ticks = 0;
+		if (setTicksTo0)
+			this.ticks = 0;
+
 		this.activeSequence = sequence;
-		if (findTardis().isEmpty() || this.activeSequence == null) return;
-		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(findTardis().get()));
+
+		if (this.activeSequence == null)
+			return;
+
+		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(tardis()));
 	}
 
 	public void triggerRandomSequence(boolean setTicksTo0) {
 		if (setTicksTo0) ticks = 0;
-		int rand = Random.create().nextBetween(0, SequenceRegistry.REGISTRY.size()/* - 4*/);
+		// TODO: replace with built-in registry random
+		int rand = Random.create().nextBetween(0, SequenceRegistry.REGISTRY.size());
 		Sequence sequence = SequenceRegistry.REGISTRY.get(rand);
-		if (sequence == null) return;
-		this.activeSequence = sequence/* == SequenceRegistry.TAKE_OFF
-				|| sequence == SequenceRegistry.ENTER_VORTEX
-				|| sequence == SequenceRegistry.EXIT_VORTEX
-				|| sequence == SequenceRegistry.LANDING ? null : sequence*/;
-		if (findTardis().isEmpty() || this.activeSequence == null) return;
-		FlightUtil.playSoundAtConsole(findTardis().get(), SoundEvents.BLOCK_BEACON_POWER_SELECT);
-		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(findTardis().get()));
-		//sync();
+
+		if (sequence == null)
+			return;
+
+		this.activeSequence = sequence;
+        FlightUtil.playSoundAtConsole(tardis(), SoundEvents.BLOCK_BEACON_POWER_SELECT);
+		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(tardis()));
 	}
 
 	@Nullable
@@ -93,32 +104,24 @@ public class SequenceHandler extends TardisLink {
 	}
 
 	private void compareToSequences() {
+		if (this.getActiveSequence() == null)
+			return;
 
-		if (this.findTardis().isEmpty() || this.getActiveSequence() == null) return;
+		if (this.recent == null)
+			this.recent = new RecentControls(this.tardis().getUuid());
 
-		if (this.recent == null) {
-
-			this.recent = new RecentControls(this.findTardis().get().getUuid());
-
-		}
 		if (this.getActiveSequence().isFinished(this.recent)) {
-
 			recent.clear();
-			this.getActiveSequence().execute(this.findTardis().get());
-			completedControlEffects(this.findTardis().get());
+			this.getActiveSequence().execute(this.tardis());
+			completedControlEffects(this.tardis());
 			this.setActiveSequence(null, true);
-
 		} else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
-
 			recent.clear();
-			this.getActiveSequence().executeMissed(this.findTardis().get(), this.getActivePlayer());
-			missedControlEffects(this.findTardis().get());
+			this.getActiveSequence().executeMissed(this.tardis(), this.getActivePlayer());
+			missedControlEffects(this.tardis());
 			this.setActiveSequence(null, true);
-
 		} else if (recent.size() >= this.getActiveSequence().getControls().size()) {
-
 			recent.clear();
-
 		}
 	}
 
@@ -154,13 +157,7 @@ public class SequenceHandler extends TardisLink {
 	}
 
 	public boolean isConsoleDisabled() {
-		if (findTardis().isEmpty()) return false;
-		return PropertiesHandler.getBool(findTardis().get().getHandlers().getProperties(), PropertiesHandler.CONSOLE_DISABLED);
-	}
-
-	public void disableConsole(boolean disabled) {
-		if (findTardis().isEmpty()) return;
-		PropertiesHandler.set(findTardis().get(), PropertiesHandler.CONSOLE_DISABLED, disabled);
+		return PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.CONSOLE_DISABLED);
 	}
 
 	@Override
@@ -182,11 +179,4 @@ public class SequenceHandler extends TardisLink {
 		return this.getActiveSequence().controlPartOfSequence(control);
 	}
 
-	public RecentControls getRecent() {
-		return recent;
-	}
-
-	public int getActiveSequenceTicks() {
-		return ticks;
-	}
 }

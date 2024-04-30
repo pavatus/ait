@@ -2,22 +2,20 @@ package loqor.ait.tardis;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
-import loqor.ait.tardis.base.AbstractTardisComponent;
-import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.data.TardisHandlersManager;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.control.sequences.SequenceHandler;
+import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -33,27 +31,33 @@ import java.util.function.Function;
 
 public abstract class Tardis {
 
+	private UUID uuid;
 	protected TardisTravel travel;
-	private final UUID uuid;
 	protected TardisDesktop desktop;
 	protected TardisExterior exterior;
-	//protected TardisDoor door;
 	protected TardisHandlersManager handlers;
-	protected boolean dirty = false;
 
+	protected boolean dirty = false;
 	public int tardisHammerAnnoyance = 0; // todo move :(
 
-	public Tardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variant) {
-		this(uuid, tardis -> new TardisTravel(tardis, pos), tardis -> new TardisDesktop(tardis, schema), (tardis) -> new TardisExterior(tardis, exteriorType, variant));
+	// TODO: remove the lambdas, since ATCs are now linked in the init.
+	protected Tardis(UUID uuid, TardisTravel travel, TardisDesktop desktop, TardisExterior exterior) {
+		this.uuid = uuid;
+		this.travel = travel;
+		this.desktop = desktop;
+		this.exterior = exterior;
+		this.handlers = new TardisHandlersManager();
+
 		tardisHammerAnnoyance = 0;
+		this.init(false);
 	}
 
-	protected Tardis(UUID uuid, Function<Tardis, TardisTravel> travel, Function<Tardis, TardisDesktop> desktop, Function<Tardis, TardisExterior> exterior) {
-		this.uuid = uuid;
-		this.travel = travel.apply(this);
-		this.desktop = desktop.apply(this);
-		this.exterior = exterior.apply(this);
-		tardisHammerAnnoyance = 0;
+	/**
+	 * @deprecated NEVER EVER use this constructor. It's for GSON to call upon deserialization!
+	 */
+	@Deprecated
+	protected Tardis() {
+
 	}
 
 	public UUID getUuid() {
@@ -69,14 +73,14 @@ public abstract class Tardis {
 	}
 
 	public DoorData getDoor() {
-		return this.getHandlers().getDoor();
+		return this.getHandlers().get(TardisComponent.Id.DOOR);
 	}
 
-	public SonicHandler getSonic() {
-		return this.getHandlers().getSonic();
+	public SonicHandler sonic() {
+		return this.getHandlers().get(TardisComponent.Id.SONIC);
 	}
 
-	// dont use this
+	@Deprecated
 	public void setLockedTardis(boolean bool) {
 		this.getDoor().setLocked(bool);
 	}
@@ -89,16 +93,29 @@ public abstract class Tardis {
 		return travel;
 	}
 
+	public LoyaltyHandler loyalty() {
+		return this.handler(TardisComponent.Id.LOYALTY);
+	}
+
+	public ServerAlarmHandler alarm() {
+		return this.handler(TardisComponent.Id.ALARMS);
+	}
+
+	public StatsData stats() {
+		return this.handler(TardisComponent.Id.STATS);
+	}
+
 	/**
 	 * Retrieves the TardisHandlersManager instance associated with the given UUID.
 	 *
 	 * @return TardisHandlersManager instance or null if it doesn't exist
 	 */
 	public TardisHandlersManager getHandlers() {
-		if (handlers == null)
-			handlers = new TardisHandlersManager(this);
-
 		return handlers;
+	}
+	
+	public <T extends TardisComponent> T handler(TardisComponent.Id type) {
+		return this.handlers.get(type);
 	}
 
 	@Override
@@ -112,63 +129,72 @@ public abstract class Tardis {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(uuid);
+		return uuid.hashCode();
 	}
 
-	public void init() {
-		this.init(false);
-	}
-
-	public void init(boolean dirty) {
-
-	}
-
-	private void init(AbstractTardisComponent component, boolean dirty) {
-		AbstractTardisComponent.Init mode = component.getInitMode();
-		component.setTardis(this);
-
-		switch (mode) {
-			case NO_INIT -> {
-			}
-			case ALWAYS -> component.init();
-			case FIRST -> {
-				if (!dirty) component.init();
-			}
-			case DESERIALIZE -> {
-				if (dirty) component.init();
-			}
-			default -> throw new IllegalArgumentException("Unimplemented init mode " + mode);
-		}
+	public void init(boolean deserialized) {
+		travel.init(this, deserialized);
+		desktop.init(this, deserialized);
+		exterior.init(this, deserialized);
+		handlers.init(this, deserialized);
 	}
 
 	// todo clean up all this
 	// fuel - because getHandlers() blah blah is annoying me
 	public double addFuel(double fuel) {
-		return this.getHandlers().getFuel().addFuel(fuel);
+		return this.<FuelData>handler(TardisComponent.Id.FUEL).addFuel(fuel);
 	}
 
 	public void removeFuel(double fuel) {
-		this.getHandlers().getFuel().removeFuel(fuel);
+		this.<FuelData>handler(TardisComponent.Id.FUEL).removeFuel(fuel);
 	}
 
 	public double getFuel() {
-		return this.getHandlers().getFuel().getCurrentFuel();
+		return this.<FuelData>handler(TardisComponent.Id.FUEL).getCurrentFuel();
 	}
 
 	public void setFuelCount(double i) {
-		this.getHandlers().getFuel().setCurrentFuel(i);
+		this.<FuelData>handler(TardisComponent.Id.FUEL).setCurrentFuel(i);
 	}
 
 	public boolean isRefueling() {
-		return this.getHandlers().getFuel().isRefueling();
+		return this.<FuelData>handler(TardisComponent.Id.FUEL).isRefueling();
 	}
 
 	public void setRefueling(boolean b) {
-		this.getHandlers().getFuel().setRefueling(b);
+		this.<FuelData>handler(TardisComponent.Id.FUEL).setRefueling(b);
 	}
 
-	public void setIsInDanger(boolean danger) {
-		this.getHandlers().getHADS().setIsInDanger(danger);
+	public boolean isInDanger() {
+		return this.<HADSData>handler(TardisComponent.Id.HADS).isInDanger();
+	}
+
+	public FuelData fuel() {
+		return this.handler(TardisComponent.Id.FUEL);
+	}
+
+	public PropertiesHolder properties() {
+		return this.handler(TardisComponent.Id.PROPERTIES);
+	}
+
+	public FlightData flight() {
+		return this.handler(TardisComponent.Id.FLIGHT);
+	}
+
+	public TardisCrashData crash() {
+		return this.handler(TardisComponent.Id.CRASH_DATA);
+	}
+
+	public SequenceHandler sequence() {
+		return this.handler(TardisComponent.Id.SEQUENCE);
+	}
+
+	public WaypointHandler waypoint() {
+		return this.handler(TardisComponent.Id.WAYPOINTS);
+	}
+
+	public boolean inFlight() {
+		return this.getTravel().getState() != TardisTravel.State.LANDED;
 	}
 
 	public boolean isUnlocked(Unlockable unlockable) {
@@ -190,7 +216,7 @@ public abstract class Tardis {
 	}
 
 	public boolean hasPower() {
-		return PropertiesHandler.getBool(this.getHandlers().getProperties(), PropertiesHandler.HAS_POWER);
+		return PropertiesHandler.getBool(this.properties(), PropertiesHandler.HAS_POWER);
 	}
 
 	public void disablePower() {
@@ -225,32 +251,27 @@ public abstract class Tardis {
 	}
 
 	public boolean areShieldsActive() {
-		return this.getHandlers().getShields().areShieldsActive();
+		return this.<ShieldData>handler(TardisComponent.Id.SHIELDS).areShieldsActive();
 	}
 
 	public boolean areVisualShieldsActive() {
-		return this.getHandlers().getShields().areVisualShieldsActive();
+		return this.<ShieldData>handler(TardisComponent.Id.SHIELDS).areVisualShieldsActive();
 	}
 
-
 	public boolean isSiegeMode() {
-		return this.getHandlers().getSiege().isSiegeMode();
+		return this.<SiegeData>handler(TardisComponent.Id.SIEGE).isSiegeMode();
 	}
 
 	public void setSiegeMode(boolean b) {
-		this.getHandlers().getSiege().setSiegeMode(b);
+		this.<SiegeData>handler(TardisComponent.Id.SIEGE).setSiegeMode(b);
 	}
 
 	public boolean isSiegeBeingHeld() {
-		return this.getHandlers().getSiege().isSiegeBeingHeld();
+		return this.<SiegeData>handler(TardisComponent.Id.SIEGE).isSiegeBeingHeld();
 	}
 
 	public void setSiegeBeingHeld(UUID b) {
-		this.getHandlers().getSiege().setSiegeBeingHeld(b);
-	}
-
-	public int getTimeInSiegeMode() {
-		return this.getHandlers().getSiege().getTimeInSiegeMode();
+		this.<SiegeData>handler(TardisComponent.Id.SIEGE).setSiegeBeingHeld(b);
 	}
 
 	public AbsoluteBlockPos.Directed position() {
@@ -273,8 +294,11 @@ public abstract class Tardis {
 					this.enablePower();
 					entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
 					entity.getWorld().playSound(null, this.getExterior().getExteriorPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
-					this.getHandlers().getInteriorChanger().queueInteriorChange(DesktopRegistry.getInstance().getRandom(this));
-					if (this.getHandlers().getInteriorChanger().isGenerating()) {
+
+					InteriorChangingHandler interior = this.handler(TardisComponent.Id.INTERIOR);
+					interior.queueInteriorChange(DesktopRegistry.getInstance().getRandom(this));
+
+					if (interior.isGenerating()) {
 						entity.discard();
 					}
 				});
@@ -297,13 +321,5 @@ public abstract class Tardis {
 	@Deprecated
 	public void markDirty() {
 		this.dirty = false;
-	}
-
-	public boolean isInDanger() {
-		return this.getHandlers().getHADS().isInDanger();
-	}
-
-	public boolean inFlight() {
-		return this.getTravel().getState() != TardisTravel.State.LANDED;
 	}
 }

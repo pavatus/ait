@@ -27,14 +27,14 @@ public class TardisConsole extends TardisLink {
 	@Exclude
 	private int ticks = 0;
 
-	protected TardisConsole(Tardis tardis, AbsoluteBlockPos pos, UUID uuid) {
-		super(tardis, TypeId.CONSOLE);
+	protected TardisConsole(AbsoluteBlockPos pos, UUID uuid) {
+		super(Id.CONSOLE);
 		this.position = pos;
 		this.uuid = uuid;
 	}
 
-	public TardisConsole(Tardis tardis, AbsoluteBlockPos pos) {
-		this(tardis, pos, UUID.randomUUID());
+	public TardisConsole(AbsoluteBlockPos pos) {
+		this(pos, UUID.randomUUID());
 	}
 
 	public boolean inUse() {
@@ -72,18 +72,20 @@ public class TardisConsole extends TardisLink {
 		return (found instanceof ConsoleBlockEntity) ? Optional.of((ConsoleBlockEntity) found) : Optional.empty();
 	}
 
-	@Override
-	public Optional<Tardis> findTardis() {
-		if (this.tardisId == null) {
-			if (!this.validate()) return Optional.empty();
+	/*@Override
+	public Tardis tardis() {
+		if (this.tardis == null) {
+			if (!this.validate())
+				return Optional.empty();
 
 			Tardis found = TardisUtil.findTardisByInterior(this.position(), !this.findEntity().get().getWorld().isClient());
+
 			if (found != null)
 				this.setTardis(found);
 		}
-		return super.findTardis();
-	}
 
+		return super.tardis();
+	}*/
 
 	public boolean validate() {
 		if (this.shouldRemove()) {
@@ -100,17 +102,13 @@ public class TardisConsole extends TardisLink {
 	}
 
 	private void remove() {
-		if (this.findTardis().isEmpty()) return;
-
-		Tardis tardis = this.findTardis().get();
-		tardis.getDesktop().removeConsole(this);
+		this.tardis().getDesktop().removeConsole(this);
 	}
 
 	@Override
 	public void tick(MinecraftServer server) {
 		super.tick(server);
 	}
-
 
 	/**
 	 * Tick from the {@link ConsoleBlockEntity#tick(World, BlockPos, BlockState, ConsoleBlockEntity)}

@@ -40,7 +40,7 @@ public class EngineBlockEntity extends LinkableBlockEntity implements NamedScree
 
 	public void useOn(BlockState state, World world, boolean sneaking, PlayerEntity player) {
 		if (world.isClient() || this.findTardis().isEmpty()) return;
-		boolean security = PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
+		boolean security = PropertiesHandler.getBool(this.findTardis().get().properties(), SecurityControl.SECURITY_KEY);
 		if (security) {
 			if (!SecurityControl.hasMatchingKey((ServerPlayerEntity) player, this.findTardis().get())) {
 				return;

@@ -15,7 +15,8 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.base.AbstractTardisComponent;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisChunkUtil;
 import loqor.ait.tardis.util.TardisUtil;
@@ -126,39 +127,32 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		}
 	}
 
-	public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked) {
-		UUID uuid = UUID.randomUUID();
-
-		ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked); // todo removed "locked" param
-		this.lookup.put(uuid, tardis);
-
-		tardis.init();
-
-		// todo this can be moved to init
-		tardis.getTravel().placeExterior();
-		tardis.getTravel().runAnimations();
-
-		tardis.getHandlers().getStats().markCreationDate();
-
-		this.saveTardis(TardisUtil.getServer(), tardis);
-		return tardis;
+	public ServerTardis create(AbsoluteBlockPos.Directed pos, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema) {
+		return createWithStats(pos, exteriorType, variantType, schema, stats -> {});
 	}
 
-	public ServerTardis createWithPlayerCreator(AbsoluteBlockPos.Directed pos, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, boolean locked, String playerCreatorName) {
+	public ServerTardis createWithPlayerCreator(AbsoluteBlockPos.Directed pos, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, String playerCreatorName) {
+		return createWithStats(pos, exteriorType, variantType, schema, stats -> {
+			stats.setPlayerCreatorName(playerCreatorName);
+			stats.markPlayerCreatorName();
+		});
+	}
+
+	private ServerTardis createWithStats(AbsoluteBlockPos.Directed pos, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType, TardisDesktopSchema schema, Consumer<StatsData> consumer) {
 		UUID uuid = UUID.randomUUID();
 
-		ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType, locked); // todo removed "locked" param
-		this.lookup.put(uuid, tardis);
+		ServerTardis tardis = new ServerTardis(uuid, pos, schema, exteriorType, variantType); // todo removed "locked" param
+		tardis.init(false);
 
 		// todo this can be moved to init
 		tardis.getTravel().placeExterior();
 		tardis.getTravel().runAnimations();
 
-		tardis.getHandlers().getStats().markCreationDate();
-		tardis.getHandlers().getStats().setPlayerCreatorName(playerCreatorName);
-		tardis.getHandlers().getStats().markPlayerCreatorName();
+		StatsData stats = tardis.handler(TardisComponent.Id.STATS);
+		stats.markCreationDate();
+		consumer.accept(stats);
 
-		this.saveTardis(TardisUtil.getServer(), tardis);
+		this.lookup.put(uuid, tardis);
 		return tardis;
 	}
 
@@ -180,7 +174,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
 	@Override
 	protected GsonBuilder getGsonBuilder(GsonBuilder builder) {
-		builder.registerTypeAdapter(SerialDimension.class, SerialDimension.serializer());
+		builder.registerTypeAdapter(SerialDimension.class, SerialDimension.serializer())
+				.registerTypeAdapter(Tardis.class, ServerTardis.creator());
+
 		return builder;
 	}
 
@@ -189,31 +185,15 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 	}
 
 	public void sendToSubscribers(Tardis tardis) {
-		// todo this likely needs refactoring // yes, yes it does.
-//        if (tardis == null) return;
-//        if (!this.subscribers.containsKey(tardis.getUuid())) return;
-//        MinecraftServer mc = TardisUtil.getServer();
-//
-//        Map<UUID, List<UUID>> subscribersCopy = new HashMap<>(this.subscribers);
-//        List<UUID> tardisSubscribers = new CopyOnWriteArrayList<>(subscribersCopy.getOrDefault(tardis.getUuid(), Collections.emptyList()));
-//
-//        for (UUID uuid : tardisSubscribers) {
-//            ServerPlayerEntity player = mc.getPlayerManager().getPlayer(uuid);
-//            if (player == null) continue;
-//            this.sendTardis(player, tardis);
-//        }
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
 			this.sendTardis(player, tardis);
 		}
 	}
 
 	// TODO - yes this is much better than sending the entire tardis class, but it still sends the entire component class. If everything is saved in a PropertiesHolder then this is a non-issue though.
-	public void sendToSubscribers(AbstractTardisComponent component) {
-		if (component.findTardis().isEmpty())
-			return;
-
-		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(this.getTardis(component.findTardis().get().getUuid()))) {
-			this.updateTardis(player, component.findTardis().get().getUuid(), component);
+	public void sendToSubscribers(TardisComponent component) {
+		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(this.getTardis(component.tardis().getUuid()))) {
+			this.updateTardis(player, component.tardis().getUuid(), component);
 		}
 	}
 
@@ -236,7 +216,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		PacketByteBuf data = PacketByteBufs.create();
 
 		data.writeUuid(tardis);
-		data.writeEnumConstant(AbstractTardisComponent.TypeId.PROPERTIES);
+		data.writeEnumConstant(TardisComponent.Id.PROPERTIES);
 
 		data.writeString(key);
 		data.writeString(type);
@@ -246,11 +226,11 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		checkForceSync(player, tardis);
 	}
 
-	private void updateTardis(@NotNull ServerPlayerEntity player, UUID uuid, AbstractTardisComponent component) {
+	private void updateTardis(@NotNull ServerPlayerEntity player, UUID uuid, TardisComponent component) {
 		this.updateTardis(player, uuid, component.getId(), this.gson.toJson(component));
 	}
 
-	private void updateTardis(@NotNull ServerPlayerEntity player, UUID uuid, AbstractTardisComponent.TypeId header, String json) {
+	private void updateTardis(@NotNull ServerPlayerEntity player, UUID uuid, TardisComponent.Id header, String json) {
 		PacketByteBuf data = PacketByteBufs.create();
 		data.writeUuid(uuid);
 		data.writeEnumConstant(header);

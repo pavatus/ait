@@ -4,7 +4,9 @@ import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.MachineRecipeRegistry;
 import loqor.ait.registry.impl.SonicRegistry;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -26,6 +28,9 @@ public class Registries {
         registries.add(MachineRecipeRegistry.getInstance());
         registries.add(ExteriorVariantRegistry.getInstance());
         registries.add(CategoryRegistry.getInstance());
+
+        registries.add(ClientConsoleVariantRegistry.getInstance());
+        registries.add(ClientExteriorVariantRegistry.getInstance());
     }
 
     public void subscribe(InitType env) {
@@ -33,9 +38,6 @@ public class Registries {
             throw new UnsupportedOperationException("Cannot call onInitializeClient while not running a client!");
 
         for (Registry registry : registries) {
-            if (env == InitType.COMMON)
-                registry.init();
-
             env.init(registry);
         }
     }
@@ -50,7 +52,7 @@ public class Registries {
     public enum InitType {
         CLIENT(Registry::onClientInit),
         SERVER(Registry::onServerInit),
-        COMMON(Registry::onCommonInit); // handled in #init
+        COMMON(Registry::onCommonInit);
 
         private final Consumer<Registry> consumer;
 

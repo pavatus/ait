@@ -2,6 +2,8 @@ package loqor.ait.client.screens;
 
 import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -64,7 +66,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		PacketByteBuf buf = PacketByteBufs.create();
 
 		buf.writeUuid(tardis().getUuid());
-		buf.writeBoolean(!PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.LEAVE_BEHIND));
+		buf.writeBoolean(!PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.LEAVE_BEHIND));
 
 		ClientPlayNetworking.send(PropertiesHandler.LEAVEBEHIND, buf);
 		updateTardis();
@@ -74,7 +76,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		PacketByteBuf buf = PacketByteBufs.create();
 
 		buf.writeUuid(tardis().getUuid());
-		buf.writeBoolean(!PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE));
+		buf.writeBoolean(!PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE));
 
 		ClientPlayNetworking.send(PropertiesHandler.HOSTILEALARMS, buf);
 		updateTardis();
@@ -84,7 +86,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		PacketByteBuf buf = PacketByteBufs.create();
 
 		buf.writeUuid(tardis().getUuid());
-		buf.writeBoolean(!PropertiesHandler.getBool(tardis().getHandlers().getProperties(), ShieldData.IS_SHIELDED));
+		buf.writeBoolean(!PropertiesHandler.getBool(tardis().properties(), ShieldData.IS_SHIELDED));
 
 		ClientPlayNetworking.send(PropertiesHandler.SHIELDS, buf);
 		updateTardis();
@@ -94,7 +96,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		PacketByteBuf buf = PacketByteBufs.create();
 
 		buf.writeUuid(tardis().getUuid());
-		buf.writeBoolean(!PropertiesHandler.getBool(tardis().getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED));
+		buf.writeBoolean(!PropertiesHandler.getBool(tardis().properties(), ShieldData.IS_VISUALLY_SHIELDED));
 
 		ClientPlayNetworking.send(PropertiesHandler.VISUAL_SHIELDS, buf);
 		updateTardis();
@@ -130,13 +132,13 @@ public class TardisSecurityScreen extends ConsoleScreen {
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
 		this.drawBackground(context);
-		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.LEAVE_BEHIND) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
-		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
-		//context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), ShieldData.IS_SHIELDED) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.3f)), (int) (top + (bgHeight * (0.1f * 4))), Color.ORANGE.getRGB(), false);
-		//context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 5))), Color.ORANGE.getRGB(), false);
+		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.LEAVE_BEHIND) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
+		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
+		//context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), ShieldData.IS_SHIELDED) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.3f)), (int) (top + (bgHeight * (0.1f * 4))), Color.ORANGE.getRGB(), false);
+		//context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), ShieldData.IS_VISUALLY_SHIELDED) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 5))), Color.ORANGE.getRGB(), false);
 		//
 		context.drawText(this.textRenderer, Text.literal("Date created:"), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 5))), 0xadcaf7, false);
-		context.drawText(this.textRenderer, Text.literal(this.tardis().getHandlers().getStats().getCreationString()), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 6))), 0xadcaf7, false);
+		context.drawText(this.textRenderer, Text.literal(this.tardis().<StatsData>handler(TardisComponent.Id.STATS).getCreationString()), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 6))), 0xadcaf7, false);
 		super.render(context, mouseX, mouseY, delta);
 	}
 

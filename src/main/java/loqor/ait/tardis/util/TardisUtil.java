@@ -21,8 +21,10 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
@@ -116,7 +118,7 @@ public class TardisUtil {
 			Identifier id = buf.readIdentifier();
 
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-			SonicItem.setSchema(tardis.getHandlers().getSonic().get(SonicHandler.HAS_CONSOLE_SONIC), id); // here we trust in the server with all of our might
+			SonicItem.setSchema(tardis.sonic().get(SonicHandler.HAS_CONSOLE_SONIC), id); // here we trust in the server with all of our might
 		});
 		ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
 				(server, player, handler, buf, responseSender) -> {
@@ -151,10 +153,10 @@ public class TardisUtil {
 					UUID uuid = buf.readUuid();
 					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-					if (tardis.getHandlers().getLoyalties().get(player).level() <= Loyalty.Type.PILOT.level)
+					if (tardis.loyalty().get(player).level() <= Loyalty.Type.PILOT.level)
 						return;
 
-					if (tardis.getHandlers().getOvergrown().isOvergrown())
+					if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
 						return;
 
 					player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
@@ -209,7 +211,7 @@ public class TardisUtil {
 									serverPlayer.getBlockZ(),
 									serverPlayer.getWorld(),
 									serverPlayer.getMovementDirection()),
-							PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND));
+							PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.AUTO_LAND));
 					FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
 				}
 		);
@@ -353,7 +355,7 @@ public class TardisUtil {
 	}
 
 	public static void teleportOutside(Tardis tardis, Entity entity) {
-		AbsoluteBlockPos.Directed pos = tardis.getTravel().getState() == TardisTravel.State.FLIGHT ? FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage()) : tardis.position();
+		AbsoluteBlockPos.Directed pos = tardis.getTravel().getState() == TardisTravel.State.FLIGHT ? FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.flight().getDurationAsPercentage()) : tardis.position();
 		TardisUtil.teleportWithDoorOffset(entity, tardis.getDoor().getExteriorPos());
 	}
 

@@ -16,38 +16,28 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.Objects;
-
 public class ShieldData extends TardisLink {
 	public static String IS_SHIELDED = "is_shielded";
 	public static String IS_VISUALLY_SHIELDED = "is_visually_shielded";
 
-	public ShieldData(Tardis tardis) {
-		super(tardis, TypeId.SHIELD);
+	public ShieldData() {
+		super(Id.SHIELDS);
 	}
 
 	public void enable() {
-		if (this.findTardis().isEmpty()) return;
-
-		PropertiesHandler.set(this.findTardis().get(), IS_SHIELDED, true);
+		PropertiesHandler.set(this.tardis(), IS_SHIELDED, true);
 	}
 
 	public void disable() {
-		if (this.findTardis().isEmpty()) return;
-
-		PropertiesHandler.set(this.findTardis().get(), IS_SHIELDED, false);
+		PropertiesHandler.set(this.tardis(), IS_SHIELDED, false);
 	}
 
 	public void enableVisuals() {
-		if (this.findTardis().isEmpty()) return;
-
-		PropertiesHandler.set(this.findTardis().get(), IS_VISUALLY_SHIELDED, true);
+		PropertiesHandler.set(this.tardis(), IS_VISUALLY_SHIELDED, true);
 	}
 
 	public void disableVisuals() {
-		if (this.findTardis().isEmpty()) return;
-
-		PropertiesHandler.set(this.findTardis().get(), IS_VISUALLY_SHIELDED, false);
+		PropertiesHandler.set(this.tardis(), IS_VISUALLY_SHIELDED, false);
 	}
 
 	public void disableAll() {
@@ -56,31 +46,27 @@ public class ShieldData extends TardisLink {
 	}
 
 	public boolean areShieldsActive() {
-		if (this.findTardis().isEmpty()) return false;
-
-		return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), IS_SHIELDED);
+		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), IS_SHIELDED);
 	}
 
 	public boolean areVisualShieldsActive() {
-		if (this.findTardis().isEmpty()) return false;
-
-		return PropertiesHandler.getBool(this.findTardis().get().getHandlers().getProperties(), IS_VISUALLY_SHIELDED);
+		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), IS_VISUALLY_SHIELDED);
 	}
 
 	@Override
 	public void tick(MinecraftServer server) {
 		super.tick(server);
 
-		if (this.findTardis().isEmpty() || this.areShieldsActive() && !this.findTardis().get().hasPower()) {
+		if (this.areShieldsActive() && !this.tardis().hasPower())
 			this.disableAll();
+
+		if (!this.areShieldsActive())
 			return;
-		}
 
-		if (this.findTardis().get().getExterior().getExteriorPos() == null) return;
+		if (this.tardis().getExterior().getExteriorPos() == null)
+			return;
 
-		if (!this.areShieldsActive()) return;
-
-		Tardis tardis = this.findTardis().get();
+		Tardis tardis = this.tardis();
 
 		tardis.removeFuel(2 * (tardis.tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick
 		World world = tardis.getExterior().getExteriorPos().getWorld();

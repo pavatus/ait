@@ -15,8 +15,8 @@ public class TardisExterior extends TardisLink {
 	private ExteriorCategorySchema exterior;
 	private ExteriorVariantSchema variant;
 
-	public TardisExterior(Tardis tardis, ExteriorCategorySchema exterior, ExteriorVariantSchema variant) {
-		super(tardis, TypeId.EXTERIOR);
+	public TardisExterior(ExteriorCategorySchema exterior, ExteriorVariantSchema variant) {
+		super(Id.EXTERIOR);
 		this.exterior = exterior;
 		this.variant = variant;
 	}
@@ -33,7 +33,7 @@ public class TardisExterior extends TardisLink {
 	public ExteriorVariantSchema getVariant() {
 		if (variant == null) {
 			AITMod.LOGGER.error("Variant was null! Changing to a random one...");
-			this.setVariant(ExteriorVariantRegistry.getInstance().getRandom(this.findTardis().get()));
+			this.setVariant(ExteriorVariantRegistry.getInstance().getRandom(this.tardis()));
 		}
 
 		return variant;
@@ -47,26 +47,15 @@ public class TardisExterior extends TardisLink {
 			setVariant(ExteriorVariantRegistry.getInstance().pickRandomWithParent(exterior));
 		}
 
-		if (findTardis().isEmpty()) {
-			findTardis().get().getDoor().closeDoors();
-		}
-
 		this.sync();
 	}
 
 	public void setVariant(ExteriorVariantSchema variant) {
-		if (findTardis().isEmpty()) {
-			findTardis().get().getDoor().closeDoors();
-		}
-
 		this.variant = variant;
 		this.sync();
 	}
 
 	public Optional<ExteriorBlockEntity> findExteriorBlock() {
-		if (this.findTardis().isEmpty())
-			return Optional.empty();
-
 		BlockEntity found = this.getExteriorPos().getWorld().getBlockEntity(this.getExteriorPos());
 
 		if (!(found instanceof ExteriorBlockEntity))
