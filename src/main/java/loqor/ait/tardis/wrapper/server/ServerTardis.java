@@ -30,6 +30,8 @@ import java.util.UUID;
 
 public class ServerTardis extends Tardis {
 
+	private boolean lock = false;
+
 	public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorCategorySchema exteriorType, ExteriorVariantSchema variantType) {
 		super(uuid, new ServerTardisTravel(pos), new ServerTardisDesktop(schema), new ServerTardisExterior(exteriorType, variantType));
 	}
@@ -47,6 +49,10 @@ public class ServerTardis extends Tardis {
 		ServerTardisManager.getInstance().sendToSubscribers(this);
 	}
 
+	public void setLocked(boolean lock) {
+		this.lock = lock;
+	}
+
 	public void unlock(Unlockable unlockable) {
 		PropertiesHandler.setUnlocked(this, unlockable, true);
 	}
@@ -59,6 +65,9 @@ public class ServerTardis extends Tardis {
 	}
 
 	public void tick(MinecraftServer server) {
+		if (this.lock)
+			return;
+
 		// most of the logic is in the handlers, so we can just disable them if we're a growth
 		if (!this.hasPower() && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-driftingmusicdelay")) {
 			List<PlayerEntity> playerEntities = TardisUtil.getPlayersInsideInterior(this);

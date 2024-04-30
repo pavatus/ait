@@ -161,9 +161,12 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	public void sync() {
-		if (isClient()) return;
+		if (isClient())
+			return;
+
 		syncType();
 		syncVariant();
+
 		this.syncParent();
 		needsSync = false;
 	}
@@ -368,7 +371,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	public void setDesktop(TardisDesktop desktop) {
-		if (this.getWorld() == null || this.getWorld().isClient()) return;
+		if (this.getWorld() == null || this.getWorld().isClient())
+			return;
 
 		AITMod.LOGGER.info("Linking desktop " + this.findTardis().get().getUuid());
 

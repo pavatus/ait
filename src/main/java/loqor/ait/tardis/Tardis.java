@@ -198,7 +198,8 @@ public abstract class Tardis {
 	}
 
 	public boolean isUnlocked(Unlockable unlockable) {
-		return unlockable.getRequirement() == Loyalty.MIN || PropertiesHandler.isUnlocked(this, unlockable);
+		return unlockable.getRequirement() == Loyalty.MIN
+				|| PropertiesHandler.isUnlocked(this, unlockable);
 	}
 
 	// for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta

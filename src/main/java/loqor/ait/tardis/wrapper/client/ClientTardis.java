@@ -1,6 +1,7 @@
 package loqor.ait.tardis.wrapper.client;
 
 import com.google.gson.InstanceCreator;
+import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.tardis.Tardis;
@@ -48,6 +49,7 @@ public class ClientTardis extends Tardis {
 
 	public void setDoor(DoorData door) {
 		door.setTardis(this);
+		AITMod.LOGGER.info("previous: {}-{}; rec new door: {}-{}; self = {}", this.getDoor(), this.getDoor().getDoorState(), door, door.getDoorState(), this);
 		this.handlers.set(TardisComponent.Id.DOOR, door);
 	}
 

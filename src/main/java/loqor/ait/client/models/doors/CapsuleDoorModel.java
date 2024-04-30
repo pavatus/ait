@@ -1,5 +1,6 @@
 package loqor.ait.client.models.doors;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
@@ -95,6 +96,8 @@ public class CapsuleDoorModel extends DoorModel {
         this.body.getChild("doors").getChild("right_door").yaw = -door.getRightDoorRotation();*/
 
 		DoorData handler = door.findTardis().get().getDoor();
+
+		AITMod.LOGGER.info("handler: {}-{}; tardis = {}", handler, handler.getDoorState(), door.findTardis());
 
 		this.body.getChild("doors").getChild("door_left").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
 		this.body.getChild("doors").getChild("door_right").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;

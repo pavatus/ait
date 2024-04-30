@@ -12,6 +12,7 @@ import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.util.EnumMap;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.Map;
@@ -214,7 +215,13 @@ public class TardisHandlersManager extends TardisLink {
 					throw new NullPointerException("id is null.");
 				}
 
-				manager.set(id, context.deserialize(element, id.clazz()));
+				TardisComponent component = context.deserialize(element, id.clazz());
+
+				if (id == Id.DOOR) {
+					AITMod.LOGGER.info("THM-DESER: {}", ((DoorData) component).getDoorState());
+				}
+
+				manager.set(id, component);
 			}
 
 			return manager;
@@ -224,10 +231,16 @@ public class TardisHandlersManager extends TardisLink {
 		public JsonElement serialize(TardisHandlersManager manager, java.lang.reflect.Type type, JsonSerializationContext context) {
 			JsonObject result = new JsonObject();
 
-			manager.forEach(component -> result.add(
-					component.getId().toString(),
-					context.serialize(component)
-			));
+			manager.forEach(component -> {
+				if (component.getId() == Id.DOOR) {
+					AITMod.LOGGER.info("THM-SER: {}", ((DoorData) component).getDoorState());
+				}
+
+				result.add(
+						component.getId().toString(),
+						context.serialize(component)
+				);
+			});
 
 			return result;
 		}
