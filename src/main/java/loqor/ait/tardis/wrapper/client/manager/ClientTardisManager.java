@@ -12,10 +12,10 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -23,8 +23,8 @@ import net.minecraft.util.Identifier;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class ClientTardisManager extends TardisManager<ClientTardis> {
+
 	private static ClientTardisManager instance;
 
 	private final Multimap<UUID, Consumer<ClientTardis>> subscribers = ArrayListMultimap.create();
@@ -122,12 +122,15 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 	}
 
 	@Override
-	public GsonBuilder getGsonBuilder(GsonBuilder builder) {
+	protected GsonBuilder getGsonBuilder(GsonBuilder builder) {
 		builder.registerTypeAdapter(SerialDimension.class, new SerialDimension.ClientSerializer());
 		return builder;
 	}
 
 	public static void init() {
+		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT)
+			throw new UnsupportedOperationException("Tried to initialize ClientTardisManager on the server!");
+
 		instance = new ClientTardisManager();
 	}
 

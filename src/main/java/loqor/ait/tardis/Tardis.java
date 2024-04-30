@@ -31,7 +31,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class Tardis {
+public abstract class Tardis {
 
 	protected TardisTravel travel;
 	private final UUID uuid;
