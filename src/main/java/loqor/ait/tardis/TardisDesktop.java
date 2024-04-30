@@ -57,6 +57,9 @@ public class TardisDesktop extends TardisLink {
 	public void init(Tardis tardis, boolean deserialized) {
 		super.init(tardis, deserialized);
 
+		if (this.consoles == null)
+			return;
+
 		for (TardisConsole console : this.consoles) {
 			console.init(tardis, deserialized);
 		}

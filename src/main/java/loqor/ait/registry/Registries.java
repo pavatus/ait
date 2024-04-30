@@ -22,13 +22,22 @@ public class Registries {
     private final List<Registry> registries = new ArrayList<>();
 
     private Registries() {
+        this.onCommonInit();
+
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+            this.onClientInit();
+    }
+
+    private void onCommonInit() {
         registries.add(SonicRegistry.getInstance());
         registries.add(DesktopRegistry.getInstance());
         registries.add(ConsoleVariantRegistry.getInstance());
         registries.add(MachineRecipeRegistry.getInstance());
         registries.add(ExteriorVariantRegistry.getInstance());
         registries.add(CategoryRegistry.getInstance());
+    }
 
+    private void onClientInit() {
         registries.add(ClientConsoleVariantRegistry.getInstance());
         registries.add(ClientExteriorVariantRegistry.getInstance());
     }
