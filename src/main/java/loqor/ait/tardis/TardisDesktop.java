@@ -12,6 +12,7 @@ import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
@@ -55,7 +56,7 @@ public class TardisDesktop extends TardisLink {
 	public void init(Tardis tardis, boolean deserialized) {
 		super.init(tardis, deserialized);
 
-		if (!deserialized)
+		if (this.tardis() instanceof ServerTardis && !deserialized)
 			this.changeInterior(schema);
 
 		if (this.consoles == null)
