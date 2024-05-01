@@ -66,10 +66,8 @@ public class ServerVortexDataHelper {
         );
         AITMod.LOGGER.info("ServerVortexDataHelper: Serialising vortex data");
 
-        ByteBuffer vortexDataBuffer = vortexTree.toNioByteBuffer();
+        byte[] vortexDataBuffer = vortexTree.toByteArray();
         VortexData vortexData = VortexData.deserialize(vortexDataBuffer);
-
-        assert vortexData != null;
 
         AITMod.LOGGER.info("ServerVortexDataHelper: VortexData object received, tree serialised");
         return vortexData;
@@ -87,6 +85,7 @@ public class ServerVortexDataHelper {
             }
             VortexData data = generateData(server);
             storeVortexData(server, data);
+            VortexData d = getVortexData(server);
         }));
     }
 }

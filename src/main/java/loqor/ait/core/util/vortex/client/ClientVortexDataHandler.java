@@ -31,7 +31,7 @@ public class ClientVortexDataHandler {
         ClientPlayNetworking.registerGlobalReceiver(VortexDataHelper.SYNC_PACKET,
                 ((client, handler, buf, responseSender) -> {
                     ClientVortexDataHelper.cacheVortexData(
-                            VortexData.deserialize(buf), Objects.requireNonNull(handler.getServerInfo()).address);
+                            VortexData.deserialize(buf.array()), Objects.requireNonNull(handler.getServerInfo()).address);
                 }));
     }
 
@@ -39,7 +39,7 @@ public class ClientVortexDataHandler {
         Caches VortexData that was received from the server.
      */
     private static void readServerData(PacketByteBuf buffer, String serverAddress) {
-        VortexData data = VortexData.deserialize(buffer);
+        VortexData data = VortexData.deserialize(buffer.array());
         ClientVortexDataHelper.cacheVortexData(data, serverAddress);
     }
 }

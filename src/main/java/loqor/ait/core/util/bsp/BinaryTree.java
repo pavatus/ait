@@ -1,19 +1,13 @@
 package loqor.ait.core.util.bsp;
 
-import loqor.ait.AITMod;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.Vec3d;
-import org.apache.logging.log4j.core.jmx.Server;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import loqor.ait.core.util.vortex.VortexData;
+import loqor.ait.core.util.vortex.VortexNode;
+import net.minecraft.util.math.Vec3d;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 
 public class BinaryTree {
     protected Node rootNode;
@@ -29,20 +23,30 @@ public class BinaryTree {
     public static class Node {
         Node left;
         Node right;
-        Vec3d data;
+        Vec3d pos;
+        Vec3d ptrToLeft;
+        Vec3d ptrToRight;
 
-        public Node(Vec3d data) {
-            this.data = data;
+        public Node(Vec3d pos) {
+            this.pos = pos;
             this.left = null;
             this.right = null;
+            this.ptrToLeft = null;
+            this.ptrToRight = null;
+        }
+
+        private static Vec3d dir(Vec3d from, Vec3d to) {
+            return new Vec3d(to.x - from.x, to.y - from.y, to.z - from.z).normalize();
         }
 
         public void addLeft(Vec3d data) {
             this.left = new Node(data);
+            this.ptrToLeft = dir(this.pos, data);
         }
 
         public void addRight(Vec3d data) {
             this.right = new Node(data);
+            this.ptrToRight = dir(this.pos, data);
         }
 
         public Node getLeft() {
@@ -53,16 +57,20 @@ public class BinaryTree {
             return this.right;
         }
 
-        public Vec3d getData() {
-            return this.data;
+        public Vec3d getPos() {
+            return this.pos;
+        }
+
+        public Vec3d getPtrToLeft() {
+            return ptrToLeft;
+        }
+
+        public Vec3d getPtrToRight() {
+            return ptrToRight;
         }
 
         public boolean isLeaf() {
             return this.left == null && this.right == null;
-        }
-
-        public boolean isBranch() {
-            return this.left != null || this.right != null;
         }
 
         public static int getChildrenCount(Node node) {
@@ -85,22 +93,17 @@ public class BinaryTree {
         return this.rootNode;
     }
 
-    public ByteBuffer toNioByteBuffer() {
-        int size = this.byteSize() * 8;
-        AITMod.LOGGER.info(String.format("Saving BinaryTree with arbitrary size of %d", size));
-
+    public byte[] toByteArray() {
         BTreeInorderIterator it = new BTreeInorderIterator(this.getRootNode());
-        ByteBuffer buffer = ByteBuffer.allocate(size);
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
         Node node = this.getRootNode();
 
         while (node != null) {
-            buffer.putDouble(node.getData().x)
-                    .putDouble(node.getData().y)
-                    .putDouble(node.getData().z)
-                    .rewind();
+            VortexNode vnode = new VortexNode(node);
+            vnode.serialize(out);
             node = it.next();
         }
-        return buffer;
+        return out.toByteArray();
     }
 }

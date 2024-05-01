@@ -1,51 +1,41 @@
 package loqor.ait.core.util.vortex;
 
-import io.netty.buffer.ByteBuf;
-import loqor.ait.AITMod;
-import net.minecraft.util.math.Vec3d;
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
-import java.nio.BufferUnderflowException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-public record VortexData(ArrayList<Vec3d> positions) {
-    public int byteSize() {
-        return this.positions.size() * 3 * Double.BYTES * 8;
+public record VortexData(ArrayList<VortexNode> nodes) {
+    public void serialize(ByteArrayDataOutput out) {
+        for (VortexNode vortexNode : this.nodes())
+            putVortexNode(out, vortexNode);
     }
 
-    public static VortexData deserialize(ByteBuffer buffer) {
-        ArrayList<Vec3d> data = new ArrayList<>();
+    public byte[] serialize() {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        serialize(out);
+        return out.toByteArray();
+    }
 
-        while (buffer.hasRemaining()) {
-            double x, y, z;
-            try {
-                x = buffer.getDouble();
-                y = buffer.getDouble();
-                z = buffer.getDouble();
-            } catch (BufferUnderflowException e) {
-                AITMod.LOGGER.error("VortexData: Deserialization failed: Invalid Vec3d save format: {}", e.getMessage());
-                return null;
+    public static VortexData deserialize(ByteArrayDataInput in) {
+        ArrayList<VortexNode> nodes = new ArrayList<>();
+
+        try {
+            while (true) {
+                VortexNode node = VortexNode.deserialize(in);
+                nodes.add(node);
             }
-            data.add(new Vec3d(x, y, z));
-        }
-        return new VortexData(data);
+        } catch (Exception ignored) {}
+        return new VortexData(nodes);
     }
 
-    public static VortexData deserialize(ByteBuf buffer) {
-        return VortexData.deserialize(buffer.nioBuffer());
+    public static VortexData deserialize(byte[] bytes) {
+        ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
+        return deserialize(in);
     }
 
-    public ByteBuffer serialize() {
-        Iterator<Vec3d> it = this.positions.iterator();
-        Vec3d current = this.positions.get(0);
-        ByteBuffer buffer = ByteBuffer.allocateDirect(this.byteSize());
-
-        while (it.hasNext()) {
-            buffer.putDouble(current.x);
-            buffer.putDouble(current.y);
-            buffer.putDouble(current.z);
-        }
-        return buffer;
+    private void putVortexNode(ByteArrayDataOutput out, VortexNode node) {
+        out.write(node.serialize());
     }
 }

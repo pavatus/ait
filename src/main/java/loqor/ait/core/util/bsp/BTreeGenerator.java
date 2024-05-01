@@ -71,7 +71,7 @@ public class BTreeGenerator {
         this.bTreeInorderIterator = new BTreeInorderIterator(this.binaryTree.rootNode);
 
         BinaryTree.Node node = this.binaryTree.getRootNode();
-        Vec3d prevPos = node.getData();
+        Vec3d prevPos = node.getPos();
 
         // Generate for the root node first so the BTII doesn't break
         this.genFor(node, prevPos);
@@ -86,7 +86,7 @@ public class BTreeGenerator {
                 node = node.left;
             }
             this.genFor(node, prevPos);
-            prevPos = node.getData();
+            prevPos = node.getPos();
             depth += 1;
         }
     }

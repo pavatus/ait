@@ -40,10 +40,9 @@ public class ServerVortexDataHandler {
         packetByteBuf.writeBytes(vortexData.serialize());
         ServerPlayNetworking.send((ServerPlayerEntity) player, VortexDataHelper.SYNC_PACKET, packetByteBuf);
 
-        AITMod.LOGGER.info("SEND {} -> {} DATA_SIZE {}",
+        AITMod.LOGGER.info("SEND {} -> {}",
                 VortexDataHelper.SYNC_PACKET,
-                ((ServerPlayerEntity) player).getIp(),
-                vortexData.byteSize()
+                ((ServerPlayerEntity) player).getIp()
         );
     }
 }

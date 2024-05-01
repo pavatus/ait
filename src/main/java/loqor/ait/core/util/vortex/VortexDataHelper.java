@@ -7,8 +7,6 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 public class VortexDataHelper {
     public static final String VORTEX_DATA_SERVER_CACHE_PATH = "vortex/vortex.dat";
@@ -31,7 +29,11 @@ public class VortexDataHelper {
             dataFc.read(buffer);
             dataFc.close();
 
-            data = VortexData.deserialize(buffer);
+            data = VortexData.deserialize(buffer.array());
+
+            for (VortexNode node : data.nodes()) {
+                AITMod.LOGGER.info("POS: {} | PTL: {} | PTR: {} | LEAF: {}", node.pos, node.ptrToLeft, node.ptrToRight, node.isLeaf);
+            }
         } catch (Exception e) {
             AITMod.LOGGER.error("ServerVortexDataHelper: Vortex data read failure: {}", e.getMessage());
             return null;
@@ -46,7 +48,7 @@ public class VortexDataHelper {
         File fd = path.toFile();
         try (FileChannel fc = new FileOutputStream(fd).getChannel()) {
             try  {
-                fc.write(data.serialize());
+                fc.write(ByteBuffer.wrap(data.serialize()));
                 fc.close();
             } catch (IOException e) {
                 AITMod.LOGGER.error("VortexDataHelper: Storage failure due to I/O exception: {}", e.getMessage());
