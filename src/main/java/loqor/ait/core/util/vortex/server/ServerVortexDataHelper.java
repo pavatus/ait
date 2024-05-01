@@ -85,7 +85,6 @@ public class ServerVortexDataHelper {
             }
             VortexData data = generateData(server);
             storeVortexData(server, data);
-            VortexData d = getVortexData(server);
         }));
     }
 }

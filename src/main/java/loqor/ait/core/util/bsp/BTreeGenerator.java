@@ -1,8 +1,6 @@
 package loqor.ait.core.util.bsp;
 
-import loqor.ait.AITMod;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Random;
@@ -57,7 +55,6 @@ public class BTreeGenerator {
             case 0 -> this.genLhs(node, prevPos);
             case 1 -> this.genRhs(node, prevPos);
             case 2 -> this.genBoth(node, prevPos);
-            default -> AITMod.LOGGER.error("How the fuck did that happen? How did you do that?");
         }
     }
 
@@ -67,7 +64,7 @@ public class BTreeGenerator {
             return;
 
         this.binaryTree = binaryTree;
-        this.bTreeInorderIterator = new BTreeInorderIterator(this.binaryTree.rootNode);
+        this.bTreeInorderIterator = binaryTree.iterator();
 
         BinaryTree.Node node = this.binaryTree.getRootNode();
         Vec3d prevPos = node.getPos();
@@ -81,8 +78,8 @@ public class BTreeGenerator {
             if (this.bTreeInorderIterator.hasNext()) {
                 node = this.bTreeInorderIterator.next();
             } else {
-                node.left = new BinaryTree.Node(this.genData(prevPos, 0));
-                node = node.left;
+                node.setLeft(this.genData(prevPos, 0));
+                node = node.getLeft();
             }
             this.genFor(node, prevPos);
             prevPos = node.getPos();

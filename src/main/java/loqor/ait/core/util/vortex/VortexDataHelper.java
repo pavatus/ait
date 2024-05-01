@@ -1,19 +1,14 @@
 package loqor.ait.core.util.vortex;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import loqor.ait.AITMod;
 import net.minecraft.util.Identifier;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.InflaterInputStream;
 
 public class VortexDataHelper {
     public static final String VORTEX_DATA_SERVER_CACHE_PATH = "vortex/vortex_nodes.ait-data";
@@ -53,16 +48,14 @@ public class VortexDataHelper {
     public static void storeVortexData(Path path, VortexData data) {
         File fd = path.toFile();
         try (FileChannel fc = new FileOutputStream(fd).getChannel()) {
-            try  {
-                byte[] sData = data.serialize();
-                byte[] compressed = compressVortexData(sData);
+            byte[] sData = data.serialize();
+            byte[] compressed = compressVortexData(sData);
 
-                assert compressed != null;
-                fc.write(ByteBuffer.wrap(compressed));
-                fc.close();
-            } catch (IOException e) {
-                AITMod.LOGGER.error("VortexDataHelper: Storage failure due to I/O exception: {}", e.getMessage());
-            }
+            assert compressed != null;
+            int bytes = fc.write(ByteBuffer.wrap(compressed));
+            fc.close();
+
+            AITMod.LOGGER.info("VortexDataHelper: Stored {} bytes of vortex data", bytes);
         } catch (IOException e) {
             AITMod.LOGGER.error("VortexDataHelper: Storage failed, no such file or directory: {}", e.getMessage());
         }

@@ -3,10 +3,8 @@ package loqor.ait.core.util.bsp;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
-import loqor.ait.core.util.vortex.VortexData;
 import loqor.ait.core.util.vortex.VortexNode;
 import net.minecraft.util.math.Vec3d;
-import java.nio.ByteBuffer;
 
 
 public class BinaryTree {
@@ -16,16 +14,12 @@ public class BinaryTree {
         return new BTreeInorderIterator(this.getRootNode());
     }
 
-    public int byteSize() {
-        return Node.getChildrenCount(this.getRootNode()) * 3 * Long.BYTES;
-    }
-
     public static class Node {
-        Node left;
-        Node right;
-        Vec3d pos;
-        Vec3d ptrToLeft;
-        Vec3d ptrToRight;
+        private Node left;
+        private Node right;
+        private final Vec3d pos;
+        private Vec3d ptrToLeft;
+        private Vec3d ptrToRight;
 
         public Node(Vec3d pos) {
             this.pos = pos;
@@ -33,6 +27,14 @@ public class BinaryTree {
             this.right = null;
             this.ptrToLeft = null;
             this.ptrToRight = null;
+        }
+
+        public void setLeft(Vec3d data) {
+            this.left = new Node(data);
+        }
+
+        public void setRight(Vec3d data) {
+            this.right = new Node(data);
         }
 
         private static Vec3d dir(Vec3d from, Vec3d to) {
@@ -100,8 +102,8 @@ public class BinaryTree {
         Node node = this.getRootNode();
 
         while (node != null) {
-            VortexNode vnode = new VortexNode(node);
-            vnode.serialize(out);
+            VortexNode vNode = new VortexNode(node);
+            vNode.serialize(out);
             node = it.next();
         }
         return out.toByteArray();

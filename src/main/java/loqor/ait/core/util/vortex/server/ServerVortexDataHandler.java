@@ -1,6 +1,5 @@
 package loqor.ait.core.util.vortex.server;
 
-
 import loqor.ait.AITMod;
 import loqor.ait.core.util.vortex.VortexData;
 import loqor.ait.core.util.vortex.VortexDataHelper;
@@ -18,9 +17,7 @@ public class ServerVortexDataHandler {
     public static void subscribe() {
         ServerVortexDataHelper.subscribeDataGenerator();
         ServerPlayNetworking.registerGlobalReceiver(VortexDataHelper.REQUEST_SYNC_PACKET,
-                (((server, player, handler, buf, responseSender) -> {
-                    ServerVortexDataHandler.sendSyncPacketTo(player);
-                })));
+                (((server, player, handler, buf, responseSender) -> ServerVortexDataHandler.sendSyncPacketTo(player))));
     }
 
     /*
@@ -35,7 +32,6 @@ public class ServerVortexDataHandler {
         }
         VortexData vortexData = ServerVortexDataHelper.getVortexData(player.getServer());
         PacketByteBuf packetByteBuf = PacketByteBufs.create();
-        assert vortexData != null;
 
         packetByteBuf.writeBytes(vortexData.serialize());
         ServerPlayNetworking.send((ServerPlayerEntity) player, VortexDataHelper.SYNC_PACKET, packetByteBuf);
