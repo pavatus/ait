@@ -27,7 +27,7 @@ public class ClientVortexDataHelper {
     public static Path getCachedVortexDataPath(String serverAddress) {
         return FabricLoader.getInstance().getGameDir()
                 .resolve(VortexDataHelper.VORTEX_DATA_CLIENT_CACHE_PATH)
-                .resolve(String.format("%s.dat", serverAddress));
+                .resolve(String.format("%s.ait-data", serverAddress));
     }
 
     /*

@@ -23,7 +23,6 @@ public class BTreeGenerator {
         this.world = world;
     }
 
-    // 'magic number' my ass
     private void genLhs(BinaryTree.Node node, Vec3d prevPos) {
         node.addLeft(this.genData(prevPos, 0));
     }

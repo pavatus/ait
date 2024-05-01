@@ -1,15 +1,22 @@
 package loqor.ait.core.util.vortex;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import loqor.ait.AITMod;
 import net.minecraft.util.Identifier;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.InflaterInputStream;
 
 public class VortexDataHelper {
-    public static final String VORTEX_DATA_SERVER_CACHE_PATH = "vortex/vortex.dat";
+    public static final String VORTEX_DATA_SERVER_CACHE_PATH = "vortex/vortex_nodes.ait-data";
     public static final String VORTEX_DATA_CLIENT_CACHE_PATH = ".cache/ait/vortex";
     public static final Identifier SYNC_PACKET = new Identifier(AITMod.MOD_ID, "vortex_sync");
     public static final Identifier REQUEST_SYNC_PACKET = new Identifier(AITMod.MOD_ID, "request_vortex_sync");
@@ -20,22 +27,21 @@ public class VortexDataHelper {
      */
     public static VortexData readVortexData(Path path) {
         File dataFd = path.toFile();
-        VortexData data;
+        VortexData data = null;
 
         try {
             FileChannel dataFc = new FileInputStream(dataFd).getChannel();
-            ByteBuffer buffer = ByteBuffer.allocateDirect((int)dataFd.length());
+            ByteBuffer buffer = ByteBuffer.allocate((int)dataFd.length());
 
             dataFc.read(buffer);
             dataFc.close();
 
-            data = VortexData.deserialize(buffer.array());
+            byte[] decompData = decompressVortexData(buffer.array());
 
-            for (VortexNode node : data.nodes()) {
-                AITMod.LOGGER.info("POS: {} | PTL: {} | PTR: {} | LEAF: {}", node.pos, node.ptrToLeft, node.ptrToRight, node.isLeaf);
-            }
-        } catch (Exception e) {
-            AITMod.LOGGER.error("ServerVortexDataHelper: Vortex data read failure: {}", e.getMessage());
+            data = VortexData.deserialize(decompData);
+        } catch (IllegalStateException ignored) {
+        } catch (IOException e) {
+            AITMod.LOGGER.error("VortexDataHelper: Vortex data read failure due to I/O exception: {}", e.getMessage());
             return null;
         }
         return data;
@@ -48,13 +54,45 @@ public class VortexDataHelper {
         File fd = path.toFile();
         try (FileChannel fc = new FileOutputStream(fd).getChannel()) {
             try  {
-                fc.write(ByteBuffer.wrap(data.serialize()));
+                byte[] sData = data.serialize();
+                byte[] compressed = compressVortexData(sData);
+
+                assert compressed != null;
+                fc.write(ByteBuffer.wrap(compressed));
                 fc.close();
             } catch (IOException e) {
                 AITMod.LOGGER.error("VortexDataHelper: Storage failure due to I/O exception: {}", e.getMessage());
             }
         } catch (IOException e) {
             AITMod.LOGGER.error("VortexDataHelper: Storage failed, no such file or directory: {}", e.getMessage());
+        }
+    }
+
+    public static byte[] compressVortexData(byte[] data) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            GZIPOutputStream gzipOs = new GZIPOutputStream(os);
+            gzipOs.write(data, 0, data.length);
+            gzipOs.close();
+
+            return os.toByteArray();
+        } catch (IOException e) {
+            AITMod.LOGGER.warn("VortexDataHelper: GZIP initialization failed: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    public static byte[] decompressVortexData(byte[] data) {
+        ByteArrayInputStream is = new ByteArrayInputStream(data);
+
+        try {
+            GZIPInputStream gzipIs = new GZIPInputStream(is);
+            byte[] decomp = gzipIs.readAllBytes();
+            gzipIs.close();
+            return decomp;
+        } catch (IOException e) {
+            AITMod.LOGGER.warn("VortexDataHelper: GZIP initialization failed: {}", e.getMessage());
+            return null;
         }
     }
 }

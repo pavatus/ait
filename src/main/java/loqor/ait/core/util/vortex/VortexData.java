@@ -26,8 +26,9 @@ public record VortexData(ArrayList<VortexNode> nodes) {
                 VortexNode node = VortexNode.deserialize(in);
                 nodes.add(node);
             }
-        } catch (Exception ignored) {}
-        return new VortexData(nodes);
+        } catch (IllegalStateException e) {
+            return new VortexData(nodes);
+        }
     }
 
     public static VortexData deserialize(byte[] bytes) {
