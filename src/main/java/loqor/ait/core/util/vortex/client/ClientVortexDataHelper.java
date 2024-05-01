@@ -5,12 +5,10 @@ import loqor.ait.core.util.vortex.VortexData;
 import loqor.ait.core.util.vortex.VortexDataHelper;
 import net.fabricmc.loader.api.FabricLoader;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class ClientVortexDataHelper {
@@ -39,23 +37,14 @@ public class ClientVortexDataHelper {
     }
 
     /*
-    Caches a received VortexData object to the local client directory,
-    which is typically '/home/<user>/.minecraft/.ait/cache/vortex/<server_ip>.dat' on Linux, macOS,
-    and BSD, and '%APPDATA%/.minecraft/.ait/cache/vortex/<server_ip>.dat' on Windows. Must
-    only be called by the client.
- */
+        Caches a received VortexData object to the local client directory,
+        which is typically '/home/<user>/.minecraft/.ait/cache/vortex/<server_ip>.dat' on Linux, macOS,
+        and BSD, and '%APPDATA%/.minecraft/.ait/cache/vortex/<server_ip>.dat' on Windows. Must
+        only be called by the client.
+     */
     public static void cacheVortexData(VortexData data, String serverAddress) {
-        File cacheFd = getCachedVortexDataPath(serverAddress).toFile();
-        FileChannel cacheFc = null;
-        try {
-            cacheFc = new FileOutputStream(cacheFd, false).getChannel();
-        } catch (FileNotFoundException e) {
-            AITMod.LOGGER.error("ServerVortexDataHelper: Caching vortex data failed: Unknown Exception: {}", e.getMessage());
-            return;
-        }
-
-        try {
-            int bytes = cacheFc.write(ByteBuffer.wrap(data.serialize()));
+        try (OutputStream cacheFc = Files.newOutputStream(getCachedVortexDataPath(serverAddress))) {
+            cacheFc.write(data.serialize());
         } catch (IOException e) {
             AITMod.LOGGER.error("ServerVortexDataHelper: Saving vortex data failed: I/O exception: {}", e.getMessage());
             return;

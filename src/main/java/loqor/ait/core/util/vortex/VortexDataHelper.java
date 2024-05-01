@@ -1,11 +1,13 @@
 package loqor.ait.core.util.vortex;
 
+import com.ibm.icu.util.Output;
 import loqor.ait.AITMod;
 import net.minecraft.util.Identifier;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -21,43 +23,22 @@ public class VortexDataHelper {
         called by either server or client.
      */
     public static VortexData readVortexData(Path path) {
-        File dataFd = path.toFile();
-        VortexData data = null;
-
-        try {
-            FileChannel dataFc = new FileInputStream(dataFd).getChannel();
-            ByteBuffer buffer = ByteBuffer.allocate((int)dataFd.length());
-
-            dataFc.read(buffer);
-            dataFc.close();
-
-            byte[] decompData = decompressVortexData(buffer.array());
-
-            data = VortexData.deserialize(decompData);
-        } catch (IllegalStateException ignored) {
+        try (InputStream in = Files.newInputStream(path)) {
+            return VortexData.deserialize(decompressVortexData(in.readAllBytes()));
         } catch (IOException e) {
-            AITMod.LOGGER.error("VortexDataHelper: Vortex data read failure due to I/O exception: {}", e.getMessage());
-            return null;
-        }
-        return data;
+            AITMod.LOGGER.error("VortexDataHelper: Unable to read vortex data");
+        } catch (IllegalStateException ignored) {}
+        return null;
     }
 
     /*
         Stores VortexData object to a file.
      */
     public static void storeVortexData(Path path, VortexData data) {
-        File fd = path.toFile();
-        try (FileChannel fc = new FileOutputStream(fd).getChannel()) {
-            byte[] sData = data.serialize();
-            byte[] compressed = compressVortexData(sData);
-
-            assert compressed != null;
-            int bytes = fc.write(ByteBuffer.wrap(compressed));
-            fc.close();
-
-            AITMod.LOGGER.info("VortexDataHelper: Stored {} bytes of vortex data", bytes);
+        try (OutputStream out = Files.newOutputStream(path)) {
+            out.write(compressVortexData(data.serialize()));
         } catch (IOException e) {
-            AITMod.LOGGER.error("VortexDataHelper: Storage failed, no such file or directory: {}", e.getMessage());
+            AITMod.LOGGER.error("VortexDataHelper: Storage failed: {}", e.getMessage());
         }
     }
 
