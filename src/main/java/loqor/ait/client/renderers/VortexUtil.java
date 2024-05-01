@@ -2,14 +2,22 @@ package loqor.ait.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
+
+import java.io.*;
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
+import java.nio.file.Path;
+import java.util.ArrayList;
 
 /**
  * @author - ThePlaceHolder (someElseisHere), Loqor
@@ -42,7 +50,7 @@ public class VortexUtil {
         MatrixStack matrixStack = new MatrixStack();
         matrixStack.push();
         Camera camera = context.camera();
-        Vec3d targetPosition = new Vec3d(0, 100, 0);
+        Vec3d targetPosition = new Vec3d(0, 110, 0);
         //Vec3d position = new Vec3d(0, 50, 0);
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         Vec3d transformedPosition = targetPosition.subtract(camera.getPos());
@@ -57,7 +65,7 @@ public class VortexUtil {
 
         float f0 = (float) Math.toDegrees(this.rotationFactor * Math.sin(time * this.rotationSpeed));
         float f2 = f0 / 90.0f - (int) (f0 / 90.0f);
-        //matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(f2 * 360.0f));
+//        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(f2 * 360.0f));
         matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90f));
 
         /*float alternate = (float) (((targetPosition.x - position.x) * (targetPosition.x - position.x)) * ((targetPosition.z - position.z) * (targetPosition.z - position.z)));

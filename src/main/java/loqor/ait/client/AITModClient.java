@@ -2,11 +2,12 @@ package loqor.ait.client;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.renderers.machines.PlugBoardRenderer;
+import loqor.ait.core.util.vortex.client.ClientVortexDataHandler;
+import loqor.ait.core.util.vortex.server.ServerVortexDataHandler;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.client.renderers.CustomItemRendering;
-import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
@@ -85,13 +86,15 @@ import static loqor.ait.AITMod.*;
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
-    private final VortexUtil vortex = new VortexUtil("space");
 
     @Override
     public void onInitializeClient() {
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
 
         ClientTardisManager.init();
+
+        ClientVortexDataHandler.init();
+        ClientVortexDataHandler.subscribe();
 
         setupBlockRendering();
         sonicModelPredicate();
