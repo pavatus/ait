@@ -15,10 +15,10 @@ import net.minecraft.util.math.Vec3d;
  */
 
 public class VortexNode {
-    boolean isLeaf;
-    Vec3d pos;
-    Vec3d ptrToLeft;
-    Vec3d ptrToRight;
+    private boolean isLeaf;
+    private Vec3d pos;
+    private Vec3d ptrToLeft;
+    private Vec3d ptrToRight;
 
     public static final int GUARD_LEAF_NODE_MARK = 0xDEADBEEF;
     public static final int GUARD_END_NODE_MARK = 0xFDFDFDFD;
