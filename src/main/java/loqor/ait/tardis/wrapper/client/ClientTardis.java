@@ -8,9 +8,6 @@ import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.client.MinecraftClient;
 
 import java.lang.reflect.Type;
@@ -36,19 +33,14 @@ public class ClientTardis extends Tardis {
 		this.travel = travel;
 	}
 
-	public void setSonic(SonicHandler sonic) {
-		sonic.setTardis(this);
-		this.handlers.set(TardisComponent.Id.SONIC, sonic);
-	}
-
 	public void setExterior(TardisExterior exterior) {
 		exterior.setTardis(this);
 		this.exterior = exterior;
 	}
 
-	public void setDoor(DoorData door) {
-		door.setTardis(this);
-		this.handlers.set(TardisComponent.Id.DOOR, door);
+	public void set(TardisComponent component) {
+		component.setTardis(this);
+		this.handlers.set(component.getId(), component);
 	}
 
 	public void tick(MinecraftClient client) {

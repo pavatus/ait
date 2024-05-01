@@ -4,10 +4,10 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
 import net.minecraft.block.entity.BlockEntity;
@@ -254,20 +254,22 @@ public class ConsoleControlEntity extends BaseControlEntity {
                 controlEditorHandler(player);
             }*/
 
-			if (this.getTardis() == null) return false; // AAAAAAAAAAA
+			if (this.getTardis() == null)
+				return false; // AAAAAAAAAAA
 
 			Tardis tardis = this.getTardis(world);
 
 			if (tardis == null || this.findConsole().isEmpty()) {
+				AITMod.LOGGER.warn("Discarding invalid control entity at {}; tardis = {}; console = {}", this.getPos(), tardis, this.findConsole());
+				AITMod.LOGGER.warn("> console pos: {}; parent = {}", this.consoleBlockPos, this.getConsoleBlock().findParent());
 				this.discard();
-				AITMod.LOGGER.warn("Discarding invalid control entity at " + this.getPos());
 				return false;
 			}
 
 			control.runAnimation(tardis, (ServerPlayerEntity) player, (ServerWorld) world);
 
-			if (!this.control.canRun(tardis, (ServerPlayerEntity) player)) return false;
-
+			if (!this.control.canRun(tardis, (ServerPlayerEntity) player))
+				return false;
 
 			if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
 				this.createDelay(this.control.getDelayLength());
@@ -286,7 +288,8 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		if (!(this.consoleBlockPos != null && this.control != null && world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))
 			return null;
 
-		if (console.findTardis().isEmpty()) return null;
+		if (console.findTardis().isEmpty())
+			return null;
 
 		return console.findTardis().get();
 	}
@@ -381,10 +384,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	}
 
 	protected @Nullable ConsoleBlockEntity getConsoleBlock() {
-		if (this.consoleBlockPos == null || !(this.getWorld() instanceof ServerWorld world)) return null;
+		if (this.consoleBlockPos == null || !(this.getWorld() instanceof ServerWorld world))
+			return null;
 
 		BlockEntity found = world.getBlockEntity(this.consoleBlockPos);
-
 		return found instanceof ConsoleBlockEntity ? (ConsoleBlockEntity) found : null;
 	}
 

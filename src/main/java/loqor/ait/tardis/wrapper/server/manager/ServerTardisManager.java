@@ -237,7 +237,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		data.writeString(json);
 
 		ServerPlayNetworking.send(player, UPDATE, data);
-
 		checkForceSync(player, uuid);
 	}
 
@@ -254,10 +253,11 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
 	}
 
+	// FIXME should this really be used this often? ((see #checkForceSync))
 	private void sendTardis(@NotNull ServerPlayerEntity player, UUID uuid, String json) {
-		if (this.isInBuffer(player, uuid)) {
+		if (this.isInBuffer(player, uuid))
 			return;
-		}
+
 		if (isAskOnDelay(player)) {
 			this.addToBuffer(player, uuid);
 			return;

@@ -78,7 +78,7 @@ public class TardisItemBuilder extends Item {
 
 			TardisDesktopSchema desktop = DesktopRegistry.getInstance().get(this.desktop);
 
-			ServerTardisManager.getInstance().create(pos, category, exterior, desktop);
+			ServerTardisManager.getInstance().createWithPlayerCreator(pos, category, exterior, desktop, player.getName().toString());
 			context.getStack().decrement(1);
 		}
 

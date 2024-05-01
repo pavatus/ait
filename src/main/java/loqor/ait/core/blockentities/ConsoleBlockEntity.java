@@ -5,6 +5,9 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITEntityTypes;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.managers.RiftChunkManager;
@@ -13,13 +16,10 @@ import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
-import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.link.LinkableBlockEntity;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -50,9 +50,9 @@ import org.joml.Vector3f;
 import java.util.*;
 
 import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
-import static loqor.ait.tardis.util.TardisUtil.isClient;
 
 public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
+	private static final Random RANDOM = new Random();
 	public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
 	public final AnimationState ANIM_STATE = new AnimationState();
 	public int age;
@@ -71,8 +71,13 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 	public ConsoleBlockEntity(BlockPos pos, BlockState state) {
 		super(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
-		if (!this.hasWorld()) return;
-		if (this.findTardis().isEmpty()) return;
+
+		if (!this.hasWorld())
+			return;
+
+		if (this.findTardis().isEmpty())
+			return;
+
 		this.linkDesktop();
 	}
 
@@ -130,9 +135,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 	@Override
 	public Optional<Tardis> findTardis() {
-		if (this.tardisId == null) {
+		if (this.tardisId == null)
 			this.refindTardis();
-		}
 
 		Optional<Tardis> found = super.findTardis();
 
@@ -144,6 +148,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 	private void refindTardis() {
 		Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
+
 		if (found != null)
 			this.setTardis(found);
 	}
@@ -155,22 +160,28 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	public void ask() {
-		if (!getWorld().isClient()) return;
+		if (!getWorld().isClient())
+			return;
+
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeBlockPos(this.getPos());
 		ClientPlayNetworking.send(ASK, buf);
 	}
 
 	public void sync() {
-		if (isClient()) return;
+		if (this.getWorld().isClient())
+			return;
+
 		syncType();
 		syncVariant();
+
 		this.syncParent();
 		needsSync = false;
 	}
 
 	private void syncType() {
-		if (!hasWorld() || world.isClient()) return;
+		if (!hasWorld() || world.isClient())
+			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
 
@@ -183,7 +194,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	private void syncVariant() {
-		if (!hasWorld() || world.isClient()) return;
+		if (!hasWorld() || world.isClient())
+			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
 
@@ -196,8 +208,10 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	public void setTardis(Tardis tardis) {
-		super.setTardis(tardis);
-		this.markDirty();
+		if (tardis == null)
+			return;
+
+		this.tardisId = tardis.getUuid();
 		// force re-link a desktop if it's not null
 		this.linkDesktop();
 	}
@@ -237,7 +251,6 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		setType(schema.id());
 	}
 
-
 	public ConsoleVariantSchema getVariant() {
 		if (variant == null) {
 			// oh no : (
@@ -273,7 +286,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	private void syncParent() {
-		if (!hasWorld() || world.isClient() || this.findParent().isEmpty()) return;
+		if (!hasWorld() || world.isClient() || this.findParent().isEmpty())
+			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
 
@@ -286,23 +300,40 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	public Optional<TardisConsole> findParent() {
-		if (this.findTardis().isEmpty()) return Optional.empty();
-
-		TardisDesktop desktop = this.getDesktop();
-
-		if (this.parent == null) {
-			TardisConsole found = desktop.findConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
-
-			if (found == null) {
-				found = new TardisConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
-				found.init(this.findTardis().get(), false);
-				desktop.addConsole(found);
-			}
-
-			this.setParent(found.uuid());
+		if (this.findTardis().isEmpty()) {
+			AITMod.LOGGER.warn("No tardis found for ConsoleBlockEntity!");
+			return Optional.empty();
 		}
 
-		return Optional.ofNullable(desktop.findConsole(this.parent));
+		TardisDesktop desktop = this.getDesktop();
+		TardisConsole found;
+
+		if (this.parent == null) {
+			found = desktop.findConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
+
+			if (found == null)
+				found = this.fixConsole();
+
+			this.setParent(found.uuid());
+		} else {
+			found = desktop.findConsole(this.parent);
+		}
+
+		if (found == null)
+			found = this.fixConsole();
+
+		return Optional.of(found);
+	}
+
+	private TardisConsole fixConsole() {
+		AITMod.LOGGER.warn("Fixing missing console entry...");
+		TardisConsole found = new TardisConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
+
+		found.init(this.findTardis().get(), false);
+		this.getDesktop().addConsole(found);
+
+		this.setParent(found.uuid());
+		return found;
 	}
 
 	/**
@@ -342,9 +373,11 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	public void useOn(World world, boolean sneaking, PlayerEntity player) {
+		if (!world.isClient())
+			return;
 
-		if (!world.isClient()) return;
-		if (this.findTardis().isEmpty()) return;
+		if (this.findTardis().isEmpty())
+			return;
 
 		ItemStack itemStack = player.getMainHandStack();
 		if (itemStack.getItem() == AITBlocks.ZEITON_CLUSTER.asItem()) {
@@ -356,7 +389,6 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 			this.findTardis().get().addFuel(nbt.getDouble(ChargedZeitonCrystalItem.FUEL_KEY));
 			nbt.putDouble(ChargedZeitonCrystalItem.FUEL_KEY, 0);
 		}
-
 	}
 
 	@Override
@@ -366,7 +398,8 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	public void setDesktop(TardisDesktop desktop) {
-		if (this.getWorld() == null || this.getWorld().isClient()) return;
+		if (this.getWorld() == null || this.getWorld().isClient())
+			return;
 
 		AITMod.LOGGER.info("Linking desktop " + this.findTardis().get().getUuid());
 
@@ -433,12 +466,13 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 	@Override
 	public void tick(World world, BlockPos pos, BlockState state, ConsoleBlockEntity blockEntity) {
-		Random random = new Random();
 		if (this.needsControls) {
 			spawnControls();
 		}
+
 		if (needsSync)
 			sync();
+
 		if (needsReloading) {
 			markNeedsSyncing();
 			needsReloading = false;
@@ -451,12 +485,13 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		// idk
 		if (world.isClient()) {
 			this.tickAge();
+			return;
 		}
 
-		if (world.isClient()) return;
+		if (this.findTardis().isEmpty())
+			return;
 
-		if (this.findTardis().isEmpty()) return;
-
+		// FIXME the findParent method is not exactly cheap. You sure you want to run it every tick?
 		this.findParent().ifPresent(parent -> parent.tickConsole(this));
 
 		SequenceHandler handler = this.findTardis().get().sequence();
@@ -509,7 +544,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 			((ServerWorld) world).spawnParticles(new DustColorTransitionParticleEffect(
 							new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 1),
 					pos.getX() + 0.5f, pos.getY() + 1.25,
-					pos.getZ() + 0.5f, 1, random.nextBoolean() ? 0.5f : -0.5f, 3f, random.nextBoolean() ? 0.5f : -0.5f, 0.025f);
+					pos.getZ() + 0.5f, 1, RANDOM.nextBoolean() ? 0.5f : -0.5f, 3f, RANDOM.nextBoolean() ? 0.5f : -0.5f, 0.025f);
 		}
 		if (tardis.isRefueling()) {
 			((ServerWorld) world).spawnParticles((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD, pos.getX() + 0.5f, pos.getY() + 1.25,

@@ -6,20 +6,17 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-import java.util.UUID;
 import java.util.function.Function;
 
-import static loqor.ait.core.commands.TeleportInteriorCommand.TARDIS_SUGGESTION;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -28,7 +25,7 @@ public class LoyaltyCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(AITMod.MOD_ID)
                 .then(literal("loyalty").requires(source -> source.hasPermissionLevel(2))
-                        .then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
+                        .then(argument("tardis", TardisArgumentType.tardis())
                                 .then(argument("player", EntityArgumentType.player())
                                         .executes(LoyaltyCommand::get)
                                         .then(argument("value", IntegerArgumentType.integer())
@@ -56,15 +53,10 @@ public class LoyaltyCommand {
                 handler -> handler.get(args.player)).level();
     }
 
-    record CommonArgs(ServerCommandSource source, Tardis tardis, ServerPlayerEntity player) {
+    record CommonArgs(ServerCommandSource source, ServerTardis tardis, ServerPlayerEntity player) {
 
         public static CommonArgs create(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-            UUID uuid = UuidArgumentType.getUuid(context, "tardis");
-            Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-
-            if (tardis == null)
-                throw new CommandSyntaxException(CommandSyntaxException.BUILT_IN_EXCEPTIONS.literalIncorrect(), () -> "No tardis with id '" + uuid + "'");
-
+            ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
             ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 
             return new CommonArgs(context.getSource(), tardis, player);

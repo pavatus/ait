@@ -30,26 +30,28 @@ public class TardisHandlersManager extends TardisLink {
 	public void init(Tardis tardis, boolean deserialized) {
 		super.init(tardis, deserialized);
 
-		this.createHandler(new DoorData());
-		this.createHandler(new PropertiesHolder());
-		this.createHandler(new WaypointHandler());
-		this.createHandler(new LoyaltyHandler());
-		this.createHandler(new OvergrownData());
-		this.createHandler(new ServerHumHandler());
-		this.createHandler(new ServerAlarmHandler());
-		this.createHandler(new InteriorChangingHandler());
-		this.createHandler(new SequenceHandler());
-		this.createHandler(new FuelData());
-		this.createHandler(new HADSData());
-		this.createHandler(new FlightData());
-		this.createHandler(new SiegeData());
-		this.createHandler(new CloakData());
-		this.createHandler(new StatsData());
-		this.createHandler(new TardisCrashData());
-		this.createHandler(new SonicHandler());
-		this.createHandler(new ShieldData());
-		this.createHandler(new BiomeHandler());
-		this.createHandler(new PermissionHandler());
+		if (!deserialized) {
+			this.createHandler(new DoorData());
+			this.createHandler(new PropertiesHolder());
+			this.createHandler(new WaypointHandler());
+			this.createHandler(new LoyaltyHandler());
+			this.createHandler(new OvergrownData());
+			this.createHandler(new ServerHumHandler());
+			this.createHandler(new ServerAlarmHandler());
+			this.createHandler(new InteriorChangingHandler());
+			this.createHandler(new SequenceHandler());
+			this.createHandler(new FuelData());
+			this.createHandler(new HADSData());
+			this.createHandler(new FlightData());
+			this.createHandler(new SiegeData());
+			this.createHandler(new CloakData());
+			this.createHandler(new StatsData());
+			this.createHandler(new TardisCrashData());
+			this.createHandler(new SonicHandler());
+			this.createHandler(new ShieldData());
+			this.createHandler(new BiomeHandler());
+			this.createHandler(new PermissionHandler());
+		}
 
 		this.forEach(component -> component.init(
 				tardis, deserialized)
@@ -102,6 +104,13 @@ public class TardisHandlersManager extends TardisLink {
 		return (T) this.handlers.get(id);
 	}
 
+	/**
+	 * Do NOT use this setter if you don't know what you're doing. Use {@link loqor.ait.tardis.wrapper.client.ClientTardis#set(TardisComponent)}.
+	 * @param id
+	 * @param t
+	 * @param <T>
+	 */
+	@Deprecated
 	public <T extends TardisComponent> void set(Id id, T t) {
 		this.handlers.put(id, t);
 	}
@@ -210,11 +219,12 @@ public class TardisHandlersManager extends TardisLink {
 				Id id = legacy ? LegacyUtil.getLegacyId(key) : Id.valueOf(key);
 
 				if (id == null) {
-					AITMod.LOGGER.error("Can't find a component id with name '{}'!", entry.getKey());
-					throw new NullPointerException("id is null.");
+					throw new NullPointerException("Can't find a component id with name '" + entry.getKey() + "'!");
 				}
 
-				manager.set(id, context.deserialize(element, id.clazz()));
+				TardisComponent component = context.deserialize(element, id.clazz());
+
+				manager.set(id, component);
 			}
 
 			return manager;
@@ -225,9 +235,9 @@ public class TardisHandlersManager extends TardisLink {
 			JsonObject result = new JsonObject();
 
 			manager.forEach(component -> result.add(
-					component.getId().toString(),
-					context.serialize(component)
-			));
+                    component.getId().toString(),
+                    context.serialize(component)
+            ));
 
 			return result;
 		}

@@ -5,12 +5,12 @@ import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
 import loqor.ait.AITMod;
 import loqor.ait.client.sounds.ClientSoundManager;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -112,13 +112,12 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 			return;
 		}
 
-		TardisComponent.Type<?> header = typeId.getType();
-		String json = buf.readString();
-
-		if(header == null)
+		if (!typeId.mutable())
 			return;
 
-		header.unsafeSet(tardis, this.gson.fromJson(json, typeId.clazz()));
+		typeId.set(tardis, this.gson.fromJson(
+				buf.readString(), typeId.clazz())
+		);
 	}
 
 	private void update(PacketByteBuf buf) {

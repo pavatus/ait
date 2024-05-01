@@ -26,12 +26,19 @@ import static loqor.ait.tardis.TardisTravel.State.*;
 
 public class DoorData extends TardisLink {
 	private boolean locked, left, right;
-	private DoorStateEnum doorState = DoorStateEnum.CLOSED;
+	private DoorStateEnum doorState;
 	public DoorStateEnum tempExteriorState; // this is the previous state before it was changed, used for checking when the door has been changed so the animation can start. Set on server, used on client
 	public DoorStateEnum tempInteriorState;
 
 	public DoorData() {
 		super(Id.DOOR);
+
+		this.doorState = DoorStateEnum.CLOSED;
+	}
+
+	@Override
+	public void init(Tardis tardis, boolean deserialized) {
+		super.init(tardis, deserialized);
 	}
 
 	@Override
@@ -72,7 +79,6 @@ public class DoorData extends TardisLink {
 		) instanceof DoorBlockEntity;
 	}
 
-	// Remember to this.sync() for these setters!!
 	public void setLeftRot(boolean var) {
 		this.left = var;
 		if (this.left) this.setDoorState(DoorStateEnum.FIRST);
@@ -171,13 +177,10 @@ public class DoorData extends TardisLink {
 	}
 
 	public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
-		if (world.isClient()) { // not even possible.
-			return false;
-		}
-
 		if (tardis.getHandlers().getOvergrown().isOvergrown()) {
 			// Bro cant escape
-			if (player == null) return false;
+			if (player == null)
+				return false;
 
 			// if holding an axe then break off the vegetation
 			ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
@@ -253,7 +256,8 @@ public class DoorData extends TardisLink {
 
 		DoorData door = tardis.getDoor();
 
-		if (door == null) return false; // how would that happen anyway
+		if (door == null)
+			return false; // how would that happen anyway
 
 		// fixme this is loqors code so there might be a better way
 		// PLEASE FIXME ALL THIS CODE IS SO JANK I CANT

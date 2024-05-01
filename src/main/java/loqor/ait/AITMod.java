@@ -4,7 +4,6 @@ import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.*;
@@ -22,13 +21,10 @@ import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.util.AITConfig;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.vortex.server.ServerVortexDataHandler;
-import loqor.ait.core.util.vortex.server.ServerVortexDataHelper;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.core.util.bsp.BTreeGenerator;
-import loqor.ait.core.util.bsp.BinaryTree;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
@@ -102,6 +98,8 @@ public class AITMod implements ModInitializer {
 		Registries.getInstance().subscribe(Registries.InitType.COMMON);
 		DoorRegistry.init();
 
+		AITArgumentTypes.register();
+
 		FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
@@ -123,14 +121,11 @@ public class AITMod implements ModInitializer {
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
 			TeleportInteriorCommand.register(dispatcher);
-			UnlockInteriorsCommand.register(dispatcher);
 			SummonTardisCommand.register(dispatcher);
 			SetLockedCommand.register(dispatcher);
 			GetInsideTardisCommand.register(dispatcher);
-			SetFuelCommand.register(dispatcher);
 			RealWorldCommand.register(dispatcher);
-			AddFuelCommand.register(dispatcher);
-			RemoveFuelCommand.register(dispatcher);
+			FuelCommand.register(dispatcher);
 			SetRepairTicksCommand.register(dispatcher);
 			RiftChunkCommand.register(dispatcher);
 			SetNameCommand.register(dispatcher);
@@ -143,8 +138,7 @@ public class AITMod implements ModInitializer {
 			RemoveCommand.register(dispatcher);
 			PermissionCommand.register(dispatcher);
 			LoyaltyCommand.register(dispatcher);
-			UnlockExteriorsCommand.register(dispatcher);
-			UnlockConsolesCommand.register(dispatcher);
+			UnlockCommand.register(dispatcher);
 		}));
 
 		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {

@@ -1,7 +1,6 @@
 package loqor.ait.core.util;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import loqor.ait.AITMod;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.registry.impl.SonicRegistry;
@@ -23,7 +22,12 @@ public class LegacyUtil {
     );
 
     public static TardisComponent.Id getLegacyId(String raw) {
-        return LEGACY_IDS.get(raw);
+        TardisComponent.Id id = LEGACY_IDS.get(raw);
+
+        if (id == null)
+            return TardisComponent.Id.valueOf(raw.toUpperCase());
+
+        return id;
     }
 
     /**

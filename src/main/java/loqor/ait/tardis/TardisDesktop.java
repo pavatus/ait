@@ -29,7 +29,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TardisDesktop extends TardisLink {
+
 	public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
+
 	private TardisDesktopSchema schema;
 	private AbsoluteBlockPos.Directed doorPos;
 	private AbsoluteBlockPos.Directed consolePos;
@@ -59,8 +61,9 @@ public class TardisDesktop extends TardisLink {
 		if (this.tardis() instanceof ServerTardis && !deserialized)
 			this.changeInterior(schema);
 
+		// in some cases, an old and fucked up save can have no consoles field.
 		if (this.consoles == null)
-			return;
+			this.consoles = new ConcurrentLinkedQueue<>();
 
 		for (TardisConsole console : this.consoles) {
 			console.init(tardis, deserialized);
@@ -89,7 +92,9 @@ public class TardisDesktop extends TardisLink {
 		BlockEntity entity;
 		for (BlockPos pos : this.iterateOverInterior()) { // FIXME this is bullshit
 			entity = TardisUtil.getTardisDimension().getBlockEntity(pos);
-			if (entity == null) continue;
+
+			if (entity == null)
+				continue;
 
 			if (doorPos == null && entity instanceof DoorBlockEntity door) {
 				door.setTardis(this.tardis());
@@ -111,10 +116,6 @@ public class TardisDesktop extends TardisLink {
 	}
 
 	public ConcurrentLinkedQueue<TardisConsole> getConsoles() {
-		if (this.consoles == null) {
-			this.consoles = new ConcurrentLinkedQueue<>();
-		}
-
 		return this.consoles;
 	}
 
@@ -156,6 +157,7 @@ public class TardisDesktop extends TardisLink {
 				return console;
 			}
 		}
+
 		return null;
 	}
 

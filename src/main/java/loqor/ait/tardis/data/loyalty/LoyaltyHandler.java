@@ -2,10 +2,10 @@ package loqor.ait.tardis.data.loyalty;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.core.data.base.Nameable;
+import loqor.ait.registry.impl.DesktopRegistry;
+import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.tardis.util.TardisUtil;
@@ -18,7 +18,10 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 public class LoyaltyHandler extends TardisLink {
@@ -77,9 +80,9 @@ public class LoyaltyHandler extends TardisLink {
         if (!(tardis instanceof ServerTardis serverTardis))
             return;
 
-        ConsoleVariantRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        DesktopRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        ExteriorVariantRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        ConsoleVariantRegistry.getInstance().tryUnlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        DesktopRegistry.getInstance().tryUnlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        ExteriorVariantRegistry.getInstance().tryUnlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
     }
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {

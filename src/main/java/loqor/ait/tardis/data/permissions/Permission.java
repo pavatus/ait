@@ -59,7 +59,7 @@ public record Permission(String name, Permission parent, Map<String, Permission>
 
     public static Collection<String> collect() {
         Set<String> result = new HashSet<>();
-        collect(result, LOOKUP);
+        Permission.collect(result, LOOKUP);
 
         return result;
     }
@@ -99,13 +99,15 @@ public record Permission(String name, Permission parent, Map<String, Permission>
         return base + this.name;
     }
 
-    // e.g. tardis.use.attune
     public static Permission from(String id) {
         String[] parts = id.split("\\.");
         Permission node = LOOKUP;
 
         for (int i = 1; i < parts.length; i++) {
             node = node.children.get(parts[i]);
+
+            if (node == null)
+                return null;
         }
 
         return node;

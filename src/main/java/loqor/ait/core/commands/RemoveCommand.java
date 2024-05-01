@@ -3,15 +3,13 @@ package loqor.ait.core.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.suggestion.SuggestionProvider;
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -19,7 +17,6 @@ import net.minecraft.text.Text;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -30,29 +27,21 @@ public class RemoveCommand {
 
     private static final Executor EXECUTOR = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-    private static final SuggestionProvider<ServerCommandSource> TARDIS_SUGGESTION = (context, builder) ->
-            CommandSource.suggestMatching(ServerTardisManager.getInstance()
-                    .getLookup().keySet().stream().map(UUID::toString), builder);
-
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID).then(literal("remove").requires(source -> source.hasPermissionLevel(2))
-                .then(argument("id", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
-                        .executes(RemoveCommand::removeCommand)))
+        dispatcher.register(literal(AITMod.MOD_ID)
+                .then(literal("remove").requires(source -> source.hasPermissionLevel(2))
+                        .then(argument("tardis", TardisArgumentType.tardis())
+                                .executes(RemoveCommand::removeCommand)))
         );
     }
 
     private static int removeCommand(CommandContext<ServerCommandSource> context) {
-        UUID uuid = UuidArgumentType.getUuid(context, "id");
         ServerCommandSource source = context.getSource();
+        ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
-        Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-
-        if (tardis == null) {
-            source.sendFeedback(() -> Text.literal("No TARDIS with id [" + uuid + "]"), false);
-            return 0;
-        }
-
-        source.sendFeedback(() -> Text.literal("Removing TARDIS with id [" + uuid + "]..."), false);
+        source.sendFeedback(() -> Text.translatableWithFallback("tardis.remove.progress",
+                "Removing TARDIS with id [%s]...", tardis.getUuid()), true
+        );
 
         // Remove the exterior if it exists
         AbsoluteBlockPos exterior = tardis.getHandlers().getExteriorPos();
@@ -76,7 +65,7 @@ public class RemoveCommand {
         // Delete the file. File system operations are costly!
         EXECUTOR.execute(() -> {
             try {
-                Path file = ServerTardisManager.getSavePath(context.getSource().getServer(), uuid, "json");
+                Path file = ServerTardisManager.getSavePath(context.getSource().getServer(), tardis.getUuid(), "json");
 
                 if (Files.exists(file)) {
                     Files.delete(file);
@@ -85,10 +74,12 @@ public class RemoveCommand {
                 throw new RuntimeException(e);
             }
 
-            ServerTardisManager.getInstance().remove(uuid);
+            ServerTardisManager.getInstance().remove(tardis.getUuid());
         });
 
-        source.sendFeedback(() -> Text.literal("TARDIS [" + uuid + "] removed"), true);
+        source.sendFeedback(() -> Text.translatableWithFallback("tardis.remove.done",
+                "TARDIS [%s] removed", tardis.getUuid()), true
+        );
 
         return Command.SINGLE_SUCCESS;
     }
