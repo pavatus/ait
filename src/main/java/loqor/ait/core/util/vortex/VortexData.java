@@ -5,8 +5,9 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public record VortexData(ArrayList<VortexNode> nodes) {
+public record VortexData(List<VortexNode> nodes) {
     public void serialize(ByteArrayDataOutput out) {
         for (VortexNode vortexNode : this.nodes())
             putVortexNode(out, vortexNode);
@@ -19,7 +20,7 @@ public record VortexData(ArrayList<VortexNode> nodes) {
     }
 
     public static VortexData deserialize(ByteArrayDataInput in) {
-        ArrayList<VortexNode> nodes = new ArrayList<>();
+        List<VortexNode> nodes = new ArrayList<>();
 
         try {
             while (true) {
