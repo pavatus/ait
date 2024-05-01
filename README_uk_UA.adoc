@@ -1,0 +1,66 @@
+// Andrij Glyko <nitrogenesis.developer@gmail.com>
+// v0.1, 2024-04-25
+
+image::https://github.com/M-D-Team/ait-fabric-1.20.1/blob/main/src/main/resources/assets/ait/textures/gui/title/aitlogo.png?raw=true[AIT Logo]
+
+image::https://img.shields.io/github/v/release/M-D-Team/ait-fabric-1.20.1?include_prereleases[Github Release]
+image::https://img.shields.io/modrinth/game-versions/ait?link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait%2Fversions[Modrinth Game Versions]
+image::https://img.shields.io/modrinth/dt/ait?logo=modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait[Modrinth Downloads]
+image::https://img.shields.io/curseforge/dt/856138?logo=curseforge&color=red&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fadventures-in-time[CurseForge Downloads]
+image::https://img.shields.io/badge/wiki-grey?logo=gitbook&logoColor=white&link=https%3A%2F%2Floqor.dev%2Fait%2F[Wiki]
+
+- AIT створено https://github.com/loqor/ait[*Loqor*]
+- AIT потребує https://modrinth.com/mod/owo-lib[*owolib*]
+
+:toc:
+
+== Підсумки
+
+_Apparatus Vivi_. Жива машина. ТАРДІС з серіалу "Доктор Хто". Неважливо, як Ви її називаєте.
+Вона росте разом з тобою, літає так, як літаєш ти. Звісно, ти пілот, але врешті решт ТАРДІС є
+жива.
+
+== Що цей мод робить?
+
+Adventures in Time додає ТАРДІС з серіалу "Доктор Хто". Ви можете взаємодіяти із нею багатьма
+спосібами, включно переміщення до інших вимірів, ховання від друзів із режимом клоаки, та інші
+кумедності та функції що тобі ще треба знайти.
+
+Нещодавно оновлено до Minecraft 1.20.1 (Fabric).
+
+Рекомендовано грати із 8 ҐБ RAM у режимі одиночної гри, та 8 ҐБ RAM виділено
+для серверу.
+
+== Сумісність
+=== https://modrinth.com/mod/immersiveportals[Immersive Portals]
+- Твоя ТАРДІС справді буде _БільшеВсередині^TM_
+- Якщо відкрити двери з інтер'єру ти побачиш те, що ззовні, й навпаки
+
+== Розробники
+- Loqor
+- Duzo
+- Dr. Theo
+- nitrogenez
+
+== Митеці
+- Tright (Моделіст)
+- b2bmrww2 (Моделіст)
+- classic_account (Будівник)
+- Monsterwaill (Аніматор)
+
+== Звуковий дизайн
+- Radio
+- TARDISSFX (канал на YouTube)
+
+== Подяки
+- MagicMan(?) (Допомога із моделями)
+- Bug1312 (Допомога із кодом)
+- DocArcane (Подяка за дизайн консолі "Стімпанк")
+- Creativious (Допомога із кодом)
+- Jeryn (Suff) (Допомога із кодом)
+
+== Посилання
+- https://loqor.dev/ait/[Довідка]
+- https://github.com/loqor/ait/[GitHub Репозиторій]
+- https://www.curseforge.com/minecraft/mc-mods/adventures-in-time[CurseForge Сторінка]
+- https://modrinth.com/mod/ait[Modrinth Сторінка]

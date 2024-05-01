@@ -1,8 +1,13 @@
 package loqor.ait.client;
 
 import loqor.ait.AITMod;
+import loqor.ait.client.renderers.machines.PlugBoardRenderer;
+import loqor.ait.core.util.vortex.client.ClientVortexDataHandler;
+import loqor.ait.core.util.vortex.server.ServerVortexDataHandler;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
+import loqor.ait.registry.impl.door.ClientDoorRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.client.renderers.CustomItemRendering;
-import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
@@ -15,7 +20,6 @@ import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
 import loqor.ait.client.renderers.machines.ArtronCollectorRenderer;
 import loqor.ait.client.renderers.machines.EngineCoreBlockEntityRenderer;
 import loqor.ait.client.renderers.machines.EngineRenderer;
-import loqor.ait.client.renderers.machines.PlugBoardRenderer;
 import loqor.ait.client.renderers.monitors.MonitorRenderer;
 import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
 import loqor.ait.client.renderers.wearables.AITHudOverlay;
@@ -28,17 +32,16 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.RiftTarget;
-import loqor.ait.core.data.schema.SonicSchema;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.*;
+import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
-import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -74,6 +77,7 @@ import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -82,12 +86,15 @@ import static loqor.ait.AITMod.*;
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
-    private final VortexUtil vortex = new VortexUtil("space");
 
     @Override
     public void onInitializeClient() {
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
+
         ClientTardisManager.init();
+
+        ClientVortexDataHandler.init();
+        ClientVortexDataHandler.subscribe();
 
         setupBlockRendering();
         sonicModelPredicate();
@@ -103,6 +110,8 @@ public class AITModClient implements ClientModInitializer {
 
         HudRenderCallback.EVENT.register(new AITHudOverlay());
 
+        ClientExteriorVariantRegistry.getInstance().init();
+        ClientConsoleVariantRegistry.getInstance().init();
         ClientDoorRegistry.init();
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
@@ -113,7 +122,6 @@ public class AITModClient implements ClientModInitializer {
                     if (screen == null) return;
                     MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
                 });
-
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN_TARDIS, // fixme this might not be necessary could just be easier to always use the other method.
                 (client, handler, buf, responseSender) -> {
                     int id = buf.readInt();
@@ -123,7 +131,6 @@ public class AITModClient implements ClientModInitializer {
                     if (screen == null) return;
                     MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
         });
-
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN_CONSOLE, (client, handler, buf, responseSender) -> {
             int id = buf.readInt();
             UUID tardis = buf.readUuid();
@@ -179,18 +186,11 @@ public class AITModClient implements ClientModInitializer {
                     int p = buf.readInt();
                     UUID tardisId = buf.readUuid();
                     ClientTardisManager.getInstance().getTardis(tardisId, (tardis -> {
-                        // idk how the consumer works tbh, but im sure theo is gonna b happy
-                        if (tardis == null)
-                            return;
+                        if (tardis == null) return; // idk how the consumer works tbh, but im sure theo is gonna b happy
 
-                        // todo remember to use the right world in future !!
-                       BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.getExterior().getExteriorPos());
-
-                        if (!(block instanceof ExteriorBlockEntity exterior))
-                           return;
-
-                       if (exterior.getAnimation() == null)
-                           return;
+                       BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.getExterior().getExteriorPos()); // todo remember to use the right world in future !!
+                       if (!(block instanceof ExteriorBlockEntity exterior)) return;
+                       if (exterior.getAnimation() == null) return;
 
                        exterior.getAnimation().setupAnimation(TardisTravel.State.values()[p]);
                     }));
