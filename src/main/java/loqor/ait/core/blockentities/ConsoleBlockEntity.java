@@ -310,6 +310,10 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 		if (this.parent == null) {
 			found = desktop.findConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
+
+			if (found == null)
+				found = this.fixConsole();
+
 			this.setParent(found.uuid());
 		} else {
 			found = desktop.findConsole(this.parent);

@@ -40,7 +40,6 @@ public abstract class Tardis {
 	protected boolean dirty = false;
 	public int tardisHammerAnnoyance = 0; // todo move :(
 
-	// TODO: remove the lambdas, since ATCs are now linked in the init.
 	protected Tardis(UUID uuid, TardisTravel travel, TardisDesktop desktop, TardisExterior exterior) {
 		this.uuid = uuid;
 		this.travel = travel;
@@ -49,7 +48,6 @@ public abstract class Tardis {
 		this.handlers = new TardisHandlersManager();
 
 		tardisHammerAnnoyance = 0;
-		this.init(false);
 	}
 
 	/**
