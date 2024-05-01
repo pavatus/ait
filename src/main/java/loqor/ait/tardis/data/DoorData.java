@@ -1,6 +1,5 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.DoorBlockEntity;
