@@ -35,9 +35,7 @@ import loqor.ait.core.util.vortex.client.ClientVortexDataHandler;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
-import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
-import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
@@ -108,8 +106,6 @@ public class AITModClient implements ClientModInitializer {
 
         HudRenderCallback.EVENT.register(new AITHudOverlay());
 
-        ClientExteriorVariantRegistry.getInstance().init();
-        ClientConsoleVariantRegistry.getInstance().init();
         ClientDoorRegistry.init();
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,

@@ -86,8 +86,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
 		ServerLifecycleEvents.SERVER_STOPPING.register(this::onShutdown);
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
-			this.reset();
 			this.saveTardis(server);
+			this.reset();
 		});
 
 		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset + save
@@ -150,9 +150,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
 		StatsData stats = tardis.handler(TardisComponent.Id.STATS);
 		stats.markCreationDate();
-		consumer.accept(stats);
 
 		this.lookup.put(uuid, tardis);
+		consumer.accept(stats);
 		return tardis;
 	}
 

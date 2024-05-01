@@ -1,7 +1,6 @@
 package loqor.ait.tardis.data;
 
 import com.google.gson.*;
-import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.tardis.Tardis;
@@ -106,9 +105,6 @@ public class TardisHandlersManager extends TardisLink {
 
 	/**
 	 * Do NOT use this setter if you don't know what you're doing. Use {@link loqor.ait.tardis.wrapper.client.ClientTardis#set(TardisComponent)}.
-	 * @param id
-	 * @param t
-	 * @param <T>
 	 */
 	@Deprecated
 	public <T extends TardisComponent> void set(Id id, T t) {
