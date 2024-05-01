@@ -49,7 +49,7 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
         return this.getRandom(tardis, RANDOM);
     }
 
-    public void unlock(Tardis tardis, Loyalty loyalty, Consumer<T> consumer) {
+    public void tryUnlock(Tardis tardis, Loyalty loyalty, Consumer<T> consumer) {
         if (!(tardis instanceof ServerTardis serverTardis))
             return;
 
@@ -71,5 +71,16 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
             if (consumer != null)
                 consumer.accept(schema);
         }
+    }
+
+    public void unlockAll(Tardis tardis) {
+        if (!(tardis instanceof ServerTardis serverTardis))
+            return;
+
+        for (T schema : REGISTRY.values()) {
+            serverTardis.unlock(schema);
+        }
+
+        AITMod.LOGGER.debug("Unlocked everything from {} registry for tardis [{}]", this.getClass(), tardis.getUuid());
     }
 }

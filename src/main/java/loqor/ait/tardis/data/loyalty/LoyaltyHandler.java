@@ -77,9 +77,9 @@ public class LoyaltyHandler extends TardisLink {
         if (!(tardis instanceof ServerTardis serverTardis))
             return;
 
-        ConsoleVariantRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        DesktopRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        ExteriorVariantRegistry.getInstance().unlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        ConsoleVariantRegistry.getInstance().tryUnlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        DesktopRegistry.getInstance().tryUnlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        ExteriorVariantRegistry.getInstance().tryUnlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
     }
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {

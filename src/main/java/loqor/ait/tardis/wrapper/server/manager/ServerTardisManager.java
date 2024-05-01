@@ -250,17 +250,14 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 		if (tardis == null || this.gson == null)
 			return;
 
-
 		this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
 	}
 
+	// FIXME should this really be used this often? ((see #checkForceSync))
 	private void sendTardis(@NotNull ServerPlayerEntity player, UUID uuid, String json) {
-		AITMod.LOGGER.warn("Sending an ENTIRE tardis!");
-		new Throwable().printStackTrace();
-
-		if (this.isInBuffer(player, uuid)) {
+		if (this.isInBuffer(player, uuid))
 			return;
-		}
+
 		if (isAskOnDelay(player)) {
 			this.addToBuffer(player, uuid);
 			return;

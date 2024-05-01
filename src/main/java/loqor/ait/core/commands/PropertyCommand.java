@@ -5,15 +5,12 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.minecraft.command.argument.UuidArgumentType;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-import static loqor.ait.core.commands.TeleportInteriorCommand.TARDIS_SUGGESTION;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -21,44 +18,43 @@ import static net.minecraft.server.command.CommandManager.literal;
  * Commands regarding getting/setting the {@link PropertiesHandler}
  */
 public class PropertyCommand {
+
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
 		dispatcher.register(literal(AITMod.MOD_ID)
 				.then(literal("property").requires(source -> source.hasPermissionLevel(2))
-						.then(argument("tardis", UuidArgumentType.uuid()).suggests(TARDIS_SUGGESTION)
+						.then(argument("tardis", TardisArgumentType.tardis())
 								.then(argument("target", StringArgumentType.string()) // todo autofill targets based off keys in the properties handler
-								.then(literal("set")
-										.then(argument("value", StringArgumentType.string()) // todo - allow for other data types.
-												.executes(PropertyCommand::runSet)))
-								.then(literal("get")
-										.executes(PropertyCommand::runGet))))));
+								.then(literal("set").then(argument("value", StringArgumentType.string()) // todo - allow for other data types.
+										.executes(PropertyCommand::runSet)))
+								.then(literal("get").executes(PropertyCommand::runGet))))));
 	}
 
 	private static int runGet(CommandContext<ServerCommandSource> context) {
-		ServerPlayerEntity source = context.getSource().getPlayer();
-		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
+		ServerCommandSource source = context.getSource();
+		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 		String target = StringArgumentType.getString(context, "target");
 
-		if (tardis == null || source == null) return 0;
-
 		Object value = PropertiesHandler.get(tardis, target);
-
-		source.sendMessage(Text.literal(target + " = " + value.toString()));
+		source.sendMessage(Text.translatableWithFallback("tardis.property.equals",
+				"Property %s = %s",target, value.toString())
+		);
 
 		return Command.SINGLE_SUCCESS;
 	}
 
 	private static int runSet(CommandContext<ServerCommandSource> context) {
-		ServerPlayerEntity source = context.getSource().getPlayer();
-		Tardis tardis = ServerTardisManager.getInstance().getTardis(UuidArgumentType.getUuid(context, "tardis"));
+		ServerCommandSource source = context.getSource();
+		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
 		String target = StringArgumentType.getString(context, "target");
 		String value = StringArgumentType.getString(context, "value");
 
-		if (tardis == null || source == null) return 0;
-
 		PropertiesHandler.set(tardis, target, value);
 
-		source.sendMessage(Text.literal(target + " = " + value.toString()));
+		source.sendMessage(Text.translatableWithFallback("tardis.property.set",
+				"Set property %s to %s", target, value.toString())
+		);
 
 		return Command.SINGLE_SUCCESS;
-	}}
+	}
+}

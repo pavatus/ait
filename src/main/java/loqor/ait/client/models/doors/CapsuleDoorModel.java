@@ -97,8 +97,6 @@ public class CapsuleDoorModel extends DoorModel {
 
 		DoorData handler = door.findTardis().get().getDoor();
 
-		AITMod.LOGGER.info("handler: {}-{}; tardis = {}", handler, handler.getDoorState(), door.findTardis());
-
 		this.body.getChild("doors").getChild("door_left").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
 		this.body.getChild("doors").getChild("door_right").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;
 

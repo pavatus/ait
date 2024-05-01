@@ -12,7 +12,6 @@ import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.util.EnumMap;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.Map;
@@ -31,26 +30,28 @@ public class TardisHandlersManager extends TardisLink {
 	public void init(Tardis tardis, boolean deserialized) {
 		super.init(tardis, deserialized);
 
-		this.createHandler(new DoorData());
-		this.createHandler(new PropertiesHolder());
-		this.createHandler(new WaypointHandler());
-		this.createHandler(new LoyaltyHandler());
-		this.createHandler(new OvergrownData());
-		this.createHandler(new ServerHumHandler());
-		this.createHandler(new ServerAlarmHandler());
-		this.createHandler(new InteriorChangingHandler());
-		this.createHandler(new SequenceHandler());
-		this.createHandler(new FuelData());
-		this.createHandler(new HADSData());
-		this.createHandler(new FlightData());
-		this.createHandler(new SiegeData());
-		this.createHandler(new CloakData());
-		this.createHandler(new StatsData());
-		this.createHandler(new TardisCrashData());
-		this.createHandler(new SonicHandler());
-		this.createHandler(new ShieldData());
-		this.createHandler(new BiomeHandler());
-		this.createHandler(new PermissionHandler());
+		if (!deserialized) {
+			this.createHandler(new DoorData());
+			this.createHandler(new PropertiesHolder());
+			this.createHandler(new WaypointHandler());
+			this.createHandler(new LoyaltyHandler());
+			this.createHandler(new OvergrownData());
+			this.createHandler(new ServerHumHandler());
+			this.createHandler(new ServerAlarmHandler());
+			this.createHandler(new InteriorChangingHandler());
+			this.createHandler(new SequenceHandler());
+			this.createHandler(new FuelData());
+			this.createHandler(new HADSData());
+			this.createHandler(new FlightData());
+			this.createHandler(new SiegeData());
+			this.createHandler(new CloakData());
+			this.createHandler(new StatsData());
+			this.createHandler(new TardisCrashData());
+			this.createHandler(new SonicHandler());
+			this.createHandler(new ShieldData());
+			this.createHandler(new BiomeHandler());
+			this.createHandler(new PermissionHandler());
+		}
 
 		this.forEach(component -> component.init(
 				tardis, deserialized)
@@ -103,6 +104,13 @@ public class TardisHandlersManager extends TardisLink {
 		return (T) this.handlers.get(id);
 	}
 
+	/**
+	 * Do NOT use this setter if you don't know what you're doing. Use {@link loqor.ait.tardis.wrapper.client.ClientTardis#set(TardisComponent)}.
+	 * @param id
+	 * @param t
+	 * @param <T>
+	 */
+	@Deprecated
 	public <T extends TardisComponent> void set(Id id, T t) {
 		this.handlers.put(id, t);
 	}
@@ -211,15 +219,10 @@ public class TardisHandlersManager extends TardisLink {
 				Id id = legacy ? LegacyUtil.getLegacyId(key) : Id.valueOf(key);
 
 				if (id == null) {
-					AITMod.LOGGER.error("Can't find a component id with name '{}'!", entry.getKey());
-					throw new NullPointerException("id is null.");
+					throw new NullPointerException("Can't find a component id with name '" + entry.getKey() + "'!");
 				}
 
 				TardisComponent component = context.deserialize(element, id.clazz());
-
-				if (id == Id.DOOR) {
-					AITMod.LOGGER.info("THM-DESER: {}", ((DoorData) component).getDoorState());
-				}
 
 				manager.set(id, component);
 			}
@@ -231,16 +234,10 @@ public class TardisHandlersManager extends TardisLink {
 		public JsonElement serialize(TardisHandlersManager manager, java.lang.reflect.Type type, JsonSerializationContext context) {
 			JsonObject result = new JsonObject();
 
-			manager.forEach(component -> {
-				if (component.getId() == Id.DOOR) {
-					AITMod.LOGGER.info("THM-SER: {}", ((DoorData) component).getDoorState());
-				}
-
-				result.add(
-						component.getId().toString(),
-						context.serialize(component)
-				);
-			});
+			manager.forEach(component -> result.add(
+                    component.getId().toString(),
+                    context.serialize(component)
+            ));
 
 			return result;
 		}

@@ -23,7 +23,12 @@ public class LegacyUtil {
     );
 
     public static TardisComponent.Id getLegacyId(String raw) {
-        return LEGACY_IDS.get(raw);
+        TardisComponent.Id id = LEGACY_IDS.get(raw);
+
+        if (id == null)
+            return TardisComponent.Id.valueOf(raw.toUpperCase());
+
+        return id;
     }
 
     /**

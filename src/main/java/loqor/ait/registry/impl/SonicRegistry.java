@@ -26,15 +26,33 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
         return SonicRegistry.DEFAULT;
     }
 
+    @Override
     public void readFromServer(PacketByteBuf buf) {
         super.readFromServer(buf);
         AITModClient.sonicModelPredicate();
     }
 
     @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        LOGGER.info("SONIC: onCommonInit");
+    }
+
+    @Override
+    public void onClientInit() {
+        super.onClientInit();
+        LOGGER.info("SONIC: onClientInit");
+    }
+
+    @Override
     protected void defaults() {
-        // why does this work?
         DEFAULT = register(BuiltinSonic.create("prime", "Prime"));
+
+        register(BuiltinSonic.create("copper", null));
+        register(BuiltinSonic.create("mechanical", null));
+        register(BuiltinSonic.create("fob", null));
+        register(BuiltinSonic.create("coral", null));
+        register(BuiltinSonic.create("renaissance", null));
     }
 
     public static SonicRegistry getInstance() {
@@ -49,20 +67,6 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
     public static SonicSchema DEFAULT;
 
     public void populateModels(Consumer<Identifier> consumer) {
-        // the default sonic (prime) is ALWAYS registered
-        if (REGISTRY.size() == 1) {
-            /*
-             * THOSE FIELDS ARE ONLY USED WHEN THE REST OF THE RESOURCES ARE NOT INITIALIZED
-             * To not reload the game the second time, it's better to keep the builtin stuff semi-loaded
-             * Shouldn't be a problem for custom sonics though, since they will require a resourcepack.
-             */
-            register(BuiltinSonic.create("copper", null));
-            register(BuiltinSonic.create("mechanical", null));
-            register(BuiltinSonic.create("fob", null));
-            register(BuiltinSonic.create("coral", null));
-            register(BuiltinSonic.create("renaissance", null));
-        }
-
         for (SonicSchema schema : REGISTRY.values()) {
             SonicSchema.Models models = schema.models();
             models.load(consumer);

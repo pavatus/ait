@@ -112,13 +112,12 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 			return;
 		}
 
-		TardisComponent.Type<?> header = typeId.getType();
-		String json = buf.readString();
-
-		if(header == null)
+		if (!typeId.mutable())
 			return;
 
-		header.unsafeSet(tardis, this.gson.fromJson(json, typeId.clazz()));
+		typeId.set(tardis, this.gson.fromJson(
+				buf.readString(), typeId.clazz())
+		);
 	}
 
 	private void update(PacketByteBuf buf) {

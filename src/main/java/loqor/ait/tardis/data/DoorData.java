@@ -27,13 +27,12 @@ import static loqor.ait.tardis.TardisTravel.State.*;
 
 public class DoorData extends TardisLink {
 	private boolean locked, left, right;
-	private DoorStateEnum doorState;
+	private DoorStateEnum doorState = DoorStateEnum.FIRST;
 	public DoorStateEnum tempExteriorState; // this is the previous state before it was changed, used for checking when the door has been changed so the animation can start. Set on server, used on client
 	public DoorStateEnum tempInteriorState;
 
 	public DoorData() {
 		super(Id.DOOR);
-		this.doorState = DoorStateEnum.CLOSED;
 	}
 
 	@Override
@@ -79,7 +78,6 @@ public class DoorData extends TardisLink {
 		) instanceof DoorBlockEntity;
 	}
 
-	// Remember to this.sync() for these setters!!
 	public void setLeftRot(boolean var) {
 		this.left = var;
 		if (this.left) this.setDoorState(DoorStateEnum.FIRST);

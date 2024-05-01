@@ -95,6 +95,8 @@ public class AITMod implements ModInitializer {
 		Registries.getInstance().subscribe(Registries.InitType.COMMON);
 		DoorRegistry.init();
 
+		AITArgumentTypes.register();
+
 		FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
@@ -116,14 +118,11 @@ public class AITMod implements ModInitializer {
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
 			TeleportInteriorCommand.register(dispatcher);
-			UnlockInteriorsCommand.register(dispatcher);
 			SummonTardisCommand.register(dispatcher);
 			SetLockedCommand.register(dispatcher);
 			GetInsideTardisCommand.register(dispatcher);
-			SetFuelCommand.register(dispatcher);
 			RealWorldCommand.register(dispatcher);
-			AddFuelCommand.register(dispatcher);
-			RemoveFuelCommand.register(dispatcher);
+			FuelCommand.register(dispatcher);
 			SetRepairTicksCommand.register(dispatcher);
 			RiftChunkCommand.register(dispatcher);
 			SetNameCommand.register(dispatcher);
@@ -136,8 +135,7 @@ public class AITMod implements ModInitializer {
 			RemoveCommand.register(dispatcher);
 			PermissionCommand.register(dispatcher);
 			LoyaltyCommand.register(dispatcher);
-			UnlockExteriorsCommand.register(dispatcher);
-			UnlockConsolesCommand.register(dispatcher);
+			UnlockCommand.register(dispatcher);
 		}));
 
 		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {
