@@ -82,6 +82,7 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
 
 			if (tardis.isUnlocked(entity.getConsoleVariant())) {
 				console.render(matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(consoleTexture, true)), maxLight, OverlayTexture.DEFAULT_UV, 0.3607843137f, 0.9450980392f, 1, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+				matrices.pop();
 				return;
 			}
 
