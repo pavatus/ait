@@ -88,9 +88,7 @@ public class AITModClient implements ClientModInitializer {
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
 
         ClientTardisManager.init();
-
         ClientVortexDataHandler.init();
-        ClientVortexDataHandler.subscribe();
 
         setupBlockRendering();
         sonicModelPredicate();

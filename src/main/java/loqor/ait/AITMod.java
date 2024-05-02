@@ -88,8 +88,6 @@ public class AITMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ServerVortexDataHandler.subscribe();
-
 		ConsoleRegistry.init();
 		HumsRegistry.init();
 		CreakRegistry.init();
@@ -97,6 +95,8 @@ public class AITMod implements ModInitializer {
 
 		Registries.getInstance().subscribe(Registries.InitType.COMMON);
 		DoorRegistry.init();
+
+		ServerVortexDataHandler.init();
 
 		AITArgumentTypes.register();
 
