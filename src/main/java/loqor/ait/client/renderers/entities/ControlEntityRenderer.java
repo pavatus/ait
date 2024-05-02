@@ -5,6 +5,7 @@ import loqor.ait.client.models.consoles.ControlModel;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -73,7 +74,8 @@ public class ControlEntityRenderer
 		matrices.pop();
 		if (hitresult != null) {
 			boolean isPlayerHoldingScanningSonic = isScanningSonicInConsole(entity);
-			if (isPlayerHoldingScanningSonic) {
+			PlayerEntity player = MinecraftClient.getInstance().player;
+			if (isPlayerHoldingScanningSonic && entity.getTardis().getHandlers().getLoyalties().get(player).level() < Loyalty.Type.PILOT.level) {
 				if (entity.isPartOfSequence()) {
 					matrices.push();
 					matrices.scale(0.4f, 0.4f, 0.4f);

@@ -15,10 +15,10 @@ import net.minecraft.util.math.Vec3d;
  */
 
 public class VortexNode {
-    private boolean isLeaf;
-    private Vec3d pos;
-    private Vec3d ptrToLeft;
-    private Vec3d ptrToRight;
+    private final boolean isLeaf;
+    private final Vec3d pos;
+    private final Vec3d ptrToLeft;
+    private final Vec3d ptrToRight;
 
     public static final int GUARD_LEAF_NODE_MARK = 0xDEADBEEF;
     public static final int GUARD_END_NODE_MARK = 0xFDFDFDFD;
@@ -81,7 +81,7 @@ public class VortexNode {
 
     private static void putLeaf(ByteArrayDataOutput out, Vec3d pos) {
         out.writeInt(GUARD_LEAF_NODE_MARK);
-        putVec3d(out, pos);
+        putOptionalVec3d(out, pos);
         out.writeInt(GUARD_END_NODE_MARK);
     }
 
@@ -128,5 +128,21 @@ public class VortexNode {
 
     private static void putEmptyVec3d(ByteArrayDataOutput out) {
         for (int i = 0; i < 3; i++) putEmptyVec3dElement(out);
+    }
+
+    public Vec3d getPos() {
+        return this.pos;
+    }
+
+    public boolean isLeaf() {
+        return this.isLeaf;
+    }
+
+    public Vec3d getPtrToLeft() {
+        return this.ptrToLeft;
+    }
+
+    public Vec3d getPtrToRight() {
+        return this.ptrToRight;
     }
 }

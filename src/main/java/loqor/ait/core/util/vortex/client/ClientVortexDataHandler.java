@@ -15,17 +15,21 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class ClientVortexDataHandler {
 
+    private static final Map<String, VortexData> CACHE = new HashMap<>();
+
     /*
         Returns the path to a locally cached vortex data file.
     */
-    public static Path getCachedVortexDataPath(String serverAddress) {
+    public static Path getCachedVortexDataPath(String name) {
         return FabricLoader.getInstance().getGameDir()
                 .resolve(VortexDataHelper.VORTEX_DATA_CLIENT_CACHE_PATH)
-                .resolve(String.format("%s.ait-data", serverAddress));
+                .resolve(String.format("%s.ait-data", name));
     }
 
     /*
@@ -53,6 +57,10 @@ public class ClientVortexDataHandler {
                 ((client, handler, buf, responseSender) -> writeVortexDataCache(
                         VortexData.deserialize(buf.array()), WorldUtil.getName(client)))
         );
+    }
+
+    public static VortexData getCachedVortexData(String name) {
+        return CACHE.computeIfAbsent(name, s -> VortexDataHelper.readVortexData(getCachedVortexDataPath(s)));
     }
 
     /*

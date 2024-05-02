@@ -1,5 +1,6 @@
 package loqor.ait.client.renderers.consoles;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleGeneratorModel;
 import loqor.ait.client.models.consoles.ConsoleModel;
@@ -71,6 +72,8 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
 		matrices.pop();
 
 		matrices.push();
+		RenderSystem.disableDepthTest();
+		RenderSystem.disableBlend();
 
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 		if (entity.getWorld() == null) return;
@@ -88,6 +91,9 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
 
 			console.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(consoleTexture)), maxLight, OverlayTexture.DEFAULT_UV, 0.2f, 0.2f, 0.2f, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
 		}
+
+		RenderSystem.enableBlend();
+		RenderSystem.enableDepthTest();
 		matrices.pop();
 	}
 }

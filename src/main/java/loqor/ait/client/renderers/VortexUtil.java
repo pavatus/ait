@@ -2,6 +2,11 @@ package loqor.ait.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
+import loqor.ait.core.util.vortex.VortexData;
+import loqor.ait.core.util.vortex.VortexDataHelper;
+import loqor.ait.core.util.vortex.VortexNode;
+import loqor.ait.core.util.vortex.client.ClientVortexDataHandler;
+import loqor.ait.core.util.vortex.client.ClientVortexDataHelper;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
@@ -183,5 +188,28 @@ public class VortexUtil {
 
     private float computeDistortionFactor(float time, int t) {
         return 0;//(float) (Math.sin(8 * this.distortionSpeed * 2.0 * Math.PI + (13 - t) * this.distortionSeparationFactor) * this.distortionFactor) / 8;
+    }
+
+    public void renderVortexNodes(WorldRenderContext context, VortexNode node) {
+        MatrixStack stack = context.matrixStack();
+        Matrix4f positionMatrix = stack.peek().getPositionMatrix();
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        stack.push();
+        stack.translate(node.getPos().x, node.getPos().y, node.getPos().z);
+        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
+        buffer.vertex(positionMatrix, 20, 20, 0).color(1f, 1f, 1f, 1f).texture(0, 0).next();
+        buffer.vertex(positionMatrix, 20, 60, 0).color(1f, 0f, 0f, 1f).texture(0, 1f).next();
+        buffer.vertex(positionMatrix, 60, 60, 0).color(0f, 1f, 0f, 1f).texture(1f, 1f).next();
+        buffer.vertex(positionMatrix, 0, 20, 0).color(0f, 0f, 1f, 1f).texture(1f, 0).next();
+
+        RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
+        RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+
+        tessellator.draw();
+
+        stack.pop();
     }
 }

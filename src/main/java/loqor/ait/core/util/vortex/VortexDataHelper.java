@@ -41,6 +41,7 @@ public class VortexDataHelper {
             out.close();
         } catch (IOException e) {
             AITMod.LOGGER.error("VortexDataHelper: Storage failed: {}", e.getMessage());
+            //e.printStackTrace();
         }
     }
 
