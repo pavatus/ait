@@ -2,27 +2,15 @@ package loqor.ait.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
-import loqor.ait.core.util.vortex.VortexData;
-import loqor.ait.core.util.vortex.VortexDataHelper;
 import loqor.ait.core.util.vortex.VortexNode;
-import loqor.ait.core.util.vortex.client.ClientVortexDataHandler;
-import loqor.ait.core.util.vortex.client.ClientVortexDataHelper;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
-
-import java.io.*;
-import java.nio.BufferUnderflowException;
-import java.nio.ByteBuffer;
-import java.nio.file.Path;
-import java.util.ArrayList;
 
 /**
  * @author - ThePlaceHolder (someElseisHere), Loqor

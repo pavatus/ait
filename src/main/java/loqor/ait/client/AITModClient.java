@@ -74,7 +74,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.World;
@@ -118,7 +117,7 @@ public class AITModClient implements ClientModInitializer {
                 System.out.println("rendering");
                 VortexUtil vortex = new VortexUtil("space");
                 VortexData vortexData = ClientVortexDataHandler.getCachedVortexData(WorldUtil.getName(client));
-                
+
                 if(vortexData != null) {
                     for (VortexNode node : vortexData.nodes()) {
                         vortex.renderVortexNodes(context, node);
