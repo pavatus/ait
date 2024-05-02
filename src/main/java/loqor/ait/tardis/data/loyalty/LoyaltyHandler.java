@@ -47,7 +47,7 @@ public class LoyaltyHandler extends TardisLink {
     public Loyalty set(PlayerEntity player, Loyalty loyalty) {
         this.data.put(player.getUuid(), loyalty);
         this.unlockInteriorViaLoyalty((ServerPlayerEntity) player, loyalty); // safe cast because this should only be called on server anyway
-
+        this.sync();
         return loyalty;
     }
 

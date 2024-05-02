@@ -6,7 +6,11 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.WorldSavePath;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Objects;
 
 public class ClientVortexDataHandler {
@@ -15,12 +19,19 @@ public class ClientVortexDataHandler {
      */
     public static void init() {
         ClientPlayConnectionEvents.JOIN.register(((handler, sender, client) -> {
-            if (handler.getServerInfo() == null)
+            if (ClientVortexDataHelper.isVortexDataCached(client.isInSingleplayer() ?
+                    client.getServer().getSavePath(WorldSavePath.ROOT).getParent().getFileName().toString() :
+                    client.getCurrentServerEntry().address)) {
                 return;
-
-            if (ClientVortexDataHelper.isVortexDataCached(handler.getServerInfo().address))
-                return;
+            }
             ClientPlayNetworking.send(VortexDataHelper.REQUEST_SYNC_PACKET, PacketByteBufs.create());
+            try {
+                Files.createDirectories(ClientVortexDataHelper.getCachedVortexDataPath(client.isInSingleplayer() ?
+                        client.getServer().getSavePath(WorldSavePath.ROOT).getParent().getFileName().toString() :
+                        client.getCurrentServerEntry().address).getParent());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }));
     }
 
@@ -31,7 +42,9 @@ public class ClientVortexDataHandler {
         ClientPlayNetworking.registerGlobalReceiver(VortexDataHelper.SYNC_PACKET,
                 ((client, handler, buf, responseSender) -> {
                     ClientVortexDataHelper.cacheVortexData(
-                            VortexData.deserialize(buf.array()), Objects.requireNonNull(handler.getServerInfo()).address);
+                            VortexData.deserialize(buf.array()), client.isInSingleplayer() ?
+                                    client.getServer().getSavePath(WorldSavePath.ROOT).getParent().getFileName().toString() :
+                                    client.getCurrentServerEntry().address);
                 }));
     }
 

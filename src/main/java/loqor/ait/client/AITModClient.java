@@ -2,6 +2,7 @@ package loqor.ait.client;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.renderers.CustomItemRendering;
+import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
@@ -31,7 +32,11 @@ import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.*;
+import loqor.ait.core.util.vortex.VortexData;
+import loqor.ait.core.util.vortex.VortexDataHelper;
+import loqor.ait.core.util.vortex.VortexNode;
 import loqor.ait.core.util.vortex.client.ClientVortexDataHandler;
+import loqor.ait.core.util.vortex.client.ClientVortexDataHelper;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
@@ -52,6 +57,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
@@ -69,12 +75,15 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 import static loqor.ait.AITMod.*;
@@ -105,6 +114,23 @@ public class AITModClient implements ClientModInitializer {
         HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
 
         HudRenderCallback.EVENT.register(new AITHudOverlay());
+
+        WorldRenderEvents.END.register(context -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            World world = client.player.getWorld();
+            if(world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
+                System.out.println("rendering");
+                VortexUtil vortex = new VortexUtil("space");
+                VortexData vortexData = ClientVortexDataHelper.getCachedVortexData(client.isInSingleplayer() ?
+                        client.getServer().getSavePath(WorldSavePath.ROOT).getParent().getFileName().toString() :
+                        client.getCurrentServerEntry().address);
+                if(vortexData != null) {
+                    for (VortexNode node : vortexData.nodes()) {
+                        vortex.renderVortexNodes(context, node);
+                    }
+                }
+            }
+        });
 
         ClientDoorRegistry.init();
 

@@ -1,12 +1,10 @@
 package loqor.ait.core.util.vortex;
 
-import com.ibm.icu.util.Output;
 import loqor.ait.AITMod;
 import net.minecraft.util.Identifier;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.zip.GZIPInputStream;
@@ -27,7 +25,8 @@ public class VortexDataHelper {
             return VortexData.deserialize(decompressVortexData(in.readAllBytes()));
         } catch (IOException e) {
             AITMod.LOGGER.error("VortexDataHelper: Unable to read vortex data");
-        } catch (IllegalStateException ignored) {}
+            //e.printStackTrace();
+        }
         return null;
     }
 
@@ -39,13 +38,13 @@ public class VortexDataHelper {
             out.write(compressVortexData(data.serialize()));
         } catch (IOException e) {
             AITMod.LOGGER.error("VortexDataHelper: Storage failed: {}", e.getMessage());
+            //e.printStackTrace();
         }
     }
 
     public static byte[] compressVortexData(byte[] data) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        try {
-            GZIPOutputStream gzipOs = new GZIPOutputStream(os);
+        try (GZIPOutputStream gzipOs = new GZIPOutputStream(os)) {
             gzipOs.write(data, 0, data.length);
             gzipOs.close();
 
@@ -58,11 +57,8 @@ public class VortexDataHelper {
 
     public static byte[] decompressVortexData(byte[] data) {
         ByteArrayInputStream is = new ByteArrayInputStream(data);
-
-        try {
-            GZIPInputStream gzipIs = new GZIPInputStream(is);
+        try (GZIPInputStream gzipIs = new GZIPInputStream(is)) {
             byte[] decomp = gzipIs.readAllBytes();
-            gzipIs.close();
             return decomp;
         } catch (IOException e) {
             AITMod.LOGGER.warn("VortexDataHelper: GZIP initialization failed: {}", e.getMessage());
