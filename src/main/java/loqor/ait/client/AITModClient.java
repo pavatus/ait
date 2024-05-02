@@ -32,11 +32,10 @@ import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.*;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.core.util.vortex.VortexData;
-import loqor.ait.core.util.vortex.VortexDataHelper;
 import loqor.ait.core.util.vortex.VortexNode;
 import loqor.ait.core.util.vortex.client.ClientVortexDataHandler;
-import loqor.ait.core.util.vortex.client.ClientVortexDataHelper;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
@@ -83,7 +82,6 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.UUID;
 
 import static loqor.ait.AITMod.*;
@@ -119,9 +117,8 @@ public class AITModClient implements ClientModInitializer {
             if(world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
                 System.out.println("rendering");
                 VortexUtil vortex = new VortexUtil("space");
-                VortexData vortexData = ClientVortexDataHelper.getCachedVortexData(client.isInSingleplayer() ?
-                        client.getServer().getSavePath(WorldSavePath.ROOT).getParent().getFileName().toString() :
-                        client.getCurrentServerEntry().address);
+                VortexData vortexData = ClientVortexDataHandler.getCachedVortexData(WorldUtil.getName(client));
+                
                 if(vortexData != null) {
                     for (VortexNode node : vortexData.nodes()) {
                         vortex.renderVortexNodes(context, node);
