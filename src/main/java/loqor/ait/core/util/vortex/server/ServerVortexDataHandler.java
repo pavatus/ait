@@ -42,8 +42,8 @@ public class ServerVortexDataHandler {
             }
         }));
 
-        ServerPlayNetworking.registerGlobalReceiver(VortexDataHelper.REQUEST_SYNC_PACKET,
-                (((server, player, handler, buf, responseSender) -> ServerVortexDataHandler.sendSyncPacketTo(player))));
+        //ServerPlayNetworking.registerGlobalReceiver(VortexDataHelper.REQUEST_SYNC_PACKET,
+        //        (((server, player, handler, buf, responseSender) -> ServerVortexDataHandler.sendSyncPacketTo(player))));
     }
 
     /*

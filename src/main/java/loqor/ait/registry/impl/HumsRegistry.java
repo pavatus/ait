@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
 public class HumsRegistry {
@@ -19,10 +20,12 @@ public class HumsRegistry {
 	public static HumSound TOYOTA;
 	public static HumSound CORAL;
 	public static HumSound EIGHT;
+	public static HumSound BEACON;
 
 	public static void init() {
 		TOYOTA = register(HumSound.create(AITMod.MOD_ID, "toyota", AITSounds.TOYOTA_HUM));
 		CORAL = register(HumSound.create(AITMod.MOD_ID, "coral", AITSounds.CORAL_HUM));
 		EIGHT = register(HumSound.create(AITMod.MOD_ID, "eight", AITSounds.EIGHT_HUM));
+		BEACON = register(HumSound.create(AITMod.MOD_ID, "beacon", SoundEvents.BLOCK_BEACON_AMBIENT));
 	}
 }

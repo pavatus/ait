@@ -38,8 +38,8 @@ public class ServerHumHandler extends TardisLink {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeIdentifier(this.current.sound().getId());
 
-		for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.tardis())) {
-			ServerPlayNetworking.send((ServerPlayerEntity) player, SEND, buf);
+		for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(this.tardis())) {
+			ServerPlayNetworking.send(player, SEND, buf);
 		}
 	}
 }

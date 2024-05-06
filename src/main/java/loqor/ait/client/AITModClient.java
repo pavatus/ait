@@ -94,7 +94,7 @@ public class AITModClient implements ClientModInitializer {
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
 
         ClientTardisManager.init();
-        ClientVortexDataHandler.init();
+        //ClientVortexDataHandler.init();
 
         setupBlockRendering();
         sonicModelPredicate();
@@ -110,7 +110,7 @@ public class AITModClient implements ClientModInitializer {
 
         HudRenderCallback.EVENT.register(new AITHudOverlay());
 
-        WorldRenderEvents.END.register(context -> {
+        /*WorldRenderEvents.END.register(context -> {
             MinecraftClient client = MinecraftClient.getInstance();
             World world = client.player.getWorld();
             if(world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
@@ -124,7 +124,7 @@ public class AITModClient implements ClientModInitializer {
                     }
                 }
             }
-        });
+        });*/
 
         ClientDoorRegistry.init();
 
