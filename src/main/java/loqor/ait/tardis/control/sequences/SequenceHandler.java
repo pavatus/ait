@@ -47,6 +47,7 @@ public class SequenceHandler extends TardisLink {
 	}
 
 	public ServerPlayerEntity getActivePlayer() {
+		if(this.playerUUID == null) return null;
 		return (ServerPlayerEntity) TardisUtil.getTardisDimension().getPlayerByUuid(this.playerUUID);
 	}
 
