@@ -70,7 +70,7 @@ public abstract class BaseControlEntity extends MobEntity {
 
 	public void setTardis(Tardis tardis) {
 		if (tardis == null) {
-			AITMod.LOGGER.error("Tardis was null in DoorBlockEntity at " + this.getPos());
+			AITMod.LOGGER.error("Tardis was null in "+ this + " at " + this.getPos());
 			return;
 		}
 

@@ -137,6 +137,11 @@ public class TardisHandlersManager extends TardisLink {
 	}
 
 	@Deprecated
+	public ShieldData getShields() {
+		return this.get(Id.SHIELDS);
+	}
+
+	@Deprecated
 	public ServerAlarmHandler getAlarms() {
 		return this.tardis().alarm();
 	}

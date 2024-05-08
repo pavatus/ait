@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Identifiable;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -72,8 +73,8 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
         if (!this.sync)
             return;
 
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server)
-                -> this.syncToClient(handler.getPlayer()));
+        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined)
+                -> this.syncToClient(player));
     }
 
     @Override
@@ -105,6 +106,7 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
             return;
 
         REGISTRY.clear();
+        this.defaults();
         int size = buf.readInt();
 
         for (int i = 0; i < size; i++) {

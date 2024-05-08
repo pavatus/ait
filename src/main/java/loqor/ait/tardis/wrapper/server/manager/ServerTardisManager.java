@@ -480,7 +480,5 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 			if (DependencyChecker.hasPortals())
 				PortalsHandler.removePortals(tardis);
 		}
-
-		this.reset();
 	}
 }

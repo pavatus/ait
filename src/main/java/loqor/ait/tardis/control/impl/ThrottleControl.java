@@ -43,8 +43,7 @@ public class ThrottleControl extends Control {
 			}
 		}
 
-		if(tardis.getHandlers().getSequenceHandler().getActivePlayer() == null &&
-				travel.getState() == TardisTravel.State.DEMAT) {
+		if(travel.getState() == TardisTravel.State.DEMAT) {
 			tardis.getHandlers().getSequenceHandler().setActivePlayer(player);
 		}
 

@@ -4,7 +4,9 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.KeyItem;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -52,7 +54,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 		float alpha = exterior.getAlpha();
 
 		if (exterior.findTardis().get().getHandlers().getCloak().isEnabled()) {
-			if (!KeyItem.hasMatchingKeyInInventory(MinecraftClient.getInstance().player, exterior.findTardis().get())) {
+			if (!(exterior.findTardis().get().getHandlers().getLoyalties().get(MinecraftClient.getInstance().player).level() < Loyalty.Type.COMPANION.level)) {
 				alpha = 0f;
 				root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
 				return;

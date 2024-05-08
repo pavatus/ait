@@ -15,6 +15,7 @@ import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.StatsData;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
@@ -29,6 +30,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
+
+import static loqor.ait.tardis.animation.ExteriorAnimation.*;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 	private ExteriorModel model;
@@ -121,12 +124,20 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		matrices.pop();
 
 		if (entity.findTardis().get().areVisualShieldsActive()) {
-			matrices.push();
-			matrices.translate(0.5F, 0.0F, 0.5F);
+			float alpha;
 			float delta = ((tickDelta + MinecraftClient.getInstance().player.age) * 0.03f);
 			if(shieldsModel == null) shieldsModel = new ShieldsModel(ShieldsModel.getTexturedModelData().createModel());
 			VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEnergySwirl(this.getEnergySwirlTexture(), delta % 1.0F, (delta * 0.1F) % 1.0F));
-			shieldsModel.render(matrices, vertexConsumer, maxLight, overlay, 0f, 0.25f, 0.5f, 1f);
+			if (isNearTardis(MinecraftClient.getInstance().player, entity.findTardis().get(), MAX_CLOAK_DISTANCE)) {
+				alpha = 1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, entity.findTardis().get()) / MAX_CLOAK_DISTANCE);
+				if (entity.getAlpha() != 0.105f)
+					alpha = alpha * entity.getAlpha();
+			} else {
+				alpha = 0f;
+			}
+			matrices.push();
+			matrices.translate(0.5F, 0.0F, 0.5F);
+			shieldsModel.render(matrices, vertexConsumer, maxLight, overlay, 0f, 0.25f, 0.5f, Math.min(entity.getAlpha(), alpha));
 			matrices.pop();
 		}
 
