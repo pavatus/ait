@@ -75,20 +75,22 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
 	public VoxelShape diagonalShape() {
 		VoxelShape shape = VoxelShapes.empty();
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.3125, 0, 0.3125, 0.5, 2, 0.5), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.375, 0, 0.25, 0.5, 2, 0.375), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.4375, 0, 0.1875, 0.5625, 2, 0.3125), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.5, 0, 0.125, 0.625, 2, 0.625), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.25, 0, 0.375, 0.375, 2, 0.5), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.1875, 0, 0.4375, 0.3125, 2, 0.5625), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.125, 0, 0.5, 0.5, 2, 0.625), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.625, 0, 0.125, 0.875, 2, 0.75), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.125, 0, 0.625, 0.875, 2, 0.875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.125, 0, 0.125, 0.75, 0.0625, 0.75), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.1875, 0, 0.0625, 0.875, 0.0625, 0.125), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.25, 0, 0, 0.875, 0.0625, 0.0625), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.0625, 0, 0.1875, 0.125, 0.0625, 0.875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 0.0625, 0.875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.125, 0, -0.125, 0.875, 0.0625, 0.875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.25, 0.0625, 0.25, 0.875, 2, 0.875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.3125, 0.0625, 0.1875, 0.875, 2, 0.25), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.1875, 0.0625, 0.3125, 0.25, 2, 0.875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.125, 0.0625, 0.375, 0.1875, 2, 0.875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.4375, 0.0625, 0.0625, 0.875, 2, 0.125), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.375, 0.0625, 0.125, 0.875, 2, 0.1875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.5625, 0.0625, -0.0625, 0.875, 2, 0), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.5, 0.0625, 0, 0.875, 2, 0.0625), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.625, 0.0625, -0.125, 0.875, 2, -0.0625), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.0625, 0.0625, 0.4375, 0.125, 2, 0.875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0, 0.0625, 0.5, 0.0625, 2, 0.875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.0625, 0.0625, 0.5625, 0, 2, 0.875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.125, 0.0625, 0.625, -0.0625, 2, 0.875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.3125, 0, -0.3125, 0.625, 0.0625, 0.625), BooleanBiFunction.OR);
+
 		return shape;
 	}
 	@Override
