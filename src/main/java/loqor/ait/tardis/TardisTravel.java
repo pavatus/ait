@@ -454,7 +454,7 @@ public class TardisTravel extends TardisLink {
 
 		// Set the destination block to the Tardis exterior block
 		ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-		BlockState state = block.getDefaultState().with(Properties.ROTATION, this.getDestination().getRotation());
+		BlockState state = block.getDefaultState().with(Properties.ROTATION, Math.abs(this.getDestination().getRotation()));
 		destWorld.setBlockState(this.getDestination(), state);
 
 		// Create and add the exterior block entity at the destination

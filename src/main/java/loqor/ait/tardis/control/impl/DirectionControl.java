@@ -28,9 +28,9 @@ public class DirectionControl extends Control {
 			}
 		}
 
-		travel.setDestination(new AbsoluteBlockPos.Directed(dest, wrap(dest.getRotation() + 2, 16)), false);
+		travel.setDestination(new AbsoluteBlockPos.Directed(dest, wrap(getNextGeneralizedRotation(dest.getRotation()), ExteriorBlock.MAX_ROTATION_INDEX)), false);
 
-		messagePlayer(player, travel.getDestination().getRotation());
+		messagePlayer(player, getNextGeneralizedRotation(dest.getRotation()));
 
 		return true;
 	}
@@ -54,6 +54,19 @@ public class DirectionControl extends Control {
 			case 12 -> "West";
 			case 13, 14, 15, 16 -> "North West";
 			default -> "North";
+		};
+	}
+
+	public static int getNextGeneralizedRotation(int rotation) {
+		return switch(rotation) {
+			case 0, 1 -> 2;
+			case 2, 3 -> 4;
+			case 4, 5 -> 6;
+			case 6, 7 -> 8;
+			case 8, 9 -> 10;
+            case 10, 11 -> 12;
+			case 12, 13 -> 14;
+			default -> 0;
 		};
 	}
 

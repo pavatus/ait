@@ -40,7 +40,7 @@ public class BiomeHandler extends TardisLink {
     public static Identifier biomeTypeFromKey(String biomeKey, Identifier texture, Tardis tardis) {
         return switch(biomeKey) {
             default -> BiomeType.DEFAULT.textureFromKey(texture, tardis);
-            case "snowy_taiga" -> BiomeType.SNOWY.textureFromKey(texture, tardis);
+            case "snowy_taiga", "snowy_beach" -> BiomeType.SNOWY.textureFromKey(texture, tardis);
             case "desert" -> BiomeType.SANDY.textureFromKey(texture, tardis);
             case "mangrove_swamp" -> BiomeType.MUDDY.textureFromKey(texture, tardis);
             case "the_end" -> BiomeType.CHORUS.textureFromKey(texture, tardis);

@@ -7,6 +7,7 @@ import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
@@ -20,6 +21,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 
 public class TardisItemBuilder extends Item {
@@ -53,7 +55,7 @@ public class TardisItemBuilder extends Item {
 		if (world.isClient() || player == null)
 			return ActionResult.PASS;
 
-		AbsoluteBlockPos.Directed pos = new AbsoluteBlockPos.Directed(context.getBlockPos().up(), world, 0);
+		AbsoluteBlockPos.Directed pos = new AbsoluteBlockPos.Directed(context.getBlockPos().up(), world, DirectionControl.getNextGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw())));
 
 		if (context.getHand() == Hand.MAIN_HAND) {
 			BlockEntity entity = world.getBlockEntity(context.getBlockPos());
