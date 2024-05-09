@@ -6,6 +6,7 @@ import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.data.datapack.DatapackConsole;
 import loqor.ait.tardis.console.variant.alnico.AlnicoVariant;
+import loqor.ait.tardis.console.variant.alnico.BlueAlnicoVariant;
 import loqor.ait.tardis.console.variant.coral.BlueCoralVariant;
 import loqor.ait.tardis.console.variant.coral.CoralVariant;
 import loqor.ait.tardis.console.variant.coral.WhiteCoralVariant;
@@ -111,6 +112,7 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 	public static ConsoleVariantSchema TOYOTA_BLUE;
 	public static ConsoleVariantSchema TOYOTA_LEGACY;
 	public static ConsoleVariantSchema ALNICO;
+	public static ConsoleVariantSchema ALNICO_BLUE;
 	public static ConsoleVariantSchema STEAM;
 	public static ConsoleVariantSchema STEAM_CHERRY;
 
@@ -134,6 +136,7 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 
 		// Alnico variants
 		ALNICO = registerStatic(new AlnicoVariant());
+		ALNICO_BLUE = registerStatic(new BlueAlnicoVariant());
 
 		// Steam variants
 		STEAM = registerStatic(new SteamVariant());

@@ -7,6 +7,7 @@ import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.data.datapack.DatapackConsole;
 import loqor.ait.tardis.console.variant.alnico.client.ClientAlnicoVariant;
+import loqor.ait.tardis.console.variant.alnico.client.ClientBlueAlnicoVariant;
 import loqor.ait.tardis.console.variant.coral.client.ClientBlueCoralVariant;
 import loqor.ait.tardis.console.variant.coral.client.ClientGreenCoralVariant;
 import loqor.ait.tardis.console.variant.coral.client.ClientWhiteCoralVariant;
@@ -126,6 +127,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 	public static ClientConsoleVariantSchema TOYOTA_BLUE;
 	public static ClientConsoleVariantSchema TOYOTA_LEGACY;
 	public static ClientConsoleVariantSchema ALNICO;
+	public static ClientConsoleVariantSchema ALNICO_BLUE;
 	public static ClientConsoleVariantSchema STEAM;
 	public static ClientConsoleVariantSchema STEAM_CHERRY;
 
@@ -149,6 +151,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
 		// Alnico variants
 		ALNICO = register(new ClientAlnicoVariant());
+		ALNICO_BLUE = register(new ClientBlueAlnicoVariant());
 
 		// Steam variants
 		STEAM = register(new ClientSteamVariant());
