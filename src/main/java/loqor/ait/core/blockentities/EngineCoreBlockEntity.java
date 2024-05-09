@@ -93,7 +93,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
 
     public static void clientTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
 
-        if(blockEntity.findTardis().isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+        //if(blockEntity.findTardis().isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
 
         ++blockEntity.ticks;
         long l = world.getTime();
@@ -147,7 +147,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     }
 
     private static void openEye(EngineCoreBlockEntity blockEntity, List<BlockPos> activatingBlocks) {
-        blockEntity.setEyeOpen(activatingBlocks.size() >= 42);
+        blockEntity.setEyeOpen(activatingBlocks.size() >= 1);
     }
 
     private static boolean updateActivatingBlocks(World world, BlockPos pos, List<BlockPos> activatingBlocks) {
@@ -167,7 +167,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
             }
         }
 
-        for(i = -2; i <= 2; ++i) {
+        /*for(i = -2; i <= 2; ++i) {
             for(j = -2; j <= 2; ++j) {
                 for(k = -2; k <= 2; ++k) {
                     int l = Math.abs(i);
@@ -187,7 +187,8 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
             }
         }
 
-        return activatingBlocks.size() >= 16;
+        return activatingBlocks.size() >= 16;*/
+        return true;
     }
 
     private static void givePlayersEffects(World world, BlockPos pos, List<BlockPos> activatingBlocks) {
