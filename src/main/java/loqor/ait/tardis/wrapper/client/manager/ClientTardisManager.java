@@ -42,9 +42,9 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		);
 
 		ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
-		/*ClientPlayConnectionEvents.DISCONNECT.register((client, reason) -> {
+		ClientPlayConnectionEvents.DISCONNECT.register((client, reason) -> {
 			this.reset();
-		});*/
+		});
 	}
 
 	@Override

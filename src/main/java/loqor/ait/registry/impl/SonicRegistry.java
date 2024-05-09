@@ -55,6 +55,7 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
         register(BuiltinSonic.create("fob", null));
         register(BuiltinSonic.create("coral", null));
         register(BuiltinSonic.create("renaissance", null));
+        register(BuiltinSonic.create("song", null));
     }
 
     public static SonicRegistry getInstance() {

@@ -128,8 +128,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			float delta = ((tickDelta + MinecraftClient.getInstance().player.age) * 0.03f);
 			if(shieldsModel == null) shieldsModel = new ShieldsModel(ShieldsModel.getTexturedModelData().createModel());
 			VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEnergySwirl(this.getEnergySwirlTexture(), delta % 1.0F, (delta * 0.1F) % 1.0F));
-			if (isNearTardis(MinecraftClient.getInstance().player, entity.findTardis().get(), MAX_CLOAK_DISTANCE)) {
-				alpha = 1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, entity.findTardis().get()) / MAX_CLOAK_DISTANCE);
+			if (isNearTardis(MinecraftClient.getInstance().player, entity.findTardis().get(), 15)) {
+				alpha = 1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, entity.findTardis().get()) / 15);
 				if (entity.getAlpha() != 0.105f)
 					alpha = alpha * entity.getAlpha();
 			} else {
