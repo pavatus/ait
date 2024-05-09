@@ -956,7 +956,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Direction Control Movements
 		ModelPart direction = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("s_crank_1").getChild("bone59");
-		direction.yaw = console.findTardis().get().getTravel().getDestination().getDirection() != Direction.NORTH ? console.findTardis().get().getTravel().getDestination().getDirection() != Direction.EAST ? console.findTardis().get().getTravel().getDestination().getDirection() != Direction.SOUTH ? direction.yaw + 1.5f : direction.yaw + 1f : direction.yaw + 0.5f : direction.yaw;
+		direction.yaw += (0.5f * console.findTardis().get().getTravel().getDestination().getRotation());
 
 		// Anti Grav Control Movements
 		ModelPart antiGrav = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("sl_switch_1").getChild("bone33");

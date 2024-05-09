@@ -8,6 +8,7 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.exterior.category.BoothCategory;
 import loqor.ait.tardis.exterior.category.ClassicCategory;
@@ -332,10 +333,10 @@ public class MonitorScreen extends ConsoleScreen {
 		if (abpd.getDimension() == null) return;
 		String positionText = abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
 		String dimensionText = convertWorldValueToModified(abpd.getDimension().getValue());
-		String directionText = abpd.getDirection().toString().toUpperCase();
+		String directionText = DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
 		String destinationText = dabpd.getX() + ", " + dabpd.getY() + ", " + dabpd.getZ();
 		String dDimensionText = convertWorldValueToModified(dabpd.getDimension().getValue());
-		String dDirectionText = dabpd.getDirection().toString().toUpperCase();
+		String dDirectionText = DirectionControl.rotationToDirection(dabpd.getRotation()).toUpperCase();
 		String fuelText = String.valueOf(Math.round((getFromUUID(tardisId).getFuel() / FuelData.TARDIS_MAX_FUEL) * 100));
 		String flightTimeText = (tardis().getTravel().getState() == TardisTravel.State.LANDED ? "0" : String.valueOf(tardis().flight().getDurationAsPercentage()));
 		// position

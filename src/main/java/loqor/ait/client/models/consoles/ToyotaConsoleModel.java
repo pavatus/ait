@@ -909,7 +909,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		// Direction Control
 		ModelPart direction = this.toyota.getChild("panel6").getChild("controls2").getChild("smallnob2");
-		direction.pitch = console.findTardis().get().getTravel().getDestination().getDirection() == Direction.NORTH ? console.findTardis().get().getTravel().getDestination().getDirection() == Direction.EAST ? console.findTardis().get().getTravel().getDestination().getDirection() == Direction.SOUTH ? console.findTardis().get().getTravel().getDestination().getDirection() == Direction.WEST ? direction.pitch : direction.pitch + 1f : direction.pitch + 2f : direction.pitch + 3f : direction.pitch;
+		direction.pitch = direction.pitch + console.findTardis().get().getTravel().getDestination().getRotation();
 
 		// Increment Control
 		ModelPart increment = this.toyota.getChild("panel2").getChild("controls3").getChild("gears").getChild("largegear2");

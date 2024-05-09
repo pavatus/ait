@@ -10,6 +10,7 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.compat.DependencyChecker;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
@@ -93,8 +94,8 @@ public class PortalsHandler {
 				tardis.getExterior().getVariant().portalHeight() // height
 		);
 
-		DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), exteriorPos.getDirection().asRotation());
-		DQuaternion doorQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), doorPos.getDirection().asRotation());
+		DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(exteriorPos.getRotation()));
+		DQuaternion doorQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(exteriorPos.getRotation()));
 
 		PortalAPI.setPortalOrientationQuaternion(portal, quat);
 		portal.setOtherSideOrientation(doorQuat);
@@ -126,8 +127,8 @@ public class PortalsHandler {
 				tardis.getExterior().getVariant().portalHeight() // height
 		);
 
-		DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), doorPos.getDirection().asRotation());
-		DQuaternion extQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), exteriorPos.getDirection().asRotation());
+		DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(doorPos.getRotation()));
+		DQuaternion extQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(exteriorPos.getRotation()));
 
 		PortalAPI.setPortalOrientationQuaternion(portal, quat);
 		portal.setOtherSideOrientation(extQuat);
@@ -144,10 +145,10 @@ public class PortalsHandler {
 	}
 
 	private static Vec3d adjustExteriorPos(ExteriorVariantSchema exterior, AbsoluteBlockPos.Directed pos) {
-		return exterior.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), pos.getDirection());
+		return exterior.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), RotationPropertyHelper.toDirection(pos.getRotation()).get());
 	}
 
 	private static Vec3d adjustInteriorPos(DoorSchema door, AbsoluteBlockPos.Directed pos) {
-		return door.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), pos.getDirection());
+		return door.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), RotationPropertyHelper.toDirection(pos.getRotation()).get());
 	}
 }

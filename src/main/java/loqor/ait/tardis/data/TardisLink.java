@@ -41,13 +41,13 @@ public abstract class TardisLink extends TardisComponent implements TardisTickab
 	public AbsoluteBlockPos.Directed getDoorPos() {
 		return tardis().getDesktop() != null && tardis().getDesktop().getInteriorDoorPos() != null ?
 				tardis().getDesktop().getInteriorDoorPos() :
-				new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
+				new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), 0);
 	}
 
 	public AbsoluteBlockPos.Directed getExteriorPos() {
 		return tardis().getTravel() != null ?
 				tardis().getTravel().getPosition() :
-				new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), Direction.NORTH);
+				new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), 0);
 	}
 
 	public static boolean isClient() {

@@ -19,6 +19,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,7 +61,7 @@ public class DoorData extends TardisLink {
 				.filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
 				.forEach(entity -> {
 					// Calculate the motion vector away from the door
-					Vec3d motion = this.getDoorPos().offset(this.getDoorPos().getDirection().getOpposite()).toCenterPos().subtract(entity.getPos()).normalize().multiply(0.05);
+					Vec3d motion = this.getDoorPos().offset(RotationPropertyHelper.toDirection(this.getDoorPos().getRotation()).get().getOpposite()).toCenterPos().subtract(entity.getPos()).normalize().multiply(0.05);
 
 					// Apply the motion to the entity
 					entity.setVelocity(entity.getVelocity().add(motion));

@@ -2,6 +2,7 @@ package loqor.ait.client.renderers.doors;
 
 import loqor.ait.client.models.doors.DoomDoorModel;
 import loqor.ait.client.models.doors.DoorModel;
+import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.core.data.schema.door.ClientDoorSchema;
@@ -23,6 +24,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
@@ -49,11 +51,11 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 			this.model = variant.model();
 
 		BlockState blockState = entity.getCachedState();
-		float f = blockState.get(ExteriorBlock.FACING).asRotation();
+		float k = blockState.get(DoorBlock.FACING).asRotation();
 		int maxLight = 0xF000F0;
 		matrices.push();
 		matrices.translate(0.5, 0, 0.5);
-		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(k));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 		Identifier texture = exteriorVariant.texture();
 
@@ -73,7 +75,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 				int lightConst = 524296; // 1 / maxLight;
 				int i = world.getLightLevel(LightType.SKY, pos);
 				int j = world.getLightLevel(LightType.BLOCK, pos);
-				int k = doorWorld.getLightLevel(LightType.BLOCK, doorPos);
+				int p = doorWorld.getLightLevel(LightType.BLOCK, doorPos);
 				light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight() ? (i / 15) + j > 0 ? j + 13 : j : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j)) * lightConst;
 			}
 		}

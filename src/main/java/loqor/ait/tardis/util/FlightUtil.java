@@ -51,7 +51,7 @@ public class FlightUtil {
 
 	public static int getFlightDuration(AbsoluteBlockPos.Directed source, AbsoluteBlockPos.Directed destination) {
 		float distance = MathHelper.sqrt((float) source.getSquaredDistance(destination));
-		boolean hasDirChanged = !(source.getDirection().equals(destination.getDirection()));
+		boolean hasDirChanged = !(source.getRotation() == destination.getRotation());
 		boolean hasDimChanged = !(source.getDimension().equals(destination.getDimension()));
 
 		return (int) (BASE_FLIGHT_TICKS + (distance / 10f) + (hasDirChanged ? convertSecondsToTicks(5) : 0) + (hasDimChanged ? convertSecondsToTicks(30) : 0));
@@ -62,7 +62,7 @@ public class FlightUtil {
 
 		float per = percentage / 100f;
 		BlockPos diff = destination.subtract(source);
-		return new AbsoluteBlockPos.Directed(source.add(new BlockPos((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per))), destination.getDimension(), destination.getDirection());
+		return new AbsoluteBlockPos.Directed(source.add(new BlockPos((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per))), destination.getDimension(), destination.getRotation());
 	}
 
 	public static int getSoundLength(MatSound sound) {

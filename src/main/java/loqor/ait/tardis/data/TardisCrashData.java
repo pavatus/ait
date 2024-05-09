@@ -5,7 +5,6 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
@@ -66,8 +65,6 @@ public class TardisCrashData extends TardisLink {
 			alarms.disable();
 		}
 		AbsoluteBlockPos.Directed exteriorPosition = tardis.getTravel().getExteriorPos();
-		double x = directionToInteger(exteriorPosition.getDirection())[0];
-		double z = directionToInteger(exteriorPosition.getDirection())[1];
 		ServerWorld exteriorWorld = (ServerWorld) exteriorPosition.getWorld();
 		if (tardis.getDoor().isOpen() && this.getState() != State.NORMAL) {
 			exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,

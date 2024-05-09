@@ -104,7 +104,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
 	private void createTardis(ServerWorld world, BlockPos pos, String creatorName) {
 		// Create a new tardis
-		ServerTardis created = ServerTardisManager.getInstance().createWithPlayerCreator(new AbsoluteBlockPos.Directed(pos, world, Direction.NORTH), CategoryRegistry.getInstance().get(GrowthCategory.REFERENCE), ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE), DesktopRegistry.DEFAULT_CAVE, creatorName);
+		ServerTardis created = ServerTardisManager.getInstance().createWithPlayerCreator(new AbsoluteBlockPos.Directed(pos, world, 0), CategoryRegistry.getInstance().get(GrowthCategory.REFERENCE), ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE), DesktopRegistry.DEFAULT_CAVE, creatorName);
 
 		created.getHandlers().getFuel().setCurrentFuel(0);
 	}

@@ -7,6 +7,7 @@ import loqor.ait.core.blocks.PlaqueBlock;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DimensionControl;
+import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
@@ -75,25 +76,9 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
 
         float v = -20f;
 
-        String arrow = "";
-        if (abpp.getDirection() == Direction.NORTH)
-            arrow = "↑";
-        else if (abpp.getDirection() == Direction.EAST)
-            arrow = "→";
-        else if (abpp.getDirection() == Direction.SOUTH)
-            arrow = "↓";
-        else if (abpp.getDirection() == Direction.WEST)
-            arrow = "←";
+        String arrow = DirectionControl.rotationForArrow(abpp.getRotation());
 
-        String arrow2 = "";
-        if (abpd.getDirection() == Direction.NORTH)
-            arrow2 = "↑";
-        else if (abpd.getDirection() == Direction.EAST)
-            arrow2 = "→";
-        else if (abpd.getDirection() == Direction.SOUTH)
-            arrow2 = "↓";
-        else if (abpd.getDirection() == Direction.WEST)
-            arrow2 = "←";
+        String arrow2 = DirectionControl.rotationForArrow(abpd.getRotation());
 
         this.textRenderer.drawWithOutline(Text.of(positionPosText).asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(positionPosText) / 2), 35, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(positionDimensionText).asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(positionDimensionText) / 2), 46, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);

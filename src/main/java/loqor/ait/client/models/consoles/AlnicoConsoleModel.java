@@ -874,7 +874,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		toast2.visible = console.findTardis().get().waypoint().hasCartridge();
 
 		ModelPart direction = alnico.getChild("section5").getChild("controls5").getChild("tinyswitch9").getChild("bone26");
-		direction.yaw = direction.yaw + (console.findTardis().get().getTravel().getDestination().getDirection() != Direction.NORTH ? console.findTardis().get().getTravel().getDestination().getDirection() != Direction.EAST ? console.findTardis().get().getTravel().getDestination().getDirection() != Direction.SOUTH ? 1.5708f * 3f : 1.5708f * 2f : 1.5708f : 0);
+		direction.yaw += (1.5708f * console.findTardis().get().getTravel().getDestination().getRotation());
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

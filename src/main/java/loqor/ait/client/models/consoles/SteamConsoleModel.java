@@ -936,7 +936,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		landType.pivotY = landType.pivotY + (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? 0.5f : 0);
 
 		ModelPart direction = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("crank").getChild("bone42");
-		direction.yaw = direction.yaw + (console.findTardis().get().getTravel().getDestination().getDirection() != Direction.NORTH ? console.findTardis().get().getTravel().getDestination().getDirection() != Direction.EAST ? console.findTardis().get().getTravel().getDestination().getDirection() != Direction.SOUTH ? 1.5708f * 3f : 1.5708f * 2f : 1.5708f : 0);
+		direction.yaw = direction.yaw + (1.5708f * console.findTardis().get().getTravel().getDestination().getRotation());
 
 		ModelPart doorControl = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("crank2").getChild("bone18");
 		doorControl.yaw = doorControl.yaw + (console.findTardis().get().getDoor().isOpen() ? console.findTardis().get().getDoor().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);

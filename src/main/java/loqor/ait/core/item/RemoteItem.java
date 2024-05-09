@@ -19,6 +19,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,7 +71,7 @@ public class RemoteItem extends LinkableItem {
 					if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
 					tardis.getTravel().setSpeed(tardis.getTravel().getMaxSpeed());
-					FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, player.getMovementDirection().getOpposite()));
+					FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, -RotationPropertyHelper.fromYaw(player.getBodyYaw())));
 				} else {
 					world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 					player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);

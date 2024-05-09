@@ -146,7 +146,7 @@ public class SequenceRegistry {
 							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
-							pos.getDirection()));
+							pos.getRotation()));
 				}), 100L, Text.literal("Drifting off course X!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new DimensionControl(), new XControl()));
 
@@ -158,7 +158,7 @@ public class SequenceRegistry {
 							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
-							pos.getDirection()));
+							pos.getRotation()));
 				}), 100L, Text.literal("Drifting off course Y!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new DimensionControl(), new YControl()));
 
@@ -170,7 +170,7 @@ public class SequenceRegistry {
 							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
-							pos.getDirection()));
+							pos.getRotation()));
 				}), 100L, Text.literal("Drifting off course Z!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new DimensionControl(), new ZControl()));
 
@@ -238,7 +238,7 @@ public class SequenceRegistry {
 							random.nextBetween(pos.getX() - 24, pos.getX() + 24),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 24, pos.getZ() + 24), pos.getWorld(),
-							pos.getDirection()));
+							pos.getRotation()));
 				}), 110L, Text.literal("TARDIS off course!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new HandBrakeControl(), new ThrottleControl(), new RandomiserControl()));
 

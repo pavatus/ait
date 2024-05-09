@@ -122,9 +122,9 @@ public class TardisTravel extends TardisLink {
 				int new_x = getDestination().getX() + random_change;
 				int new_y = getDestination().getX();
 				int new_z = getDestination().getZ() + random_change;
-				this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getDirection()));
+				this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getRotation()));
 				if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
-					this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
+					this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getRotation()));
 				}
 			}
 			if(!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT)) {
@@ -336,9 +336,9 @@ public class TardisTravel extends TardisLink {
 		int new_y = percentageOfDestination.getY();
 		int new_z = percentageOfDestination.getZ() + random_change;
 		this.setCrashing(true);
-		this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getDirection()));
+		this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getRotation()));
 		if (getDestination().getWorld() != null && getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
-			this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getDirection()));
+			this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getRotation()));
 		}
 		this.crashAndMaterialise();
 		int repair_ticks = 1000 * crash_intensity;
@@ -363,7 +363,7 @@ public class TardisTravel extends TardisLink {
 		ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
 		ForcedChunkUtil.keepChunkLoaded(destWorld, this.getDestination());
 		ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-		BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, this.getDestination().getDirection());
+		BlockState state = block.getDefaultState().with(Properties.ROTATION, this.getDestination().getRotation());
 		destWorld.setBlockState(this.getDestination(), state);
 
 		// Create and add the exterior block entity at the destination
@@ -385,7 +385,7 @@ public class TardisTravel extends TardisLink {
 		ServerWorld destWorld = (ServerWorld) pos.getWorld();
 		ForcedChunkUtil.keepChunkLoaded(destWorld, pos);
 		ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-		BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, pos.getDirection());
+		BlockState state = block.getDefaultState().with(Properties.ROTATION, pos.getRotation());
 		destWorld.setBlockState(pos, state);
 
 		// Create and add the exterior block entity at the destination
@@ -454,7 +454,7 @@ public class TardisTravel extends TardisLink {
 
 		// Set the destination block to the Tardis exterior block
 		ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-		BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, this.getDestination().getDirection());
+		BlockState state = block.getDefaultState().with(Properties.ROTATION, this.getDestination().getRotation());
 		destWorld.setBlockState(this.getDestination(), state);
 
 		// Create and add the exterior block entity at the destination
@@ -580,7 +580,7 @@ public class TardisTravel extends TardisLink {
 						MathHelper.clamp(getDestination().getY(), world.getBottomY(), world.getTopY() - 1),
 						getDestination().getZ(),
 						getDestination().getWorld(),
-						getDestination().getDirection()),
+						getDestination().getRotation()),
 				false
 		);
 
@@ -597,7 +597,7 @@ public class TardisTravel extends TardisLink {
 				ground = world.getBlockState(temp.down());
 
 				if (isReplaceable(current, top) && !isReplaceable(ground)) { // check two blocks cus tardis is two blocks tall yk and check for groud
-					this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
+					this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getRotation()), false);
 					return true;
 				}
 
@@ -612,7 +612,7 @@ public class TardisTravel extends TardisLink {
 				ground = world.getBlockState(temp.down());
 
 				if (isReplaceable(current, top) && !isReplaceable(ground)) { // check two blocks cus tardis is two blocks tall yk and check for groud
-					this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getDirection()), false);
+					this.setDestination(new AbsoluteBlockPos.Directed(temp, world, this.getDestination().getRotation()), false);
 					return true;
 				}
 
@@ -661,7 +661,7 @@ public class TardisTravel extends TardisLink {
 		}
 
 		if (world.getBlockEntity(this.getDestination().down()) instanceof ExteriorBlockEntity) {
-			this.setDestination(new AbsoluteBlockPos.Directed(this.getDestination().down(), world, this.getDestination().getDirection()), false);
+			this.setDestination(new AbsoluteBlockPos.Directed(this.getDestination().down(), world, this.getDestination().getRotation()), false);
 			return true;
 		}
 
@@ -686,7 +686,7 @@ public class TardisTravel extends TardisLink {
 		this.setDestination(new AbsoluteBlockPos.Directed(
 						h,
 						TardisUtil.getTardisDimension(),
-						this.getDestination().getDirection()),
+						this.getDestination().getRotation()),
 				checks
 		);
 	}
@@ -723,7 +723,7 @@ public class TardisTravel extends TardisLink {
 				blockEntity = exterior;
 			} else {
 				ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-				BlockState state = block.getDefaultState().with(Properties.HORIZONTAL_FACING, this.getPosition().getDirection());
+				BlockState state = block.getDefaultState().with(Properties.ROTATION, this.getPosition().getRotation());
 				world.setBlockState(this.getPosition(), state);
 
 				ExteriorBlockEntity newEntity = new ExteriorBlockEntity(this.getPosition(), state);
@@ -776,7 +776,7 @@ public class TardisTravel extends TardisLink {
 
 		this.destination = border.contains(this.destination)
 						? pos : new AbsoluteBlockPos.Directed(border.clamp(pos.getX(), pos.getY(), pos.getZ()),
-						pos.getDimension(), pos.getDirection());
+						pos.getDimension(), pos.getRotation());
 		this.tardis().flight().recalculate();
 
 		if (withChecks)
@@ -816,7 +816,7 @@ public class TardisTravel extends TardisLink {
 				this.destination = this.getPosition();
 			else {
 				AITMod.LOGGER.error("Destination error! resetting to 0 0 0 in overworld");
-				this.destination = new AbsoluteBlockPos.Directed(0, 0, 0, TardisUtil.findWorld(World.OVERWORLD), Direction.NORTH);
+				this.destination = new AbsoluteBlockPos.Directed(0, 0, 0, TardisUtil.findWorld(World.OVERWORLD), 0);
 			}
 		}
 
@@ -834,7 +834,7 @@ public class TardisTravel extends TardisLink {
 	}
 
 	public void placeExterior() {
-		this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(ExteriorBlock.FACING, this.position.getDirection()));
+		this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(ExteriorBlock.ROTATION, this.position.getRotation()));
 
 		ExteriorBlockEntity exterior = new ExteriorBlockEntity(
 				this.position, this.position.getBlockState()

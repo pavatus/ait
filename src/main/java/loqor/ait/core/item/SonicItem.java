@@ -35,6 +35,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -456,7 +457,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 				TardisTravel travel = tardis.getTravel();
 
-				AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, player.getHorizontalFacing().getOpposite());
+				AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 
 				if (!ExteriorAnimation.isNearTardis(player, tardis, 256)) {
 					travel.setDestination(target, true);

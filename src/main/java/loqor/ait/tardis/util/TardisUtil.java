@@ -36,6 +36,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
@@ -210,7 +211,7 @@ public class TardisUtil {
 									serverPlayer.getBlockY(),
 									serverPlayer.getBlockZ(),
 									serverPlayer.getWorld(),
-									serverPlayer.getMovementDirection()),
+									RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())),
 							PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.AUTO_LAND));
 					FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
 				}
@@ -250,7 +251,7 @@ public class TardisUtil {
 	}
 
 	public static AbsoluteBlockPos.Directed createFromPlayer(PlayerEntity player) {
-		return new AbsoluteBlockPos.Directed(player.getBlockPos(), player.getWorld(), player.getMovementDirection());
+		return new AbsoluteBlockPos.Directed(player.getBlockPos(), player.getWorld(), RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 	}
 
 	public static boolean inBox(Box box, BlockPos pos) {
@@ -324,33 +325,19 @@ public class TardisUtil {
 		return TardisUtil.offsetDoorPosition(desktop.getInteriorDoorPos());
 	}
 
-	public static BlockPos offsetExteriorDoorPosition(Tardis tardis) {
-		return TardisUtil.offsetExteriorDoorPosition(tardis.getTravel());
-	}
-
-	public static BlockPos offsetExteriorDoorPosition(TardisTravel travel) {
-		return TardisUtil.offsetExteriorDoorPosition(travel.getPosition());
-	}
-
 	public static BlockPos offsetDoorPosition(AbsoluteBlockPos.Directed pos) {
-		return switch (pos.getDirection()) {
-			case DOWN, UP ->
-					throw new IllegalArgumentException("Cannot adjust door position with direction: " + pos.getDirection());
-			case NORTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() - 1);
-			case SOUTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() + 1);
-			case EAST -> new BlockPos.Mutable(pos.getX() + 1, pos.getY(), pos.getZ() + 0.5);
-			case WEST -> new BlockPos.Mutable(pos.getX() - 1, pos.getY(), pos.getZ() + 0.5);
-		};
-	}
-
-	public static BlockPos offsetExteriorDoorPosition(AbsoluteBlockPos.Directed pos) {
-		return switch (pos.getDirection()) {
-			case DOWN, UP ->
-					throw new IllegalArgumentException("Cannot adjust door position with direction: " + pos.getDirection());
-			case NORTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.0125);
-			case SOUTH -> new BlockPos.Mutable(pos.getX() + 0.5, pos.getY(), pos.getZ() - 0.0125);
-			case EAST -> new BlockPos.Mutable(pos.getX() + 0.0125, pos.getY(), pos.getZ() + 0.5);
-			case WEST -> new BlockPos.Mutable(pos.getX() - 0.0125, pos.getY(), pos.getZ() + 0.5);
+		boolean bl = pos.getWorld().getBlockEntity(pos) instanceof DoorBlockEntity;
+		return switch (pos.getRotation()) {
+			default ->
+					throw new IllegalArgumentException("Cannot adjust door position with direction: " + pos.getRotation());
+			case 0 -> new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ() + (bl ? 1 : - 1));
+			case 1, 2, 3 -> new BlockPos.Mutable(pos.getX() + 1, pos.getY(), pos.getZ() - 1);
+			case 4 -> new BlockPos.Mutable(pos.getX() + (bl ? - 1 : 1), pos.getY(), pos.getZ());
+			case 5, 6, 7 -> new BlockPos.Mutable(pos.getX() + 1, pos.getY(), pos.getZ() + 1);
+			case 8 -> new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ() + (bl ? - 1 : 1));
+			case 9, 10, 11 -> new BlockPos.Mutable(pos.getX() - 1, pos.getY(), pos.getZ() + 1);
+			case 12 -> new BlockPos.Mutable(pos.getX() + (bl ? 1 : - 1), pos.getY(), pos.getZ());
+			case 13, 14, 15 -> new BlockPos.Mutable(pos.getX() - 1, pos.getY(), pos.getZ() - 1);
 		};
 	}
 
@@ -376,6 +363,7 @@ public class TardisUtil {
 	}
 
 	private static void teleportWithDoorOffset(Entity entity, AbsoluteBlockPos.Directed pos) {
+		boolean bl = pos.getWorld().getBlockEntity(pos) instanceof DoorBlockEntity;
 		Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
 		if(pos.getWorld() instanceof ServerWorld serverWorld) {
 			SERVER.execute(() -> {
@@ -383,21 +371,26 @@ public class TardisUtil {
 					PortalAPI.teleportEntity(entity, serverWorld, vec);
 				} else {
 					if (entity instanceof ServerPlayerEntity player) {
-						WorldOps.teleportToWorld(player, serverWorld, vec, pos.getDirection().asRotation(), player.getPitch());
+						WorldOps.teleportToWorld(player, serverWorld, vec, RotationPropertyHelper.toDegrees(pos.getRotation()) + (bl ? 0 : 180f), player.getPitch());
 						player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 					} else {
 						if(entity instanceof EnderDragonEntity
 								|| entity instanceof WitherEntity
 								|| entity instanceof WardenEntity) return;
 						if (entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
-							entity.refreshPositionAndAngles(vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, pos.getDirection().asRotation(), entity.getPitch());
+							entity.refreshPositionAndAngles(offset(vec, pos, 0.5f).x, vec.y, offset(vec, pos, 0.5f).z, RotationPropertyHelper.toDegrees(pos.getRotation()) + (bl ? 0 : 180f), entity.getPitch());
 						} else {
-							entity.teleport(serverWorld, vec.offset(pos.getDirection(), 0.5f).x, vec.y, vec.offset(pos.getDirection(), 0.5f).z, Set.of(), pos.getDirection().asRotation(), entity.getPitch());
+							entity.teleport(serverWorld, offset(vec, pos, 0.5f).x, vec.y, offset(vec, pos, 0.5f).z, Set.of(), RotationPropertyHelper.toDegrees(pos.getRotation()) + (bl ? 0 : 180f), entity.getPitch());
 						}
 					}
 				}
 			});
 		}
+	}
+
+	public static Vec3d offset(Vec3d vec, AbsoluteBlockPos.Directed direction, double value) {
+		Vec3i vec3i = direction.getVector(direction.getRotation());
+		return new Vec3d(vec.x + value * (double)vec3i.getX(), vec.y + value * (double)vec3i.getY(), vec.z + value * (double)vec3i.getZ());
 	}
 
 	public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {

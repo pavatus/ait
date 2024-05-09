@@ -8,24 +8,24 @@ import net.minecraft.world.World;
 public class Waypoint extends AbsoluteBlockPos.Directed {
 	private String name;
 
-	public Waypoint(int x, int y, int z, SerialDimension dimension, Direction direction) {
-		super(x, y, z, dimension, direction);
+	public Waypoint(int x, int y, int z, SerialDimension dimension, int rotation) {
+		super(x, y, z, dimension, rotation);
 	}
 
-	public Waypoint(BlockPos pos, SerialDimension dimension, Direction direction) {
+	public Waypoint(BlockPos pos, SerialDimension dimension, int direction) {
 		super(pos, dimension, direction);
 	}
 
-	public Waypoint(AbsoluteBlockPos pos, Direction direction) {
-		super(pos, direction);
+	public Waypoint(AbsoluteBlockPos pos, int rotation) {
+		super(pos, rotation);
 	}
 
-	public Waypoint(int x, int y, int z, World world, Direction direction) {
-		super(x, y, z, world, direction);
+	public Waypoint(int x, int y, int z, World world, int rotation) {
+		super(x, y, z, world, rotation);
 	}
 
-	public Waypoint(BlockPos pos, World world, Direction direction) {
-		super(pos, world, direction);
+	public Waypoint(BlockPos pos, World world, int rotation) {
+		super(pos, world, rotation);
 	}
 
 	public Waypoint setName(String name) {
@@ -42,6 +42,6 @@ public class Waypoint extends AbsoluteBlockPos.Directed {
 	}
 
 	public static Waypoint fromDirected(AbsoluteBlockPos.Directed pos) {
-		return new Waypoint(pos, pos.getDirection());
+		return new Waypoint(pos, pos.getRotation());
 	}
 }

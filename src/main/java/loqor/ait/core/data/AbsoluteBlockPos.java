@@ -6,6 +6,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.Unmodifiable;
@@ -98,40 +99,54 @@ public class AbsoluteBlockPos extends BlockPos {
 
 	public static class Directed extends AbsoluteBlockPos {
 
-		private final Direction direction;
+		private final int rotation;
 
-		public Directed(int x, int y, int z, SerialDimension dimension, Direction direction) {
+		public Directed(int x, int y, int z, SerialDimension dimension, int rotation) {
 			super(x, y, z, dimension);
 
-			this.direction = direction;
+			this.rotation = rotation;
 		}
 
-		public Directed(BlockPos pos, SerialDimension dimension, Direction direction) {
-			this(pos.getX(), pos.getY(), pos.getZ(), dimension, direction);
+		public Directed(BlockPos pos, SerialDimension dimension, int rotation) {
+			this(pos.getX(), pos.getY(), pos.getZ(), dimension, rotation);
 		}
 
-		public Directed(AbsoluteBlockPos pos, Direction direction) {
-			this(pos, pos.getDimension(), direction);
+		public Directed(AbsoluteBlockPos pos, int rotation) {
+			this(pos, pos.getDimension(), rotation);
 		}
 
-		public Directed(int x, int y, int z, World world, Direction direction) {
+		public Directed(int x, int y, int z, World world, int rotation) {
 			super(x, y, z, world);
 
-			this.direction = direction;
+			this.rotation = rotation;
 		}
 
-		public Directed(BlockPos pos, World world, Direction direction) {
-			this(pos.getX(), pos.getY(), pos.getZ(), world, direction);
+		public Directed(BlockPos pos, World world, int rotation) {
+			this(pos.getX(), pos.getY(), pos.getZ(), world, rotation);
 		}
 
-		public Direction getDirection() {
-			return direction;
+		public int getRotation() {
+			return rotation;
+		}
+
+		public Vec3i getVector(int rotation) {
+			return switch (rotation) {
+				default -> new Vec3i(0, 0, 0);
+				case 0 -> Direction.NORTH.getVector();
+				case 1, 2, 3 -> Direction.NORTH.getVector().add(Direction.EAST.getVector());
+				case 4 -> Direction.EAST.getVector();
+				case 5, 6, 7 -> Direction.EAST.getVector().add(Direction.SOUTH.getVector());
+				case 8 -> Direction.SOUTH.getVector();
+				case 9, 10, 11 -> Direction.SOUTH.getVector().add(Direction.WEST.getVector());
+				case 12 -> Direction.WEST.getVector();
+				case 13, 14, 15 -> Direction.NORTH.getVector().add(Direction.SOUTH.getVector());
+			};
 		}
 
 		@Override
 		public boolean equals(Object o) {
 			if (o instanceof AbsoluteBlockPos.Directed other)
-				return this.direction == other.direction && super.equals(other);
+				return this.rotation == other.rotation && super.equals(other);
 
 			return super.equals(o);
 		}
@@ -140,7 +155,7 @@ public class AbsoluteBlockPos extends BlockPos {
 		public NbtCompound toNbt() {
 			NbtCompound nbt = super.toNbt();
 
-			nbt.putInt("direction", this.direction.getId());
+			nbt.putInt("rotation", this.rotation);
 
 			return nbt;
 		}
@@ -148,30 +163,9 @@ public class AbsoluteBlockPos extends BlockPos {
 		public static Directed fromNbt(NbtCompound nbt) {
 			AbsoluteBlockPos pos = AbsoluteBlockPos.fromNbt(nbt);
 
-			Direction dir = Direction.byId(nbt.getInt("direction"));
+			int dir = nbt.getInt("rotation");
 
 			return new Directed(pos, dir);
-		}
-	}
-
-	// i dont understand how to use this class, it needs documentation. I don't understand why the world variable is there if the client can't get worlds other than its own
-	public static class Client extends AbsoluteBlockPos.Directed {
-		private final World world;
-
-		public Client(AbsoluteBlockPos pos, Direction direction, World world) {
-			super(pos, direction);
-
-			this.world = world;
-		}
-
-		public World getClientWorld() {
-			return this.world;
-		}
-
-		public Client(int x, int y, int z, World world, Direction direction) {
-			super(x, y, z, world, direction);
-
-			this.world = world;
 		}
 	}
 }

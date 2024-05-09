@@ -29,6 +29,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -70,7 +71,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_IN_REAL_FLIGHT, true, true);
 		world.spawnEntity(tardisRealEntity);
-		tardisRealEntity.setRotation(tardis.getExterior().getExteriorPos().getDirection().asRotation(), 0);
+		tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(tardis.getExterior().getExteriorPos().getRotation()), 0);
 		player.getAbilities().flying = true;
 		player.getAbilities().allowFlying = true;
 		player.getAbilities().setFlySpeed(player.getAbilities().getFlySpeed() * 1.5F);
@@ -110,7 +111,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 						shouldTriggerLandSound = true;
 					}
 					if (user.isSneaking()) {
-						getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(user.getBlockPos(), user.getWorld(), user.getHorizontalFacing().getOpposite()));
+						getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(user.getBlockPos(), user.getWorld(), RotationPropertyHelper.fromYaw(user.getBodyYaw())));
 						if (getTardis().getTravel().getState() == TardisTravel.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
 						PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, false);

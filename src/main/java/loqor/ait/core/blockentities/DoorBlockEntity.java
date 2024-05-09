@@ -31,6 +31,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
@@ -197,7 +198,7 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 			return;
 
 		desktop.setInteriorDoorPos(new AbsoluteBlockPos.Directed(
-				this.pos, TardisUtil.getTardisDimension(), this.getFacing())
+				this.pos, TardisUtil.getTardisDimension(), RotationPropertyHelper.fromDirection(this.getFacing()))
 		);
 	}
 }

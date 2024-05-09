@@ -31,13 +31,17 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -48,11 +52,13 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static loqor.ait.core.blocks.DoorBlock.rotateShape;
+import java.util.Optional;
 
 public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak, Waterloggable {
 
-	public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+	public static final int MAX_ROTATION_INDEX = RotationPropertyHelper.getMax();
+	private static final int MAX_ROTATIONS = MAX_ROTATION_INDEX + 1;
+	public static final IntProperty ROTATION = Properties.ROTATION;
 	public static final BooleanProperty WATERLOGGED;
 	public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16, 1, 16);
 	public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
@@ -64,7 +70,26 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	public ExteriorBlock(Settings settings) {
 		super(settings.nonOpaque());
 
-		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+		this.setDefaultState(this.stateManager.getDefaultState().with(ROTATION, 0).with(WATERLOGGED, false));
+	}
+
+	public VoxelShape diagonalShape() {
+		VoxelShape shape = VoxelShapes.empty();
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.3125, 0, 0.3125, 0.5, 2, 0.5), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.375, 0, 0.25, 0.5, 2, 0.375), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.4375, 0, 0.1875, 0.5625, 2, 0.3125), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.5, 0, 0.125, 0.625, 2, 0.625), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.25, 0, 0.375, 0.375, 2, 0.5), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.1875, 0, 0.4375, 0.3125, 2, 0.5625), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.125, 0, 0.5, 0.5, 2, 0.625), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.625, 0, 0.125, 0.875, 2, 0.75), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.125, 0, 0.625, 0.875, 2, 0.875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.125, 0, 0.125, 0.75, 0.0625, 0.75), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.1875, 0, 0.0625, 0.875, 0.0625, 0.125), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.25, 0, 0, 0.875, 0.0625, 0.0625), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.0625, 0, 0.1875, 0.125, 0.0625, 0.875), BooleanBiFunction.OR);
+		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 0.0625, 0.875), BooleanBiFunction.OR);
+		return shape;
 	}
 	@Override
 
@@ -86,7 +111,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	@Override
 	public BlockState getPlacementState(ItemPlacementContext ctx) {
 		FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-		return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite()).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+		return this.getDefaultState().with(ROTATION, 0).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
 	}
 
 	public static boolean isWaterlogged(BlockState state) {
@@ -95,7 +120,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
 	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		builder.add(FACING, WATERLOGGED);
+		builder.add(ROTATION, WATERLOGGED);
 	}
 
 	@Override
@@ -173,18 +198,40 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	}
 
 	public VoxelShape getNormalShape(BlockState state, BlockView world, BlockPos pos) {
-		if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.findTardis().isPresent() && exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING)) != null)
-			return exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING));
+		//if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.findTardis().isPresent() && exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING)) != null)
+		//	return exterior.findTardis().get().getExterior().getVariant().bounding(state.get(ROTATION));
+		Optional<Direction> direction = RotationPropertyHelper.toDirection(state.get(ROTATION));
+		if(direction.isEmpty()) {
+			return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), diagonalShape());
+		} else {
+			return rotateShape(Direction.NORTH, direction.get(), CUBE_NORTH_SHAPE);
+		}
+	}
 
-		return rotateShape(Direction.NORTH, state.get(FACING), CUBE_NORTH_SHAPE);
+	public Direction approximateDirection(int rotation) {
+		return switch(rotation) {
+			default -> Direction.NORTH;
+			case 1, 2, 3 -> Direction.EAST;
+			case 5, 6, 7 -> Direction.SOUTH;
+			case 9, 10, 11 -> Direction.WEST;
+		};
 	}
 
 	public VoxelShape getLedgeShape(BlockState state, BlockView world, BlockPos pos) {
 		// fixme these wont have ledges probably
-		if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.findTardis().isPresent() && exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING)) != null)
-			return exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING));
+		//if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior && exterior.findTardis().isPresent() && exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING)) != null)
+		//	return exterior.findTardis().get().getExterior().getVariant().bounding(state.get(FACING));
+		Optional<Direction> direction = RotationPropertyHelper.toDirection(state.get(ROTATION));
+		if(direction.isEmpty()) {
+			return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), diagonalShape());
+		} else {
+			return rotateShape(Direction.NORTH, direction.get(), CUBE_NORTH_SHAPE);
+		}
+	}
 
-		return rotateShape(Direction.NORTH, state.get(FACING), CUBE_NORTH_SHAPE);
+	@Override
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.INVISIBLE;
 	}
 
 	@Override
@@ -321,7 +368,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		Tardis tardis = falling.getTardis();
 
 		if (tardis == null) return;
-		tardis.getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, tardis.getTravel().getPosition().getDirection()));
+		tardis.getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, tardis.getTravel().getPosition().getRotation()));
 
 		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 		FlightUtil.playSoundAtConsole(tardis, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
@@ -345,6 +392,30 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	@Override
 	public void onTryBreak(World world, BlockPos pos, BlockState state) {
 
+	}
+
+	public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
+		VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+
+		int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
+		for (int i = 0; i < times; i++) {
+			buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.combine(buffer[1], VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanBiFunction.OR));
+			buffer[0] = buffer[1];
+			buffer[1] = VoxelShapes.empty();
+		}
+
+		return buffer[0];
+	}
+
+
+	@Override
+	public BlockState rotate(BlockState state, BlockRotation rotation) {
+		return state.with(ROTATION, rotation.rotate(state.get(ROTATION), MAX_ROTATIONS));
+	}
+
+	@Override
+	public BlockState mirror(BlockState state, BlockMirror mirror) {
+		return state.with(ROTATION, mirror.mirror(state.get(ROTATION), MAX_ROTATIONS));
 	}
 
 	static {

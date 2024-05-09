@@ -16,6 +16,7 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.RotationPropertyHelper;
 
 public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 	private ExteriorModel model;
@@ -46,8 +47,9 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 		if (getModel(entity) == null) return;
 
 		matrices.push();
-		float f = entity.getBlockState().get(ExteriorBlock.FACING).asRotation();
-		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
+		int k = entity.getBlockState().get(ExteriorBlock.ROTATION);
+		float h = RotationPropertyHelper.toDegrees(k);
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? k : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
 		if (entity.getTardis().isSiegeMode()) {

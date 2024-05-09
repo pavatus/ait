@@ -78,7 +78,7 @@ public class TelepathicControl extends Control {
 		if (found == null) {
 			text = Text.literal("The TARDIS is happy where it is"); // todo translatable
 		} else {
-			tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(found.add(0, 75, 0), tardis.getTravel().getDestination().getWorld(), tardis.getTravel().getDestination().getDirection()), true);
+			tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(found.add(0, 75, 0), tardis.getTravel().getDestination().getWorld(), tardis.getTravel().getDestination().getRotation()), true);
 			tardis.removeFuel(500 * (tardis.tardisHammerAnnoyance + 1));
 		}
 

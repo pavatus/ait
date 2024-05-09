@@ -35,7 +35,7 @@ public abstract class PosControl extends Control {
 		AbsoluteBlockPos.Directed destination = travel.getDestination();
 
 		BlockPos pos = this.type.add(destination, (leftClick) ? -IncrementManager.increment(tardis) : IncrementManager.increment(tardis), destination.getWorld());
-		travel.setDestination(new AbsoluteBlockPos.Directed(pos, destination.getWorld(), destination.getDirection()), false);
+		travel.setDestination(new AbsoluteBlockPos.Directed(pos, destination.getWorld(), destination.getRotation()), false);
 
 		messagePlayerDestination(player, travel);
 

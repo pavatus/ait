@@ -15,10 +15,10 @@ import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.StatsData;
-import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SkullBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -30,6 +30,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.RotationPropertyHelper;
 
 import static loqor.ait.tardis.animation.ExteriorAnimation.*;
 
@@ -64,7 +65,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			this.model = exteriorVariant.model();
 
 		BlockState blockState = entity.getCachedState();
-		float f = blockState.get(ExteriorBlock.FACING).asRotation();
+		int k = blockState.get(ExteriorBlock.ROTATION);
+		float h = RotationPropertyHelper.toDegrees(k);
 		int maxLight = 0xF000F0;
 
 		matrices.push();
@@ -75,15 +77,14 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		Identifier texture = exteriorVariant.texture();
 		Identifier emission = exteriorVariant.emission();
 
-		float wrappedDegrees = MathHelper.wrapDegrees(MinecraftClient.getInstance().player.getHeadYaw() +
-				(exteriorPos.getDirection() == Direction.NORTH || exteriorPos.getDirection() == Direction.SOUTH ? f + 180f : f));
+		float wrappedDegrees = MathHelper.wrapDegrees(MinecraftClient.getInstance().player.getHeadYaw() + h);
 
 		if (exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM)) {
 			texture = DoomConstants.getTextureForRotation(wrappedDegrees, entity.findTardis().get());
 			emission = DoomConstants.getEmissionForRotation(DoomConstants.getTextureForRotation(wrappedDegrees, entity.findTardis().get()), entity.findTardis().get());
 		}
 
-		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? f :
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? h + 180f :
 				MinecraftClient.getInstance().player.getHeadYaw() + ((wrappedDegrees > -135 && wrappedDegrees < 135) ? 180f : 0f)));
 
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
@@ -145,7 +146,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		ItemStack stack = entity.findTardis().get().sonic().get(SonicHandler.HAS_EXTERIOR_SONIC);
 		if (stack == null || entity.getWorld() == null) return;
 		matrices.push();
-		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f + exteriorVariant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(h + exteriorVariant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());
 		matrices.translate(exteriorVariant.sonicItemTranslations().x(), exteriorVariant.sonicItemTranslations().y(), exteriorVariant.sonicItemTranslations().z());
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(exteriorVariant.sonicItemRotations()[1]));
 		matrices.scale(0.9f, 0.9f, 0.9f);

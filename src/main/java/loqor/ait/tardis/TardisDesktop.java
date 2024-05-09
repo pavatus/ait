@@ -204,7 +204,7 @@ public class TardisDesktop extends TardisLink {
 		BlockPos doorPos = generator.place((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
 
 		if (doorPos != null) {
-			this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), Direction.SOUTH));
+			this.setInteriorDoorPos(new AbsoluteBlockPos.Directed(doorPos, TardisUtil.getTardisDimension(), 8));
 			this.updateDoor();
 		}
 

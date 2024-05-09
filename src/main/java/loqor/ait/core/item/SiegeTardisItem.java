@@ -19,6 +19,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -134,11 +135,11 @@ public class SiegeTardisItem extends Item {
 	}
 
 	public static AbsoluteBlockPos.Directed fromItemContext(ItemUsageContext context) {
-		return new AbsoluteBlockPos.Directed(context.getBlockPos().offset(context.getSide()), context.getWorld(), context.getHorizontalPlayerFacing().getOpposite());
+		return new AbsoluteBlockPos.Directed(context.getBlockPos().offset(context.getSide()), context.getWorld(), -RotationPropertyHelper.fromYaw(context.getPlayer().getBodyYaw()));
 	}
 
 	public static AbsoluteBlockPos.Directed fromEntity(Entity entity) {
-		return new AbsoluteBlockPos.Directed(BlockPos.ofFloored(entity.getPos()), entity.getWorld(), entity.getMovementDirection());
+		return new AbsoluteBlockPos.Directed(BlockPos.ofFloored(entity.getPos()), entity.getWorld(), RotationPropertyHelper.fromYaw(entity.getBodyYaw()));
 	}
 
 	public static boolean hasSiegeInInventory(ServerPlayerEntity player, Tardis tardis) {

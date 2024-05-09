@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationPropertyHelper;
 import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.server.command.CommandManager.argument;
@@ -46,7 +47,7 @@ public class SummonTardisCommand {
 		if (pos == null)
 			pos = source.getBlockPos();
 
-		FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(pos, source.getWorld(), source.getMovementDirection()));
+		FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(pos, source.getWorld(), RotationPropertyHelper.fromYaw(source.getBodyYaw())));
 
 		source.sendMessage(Text.translatableWithFallback("tardis.summon",
 				"TARDIS [%s] is on the way!", tardis.getUuid().toString().substring(0, 7))
