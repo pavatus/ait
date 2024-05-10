@@ -1,7 +1,7 @@
 package loqor.ait.core.blockentities;
 
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.item.part.link.AbstractFluidLinkItem;
+import loqor.ait.core.item.link.AbstractLinkItem;
 import loqor.ait.core.util.StackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -43,7 +43,7 @@ public class PlugBoardBlockEntity extends BlockEntity {
             if (stack.isEmpty())
                 return;
 
-            if (!(stack.getItem() instanceof AbstractFluidLinkItem<?>))
+            if (!(stack.getItem() instanceof AbstractLinkItem))
                 return;
 
             links.set(i, stack.copyWithCount(1));

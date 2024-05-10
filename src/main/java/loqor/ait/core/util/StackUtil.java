@@ -2,11 +2,15 @@ package loqor.ait.core.util;
 
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
@@ -17,6 +21,9 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class StackUtil {
+
+    public static final Identifier AIR_ID = Registries.ITEM.getId(Items.AIR);
+    public static final String AIR_STR_ID = AIR_ID.toString();
 
     public static boolean equals(Collection<ItemStack> as, Collection<ItemStack> bs) {
         if (as.size() != bs.size())
@@ -175,5 +182,55 @@ public class StackUtil {
         for(int i = 0; i < nbtList.size(); i++) {
             stacks.add(ItemStack.fromNbt(nbtList.getCompound(i)));
         }
+    }
+
+    public static void write(NbtCompound nbt, String key, Item item) {
+        Identifier identifier = item != null ? Registries.ITEM.getId(item) : null;
+        nbt.putString(key, identifier == null ? AIR_STR_ID : identifier.toString());
+    }
+
+    public static Item read(NbtCompound nbt, String key) {
+        String raw = nbt.getString(key);
+
+        if (raw.isEmpty())
+            return null;
+
+        return Registries.ITEM.get(new Identifier(raw));
+    }
+
+    public static Item readNonNull(NbtCompound nbt, String key) {
+        Item result = read(nbt, key);
+        return result != null ? result : Items.AIR;
+    }
+
+    public static ItemStack take(ItemStack other, int amount) {
+        ItemStack result = other.copyWithCount(amount);
+        other.decrement(amount);
+
+        return result;
+    }
+
+    public static ItemStack take(ItemStack other) {
+        return take(other, 1);
+    }
+
+    public static ItemStack air() {
+        return new ItemStack(Items.AIR);
+    }
+
+    public static void writeItem(PacketByteBuf buf, Item item) {
+        buf.writeRegistryValue(Registries.ITEM, item);
+    }
+
+    public static Item readItem(PacketByteBuf buf) {
+        return buf.readRegistryValue(Registries.ITEM);
+    }
+
+    public static ItemStack orAir(ItemStack stack) {
+        return stack == null ? air() : stack;
+    }
+
+    public static Item orAir(Item item) {
+        return item == null ? Items.AIR : item;
     }
 }

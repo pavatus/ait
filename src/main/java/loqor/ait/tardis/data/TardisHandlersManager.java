@@ -196,6 +196,11 @@ public class TardisHandlersManager extends TardisLink {
 		return this.get(Id.INTERIOR);
 	}
 
+	@Deprecated
+	public EngineHandler getEngine() {
+		return this.get(Id.ENGINE);
+	}
+
 	public static Object serializer() {
 		return new Serializer();
 	}

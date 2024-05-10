@@ -7,6 +7,7 @@ import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
+import loqor.ait.tardis.util.Ordered;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -66,7 +67,7 @@ public abstract class TardisComponent {
 		this.tardis = tardis;
 	}
 
-	public enum Id {
+	public enum Id implements Ordered {
 		DESKTOP(TardisDesktop.class, (tardis, component) -> tardis.setDesktop((TardisDesktop) component)),
 		TRAVEL(TardisTravel.class, (tardis, component) -> tardis.setTravel((TardisTravel) component)),
 		EXTERIOR(TardisExterior.class, (tardis, component) -> tardis.setExterior((TardisExterior) component)),
@@ -75,6 +76,7 @@ public abstract class TardisComponent {
 		SONIC(SonicHandler.class),
 		PERMISSIONS(PermissionHandler.class),
 		LOYALTY(LoyaltyHandler.class),
+		ENGINE(EngineHandler.class),
 
 		// FIXME in future: currently handled by properties
 		BIOME(BiomeHandler.class, null),

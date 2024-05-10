@@ -15,12 +15,12 @@ import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.util.AITConfig;
 import loqor.ait.core.util.StackUtil;
-import loqor.ait.core.util.vortex.server.ServerVortexDataHandler;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
@@ -306,6 +306,23 @@ public class AITMod implements ModInitializer {
 			server.execute(() -> {
 				SonicItem.playSonicSounds(player);
 				MachineItem.disassemble(player, machine, schema.get());
+
+				StackUtil.playBreak(player);
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(AbstractTardisPart.DISASSEMBLE, (server, player, handler, buf, responseSender) -> {
+			ItemStack machine = buf.readItemStack();
+
+			Optional<MachineRecipeSchema> schema = MachineRecipeRegistry.getInstance().findMatching(machine);
+
+			if (schema.isEmpty())
+				return;
+
+			// this should ALWAYS be executed on the main thread
+			server.execute(() -> {
+				SonicItem.playSonicSounds(player);
+				AbstractTardisPart.disassemble(player, machine, schema.get());
 
 				StackUtil.playBreak(player);
 			});

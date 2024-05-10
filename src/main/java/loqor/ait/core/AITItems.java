@@ -4,11 +4,11 @@ import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import loqor.ait.AITMod;
 import loqor.ait.core.item.*;
-import loqor.ait.core.item.control.GenericControlBlockItem;
+import loqor.ait.core.item.link.AbstractLinkItem;
+import loqor.ait.core.item.link.FluidLinkItem;
+import loqor.ait.core.item.link.MercurialLinkItem;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.item.part.MachinePartItem;
-import loqor.ait.core.item.part.link.FluidLinkItem;
-import loqor.ait.core.item.part.link.MercurialLinkItem;
 import loqor.ait.core.util.AITArmorMaterials;
 import net.minecraft.item.Item;
 import net.minecraft.item.MusicDiscItem;
@@ -40,13 +40,13 @@ public class AITItems implements ItemRegistryContainer {
 	public static final Item CHARGED_ZEITON_CRYSTAL = new ChargedZeitonCrystalItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
 
 	// Machine parts
-	public static final Item ARTRON_FLUID_LINK = new FluidLinkItem(FluidLinkItem.Type.ARTRON, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item DATA_FLUID_LINK = new FluidLinkItem(FluidLinkItem.Type.DATA, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item VORTEX_FLUID_LINK = new FluidLinkItem(FluidLinkItem.Type.VORTEX, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item ARTRON_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.ARTRON, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item DATA_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.DATA, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item VORTEX_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.VORTEX, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
-	public static final Item ARTRON_MERCURIAL_LINK = new MercurialLinkItem(MercurialLinkItem.Type.ARTRON, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item DATA_MERCURIAL_LINK = new MercurialLinkItem(MercurialLinkItem.Type.DATA, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item VORTEX_MERCURIAL_LINK = new MercurialLinkItem(MercurialLinkItem.Type.VORTEX, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item ARTRON_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.ARTRON, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item DATA_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.DATA, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item VORTEX_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.VORTEX, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
 	public static final Item CONDENSER = new MachinePartItem(MachinePartItem.Type.CONDENSER, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 	public static final Item MANIPULATOR = new MachinePartItem(MachinePartItem.Type.MANIPULATOR, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));

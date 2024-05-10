@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 /**
  * Custom and lightweight map implementation for enums. I know {@link java.util.EnumMap} exists, but it's different.
  */
-public class EnumMap<K extends Enum<K>, V> {
+public class EnumMap<K extends Ordered, V> {
 
     private final V[] values;
 

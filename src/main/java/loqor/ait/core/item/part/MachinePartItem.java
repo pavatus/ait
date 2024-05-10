@@ -14,7 +14,6 @@ public class MachinePartItem extends AbstractMachinePartItem<MachinePartItem.Typ
     public enum Type {
         CONDENSER(() -> AITItems.CONDENSER),
         MANIPULATOR(() -> AITItems.MANIPULATOR),
-        MATTER_BIN(() -> AITItems.MANIPULATOR), // not implemented
         BULB(() -> AITItems.BULB),
         INDUCTOR(() -> AITItems.INDUCTOR);
 
