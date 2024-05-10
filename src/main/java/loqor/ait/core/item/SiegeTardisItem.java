@@ -2,6 +2,7 @@ package loqor.ait.core.item;
 
 import loqor.ait.core.AITItems;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
@@ -135,11 +136,11 @@ public class SiegeTardisItem extends Item {
 	}
 
 	public static AbsoluteBlockPos.Directed fromItemContext(ItemUsageContext context) {
-		return new AbsoluteBlockPos.Directed(context.getBlockPos().offset(context.getSide()), context.getWorld(), -RotationPropertyHelper.fromYaw(context.getPlayer().getBodyYaw()));
+		return new AbsoluteBlockPos.Directed(context.getBlockPos().offset(context.getSide()), context.getWorld(), 0);
 	}
 
 	public static AbsoluteBlockPos.Directed fromEntity(Entity entity) {
-		return new AbsoluteBlockPos.Directed(BlockPos.ofFloored(entity.getPos()), entity.getWorld(), RotationPropertyHelper.fromYaw(entity.getBodyYaw()));
+		return new AbsoluteBlockPos.Directed(BlockPos.ofFloored(entity.getPos()), entity.getWorld(), 0);
 	}
 
 	public static boolean hasSiegeInInventory(ServerPlayerEntity player, Tardis tardis) {

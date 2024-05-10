@@ -409,7 +409,6 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		return buffer[0];
 	}
 
-
 	@Override
 	public BlockState rotate(BlockState state, BlockRotation rotation) {
 		return state.with(ROTATION, rotation.rotate(state.get(ROTATION), MAX_ROTATIONS));

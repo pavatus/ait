@@ -6,6 +6,7 @@ import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
@@ -71,7 +72,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_IN_REAL_FLIGHT, true, true);
 		world.spawnEntity(tardisRealEntity);
-		tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(tardis.getExterior().getExteriorPos().getRotation()), 0);
+		tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(DirectionControl.getGeneralizedRotation(tardis.getExterior().getExteriorPos().getRotation())), 0);
 		player.getAbilities().flying = true;
 		player.getAbilities().allowFlying = true;
 		player.getAbilities().setFlySpeed(player.getAbilities().getFlySpeed() * 1.5F);
@@ -83,6 +84,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		if(this.getWorld().isClient()) {
 			this.lastVelocity = this.getVelocity();
 		}
+		boolean gravs = PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED);
 		this.setRotation(0, 0);
 		super.tick();
 		if(this.getPlayer().isEmpty()) return;
@@ -97,7 +99,10 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
 				client.options.hudHidden = true;
 			} else {
-				if(this.isOnGround() && !user.getAbilities().flying) {
+				if (this.isOnGround()) {
+					this.setNoGravity(gravs);
+				}
+				if((gravs || this.isOnGround()) && !user.getAbilities().flying) {
 					if(!shouldTriggerLandSound) {
 						this.getWorld().playSound(null, this.getBlockPos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS, 2F, 1F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
 						user.getAbilities().flying = false;
@@ -111,7 +116,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 						shouldTriggerLandSound = true;
 					}
 					if (user.isSneaking()) {
-						getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(user.getBlockPos(), user.getWorld(), RotationPropertyHelper.fromYaw(user.getBodyYaw())));
+						getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(this.getBlockPos(), this.getWorld(), DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(user.getBodyYaw()))));
 						if (getTardis().getTravel().getState() == TardisTravel.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
 						PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, false);
@@ -271,8 +276,9 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 	@Override
 	public boolean hasNoGravity() {
-		if(this.getPlayer().isEmpty()) return false;
-		return this.getPlayer().get().getAbilities().flying;
+		if(this.getPlayer().isEmpty() || this.getTardis() == null) return false;
+		return /*!this.isOnGround() && */(this.getPlayer().get().getAbilities().flying ||
+				PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED));
 	}
 
 	@Override

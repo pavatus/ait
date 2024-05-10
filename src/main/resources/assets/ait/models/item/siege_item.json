@@ -2,7 +2,7 @@
 	"credit": "Made with love",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "ait:item/siege_item"
+		"0": "ait:item/siege_mode_brick_item"
 	},
 	"elements": [
 		{

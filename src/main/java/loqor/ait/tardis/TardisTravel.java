@@ -11,6 +11,7 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
@@ -566,13 +567,13 @@ public class TardisTravel extends TardisLink {
 
 		ServerWorld world = (ServerWorld) this.getDestination().getWorld(); // this cast is fine, we know its server
 
-		if (isDestinationTardisExterior()) {
+		/*if (isDestinationTardisExterior()) {
 			ExteriorBlockEntity target = (ExteriorBlockEntity) world.getBlockEntity(this.getDestination()); // safe
 
 			setDestinationToTardisInterior(target.findTardis().get(), true, 256); // how many times should this be
 
 			return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
-		}
+		}*/
 
 		// is long line
 		setDestination(new AbsoluteBlockPos.Directed(
@@ -834,7 +835,7 @@ public class TardisTravel extends TardisLink {
 	}
 
 	public void placeExterior() {
-		this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(ExteriorBlock.ROTATION, this.position.getRotation()));
+		this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(ExteriorBlock.ROTATION, DirectionControl.getGeneralizedRotation(this.position.getRotation())));
 
 		ExteriorBlockEntity exterior = new ExteriorBlockEntity(
 				this.position, this.position.getBlockState()

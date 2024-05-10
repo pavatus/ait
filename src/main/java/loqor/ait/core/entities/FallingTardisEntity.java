@@ -9,6 +9,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
@@ -203,7 +204,8 @@ public class FallingTardisEntity extends Entity {
 					return;
 				}
 
-				getTardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(), this.getTardis().getTravel().getPosition().getRotation()));
+				getTardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(),
+						DirectionControl.getGeneralizedRotation(this.getTardis().getTravel().getPosition().getRotation())));
 
 
 				BlockPos blockPos = this.getBlockPos();

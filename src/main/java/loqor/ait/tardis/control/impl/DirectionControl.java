@@ -58,16 +58,16 @@ public class DirectionControl extends Control {
 	}
 
 	public static int getNextGeneralizedRotation(int rotation) {
-		return switch(rotation) {
-			case 0, 1 -> 2;
-			case 2, 3 -> 4;
-			case 4, 5 -> 6;
-			case 6, 7 -> 8;
-			case 8, 9 -> 10;
-            case 10, 11 -> 12;
-			case 12, 13 -> 14;
-			default -> 0;
-		};
+		return (rotation + 2) % 16;
+	}
+
+	public static int getGeneralizedRotation(int rotation) {
+		if (rotation % 2 != 0 && rotation < 15) {
+			return rotation + 1;
+		} else if (rotation == 15) {
+			return 0;
+		}
+		return rotation;
 	}
 
 	public static String rotationForArrow(int currentRot) {
