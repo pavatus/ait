@@ -9,12 +9,12 @@ import net.minecraft.sound.SoundEvent;
 
 import java.util.Random;
 
-public class FlightSound extends PlayerFollowingLoopingSound {
+public class InteriorFlightSound extends PlayerFollowingLoopingSound {
 	private static final Random rnd = new Random();
 	private static final int PITCH_CHANGE_TICK = FlightUtil.convertSecondsToTicks(4);
 	private int ticks = 0;
 
-	public FlightSound(SoundEvent soundEvent, SoundCategory soundCategory, float volume) {
+	public InteriorFlightSound(SoundEvent soundEvent, SoundCategory soundCategory, float volume) {
 		super(soundEvent, soundCategory, volume);
 	}
 

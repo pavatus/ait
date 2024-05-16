@@ -16,6 +16,7 @@ import loqor.ait.tardis.console.variant.hartnell.client.ClientKeltHartnellVarian
 import loqor.ait.tardis.console.variant.hartnell.client.ClientMintHartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.client.ClientWoodenHartnellVariant;
 import loqor.ait.tardis.console.variant.steam.client.ClientSteamCherryVariant;
+import loqor.ait.tardis.console.variant.steam.client.ClientSteamSteelVariant;
 import loqor.ait.tardis.console.variant.steam.client.ClientSteamVariant;
 import loqor.ait.tardis.console.variant.toyota.client.ClientToyotaBlueVariant;
 import loqor.ait.tardis.console.variant.toyota.client.ClientToyotaLegacyVariant;
@@ -130,6 +131,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 	public static ClientConsoleVariantSchema ALNICO_BLUE;
 	public static ClientConsoleVariantSchema STEAM;
 	public static ClientConsoleVariantSchema STEAM_CHERRY;
+	public static ClientConsoleVariantSchema STEAM_STEEL;
 
 	@Override
 	public void onClientInit() {
@@ -156,5 +158,6 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 		// Steam variants
 		STEAM = register(new ClientSteamVariant());
 		STEAM_CHERRY = register(new ClientSteamCherryVariant());
+		STEAM_STEEL = register(new ClientSteamSteelVariant());
 	}
 }

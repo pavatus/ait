@@ -1,6 +1,7 @@
 package loqor.ait.core.entities;
 
 import loqor.ait.api.tardis.LinkableLivingEntity;
+import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.core.AITDamageTypes;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
@@ -12,6 +13,7 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;

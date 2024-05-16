@@ -146,7 +146,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		ItemStack stack = entity.findTardis().get().sonic().get(SonicHandler.HAS_EXTERIOR_SONIC);
 		if (stack == null || entity.getWorld() == null) return;
 		matrices.push();
-		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(h + exteriorVariant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f + h + exteriorVariant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());
 		matrices.translate(exteriorVariant.sonicItemTranslations().x(), exteriorVariant.sonicItemTranslations().y(), exteriorVariant.sonicItemTranslations().z());
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(exteriorVariant.sonicItemRotations()[1]));
 		matrices.scale(0.9f, 0.9f, 0.9f);

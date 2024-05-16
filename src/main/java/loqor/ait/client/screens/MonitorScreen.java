@@ -20,6 +20,7 @@ import loqor.ait.client.screens.interior.InteriorSettingsScreen;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -327,10 +328,10 @@ public class MonitorScreen extends ConsoleScreen {
 		int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
 		int j = ((this.width - this.backgroundWidth) / 2);
 		if (getFromUUID(tardisId) == null) return;
-		AbsoluteBlockPos.Directed abpd = getFromUUID(tardisId).getTravel().getPosition();
-		AbsoluteBlockPos.Directed dabpd = getFromUUID(tardisId).getTravel().getDestination();
-		if (abpd == null) return;
-		if (abpd.getDimension() == null) return;
+		TardisTravel travel = getFromUUID(tardisId).getTravel();
+        AbsoluteBlockPos.Directed abpd = travel.inFlight() ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.getDestination(), getFromUUID(tardisId).getHandlers().getFlight().getDurationAsPercentage()) : travel.getPosition();
+		AbsoluteBlockPos.Directed dabpd = travel.getDestination();
+        if (abpd.getDimension() == null) return;
 		String positionText = abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
 		String dimensionText = convertWorldValueToModified(abpd.getDimension().getValue());
 		String directionText = DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();

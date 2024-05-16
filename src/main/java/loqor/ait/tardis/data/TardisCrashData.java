@@ -70,7 +70,7 @@ public class TardisCrashData extends TardisLink {
 			exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
 					exteriorPosition.toCenterPos().x, exteriorPosition.getY() + 2f,
 					exteriorPosition.toCenterPos().z,
-					8,
+					1,
 					0.05D, 0.05D, 0.05D, 0.01D
 			);
 		}
@@ -80,7 +80,7 @@ public class TardisCrashData extends TardisLink {
 						new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 3),
 				exteriorPosition.toCenterPos().x, exteriorPosition.getY() + 0.1f,
 				exteriorPosition.toCenterPos().z,
-				25,
+				1,
 				0.05D, 0.75D, 0.05D, 0.01D
 		);
 		if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
@@ -89,7 +89,6 @@ public class TardisCrashData extends TardisLink {
 			if (serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.RESPIRATOR || serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.FACELESS_RESPIRATOR) continue;
 			serverPlayerEntity.playSound(AITSounds.CLOISTER, 1f, 1f);
 			serverPlayerEntity.damage(exteriorWorld.getDamageSources().magic(), 3f);
-			//TODO this messes with people and specifically me so im gonna remove it for now serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 5, true, false, false));
 			serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 100, 3, true, false, false));
 			serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 5, true, false, false));
 		}
@@ -130,15 +129,6 @@ public class TardisCrashData extends TardisLink {
 
 	public void addRepairTicks(Integer ticks) {
 		PropertiesHandler.set(tardis().properties(), TARDIS_REPAIR_TICKS, getRepairTicks() + ticks);
-	}
-
-	public double[] directionToInteger(Direction direction) {
-		return switch (direction) {
-			default -> new double[]{0.5d, 0.5d};
-			case EAST -> new double[]{-0.5d, 0.5d};
-			case SOUTH -> new double[]{-0.5d, -0.5d};
-			case WEST -> new double[]{0.5d, -0.5d};
-		};
 	}
 
 	public enum State {

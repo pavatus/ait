@@ -30,6 +30,11 @@
 			}
 		}
 	],
+	"overrides": [
+		{"predicate": {"type": 0}, "model": "ait:item/waypoint/waypoint_cartridge_inactive"},
+		{"predicate": {"type": 0.5}, "model": "ait:item/waypoint/waypoint_cartridge_active"},
+		{"predicate": {"type": 1}, "model": "ait:item/waypoint/waypoint_cartridge_loaded"}
+	],
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [90, 90, 0],
@@ -50,38 +55,20 @@
 			"translation": [0, 5.25, 0]
 		},
 		"ground": {
-			"translation": [0, 6.5, 0]
+			"translation": [0, 1.75, 0],
+			"scale": [0.65, 0.65, 0.65]
 		},
 		"gui": {
 			"rotation": [-24.75, -7.25, -25],
 			"translation": [2, 3, 0]
 		},
 		"head": {
-			"rotation": [0, 90, 0],
-			"translation": [0, 5.25, 0]
+			"rotation": [-90, 0, 0],
+			"translation": [0, -4.25, -12.5]
 		},
 		"fixed": {
-			"translation": [0, 3.5, 0]
+			"translation": [0, 4.5, 0],
+			"scale": [1.15, 1.15, 1.15]
 		}
-	},
-	"overrides": [
-		{
-			"predicate": {
-				"type": 0
-			},
-			"model": "ait:item/waypoint/waypoint_cartridge_inactive"
-		},
-		{
-			"predicate": {
-				"type": 0.5
-			},
-			"model": "ait:item/waypoint/waypoint_cartridge_active"
-		},
-		{
-			"predicate": {
-				"type": 1
-			},
-			"model": "ait:item/waypoint/waypoint_cartridge_loaded"
-		}
-	]
+	}
 }

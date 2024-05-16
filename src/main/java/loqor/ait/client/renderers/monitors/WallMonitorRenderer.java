@@ -10,6 +10,7 @@ import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -63,7 +64,8 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         float xVal = 0f;
         matrices.translate(xVal, -35f, 35f);
 
-        AbsoluteBlockPos.Directed abpp = tardis.getTravel().getPosition();
+        TardisTravel travel = tardis.getTravel();
+        AbsoluteBlockPos.Directed abpp = travel.inFlight() ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.getDestination(), tardis.getHandlers().getFlight().getDurationAsPercentage()) : travel.getPosition();
         AbsoluteBlockPos.Directed abpd = tardis.getTravel().getDestination();
 
         String positionPosText = abpp.getX() + ", " + abpp.getY() + ", " + abpp.getZ();

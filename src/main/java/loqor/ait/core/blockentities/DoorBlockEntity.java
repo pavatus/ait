@@ -8,6 +8,7 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
+import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableBlockEntity;
@@ -138,14 +139,28 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 		if (tardis.getDoor().isClosed())
 			return;
 
-		if (tardis.getLockedTardis())
+		if (tardis.getLockedTardis()) {
 			return;
+		}
 
-		if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
+		if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
 			return;
+		}
 
-		if (DependencyChecker.hasPortals() && tardis.getExterior().getVariant().hasPortals())
+		if (DependencyChecker.hasPortals() && tardis.getExterior().getVariant().hasPortals()) {
 			return;
+		}
+
+		TardisTravel travel = tardis.getTravel();
+
+		if (travel.getState() == TardisTravel.State.FLIGHT) {
+			TardisUtil.dropOutside(tardis, entity); // SHOULD properly drop someone out at the correct position instead of the not correct position :)
+			return;
+		}
+
+		if (travel.getState() != TardisTravel.State.LANDED) {
+			return;
+		}
 
 		TardisUtil.teleportOutside(tardis, entity);
 	}

@@ -15,6 +15,7 @@ import loqor.ait.tardis.console.variant.hartnell.KeltHartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.MintHartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.WoodenHartnellVariant;
 import loqor.ait.tardis.console.variant.steam.SteamCherryVariant;
+import loqor.ait.tardis.console.variant.steam.SteamSteelVariant;
 import loqor.ait.tardis.console.variant.steam.SteamVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaBlueVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaLegacyVariant;
@@ -115,6 +116,7 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 	public static ConsoleVariantSchema ALNICO_BLUE;
 	public static ConsoleVariantSchema STEAM;
 	public static ConsoleVariantSchema STEAM_CHERRY;
+	public static ConsoleVariantSchema STEAM_STEEL;
 
 	@Override
 	protected void defaults() {
@@ -141,5 +143,6 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 		// Steam variants
 		STEAM = registerStatic(new SteamVariant());
 		STEAM_CHERRY = registerStatic(new SteamCherryVariant());
+		STEAM_STEEL = registerStatic(new SteamSteelVariant());
 	}
 }

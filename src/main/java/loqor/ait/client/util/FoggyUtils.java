@@ -22,7 +22,8 @@ public class FoggyUtils {
 			RenderSystem.setShaderFogShape(FogShape.SPHERE);
 			RenderSystem.setShaderFogColor(0, 0, 0, ClientTardisUtil.getCurrentTardis().isSiegeMode() ? 0.85f : 1f);
 		}
-		if (ClientTardisUtil.isPlayerInATardis() && ClientTardisUtil.getCurrentTardis().getHandlers().getCrashData().isToxic()) {
+		if (ClientTardisUtil.isPlayerInATardis() && ClientTardisUtil.getCurrentTardis().getHandlers().getCrashData().isToxic() &&
+				ClientTardisUtil.getCurrentTardis().hasPower()) {
 			RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));
 			RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 11, 32));
 			RenderSystem.setShaderFogShape(FogShape.SPHERE);

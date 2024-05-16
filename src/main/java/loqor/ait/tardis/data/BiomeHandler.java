@@ -41,7 +41,8 @@ public class BiomeHandler extends TardisLink {
         return switch(biomeKey) {
             default -> BiomeType.DEFAULT.textureFromKey(texture, tardis);
             case "snowy_taiga", "snowy_beach" -> BiomeType.SNOWY.textureFromKey(texture, tardis);
-            case "desert" -> BiomeType.SANDY.textureFromKey(texture, tardis);
+            case "desert", "beach" -> BiomeType.SANDY.textureFromKey(texture, tardis);
+            case "badlands" -> BiomeType.RED_SANDY.textureFromKey(texture, tardis);
             case "mangrove_swamp" -> BiomeType.MUDDY.textureFromKey(texture, tardis);
             case "the_end" -> BiomeType.CHORUS.textureFromKey(texture, tardis);
             case "deep_dark" -> BiomeType.SCULK.textureFromKey(texture, tardis);
@@ -72,6 +73,14 @@ public class BiomeHandler extends TardisLink {
             public Identifier textureFromKey(Identifier texture, Tardis tardis) {
                 Identifier specific = new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png", "_sand.png"));
+                return specific;
+            }
+        },
+        RED_SANDY() {
+            @Override
+            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+                Identifier specific = new Identifier(AITMod.MOD_ID,
+                        texture.getPath().replace(".png", "_red_sand.png"));
                 return specific;
             }
         },

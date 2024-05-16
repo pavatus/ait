@@ -9,6 +9,7 @@ import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SkullBlock;
 import net.minecraft.client.MinecraftClient;
@@ -68,7 +69,8 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		matrices.scale(0.005f, 0.005f, 0.005f);
 		matrices.translate(-50f, 0, -80);
 
-		AbsoluteBlockPos.Directed abpp = tardis.getTravel().getPosition();
+		TardisTravel travel = tardis.getTravel();
+		AbsoluteBlockPos.Directed abpp = travel.inFlight() ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.getDestination(), tardis.getHandlers().getFlight().getDurationAsPercentage()) : travel.getPosition();
 
 		String positionPosText = " " + abpp.getX() + ", " + abpp.getY() + ", " + abpp.getZ();
 		String positionDimensionText = " " + DimensionControl.convertWorldValueToModified(abpp.getDimension().getValue());
