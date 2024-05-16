@@ -41,13 +41,12 @@ public class BookshelfDoorModel extends DoorModel {
 
 		DoorData door = doorEntity.findTardis().get().getDoor();
 
-		this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
-		this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
+		this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 4.75F : 0.0F;
+		this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? -4.75F : 0.0F;
 
 		matrices.push();
 		matrices.scale(1F, 1F, 1F);
-		matrices.translate(0, -1.5, 0.35);
-		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180));
+		matrices.translate(0, -1.5, 0);
 
 		super.renderWithAnimations(doorEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();

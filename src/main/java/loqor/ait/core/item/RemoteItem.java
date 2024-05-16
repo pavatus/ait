@@ -3,6 +3,7 @@ package loqor.ait.core.item;
 import loqor.ait.api.tardis.LinkableItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -71,7 +72,7 @@ public class RemoteItem extends LinkableItem {
 					if (world.getBlockState(pos).isReplaceable()) temp = pos;
 
 					tardis.getTravel().setSpeed(tardis.getTravel().getMaxSpeed());
-					FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, RotationPropertyHelper.fromYaw(player.getBodyYaw())));
+					FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw()))));
 				} else {
 					world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 					player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);

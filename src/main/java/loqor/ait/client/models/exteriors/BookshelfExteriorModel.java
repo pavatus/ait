@@ -102,13 +102,13 @@ public class BookshelfExteriorModel extends ExteriorModel {
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		if (exterior.findTardis().isEmpty()) return;
 		matrices.push();
-		matrices.scale(0.63F, 0.63F, 0.63F);
+		matrices.scale(1F, 1F, 1F);
 		matrices.translate(0, -1.5f, 0);
 
 		DoorData door = exterior.findTardis().get().getDoor();
 
-		this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
-		this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
+		this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -4.75F : 0.0F;
+		this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 4.75F : 0.0F;
 
 		// hide the doors if we have portals to stop the dupe
 		//if (DependencyChecker.hasPortals())
@@ -128,8 +128,8 @@ public class BookshelfExteriorModel extends ExteriorModel {
 
 		DoorData door = realEntity.getTardis().getDoor();
 
-		this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
-		this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
+		this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -4.75F : 0.0F;
+		this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 4.75F : 0.0F;
 
 		// hide the doors if we have portals to stop the dupe
 		//if (DependencyChecker.hasPortals())

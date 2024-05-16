@@ -48,6 +48,7 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
 	public static ExteriorCategorySchema DOOM;
 	public static ExteriorCategorySchema PLINTH;
 	public static ExteriorCategorySchema RENEGADE;
+	public static ExteriorCategorySchema BOOKSHELF;
 
 	@Override
 	protected void defaults() {
@@ -61,5 +62,6 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
 		DOOM = register(new DoomCategory());
 		PLINTH = register(new PlinthCategory());
 		RENEGADE = register(new RenegadeCategory());
+		BOOKSHELF = register(new BookshelfCategory());
 	}
 }
