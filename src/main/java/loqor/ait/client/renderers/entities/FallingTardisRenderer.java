@@ -8,6 +8,8 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.tardis.TardisExterior;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.BiomeHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -36,7 +38,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 		TardisExterior tardisExterior = entity.getTardis().getExterior();
 		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardisExterior.getVariant());
 
-		if (tardisExterior == null || exteriorVariant == null) return;
+		if (exteriorVariant == null) return;
 		Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
 
 		if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.
@@ -59,6 +61,12 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 			getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, 1, 1, 1, 1, 1);
 			if (exteriorVariant.emission() != null)
 				getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), light, 1, 1, 1, 1, 1);
+			if(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+				Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey(), exteriorVariant.texture(), entity.getTardis());
+				if (!exteriorVariant.texture().equals(biomeTexture)) {
+					model.renderFalling(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, 1, 1, 1, 1, 1);
+				}
+			}
 		}
 		matrices.pop();
 	}
