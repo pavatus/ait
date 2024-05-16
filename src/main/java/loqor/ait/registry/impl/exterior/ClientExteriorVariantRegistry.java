@@ -123,6 +123,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 	public static ClientExteriorVariantSchema BOX_SOUL;
 	public static ClientExteriorVariantSchema BOX_FUTURE;
 	public static ClientExteriorVariantSchema BOX_CORAL;
+	public static ClientExteriorVariantSchema BOX_CHERRY;
 	public static ClientExteriorVariantSchema BOX_TOKAMAK;
 	public static ClientExteriorVariantSchema PRIME;
 	public static ClientExteriorVariantSchema YETI;
@@ -163,6 +164,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 		BOX_FUTURE = register(new ClientPoliceBoxFuturisticVariant());
 		BOX_CORAL = register(new ClientPoliceBoxCoralVariant());
 		BOX_TOKAMAK = register(new ClientPoliceBoxTokamakVariant());
+		BOX_CHERRY = register(new ClientPoliceBoxCherryVariant());
 
 		// Classic Box
 		PRIME = register(new ClientClassicBoxPrimeVariant());
