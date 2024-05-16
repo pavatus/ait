@@ -43,6 +43,7 @@ public class ClientDoorRegistry {
 	public static ClientDoorSchema DOOM;
 	public static ClientDoorSchema PLINTH;
 	public static ClientDoorSchema RENEGADE;
+	public static ClientDoorSchema BOOKSHELF;
 
 	public static void init() {
 		TARDIM = register(new ClientTardimDoorVariant());
@@ -57,5 +58,6 @@ public class ClientDoorRegistry {
 		DOOM = register(new ClientDoomDoorVariant());
 		PLINTH = register(new ClientPlinthDoorVariant());
 		RENEGADE = register(new ClientRenegadeDoorVariant());
+		BOOKSHELF = register(new ClientBookshelfDoorVariant());
 	}
 }

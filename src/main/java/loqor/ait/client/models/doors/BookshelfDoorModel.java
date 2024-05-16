@@ -1,0 +1,70 @@
+package loqor.ait.client.models.doors;// Made with Blockbench 4.10.1
+// Exported for Minecraft version 1.17+ for Yarn
+// Paste this class into your mod and generate all required imports
+
+
+import loqor.ait.client.animation.exterior.door.DoorAnimations;
+import loqor.ait.core.blockentities.DoorBlockEntity;
+import loqor.ait.tardis.data.DoorData;
+import net.minecraft.client.model.*;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.RotationAxis;
+
+public class BookshelfDoorModel extends DoorModel {
+	private final ModelPart bookshelf;
+	public BookshelfDoorModel(ModelPart root) {
+		this.bookshelf = root.getChild("bookshelf");
+	}
+	public static TexturedModelData getTexturedModelData() {
+		ModelData modelData = new ModelData();
+		ModelPartData modelPartData = modelData.getRoot();
+		ModelPartData bookshelf = modelPartData.addChild("bookshelf", ModelPartBuilder.create().uv(51, 14).cuboid(-12.5938F, -21.5354F, 7.5385F, 2.0F, 42.0F, 2.0F, new Dilation(0.0F))
+		.uv(14, 14).cuboid(9.4062F, -21.5354F, 7.5385F, 2.0F, 42.0F, 2.0F, new Dilation(0.0F))
+		.uv(14, 73).cuboid(-10.5938F, 18.4646F, 7.5385F, 20.0F, 2.0F, 2.0F, new Dilation(0.0F))
+		.uv(0, 78).cuboid(-10.5938F, -19.5354F, 7.5385F, 20.0F, 38.0F, 0.0F, new Dilation(0.05F))
+		.uv(72, 57).cuboid(-10.5938F, -21.5354F, 7.5385F, 20.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-0.5938F, 3.5354F, 15.4615F, 0.0F, 3.1416F, 0.0F));
+
+		ModelPartData left_door = bookshelf.addChild("left_door", ModelPartBuilder.create().uv(66, 81).cuboid(-9.0F, -38.0F, -1.0F, 10.0F, 38.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(8.4062F, 18.4646F, 8.5385F));
+
+		ModelPartData right_door = bookshelf.addChild("right_door", ModelPartBuilder.create().uv(41, 81).cuboid(-1.0F, -38.0F, -1.0F, 10.0F, 38.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(-9.5938F, 18.4646F, 8.5385F));
+		return TexturedModelData.of(modelData, 256, 256);
+	}
+	@Override
+	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+		bookshelf.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+	}
+
+	@Override
+	public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+
+		DoorData door = doorEntity.findTardis().get().getDoor();
+
+		this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
+		this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
+
+		matrices.push();
+		matrices.scale(1F, 1F, 1F);
+		matrices.translate(0, -1.5, 0.35);
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180));
+
+		super.renderWithAnimations(doorEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+		matrices.pop();
+	}
+
+	@Override
+	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+		return switch (state) {
+			case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
+			case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
+			case SECOND -> DoorAnimations.INTERIOR_SECOND_OPEN_ANIMATION;
+			case BOTH -> DoorAnimations.INTERIOR_BOTH_OPEN_ANIMATION;
+		};
+	}
+
+	@Override
+	public ModelPart getPart() {
+		return bookshelf;
+	}
+}

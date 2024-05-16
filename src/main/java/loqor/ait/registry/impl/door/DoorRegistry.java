@@ -28,6 +28,7 @@ public class DoorRegistry {
 	public static DoorSchema DOOM;
 	public static DoorSchema PLINTH;
 	public static DoorSchema RENEGADE;
+	public static DoorSchema BOOKSHELF;
 
 	public static void init() {
 		TARDIM = register(new TardimDoorVariant());
@@ -42,5 +43,6 @@ public class DoorRegistry {
 		DOOM = register(new DoomDoorVariant());
 		PLINTH = register(new PlinthDoorVariant());
 		RENEGADE = register(new RenegadeDoorVariant());
+		BOOKSHELF = register(new BookshelfDoorVariant());
 	}
 }

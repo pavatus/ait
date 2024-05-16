@@ -6,6 +6,7 @@ import loqor.ait.core.data.datapack.DatapackExterior;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.datapack.DatapackRegistry;
+import loqor.ait.tardis.exterior.variant.bookshelf.client.ClientBookshelfDefaultVariant;
 import loqor.ait.tardis.exterior.variant.booth.client.*;
 import loqor.ait.tardis.exterior.variant.box.client.*;
 import loqor.ait.tardis.exterior.variant.capsule.client.ClientCapsuleDefaultVariant;
@@ -149,6 +150,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 	public static ClientExteriorVariantSchema RENEGADE_DEFAULT;
 	public static ClientExteriorVariantSchema RENEGADE_TRON;
 	public static ClientExteriorVariantSchema RENEGADE_CABINET;
+	public static ClientExteriorVariantSchema BOOKSHELF_DEFAULT;
 
 	@Override
 	public void onClientInit() {
@@ -205,5 +207,8 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 		RENEGADE_DEFAULT = register(new ClientRenegadeDefaultVariant());
 		RENEGADE_TRON = register(new ClientRenegadeTronVariant());
 		RENEGADE_CABINET = register(new ClientRenegadeCabinetVariant());
+
+		// Bookshelf
+		BOOKSHELF_DEFAULT = register(new ClientBookshelfDefaultVariant());
 	}
 }

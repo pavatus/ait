@@ -6,6 +6,7 @@ import loqor.ait.registry.unlockable.UnlockableRegistry;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.datapack.DatapackExterior;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.tardis.exterior.variant.bookshelf.BookshelfDefaultVariant;
 import loqor.ait.tardis.exterior.variant.booth.*;
 import loqor.ait.tardis.exterior.variant.box.*;
 import loqor.ait.tardis.exterior.variant.capsule.CapsuleDefaultVariant;
@@ -151,6 +152,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 	public static ExteriorVariantSchema RENEGADE_DEFAULT;
 	public static ExteriorVariantSchema RENEGADE_TRON;
 	public static ExteriorVariantSchema RENEGADE_CABINET;
+	public static ExteriorVariantSchema BOOKSHELF_DEFAULT;
 
 	@Override
 	protected void defaults() {
@@ -207,5 +209,8 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 		RENEGADE_DEFAULT = register(new RenegadeDefaultVariant());
 		RENEGADE_TRON = register(new RenegadeTronVariant());
 		RENEGADE_CABINET = register(new RenegadeCabinetVariant());
+
+		// Bookshelf
+		BOOKSHELF_DEFAULT = register(new BookshelfDefaultVariant());
 	}
 }
