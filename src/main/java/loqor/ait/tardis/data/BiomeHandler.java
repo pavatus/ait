@@ -20,7 +20,6 @@ public class BiomeHandler extends TardisLink {
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
-        this.setBiome(this.tardis());
     }
 
     public void setBiome(Tardis tardis) {

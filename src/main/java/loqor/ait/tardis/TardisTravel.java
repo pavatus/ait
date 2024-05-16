@@ -15,10 +15,7 @@ import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
-import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.data.TardisCrashData;
-import loqor.ait.tardis.data.TardisLink;
+import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
@@ -381,6 +378,7 @@ public class TardisTravel extends TardisLink {
 			return;
 
 		this.setState(State.LANDED);
+		((BiomeHandler) tardis().getHandlers().get(Id.BIOME)).setBiome(tardis());
 		deleteExterior();
 
 		ServerWorld destWorld = (ServerWorld) pos.getWorld();
