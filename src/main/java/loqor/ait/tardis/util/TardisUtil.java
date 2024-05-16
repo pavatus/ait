@@ -331,11 +331,11 @@ public class TardisUtil {
 					new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() - 0.5f);
 			case 1, 2, 3 -> new Vec3d(pos.getX() + 1.1f, pos.getY(), pos.getZ() - 0.5f);
 			case 4 -> new Vec3d(pos.getX() + 1.3f, pos.getY(), pos.getZ() + 0.5f);
-			case 5, 6, 7 -> new Vec3d(pos.getX() + 1.3f, pos.getY(), pos.getZ() + 1.1f);
+			case 5, 6, 7 -> new Vec3d(pos.getX() + 1.5f, pos.getY(), pos.getZ() + 1.1f);
 			case 8 -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 1.5f);
 			case 9, 10, 11 -> new Vec3d(pos.getX(), pos.getY(), pos.getZ() + 1.5f);
 			case 12 -> new Vec3d(pos.getX() - 0.5f, pos.getY(), pos.getZ() + 0.5f);
-			case 13, 14, 15 -> new Vec3d(pos.getX() - 0.3f, pos.getY(), pos.getZ() - 0.2f);
+			case 13, 14, 15 -> new Vec3d(pos.getX() - 0.3f, pos.getY(), pos.getZ() - 0.3f);
 		};
 	}
 

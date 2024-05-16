@@ -13,6 +13,7 @@ import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
@@ -90,6 +91,12 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 			if (emission != null && entity.findTardis().get().hasPower()) {
 				boolean alarms = PropertiesHandler.getBool(entity.findTardis().get().properties(), PropertiesHandler.ALARM_ENABLED);
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(emission, true)), maxLight, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
+			}
+			if(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+				Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey(), exteriorVariant.texture(), entity.findTardis().get());
+				if (!texture.equals(biomeTexture)) {
+					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
+				}
 			}
 		}
 		matrices.pop();

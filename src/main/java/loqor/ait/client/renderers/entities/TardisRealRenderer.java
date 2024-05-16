@@ -8,6 +8,8 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.TardisExterior;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -85,6 +87,13 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 		if (exteriorVariantSchema.emission() != null && entity.getTardis().hasPower()) {
 			boolean alarms = PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
 			getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, 1, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
+		}
+
+		if(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariantSchema.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+			Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey(), this.getTexture(entity), entity.getTardis());
+			if (!this.getTexture(entity).equals(biomeTexture)) {
+				model.renderRealWorld(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, 1, 1, 1, 1, 1);
+			}
 		}
 
 		int maxLight = 0xF000F0;

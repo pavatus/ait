@@ -378,7 +378,6 @@ public class TardisTravel extends TardisLink {
 			return;
 
 		this.setState(State.LANDED);
-		((BiomeHandler) tardis().getHandlers().get(Id.BIOME)).setBiome(tardis());
 		deleteExterior();
 
 		ServerWorld destWorld = (ServerWorld) pos.getWorld();
@@ -394,6 +393,7 @@ public class TardisTravel extends TardisLink {
 		// Set the position of the Tardis to the destination
 		this.setPosition(pos);
 		this.setDestination(pos);
+		((BiomeHandler) tardis().getHandlers().get(Id.BIOME)).setBiome(tardis());
 		WorldOps.updateIfOnServer(destWorld, pos);
 	}
 

@@ -3,11 +3,16 @@ package loqor.ait.tardis.data;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.resource.Resource;
+import net.minecraft.resource.ResourceFactory;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 public class BiomeHandler extends TardisLink {
 
@@ -56,6 +61,7 @@ public class BiomeHandler extends TardisLink {
             public Identifier textureFromKey(Identifier texture, Tardis tardis) {
                 Identifier specific = new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png", "_snowy.png"));
+                // Map<Identifier, Resource> iden = MinecraftClient.getInstance().getResourceManager().findResources(texture.getPath(), filename -> filename.getPath().endsWith("_snowy.png"));
                 return specific;
             }
         },
