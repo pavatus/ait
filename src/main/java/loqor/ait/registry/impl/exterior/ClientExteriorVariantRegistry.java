@@ -20,6 +20,7 @@ import loqor.ait.tardis.exterior.variant.growth.client.ClientGrowthVariant;
 import loqor.ait.tardis.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import loqor.ait.tardis.exterior.variant.plinth.client.ClientPlinthFireVariant;
 import loqor.ait.tardis.exterior.variant.plinth.client.ClientPlinthSoulVariant;
+import loqor.ait.tardis.exterior.variant.renegade.client.ClientRenegadeCabinetVariant;
 import loqor.ait.tardis.exterior.variant.renegade.client.ClientRenegadeDefaultVariant;
 import loqor.ait.tardis.exterior.variant.renegade.client.ClientRenegadeTronVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimDefaultVariant;
@@ -146,6 +147,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 	public static ClientExteriorVariantSchema PLINTH_FIRE;
 	public static ClientExteriorVariantSchema RENEGADE_DEFAULT;
 	public static ClientExteriorVariantSchema RENEGADE_TRON;
+	public static ClientExteriorVariantSchema RENEGADE_CABINET;
 
 	@Override
 	public void onClientInit() {
@@ -200,5 +202,6 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 		// Renegade
 		RENEGADE_DEFAULT = register(new ClientRenegadeDefaultVariant());
 		RENEGADE_TRON = register(new ClientRenegadeTronVariant());
+		RENEGADE_CABINET = register(new ClientRenegadeCabinetVariant());
 	}
 }

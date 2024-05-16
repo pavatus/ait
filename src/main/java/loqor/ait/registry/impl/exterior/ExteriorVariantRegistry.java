@@ -20,6 +20,7 @@ import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthDefaultVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthFireVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthSoulVariant;
+import loqor.ait.tardis.exterior.variant.renegade.RenegadeCabinetVariant;
 import loqor.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
 import loqor.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimDefaultVariant;
@@ -148,6 +149,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 	public static ExteriorVariantSchema PLINTH_FIRE;
 	public static ExteriorVariantSchema RENEGADE_DEFAULT;
 	public static ExteriorVariantSchema RENEGADE_TRON;
+	public static ExteriorVariantSchema RENEGADE_CABINET;
 
 	@Override
 	protected void defaults() {
@@ -202,5 +204,6 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 		// Renegade
 		RENEGADE_DEFAULT = register(new RenegadeDefaultVariant());
 		RENEGADE_TRON = register(new RenegadeTronVariant());
+		RENEGADE_CABINET = register(new RenegadeCabinetVariant());
 	}
 }
