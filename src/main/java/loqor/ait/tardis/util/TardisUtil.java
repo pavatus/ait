@@ -317,11 +317,11 @@ public class TardisUtil {
 		};
 	}
 
-	public static BlockPos offsetInteriorDoorPosition(Tardis tardis) {
+	public static Vec3d offsetInteriorDoorPosition(Tardis tardis) {
 		return TardisUtil.offsetInteriorDoorPosition(tardis.getDesktop());
 	}
 
-	public static BlockPos offsetInteriorDoorPosition(TardisDesktop desktop) {
+	public static Vec3d offsetInteriorDoorPosition(TardisDesktop desktop) {
 		return TardisUtil.offsetInteriorDoorPos(desktop.getInteriorDoorPos());
 	}
 
@@ -330,24 +330,22 @@ public class TardisUtil {
 			default ->
 					new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() - 0.5f);
 			case 1, 2, 3 -> new Vec3d(pos.getX() + 1.1f, pos.getY(), pos.getZ() - 0.5f);
-			case 4 -> new Vec3d(pos.getX() + 1.3f, pos.getY(), pos.getZ() + 0.5f);
+			case 4 -> new Vec3d(pos.getX() + 1.5f, pos.getY(), pos.getZ() + 0.5f);
 			case 5, 6, 7 -> new Vec3d(pos.getX() + 1.5f, pos.getY(), pos.getZ() + 1.1f);
 			case 8 -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 1.5f);
 			case 9, 10, 11 -> new Vec3d(pos.getX(), pos.getY(), pos.getZ() + 1.5f);
 			case 12 -> new Vec3d(pos.getX() - 0.5f, pos.getY(), pos.getZ() + 0.5f);
-			case 13, 14, 15 -> new Vec3d(pos.getX() - 0.3f, pos.getY(), pos.getZ() - 0.3f);
+			case 13, 14, 15 -> new Vec3d(pos.getX() - 0.3f, pos.getY(), pos.getZ() - 0.5f);
 		};
 	}
 
-	public static BlockPos offsetInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
+	public static Vec3d offsetInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
 		boolean bl = pos.getWorld().getBlockEntity(pos) instanceof DoorBlockEntity;
 		return switch (pos.getRotation()) {
-			default ->
-					throw new IllegalArgumentException("Cannot adjust door position with direction: " + pos.getRotation());
-			case 0 -> new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ() + 1);
-			case 4 -> new BlockPos.Mutable(pos.getX() -1, pos.getY(), pos.getZ());
-			case 8 -> new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ() -1);
-			case 12 -> new BlockPos.Mutable(pos.getX() + 1, pos.getY(), pos.getZ());
+			default -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.6f);
+			case 4 -> new Vec3d(pos.getX() + 0.4f, pos.getY(), pos.getZ() + 0.5f);
+			case 8 -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.4f);
+			case 12 -> new Vec3d(pos.getX() + 0.6f, pos.getY(), pos.getZ() + 0.5f);
 		};
 	}
 
@@ -380,7 +378,7 @@ public class TardisUtil {
 	private static void teleportWithDoorOffset(Entity entity, AbsoluteBlockPos.Directed pos) {
 		boolean bl = pos.getWorld().getBlockEntity(pos) instanceof DoorBlockEntity;
 		//Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
-		Vec3d vec = bl ? TardisUtil.offsetInteriorDoorPos(pos).toCenterPos().subtract(0, 0.5, 0) : new Vec3d(TardisUtil.offsetDoorPosition(pos).getX(), TardisUtil.offsetDoorPosition(pos).getY() + 0.125f, TardisUtil.offsetDoorPosition(pos).getZ());/*.toCenterPos()*/;
+		Vec3d vec = bl ? TardisUtil.offsetInteriorDoorPos(pos) : new Vec3d(TardisUtil.offsetDoorPosition(pos).getX(), TardisUtil.offsetDoorPosition(pos).getY() + 0.125f, TardisUtil.offsetDoorPosition(pos).getZ());/*.toCenterPos()*/;
 		if(pos.getWorld() instanceof ServerWorld serverWorld) {
 			SERVER.execute(() -> {
 				if (DependencyChecker.hasPortals()) {

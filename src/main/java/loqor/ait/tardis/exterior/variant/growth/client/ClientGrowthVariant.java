@@ -37,6 +37,6 @@ public class ClientGrowthVariant extends ClientExteriorVariantSchema {
 
 	@Override
 	public Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType) {
-		return texture();
+		return null;
 	}
 }

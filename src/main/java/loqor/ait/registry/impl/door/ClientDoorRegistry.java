@@ -44,6 +44,7 @@ public class ClientDoorRegistry {
 	public static ClientDoorSchema PLINTH;
 	public static ClientDoorSchema RENEGADE;
 	public static ClientDoorSchema BOOKSHELF;
+	public static ClientDoorSchema GEOMETRIC;
 
 	public static void init() {
 		TARDIM = register(new ClientTardimDoorVariant());
@@ -59,5 +60,6 @@ public class ClientDoorRegistry {
 		PLINTH = register(new ClientPlinthDoorVariant());
 		RENEGADE = register(new ClientRenegadeDoorVariant());
 		BOOKSHELF = register(new ClientBookshelfDoorVariant());
+		GEOMETRIC = register(new ClientGeometricDoorVariant());
 	}
 }

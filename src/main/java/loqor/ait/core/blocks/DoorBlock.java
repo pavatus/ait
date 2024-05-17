@@ -20,7 +20,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
@@ -99,10 +101,28 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 		if (world.isClient())
 			return;
 
+		Vec3d expansionBehind = new Vec3d(entity.prevX, entity.prevY, entity.prevZ).subtract(entity.getPos());
+		Vec3d expansionForward = entity.getVelocity();
+
+		Box entityBox = entity.getBoundingBox().stretch(
+				expansionForward.multiply(1.2)).stretch(
+						expansionBehind);
+
+		Box doorShape = this.getOutlineShape(state, world, pos, ShapeContext.of(entity)).getBoundingBox().offset(pos);
+
+		double insideBlockExpanded = 1.0E-7D;
+
+		Box biggerEntityBox = entityBox.expand(insideBlockExpanded);
+		Box biggerDoorShape = doorShape.expand(insideBlockExpanded);
+
 		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if(biggerEntityBox.intersects(biggerDoorShape)) {
+			if (blockEntity instanceof DoorBlockEntity door)
+				door.onEntityCollision(entity);
+		}
 		//if(Objects.equals(this.getOutlineShape(state, world, pos, ShapeContext.of(entity)).getClosestPointTo(entity.getPos()), Optional.of(new Vec3d(0, 0, 0)))) {
-		if (blockEntity instanceof DoorBlockEntity door)
-			door.onEntityCollision(entity);
+		//if (blockEntity instanceof DoorBlockEntity door)
+		//	door.onEntityCollision(entity);
 		//}
 	}
 

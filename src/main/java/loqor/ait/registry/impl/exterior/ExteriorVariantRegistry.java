@@ -17,6 +17,9 @@ import loqor.ait.tardis.exterior.variant.doom.DoomVariant;
 import loqor.ait.tardis.exterior.variant.easter_head.EasterHeadDefaultVariant;
 import loqor.ait.tardis.exterior.variant.easter_head.EasterHeadFireVariant;
 import loqor.ait.tardis.exterior.variant.easter_head.EasterHeadSoulVariant;
+import loqor.ait.tardis.exterior.variant.geometric.GeometricDefaultVariant;
+import loqor.ait.tardis.exterior.variant.geometric.GeometricFireVariant;
+import loqor.ait.tardis.exterior.variant.geometric.GeometricSoulVariant;
 import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthDefaultVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthFireVariant;
@@ -153,6 +156,9 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 	public static ExteriorVariantSchema RENEGADE_TRON;
 	public static ExteriorVariantSchema RENEGADE_CABINET;
 	public static ExteriorVariantSchema BOOKSHELF_DEFAULT;
+	public static ExteriorVariantSchema GEOMETRIC_DEFAULT;
+	public static ExteriorVariantSchema GEOMETRIC_FIRE;
+	public static ExteriorVariantSchema GEOMETRIC_SOUL;
 
 	@Override
 	protected void defaults() {
@@ -212,5 +218,10 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
 		// Bookshelf
 		BOOKSHELF_DEFAULT = register(new BookshelfDefaultVariant());
+
+		// Geometric
+		GEOMETRIC_DEFAULT = register(new GeometricDefaultVariant());
+		GEOMETRIC_FIRE = register(new GeometricFireVariant());
+		GEOMETRIC_SOUL = register(new GeometricSoulVariant());
 	}
 }

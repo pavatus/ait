@@ -18,6 +18,9 @@ import loqor.ait.tardis.exterior.variant.doom.client.ClientDoomVariant;
 import loqor.ait.tardis.exterior.variant.easter_head.client.ClientEasterHeadDefaultVariant;
 import loqor.ait.tardis.exterior.variant.easter_head.client.ClientEasterHeadFireVariant;
 import loqor.ait.tardis.exterior.variant.easter_head.client.ClientEasterHeadSoulVariant;
+import loqor.ait.tardis.exterior.variant.geometric.client.ClientGeometricDefaultVariant;
+import loqor.ait.tardis.exterior.variant.geometric.client.ClientGeometricFireVariant;
+import loqor.ait.tardis.exterior.variant.geometric.client.ClientGeometricSoulVariant;
 import loqor.ait.tardis.exterior.variant.growth.client.ClientGrowthVariant;
 import loqor.ait.tardis.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import loqor.ait.tardis.exterior.variant.plinth.client.ClientPlinthFireVariant;
@@ -157,6 +160,9 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 	public static ClientExteriorVariantSchema RENEGADE_TRON;
 	public static ClientExteriorVariantSchema RENEGADE_CABINET;
 	public static ClientExteriorVariantSchema BOOKSHELF_DEFAULT;
+	public static ClientExteriorVariantSchema GEOMETRIC_DEFAULT;
+	public static ClientExteriorVariantSchema GEOMETRIC_FIRE;
+	public static ClientExteriorVariantSchema GEOMETRIC_SOUL;
 
 	@Override
 	public void onClientInit() {
@@ -216,5 +222,10 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 
 		// Bookshelf
 		BOOKSHELF_DEFAULT = register(new ClientBookshelfDefaultVariant());
+
+		// Geometric
+		GEOMETRIC_DEFAULT = register(new ClientGeometricDefaultVariant());
+		GEOMETRIC_FIRE = register(new ClientGeometricFireVariant());
+		GEOMETRIC_SOUL = register(new ClientGeometricSoulVariant());
 	}
 }
