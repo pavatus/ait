@@ -4,7 +4,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.models.consoles.SteamConsoleModel;
 import loqor.ait.core.data.schema.console.ClientConsoleVariantSchema;
-import loqor.ait.tardis.console.variant.steam.SteamSteelVariant;
+import loqor.ait.tardis.console.variant.steam.SteamGildedVariant;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
@@ -13,7 +13,7 @@ public class ClientSteamGildedVariant extends ClientConsoleVariantSchema {
 	public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/steam_console_gilded_emission.png"));
 
 	public ClientSteamGildedVariant() {
-		super(SteamSteelVariant.REFERENCE, SteamSteelVariant.REFERENCE);
+		super(SteamGildedVariant.REFERENCE, SteamGildedVariant.REFERENCE);
 	}
 
 	@Override
