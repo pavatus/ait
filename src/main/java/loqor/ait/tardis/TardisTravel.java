@@ -433,6 +433,8 @@ public class TardisTravel extends TardisLink {
 		// Set the Tardis state to materialise
 		this.setState(State.MAT);
 
+		((BiomeHandler) tardis.getHandlers().get(Id.BIOME)).setBiome(tardis);
+
         /*if(this.findTardis().get().getHandlers().getSequenceHandler().isConsoleDisabled()) {
             this.findTardis().get().getHandlers().getSequenceHandler().disableConsole(false);
         }*/

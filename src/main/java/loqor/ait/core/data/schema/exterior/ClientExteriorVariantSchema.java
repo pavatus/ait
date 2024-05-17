@@ -6,6 +6,7 @@ import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.core.data.base.Identifiable;
+import loqor.ait.tardis.data.BiomeHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
@@ -32,7 +33,7 @@ public abstract class ClientExteriorVariantSchema implements Identifiable {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (o == null || getClass() == null) return false;
+		if (o == null) return false;
 		if (!(o instanceof ClientExteriorVariantSchema that)) return false;
 
 		return id.equals(that.id);
@@ -41,6 +42,8 @@ public abstract class ClientExteriorVariantSchema implements Identifiable {
 	public ExteriorVariantSchema parent() {
 		return ExteriorVariantRegistry.getInstance().get(this.parent);
 	}
+
+	public abstract Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType);
 
 	public Identifier id() {
 		return id;

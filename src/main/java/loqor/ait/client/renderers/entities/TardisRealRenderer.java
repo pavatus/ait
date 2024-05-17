@@ -90,7 +90,7 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 		}
 
 		if(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariantSchema.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-			Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey(), this.getTexture(entity), entity.getTardis());
+			Identifier biomeTexture = exteriorVariantSchema.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
 			if (!this.getTexture(entity).equals(biomeTexture)) {
 				model.renderRealWorld(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, 1, 1, 1, 1, 1);
 			}

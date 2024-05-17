@@ -4,15 +4,14 @@ import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceFactory;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class BiomeHandler extends TardisLink {
 
@@ -41,16 +40,16 @@ public class BiomeHandler extends TardisLink {
         return PropertiesHandler.get(this.tardis(), BIOME_KEY);
     }
 
-    public static Identifier biomeTypeFromKey(String biomeKey, Identifier texture, Tardis tardis) {
+    public static BiomeType getBiomeTypeFromKey(String biomeKey) {
         return switch(biomeKey) {
-            default -> BiomeType.DEFAULT.textureFromKey(texture, tardis);
-            case "snowy_taiga", "snowy_beach" -> BiomeType.SNOWY.textureFromKey(texture, tardis);
-            case "desert", "beach" -> BiomeType.SANDY.textureFromKey(texture, tardis);
-            case "badlands" -> BiomeType.RED_SANDY.textureFromKey(texture, tardis);
-            case "mangrove_swamp" -> BiomeType.MUDDY.textureFromKey(texture, tardis);
-            case "the_end" -> BiomeType.CHORUS.textureFromKey(texture, tardis);
-            case "deep_dark" -> BiomeType.SCULK.textureFromKey(texture, tardis);
-            case "cherry_grove" -> BiomeType.CHERRY.textureFromKey(texture, tardis);
+            default -> BiomeType.DEFAULT;
+            case "snowy_taiga", "snowy_beach" -> BiomeType.SNOWY;
+            case "desert", "beach" -> BiomeType.SANDY;
+            case "badlands" -> BiomeType.RED_SANDY;
+            case "mangrove_swamp" -> BiomeType.MUDDY;
+            case "the_end" -> BiomeType.CHORUS;
+            case "deep_dark" -> BiomeType.SCULK;
+            case "cherry_grove" -> BiomeType.CHERRY;
         };
     }
 
@@ -58,40 +57,39 @@ public class BiomeHandler extends TardisLink {
         DEFAULT(),
         SNOWY() {
             @Override
-            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+            public Identifier getTextureFromKey(Identifier texture) {
                 Identifier specific = new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png", "_snowy.png"));
-                // Map<Identifier, Resource> iden = MinecraftClient.getInstance().getResourceManager().findResources(texture.getPath(), filename -> filename.getPath().endsWith("_snowy.png"));
                 return specific;
             }
         },
         SCULK() {
             @Override
-            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+            public Identifier getTextureFromKey(Identifier texture) {
                 Identifier specific = new Identifier(AITMod.MOD_ID,
-                        texture.getPath().replace(".png", "_sculk.png"));
+                        texture.getPath().replace(".png",  "_sculk.png"));
                 return specific;
             }
         },
         SANDY() {
             @Override
-            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+            public Identifier getTextureFromKey(Identifier texture) {
                 Identifier specific = new Identifier(AITMod.MOD_ID,
-                        texture.getPath().replace(".png", "_sand.png"));
+                        texture.getPath().replace(".png",  "_sand.png"));
                 return specific;
             }
         },
         RED_SANDY() {
             @Override
-            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+            public Identifier getTextureFromKey(Identifier texture) {
                 Identifier specific = new Identifier(AITMod.MOD_ID,
-                        texture.getPath().replace(".png", "_red_sand.png"));
+                        texture.getPath().replace(".png",  "_red_sand.png"));
                 return specific;
             }
         },
         MUDDY() {
             @Override
-            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+            public Identifier getTextureFromKey(Identifier texture) {
                 Identifier specific = new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png", "_mud.png"));
                 return specific;
@@ -99,15 +97,15 @@ public class BiomeHandler extends TardisLink {
         },
         CHORUS() {
             @Override
-            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+            public Identifier getTextureFromKey(Identifier texture) {
                 Identifier specific = new Identifier(AITMod.MOD_ID,
-                        texture.getPath().replace(".png", "_chorus.png"));
+                        texture.getPath().replace(".png",  "_chorus.png"));
                 return specific;
             }
         },
         CHERRY() {
             @Override
-            public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+            public Identifier getTextureFromKey(Identifier texture) {
                 Identifier specific = new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png", "_cherry.png"));
                 return specific;
@@ -119,7 +117,7 @@ public class BiomeHandler extends TardisLink {
             return StringUtils.capitalize(this.toString().replace("_", " "));
         }
 
-        public Identifier textureFromKey(Identifier texture, Tardis tardis) {
+        public Identifier getTextureFromKey(Identifier texture) {
             return texture;
         };
     }

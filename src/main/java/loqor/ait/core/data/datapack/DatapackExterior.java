@@ -29,6 +29,7 @@ public class DatapackExterior extends ExteriorVariantSchema {
 	protected final Identifier parent;
 	protected final Identifier texture;
 	protected final Identifier emission;
+	protected final Identifier biomeTexturePath;
 	protected boolean initiallyDatapack;
 
 	public static final Codec<DatapackExterior> CODEC = RecordCodecBuilder.create(
@@ -39,15 +40,17 @@ public class DatapackExterior extends ExteriorVariantSchema {
 					Identifier.CODEC.fieldOf("parent").forGetter(DatapackExterior::getParentId),
 					Identifier.CODEC.fieldOf("texture").forGetter(DatapackExterior::texture),
 					Identifier.CODEC.fieldOf("emission").forGetter(DatapackExterior::emission),
+					Identifier.CODEC.fieldOf("biomeTexturePath").forGetter(DatapackExterior::getBiomeTexturePath),
 					Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack),
 					Loyalty.CODEC.optionalFieldOf("loyalty", Loyalty.MIN).forGetter(DatapackExterior::getRequirement)
 			).apply(instance, DatapackExterior::new));
 
-	public DatapackExterior(String name, Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, boolean isDatapack, Loyalty loyalty) {
+	public DatapackExterior(String name, Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, Identifier biomeTexturePath, boolean isDatapack, Loyalty loyalty) {
 		super(name, category, id, loyalty);
 		this.parent = parent;
 		this.texture = texture;
 		this.emission = emission;
+		this.biomeTexturePath = biomeTexturePath;
 		this.initiallyDatapack = isDatapack;
 	}
 
@@ -129,5 +132,9 @@ public class DatapackExterior extends ExteriorVariantSchema {
 
 	public Identifier emission() {
 		return this.emission;
+	}
+
+	public Identifier getBiomeTexturePath() {
+		return this.biomeTexturePath;
 	}
 }

@@ -18,7 +18,6 @@ import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SkullBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -27,7 +26,6 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
@@ -111,8 +109,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.findTardis().get().<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
 			}
 			if(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-				Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey(), exteriorVariant.texture(), entity.findTardis().get());
-				if (!texture.equals(biomeTexture)) {
+				Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
+				if (biomeTexture != null && !texture.equals(biomeTexture)) {
 					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
 				}
 			}

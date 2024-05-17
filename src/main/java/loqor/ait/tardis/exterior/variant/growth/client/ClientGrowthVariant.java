@@ -5,6 +5,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.coral.CoralGrowthExteriorModel;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
+import loqor.ait.tardis.data.BiomeHandler;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
@@ -32,5 +33,10 @@ public class ClientGrowthVariant extends ClientExteriorVariantSchema {
 	@Override
 	public Vector3f sonicItemTranslations() {
 		return new Vector3f(0, 0, 0);
+	}
+
+	@Override
+	public Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType) {
+		return texture();
 	}
 }

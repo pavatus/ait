@@ -5,6 +5,7 @@ import loqor.ait.client.models.exteriors.DoomExteriorModel;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.exteriors.DoomConstants;
+import loqor.ait.tardis.data.BiomeHandler;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
@@ -32,5 +33,10 @@ public class ClientDoomVariant extends ClientExteriorVariantSchema {
 	@Override
 	public Identifier emission() {
 		return DoomConstants.DOOM_TEXTURE_EMISSION;
+	}
+
+	@Override
+	public Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType) {
+		return texture();
 	}
 }

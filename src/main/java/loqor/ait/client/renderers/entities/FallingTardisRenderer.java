@@ -62,7 +62,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 			if (exteriorVariant.emission() != null)
 				getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), light, 1, 1, 1, 1, 1);
 			if(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-				Identifier biomeTexture = BiomeHandler.biomeTypeFromKey(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey(), exteriorVariant.texture(), entity.getTardis());
+				Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
 				if (!exteriorVariant.texture().equals(biomeTexture)) {
 					model.renderFalling(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, 1, 1, 1, 1, 1);
 				}
