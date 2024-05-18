@@ -9,6 +9,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class RandomiserControl extends Control {
 
@@ -27,7 +28,7 @@ public class RandomiserControl extends Control {
 			}
 		}
 
-		randomiseDestination(tardis, 10);
+		tardis.getTravel().setDestination(randomiseDestination(tardis, 10));
 		tardis.removeFuel((0.1d * IncrementManager.increment(tardis)) * (tardis.tardisHammerAnnoyance + 1));
 
 		messagePlayer(player, travel);
@@ -42,16 +43,21 @@ public class RandomiserControl extends Control {
 		AbsoluteBlockPos.Directed dest = travel.getDestination();
 		ServerWorld world = (ServerWorld) dest.getWorld();
 
-		BlockPos pos;
+		AbsoluteBlockPos.Directed pos;
+		int getx = dest.getX();
+		int getz = dest.getZ();
 		int x, z;
+		int y = dest.getY();
+		int rot = dest.getRotation();
 
 		for (int i = 0; i <= limit; i++) {
-			x = dest.getX() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
-			z = dest.getZ() + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
-			pos = new BlockPos(x, dest.getY(), z);
+			x = getx + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
+			z = getz + ((world.random.nextBoolean()) ? world.random.nextInt(increment) : -world.random.nextInt(increment));
+			pos = new AbsoluteBlockPos.Directed(x, y, z, world, rot);
 
-			travel.setDestination(new AbsoluteBlockPos.Directed(pos, dest.getWorld(), dest.getRotation()), false);
-			if (travel.checkDestination()) return travel.getDestination();
+			if (i >= limit) {
+				return pos;
+			}
 		}
 
 		return travel.getPosition();

@@ -7,10 +7,7 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.data.SonicHandler;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
@@ -41,7 +38,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 			this.console = variant.model();
 		// BlockState blockState = entity.getCachedState();
 		// float f = blockState.get(ConsoleBlock.FACING).asRotation();
-		int maxLight = 0xFFFFFF;
+		int maxLight = LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE;
 
 		matrices.push();
 		//matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
@@ -52,7 +49,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 			console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
 
 			if (entity.findTardis().get().hasPower())
-				console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(variant.emission(), true)), maxLight, overlay, 1, 1, 1, 1);
+				console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentEmissive(variant.emission(), true)), maxLight, overlay, 1, 1, 1, 1);
 		}
 		matrices.pop();
 		if (!entity.findTardis().get().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return;

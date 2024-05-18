@@ -65,7 +65,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		BlockState blockState = entity.getCachedState();
 		int k = blockState.get(ExteriorBlock.ROTATION);
 		float h = RotationPropertyHelper.toDegrees(k);
-		int maxLight = 0xF000F0;
+		int maxLight = LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE;
 
 		matrices.push();
 		matrices.translate(0.5, 0, 0.5);
