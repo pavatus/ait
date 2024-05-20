@@ -10,7 +10,6 @@ import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.util.Identifier;
 
@@ -52,11 +51,13 @@ public class PropertiesHandler {
 	// Should these methods be in the holder instead?
 
 	public static void set(Tardis tardis, String key, Object val, boolean performSync) {
-		if (!hasChanged(tardis.getHandlers().getProperties(), key, val)) return;
+		if (!hasChanged(tardis.properties(), key, val))
+			return;
 
-		set(tardis.getHandlers().getProperties(), key, val);
+		set(tardis.properties(), key, val);
+
 		if (performSync)
-			sync(tardis.getHandlers().getProperties(), key, tardis.getUuid());
+			sync(tardis.properties(), key, tardis.getUuid());
 	}
 
 	public static void set(Tardis tardis, String key, Object val) {
@@ -86,11 +87,10 @@ public class PropertiesHandler {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getOrDefault(Tardis tardis, String key, T def) {
-		Object result = get(tardis.getHandlers().getProperties(), key);
+		Object result = get(tardis.properties(), key);
 		return result != null ? (T) result : def;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T> T get(Tardis tardis, String key) {
 		return getOrDefault(tardis, key, null);
 	}
@@ -115,7 +115,7 @@ public class PropertiesHandler {
 		}
 
 		// because gson saves it weird
-		if (holder.getData().get(key) instanceof LinkedTreeMap map) {
+		if (holder.getData().get(key) instanceof LinkedTreeMap<?, ?> map) {
 			if (map.get("namespace") == null || map.get("path") == null) {
 				AITMod.LOGGER.error("namespace/path was null! Panic - I'm giving back the default desktop id, lets hope this doesnt cause a crash..");
 				return DesktopRegistry.getInstance().toList().get(0).id();
@@ -188,7 +188,7 @@ public class PropertiesHandler {
 	 */
 	@Deprecated
 	public static boolean isUnlocked(Tardis tardis, Identifier id) {
-		return getBool(tardis.getHandlers().getProperties(), id.getPath() + "_unlocked");
+		return getBool(tardis.properties(), id.getPath() + "_unlocked");
 	}
 
 	public static boolean isUnlocked(Tardis tardis, Unlockable unlockable) {
@@ -210,10 +210,16 @@ public class PropertiesHandler {
 		}
 	}
 
+	// FIXME wow this sucks.
 	public static void sync(PropertiesHolder holder, String key, UUID tardis) {
-		if (TardisUtil.isClient()) return;
+		if (holder.isClient())
+			return;
+		
 		Object val = holder.getData().get(key);
-		if (val == null) return;
+		
+		if (val == null)
+			return;
+		
 		switch (val.getClass().getName()) {
 			case "java.lang.Integer" ->
 					ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "int", String.valueOf(val));

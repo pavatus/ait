@@ -39,7 +39,6 @@ public class HammerItem extends SwordItem {
 		}
 	}
 
-
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
 		World world = context.getWorld();
@@ -54,12 +53,12 @@ public class HammerItem extends SwordItem {
 						SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS, 1f, 1.0f);
 				return ActionResult.SUCCESS;
 			}
-			FlightData flightData = tardis.getHandlers().getFlight();
+			FlightData flightData = tardis.flight();
 			int targetTicks = flightData.getTargetTicks();
 			int current_flight_ticks = flightData.getFlightTicks();
 			int added_flight_ticks = 500 * tardis.getTravel().getSpeed();
-			double current_fuel = tardis.getHandlers().getFuel().getCurrentFuel();
-			double max_fuel = tardis.getHandlers().getFuel().getMaxFuel();
+			double current_fuel = tardis.fuel().getCurrentFuel();
+			double max_fuel = tardis.fuel().getMaxFuel();
 			if (tardis.tardisHammerAnnoyance > 0) {
 				added_flight_ticks -= (int) Math.round(added_flight_ticks * 0.1 * tardis.tardisHammerAnnoyance);
 			}
@@ -67,19 +66,15 @@ public class HammerItem extends SwordItem {
 			if (tardis.tardisHammerAnnoyance > 0) {
 				estimated_fuel_cost_for_hit += (150 * tardis.getTravel().getSpeed() * tardis.tardisHammerAnnoyance) / 7.0;
 			}
-			if (current_fuel + estimated_fuel_cost_for_hit > max_fuel) {
+			if (!world.isClient() && current_fuel + estimated_fuel_cost_for_hit > max_fuel) {
 				tardis.getTravel().crash();
-				tardis.getHandlers().getFuel().setCurrentFuel(0.0);
+				tardis.fuel().setCurrentFuel(0.0);
 				return ActionResult.SUCCESS;
 			}
-			if (current_flight_ticks + added_flight_ticks < targetTicks) {
-				flightData.setFlightTicks(current_flight_ticks + added_flight_ticks);
-			} else {
-				flightData.setFlightTicks(targetTicks);
-			}
-			tardis.getHandlers().getFuel().setCurrentFuel(current_fuel - estimated_fuel_cost_for_hit);
+            flightData.setFlightTicks(Math.min(current_flight_ticks + added_flight_ticks, targetTicks));
+			tardis.fuel().setCurrentFuel(current_fuel - estimated_fuel_cost_for_hit);
 			tardis.tardisHammerAnnoyance++;
-			if (shouldCrashTardis(tardis.tardisHammerAnnoyance)) {
+			if (!world.isClient() && shouldCrashTardis(tardis.tardisHammerAnnoyance)) {
 				tardis.getTravel().crash();
 			} else {
 				world.playSound(null, consoleBlockEntity.getPos(),
@@ -103,7 +98,7 @@ public class HammerItem extends SwordItem {
 	}
 
 	public boolean shouldCrashTardis(int annoyance) {
-		java.util.Random random = new Random();
+		Random random = new Random();
 		if (annoyance <= 3) {
 			return false;
 		}

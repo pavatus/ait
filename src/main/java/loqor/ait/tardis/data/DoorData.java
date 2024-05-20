@@ -3,6 +3,7 @@ package loqor.ait.tardis.data;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.DoorBlockEntity;
+import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
@@ -15,6 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
@@ -46,8 +48,11 @@ public class DoorData extends TardisLink {
 	public void tick(MinecraftServer server) {
 		super.tick(server);
 
-		if (shouldSucc()) this.succ();
-		if (locked() && isOpen()) closeDoors();
+		if (shouldSucc())
+			this.succ();
+
+		if (locked() && isOpen())
+			closeDoors();
 	}
 
 	/**
@@ -93,17 +98,19 @@ public class DoorData extends TardisLink {
 	}
 
 	public boolean isRightOpen() {
-		return this.doorState == DoorStateEnum.SECOND /*|| doorState == DoorStateEnum.BOTH*/ || this.right;
+		return this.doorState == DoorStateEnum.SECOND || this.right;
 	}
 
 	public boolean isLeftOpen() {
-		return this.doorState == DoorStateEnum.FIRST /*|| doorState == DoorStateEnum.BOTH*/ || this.left;
+		return this.doorState == DoorStateEnum.FIRST || this.left;
 	}
 
-	public void setLocked(boolean var) {
-		this.locked = var;
-		// should probs be in the method below
-		if (var) setDoorState(DoorStateEnum.CLOSED);
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+
+		if (locked)
+			setDoorState(DoorStateEnum.CLOSED);
+
 		this.sync();
 	}
 
@@ -115,14 +122,10 @@ public class DoorData extends TardisLink {
 		return tardis().getExterior().getVariant().door().isDouble();
 	}
 
-	// fixme all these open methods are terrible
 	public boolean isOpen() {
-		if (isDoubleDoor()) {
-			return this.isRightOpen() || this.isLeftOpen();
-		}
-
-		return this.isLeftOpen();
+		return this.isLeftOpen() || this.isRightOpen();
 	}
+
 	public boolean isClosed() {
 		return !isOpen();
 	}
@@ -195,7 +198,6 @@ public class DoorData extends TardisLink {
 				tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
 
 				TardisCriterions.VEGETATION.trigger(player);
-
 				return true;
 			}
 
@@ -203,18 +205,18 @@ public class DoorData extends TardisLink {
 				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
 
 			tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
-
 			return false;
 		}
 
 		if (!tardis.hasPower() && tardis.getLockedTardis()) {
 			// Bro cant escape
-			if (player == null) return false;
+			if (player == null)
+				return false;
 
 			ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
 
 			// if holding a key and in siege mode and have an empty interior, disable siege mode !!
-			if (stack.getItem() instanceof KeyItem && tardis.isSiegeMode() && KeyItem.getTardis(stack).getUuid().equals(tardis.getUuid()) && !TardisUtil.isInteriorNotEmpty(tardis)) {
+			if (stack.getItem() instanceof KeyItem && tardis.isSiegeMode() && KeyItem.isOf(stack, tardis) && !TardisUtil.isInteriorNotEmpty(tardis)) {
 				player.swingHand(Hand.MAIN_HAND);
 				tardis.setSiegeMode(false);
 				lockTardis(false, tardis, player, true);
@@ -241,7 +243,6 @@ public class DoorData extends TardisLink {
 				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
 
 			tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
-
 			return false;
 		}
 
@@ -257,33 +258,27 @@ public class DoorData extends TardisLink {
 
 		DoorData door = tardis.getDoor();
 
-		if (door == null)
-			return false; // how would that happen anyway
+		DoorSchema doorSchema = tardis.getExterior().getVariant().door();
+		SoundEvent sound = doorSchema.isDouble() && door.isBothOpen() ? doorSchema.closeSound() : doorSchema.openSound();
 
-		// fixme this is loqors code so there might be a better way
-		// PLEASE FIXME ALL THIS CODE IS SO JANK I CANT
+		tardis.getDoor().getExteriorPos().getWorld().playSound(null, door.getExteriorPos(), sound, SoundCategory.BLOCKS, 0.6F, 1F);
+		tardis.getDoor().getDoorPos().getWorld().playSound(null, door.getDoorPos(), sound, SoundCategory.BLOCKS, 0.6F, 1F);
 
-		if (tardis.getExterior().getVariant().door().isDouble()) {
-			if (door.isBothOpen()) {
-				tardis.getDoor().getExteriorPos().getWorld().playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().closeSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-				tardis.getDoor().getDoorPos().getWorld().playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().closeSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-				door.closeDoors();
-			} else {
-				tardis.getDoor().getExteriorPos().getWorld().playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-				tardis.getDoor().getDoorPos().getWorld().playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-
-				if (door.isOpen() && player.isSneaking()) {
-					door.closeDoors();
-				} else if (door.isBothClosed() && player.isSneaking()) {
-					door.openDoors();
-				} else {
-					door.setDoorState(door.getDoorState().next());
-				}
-			}
-		} else {
-			tardis.getDoor().getExteriorPos().getWorld().playSound(null, door.getExteriorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
-			tardis.getDoor().getDoorPos().getWorld().playSound(null, door.getDoorPos(), tardis.getExterior().getVariant().door().openSound(), SoundCategory.BLOCKS, 0.6F, 1F);
+		if (!doorSchema.isDouble()) {
 			door.setDoorState(door.getDoorState() == DoorStateEnum.FIRST ? DoorStateEnum.CLOSED : DoorStateEnum.FIRST);
+			return true;
+		}
+
+		if (door.isBothOpen()) {
+			door.closeDoors();
+		} else {
+			if (door.isOpen() && player.isSneaking()) {
+				door.closeDoors();
+			} else if (door.isBothClosed() && player.isSneaking()) {
+				door.openDoors();
+			} else {
+				door.setDoorState(door.getDoorState().next());
+			}
 		}
 
 		return true;
@@ -294,7 +289,8 @@ public class DoorData extends TardisLink {
 	}
 
 	public static boolean lockTardis(boolean locked, Tardis tardis, @Nullable ServerPlayerEntity player, boolean forced) {
-		if (tardis.getLockedTardis() == locked) return true;
+		if (tardis.getLockedTardis() == locked)
+			return true;
 
 		if (!forced && (tardis.getTravel().getState() == DEMAT || tardis.getTravel().getState() == MAT))
 			return false;

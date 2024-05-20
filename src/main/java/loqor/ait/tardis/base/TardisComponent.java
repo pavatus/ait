@@ -39,7 +39,7 @@ public abstract class TardisComponent {
 	 * @implNote Server-side only.
 	 */
 	protected void sync() {
-		if (!(this.tardis instanceof ServerTardis))
+		if (this.isClient())
 			return;
 
 		ServerTardisManager.getInstance().sendToSubscribers(this);
@@ -67,10 +67,18 @@ public abstract class TardisComponent {
 		this.tardis = tardis;
 	}
 
+	public boolean isClient() {
+		return this.tardis() instanceof ClientTardis;
+	}
+
+	public boolean isServer() {
+		return this.tardis() instanceof ServerTardis;
+	}
+
 	public enum Id implements Ordered {
-		DESKTOP(TardisDesktop.class, (tardis, component) -> tardis.setDesktop((TardisDesktop) component)),
-		TRAVEL(TardisTravel.class, (tardis, component) -> tardis.setTravel((TardisTravel) component)),
-		EXTERIOR(TardisExterior.class, (tardis, component) -> tardis.setExterior((TardisExterior) component)),
+		DESKTOP(TardisDesktop.class, ClientTardis::setDesktop),
+		TRAVEL(TardisTravel.class, ClientTardis::setTravel),
+		EXTERIOR(TardisExterior.class, ClientTardis::setExterior),
 
 		DOOR(DoorData.class),
 		SONIC(SonicHandler.class),
@@ -103,13 +111,14 @@ public abstract class TardisComponent {
 		private final BiConsumer<ClientTardis, TardisComponent> setter;
 		private final Class<? extends TardisComponent> clazz;
 
-		Id(Class<? extends TardisComponent> clazz) {
+		<T extends TardisComponent>Id(Class<T> clazz) {
 			this(clazz, ClientTardis::set);
 		}
 
-		Id(Class<? extends TardisComponent> clazz, BiConsumer<ClientTardis, TardisComponent> setter) {
+		@SuppressWarnings("unchecked")
+		<T extends TardisComponent>Id(Class<T> clazz, BiConsumer<ClientTardis, T> setter) {
 			this.clazz = clazz;
-			this.setter = setter;
+			this.setter = (BiConsumer<ClientTardis, TardisComponent>) setter;
 		}
 
 		public Class<? extends TardisComponent> clazz() {

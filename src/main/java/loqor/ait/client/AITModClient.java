@@ -1,8 +1,6 @@
 package loqor.ait.client;
 
-import loqor.ait.AITMod;
 import loqor.ait.client.renderers.CustomItemRendering;
-import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
@@ -22,7 +20,6 @@ import loqor.ait.client.renderers.wearables.AITHudOverlay;
 import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.screens.MonitorScreen;
 import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
-import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
@@ -30,20 +27,13 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.RiftTarget;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
-import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.*;
-import loqor.ait.core.util.WorldUtil;
-import loqor.ait.core.util.vortex.VortexData;
-import loqor.ait.core.util.vortex.VortexNode;
-import loqor.ait.core.util.vortex.client.ClientVortexDataHandler;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.api.ClientModInitializer;
@@ -51,12 +41,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
@@ -64,37 +51,30 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
-import java.util.Collection;
 import java.util.UUID;
 
 import static loqor.ait.AITMod.*;
 
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
-    private static KeyBinding keyBinding;
 
     @Override
     public void onInitializeClient() {
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
+        ClientDoorRegistry.init(); // TODO move to Registries
 
         ClientTardisManager.init();
-        //ClientVortexDataHandler.init();
+
 
         setupBlockRendering();
         sonicModelPredicate();
@@ -104,13 +84,15 @@ public class AITModClient implements ClientModInitializer {
         chargedZeitonCrystalPredicate();
         waypointPredicate();
         hammerPredicate();
-        setKeyBinding();
+
+        AITKeyBinds.init();
 
         HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
-
         HudRenderCallback.EVENT.register(new AITHudOverlay());
 
-        /*WorldRenderEvents.END.register(context -> {
+        /*
+        ClientVortexDataHandler.init();
+        WorldRenderEvents.END.register(context -> {
             MinecraftClient client = MinecraftClient.getInstance();
             World world = client.player.getWorld();
             if(world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
@@ -124,9 +106,8 @@ public class AITModClient implements ClientModInitializer {
                     }
                 }
             }
-        });*/
-
-        ClientDoorRegistry.init();
+        });
+        */
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
                 (client, handler, buf, responseSender) -> {
@@ -199,7 +180,7 @@ public class AITModClient implements ClientModInitializer {
                 (client, handler, buf, responseSender) -> {
                     int p = buf.readInt();
                     UUID tardisId = buf.readUuid();
-                    ClientTardisManager.getInstance().getTardis(tardisId, (tardis -> {
+                    ClientTardisManager.getInstance().getTardis(tardisId, tardis -> {
                         // idk how the consumer works tbh, but im sure theo is gonna b happy
                         if (tardis == null)
                             return;
@@ -214,18 +195,20 @@ public class AITModClient implements ClientModInitializer {
                             return;
 
                         exterior.getAnimation().setupAnimation(TardisTravel.State.values()[p]);
-                    }));
+                    });
                 }
         );
 
         // does all this clientplaynetwrokigng shite really have to go in here, theres probably somewhere else it can go right??
-        ClientPlayNetworking.registerGlobalReceiver(AITMessages.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) -> {
-            client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS);
-        });
+        ClientPlayNetworking.registerGlobalReceiver(TardisTravel.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) ->
+                client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
 
+        // FIXME well this seems pointless
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
             if (block instanceof LinkableBlockEntity) {
-                if (((LinkableBlockEntity) block).findTardis().isEmpty()) return;
+                if (((LinkableBlockEntity) block).findTardis().isEmpty())
+                    return;
+
                 ClientTardisManager.getInstance().loadTardis(((LinkableBlockEntity) block).findTardis().get().getUuid(), (t) -> {});
             }
         });
@@ -336,51 +319,6 @@ public class AITModClient implements ClientModInitializer {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, TardisRealRenderer::new);
-    }
-
-    private boolean keyHeldDown = false;
-
-    public void setKeyBinding() {
-        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key." + AITMod.MOD_ID + ".open",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_V,
-                "category." + AITMod.MOD_ID + ".snap"
-        ));
-
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            ClientPlayerEntity player = client.player;
-
-            if (player == null)
-                return;
-
-            if (!keyBinding.isPressed()) {
-                keyHeldDown = false;
-                return;
-            }
-
-            if (!keyHeldDown) {
-                keyHeldDown = true;
-
-                if (player.getVehicle() instanceof TardisRealEntity entity) {
-                    ClientTardisUtil.snapToOpenDoors(entity.getTardisID());
-                    return;
-                }
-
-                Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
-
-                for (ItemStack stack : keys) {
-                    if (stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
-                        Tardis tardis = KeyItem.getTardis(stack);
-                        Loyalty loyalty = tardis.getHandlers().getLoyalties().get(player);
-
-                        //TODO: make a permissionhandler - yayy we have one :)
-                        if (loyalty.level() > Loyalty.Type.PILOT.level)
-                            ClientTardisUtil.snapToOpenDoors(tardis);
-                    }
-                }
-            }
-        });
     }
 
     public void setupBlockRendering() {

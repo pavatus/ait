@@ -6,6 +6,7 @@ import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -30,7 +31,7 @@ public class DimensionControl extends Control {
 
 		TardisTravel travel = tardis.getTravel();
 		AbsoluteBlockPos.Directed dest = travel.getDestination();
-		List<ServerWorld> dims = getDimensions();
+		List<ServerWorld> dims = getDimensions(world.getServer());
 
 		int current = dims.indexOf(dest.getWorld() == null ? World.OVERWORLD : dest.getWorld());
 		int next = 0;
@@ -110,9 +111,9 @@ public class DimensionControl extends Control {
 		return String.join(" ", words);
 	}
 
-	public static List<ServerWorld> getDimensions() {
+	public static List<ServerWorld> getDimensions(MinecraftServer server) {
 		List<ServerWorld> dims = new ArrayList<>();
-		Iterable<ServerWorld> allDims = TardisUtil.getServer().getWorlds();
+		Iterable<ServerWorld> allDims = server.getWorlds();
 
 		// fixme this is easiest/stupidest way to do this without letting them get to the tardis dim :p - Loqor
 		allDims.forEach(dim -> {

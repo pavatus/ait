@@ -169,16 +169,14 @@ public class AITMod implements ModInitializer {
 		}));
 
 		TardisEvents.MAT.register((tardis -> {
-			// Check that the tardis has finished flight
-			boolean flightDone = tardis.flight().hasFinishedFlight();
-
-			// Check if the Tardis is on cooldown
+            // Check if the Tardis is on cooldown
 			boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
 
 			// Check if the destination is already occupied
-			boolean isDestinationOccupied = !tardis.getTravel().getDestination().equals(tardis.getExterior().getExteriorPos()) && !tardis.getTravel().checkDestination();
+			boolean isDestinationOccupied = !tardis.getTravel().getDestination().equals(tardis.getExterior().getExteriorPos())
+					&& !tardis.getTravel().checkDestination();
 
-			return /*!flightDone ||*/ isCooldown || isDestinationOccupied;
+			return isCooldown || isDestinationOccupied;
 		}));
 
 		TardisEvents.CRASH.register((tardis -> {

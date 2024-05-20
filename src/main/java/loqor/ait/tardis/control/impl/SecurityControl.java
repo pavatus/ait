@@ -6,6 +6,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -16,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class SecurityControl extends Control {
+
 	public static final String SECURITY_KEY = "security";
 
 	public SecurityControl() {
@@ -25,32 +27,28 @@ public class SecurityControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-
-		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
+		if (tardis.sequence().hasActiveSequence()) {
+			if (tardis.sequence().controlPartOfSequence(this)) {
 				this.addToControlSequence(tardis, player);
 				return false;
 			}
 		}
 
-		if (!hasMatchingKey(player, tardis)) {
+		if (!hasMatchingKey(player, tardis))
 			return false;
-		}
 
-		boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SECURITY_KEY);
+		boolean security = PropertiesHandler.getBool(tardis.properties(), SECURITY_KEY);
 
 		PropertiesHandler.set(tardis, SECURITY_KEY, !security);
-
-		security = !security;
-
-		return true;
+        return true;
 	}
 
 	public static void runSecurityProtocols(Tardis tardis) {
-		boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SECURITY_KEY);
-		boolean leaveBehind = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.LEAVE_BEHIND);
+		boolean security = PropertiesHandler.getBool(tardis.properties(), SECURITY_KEY);
+		boolean leaveBehind = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.LEAVE_BEHIND);
 
-		if (!security) return;
+		if (!security)
+			return;
 
 		List<ServerPlayerEntity> forRemoval = new ArrayList<>();
 
@@ -60,8 +58,7 @@ public class SecurityControl extends Control {
 					forRemoval.add(player);
 				}
 			}
-
-
+			
 			for (ServerPlayerEntity player : forRemoval) {
 				TardisUtil.teleportOutside(tardis, player);
 			}
@@ -70,13 +67,16 @@ public class SecurityControl extends Control {
 
 
 	public static boolean hasMatchingKey(ServerPlayerEntity player, Tardis tardis) {
-		if (player.hasPermissionLevel(2)) return true;
-		if (!KeyItem.isKeyInInventory(player)) return false;
+		if (player.hasPermissionLevel(2))
+			return true;
+
+		if (!KeyItem.isKeyInInventory(player))
+			return false;
 
 		Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
 
 		for (ItemStack stack : keys) {
-			Tardis found = KeyItem.getTardis(stack);
+			Tardis found = KeyItem.getTardis(stack, ServerTardisManager.getInstance());
 
 			if (found == null)
 				continue;

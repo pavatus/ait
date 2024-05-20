@@ -46,7 +46,7 @@ public class LoyaltyHandler extends TardisLink {
 
     public Loyalty set(PlayerEntity player, Loyalty loyalty) {
         this.data.put(player.getUuid(), loyalty);
-        this.unlockInteriorViaLoyalty((ServerPlayerEntity) player, loyalty); // safe cast because this should only be called on server anyway
+        this.unlock((ServerPlayerEntity) player, loyalty); // safe cast because this should only be called on server anyway
         this.sync();
         return loyalty;
     }
@@ -70,19 +70,16 @@ public class LoyaltyHandler extends TardisLink {
         Loyalty current = this.get(player);
         current = consumer.apply(current);
 
-        this.unlockInteriorViaLoyalty(player, current);
+        this.unlock(player, current);
         this.set(player, current);
     }
 
-    public void unlockInteriorViaLoyalty(ServerPlayerEntity player, Loyalty loyalty) {
-        Tardis tardis = this.tardis();
+    public void unlock(ServerPlayerEntity player, Loyalty loyalty) {
+        ServerTardis tardis = (ServerTardis) this.tardis();
 
-        if (!(tardis instanceof ServerTardis serverTardis))
-            return;
-
-        ConsoleVariantRegistry.getInstance().tryUnlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        DesktopRegistry.getInstance().tryUnlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        ExteriorVariantRegistry.getInstance().tryUnlock(serverTardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        DesktopRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        ExteriorVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
     }
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {

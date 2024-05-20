@@ -2,9 +2,8 @@ package loqor.ait.core.entities;
 
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -23,8 +22,7 @@ import net.minecraft.world.World;
 import java.util.Collections;
 import java.util.UUID;
 
-import static loqor.ait.tardis.util.TardisUtil.isClient;
-
+// TODO: move stuff to LinkableMobEntity
 public abstract class BaseControlEntity extends MobEntity {
 
 	private UUID tardisId;
@@ -44,8 +42,7 @@ public abstract class BaseControlEntity extends MobEntity {
 	}
 
 	@Override
-	public void equipStack(EquipmentSlot slot, ItemStack stack) {
-	}
+	public void equipStack(EquipmentSlot slot, ItemStack stack) { }
 
 	@Override
 	public Arm getMainArm() {
@@ -57,11 +54,7 @@ public abstract class BaseControlEntity extends MobEntity {
 			this.findTardis();
 		}
 
-		if (isClient()) {
-			return ClientTardisManager.getInstance().getLookup().get(this.tardisId);
-		}
-
-		return ServerTardisManager.getInstance().getTardis(this.tardisId);
+		return TardisManager.getInstance(this).demandTardis(this.tardisId);
 	}
 
 	private void findTardis() {

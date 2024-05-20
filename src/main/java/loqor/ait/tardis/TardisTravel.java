@@ -4,21 +4,20 @@ import io.wispforest.owo.ops.WorldOps;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITMessages;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
+import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -33,8 +32,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
@@ -51,6 +50,9 @@ import java.util.concurrent.ScheduledExecutorService;
 
 // todo this class is like a monopoly, im gonna slash it into little corporate pieces
 public class TardisTravel extends TardisLink {
+
+	public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
+
 	private static final String MAX_SPEED_KEY = "max_speed";
 	private static final int DEFAULT_MAX_SPEED = 7;
 	private State state = State.LANDED;
@@ -122,10 +124,10 @@ public class TardisTravel extends TardisLink {
 				int new_z = getDestination().getZ() + random_change;
 				this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getRotation()));
 				if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
-					this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getRotation()));
+					this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, server.getOverworld(), getDestination().getRotation()));
 				}
 			}
-			if(!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT)) {
+			if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT)) {
 				this.materialise();
 			}
 		}
@@ -257,7 +259,8 @@ public class TardisTravel extends TardisLink {
 
 		this.forceLand();
 		this.playThudSound();
-		AITMessages.sendToInterior(this.tardis(), AITMessages.CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
+
+		NetworkUtil.sendToInterior(this.tardis(), CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
 	}
 
 	public void playThudSound() {
@@ -270,7 +273,7 @@ public class TardisTravel extends TardisLink {
 	 * If the Tardis is not in flight state, the crash will not be executed.
 	 */
 	public void crash() {
-		if (this.getState() != State.FLIGHT || this.isCrashing() || TardisUtil.getTardisDimension() == null || TardisUtil.isClient())
+		if (this.getState() != State.FLIGHT || this.isCrashing())
 			return;
 
 		Tardis tardis = tardis();
@@ -336,7 +339,7 @@ public class TardisTravel extends TardisLink {
 		this.setCrashing(true);
 		this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getRotation()));
 		if (getDestination().getWorld() != null && getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
-			this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getServer().getOverworld(), getDestination().getRotation()));
+			this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, TardisUtil.getOverworld(), getDestination().getRotation()));
 		}
 		this.crashAndMaterialise();
 		int repair_ticks = 1000 * crash_intensity;
@@ -432,10 +435,6 @@ public class TardisTravel extends TardisLink {
 
 		// Set the Tardis state to materialise
 		this.setState(State.MAT);
-
-        /*if(this.findTardis().get().getHandlers().getSequenceHandler().isConsoleDisabled()) {
-            this.findTardis().get().getHandlers().getSequenceHandler().disableConsole(false);
-        }*/
 
 		SequenceHandler sequences = tardis.handler(Id.SEQUENCE);
 
@@ -536,9 +535,6 @@ public class TardisTravel extends TardisLink {
 		// Play failure sound at the Tardis console position if the interior is not empty
 		FlightUtil.playSoundAtConsole(this.tardis(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
-		// Send error message to the pilot
-		// TardisUtil.sendMessageToPilot(this.getTardis().get(), Text.literal("Unable to land!"));
-
 		// Create materialization delay and return
 		FlightUtil.createMaterialiseDelay(this.tardis());
 	}
@@ -562,17 +558,10 @@ public class TardisTravel extends TardisLink {
 	 * @return whether its safe to land
 	 */
 	private boolean checkDestination(int limit, boolean fullCheck) {
-		if (TardisUtil.isClient()) return true;
+		if (this.isClient())
+			return true;
 
 		ServerWorld world = (ServerWorld) this.getDestination().getWorld(); // this cast is fine, we know its server
-
-		/*if (isDestinationTardisExterior()) {
-			ExteriorBlockEntity target = (ExteriorBlockEntity) world.getBlockEntity(this.getDestination()); // safe
-
-			setDestinationToTardisInterior(target.findTardis().get(), true, 256); // how many times should this be
-
-			return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.FIND_GROUND)); // limit at a small number cus it might get too laggy
-		}*/
 
 		// is long line
 		setDestination(new AbsoluteBlockPos.Directed(
@@ -638,57 +627,8 @@ public class TardisTravel extends TardisLink {
 		return true;
 	}
 
-	private static boolean isLiquid(BlockState... states) {
-		for (BlockState state1 : states) {
-			if (!state1.isSolid() || state1.isLiquid()) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	public boolean checkDestination() {
 		return this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.FIND_GROUND));
-	}
-
-	private boolean isDestinationTardisExterior() {
-		ServerWorld world = (ServerWorld) this.getDestination().getWorld();
-
-		// bad code but its 4am i cba anymore
-		if (world.getBlockEntity(this.getDestination()) instanceof ExteriorBlockEntity) {
-			return true;
-		}
-
-		if (world.getBlockEntity(this.getDestination().down()) instanceof ExteriorBlockEntity) {
-			this.setDestination(new AbsoluteBlockPos.Directed(this.getDestination().down(), world, this.getDestination().getRotation()), false);
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Picks a random pos within the placed tardis interior and sets the destination
-	 *
-	 * @param target tardis to land in
-	 * @param checks whether to run usual landing checks
-	 * @param limit  how many times to check / rerun this
-	 */
-	private void setDestinationToTardisInterior(Tardis target, boolean checks, int limit) { // fixme as this causes problems sometimes
-		if (target == null) return; // i hate null shit
-
-		Random random = new Random();
-		BlockPos h = TardisUtil.getPlacedInteriorCentre(target); // bad variable name
-		h = PosType.X.add(h, random.nextBoolean() ? -random.nextInt(8) : random.nextInt(8));
-		h = PosType.Z.add(h, random.nextBoolean() ? -random.nextInt(8) : random.nextInt(8));
-
-		this.setDestination(new AbsoluteBlockPos.Directed(
-						h,
-						TardisUtil.getTardisDimension(),
-						this.getDestination().getRotation()),
-				checks
-		);
 	}
 
 	public void toFlight() {
@@ -736,9 +676,10 @@ public class TardisTravel extends TardisLink {
 
 		this.runAnimations(blockEntity);
 
-		if (DoorData.isClient()) return;
-		DoorData.lockTardis(PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.tardis(), null, false);
+		if (this.isClient())
+			return;
 
+		DoorData.lockTardis(PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.tardis(), null, false);
 		TardisEvents.LANDED.invoker().onLanded(tardis());
 	}
 
@@ -846,10 +787,9 @@ public class TardisTravel extends TardisLink {
 
 	public void deleteExterior() {
 		this.getPosition().getWorld().removeBlock(this.getPosition(), false);
-		if (TardisUtil.isServer()) {
-			ForcedChunkUtil.stopForceLoading((ServerWorld) this.getPosition().getWorld(), this.getPosition());
-		}
 
+		if (this.isServer())
+			ForcedChunkUtil.stopForceLoading((ServerWorld) this.getPosition().getWorld(), this.getPosition());
 	}
 
 	@NotNull

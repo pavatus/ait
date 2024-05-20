@@ -1,7 +1,6 @@
 package loqor.ait.core.entities;
 
-import loqor.ait.api.tardis.LinkableLivingEntity;
-import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
+import loqor.ait.tardis.link.LinkableLivingEntity;
 import loqor.ait.core.AITDamageTypes;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
@@ -13,7 +12,6 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -69,7 +67,9 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	}
 
 	public static void spawnFromTardisId(World world, UUID tardisId, BlockPos spawnPos, PlayerEntity player, BlockPos pos) {
-		if(world.isClient()) return;
+		if(world.isClient())
+			return;
+
 		Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisId);
 		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_IN_REAL_FLIGHT, true, true);

@@ -4,7 +4,6 @@ import com.google.gson.*;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
@@ -21,7 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
 
 import java.lang.reflect.Type;
 
@@ -93,7 +91,7 @@ public abstract class ExteriorVariantSchema implements Unlockable, Nameable {
 	}
 
 	/**
-	 * The bounding box for this exterior, will be used in {@link ExteriorBlock#getNormalShape(BlockState, BlockView, BlockPos)}
+	 * The bounding box for this exterior, will be used in {@link #getNormalShape(BlockState, BlockPos)}
 	 */
 	public VoxelShape bounding(Direction dir) {
 		return null;

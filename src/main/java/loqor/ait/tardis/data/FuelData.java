@@ -98,7 +98,6 @@ public class FuelData extends TardisLink implements ArtronHolder {
 		World world = pos.getWorld();
 		TardisTravel.State state = tardis.getTravel().getState();
 
-
 		if (state == TardisTravel.State.LANDED) {
 			if (this.isRefueling() && this.getCurrentFuel() < FuelData.TARDIS_MAX_FUEL && (!isRefuelOnDelay(tardis))) {
 				if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) > 0) {
@@ -123,7 +122,7 @@ public class FuelData extends TardisLink implements ArtronHolder {
 			}
 
 			if (!tardis.hasPower())
-				tardis().getTravel().crash(); // hehe force land if you don't have enough fue
+				tardis().getTravel().crash(); // hehe force land if you don't have enough fuel
 		}
 
 		if ((state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT) && !isDrainOnDelay(tardis)) {

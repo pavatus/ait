@@ -28,7 +28,15 @@ public record Loyalty(int level, Type type) {
     }
 
     public boolean greaterOrEqual(Loyalty other) {
-        return other.level >= this.level;
+        return this.level >= other.level;
+    }
+
+    public boolean smallerOrEqual(Loyalty other) {
+        return this.level <= other.level;
+    }
+
+    public boolean isOf(Type type) {
+        return this.level >= type().level;
     }
 
     @Override

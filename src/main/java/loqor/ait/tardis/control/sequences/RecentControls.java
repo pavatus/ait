@@ -2,6 +2,7 @@ package loqor.ait.tardis.control.sequences;
 
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import loqor.ait.tardis.control.Control;
@@ -21,18 +22,6 @@ public class RecentControls extends ArrayList<Control> {
 
 	public RecentControls(UUID tardisId) {
 		this(tardisId, new ArrayList<>());
-	}
-
-	public Tardis tardis() {
-		if (tardisId == null) {
-			AITMod.LOGGER.warn("RecentControls is missing a TARDIS!");
-			return null;
-		}
-
-		if (TardisUtil.isClient())
-			return ClientTardisManager.getInstance().getLookup().get(this.tardisId);
-
-		return ServerTardisManager.getInstance().getTardis(this.tardisId);
 	}
 }
 

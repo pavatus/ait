@@ -3,6 +3,7 @@ package loqor.ait.mixin.server;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -20,21 +21,27 @@ public abstract class ItemEntityMixin {
 		ItemEntity entity = (ItemEntity) (Object) this;
 		ItemStack stack = entity.getStack();
 
-		if (entity.getWorld().isClient()) return;
+		if (entity.getWorld().isClient())
+			return;
 
 		if (stack.getItem() instanceof SiegeTardisItem) {
-			Tardis found = SiegeTardisItem.getTardis(stack);
+			Tardis found = SiegeTardisItem.getTardis(stack, TardisManager.getInstance(entity));
 
-			if (found == null) return;
+			if (found == null)
+				return;
+
 			// kill ourselves and place down the exterior
 			SiegeTardisItem.placeTardis(found, SiegeTardisItem.fromEntity(entity));
 			entity.kill();
 		}
+
 		// if entity is in tardis and y is less than -100 save them
 		if (entity.getY() <= -100 && entity.getWorld().getRegistryKey().equals(AITDimensions.TARDIS_DIM_WORLD)) {
 			Tardis found = TardisUtil.findTardisByInterior(entity.getBlockPos(), true);
 
-			if (found == null) return;
+			if (found == null)
+				return;
+
 			TardisUtil.teleportInside(found, entity);
 		}
 	}

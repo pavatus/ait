@@ -67,10 +67,7 @@ public abstract class DatapackRegistry<T extends Identifiable> implements Regist
 	}
 
 	public void syncToEveryone() {
-		if (TardisUtil.getServer() == null)
-			return;
-
-		for (ServerPlayerEntity player : TardisUtil.getServer().getPlayerManager().getPlayerList()) {
+		for (ServerPlayerEntity player : TardisUtil.getPlayerManager().getPlayerList()) {
 			this.syncToClient(player);
 		}
 	}

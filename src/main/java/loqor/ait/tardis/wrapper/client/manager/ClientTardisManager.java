@@ -13,7 +13,6 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -23,6 +22,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -32,7 +32,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
 	private final Multimap<UUID, Consumer<ClientTardis>> subscribers = ArrayListMultimap.create();
 
-	public ClientTardisManager() {
+	private ClientTardisManager() {
 		ClientPlayNetworking.registerGlobalReceiver(SEND,
 				(client, handler, buf, responseSender) -> ClientTardisManager.getInstance().sync(buf)
 		);
@@ -42,9 +42,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		);
 
 		ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
-		ClientPlayConnectionEvents.DISCONNECT.register((client, reason) -> {
-			this.reset();
-		});
+		ClientPlayConnectionEvents.DISCONNECT.register((client, reason) -> this.reset());
 	}
 
 	@Override
@@ -52,12 +50,14 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		PacketByteBuf data = PacketByteBufs.create();
 		data.writeUuid(uuid);
 
-		this.subscribers.put(uuid, consumer);
-
-		if (MinecraftClient.getInstance().getNetworkHandler() == null)
-			return;
+		if (consumer != null)
+			this.subscribers.put(uuid, consumer);
 
 		ClientPlayNetworking.send(ASK, data);
+	}
+
+	public void askTardis(UUID uuid) {
+		this.loadTardis(uuid, null);
 	}
 
 	/**
@@ -104,25 +104,21 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 	}
 
 	private void update(UUID uuid, PacketByteBuf buf) {
-		if (!this.lookup.containsKey(uuid)) {
-			this.getTardis(uuid, t -> {}); // force ASK
-			return;
-		}
+		this.getTardis(uuid, tardis -> {
+			TardisComponent.Id typeId = buf.readEnumConstant(TardisComponent.Id.class);
 
-		ClientTardis tardis = this.lookup.get(uuid);
-		TardisComponent.Id typeId = buf.readEnumConstant(TardisComponent.Id.class);
+			if (!typeId.mutable())
+				return;
 
-		if (typeId == TardisComponent.Id.PROPERTIES) {
-			this.updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
-			return;
-		}
+			if (typeId == TardisComponent.Id.PROPERTIES) {
+				this.updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
+				return;
+			}
 
-		if (!typeId.mutable())
-			return;
-
-		typeId.set(tardis, this.gson.fromJson(
-				buf.readString(), typeId.clazz())
-		);
+			typeId.set(tardis, this.gson.fromJson(
+					buf.readString(), typeId.clazz())
+			);
+		});
 	}
 
 	private void update(PacketByteBuf buf) {
@@ -144,15 +140,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		instance = new ClientTardisManager();
 	}
 
-	// Replace with loadTardis
-	@Deprecated
-	public void ask(UUID uuid) {
-		PacketByteBuf data = PacketByteBufs.create();
-		data.writeUuid(uuid);
-
-		ClientPlayNetworking.send(ASK, data);
-	}
-
 	private void onTick(MinecraftClient client) {
 		if (client.player == null || client.world == null)
 			return;
@@ -168,6 +155,16 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 	public void reset() {
 		this.subscribers.clear();
 		super.reset();
+	}
+
+	/**
+	 * @deprecated By using this method on the client you accept that the tardis,
+	 * even though exists on the server, might not on the client and client cba to actually ask for it.
+	 */
+	@Override
+	@Deprecated
+	public Map<UUID, ClientTardis> getLookup() {
+		return super.getLookup();
 	}
 
 	public static ClientTardisManager getInstance() {

@@ -11,8 +11,8 @@ import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.Corners;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.entities.TardisRealEntity;
-import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
@@ -27,8 +27,10 @@ import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.permissions.Permission;
+import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -36,7 +38,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
-import net.minecraft.block.DoorBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
@@ -44,11 +45,12 @@ import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.WardenEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -58,26 +60,25 @@ import net.minecraft.structure.StructureTemplate;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import qouteall.imm_ptl.core.api.PortalAPI;
 
+import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
 	private static final Random RANDOM = new Random();
 
-	/**
-	 * @deprecated do NOT use this method.
-	 */
-	@Deprecated
-	private static MinecraftServer SERVER;
-
+	private static ServerWorld OVERWORLD;
 	private static ServerWorld TARDIS_DIMENSION;
 	private static ServerWorld TIME_VORTEX;
+
 	public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
 	public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");
 
@@ -85,33 +86,31 @@ public class TardisUtil {
 
 	public static void init() {
 		ServerWorldEvents.UNLOAD.register((server, world) -> {
-			if (world.getRegistryKey() == World.OVERWORLD) {
-				SERVER = null;
-			}
+			if (world.getRegistryKey() == World.OVERWORLD)
+				OVERWORLD = null;
+
+			if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
+				TARDIS_DIMENSION = null;
+
+			if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD)
+				TIME_VORTEX = null;
 		});
 
 		ServerWorldEvents.LOAD.register((server, world) -> {
-			if (world.getRegistryKey() == World.OVERWORLD) {
-				SERVER = server;
-			}
+			if (world.getRegistryKey() == World.OVERWORLD)
+				OVERWORLD = world;
 
-			if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
+			if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
 				TARDIS_DIMENSION = world;
-			}
 
-			if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
+			if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD)
 				TIME_VORTEX = world;
-			}
 		});
 
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-			SERVER = server;
+			OVERWORLD = server.getOverworld();
 			TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
 			TIME_VORTEX = server.getWorld(AITDimensions.TIME_VORTEX_WORLD);
-		});
-
-		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
-			SERVER = null;
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(ClientTardisUtil.CHANGE_SONIC, (server, player, handler, buf, responseSender) -> {
@@ -121,6 +120,7 @@ public class TardisUtil {
 			Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 			SonicItem.setSchema(tardis.sonic().get(SonicHandler.HAS_CONSOLE_SONIC), id); // here we trust in the server with all of our might
 		});
+
 		ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
 				(server, player, handler, buf, responseSender) -> {
 					UUID uuid = buf.readUuid();
@@ -154,7 +154,10 @@ public class TardisUtil {
 					UUID uuid = buf.readUuid();
 					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-					if (tardis.loyalty().get(player).level() <= Loyalty.Type.PILOT.level)
+					PermissionHandler permissions = tardis.handler(TardisComponent.Id.PERMISSIONS);
+
+					if (tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT)
+							|| !permissions.check(player, Permission.SPECIAL.SNAP.get()))
 						return;
 
 					if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
@@ -218,28 +221,24 @@ public class TardisUtil {
 		);
 	}
 
-	/**
-	 * @deprecated do NOT use this method.
-	 */
-	@Deprecated
-	public static MinecraftServer getServer() {
-		return SERVER;
+	public static PlayerManager getPlayerManager() {
+		return OVERWORLD.getServer().getPlayerManager();
 	}
 
-	/**
-	 * @deprecated do NOT use this method.
-	 */
-	@Deprecated
-	public static boolean isClient() {
-		return !TardisUtil.isServer();
+	public static ResourceManager getServerResourceManager() {
+		return OVERWORLD.getServer().getResourceManager();
 	}
 
-	/**
-	 * @deprecated do NOT use this method.
-	 */
-	@Deprecated
-	public static boolean isServer() {
-		return SERVER != null;
+	public static Path getSavePath(WorldSavePath path) {
+		return OVERWORLD.getServer().getSavePath(path);
+	}
+
+	public static <T> T getPlayerLookup(Function<MinecraftServer, T> f) {
+		return f.apply(OVERWORLD.getServer());
+	}
+
+	public static ServerWorld getOverworld() {
+		return OVERWORLD;
 	}
 
 	public static World getTardisDimension() {
@@ -355,7 +354,7 @@ public class TardisUtil {
 	}
 
 	public static void dropOutside(Tardis tardis, Entity entity) {
-		AbsoluteBlockPos.Directed percentageOfDestination = FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage());
+		AbsoluteBlockPos.Directed percentageOfDestination = FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.flight().getDurationAsPercentage());
 		TardisUtil.teleportWithDoorOffset(entity, percentageOfDestination);
 	}
 
@@ -376,25 +375,30 @@ public class TardisUtil {
 	}
 
 	private static void teleportWithDoorOffset(Entity entity, AbsoluteBlockPos.Directed pos) {
-		boolean bl = pos.getWorld().getBlockEntity(pos) instanceof DoorBlockEntity;
-		//Vec3d vec = TardisUtil.offsetDoorPosition(pos).toCenterPos();
-		Vec3d vec = bl ? TardisUtil.offsetInteriorDoorPos(pos) : new Vec3d(TardisUtil.offsetDoorPosition(pos).getX(), TardisUtil.offsetDoorPosition(pos).getY() + 0.125f, TardisUtil.offsetDoorPosition(pos).getZ());/*.toCenterPos()*/;
-		if(pos.getWorld() instanceof ServerWorld serverWorld) {
-			SERVER.execute(() -> {
+		boolean isDoor = pos.getWorld().getBlockEntity(pos) instanceof DoorBlockEntity;
+
+		Vec3d vec = isDoor ? TardisUtil.offsetInteriorDoorPos(pos) : new Vec3d(
+				TardisUtil.offsetDoorPosition(pos).getX(),
+				TardisUtil.offsetDoorPosition(pos).getY() + 0.125f,
+				TardisUtil.offsetDoorPosition(pos).getZ()
+		);
+
+		if (pos.getWorld() instanceof ServerWorld world) {
+			world.getServer().execute(() -> {
 				if (DependencyChecker.hasPortals()) {
-					PortalAPI.teleportEntity(entity, serverWorld, vec);
+					PortalAPI.teleportEntity(entity, world, vec);
 				} else {
 					if (entity instanceof ServerPlayerEntity player) {
-						WorldOps.teleportToWorld(player, serverWorld, vec, RotationPropertyHelper.toDegrees(pos.getRotation()) + (bl ? 0 : 180f), player.getPitch());
+						WorldOps.teleportToWorld(player, world, vec, RotationPropertyHelper.toDegrees(pos.getRotation()) + (isDoor ? 0 : 180f), player.getPitch());
 						player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 					} else {
 						if(entity instanceof EnderDragonEntity
 								|| entity instanceof WitherEntity
 								|| entity instanceof WardenEntity) return;
 						if (entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
-							entity.refreshPositionAndAngles(offset(vec, pos, 0.5f).x, vec.y, offset(vec, pos, 0.5f).z, RotationPropertyHelper.toDegrees(pos.getRotation()) + (bl ? 0 : 180f), entity.getPitch());
+							entity.refreshPositionAndAngles(offset(vec, pos, 0.5f).x, vec.y, offset(vec, pos, 0.5f).z, RotationPropertyHelper.toDegrees(pos.getRotation()) + (isDoor ? 0 : 180f), entity.getPitch());
 						} else {
-							entity.teleport(serverWorld, offset(vec, pos, 0.5f).x, vec.y, offset(vec, pos, 0.5f).z, Set.of(), RotationPropertyHelper.toDegrees(pos.getRotation()) + (bl ? 0 : 180f), entity.getPitch());
+							entity.teleport(world, offset(vec, pos, 0.5f).x, vec.y, offset(vec, pos, 0.5f).z, Set.of(), RotationPropertyHelper.toDegrees(pos.getRotation()) + (isDoor ? 0 : 180f), entity.getPitch());
 						}
 					}
 				}
@@ -417,10 +421,7 @@ public class TardisUtil {
 			return null;
 		}
 
-		if (manager.getLookup() == null)
-			return null;
-
-		for (Tardis tardis : manager.getLookup().values()) {;
+		for (Tardis tardis : manager.getLookup().values()) {
 			if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos))
 				return tardis;
 		}
@@ -428,48 +429,26 @@ public class TardisUtil {
 		return null;
 	}
 
-	public static Tardis findTardisByPosition(AbsoluteBlockPos.Directed pos) {
-		Map<UUID, Tardis> matchingTardises = new HashMap<>();
+	public static Tardis findTardisByPosition(AbsoluteBlockPos pos, Supplier<TardisManager<?>> supplier) {
+		Map<UUID, Tardis> matching = new HashMap<>();
+		TardisManager<?> manager = supplier.get();
 
-		for (Map.Entry<UUID, ?> entry : TardisManager.getInstance().getLookup().entrySet()) {
+		for (Map.Entry<UUID, ?> entry : manager.getLookup().entrySet()) {
 			Tardis tardis = (Tardis) entry.getValue();
+
 			if (tardis.getDoor().getExteriorPos().equals(pos)) {
-				matchingTardises.put(entry.getKey(), tardis);
+				matching.put(entry.getKey(), tardis);
 			}
 		}
 
-		if (matchingTardises.isEmpty()) {
-			if (isClient()) {
-				ClientTardisManager.getInstance().askTardis(pos);
-			}
-			return null;
-		} else {
-			// Return the first Tardis object in the Map
-			return matchingTardises.values().iterator().next();
-		}
+		if (!matching.isEmpty())
+			return matching.values().iterator().next(); // Return the first Tardis object in the Map
+
+		if (manager instanceof ClientTardisManager client)
+			client.askTardis(pos);
+
+		return null;
 	}
-
-	public static Tardis findTardisByPosition(AbsoluteBlockPos pos) {
-		Map<UUID, Tardis> matchingTardises = new HashMap<>();
-
-		for (Map.Entry<UUID, ?> entry : TardisManager.getInstance().getLookup().entrySet()) {
-			Tardis tardis = (Tardis) entry.getValue();
-			if (tardis.getDoor().getExteriorPos().equals(pos)) {
-				matchingTardises.put(entry.getKey(), tardis);
-			}
-		}
-
-		if (matchingTardises.isEmpty()) {
-			if (isClient()) {
-				ClientTardisManager.getInstance().askTardis(pos);
-			}
-			return null;
-		} else {
-			// Return the first Tardis object in the Map
-			return matchingTardises.values().iterator().next();
-		}
-	}
-
 
 	public static void giveEffectToInteriorPlayers(Tardis tardis, StatusEffectInstance effect) {
 		for (PlayerEntity player : getPlayersInInterior(tardis)) {
@@ -504,11 +483,15 @@ public class TardisUtil {
 		Tardis found;
 		List<ServerPlayerEntity> list = new ArrayList<>();
 
-		for (ServerPlayerEntity player : getServer().getPlayerManager().getPlayerList()) {
-			if (player.getServerWorld() != getTardisDimension()) continue;
+		for (ServerPlayerEntity player : TardisUtil.getPlayerManager().getPlayerList()) {
+			if (player.getServerWorld() != TARDIS_DIMENSION)
+				continue;
 
 			found = findTardisByInterior(player.getBlockPos(), true);
-			if (found == null) continue; // fixme "Cannot invoke "..getUuid()" because "found" is null ????
+
+			if (found == null)
+				continue;
+
 			if (found.getUuid().equals(tardis.getUuid())) list.add(player);
 		}
 
@@ -527,22 +510,16 @@ public class TardisUtil {
 		return getLivingEntitiesInInterior(tardis, 20);
 	}
 
-	public static List<PlayerEntity> getPlayersInInterior(Corners corners) {
-		List<PlayerEntity> list = List.of();
-		for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
-			if (inBox(corners, player.getBlockPos())) list.add(player);
-		}
-		return list;
-	}
-
 	public static boolean isInteriorNotEmpty(Tardis tardis) {
 		return TardisUtil.getPlayerInsideInterior(tardis) != null;
 	}
 
 	public static void sendMessageToPilot(Tardis tardis, Text text) {
-		ServerPlayerEntity player = (ServerPlayerEntity) TardisUtil.getPlayerInsideInterior(tardis); // may not necessarily be the person piloting the tardis, but todo this can be replaced with the player with the highest loyalty in future
+		// may not necessarily be the person piloting the tardis, but todo this can be replaced with the player with the highest loyalty in future
+		ServerPlayerEntity player = (ServerPlayerEntity) TardisUtil.getPlayerInsideInterior(tardis);
 
-		if (player == null) return; // Interior is probably empty
+		if (player == null)
+			return; // Interior is probably empty
 
 		player.sendMessage(text, true);
 	}
@@ -561,7 +538,9 @@ public class TardisUtil {
 
 	@Nullable
 	public static ExteriorBlockEntity findExteriorEntity(Tardis tardis) {
-		if (isClient()) return null;
+		if (tardis instanceof ClientTardis)
+			return null;
+
 		return (ExteriorBlockEntity) tardis.getDoor().getExteriorPos().getWorld().getBlockEntity(tardis.getDoor().getExteriorPos());
 	}
 
@@ -599,7 +578,7 @@ public class TardisUtil {
 		BlockPos centre = BlockPos.ofFloored(tardis.getDesktop().getCorners().getBox().getCenter());
 		BlockPos first, second;
 
-		if (!tardis.getDesktop().getSchema().findTemplate().isPresent()) {
+		if (tardis.getDesktop().getSchema().findTemplate().isEmpty()) {
 			AITMod.LOGGER.warn("Could not get desktop schema! Using whole interior instead.");
 			return tardis.getDesktop().getCorners();
 		}
@@ -613,37 +592,18 @@ public class TardisUtil {
 		second = PosType.Y.add(second, size.getY());
 		second = PosType.Z.add(second, size.getZ() / 2);
 
-		Corners corners = new Corners(first, second);
-
-		return corners;
+        return new Corners(first, second);
 	}
 
 	public static BlockPos getPlacedInteriorCentre(Tardis tardis) {
 		Corners corners = getPlacedInteriorCorners(tardis);
 
-		if (!tardis.getDesktop().getSchema().findTemplate().isPresent()) {
+		if (tardis.getDesktop().getSchema().findTemplate().isEmpty()) {
 			AITMod.LOGGER.warn("Could not get desktop schema! Returning bad centre instead.");
 			return BlockPos.ofFloored(corners.getBox().getCenter());
 		}
 
 		Vec3i size = tardis.getDesktop().getSchema().findTemplate().get().getSize();
-
 		return corners.getFirst().add(size.getX(), size.getY() / 2, size.getZ());
-	}
-
-	public static @NotNull List<PlayerEntity> findPlayerByTardisKey(ServerWorld world, Tardis tardis) {
-		List<PlayerEntity> newList = new ArrayList<>();
-		for (PlayerEntity player : world.getServer().getPlayerManager().getPlayerList()) {
-			if (KeyItem.isKeyInInventory(player)) {
-				Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
-
-				for (ItemStack key : keys) {
-					if (KeyItem.getTardis(key) == tardis) {
-						newList.add(player);
-					}
-				}
-			}
-		}
-		return newList;
 	}
 }

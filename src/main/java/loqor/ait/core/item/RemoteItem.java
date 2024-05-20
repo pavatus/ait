@@ -1,14 +1,13 @@
 package loqor.ait.core.item;
 
-import loqor.ait.api.tardis.LinkableItem;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.DirectionControl;
+import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -32,7 +31,7 @@ import static loqor.ait.tardis.TardisTravel.State.LANDED;
 public class RemoteItem extends LinkableItem {
 
 	public RemoteItem(Settings settings) {
-		super(settings);
+		super(settings, true);
 	}
 
 	@Override
@@ -89,18 +88,16 @@ public class RemoteItem extends LinkableItem {
 
 	@Override
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-		if (!Screen.hasShiftDown()) {
-			tooltip.add(Text.translatable("tooltip.ait.remoteitem.holdformoreinfo").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
-			return;
-		}
+		super.appendTooltip(stack, world, tooltip, context);
 
 		NbtCompound tag = stack.getOrCreateNbt();
 
-		super.appendTooltip(stack, world, tooltip, context);
-
 		if (tag.contains("tardis")) {
-			Tardis tardis = ClientTardisManager.getInstance().getTardis(UUID.fromString(tag.getString("tardis")));
-			if (tardis == null) return;
+			Tardis tardis = ClientTardisManager.getInstance().demandTardis(UUID.fromString(tag.getString("tardis")));
+
+			if (tardis == null)
+				return;
+
 			if (tardis.getTravel().getState() != LANDED)
 				tooltip.add(Text.literal("→ " + tardis.getHandlers().getFlight().getDurationAsPercentage() + "%").formatted(Formatting.GOLD));
 		}

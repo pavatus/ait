@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
-import loqor.ait.api.tardis.LinkableItem;
+import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.item.ItemStack;

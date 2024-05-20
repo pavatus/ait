@@ -1,7 +1,7 @@
 package loqor.ait.tardis.control.impl;
 
 import com.mojang.datafixers.util.Pair;
-import loqor.ait.api.tardis.LinkableItem;
+import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;

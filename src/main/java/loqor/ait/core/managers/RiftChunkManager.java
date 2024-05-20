@@ -1,8 +1,6 @@
 package loqor.ait.core.managers;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -25,39 +23,34 @@ import java.util.Random;
 
 public class RiftChunkManager {
 
-	private static final RiftChunkManager INSTANCE = new RiftChunkManager();
-
-	public RiftChunkManager() {
-		ServerLifecycleEvents.SERVER_STARTED.register((server) -> load());
-		ServerLifecycleEvents.SERVER_STOPPING.register(((server) -> {
-			save();
-			riftChunkData = new HashMap<>();
-			riftChunkArtronLevels = new HashMap<>();
-		}));
-	}
-
 	public static void init() {
-		// nothing
+		ServerLifecycleEvents.SERVER_STARTED.register(RiftChunkManager::load);
+
+		ServerLifecycleEvents.SERVER_STOPPING.register(((server) -> {
+			save(server);
+
+			riftChunkData = new HashMap<>();
+        }));
 	}
 
-	private static Map<Long, Integer> riftChunkArtronLevels = new HashMap<>();
-
-	private static Map<RegistryKey<World>, Map<ChunkPos, Integer>> riftChunkData = new HashMap<>(); // <World, <ChunkPos, ArtronLevels>>
+    private static Map<RegistryKey<World>, Map<ChunkPos, Integer>> riftChunkData = new HashMap<>();
 
 	public static void setArtronLevels(World world, ChunkPos chunkPos, Integer artronLevels) {
-		if (!isRiftChunk(chunkPos)) return;
+		if (!isRiftChunk(chunkPos))
+			return;
+
 		if (!riftChunkData.containsKey(world.getRegistryKey())) {
 			HashMap<ChunkPos, Integer> temp = new HashMap<>();
 			temp.put(chunkPos, artronLevels);
 			riftChunkData.put(world.getRegistryKey(), temp);
 			return;
 		}
+
 		if (!riftChunkData.get(world.getRegistryKey()).containsKey(chunkPos)) {
-			HashMap<ChunkPos, Integer> temp = new HashMap<>();
-			temp.put(chunkPos, artronLevels);
 			riftChunkData.get(world.getRegistryKey()).put(chunkPos, artronLevels);
 			return;
 		}
+
 		riftChunkData.get(world.getRegistryKey()).replace(chunkPos, artronLevels);
 	}
 
@@ -66,15 +59,19 @@ public class RiftChunkManager {
 	}
 
 	public static Integer getArtronLevels(World world, ChunkPos chunkPos) {
-		if (!isRiftChunk(chunkPos)) return 0;
+		if (!isRiftChunk(chunkPos))
+			return 0;
+
 		if (!riftChunkData.containsKey(world.getRegistryKey())) {
 			initRiftChunk(world, chunkPos);
 			return getArtronLevels(world, chunkPos);
 		}
+
 		if (!riftChunkData.get(world.getRegistryKey()).containsKey(chunkPos)) {
 			initRiftChunk(world, chunkPos);
 			return getArtronLevels(world, chunkPos);
 		}
+
 		return riftChunkData.get(world.getRegistryKey()).get(chunkPos);
 	}
 
@@ -85,6 +82,7 @@ public class RiftChunkManager {
 	public static void initRiftChunk(World world, ChunkPos chunkPos) {
 		if (riftChunkData.containsKey(world.getRegistryKey()) && riftChunkData.get(world.getRegistryKey()).containsKey(chunkPos))
 			return;
+
 		Random random = new Random();
 		if (!riftChunkData.containsKey(world.getRegistryKey())) {
 			HashMap<ChunkPos, Integer> temp = new HashMap<>();
@@ -92,12 +90,13 @@ public class RiftChunkManager {
 			riftChunkData.put(world.getRegistryKey(), temp);
 			return;
 		}
+
 		riftChunkData.get(world.getRegistryKey()).put(chunkPos, random.nextInt(100, 800));
 	}
 
-	public static void save() {
-		MinecraftServer server = TardisUtil.getServer();
+	public static void save(MinecraftServer server) {
 		String save_file_path = server.getSavePath(WorldSavePath.ROOT) + "ait_rift_chunk_data.json";
+
 		try {
 			JsonObject jsonRiftChunkData = new JsonObject();
 			for (RegistryKey<World> key : riftChunkData.keySet()) {
@@ -111,25 +110,19 @@ public class RiftChunkManager {
 			fileWriter.write(jsonRiftChunkData.toString());
 			fileWriter.close();
 		} catch (Exception e) {
-
+			AITMod.LOGGER.error("Failed to save rift chunk data!", e);
 		}
 	}
 
 	public static boolean isRiftChunk(ChunkPos chunkPos) {
-		if (TardisUtil.getServer() == null) {
-			AITMod.LOGGER.error("TARDIS UTIL SERVER IS NULL, RETURNING FALSE");
-			return false;
-		}
-
-		return ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, TardisUtil.getServer().getOverworld().getSeed(), 987234910L).nextInt(8) == 0;
+		return ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, TardisUtil.getOverworld().getSeed(), 987234910L).nextInt(8) == 0;
 	}
 
 	public static boolean isRiftChunk(BlockPos blockPos) {
 		return isRiftChunk(new ChunkPos(blockPos));
 	}
 
-	public static void load() {
-		MinecraftServer server = TardisUtil.getServer();
+	public static void load(MinecraftServer server) {
 		String save_file_path = server.getSavePath(WorldSavePath.ROOT) + "ait_rift_chunk_data.json";
 		try {
 			FileReader fileReader = new FileReader(save_file_path);
@@ -153,31 +146,8 @@ public class RiftChunkManager {
 					riftChunkData.get(key).replace(chunkPos, artronLevels);
 				}
 			}
-
-
 		} catch (Exception e) {
-
-		}
-	}
-
-	public static void loadRiftChunkData() {
-		MinecraftServer server = TardisUtil.getServer();
-		String save_path = server.getSavePath(WorldSavePath.ROOT) + "ait/";
-		JsonParser jsonParser = new JsonParser();
-		try {
-			FileReader fileReader = new FileReader(save_path + "riftChunkData.rift");
-			Object object = jsonParser.parse(fileReader);
-			JsonObject riftChunkData = (JsonObject) object;
-			JsonObject riftChunkArtronLevelsJsonObject = (JsonObject) riftChunkData.get("rift_chunk_artron_levels");
-			Map<String, JsonElement> map = riftChunkArtronLevelsJsonObject.asMap();
-			for (String string : map.keySet()) {
-				Long lll = Long.parseLong(string);
-				JsonElement jsonElement = map.get(string);
-				Integer artron = jsonElement.getAsInt();
-				riftChunkArtronLevels.put(lll, artron);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			AITMod.LOGGER.error("Failed to load rift chunk data!", e);
 		}
 	}
 }

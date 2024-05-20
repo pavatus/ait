@@ -19,7 +19,7 @@ public class SerialDimension {
 	}
 
 	/**
-	 * @Deprecated This method is strictly for serialization purposes to the client. - Loqor
+	 * @deprecated This method is strictly for serialization purposes to the client. - Loqor
 	 **/
 	private SerialDimension(Identifier value) {
 		this.dimension = null;

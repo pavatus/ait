@@ -80,7 +80,7 @@ public class ServerVortexDataHandler {
         Returns the path to a world save stored vortex data file.
      */
     public static Path getVortexDataPath(MinecraftServer server) {
-        return ServerTardisManager.getRootSavePath(server)
+        return ServerTardisManager.getRootSavePath()
                 .resolve(VortexDataHelper.VORTEX_DATA_SERVER_CACHE_PATH);
     }
 

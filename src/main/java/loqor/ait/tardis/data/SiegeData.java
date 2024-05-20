@@ -24,55 +24,53 @@ public class SiegeData extends TardisLink {
 	}
 
 	public boolean isSiegeMode() {
-		return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_MODE);
+		return PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.SIEGE_MODE);
 	}
 
 	public boolean isSiegeBeingHeld() {
-		return tardis().getHandlers().getProperties().getData().containsKey(HELD_KEY) &&
-				PropertiesHandler.get(tardis().getHandlers().getProperties(), HELD_KEY) != null;
+		return tardis().properties().getData().containsKey(HELD_KEY) &&
+				PropertiesHandler.get(tardis().properties(), HELD_KEY) != null;
 	}
 
 	public UUID getHeldPlayerUUID() {
 		if (!isSiegeBeingHeld())
 			return null;
 
-		return PropertiesHandler.getUUID(tardis().getHandlers().getProperties(), HELD_KEY);
-	}
-
-	public ServerPlayerEntity getHeldPlayer() {
-		return TardisUtil.getServer().getPlayerManager().getPlayer(getHeldPlayerUUID());
+		return PropertiesHandler.getUUID(tardis().properties(), HELD_KEY);
 	}
 
 	public void setSiegeBeingHeld(UUID playerId) {
 		if (playerId != null)
-			tardis().getHandlers().getAlarms().enable();
+			tardis().alarm().enable();
 
 		PropertiesHandler.set(tardis(), HELD_KEY, playerId);
 	}
 
 	public int getTimeInSiegeMode() {
-		return PropertiesHandler.getInt(tardis().getHandlers().getProperties(), PropertiesHandler.SIEGE_TIME);
+		return PropertiesHandler.getInt(tardis().properties(), PropertiesHandler.SIEGE_TIME);
 	}
 
-	// todo this is getting bloateed, merge some if statements together
-	public void setSiegeMode(boolean b) {
+	public void setSiegeMode(boolean siege) {
 		Tardis tardis = this.tardis();
 
 		if (tardis.getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL))
 			return; // The required amount of fuel to enable/disable siege mode
-		if (b) tardis.disablePower();
-		if (!b) tardis.getHandlers().getAlarms().disable();
-		// if (getTardis().get().isSiegeBeingHeld()) return;
-		if (!b && tardis.getExterior().findExteriorBlock().isEmpty())
-			tardis.getTravel().placeExterior();
-		if (b)
+
+		if (siege) {
+			tardis.disablePower();
 			TardisUtil.giveEffectToInteriorPlayers(tardis, new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0, false, false));
-		if (b) FlightUtil.playSoundAtConsole(tardis, AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 3f, 1f);
-		if (!b) FlightUtil.playSoundAtConsole(tardis, AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 3f, 1f);
+			FlightUtil.playSoundAtConsole(tardis, AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 3f, 1f);
+		} else {
+			tardis.alarm().disable();
+
+			if (tardis.getExterior().findExteriorBlock().isEmpty())
+				tardis.getTravel().placeExterior();
+
+			FlightUtil.playSoundAtConsole(tardis, AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 3f, 1f);
+		}
 
 		tardis.removeFuel((0.01 * FuelData.TARDIS_MAX_FUEL) * (tardis.tardisHammerAnnoyance + 1));
-
-		PropertiesHandler.set(tardis, PropertiesHandler.SIEGE_MODE, b);
+		PropertiesHandler.set(tardis, PropertiesHandler.SIEGE_MODE, siege);
 		this.sync();
 	}
 
@@ -98,7 +96,8 @@ public class SiegeData extends TardisLink {
 		int siegeTime = this.getTimeInSiegeMode() + 1;
 		PropertiesHandler.set(tardis(), PropertiesHandler.SIEGE_TIME, tardis().isSiegeMode() ? siegeTime : 0, false);
 
-		if (!tardis().isSiegeMode()) return;
+		if (!tardis().isSiegeMode())
+			return;
 
 		// todo add more downsides the longer you are in siege mode as it is meant to fail systems and kill you and that
 		// for example, this starts to freeze the player (like we see in the episode) after a minute (change the length if too short) and only if its on the ground, to stop people from just slaughtering lol

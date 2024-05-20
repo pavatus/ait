@@ -34,7 +34,7 @@ public class StatsData extends TardisLink {
 	}
 
 	public String getName() {
-		String name = (String) PropertiesHandler.get(tardis().getHandlers().getProperties(), NAME_KEY);
+		String name = (String) PropertiesHandler.get(tardis().properties(), NAME_KEY);
 
 		if (name == null) {
 			name = getRandomName();
@@ -45,7 +45,7 @@ public class StatsData extends TardisLink {
 	}
 
 	public String getPlayerCreatorName() {
-		String name = (String) PropertiesHandler.get(tardis().getHandlers().getProperties(), PLAYER_CREATOR_NAME_KEY);
+		String name = (String) PropertiesHandler.get(tardis().properties(), PLAYER_CREATOR_NAME_KEY);
 
 		if (name == null) {
 			name = getRandomName();
@@ -64,15 +64,6 @@ public class StatsData extends TardisLink {
 		PropertiesHandler.set(tardis(), PLAYER_CREATOR_NAME_KEY, name);
 	}
 
-	public static String fixupName(String name) {
-		String[] words = name.split("_");
-		StringBuilder result = new StringBuilder();
-		for (String word : words) {
-			result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
-		}
-		return result.toString().trim();
-	}
-
 	public static String getRandomName() {
 		if (shouldGenerateNames()) loadNames();
 		if (NAME_CACHE == null) return "";
@@ -82,18 +73,17 @@ public class StatsData extends TardisLink {
 
 	public static boolean shouldGenerateNames() {
 		return (NAME_CACHE == null
-				|| NAME_CACHE.isEmpty())
-				&& TardisUtil.getServer() != null;
+				|| NAME_CACHE.isEmpty());
 	}
 
 	private static void loadNames() {
-		if (TardisUtil.getServer() == null) return;
-		if (NAME_CACHE == null) NAME_CACHE = new ArrayList<>();
+		if (NAME_CACHE == null) 
+			NAME_CACHE = new ArrayList<>();
 
 		NAME_CACHE.clear();
 
 		try {
-			Optional<Resource> resource = TardisUtil.getServer().getResourceManager().getResource(NAME_PATH);
+			Optional<Resource> resource = TardisUtil.getServerResourceManager().getResource(NAME_PATH);
 
 			if (resource.isEmpty()) {
 				AITMod.LOGGER.error("ERROR in tardis_names.json:");
@@ -109,26 +99,24 @@ public class StatsData extends TardisLink {
 				NAME_CACHE.add(element.getAsString());
 			}
 		} catch (IOException e) {
-			AITMod.LOGGER.error("ERROR in tardis_names.json");
-			e.printStackTrace();
+			AITMod.LOGGER.error("ERROR in tardis_names.json", e);
 		}
 	}
 
 	public Date getCreationDate() {
 		Tardis tardis = this.tardis();
 
-		if (PropertiesHandler.get(tardis.getHandlers().getProperties(), DATE_KEY) == null) {
+		if (PropertiesHandler.get(tardis.properties(), DATE_KEY) == null) {
 			AITMod.LOGGER.error(tardis.getUuid().toString() + " was missing creation date! Resetting to now");
 			markCreationDate();
 		}
 
-		String date = PropertiesHandler.getString(tardis.getHandlers().getProperties(), DATE_KEY);
+		String date = PropertiesHandler.getString(tardis.properties(), DATE_KEY);
 
 		try {
 			return DateFormat.getDateTimeInstance(DateFormat.LONG, 3).parse(date);
 		} catch (Exception e) {
 			AITMod.LOGGER.error("Failed to parse date from " + date);
-
 			this.markCreationDate();
 
 			return Date.from(Instant.now());
@@ -140,11 +128,11 @@ public class StatsData extends TardisLink {
 	}
 
 	public void markCreationDate() {
-		PropertiesHandler.set(tardis().getHandlers().getProperties(), DATE_KEY,
+		PropertiesHandler.set(tardis().properties(), DATE_KEY,
 				DateFormat.getDateTimeInstance(DateFormat.LONG, 3).format(Date.from(Instant.now())));
 	}
 
 	public void markPlayerCreatorName() {
-		PropertiesHandler.set(tardis().getHandlers().getProperties(), PLAYER_CREATOR_NAME_KEY, this.getPlayerCreatorName());
+		PropertiesHandler.set(tardis().properties(), PLAYER_CREATOR_NAME_KEY, this.getPlayerCreatorName());
 	}
 }

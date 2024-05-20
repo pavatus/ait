@@ -58,7 +58,7 @@ public class TardisDesktop extends TardisLink {
 	public void init(Tardis tardis, boolean deserialized) {
 		super.init(tardis, deserialized);
 
-		if (this.tardis() instanceof ServerTardis && !deserialized)
+		if (this.isServer() && !deserialized)
 			this.changeInterior(schema);
 
 		// in some cases, an old and fucked up save can have no consoles field.

@@ -1,21 +1,24 @@
 package loqor.ait.core.entities;
 
-import com.mojang.logging.LogUtils;
+import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientShakeUtil;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDamageTypes;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.minecraft.block.*;
+import net.minecraft.block.AnvilBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -25,8 +28,6 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.AutomaticItemPlacementContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -36,39 +37,30 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.crash.CrashReportSection;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
 public class FallingTardisEntity extends Entity {
-	private static final Logger LOGGER = LogUtils.getLogger();
-	private BlockState block;
 	public int timeFalling;
-	public boolean dropItem;
 	private boolean destroyedOnLanding;
 	private boolean hurtEntities;
 	private int fallHurtMax;
 	private float fallHurtAmount;
+	private BlockState block;
 	@Nullable
 	public NbtCompound blockEntityData;
 	protected static final TrackedData<BlockPos> BLOCK_POS;
@@ -76,20 +68,19 @@ public class FallingTardisEntity extends Entity {
 
 	public FallingTardisEntity(EntityType<? extends Entity> entityType, World world) {
 		super(entityType, world);
-		this.block = Blocks.SAND.getDefaultState();
-		this.dropItem = true;
 		this.fallHurtMax = 40;
+		this.block = AITBlocks.EXTERIOR_BLOCK.getDefaultState();
 	}
 
 	private FallingTardisEntity(World world, double x, double y, double z, BlockState block) {
 		this(AITEntityTypes.FALLING_TARDIS_TYPE, world);
-		this.block = block;
 		this.intersectionChecked = true;
 		this.setPosition(x, y, z);
 		this.setVelocity(Vec3d.ZERO);
 		this.prevX = x;
 		this.prevY = y;
 		this.prevZ = z;
+		this.block = block;
 		this.setFallingBlockPos(this.getBlockPos());
 	}
 
@@ -121,6 +112,7 @@ public class FallingTardisEntity extends Entity {
 
 			PropertiesHandler.set(exterior.findTardis().get(), PropertiesHandler.IS_FALLING, true);
 		}
+
 		world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
 		world.spawnEntity(fallingBlockEntity);
 		fallingBlockEntity.setHurtEntities(100.0F, 100);
@@ -128,16 +120,12 @@ public class FallingTardisEntity extends Entity {
 	}
 
 	public Tardis getTardis() {
-		if (getTardisId() == null) {
-			LOGGER.error("TARDIS ID WAS NULL AT " + getPos());
+		if (this.getTardisId() == null) {
+			AITMod.LOGGER.error("TARDIS ID WAS NULL AT " + getPos());
 			return null;
 		}
 
-		if (getWorld().isClient) {
-			return ClientTardisManager.getInstance().getLookup().get(getTardisId());
-		}
-
-		return ServerTardisManager.getInstance().getTardis(getTardisId());
+		return TardisManager.getInstance(this).demandTardis(this.getTardisId());
 	}
 
 	public boolean isAttackable() {
@@ -146,10 +134,6 @@ public class FallingTardisEntity extends Entity {
 
 	public void setFallingBlockPos(BlockPos pos) {
 		this.dataTracker.set(BLOCK_POS, pos);
-	}
-
-	public BlockPos getFallingBlockPos() {
-		return this.dataTracker.get(BLOCK_POS);
 	}
 
 	protected Entity.MoveEffect getMoveEffect() {
@@ -182,11 +166,10 @@ public class FallingTardisEntity extends Entity {
 		if (this.block.isAir()) {
 			this.discard();
 		} else {
-			Block block = this.block.getBlock();
-			++this.timeFalling;
-			if (!this.hasNoGravity()) {
+            this.timeFalling++;
+
+			if (!this.hasNoGravity())
 				this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-			}
 
 			if (this.wouldBeKilled()) {
 				this.stopFalling(true);
@@ -194,65 +177,47 @@ public class FallingTardisEntity extends Entity {
 			}
 
 			this.move(MovementType.SELF, this.getVelocity());
-			if (!this.getWorld().isClient) {
-				if (getTardis() == null) return;
-				this.getTardis().getDesktop().getConsoles().forEach(console -> {
-					this.getWorld().playSound(null, console.position(), SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F);
-				});
+
+			Tardis tardis = this.getTardis();
+
+			if (tardis == null)
+				return;
+
+			if (!this.getWorld().isClient()) {
+				this.getTardis().getDesktop().getConsoles().forEach(console -> this.getWorld().playSound(
+						null, console.position(), SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F)
+				);
+
 				if (PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
-					stopFalling();
+					this.stopFalling();
 					return;
 				}
 
-				getTardis().getTravel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(),
+				tardis.getTravel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(),
 						DirectionControl.getGeneralizedRotation(this.getTardis().getTravel().getPosition().getRotation())));
 
-
 				BlockPos blockPos = this.getBlockPos();
-				if (blockPos == null) return;
-				boolean bl = this.block.getBlock() instanceof ConcretePowderBlock;
-				boolean bl2 = bl && this.getWorld().getFluidState(blockPos).isIn(FluidTags.WATER);
-				double d = this.getVelocity().lengthSquared();
-				if (bl && d > 1.0) {
-					BlockHitResult blockHitResult = this.getWorld().raycast(new RaycastContext(new Vec3d(this.prevX, this.prevY, this.prevZ), this.getPos(), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.SOURCE_ONLY, this));
-					if (blockHitResult.getType() != HitResult.Type.MISS && this.getWorld().getFluidState(blockHitResult.getBlockPos()).isIn(FluidTags.WATER)) {
-						blockPos = blockHitResult.getBlockPos();
-						bl2 = true;
-					}
-				}
 
-				if (!this.isOnGround() && !bl2) {
-					if (!this.getWorld().isClient && (/*this.timeFalling > 100 &&*/ (blockPos.getY() <= this.getWorld().getBottomY() || blockPos.getY() > this.getWorld().getTopY()) /*|| this.timeFalling > 600*/)) {
-						if (this.dropItem && this.getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-							this.dropItem(block);
-						}
+				if (blockPos == null)
+					return;
 
-						this.stopFalling();
-					}
+                if (!this.isOnGround() && (blockPos.getY() <= this.getWorld().getBottomY() || blockPos.getY() > this.getWorld().getTopY())) {
+					this.stopFalling();
 				} else {
-					// This is when the tardis lands on its own
-
-					boolean crashing = this.getTardis().getTravel().isCrashing();
+					boolean crashing = tardis.getTravel().isCrashing();
 
 					if (crashing) {
-						World world = this.getWorld();
-						BlockPos pos = this.getBlockPos();
-						world.createExplosion(this, pos.getX(), pos.getY(), pos.getZ(), 10, true, World.ExplosionSourceType.MOB);
+						this.getWorld().createExplosion(this, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
+								10, true, World.ExplosionSourceType.MOB
+						);
 					}
 
-					this.getTardis().getDoor().setLocked(crashing);
-
+					tardis.getDoor().setLocked(crashing);
 					this.stopFalling(false);
-
 				}
 			}
 
-			if (this.getTardis().getTravel().isCrashing()) {
-				this.setVelocity(this.getVelocity().multiply(1.5));
-			} else {
-				this.setVelocity(this.getVelocity().multiply(0.98));
-			}
-
+			this.setVelocity(this.getVelocity().multiply(tardis.getTravel().isCrashing() ? 1.5f : 0.98f));
 		}
 	}
 
@@ -261,135 +226,103 @@ public class FallingTardisEntity extends Entity {
 	}
 
 	public void stopFalling(boolean antigravs) {
-		if (antigravs) {
-			PropertiesHandler.set(getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
-		}
-		TardisUtil.getPlayersInInterior(getTardis()).forEach(player -> {
-			if (getTardis().getTravel().isCrashing()) {
-				player.playSound(SoundEvents.ENTITY_GENERIC_EXPLODE, 1.0F, 1.0F);
-				if (TardisUtil.isClient()) {
-					ClientShakeUtil.shake(3.0f);
-				}
-			} else {
-				player.playSound(AITSounds.LAND_THUD, 3.0f, 1.0f);
-				if (TardisUtil.isClient()) {
-					ClientShakeUtil.shake(0.5f);
-				}
-			}
-		});
-		if (TardisUtil.isServer()) {
-			if (ForcedChunkUtil.isChunkForced((ServerWorld) this.getWorld(), this.getBlockPos())) {
-				ForcedChunkUtil.stopForceLoading((ServerWorld) this.getWorld(), this.getBlockPos());
-			}
-		}
-		if (getTardis().getTravel().isCrashing()) {
-			getTardis().setLockedTardis(false);
-		}
-		getTardis().getTravel().setCrashing(false);
+		if (antigravs)
+			PropertiesHandler.set(this.getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
 
+		Tardis tardis = this.getTardis();
+		boolean isCrashing = tardis.getTravel().isCrashing();
+
+		if (isCrashing)
+			tardis.setLockedTardis(false);
+
+		TardisUtil.getPlayersInInterior(tardis).forEach(player -> {
+			SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_THUD;
+			float volume = isCrashing ? 1.0F : 3.0F;
+
+			player.playSound(sound, volume, 1.0f);
+
+			if (this.getWorld().isClient())
+				ClientShakeUtil.shake(isCrashing ? 3.0f : 0.5f);
+		});
+
+		if (!this.getWorld().isClient() && ForcedChunkUtil.isChunkForced((ServerWorld) this.getWorld(), this.getBlockPos()))
+			ForcedChunkUtil.stopForceLoading((ServerWorld) this.getWorld(), this.getBlockPos());
+
+		tardis.getTravel().setCrashing(false);
 
 		Block block = this.block.getBlock();
 		BlockPos blockPos = this.getBlockPos();
-		boolean bl = this.block.getBlock() instanceof ConcretePowderBlock;
-		boolean bl2 = bl && this.getWorld().getFluidState(blockPos).isIn(FluidTags.WATER);
-		double d = this.getVelocity().lengthSquared();
-		BlockState blockState = this.getWorld().getBlockState(blockPos);
+
+        BlockState blockState = this.getWorld().getBlockState(blockPos);
 		this.setVelocity(this.getVelocity().multiply(0.7, -0.5, 0.7));
-		if (!blockState.isOf(Blocks.MOVING_PISTON)) {
-			if (!this.destroyedOnLanding) {
-				boolean bl3 = blockState.canReplace(new AutomaticItemPlacementContext(this.getWorld(), blockPos, Direction.DOWN, ItemStack.EMPTY, Direction.UP));
-				boolean bl4 = FallingBlock.canFallThrough(this.getWorld().getBlockState(blockPos.down())) && (!bl || !bl2);
-				boolean bl5 = this.block.canPlaceAt(this.getWorld(), blockPos) && !bl4;
 
-				if (this.block.contains(Properties.WATERLOGGED) && this.getWorld().getFluidState(blockPos).getFluid() == Fluids.WATER) {
-					this.block = this.block.with(Properties.WATERLOGGED, true);
-				}
+		if (!blockState.isOf(Blocks.MOVING_PISTON) && !this.destroyedOnLanding) {
+			if (this.block.contains(Properties.WATERLOGGED) && this.getWorld().getFluidState(blockPos).getFluid() == Fluids.WATER) {
+				this.block = this.block.with(Properties.WATERLOGGED, true);
+			}
 
-				if (this.getWorld().setBlockState(blockPos, this.block, 3) && TardisUtil.isServer()) {
-					((ServerWorld) this.getWorld()).getChunkManager().threadedAnvilChunkStorage.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, this.getWorld().getBlockState(blockPos)));
-					this.discard();
-					if (block instanceof ExteriorBlock) {
-						((ExteriorBlock) block).onLanding(this.getWorld(), blockPos, this.block, blockState, this);
-					}
-
-					if (this.blockEntityData != null && this.block.hasBlockEntity()) {
-						BlockEntity blockEntity = this.getWorld().getBlockEntity(blockPos);
-						if (blockEntity != null) {
-							NbtCompound nbtCompound = blockEntity.createNbt();
-							Iterator var13 = this.blockEntityData.getKeys().iterator();
-
-							while (var13.hasNext()) {
-								String string = (String) var13.next();
-								nbtCompound.put(string, this.blockEntityData.get(string).copy());
-							}
-
-							try {
-								blockEntity.readNbt(nbtCompound);
-							} catch (Exception var15) {
-								LOGGER.error("Failed to load block entity from falling block", var15);
-							}
-
-							blockEntity.markDirty();
-						}
-					}
-				} else if (this.dropItem && this.getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-					this.discard();
-					this.onDestroyedOnLanding(block, blockPos);
-					this.dropItem(block);
-				}
-			} else {
+			if (this.getWorld().setBlockState(blockPos, this.block, 3) && !this.getWorld().isClient()) {
+				((ServerWorld) this.getWorld()).getChunkManager().threadedAnvilChunkStorage.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, this.getWorld().getBlockState(blockPos)));
 				this.discard();
-				if (this.dropItem && this.getWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-					this.onDestroyedOnLanding(block, blockPos);
-					this.dropItem(block);
+
+				if (block instanceof ExteriorBlock) {
+					((ExteriorBlock) block).onLanding(this.getWorld(), blockPos, this.block, blockState, this);
 				}
+
+				if (this.blockEntityData != null && this.block.hasBlockEntity()) {
+					BlockEntity blockEntity = this.getWorld().getBlockEntity(blockPos);
+
+					if (blockEntity == null)
+						return;
+
+                    NbtCompound nbt = blockEntity.createNbt();
+
+                    for (String string : this.blockEntityData.getKeys()) {
+                        nbt.put(string, this.blockEntityData.get(string).copy());
+                    }
+
+                    try {
+                        blockEntity.readNbt(nbt);
+                    } catch (Exception e) {
+                        AITMod.LOGGER.error("Failed to load block entity from falling tardis", e);
+                    }
+
+                    blockEntity.markDirty();
+                }
 			}
 		} else {
 			this.discard();
-			this.onDestroyedOnLanding(block, blockPos);
-		}
-	}
-
-	public void onDestroyedOnLanding(Block block, BlockPos pos) {
-		if (block instanceof LandingBlock) {
-			// ((LandingBlock)block).onDestroyedOnLanding(this.getWorld(), pos, this);
 		}
 	}
 
 	public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
-		if (!this.hurtEntities) {
-			return false;
-		} else {
-			int i = MathHelper.ceil(fallDistance - 1.0F);
-			if (i < 0) {
-				return false;
-			} else {
-				Predicate<Entity> predicate = EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(EntityPredicates.VALID_LIVING_ENTITY);
-				Block var8 = this.block.getBlock();
-				DamageSource damageSource2 = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
-				float f = (float) Math.min(MathHelper.floor((float) i * this.fallHurtAmount), this.fallHurtMax);
-				this.getWorld().getOtherEntities(this, this.getBoundingBox(), predicate).forEach((entity) -> {
-					entity.damage(damageSource2, f);
-				});
-				boolean bl = this.block.isIn(BlockTags.ANVIL);
-				if (bl && f > 0.0F && this.random.nextFloat() < 0.05F + (float) i * 0.05F) {
-					BlockState blockState = AnvilBlock.getLandingState(this.block);
-					if (blockState == null) {
-						this.destroyedOnLanding = true;
-					} else {
-						this.block = blockState;
-					}
-				}
+        if (this.hurtEntities) {
+            int i = MathHelper.ceil(fallDistance - 1.0F);
+            if (i >= 0) {
+                Predicate<Entity> predicate = EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(EntityPredicates.VALID_LIVING_ENTITY);
+                DamageSource damageSource2 = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
+                float f = (float) Math.min(MathHelper.floor((float) i * this.fallHurtAmount), this.fallHurtMax);
 
-				return false;
-			}
-		}
-	}
+                this.getWorld().getOtherEntities(this, this.getBoundingBox(), predicate)
+						.forEach((entity) -> entity.damage(damageSource2, f));
+
+                if (this.block.isIn(BlockTags.ANVIL) && f > 0.0F && this.random.nextFloat() < 0.05F + (float) i * 0.05F) {
+                    BlockState blockState = AnvilBlock.getLandingState(this.block);
+                    if (blockState == null) {
+                        this.destroyedOnLanding = true;
+                    } else {
+                        this.block = blockState;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
 	protected void writeCustomDataToNbt(NbtCompound nbt) {
 		nbt.put("BlockState", NbtHelper.fromBlockState(this.block));
 		nbt.putInt("Time", this.timeFalling);
-		nbt.putBoolean("DropItem", this.dropItem);
 		nbt.putBoolean("HurtEntities", this.hurtEntities);
 		nbt.putFloat("FallHurtAmount", this.fallHurtAmount);
 		nbt.putInt("FallHurtMax", this.fallHurtMax);
@@ -411,29 +344,21 @@ public class FallingTardisEntity extends Entity {
 			this.hurtEntities = true;
 		}
 
-		if (nbt.contains("DropItem", 99)) {
-			this.dropItem = nbt.getBoolean("DropItem");
-		}
-
 		if (nbt.contains("TileEntityData", 10)) {
 			this.blockEntityData = nbt.getCompound("TileEntityData");
 		}
 
 		this.destroyedOnLanding = nbt.getBoolean("CancelDrop");
-		if (this.block.isAir()) {
-			this.block = Blocks.SAND.getDefaultState();
-		}
 
+		if (this.block.isAir()) {
+			this.block = AITBlocks.EXTERIOR_BLOCK.getDefaultState();
+		}
 	}
 
 	public void setHurtEntities(float fallHurtAmount, int fallHurtMax) {
 		this.hurtEntities = true;
 		this.fallHurtAmount = fallHurtAmount;
 		this.fallHurtMax = fallHurtMax;
-	}
-
-	public void setDestroyedOnLanding() {
-		this.destroyedOnLanding = true;
 	}
 
 	public boolean doesRenderOnFire() {

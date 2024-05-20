@@ -36,12 +36,19 @@ public class ServerTardis extends Tardis {
 		super(uuid, new ServerTardisTravel(pos), new ServerTardisDesktop(schema), new ServerTardisExterior(exteriorType, variantType));
 	}
 
+	@Override
+	public void init(boolean deserialized) {
+		if (!deserialized) {
+			this.getTravel().placeExterior();
+			this.getTravel().runAnimations();
+		}
+	}
+
 	/**
 	 * @deprecated NEVER EVER use this constructor. It's for GSON to call upon deserialization!
 	 */
 	@Deprecated
-	@SuppressWarnings("unused")
-	private ServerTardis() {
+    private ServerTardis() {
 		super();
 	}
 

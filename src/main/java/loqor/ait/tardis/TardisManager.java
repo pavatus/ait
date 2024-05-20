@@ -18,8 +18,8 @@ import loqor.ait.tardis.data.TardisHandlersManager;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
 import loqor.ait.tardis.link.Linkable;
-import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +45,7 @@ public abstract class TardisManager<T extends Tardis> {
 	protected final Map<UUID, T> lookup = new HashMap<>();
 	protected final Gson gson;
 
-	public TardisManager() {
+	protected TardisManager() {
 		GsonBuilder builder = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
 					@Override
 					public boolean shouldSkipField(FieldAttributes field) {
@@ -91,9 +92,8 @@ public abstract class TardisManager<T extends Tardis> {
 		return TardisManager.getInstance(!world.isClient());
 	}
 
-	@Deprecated
-	public static TardisManager<?> getInstance() {
-		return TardisManager.getInstance(TardisUtil.isServer());
+	public static TardisManager<?> getInstance(Tardis tardis) {
+		return TardisManager.getInstance((tardis instanceof ServerTardis));
 	}
 
 	public static TardisManager<?> getInstance(boolean isServer) {
@@ -114,40 +114,18 @@ public abstract class TardisManager<T extends Tardis> {
 	}
 
 	/**
-	 * Gets the ClientTardis if it's in the lookup, should only be called if you are 100% sure the client has this tardis.
+	 * By all means a bad practice. Use {@link #getTardis(UUID, Consumer)} instead.
+	 * Ensures to return a {@link Tardis} instance as fast as possible.
+	 * <p>
+	 * By using this method you accept the risk of the tardis not being on the client.
 	 *
-	 * @deprecated This method is stupid. Use {@link TardisManager#getTardis(UUID, Consumer)} instead.
-	 * Why is it stupid? Because {@link TardisManager#getTardis(UUID, Consumer)} will yield the same results,
-	 * given that the client has this tardis!
-	 *
-	 * @param uuid The UUID of the tardis
-	 * @param performAsk Whether to ask for this tardis if we don't have it
+	 * @implNote For {@link ServerTardisManager} the implementation is identical {@link ServerTardisManager#getTardis(UUID)}.
+	 * @deprecated Have you read the comment?
 	 */
+	@Nullable
 	@Deprecated
-	public Tardis getTardis(UUID uuid, boolean performAsk) {
-		if (!this.hasTardis(uuid)) {
-			AITMod.LOGGER.error("Called getTardis() on a tardis that hasnt been synced!");
-
-			if (performAsk)
-				this.getTardis(uuid, (t) -> {
-				});
-
-			return null;
-		}
-
+	public T demandTardis(UUID uuid) {
 		return this.lookup.get(uuid);
-	}
-
-	/**
-	 * @deprecated This method SHOULD NOT be in {@link ClientTardisManager}. It should be exclusive to {@link ServerTardisManager}
-	 */
-	@Deprecated
-	public Tardis getTardis(UUID uuid) {
-		return this.getTardis(uuid, false);
-	}
-
-	public boolean hasTardis(UUID uuid) {
-		return this.lookup.containsKey(uuid);
 	}
 
 	public abstract void loadTardis(UUID uuid, Consumer<T> consumer);
@@ -156,7 +134,7 @@ public abstract class TardisManager<T extends Tardis> {
 		this.lookup.clear();
 	}
 
-	@Deprecated // only use if necessary, otherwise use loadTardis / getTardis etc
+	@Deprecated
 	public Map<UUID, T> getLookup() {
 		return this.lookup;
 	}

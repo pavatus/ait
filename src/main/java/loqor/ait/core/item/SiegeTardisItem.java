@@ -1,12 +1,10 @@
 package loqor.ait.core.item;
 
 import loqor.ait.core.AITItems;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
-import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -20,7 +18,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +28,7 @@ import java.util.UUID;
 
 // todo fix so many issues with having more than one of this item
 public class SiegeTardisItem extends Item {
+
 	public SiegeTardisItem(Settings settings) {
 		super(settings.maxCount(1));
 	}
@@ -39,17 +37,17 @@ public class SiegeTardisItem extends Item {
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 		super.inventoryTick(stack, world, entity, slot, selected);
 
-		if (world.isClient()) return;
+		if (world.isClient())
+			return;
 
-		if (getTardis(stack) == null) {
+		Tardis tardis = SiegeTardisItem.getTardis(stack, ServerTardisManager.getInstance());
+
+		if (tardis == null) {
 			stack.setCount(0);
 			return;
 		}
 
-		Tardis tardis = getTardis(stack);
-		if (tardis == null) return;
-
-		if (!tardis.isSiegeMode()) {
+        if (!tardis.isSiegeMode()) {
 			tardis.setSiegeBeingHeld(null);
 			stack.setCount(0);
 			return;
@@ -67,13 +65,13 @@ public class SiegeTardisItem extends Item {
 			}
 
 			if (!(Objects.equals(player.getUuid(), heldId))) {
-				int found = findSlot(player, tardis);
+				int found = findSlot(player, tardis, ServerTardisManager.getInstance());
 				player.getInventory().setStack(found, ItemStack.EMPTY);
 				return;
 			}
 
-			if (getSiegeCount(player, tardis) > 1) {
-				int foundSlot = findSlot(player, tardis);
+			if (getSiegeCount(player, tardis, ServerTardisManager.getInstance()) > 1) {
+				int foundSlot = findSlot(player, tardis, ServerTardisManager.getInstance());
 				if (foundSlot == slot) {
 					player.getInventory().setStack(slot, ItemStack.EMPTY);
 				}
@@ -81,6 +79,7 @@ public class SiegeTardisItem extends Item {
 		}
 
 		tardis.getTravel().setPosition(fromEntity(entity));
+
 		if (!tardis.isSiegeBeingHeld()) {
 			tardis.setSiegeBeingHeld(entity.getUuid());
 		}
@@ -88,41 +87,42 @@ public class SiegeTardisItem extends Item {
 
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
-		if (context.getHand() != Hand.MAIN_HAND) return ActionResult.FAIL; // bc i cba
-		if (context.getWorld().isClient()) return ActionResult.SUCCESS;
+		if (context.getHand() != Hand.MAIN_HAND)
+			return ActionResult.FAIL; // bc i cba
+
+		if (context.getWorld().isClient())
+			return ActionResult.SUCCESS;
 
 		ItemStack stack = context.getStack();
-		ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+		Tardis tardis = SiegeTardisItem.getTardis(stack, ServerTardisManager.getInstance());
 
-		if (getTardis(stack) == null) {
-			player.getMainHandStack().setCount(0);
+		ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+		player.getMainHandStack().setCount(0);
+
+		if (tardis == null) {
 			player.getInventory().markDirty();
 			return ActionResult.FAIL;
 		}
 
-		Tardis tardis = getTardis(stack);
-		if (tardis == null) return ActionResult.FAIL;
-
-		if (!tardis.isSiegeMode()) {
+        if (!tardis.isSiegeMode()) {
 			tardis.setSiegeBeingHeld(null);
-			player.getMainHandStack().setCount(0);
 			player.getInventory().markDirty();
 			return ActionResult.FAIL;
 		}
 
 		placeTardis(tardis, fromItemContext(context));
-		player.getMainHandStack().setCount(0);
 
 		if (player.isCreative()) {
-			int slot = findSlot(player, tardis);
+			int slot = findSlot(player, tardis, ServerTardisManager.getInstance());
+
 			if (slot == -1) {
 				return ActionResult.SUCCESS; // how
 			}
+
 			player.getInventory().setStack(slot, ItemStack.EMPTY);
 		}
 
 		player.getInventory().markDirty();
-
 		return ActionResult.SUCCESS;
 	}
 
@@ -143,29 +143,31 @@ public class SiegeTardisItem extends Item {
 		return new AbsoluteBlockPos.Directed(BlockPos.ofFloored(entity.getPos()), entity.getWorld(), 0);
 	}
 
-	public static boolean hasSiegeInInventory(ServerPlayerEntity player, Tardis tardis) {
-		return getSiegeCount(player, tardis) > 0;
-	}
-
-	public static int getSiegeCount(ServerPlayerEntity player, Tardis tardis) {
+	public static int getSiegeCount(ServerPlayerEntity player, Tardis tardis, TardisManager<?> manager) {
 		int count = 0;
 
 		for (int i = 0; i < 36; i++) {
-			if (getTardis(player.getInventory().getStack(i)) == null) continue;
-			if (getTardis(player.getInventory().getStack(i)).equals(tardis)) {
+			Tardis other = SiegeTardisItem.getTardis(player.getInventory().getStack(i), manager);
+
+			if (other == null)
+				continue;
+
+			if (other == tardis)
 				count++;
-			}
 		}
+
 		return count;
 	}
 
-	public static int findSlot(ServerPlayerEntity player, Tardis tardis) {
+	public static int findSlot(ServerPlayerEntity player, Tardis tardis, TardisManager<?> manager) {
 		Tardis found;
 
 		for (ItemStack stack : player.getInventory().main) {
-			found = getTardis(stack);
+			found = SiegeTardisItem.getTardis(stack, manager);
 
-			if (found == null) continue;
+			if (found == null)
+				continue;
+
 			if (found.equals(tardis)) {
 				return player.getInventory().indexOf(stack);
 			}
@@ -177,6 +179,7 @@ public class SiegeTardisItem extends Item {
 	public static void pickupTardis(Tardis tardis, ServerPlayerEntity player) {
 		if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE))
 			return;
+
 		tardis.getTravel().deleteExterior();
 		tardis.getHandlers().getSiege().setSiegeBeingHeld(player.getUuid());
 		player.getInventory().insertStack(create(tardis));
@@ -189,26 +192,22 @@ public class SiegeTardisItem extends Item {
 		tardis.setSiegeBeingHeld(null);
 	}
 
-
 	public static ItemStack create(Tardis tardis) {
 		ItemStack stack = new ItemStack(AITItems.SIEGE_ITEM);
 		stack.setCount(1);
+
 		setTardis(stack, tardis);
 		return stack;
 	}
 
-	public static Tardis getTardis(ItemStack stack) {
+	public static Tardis getTardis(ItemStack stack, TardisManager<?> manager) {
 		NbtCompound data = stack.getOrCreateNbt();
-
-		if (!data.contains("tardis-uuid")) {
-			return null;
-		}
-
 		UUID uuid = data.getUuid("tardis-uuid");
-		if (TardisUtil.isClient())
-			return ClientTardisManager.getInstance().getLookup().get(uuid);
 
-		return ServerTardisManager.getInstance().getTardis(uuid);
+		if (uuid == null)
+			return null;
+
+		return manager.demandTardis(uuid);
 	}
 
 	public static void setTardis(ItemStack stack, Tardis tardis) {
