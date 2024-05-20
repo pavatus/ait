@@ -3,6 +3,7 @@ package loqor.ait.registry.datapack;
 import com.mojang.serialization.Codec;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Identifiable;
+import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -78,7 +79,7 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
 
     @Override
     public void syncToEveryone() {
-        if (!this.sync)
+        if (!this.sync || TardisUtil.getOverworld() == null)
             return;
 
         super.syncToEveryone();

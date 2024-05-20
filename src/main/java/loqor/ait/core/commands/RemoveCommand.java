@@ -65,7 +65,7 @@ public class RemoveCommand {
         // Delete the file. File system operations are costly!
         EXECUTOR.execute(() -> {
             try {
-                Path file = ServerTardisManager.getSavePath(context.getSource().getServer(), tardis.getUuid(), "json");
+                Path file = ServerTardisManager.getSavePath(tardis.getUuid(), "json");
 
                 if (Files.exists(file)) {
                     Files.delete(file);

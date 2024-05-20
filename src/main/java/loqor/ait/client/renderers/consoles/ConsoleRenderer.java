@@ -49,7 +49,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 			console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
 
 			if (entity.findTardis().get().hasPower())
-				console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentEmissive(variant.emission(), true)), maxLight, overlay, 1, 1, 1, 1);
+				console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(variant.emission(), true)), maxLight, overlay, 1, 1, 1, 1);
 		}
 		matrices.pop();
 		if (!entity.findTardis().get().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) return;

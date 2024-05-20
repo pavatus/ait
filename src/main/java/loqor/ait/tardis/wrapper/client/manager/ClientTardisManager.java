@@ -104,21 +104,25 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 	}
 
 	private void update(UUID uuid, PacketByteBuf buf) {
-		this.getTardis(uuid, tardis -> {
-			TardisComponent.Id typeId = buf.readEnumConstant(TardisComponent.Id.class);
+		if (!this.lookup.containsKey(uuid)) {
+			this.getTardis(uuid, t -> {}); // We *DON'T* want to use the tardis from this consumer. It's not the correct instance.
+			return;
+		}
 
-			if (!typeId.mutable())
-				return;
+		ClientTardis tardis = this.lookup.get(uuid); // THIS is the correct instance. There's a stupid race condition with the lookup table.
+		TardisComponent.Id typeId = buf.readEnumConstant(TardisComponent.Id.class);
 
 			if (typeId == TardisComponent.Id.PROPERTIES) {
 				this.updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
 				return;
 			}
 
-			typeId.set(tardis, this.gson.fromJson(
+		if (!typeId.mutable())
+			return;
+
+		typeId.set(tardis, this.gson.fromJson(
 					buf.readString(), typeId.clazz())
 			);
-		});
 	}
 
 	private void update(PacketByteBuf buf) {

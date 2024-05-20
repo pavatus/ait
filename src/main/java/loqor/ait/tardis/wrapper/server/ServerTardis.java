@@ -38,6 +38,7 @@ public class ServerTardis extends Tardis {
 
 	@Override
 	public void init(boolean deserialized) {
+		super.init(deserialized);
 		if (!deserialized) {
 			this.getTravel().placeExterior();
 			this.getTravel().runAnimations();
