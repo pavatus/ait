@@ -51,7 +51,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     @Nullable
     private UUID targetUuid;
     private long nextAmbientSoundTime;
-    public static final String HAS_ENGINE_CORE = "hasEngineCore";
+    public static final String HAS_ENGINE_CORE = "has_engine_core";
 
     public EngineCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, pos, state);
