@@ -206,7 +206,7 @@ public class AITModClient implements ClientModInitializer {
                 if (((LinkableBlockEntity) block).findTardis().isEmpty())
                     return;
 
-                ClientTardisManager.getInstance().loadTardis(MinecraftClient.getInstance(), ((LinkableBlockEntity) block).findTardis().get().getUuid(), null);
+                ClientTardisManager.getInstance().loadTardis(((LinkableBlockEntity) block).findTardis().get().getUuid(), null);
             }
         });
     }

@@ -17,9 +17,7 @@ import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.*;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -308,12 +306,10 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		NbtCompound tag = stack.getOrCreateNbt();
         String position = Text.translatable("message.ait.sonic.none").getString();
 
-		if (tag.contains("tardis")) {
-			Tardis tardis = ClientTardisManager.getInstance().demandTardis(MinecraftClient.getInstance(), UUID.fromString(tag.getString("tardis")));
+		Tardis tardis = LinkableItem.getTardis(world, stack);;
 
-			if (tardis != null)
-				position = tardis.getTravel() == null || tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();
-		}
+		if (tardis != null)
+			position = tardis.getTravel() == null || tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();
 
 		tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
 
