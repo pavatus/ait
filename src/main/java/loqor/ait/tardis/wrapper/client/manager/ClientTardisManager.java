@@ -97,6 +97,10 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		return this.demandTardis(MinecraftClient.getInstance(), uuid);
 	}
 
+	public void getTardis(UUID uuid, Consumer<ClientTardis> consumer) {
+		this.getTardis(MinecraftClient.getInstance(), uuid, consumer);
+	}
+
 	/**
 	 * Asks the server for a tardis at an exterior position
 	 */

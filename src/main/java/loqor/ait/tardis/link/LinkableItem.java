@@ -3,7 +3,6 @@ package loqor.ait.tardis.link;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
@@ -57,7 +56,7 @@ public abstract class LinkableItem extends Item {
 			return;
 		}
 
-		ClientTardisManager.getInstance().getTardis(MinecraftClient.getInstance(), UUID.fromString(nbt.getString("tardis")), tardis -> {
+		ClientTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")), tardis -> {
 			if (tardis != null) {
 				tooltip.add(Text.literal("TARDIS: ").formatted(Formatting.BLUE));
 				tooltip.add(Text.literal("> " + tardis.getHandlers().getStats().getName()));
