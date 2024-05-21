@@ -82,6 +82,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 	}
 
 	@Override
+	@Deprecated
 	public @Nullable ClientTardis demandTardis(MinecraftClient client, UUID uuid) {
 		ClientTardis result = this.lookup.get(uuid);
 
@@ -91,6 +92,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		return result;
 	}
 
+	@Deprecated
 	public @Nullable ClientTardis demandTardis(UUID uuid) {
 		return this.demandTardis(MinecraftClient.getInstance(), uuid);
 	}
