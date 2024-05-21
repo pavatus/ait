@@ -472,7 +472,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             AITModelProvider aitModelProvider = new AITModelProvider(output);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE_GENERATOR);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.EXTERIOR_BLOCK);
+            aitModelProvider.registerSimpleBlock(AITBlocks.EXTERIOR_BLOCK);
+            aitModelProvider.registerDirectionalBlock(AITBlocks.FABRICATOR);
             aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
             aitModelProvider.registerDirectionalBlock(AITBlocks.CORAL_PLANT);
             aitModelProvider.registerDirectionalBlock(AITBlocks.ARTRON_COLLECTOR_BLOCK);
@@ -534,8 +535,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.MERCURY_MUSIC_DISC, "Music Disc");
         provider.addTranslation(AITItems.MERCURY_MUSIC_DISC.getTranslationKey() + ".desc", "Nitrogenesis - Mercury");
         provider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Sonic Screwdriver");
-        //provider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER, "Renaissance Sonic Screwdriver");
-        //provider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER, "Coral Sonic Screwdriver");
+        provider.addTranslation(AITItems.BLUEPRINT, "Blueprint");
         provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
         provider.addTranslation(AITItems.HAMMER, "Hammer");
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
@@ -642,6 +642,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("waypoint.position.tooltip", "Position");
         provider.addTranslation("waypoint.dimension.tooltip", "Dimension");
         provider.addTranslation("waypoint.direction.tooltip", "Direction");
+
+        provider.addTranslation("ait.blueprint.tooltip", "Blueprint: ");
 
         return provider;
     }

@@ -105,7 +105,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 
 	private void update(UUID uuid, PacketByteBuf buf) {
 		if (!this.lookup.containsKey(uuid)) {
-			this.getTardis(uuid, t -> {}); // We *DON'T* want to use the tardis from this consumer. It's not the correct instance.
+			this.getTardis(uuid, tardis -> {}); // We *DON'T* want to use the tardis from this consumer. It's not the correct instance.
 			return;
 		}
 

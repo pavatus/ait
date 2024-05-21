@@ -159,6 +159,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 	}
 
 	public Identifier getEnergySwirlTexture() {
-		return new Identifier("textures/misc/forcefield.png");
+		return new Identifier(AITMod.MOD_ID, "textures/environment/shields.png");
 	}
 }

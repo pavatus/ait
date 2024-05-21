@@ -141,6 +141,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis> {
 
 		this.lookup.put(uuid, tardis);
 		consumer.accept(stats);
+
+		stats.setName(StatsData.getRandomName());
+
 		return tardis;
 	}
 

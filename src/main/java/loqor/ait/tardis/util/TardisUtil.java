@@ -156,8 +156,7 @@ public class TardisUtil {
 
 					PermissionHandler permissions = tardis.handler(TardisComponent.Id.PERMISSIONS);
 
-					if (tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT)
-							|| !permissions.check(player, Permission.SPECIAL.SNAP.get()))
+					if (tardis.loyalty().get(player).level() < Loyalty.Type.PILOT.level)
 						return;
 
 					if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown())

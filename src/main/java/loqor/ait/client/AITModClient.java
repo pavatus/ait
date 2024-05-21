@@ -10,10 +10,7 @@ import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
 import loqor.ait.client.renderers.entities.TardisRealRenderer;
 import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
-import loqor.ait.client.renderers.machines.ArtronCollectorRenderer;
-import loqor.ait.client.renderers.machines.EngineCoreBlockEntityRenderer;
-import loqor.ait.client.renderers.machines.EngineRenderer;
-import loqor.ait.client.renderers.machines.PlugBoardRenderer;
+import loqor.ait.client.renderers.machines.*;
 import loqor.ait.client.renderers.monitors.MonitorRenderer;
 import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
 import loqor.ait.client.renderers.wearables.AITHudOverlay;
@@ -313,6 +310,7 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, EngineRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, EngineCoreBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.PLUGBOARD_ENTITY_TYPE, PlugBoardRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.FABRICATOR_BLOCK_ENTITY_TYPE, FabricatorRenderer::new);
     }
 
     public void entityRenderRegister() {
@@ -325,10 +323,12 @@ public class AITModClient implements ClientModInitializer {
         BlockRenderLayerMap map = BlockRenderLayerMap.INSTANCE;
         map.putBlock(AITBlocks.ZEITON_BLOCK, RenderLayer.getCutout());
         map.putBlock(AITBlocks.BUDDING_ZEITON, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.ENGINE_BLOCK, RenderLayer.getCutout());
         map.putBlock(AITBlocks.ZEITON_CLUSTER, RenderLayer.getCutout());
         map.putBlock(AITBlocks.LARGE_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.MEDIUM_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.SMALL_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.MACHINE_CASING, RenderLayer.getTranslucent());
+        map.putBlock(AITBlocks.FABRICATOR, RenderLayer.getTranslucent());
     }
 }

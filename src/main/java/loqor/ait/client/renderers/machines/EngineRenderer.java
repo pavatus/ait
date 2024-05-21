@@ -3,6 +3,7 @@ package loqor.ait.client.renderers.machines;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.machines.ArtronCollectorModel;
 import loqor.ait.client.models.machines.EngineModel;
+import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blockentities.ArtronCollectorBlockEntity;
 import loqor.ait.core.blockentities.EngineBlockEntity;
@@ -44,13 +45,11 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
 
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
-		this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(ENGINE_TEXTURE)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
-		if (entity.hasWorld() && entity.getWorld().getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
+		this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(ENGINE_TEXTURE)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+		if (entity.getWorld().getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
 			if (entity.findTardis().get().hasPower()) {
-				this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(EMISSIVE_ENGINE_TEXTURE)), 0xF000F00, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+				this.engineModel.render(matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(EMISSIVE_ENGINE_TEXTURE, true)), 0xF000F00, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 			}
-		} else {
-			this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(EMISSIVE_ENGINE_TEXTURE)), 0xF000F00, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 		}
 		matrices.pop();
 	}

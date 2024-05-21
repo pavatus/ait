@@ -57,6 +57,9 @@ public class AITItems implements ItemRegistryContainer {
 	// Components
 	public static final Item DEMATERIALIZATION_CIRCUIT = new MachineItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
+	// Blueprints (there's only 1 lol idk why the fuck i made it plural)
+	public static final Item BLUEPRINT = new BlueprintItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).rarity(Rarity.EPIC));
+
 
 	// Waypoint-related
 	public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
