@@ -96,7 +96,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
 
     public static void clientTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
 
-        //if(blockEntity.findTardis().isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+        if(blockEntity.findTardis().isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
 
         ++blockEntity.ticks;
         long l = world.getTime();
@@ -147,10 +147,10 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
             }
         }
 
+        // @TODO positively awful idea, IM GONNA DO IT ANYWAYS HAHAHA
         Optional<Tardis> tardis = blockEntity.findTardis();
         if (tardis.isEmpty()) return;
         PropertiesHandler.set(tardis.get(), HAS_ENGINE_CORE, blockEntity.isActive(), true);
-
     }
 
     private static void openEye(EngineCoreBlockEntity blockEntity, List<BlockPos> activatingBlocks) {
@@ -325,7 +325,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
         Optional<Tardis> tardis = this.findTardis();
         if (tardis.isEmpty()) return;
-        PropertiesHandler.set(tardis.get(), HAS_ENGINE_CORE, this.isActive(), true);
+        PropertiesHandler.set(tardis.get(), HAS_ENGINE_CORE, false, true);
         tardis.get().disablePower();
     }
 }
