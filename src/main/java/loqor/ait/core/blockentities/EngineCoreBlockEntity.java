@@ -5,6 +5,8 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -27,6 +29,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -144,10 +147,14 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
             }
         }
 
+        Optional<Tardis> tardis = blockEntity.findTardis();
+        if (tardis.isEmpty()) return;
+        PropertiesHandler.set(tardis.get(), HAS_ENGINE_CORE, blockEntity.isActive(), true);
+
     }
 
     private static void openEye(EngineCoreBlockEntity blockEntity, List<BlockPos> activatingBlocks) {
-        blockEntity.setEyeOpen(activatingBlocks.size() >= 1);
+        blockEntity.setEyeOpen(!activatingBlocks.isEmpty()); // @TODO: do not forget to change this for release
     }
 
     private static boolean updateActivatingBlocks(World world, BlockPos pos, List<BlockPos> activatingBlocks) {
@@ -313,5 +320,12 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
                 AITBlocks.ZEITON_BLOCK,
                 Blocks.MAGMA_BLOCK
         };
+    }
+
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        Optional<Tardis> tardis = this.findTardis();
+        if (tardis.isEmpty()) return;
+        PropertiesHandler.set(tardis.get(), HAS_ENGINE_CORE, this.isActive(), true);
+        tardis.get().disablePower();
     }
 }

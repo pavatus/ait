@@ -2,6 +2,8 @@ package loqor.ait.tardis;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.blockentities.EngineCoreBlockEntity;
+import loqor.ait.core.blocks.EngineCoreBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.util.DeltaTimeManager;
@@ -236,6 +238,10 @@ public abstract class Tardis {
 
 		if (this.hasPower())
 			return;
+
+		if (!PropertiesHandler.getBool(this.properties(), EngineCoreBlockEntity.HAS_ENGINE_CORE)) {
+			return;
+		}
 
 		PropertiesHandler.set(this, PropertiesHandler.HAS_POWER, true);
 		TardisEvents.REGAIN_POWER.invoker().onRegainPower(this);

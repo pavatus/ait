@@ -252,7 +252,7 @@ public class PropertiesHandler {
 		map.put(HADS_ENABLED, false);
 		map.put(FuelData.FUEL_COUNT, 1000d);
 		map.put(FuelData.REFUELING, false);
-		map.put(HAS_POWER, true);
+		map.put(HAS_POWER, false);
 		map.put(SIEGE_MODE, false);
 		map.put(SIEGE_HELD, false);
 		map.put(IS_IN_REAL_FLIGHT, false);

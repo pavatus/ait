@@ -1,5 +1,7 @@
 package loqor.ait.client.renderers.machines;
 
+import loqor.ait.AITMod;
+import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -33,7 +35,7 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
     public static final SpriteIdentifier CAGE_TEXTURE;
     public static final SpriteIdentifier WIND_TEXTURE;
     public static final SpriteIdentifier WIND_VERTICAL_TEXTURE;
-    public static final SpriteIdentifier OPEN_EYE_TEXTURE;
+    public static final Identifier OPEN_EYE_TEXTURE;
     public static final SpriteIdentifier CLOSED_EYE_TEXTURE;
     private final ModelPart conduitEye;
     private final ModelPart conduitWind;
@@ -79,13 +81,16 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
     public void render(EngineCoreBlockEntity coreBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
         float g = (float)coreBlockEntity.ticks + f;
         float h;
+        matrixStack.push();
+        matrixStack.scale(2f, 2f, 2f);
+        matrixStack.translate(-0.25f, -0.25f, -0.25f);
         if (!coreBlockEntity.isActive()) {
             h = coreBlockEntity.getRotation(0.0F);
             VertexConsumer vertexConsumer = BASE_TEXTURE.getVertexConsumer(vertexConsumerProvider, RenderLayer::getEntitySolid);
             matrixStack.push();
             matrixStack.translate(0.5F, 0.5F, 0.5F);
             matrixStack.multiply((new Quaternionf()).rotationY(h * 0.017453292F));
-            this.conduitShell.render(matrixStack, vertexConsumer, i, j, 0.1f, 0.9f, 1, 1);
+            this.conduitShell.render(matrixStack, vertexConsumer, i, j, 245f / 255f, 111f / 255f, 39f / 255f, 1);
             matrixStack.pop();
         } else {
             h = coreBlockEntity.getRotation(f) * 57.295776F;
@@ -95,7 +100,7 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
             matrixStack.translate(0.5F, 0.3F + k * 0.2F, 0.5F);
             Vector3f vector3f = (new Vector3f(0.5F, 1.0F, 0.5F)).normalize();
             matrixStack.multiply((new Quaternionf()).rotationAxis(h * 0.017453292F, vector3f));
-            this.conduit.render(matrixStack, CAGE_TEXTURE.getVertexConsumer(vertexConsumerProvider, RenderLayer::getEntityCutoutNoCull), i, j, 0.1f, 0.9f, 1, 1);
+            this.conduit.render(matrixStack, CAGE_TEXTURE.getVertexConsumer(vertexConsumerProvider, RenderLayer::getEntityCutoutNoCull), i, j, 245f / 255f, 111 / 255f, 39f / 255f, 1);
             matrixStack.pop();
             int l = coreBlockEntity.ticks / 66 % 3;
             matrixStack.push();
@@ -107,13 +112,13 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
             }
 
             VertexConsumer vertexConsumer2 = (l == 1 ? WIND_VERTICAL_TEXTURE : WIND_TEXTURE).getVertexConsumer(vertexConsumerProvider, RenderLayer::getEntityCutoutNoCull);
-            this.conduitWind.render(matrixStack, vertexConsumer2, i, j, 0.1f, 0.9f, 1, 1);
+            this.conduitWind.render(matrixStack, vertexConsumer2, i, j, 245f / 255f, 111 / 255f, 39f / 255f, 1);
             matrixStack.pop();
             matrixStack.push();
             matrixStack.translate(0.5F, 0.5F, 0.5F);
             matrixStack.scale(0.875F, 0.875F, 0.875F);
             matrixStack.multiply((new Quaternionf()).rotationXYZ(3.1415927F, 0.0F, 3.1415927F));
-            this.conduitWind.render(matrixStack, vertexConsumer2, i, j, 0.1f, 0.9f, 1, 1);
+            this.conduitWind.render(matrixStack, vertexConsumer2, i, j, 245f / 255f, 111 / 255f, 39f / 255f, 1);
             matrixStack.pop();
             Camera camera = this.dispatcher.camera;
             matrixStack.push();
@@ -123,9 +128,11 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
             matrixStack.multiply((new Quaternionf()).rotationYXZ(m * 0.017453292F, camera.getPitch() * 0.017453292F, 3.1415927F));
             float n = 1.3333334F;
             matrixStack.scale(1.3333334F, 1.3333334F, 1.3333334F);
-            this.conduitEye.render(matrixStack, (coreBlockEntity.isEyeOpen() ? OPEN_EYE_TEXTURE : CLOSED_EYE_TEXTURE).getVertexConsumer(vertexConsumerProvider, RenderLayer::getEntityCutoutNoCull), i, j, 0.1f, 0.9f, 1, 1);
+            this.conduitEye.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucentCull(OPEN_EYE_TEXTURE)), i, j, 1f, 1f, 1f, 1);
+            this.conduitEye.render(matrixStack, vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucentEmissive(OPEN_EYE_TEXTURE)), i, j, 1f, 1f, 1f, 1);
             matrixStack.pop();
         }
+        matrixStack.pop();
     }
 
     static {
@@ -133,7 +140,7 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
         CAGE_TEXTURE = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("entity/conduit/cage"));
         WIND_TEXTURE = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("entity/conduit/wind"));
         WIND_VERTICAL_TEXTURE = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("entity/conduit/wind_vertical"));
-        OPEN_EYE_TEXTURE = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("entity/conduit/open_eye"));
+        OPEN_EYE_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/environment/eye_of_harmony.png");
         CLOSED_EYE_TEXTURE = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("entity/conduit/closed_eye"));
     }
 }
