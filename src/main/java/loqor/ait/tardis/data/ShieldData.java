@@ -2,13 +2,16 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
+import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -71,24 +74,27 @@ public class ShieldData extends TardisLink {
 		tardis.removeFuel(2 * (tardis.tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick
 		World world = tardis.getExterior().getExteriorPos().getWorld();
 		world.getOtherEntities(null,
-						new Box(getExteriorPos()).expand(4f),
+						new Box(getExteriorPos()).expand(8f),
 						EntityPredicates.EXCEPT_SPECTATOR)
 				.stream()
 				.filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
+				.filter(entity -> !(entity instanceof TardisRealEntity)) // Exclude real world flight TARDIS (I'm too lazy to fix this for now bcs RWF isn't releasable)
 				.filter(entity -> !(entity instanceof ServerPlayerEntity player && player.isSpectator())) // Exclude players in spectator
 				.filter(entity -> !(entity instanceof FallingTardisEntity falling && falling.getTardis() == tardis))
-				.filter(entity -> !(entity instanceof PlayerEntity player && tardis.getHandlers().getLoyalties().get(player).level() >= Loyalty.Type.PILOT.level))
+				.filter(entity -> !(entity instanceof PlayerEntity player && ((LoyaltyHandler) tardis.getHandlers().get(Id.LOYALTY)).get(player).level() >= Loyalty.Type.PILOT.level))
 				.forEach(entity -> {
 					if(entity instanceof ServerPlayerEntity && entity.isSubmergedInWater()) {
-						((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 20, 3, true, false, false));
+						((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
 					}
 					if(this.areVisualShieldsActive()) {
-						if (entity.squaredDistanceTo(this.getExteriorPos().toCenterPos()) <= 6f) {
+						if (entity.squaredDistanceTo(this.getExteriorPos().toCenterPos()) <= 8f) {
 							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(this.getExteriorPos().toCenterPos()).normalize().multiply(0.1f);
 							if(entity instanceof ProjectileEntity projectile) {
-								projectile.setVelocity(0, 0, 0);
-								projectile.velocityDirty = true;
-								projectile.velocityModified = true;
+								if(projectile instanceof TridentEntity) {
+									projectile.getVelocity().add(motion.multiply(2f));
+									return;
+								}
+								projectile.discard();
 								return;
 							}
 							entity.setVelocity(entity.getVelocity().add(motion.multiply(2f)));
