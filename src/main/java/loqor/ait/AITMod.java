@@ -204,7 +204,8 @@ public class AITMod implements ModInitializer {
 		}));
 
 		ServerPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.ASK, ((server, player, handler, buf, responseSender) -> {
-			if (player.getServerWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+			if (player.getServerWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+				return;
 
 			BlockPos consolePos = buf.readBlockPos();
 			// fixme the gotten block entity is always null, shit.
@@ -213,82 +214,93 @@ public class AITMod implements ModInitializer {
 		}));
 
 		ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ((server, player, handler, buf, responseSender) -> {
-			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-			TardisDesktopSchema desktop = DesktopRegistry.getInstance().get(buf.readIdentifier());
+			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
+				TardisDesktopSchema desktop = DesktopRegistry.getInstance().get(buf.readIdentifier());
 
-			if (tardis == null || desktop == null) return;
+				if (tardis == null || desktop == null)
+					return;
 
-			// nuh uh no interior changing during flight
-			if(tardis.getTravel().inFlight())
-				return;
+				// nuh uh no interior changing during flight
+				if(tardis.getTravel().inFlight())
+					return;
 
-			tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).queueInteriorChange(desktop);
+				tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).queueInteriorChange(desktop);
+			});
 		}));
 
 		ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE, ((server, player, handler, buf, responseSender) -> {
-			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-			HumSound hum = HumSound.fromName(buf.readString(), buf.readString());
+			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
+				HumSound hum = HumSound.fromName(buf.readString(), buf.readString());
 
-			if (tardis == null || hum == null)
-				return;
+				if (tardis == null || hum == null)
+					return;
 
-			tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).setHum(hum);
+				tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).setHum(hum);
+			});
 		}));
 
 		ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
-			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-			UUID console = buf.readUuid();
-			server.execute(() -> {
-				if (tardis == null)
-					return;
+			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
+				UUID console = buf.readUuid();
 
-				tardis.getDesktop().cacheConsole(console);
+				server.execute(() -> {
+					if (tardis == null)
+						return;
+
+					tardis.getDesktop().cacheConsole(console);
+				});
 			});
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.LEAVEBEHIND, (server, player, handler, buf, responseSender) -> {
-			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-			boolean behind = buf.readBoolean();
-			server.execute(() -> {
-				if (tardis == null)
-					return;
+			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
+				boolean behind = buf.readBoolean();
 
-				PropertiesHandler.set(tardis.properties(), PropertiesHandler.LEAVE_BEHIND, behind);
+				server.execute(() -> {
+					if (tardis == null)
+						return;
+
+					PropertiesHandler.set(tardis.properties(), PropertiesHandler.LEAVE_BEHIND, behind);
+				});
 			});
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.HOSTILEALARMS, (server, player, handler, buf, responseSender) -> {
-			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-			boolean hostile = buf.readBoolean();
-			server.execute(() -> {
-				if (tardis == null)
-					return;
+			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
+				boolean hostile = buf.readBoolean();
 
-				PropertiesHandler.set(tardis.properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
+				server.execute(() -> {
+					if (tardis == null)
+						return;
+
+					PropertiesHandler.set(tardis.properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
+				});
 			});
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.SHIELDS, (server, player, handler, buf, responseSender) -> {
-			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-			boolean shields = buf.readBoolean();
+			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
+				boolean shields = buf.readBoolean();
 
-			server.execute(() -> {
-				if (tardis == null)
-					return;
+				server.execute(() -> {
+					if (tardis == null)
+						return;
 
-				PropertiesHandler.set(tardis.properties(), ShieldData.IS_SHIELDED, shields);
+					PropertiesHandler.set(tardis.properties(), ShieldData.IS_SHIELDED, shields);
+				});
 			});
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.VISUAL_SHIELDS, (server, player, handler, buf, responseSender) -> {
-			Tardis tardis = ServerTardisManager.getInstance().getTardis(buf.readUuid());
-			boolean shields = buf.readBoolean();
+			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
+				boolean shields = buf.readBoolean();
 
-			server.execute(() -> {
-				if (tardis == null)
-					return;
+				server.execute(() -> {
+					if (tardis == null)
+						return;
 
-				PropertiesHandler.set(tardis.properties(), ShieldData.IS_VISUALLY_SHIELDED, tardis.areShieldsActive() && shields);
+					PropertiesHandler.set(tardis.properties(), ShieldData.IS_VISUALLY_SHIELDED, tardis.areShieldsActive() && shields);
+				});
 			});
 		});
 

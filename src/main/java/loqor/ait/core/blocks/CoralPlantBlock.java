@@ -5,11 +5,12 @@ import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.advancement.TardisCriterions;
-import loqor.ait.tardis.exterior.category.GrowthCategory;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -104,7 +105,14 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
 	private void createTardis(ServerWorld world, BlockPos pos, String creatorName) {
 		// Create a new tardis
-		ServerTardis created = ServerTardisManager.getInstance().createWithPlayerCreator(new AbsoluteBlockPos.Directed(pos, world, 0), CategoryRegistry.getInstance().get(GrowthCategory.REFERENCE), ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE), DesktopRegistry.DEFAULT_CAVE, creatorName);
+		ServerTardis created = ServerTardisManager.getInstance().create(new TardisBuilder()
+				.at(new AbsoluteBlockPos.Directed(pos, world, 0))
+				.exterior(ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE))
+				.desktop(DesktopRegistry.DEFAULT_CAVE)
+				.<StatsData>with(TardisComponent.Id.STATS, stats -> {
+					stats.setPlayerCreatorName(creatorName);
+					stats.markPlayerCreatorName();
+				}));
 
 		created.getHandlers().getFuel().setCurrentFuel(0);
 	}

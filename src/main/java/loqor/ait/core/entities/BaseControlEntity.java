@@ -50,11 +50,10 @@ public abstract class BaseControlEntity extends MobEntity {
 	}
 
 	public Tardis getTardis() {
-		if (this.tardisId == null) {
+		if (this.tardisId == null)
 			this.findTardis();
-		}
 
-		return TardisManager.getInstance(this).demandTardis(this.tardisId);
+		return TardisManager.with(this, (o, manager) -> manager.demandTardis(o, this.tardisId));
 	}
 
 	private void findTardis() {

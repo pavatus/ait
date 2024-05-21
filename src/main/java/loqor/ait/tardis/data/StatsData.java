@@ -33,6 +33,16 @@ public class StatsData extends TardisLink {
 		super(Id.STATS);
 	}
 
+	@Override
+	public void init(Tardis tardis, boolean deserialized) {
+		super.init(tardis, deserialized);
+
+		if (!deserialized) {
+			this.markCreationDate();
+			this.setName(StatsData.getRandomName());
+		}
+	}
+
 	public String getName() {
 		String name = (String) PropertiesHandler.get(tardis().properties(), NAME_KEY);
 
@@ -65,8 +75,11 @@ public class StatsData extends TardisLink {
 	}
 
 	public static String getRandomName() {
-		if (shouldGenerateNames()) loadNames();
-		if (NAME_CACHE == null) return "";
+		if (StatsData.shouldGenerateNames())
+			StatsData.loadNames();
+
+		if (NAME_CACHE == null)
+			return "";
 
 		return NAME_CACHE.get(AITMod.RANDOM.nextInt(NAME_CACHE.size()));
 	}

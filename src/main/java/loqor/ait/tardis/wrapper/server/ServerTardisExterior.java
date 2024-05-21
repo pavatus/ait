@@ -4,14 +4,11 @@ import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisTickable;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 
 public class ServerTardisExterior extends TardisExterior implements TardisTickable {
 
-	public ServerTardisExterior(ExteriorCategorySchema exterior, ExteriorVariantSchema variant) {
-		super(exterior, variant);
+	public ServerTardisExterior(ExteriorVariantSchema variant) {
+		super(variant);
 	}
 
 	@Override
@@ -25,16 +22,4 @@ public class ServerTardisExterior extends TardisExterior implements TardisTickab
 		super.setVariant(variant);
 		this.sync();
 	}
-
-	@Override
-	public void startTick(MinecraftServer server) { }
-
-	@Override
-	public void tick(MinecraftServer server) { }
-
-	@Override
-	public void tick(ServerWorld world) { }
-
-	@Override
-	public void tick(MinecraftClient client) { }
 }

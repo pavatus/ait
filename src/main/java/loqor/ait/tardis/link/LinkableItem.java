@@ -3,6 +3,7 @@ package loqor.ait.tardis.link;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
@@ -56,7 +57,7 @@ public abstract class LinkableItem extends Item {
 			return;
 		}
 
-		ClientTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")), tardis -> {
+		ClientTardisManager.getInstance().getTardis(MinecraftClient.getInstance(), UUID.fromString(nbt.getString("tardis")), tardis -> {
 			if (tardis != null) {
 				tooltip.add(Text.literal("TARDIS: ").formatted(Formatting.BLUE));
 				tooltip.add(Text.literal("> " + tardis.getHandlers().getStats().getName()));
@@ -65,17 +66,53 @@ public abstract class LinkableItem extends Item {
 		});
 	}
 
-	public static boolean isOf(ItemStack stack, Tardis tardis) {
-		return getTardis(stack, TardisManager.getInstance(tardis)) == tardis;
+	public static boolean isOf(World world, ItemStack stack, Tardis tardis) {
+		return LinkableItem.getTardis(world, stack) == tardis;
 	}
 
-	public static Tardis getTardis(ItemStack stack, TardisManager<?> manager) {
+	public static Tardis getTardis(World world, ItemStack stack) {
+		return LinkableItem.getTardisFromString(world, stack, "tardis");
+	}
+
+	public static UUID getTardisIdFromString(ItemStack stack, String path) {
 		NbtCompound nbt = stack.getOrCreateNbt();
 
-		if (!(nbt.contains("tardis")))
+		if (!(nbt.contains(path)))
 			return null;
 
-		UUID uuid = UUID.fromString(nbt.getString("tardis"));
-		return manager.demandTardis(uuid);
+        return UUID.fromString(nbt.getString(path));
+	}
+
+	public static UUID getTardisIdFromUuid(ItemStack stack, String path) {
+		NbtCompound nbt = stack.getOrCreateNbt();
+
+		if (!(nbt.contains(path)))
+			return null;
+
+        return nbt.getUuid(path);
+	}
+
+	public static Tardis getTardisFromString(World world, ItemStack stack, String path) {
+		return LinkableItem.getTardis(world, LinkableItem.getTardisIdFromString(stack, path));
+	}
+
+	public static <C> Tardis getTardisFromString(TardisManager<?, C> manager, C c, ItemStack stack, String path) {
+		return LinkableItem.getTardis(LinkableItem.getTardisIdFromString(stack, path), c, manager);
+	}
+
+	public static Tardis getTardisFromUuid(World world, ItemStack stack, String path) {
+		return LinkableItem.getTardis(world, LinkableItem.getTardisIdFromUuid(stack, path));
+	}
+
+	public static <C> Tardis getTardisFromUuid(TardisManager<?, C> manager, C c, ItemStack stack, String path) {
+		return LinkableItem.getTardis(LinkableItem.getTardisIdFromUuid(stack, path), c, manager);
+	}
+
+	public static Tardis getTardis(World world, UUID uuid) {
+		return TardisManager.with(world, (o, manager) -> LinkableItem.getTardis(uuid, o, manager));
+	}
+
+	public static <C> Tardis getTardis(UUID uuid, C c, TardisManager<?, C> manager) {
+		return manager.demandTardis(c, uuid);
 	}
 }

@@ -3,9 +3,8 @@ package loqor.ait.core.item;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import loqor.ait.tardis.link.LinkableItem;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -40,7 +39,7 @@ public class SiegeTardisItem extends Item {
 		if (world.isClient())
 			return;
 
-		Tardis tardis = SiegeTardisItem.getTardis(stack, ServerTardisManager.getInstance());
+		Tardis tardis = SiegeTardisItem.getTardis(world, stack);
 
 		if (tardis == null) {
 			stack.setCount(0);
@@ -65,13 +64,13 @@ public class SiegeTardisItem extends Item {
 			}
 
 			if (!(Objects.equals(player.getUuid(), heldId))) {
-				int found = findSlot(player, tardis, ServerTardisManager.getInstance());
+				int found = findSlot(player, tardis);
 				player.getInventory().setStack(found, ItemStack.EMPTY);
 				return;
 			}
 
-			if (getSiegeCount(player, tardis, ServerTardisManager.getInstance()) > 1) {
-				int foundSlot = findSlot(player, tardis, ServerTardisManager.getInstance());
+			if (getSiegeCount(player, tardis) > 1) {
+				int foundSlot = findSlot(player, tardis);
 				if (foundSlot == slot) {
 					player.getInventory().setStack(slot, ItemStack.EMPTY);
 				}
@@ -94,7 +93,7 @@ public class SiegeTardisItem extends Item {
 			return ActionResult.SUCCESS;
 
 		ItemStack stack = context.getStack();
-		Tardis tardis = SiegeTardisItem.getTardis(stack, ServerTardisManager.getInstance());
+		Tardis tardis = SiegeTardisItem.getTardis(context.getWorld(), stack);
 
 		ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
 		player.getMainHandStack().setCount(0);
@@ -113,7 +112,7 @@ public class SiegeTardisItem extends Item {
 		placeTardis(tardis, fromItemContext(context));
 
 		if (player.isCreative()) {
-			int slot = findSlot(player, tardis, ServerTardisManager.getInstance());
+			int slot = findSlot(player, tardis);
 
 			if (slot == -1) {
 				return ActionResult.SUCCESS; // how
@@ -143,11 +142,11 @@ public class SiegeTardisItem extends Item {
 		return new AbsoluteBlockPos.Directed(BlockPos.ofFloored(entity.getPos()), entity.getWorld(), 0);
 	}
 
-	public static int getSiegeCount(ServerPlayerEntity player, Tardis tardis, TardisManager<?> manager) {
+	public static int getSiegeCount(ServerPlayerEntity player, Tardis tardis) {
 		int count = 0;
 
 		for (int i = 0; i < 36; i++) {
-			Tardis other = SiegeTardisItem.getTardis(player.getInventory().getStack(i), manager);
+			Tardis other = SiegeTardisItem.getTardis(player.getWorld(), player.getInventory().getStack(i));
 
 			if (other == null)
 				continue;
@@ -159,11 +158,11 @@ public class SiegeTardisItem extends Item {
 		return count;
 	}
 
-	public static int findSlot(ServerPlayerEntity player, Tardis tardis, TardisManager<?> manager) {
+	public static int findSlot(ServerPlayerEntity player, Tardis tardis) {
 		Tardis found;
 
 		for (ItemStack stack : player.getInventory().main) {
-			found = SiegeTardisItem.getTardis(stack, manager);
+			found = SiegeTardisItem.getTardis(player.getWorld(), stack);
 
 			if (found == null)
 				continue;
@@ -200,14 +199,8 @@ public class SiegeTardisItem extends Item {
 		return stack;
 	}
 
-	public static Tardis getTardis(ItemStack stack, TardisManager<?> manager) {
-		NbtCompound data = stack.getOrCreateNbt();
-		UUID uuid = data.getUuid("tardis-uuid");
-
-		if (uuid == null)
-			return null;
-
-		return manager.demandTardis(uuid);
+	public static Tardis getTardis(World world, ItemStack stack) {
+		return LinkableItem.getTardisFromUuid(world, stack, "tardis-uuid");
 	}
 
 	public static void setTardis(ItemStack stack, Tardis tardis) {

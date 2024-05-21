@@ -6,6 +6,7 @@ import loqor.ait.core.util.bsp.BTreeGenerator;
 import loqor.ait.core.util.bsp.BinaryTree;
 import loqor.ait.core.util.vortex.VortexData;
 import loqor.ait.core.util.vortex.VortexDataHelper;
+import loqor.ait.tardis.manager.TardisFileManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -80,7 +81,7 @@ public class ServerVortexDataHandler {
         Returns the path to a world save stored vortex data file.
      */
     public static Path getVortexDataPath(MinecraftServer server) {
-        return ServerTardisManager.getRootSavePath()
+        return TardisFileManager.getRootSavePath(server)
                 .resolve(VortexDataHelper.VORTEX_DATA_SERVER_CACHE_PATH);
     }
 

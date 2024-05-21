@@ -3,10 +3,9 @@ package loqor.ait.tardis.control.impl;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -76,7 +75,7 @@ public class SecurityControl extends Control {
 		Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
 
 		for (ItemStack stack : keys) {
-			Tardis found = KeyItem.getTardis(stack, ServerTardisManager.getInstance());
+			Tardis found = KeyItem.getTardis(player.getWorld(), stack);
 
 			if (found == null)
 				continue;

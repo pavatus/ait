@@ -216,7 +216,7 @@ public class DoorData extends TardisLink {
 			ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
 
 			// if holding a key and in siege mode and have an empty interior, disable siege mode !!
-			if (stack.getItem() instanceof KeyItem && tardis.isSiegeMode() && KeyItem.isOf(stack, tardis) && !TardisUtil.isInteriorNotEmpty(tardis)) {
+			if (stack.getItem() instanceof KeyItem && tardis.isSiegeMode() && KeyItem.isOf(world, stack, tardis) && !TardisUtil.isInteriorNotEmpty(tardis)) {
 				player.swingHand(Hand.MAIN_HAND);
 				tardis.setSiegeMode(false);
 				lockTardis(false, tardis, player, true);

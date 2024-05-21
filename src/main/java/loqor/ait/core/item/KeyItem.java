@@ -73,7 +73,7 @@ public class KeyItem extends LinkableItem {
 		Collection<ItemStack> keys = getKeysInInventory(player);
 
 		for (ItemStack stack : keys) {
-			Tardis found = KeyItem.getTardis(stack, TardisManager.getInstance(tardis));
+			Tardis found = KeyItem.getTardis(player.getWorld(), stack);
 
 			if (found == null)
 				continue;
@@ -92,7 +92,7 @@ public class KeyItem extends LinkableItem {
 		if (!(entity instanceof ServerPlayerEntity player))
 			return;
 
-		Tardis tardis = KeyItem.getTardis(stack, ServerTardisManager.getInstance());
+		Tardis tardis = KeyItem.getTardis(world, stack);
 
 		if (tardis == null)
 			return;

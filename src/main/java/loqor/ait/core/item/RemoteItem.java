@@ -41,7 +41,8 @@ public class RemoteItem extends LinkableItem {
 		PlayerEntity player = context.getPlayer();
 		ItemStack itemStack = context.getStack();
 
-		if (world.isClient() || player == null) return ActionResult.PASS;
+		if (world.isClient() || player == null)
+			return ActionResult.PASS;
 
 		NbtCompound nbt = itemStack.getOrCreateNbt();
 
@@ -49,39 +50,36 @@ public class RemoteItem extends LinkableItem {
 		if (!nbt.contains("tardis"))
 			return ActionResult.FAIL;
 
-		Tardis tardis = ServerTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")));
+		ServerTardisManager.getInstance().getTardis(context.getWorld().getServer(), UUID.fromString(nbt.getString("tardis")), tardis -> {
+			if (tardis == null)
+				return;
 
-		if (tardis != null) {
-			if (tardis.getFuel() <= 0) {
-				player.sendMessage(Text.translatable("message.ait.remoteitem.warning1"));
-				return ActionResult.FAIL;
-			}
-			if (tardis.isRefueling()) {
-				player.sendMessage(Text.translatable("message.ait.remoteitem.warning2"));
-				return ActionResult.FAIL;
-			}
-			// Check if the Tardis is already present at this location before moving it there
-			AbsoluteBlockPos.Directed currentPosition = tardis.getTravel().getPosition();
-			if (!currentPosition.equals(pos)) {
-				if (world != TardisUtil.getTardisDimension()) {
-					world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
+            if (tardis.getFuel() <= 0)
+                player.sendMessage(Text.translatable("message.ait.remoteitem.warning1"));
 
-					BlockPos temp = pos.up();
+            if (tardis.isRefueling())
+                player.sendMessage(Text.translatable("message.ait.remoteitem.warning2"));
 
-					if (world.getBlockState(pos).isReplaceable()) temp = pos;
+            // Check if the Tardis is already present at this location before moving it there
+            AbsoluteBlockPos.Directed currentPosition = tardis.getTravel().getPosition();
 
-					tardis.getTravel().setSpeed(tardis.getTravel().getMaxSpeed());
-					FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw()))));
-				} else {
-					world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-					player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
-					return ActionResult.PASS;
-				}
-			} else {
-				// If the Tardis is already present at this location, do not proceed with any further operations
-				return ActionResult.FAIL;
-			}
-		}
+            if (!currentPosition.equals(pos)) {
+                if (world != TardisUtil.getTardisDimension()) {
+                    world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
+
+                    BlockPos temp = pos.up();
+
+                    if (world.getBlockState(pos).isReplaceable())
+						temp = pos;
+
+                    tardis.getTravel().setSpeed(tardis.getTravel().getMaxSpeed());
+                    FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw()))));
+                } else {
+                    world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                    player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
+                }
+            }
+        });
 
 		return ActionResult.PASS;
 	}

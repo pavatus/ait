@@ -29,7 +29,10 @@ public class FuelCommand {
 						.then(literal("set").requires(source -> source.hasPermissionLevel(2))
 								.then(argument("tardis", TardisArgumentType.tardis())
 										.then(argument("amount", DoubleArgumentType.doubleArg(0, FuelData.TARDIS_MAX_FUEL))
-												.executes(FuelCommand::set))))));
+												.executes(FuelCommand::set))))
+						.then(literal("get").requires(source -> source.hasPermissionLevel(2))
+								.then(argument("tardis", TardisArgumentType.tardis())
+										.executes(FuelCommand::get)))));
 	}
 
 	private static int add(CommandContext<ServerCommandSource> context) {
@@ -77,5 +80,17 @@ public class FuelCommand {
 		);
 
 		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int get(CommandContext<ServerCommandSource> context) {
+		ServerCommandSource source = context.getSource();
+		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
+
+		double fuel = tardis.fuel().getCurrentFuel();
+		source.sendMessage(Text.translatableWithFallback("tardis.fuel.get",
+				"Fuel of [%s] is: [%sau]", tardis.getUuid(), fuel)
+		);
+
+		return (int) fuel;
 	}
 }

@@ -30,22 +30,29 @@ public class TardisPortal extends Portal {
 	@Override
 	public void tick() {
 		super.tick();
-		if (this.getWorld().isClient()) return;
+
+		if (this.getWorld().isClient())
+			return;
+
 		if (this.tardisId == null) {
 			this.discard();
 			return;
 		}
 
-		Tardis found = ServerTardisManager.getInstance().getTardis(this.tardisId);
-		if (found == null) {
-			AITMod.LOGGER.info("Killing portal (" + this.getId() + ") with tardis (" + this.tardisId + ") as found was null");
+		ServerTardisManager.getInstance().getTardis(this.getWorld().getServer(), this.tardisId, tardis -> {
+			if (tardis == null) {
+				AITMod.LOGGER.info("Killing portal (" + this.getId() + ") with tardis (" + this.tardisId + ") as found was null");
+				this.discard();
+				return;
+			}
+
+			if (!tardis.getDoor().isClosed())
+				return;
+
+			// we know we are closed and have a tardis so we shouldn't be existing AHHH
+			AITMod.LOGGER.info("Killing portal (" + this.getId() + ") with tardis (" + this.tardisId + ") as doors are closed");
 			this.discard();
-			return;
-		}
-		if (!found.getDoor().isClosed()) return;
-		// we know we are closed and have a tardis so we shouldnt be existing AHHH
-		AITMod.LOGGER.info("Killing portal (" + this.getId() + ") with tardis (" + this.tardisId + ") as doors are closed");
-		this.discard();
+		});
 	}
 
 	@Override

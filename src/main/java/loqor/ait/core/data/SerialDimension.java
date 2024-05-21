@@ -21,6 +21,7 @@ public class SerialDimension {
 	/**
 	 * @deprecated This method is strictly for serialization purposes to the client. - Loqor
 	 **/
+	@Deprecated
 	private SerialDimension(Identifier value) {
 		this.dimension = null;
 		this.value = value.getPath();

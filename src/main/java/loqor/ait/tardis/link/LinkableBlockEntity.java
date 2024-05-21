@@ -3,8 +3,7 @@ package loqor.ait.tardis.link;
 
 import blue.endless.jankson.annotation.Nullable;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import loqor.ait.tardis.TardisManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -73,13 +72,7 @@ public abstract class LinkableBlockEntity extends BlockEntity implements Linkabl
 	 */
 	@Override
 	public Optional<Tardis> findTardis(boolean isClient) {
-		if (!isClient)
-			return Optional.ofNullable(ServerTardisManager.getInstance().getTardis(this.tardisId));
-
-		if (this.tardisId == null)
-			return Optional.empty();
-
-        return Optional.ofNullable(ClientTardisManager.getInstance().getLookup().get(this.tardisId));
+		return Optional.ofNullable(TardisManager.with(this, (o, manager) -> manager.demandTardis(o, this.tardisId)));
     }
 
 	public Optional<Tardis> findTardis() {

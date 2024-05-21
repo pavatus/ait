@@ -73,11 +73,12 @@ public class NetworkUtil {
 			if (!(stack.getItem() instanceof LinkableItem))
 				continue;
 
-			if (!LinkableItem.isOf(stack, tardis))
+			if (!LinkableItem.isOf(player.getWorld(), stack, tardis))
 				continue;
 
 			return true;
 		}
+
 		return false;
 	}
 

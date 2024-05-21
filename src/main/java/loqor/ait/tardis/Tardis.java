@@ -25,6 +25,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Random;
@@ -112,8 +113,8 @@ public abstract class Tardis {
 	public TardisHandlersManager getHandlers() {
 		return handlers;
 	}
-	
-	public <T extends TardisComponent> T handler(TardisComponent.Id type) {
+
+	public @NotNull <T extends TardisComponent> T handler(TardisComponent.Id type) {
 		return this.handlers.get(type);
 	}
 

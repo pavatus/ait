@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TardisArgumentType implements ArgumentType<ServerTardis> {
+public class TardisArgumentType implements ArgumentType<TardisArgumentType.ServerTardisAccessor> {
 
     public static final SimpleCommandExceptionType INVALID_UUID = new SimpleCommandExceptionType(Text.translatable("argument.uuid.invalid"));
 
@@ -28,7 +28,7 @@ public class TardisArgumentType implements ArgumentType<ServerTardis> {
     private static final Pattern VALID_CHARACTERS = Pattern.compile("^([-A-Fa-f0-9]+)");
 
     public static ServerTardis getTardis(CommandContext<ServerCommandSource> context, String name) {
-        return context.getArgument(name, ServerTardis.class);
+        return context.getArgument(name, ServerTardisAccessor.class).get(context);
     }
 
     public static TardisArgumentType tardis() {
@@ -36,23 +36,17 @@ public class TardisArgumentType implements ArgumentType<ServerTardis> {
     }
 
     @Override
-    public ServerTardis parse(StringReader reader) throws CommandSyntaxException {
+    public ServerTardisAccessor parse(StringReader reader) throws CommandSyntaxException {
         String string = reader.getRemaining();
         Matcher matcher = VALID_CHARACTERS.matcher(string);
+
         if (matcher.find()) {
             String raw = matcher.group(1);
 
-            try {
-                UUID uuid = UUID.fromString(raw);
-                reader.setCursor(reader.getCursor() + raw.length());
+            UUID uuid = UUID.fromString(raw);
+            reader.setCursor(reader.getCursor() + raw.length());
 
-                ServerTardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-
-                if (tardis == null)
-                    throw INVALID_UUID.create();
-
-                return tardis;
-            } catch (IllegalArgumentException ignored) { }
+            return context -> ServerTardisManager.getInstance().demandTardis(context.getSource().getServer(), uuid);
         }
 
         throw INVALID_UUID.create();
@@ -66,5 +60,10 @@ public class TardisArgumentType implements ArgumentType<ServerTardis> {
     @Override
     public Collection<String> getExamples() {
         return EXAMPLES;
+    }
+
+    @FunctionalInterface
+    public interface ServerTardisAccessor {
+        ServerTardis get(CommandContext<ServerCommandSource> context);
     }
 }

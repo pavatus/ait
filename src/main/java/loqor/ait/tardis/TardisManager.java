@@ -17,14 +17,15 @@ import loqor.ait.core.util.gson.NbtSerializer;
 import loqor.ait.tardis.data.TardisHandlersManager;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
-import loqor.ait.tardis.link.Linkable;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -33,8 +34,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public abstract class TardisManager<T extends Tardis> {
+public abstract class TardisManager<T extends Tardis, C> {
 
 	public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "ask_tardis");
 	public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
@@ -80,60 +82,84 @@ public abstract class TardisManager<T extends Tardis> {
 		return builder;
 	}
 
-	public static TardisManager<?> getInstance(Entity entity) {
+	public static TardisManager<?, ?> getInstance(Entity entity) {
 		return TardisManager.getInstance(entity.getWorld());
 	}
 
-	public static TardisManager<?> getInstance(BlockEntity entity) {
+	public static TardisManager<?, ?> getInstance(BlockEntity entity) {
 		return TardisManager.getInstance(entity.getWorld());
 	}
 
-	public static TardisManager<?> getInstance(World world) {
+	public static TardisManager<?, ?> getInstance(World world) {
 		return TardisManager.getInstance(!world.isClient());
 	}
 
-	public static TardisManager<?> getInstance(Tardis tardis) {
+	public static TardisManager<?, ?> getInstance(Tardis tardis) {
 		return TardisManager.getInstance((tardis instanceof ServerTardis));
 	}
 
-	public static TardisManager<?> getInstance(boolean isServer) {
+	public static TardisManager<?, ?> getInstance(boolean isServer) {
 		return isServer ? ServerTardisManager.getInstance() : ClientTardisManager.getInstance();
 	}
 
-	public void link(UUID uuid, Linkable linkable) {
-		this.getTardis(uuid, linkable::setTardis);
+	public static <C, R> R with(BlockEntity entity, ContextManager<C, R> consumer) {
+		return TardisManager.with(entity.getWorld(), consumer);
 	}
 
-	public void getTardis(UUID uuid, Consumer<T> consumer) {
-		if (this.lookup.containsKey(uuid)) {
-			consumer.accept(this.lookup.get(uuid));
+	public static <C, R> R with(Entity entity, ContextManager<C, R> consumer) {
+		return TardisManager.with(entity.getWorld(), consumer);
+	}
+
+	public static <C, R> R with(World world, ContextManager<C, R> consumer) {
+		return TardisManager.with(world.isClient(), consumer, world::getServer);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <C, R> R with(boolean isClient, ContextManager<C, R> consumer, Supplier<MinecraftServer> server) {
+		TardisManager<?, C> manager = (TardisManager<?, C>) TardisManager.getInstance(!isClient);
+
+		if (isClient) {
+			return consumer.run((C) MinecraftClient.getInstance(), manager);
+		} else {
+			return consumer.run((C) server.get(), manager);
+		}
+	}
+
+	public void getTardis(C c, UUID uuid, Consumer<T> consumer) {
+		if (uuid == null)
+			return; // ugh
+
+		T result = this.lookup.get(uuid);
+
+		if (result == null) {
+			this.loadTardis(c, uuid, consumer);
 			return;
 		}
 
-		this.loadTardis(uuid, consumer);
+		consumer.accept(result);
 	}
 
 	/**
-	 * By all means a bad practice. Use {@link #getTardis(UUID, Consumer)} instead.
+	 * By all means a bad practice. Use {@link #getTardis(Object, UUID, Consumer)} instead.
 	 * Ensures to return a {@link Tardis} instance as fast as possible.
 	 * <p>
 	 * By using this method you accept the risk of the tardis not being on the client.
 	 *
-	 * @implNote For {@link ServerTardisManager} the implementation is identical {@link ServerTardisManager#getTardis(UUID)}.
 	 * @deprecated Have you read the comment?
 	 */
 	@Nullable
 	@Deprecated
-	public T demandTardis(UUID uuid) {
-		return this.lookup.get(uuid);
-	}
+	public abstract T demandTardis(C c, UUID uuid);
 
-	public abstract void loadTardis(UUID uuid, Consumer<T> consumer);
+	public abstract void loadTardis(C c, UUID uuid, @Nullable Consumer<T> consumer);
 
 	public void reset() {
 		this.lookup.clear();
 	}
 
+	/**
+	 * @deprecated This method allows you to get currently loaded TARDIS'.
+	 */
 	@Deprecated
 	public Map<UUID, T> getLookup() {
 		return this.lookup;
@@ -141,5 +167,10 @@ public abstract class TardisManager<T extends Tardis> {
 
 	public Gson getGson() {
 		return this.gson;
+	}
+
+	@FunctionalInterface
+	public interface ContextManager<C, R> {
+		R run(C c, TardisManager<?, C> manager);
 	}
 }

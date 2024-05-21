@@ -14,18 +14,10 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class RemoveCommand {
-
-    private static final Executor EXECUTOR = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(AITMod.MOD_ID)
@@ -63,19 +55,7 @@ public class RemoveCommand {
         DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), tardis.getDesktop().getCorners());
 
         // Delete the file. File system operations are costly!
-        EXECUTOR.execute(() -> {
-            try {
-                Path file = ServerTardisManager.getSavePath(tardis.getUuid(), "json");
-
-                if (Files.exists(file)) {
-                    Files.delete(file);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            ServerTardisManager.getInstance().remove(tardis.getUuid());
-        });
+        ServerTardisManager.getInstance().remove(context.getSource().getServer(), tardis.getUuid());
 
         source.sendFeedback(() -> Text.translatableWithFallback("tardis.remove.done",
                 "TARDIS [%s] removed", tardis.getUuid()), true

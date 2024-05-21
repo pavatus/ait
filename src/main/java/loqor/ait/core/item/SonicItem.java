@@ -18,8 +18,8 @@ import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -121,7 +121,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		if (world.isClient())
 			return true;
 
-		Tardis tardis = getTardis(stack);
+		Tardis tardis = getTardis(world, stack);
 
 		if (this.isOutOfFuel(stack))
 			return false;
@@ -151,15 +151,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 		mode.run(tardis, world, pos, user, stack);
 		return true;
-	}
-
-	public static Tardis getTardis(ItemStack item) {
-		NbtCompound nbt = item.getOrCreateNbt();
-
-		if (!nbt.contains("tardis"))
-			return null;
-
-		return ServerTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")));
 	}
 
 	@Override
@@ -318,7 +309,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         String position = Text.translatable("message.ait.sonic.none").getString();
 
 		if (tag.contains("tardis")) {
-			Tardis tardis = ClientTardisManager.getInstance().demandTardis(UUID.fromString(tag.getString("tardis")));
+			Tardis tardis = ClientTardisManager.getInstance().demandTardis(MinecraftClient.getInstance(), UUID.fromString(tag.getString("tardis")));
 
 			if (tardis != null)
 				position = tardis.getTravel() == null || tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();

@@ -125,7 +125,7 @@ public class FallingTardisEntity extends Entity {
 			return null;
 		}
 
-		return TardisManager.getInstance(this).demandTardis(this.getTardisId());
+		return TardisManager.with(this, (o, manager) -> manager.demandTardis(o, this.getTardisId()));
 	}
 
 	public boolean isAttackable() {

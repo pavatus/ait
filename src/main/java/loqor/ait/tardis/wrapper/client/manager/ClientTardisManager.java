@@ -21,16 +21,24 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class ClientTardisManager extends TardisManager<ClientTardis> {
+public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftClient> {
 
 	private static ClientTardisManager instance;
 
 	private final Multimap<UUID, Consumer<ClientTardis>> subscribers = ArrayListMultimap.create();
+
+	public static void init() {
+		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT)
+			throw new UnsupportedOperationException("Tried to initialize ClientTardisManager on the server!");
+
+		instance = new ClientTardisManager();
+	}
 
 	private ClientTardisManager() {
 		ClientPlayNetworking.registerGlobalReceiver(SEND,
@@ -38,15 +46,28 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		);
 
 		ClientPlayNetworking.registerGlobalReceiver(UPDATE,
-				(client, handler, buf, responseSender) -> ClientTardisManager.getInstance().update(buf)
+				(client, handler, buf, responseSender) -> ClientTardisManager.getInstance().update(client, buf)
 		);
 
-		ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			if (client.player == null || client.world == null)
+				return;
+
+			for (ClientTardis tardis : this.lookup.values()) {
+				tardis.tick(client);
+			}
+
+			ClientSoundManager.tick(client);
+		});
+
 		ClientPlayConnectionEvents.DISCONNECT.register((client, reason) -> this.reset());
 	}
 
 	@Override
-	public void loadTardis(UUID uuid, Consumer<ClientTardis> consumer) {
+	public void loadTardis(MinecraftClient client, UUID uuid, @Nullable Consumer<ClientTardis> consumer) {
+		if (uuid == null)
+			return;
+
 		PacketByteBuf data = PacketByteBufs.create();
 		data.writeUuid(uuid);
 
@@ -56,8 +77,22 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		ClientPlayNetworking.send(ASK, data);
 	}
 
-	public void askTardis(UUID uuid) {
-		this.loadTardis(uuid, null);
+	public void loadTardis(UUID uuid, @Nullable Consumer<ClientTardis> consumer) {
+		this.loadTardis(MinecraftClient.getInstance(), uuid, consumer);
+	}
+
+	@Override
+	public @Nullable ClientTardis demandTardis(MinecraftClient client, UUID uuid) {
+		ClientTardis result = this.lookup.get(uuid);
+
+		if (result == null)
+			this.loadTardis(client, uuid, null);
+
+		return result;
+	}
+
+	public @Nullable ClientTardis demandTardis(UUID uuid) {
+		return this.demandTardis(MinecraftClient.getInstance(), uuid);
 	}
 
 	/**
@@ -103,30 +138,29 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 		}
 	}
 
-	private void update(UUID uuid, PacketByteBuf buf) {
-		if (!this.lookup.containsKey(uuid)) {
-			this.getTardis(uuid, tardis -> {}); // We *DON'T* want to use the tardis from this consumer. It's not the correct instance.
-			return;
-		}
+	private void update(MinecraftClient client, UUID uuid, PacketByteBuf buf) {
+		ClientTardis tardis = this.demandTardis(client, uuid);
 
-		ClientTardis tardis = this.lookup.get(uuid); // THIS is the correct instance. There's a stupid race condition with the lookup table.
+		if (tardis == null)
+			return;
+
 		TardisComponent.Id typeId = buf.readEnumConstant(TardisComponent.Id.class);
 
-			if (typeId == TardisComponent.Id.PROPERTIES) {
-				this.updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
-				return;
-			}
+		if (typeId == TardisComponent.Id.PROPERTIES) {
+			this.updateProperties(tardis, buf.readString(), buf.readString(), buf.readString());
+			return;
+		}
 
 		if (!typeId.mutable())
 			return;
 
 		typeId.set(tardis, this.gson.fromJson(
-					buf.readString(), typeId.clazz())
-			);
+				buf.readString(), typeId.clazz())
+		);
 	}
 
-	private void update(PacketByteBuf buf) {
-		this.update(buf.readUuid(), buf);
+	private void update(MinecraftClient client, PacketByteBuf buf) {
+		this.update(client, buf.readUuid(), buf);
 	}
 
 	@Override
@@ -135,24 +169,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis> {
 				.registerTypeAdapter(Tardis.class, ClientTardis.creator());
 
 		return builder;
-	}
-
-	public static void init() {
-		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT)
-			throw new UnsupportedOperationException("Tried to initialize ClientTardisManager on the server!");
-
-		instance = new ClientTardisManager();
-	}
-
-	private void onTick(MinecraftClient client) {
-		if (client.player == null || client.world == null)
-			return;
-
-		for (ClientTardis tardis : this.lookup.values()) {
-			tardis.tick(client);
-		}
-
-		ClientSoundManager.tick(client);
 	}
 
 	@Override

@@ -27,12 +27,10 @@ import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -117,8 +115,9 @@ public class TardisUtil {
 			UUID uuid = buf.readUuid();
 			Identifier id = buf.readIdentifier();
 
-			Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
-			SonicItem.setSchema(tardis.sonic().get(SonicHandler.HAS_CONSOLE_SONIC), id); // here we trust in the server with all of our might
+			ServerTardisManager.getInstance().getTardis(server, uuid, tardis -> {
+				SonicItem.setSchema(tardis.sonic().get(SonicHandler.HAS_CONSOLE_SONIC), id); // here we trust in the server with all of our might
+			});
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
@@ -127,62 +126,45 @@ public class TardisUtil {
 					Identifier exteriorValue = Identifier.tryParse(buf.readString());
 					boolean variantChange = buf.readBoolean();
 					String variantValue = buf.readString();
-					ServerTardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
 
-					ExteriorVariantSchema schema = ExteriorVariantRegistry.getInstance().get(Identifier.tryParse(variantValue));
+					ServerTardisManager.getInstance().getTardis(server, uuid, tardis -> {
+						ExteriorVariantSchema schema = ExteriorVariantRegistry.getInstance().get(Identifier.tryParse(variantValue));
 
-					// no hax
-					if (!tardis.isUnlocked(schema))
-						return;
+						// no hax
+						if (!tardis.isUnlocked(schema))
+							return;
 
-					server.execute(() -> StackUtil.playBreak(player));
+						server.execute(() -> StackUtil.playBreak(player));
 
-					tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
-					WorldOps.updateIfOnServer(server.getWorld(tardis
-									.getTravel().getPosition().getWorld().getRegistryKey()),
-							tardis.getDoor().getExteriorPos());
-					if (variantChange) {
-						tardis.getExterior().setVariant(schema);
+						tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
 						WorldOps.updateIfOnServer(server.getWorld(tardis
 										.getTravel().getPosition().getWorld().getRegistryKey()),
 								tardis.getDoor().getExteriorPos());
-					}
+						if (variantChange) {
+							tardis.getExterior().setVariant(schema);
+							WorldOps.updateIfOnServer(server.getWorld(tardis
+											.getTravel().getPosition().getWorld().getRegistryKey()),
+									tardis.getDoor().getExteriorPos());
+						}
+					});
 				}
 		);
+
 		ServerPlayNetworking.registerGlobalReceiver(SNAP,
 				(server, player, handler, buf, responseSender) -> {
 					UUID uuid = buf.readUuid();
-					Tardis tardis = ServerTardisManager.getInstance().getTardis(uuid);
+					ServerTardisManager.getInstance().getTardis(server, uuid, tardis -> {
+						PermissionHandler permissions = tardis.handler(TardisComponent.Id.PERMISSIONS);
 
-					PermissionHandler permissions = tardis.handler(TardisComponent.Id.PERMISSIONS);
+						if (tardis.loyalty().get(player).level() < Loyalty.Type.PILOT.level)
+							return;
 
-					if (tardis.loyalty().get(player).level() < Loyalty.Type.PILOT.level)
-						return;
+						if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
+							return;
 
-					if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
-						return;
+						player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
 
-					player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
-
-					if (player.getVehicle() instanceof TardisRealEntity real) {
-						DoorData.DoorStateEnum state = tardis.getDoor().getDoorState();
-						if (state == DoorData.DoorStateEnum.CLOSED || state == DoorData.DoorStateEnum.FIRST) {
-							DoorData.useDoor(tardis, player.getServerWorld(), null, player);
-							if (tardis.getDoor().isDoubleDoor()) {
-								DoorData.useDoor(tardis, player.getServerWorld(), null, player);
-							}
-						} else {
-							DoorData.useDoor(tardis, player.getServerWorld(), null, player);
-						}
-						return;
-					}
-
-					BlockPos pos = player.getWorld().getRegistryKey() ==
-							TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
-					if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
-						if (!player.isSneaking()) {
-							// annoying bad code
-
+						if (player.getVehicle() instanceof TardisRealEntity real) {
 							DoorData.DoorStateEnum state = tardis.getDoor().getDoorState();
 							if (state == DoorData.DoorStateEnum.CLOSED || state == DoorData.DoorStateEnum.FIRST) {
 								DoorData.useDoor(tardis, player.getServerWorld(), null, player);
@@ -192,30 +174,51 @@ public class TardisUtil {
 							} else {
 								DoorData.useDoor(tardis, player.getServerWorld(), null, player);
 							}
-						} else {
-							DoorData.toggleLock(tardis, player);
+							return;
 						}
-					}
+
+						BlockPos pos = player.getWorld().getRegistryKey() ==
+								TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
+						if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
+							if (!player.isSneaking()) {
+								// annoying bad code
+
+								DoorData.DoorStateEnum state = tardis.getDoor().getDoorState();
+								if (state == DoorData.DoorStateEnum.CLOSED || state == DoorData.DoorStateEnum.FIRST) {
+									DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+									if (tardis.getDoor().isDoubleDoor()) {
+										DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+									}
+								} else {
+									DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+								}
+							} else {
+								DoorData.toggleLock(tardis, player);
+							}
+						}
+					});
 				}
 		);
 		ServerPlayNetworking.registerGlobalReceiver(FIND_PLAYER,
 				(server, currentPlayer, handler, buf, responseSender) -> {
 					UUID tardisId = buf.readUuid();
 					UUID playerUuid = buf.readUuid();
-					Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisId);
-					ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(playerUuid);
-					if (serverPlayer == null) {
-						FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
-						return;
-					}
-					tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
-									serverPlayer.getBlockX(),
-									serverPlayer.getBlockY(),
-									serverPlayer.getBlockZ(),
-									serverPlayer.getWorld(),
-									RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())),
-							PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.AUTO_LAND));
-					FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
+
+					ServerTardisManager.getInstance().getTardis(server, tardisId, tardis -> {
+						ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(playerUuid);
+						if (serverPlayer == null) {
+							FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
+							return;
+						}
+						tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+										serverPlayer.getBlockX(),
+										serverPlayer.getBlockY(),
+										serverPlayer.getBlockZ(),
+										serverPlayer.getWorld(),
+										RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())),
+								PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.AUTO_LAND));
+						FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
+					});
 				}
 		);
 	}
@@ -411,7 +414,7 @@ public class TardisUtil {
 	}
 
 	public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
-		TardisManager<?> manager = TardisManager.getInstance(isServer);
+		TardisManager<?, ?> manager = TardisManager.getInstance(isServer);
 
 		if (manager == null) {
 			AITMod.LOGGER.error("TardisManager is NULL in findTardisByInterior");
@@ -428,9 +431,9 @@ public class TardisUtil {
 		return null;
 	}
 
-	public static Tardis findTardisByPosition(AbsoluteBlockPos pos, Supplier<TardisManager<?>> supplier) {
+	public static Tardis findTardisByPosition(AbsoluteBlockPos pos, Supplier<TardisManager<?, ?>> supplier) {
 		Map<UUID, Tardis> matching = new HashMap<>();
-		TardisManager<?> manager = supplier.get();
+		TardisManager<?, ?> manager = supplier.get();
 
 		for (Map.Entry<UUID, ?> entry : manager.getLookup().entrySet()) {
 			Tardis tardis = (Tardis) entry.getValue();

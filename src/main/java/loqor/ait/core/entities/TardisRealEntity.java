@@ -1,5 +1,6 @@
 package loqor.ait.core.entities;
 
+import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.link.LinkableLivingEntity;
 import loqor.ait.core.AITDamageTypes;
 import loqor.ait.core.AITEntityTypes;
@@ -70,7 +71,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		if(world.isClient())
 			return;
 
-		Tardis tardis = ServerTardisManager.getInstance().getTardis(tardisId);
+		Tardis tardis = TardisManager.with(world, (o, manager) -> manager.demandTardis(o, tardisId));
 		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_IN_REAL_FLIGHT, true, true);
 		world.spawnEntity(tardisRealEntity);

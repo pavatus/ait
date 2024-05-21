@@ -43,7 +43,7 @@ public abstract class LinkableLivingEntity extends LivingEntity {
         if (id == null)
             return null;
 
-        return TardisManager.getInstance(this.getWorld()).demandTardis(id);
+        return TardisManager.with(this, (o, manager) -> manager.demandTardis(o, id));
     }
 
     public UUID getTardisID() {

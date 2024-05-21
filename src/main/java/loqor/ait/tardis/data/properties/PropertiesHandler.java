@@ -10,6 +10,7 @@ import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.data.ShieldData;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.util.Identifier;
 
@@ -57,7 +58,7 @@ public class PropertiesHandler {
 		set(tardis.properties(), key, val);
 
 		if (performSync)
-			sync(tardis.properties(), key, tardis.getUuid());
+			sync(tardis.properties(), key, (ServerTardis) tardis);
 	}
 
 	public static void set(Tardis tardis, String key, Object val) {
@@ -211,10 +212,7 @@ public class PropertiesHandler {
 	}
 
 	// FIXME wow this sucks.
-	public static void sync(PropertiesHolder holder, String key, UUID tardis) {
-		if (holder.isClient())
-			return;
-		
+	private static void sync(PropertiesHolder holder, String key, ServerTardis tardis) {
 		Object val = holder.getData().get(key);
 		
 		if (val == null)
@@ -222,17 +220,17 @@ public class PropertiesHandler {
 		
 		switch (val.getClass().getName()) {
 			case "java.lang.Integer" ->
-					ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "int", String.valueOf(val));
+					ServerTardisManager.getInstance().sendPropertyToSubscribers(tardis, holder, key, "int", String.valueOf(val));
 			case "java.lang.Double" ->
-					ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "double", String.valueOf(val));
+					ServerTardisManager.getInstance().sendPropertyToSubscribers(tardis, holder, key, "double", String.valueOf(val));
 			case "java.lang.Float" ->
-					ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "float", String.valueOf(val));
+					ServerTardisManager.getInstance().sendPropertyToSubscribers(tardis, holder, key, "float", String.valueOf(val));
 			case "java.lang.Boolean" ->
-					ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "boolean", String.valueOf(val));
+					ServerTardisManager.getInstance().sendPropertyToSubscribers(tardis, holder, key, "boolean", String.valueOf(val));
 			case "java.lang.String" ->
-					ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "string", String.valueOf(val));
+					ServerTardisManager.getInstance().sendPropertyToSubscribers(tardis, holder, key, "string", String.valueOf(val));
 			case "java.lang.Identifier" ->
-					ServerTardisManager.getInstance().sendToSubscribers(tardis, key, "identifier", getIdentifier(holder, key).toString());
+					ServerTardisManager.getInstance().sendPropertyToSubscribers(tardis, holder, key, "identifier", getIdentifier(holder, key).toString());
 		}
 	}
 

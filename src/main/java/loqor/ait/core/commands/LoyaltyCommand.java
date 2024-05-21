@@ -63,7 +63,7 @@ public class LoyaltyCommand {
         }
 
         public Loyalty run(String key, String fallback, Function<LoyaltyHandler, Loyalty> func) {
-            Loyalty result = func.apply(this.tardis.getHandlers().getLoyalties());
+            Loyalty result = func.apply(this.tardis.loyalty());
 
             this.source.sendFeedback(() -> Text.translatableWithFallback(
                     key, fallback, this.player.getName(), result.type(), result.level()

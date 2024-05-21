@@ -177,8 +177,8 @@ public class AITModClient implements ClientModInitializer {
                 (client, handler, buf, responseSender) -> {
                     int p = buf.readInt();
                     UUID tardisId = buf.readUuid();
-                    ClientTardisManager.getInstance().getTardis(tardisId, tardis -> {
-                        // idk how the consumer works tbh, but im sure theo is gonna b happy
+
+                    ClientTardisManager.getInstance().getTardis(client, tardisId, tardis -> {
                         if (tardis == null)
                             return;
 
@@ -206,7 +206,7 @@ public class AITModClient implements ClientModInitializer {
                 if (((LinkableBlockEntity) block).findTardis().isEmpty())
                     return;
 
-                ClientTardisManager.getInstance().loadTardis(((LinkableBlockEntity) block).findTardis().get().getUuid(), (t) -> {});
+                ClientTardisManager.getInstance().loadTardis(MinecraftClient.getInstance(), ((LinkableBlockEntity) block).findTardis().get().getUuid(), null);
             }
         });
     }

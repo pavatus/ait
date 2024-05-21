@@ -25,7 +25,7 @@ public abstract class ItemEntityMixin {
 			return;
 
 		if (stack.getItem() instanceof SiegeTardisItem) {
-			Tardis found = SiegeTardisItem.getTardis(stack, TardisManager.getInstance(entity));
+			Tardis found = SiegeTardisItem.getTardis(entity.getWorld(), stack);
 
 			if (found == null)
 				return;
