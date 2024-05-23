@@ -186,6 +186,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 
 		if (world.isClient()) {
 			this.checkAnimations();
+			this.exteriorLightBlockState();
 			return;
 		}
 
@@ -278,6 +279,17 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 		}
 
 		return this.getAnimation().getAlpha();
+	}
+
+	public void exteriorLightBlockState() {
+		Optional<Tardis> tardis = this.findTardis();
+		if (tardis.isEmpty())
+			return;
+		if (tardis.get().getTravel().getState() == TardisTravel.State.DEMAT || tardis.get().getTravel().getState() == TardisTravel.State.MAT) {
+			int light = (int) (this.getAlpha() * 9.0f);
+			light = Math.max(1, Math.min(light, 9));
+			this.getWorld().setBlockState(pos, this.getCachedState().with(ExteriorBlock.LEVEL_9, light), 3);
+		}
 	}
 
 	public void onBroken() {

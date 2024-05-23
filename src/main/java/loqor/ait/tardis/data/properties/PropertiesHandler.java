@@ -10,6 +10,7 @@ import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.data.ShieldData;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.util.Identifier;
@@ -62,7 +63,7 @@ public class PropertiesHandler {
 	}
 
 	public static void set(Tardis tardis, String key, Object val) {
-		set(tardis, key, val, true);
+		set(tardis, key, val, !(tardis instanceof ClientTardis));
 	}
 
 	private static boolean hasChanged(PropertiesHolder holder, String key, Object newVal) {

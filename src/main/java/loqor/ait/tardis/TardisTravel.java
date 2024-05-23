@@ -364,7 +364,7 @@ public class TardisTravel extends TardisLink {
 		ServerWorld destWorld = (ServerWorld) this.getDestination().getWorld();
 		ForcedChunkUtil.keepChunkLoaded(destWorld, this.getDestination());
 		ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-		BlockState state = block.getDefaultState().with(Properties.ROTATION, this.getDestination().getRotation());
+		BlockState state = block.getDefaultState().with(Properties.ROTATION, this.getDestination().getRotation()).with(ExteriorBlock.LEVEL_9, 0);
 		destWorld.setBlockState(this.getDestination(), state);
 
 		// Create and add the exterior block entity at the destination
@@ -386,7 +386,7 @@ public class TardisTravel extends TardisLink {
 		ServerWorld destWorld = (ServerWorld) pos.getWorld();
 		ForcedChunkUtil.keepChunkLoaded(destWorld, pos);
 		ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-		BlockState state = block.getDefaultState().with(Properties.ROTATION, pos.getRotation());
+		BlockState state = block.getDefaultState().with(Properties.ROTATION, pos.getRotation()).with(ExteriorBlock.LEVEL_9, 0);
 		destWorld.setBlockState(pos, state);
 
 		// Create and add the exterior block entity at the destination
@@ -452,7 +452,7 @@ public class TardisTravel extends TardisLink {
 
 		// Set the destination block to the Tardis exterior block
 		ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-		BlockState state = block.getDefaultState().with(Properties.ROTATION, Math.abs(this.getDestination().getRotation()));
+		BlockState state = block.getDefaultState().with(Properties.ROTATION, Math.abs(this.getDestination().getRotation())).with(ExteriorBlock.LEVEL_9, 0);
 		destWorld.setBlockState(this.getDestination(), state);
 
 		// Create and add the exterior block entity at the destination
@@ -663,7 +663,7 @@ public class TardisTravel extends TardisLink {
 				blockEntity = exterior;
 			} else {
 				ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-				BlockState state = block.getDefaultState().with(Properties.ROTATION, this.getPosition().getRotation());
+				BlockState state = block.getDefaultState().with(Properties.ROTATION, this.getPosition().getRotation()).with(ExteriorBlock.LEVEL_9, 0);
 				world.setBlockState(this.getPosition(), state);
 
 				ExteriorBlockEntity newEntity = new ExteriorBlockEntity(this.getPosition(), state);
@@ -775,7 +775,7 @@ public class TardisTravel extends TardisLink {
 	}
 
 	public void placeExterior() {
-		this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(ExteriorBlock.ROTATION, DirectionControl.getGeneralizedRotation(this.position.getRotation())));
+		this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(ExteriorBlock.ROTATION, DirectionControl.getGeneralizedRotation(this.position.getRotation())).with(ExteriorBlock.LEVEL_9, 0));
 
 		ExteriorBlockEntity exterior = new ExteriorBlockEntity(
 				this.position, this.position.getBlockState()

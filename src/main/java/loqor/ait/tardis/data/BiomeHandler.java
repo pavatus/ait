@@ -43,7 +43,7 @@ public class BiomeHandler extends TardisLink {
     public static BiomeType getBiomeTypeFromKey(String biomeKey) {
         return switch(biomeKey) {
             default -> BiomeType.DEFAULT;
-            case "snowy_taiga", "snowy_beach" -> BiomeType.SNOWY;
+            case "snowy_taiga", "snowy_beach", "frozen_peaks" -> BiomeType.SNOWY;
             case "desert", "beach" -> BiomeType.SANDY;
             case "badlands" -> BiomeType.RED_SANDY;
             case "mangrove_swamp" -> BiomeType.MUDDY;

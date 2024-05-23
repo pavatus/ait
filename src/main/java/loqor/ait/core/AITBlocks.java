@@ -20,7 +20,7 @@ import java.util.List;
 public class AITBlocks implements BlockRegistryContainer {
 
     @NoBlockItem
-    public static final Block EXTERIOR_BLOCK = new ExteriorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing().luminance(7).pistonBehavior(PistonBehavior.IGNORE));
+    public static final Block EXTERIOR_BLOCK = new ExteriorBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing().pistonBehavior(PistonBehavior.IGNORE).luminance(ExteriorBlock.STATE_TO_LUMINANCE));
     public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque().noCollision()
             .instrument(Instrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
     public static final Block CONSOLE = new ConsoleBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()

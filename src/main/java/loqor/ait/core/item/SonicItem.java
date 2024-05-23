@@ -306,7 +306,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		NbtCompound tag = stack.getOrCreateNbt();
         String position = Text.translatable("message.ait.sonic.none").getString();
 
-		Tardis tardis = LinkableItem.getTardis(world, stack);;
+		if (world == null) return;
+
+		Tardis tardis = LinkableItem.getTardis(world, stack);
 
 		if (tardis != null)
 			position = tardis.getTravel() == null || tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();

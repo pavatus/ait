@@ -322,10 +322,12 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
         };
     }
 
-    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+    public void onBreak(WorldAccess world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if(world.isClient()) return;
         Optional<Tardis> tardis = this.findTardis();
         if (tardis.isEmpty()) return;
-        PropertiesHandler.set(tardis.get(), HAS_ENGINE_CORE, false, true);
+        System.out.println("what");
         tardis.get().disablePower();
+        PropertiesHandler.set(tardis.get(), HAS_ENGINE_CORE, false, true);
     }
 }

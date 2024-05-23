@@ -14,6 +14,7 @@ import net.minecraft.block.entity.ConduitBlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -81,12 +82,13 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
         super.onPlaced(world, pos, state, placer, itemStack);
     }
 
+
     @Override
-    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (world.getBlockEntity(pos) instanceof EngineCoreBlockEntity engineCoreBlockEntity) {
-            engineCoreBlockEntity.onBroken(world, pos, state);
+            engineCoreBlockEntity.onBreak(world, pos, state, player);
         }
-        super.onBroken(world, pos, state);
+        super.onBreak(world, pos, state, player);
     }
 
     @Nullable

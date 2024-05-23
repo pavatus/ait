@@ -1,6 +1,7 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
@@ -21,13 +22,18 @@ public class FlightData extends TardisLink {
 	public FlightData() {
 		super(Id.FLIGHT);
 
-		// todo this doesn't seem to work.
+		// this does work actually, it just spams it 7 times.
 		TardisEvents.LANDED.register((tardis -> {
 			if (!tardis.equals(this.tardis()))
 				return;
 
 			this.setFlightTicks(0);
 			this.setTargetTicks(0);
+			if(this.getExteriorPos().getWorld() != null) {
+				this.getExteriorPos().getWorld().setBlockState(
+						this.getExteriorPos(), this.getExteriorPos().getBlockState()
+								.with(ExteriorBlock.LEVEL_9, 9), 3);
+			}
 		}));
 
 		TardisEvents.DEMAT.register((tardis -> {

@@ -3,7 +3,7 @@ package loqor.ait.tardis;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
-import loqor.ait.core.blocks.EngineCoreBlock;
+import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.util.DeltaTimeManager;
@@ -227,6 +227,8 @@ public abstract class Tardis {
 		DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1, 360)));
 
 		PropertiesHandler.set(this, PropertiesHandler.HAS_POWER, false);
+		if(this.position().getWorld() != null)
+			this.position().getWorld().setBlockState(this.position(), this.position().getBlockEntity().getCachedState().with(ExteriorBlock.LEVEL_9, 0), 3);
 		TardisEvents.LOSE_POWER.invoker().onLosePower(this);
 	}
 
@@ -243,6 +245,9 @@ public abstract class Tardis {
 		if (!PropertiesHandler.getBool(this.properties(), EngineCoreBlockEntity.HAS_ENGINE_CORE)) {
 			return;
 		}
+
+		if(this.position().getWorld() != null)
+			this.position().getWorld().setBlockState(this.position(), this.position().getBlockEntity().getCachedState().with(ExteriorBlock.LEVEL_9, 9), 3);
 
 		PropertiesHandler.set(this, PropertiesHandler.HAS_POWER, true);
 		TardisEvents.REGAIN_POWER.invoker().onRegainPower(this);

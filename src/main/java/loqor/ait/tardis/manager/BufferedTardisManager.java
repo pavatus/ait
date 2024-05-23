@@ -71,7 +71,8 @@ public abstract class BufferedTardisManager<T extends ServerTardis, P extends Pl
 
     protected void sendAndSubscribe(P player, T tardis) {
         this.sendTardis(player, tardis);
-        this.addSubscriberToTardis(player, tardis.getUuid());
+        if (tardis != null)
+            this.addSubscriberToTardis(player, tardis.getUuid());
     }
 
     protected void sendTardis(@NotNull P player, Tardis tardis) {
