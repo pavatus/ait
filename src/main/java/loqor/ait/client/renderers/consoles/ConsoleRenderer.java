@@ -23,7 +23,8 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		if (entity.findTardis().isEmpty()) return;
+		if (entity.findTardis().isEmpty())
+			return;
 
 		ClientConsoleVariantSchema variant = ClientConsoleVariantRegistry.withParent(entity.getVariant());
 
@@ -44,7 +45,6 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 		//matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(f));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 		if (console != null) {
-			if (entity.findTardis().isEmpty()) return; // for some it forgets the tardis can be null, fucking weird
 			console.animateBlockEntity(entity);
 			console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
 
