@@ -16,6 +16,7 @@ import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.TardisDesktop;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
@@ -329,7 +330,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		AITMod.LOGGER.warn("Fixing missing console entry...");
 		TardisConsole found = new TardisConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
 
-		found.init(this.findTardis().get(), false);
+		TardisComponent.init(found, this.findTardis().get(), false);
 		this.getDesktop().addConsole(found);
 
 		this.setParent(found.uuid());

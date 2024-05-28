@@ -4,7 +4,6 @@ import com.google.gson.InstanceCreator;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.AbsoluteBlockPos;
-import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
@@ -36,21 +35,14 @@ public class ServerTardis extends Tardis {
 		super(uuid, new ServerTardisTravel(pos), new ServerTardisDesktop(schema), new ServerTardisExterior(variantType));
 	}
 
-	@Override
-	public void init(boolean deserialized) {
-		super.init(deserialized);
-		if (!deserialized) {
-			this.getTravel().placeExterior();
-			this.getTravel().runAnimations();
-		}
+	private ServerTardis() {
+		super();
 	}
 
-	/**
-	 * @deprecated NEVER EVER use this constructor. It's for GSON to call upon deserialization!
-	 */
-	@Deprecated
-    private ServerTardis() {
-		super();
+	@Override
+	public void onCreate() {
+		this.travel.placeExterior();
+		this.travel.runAnimations();
 	}
 
 	public void sync() {

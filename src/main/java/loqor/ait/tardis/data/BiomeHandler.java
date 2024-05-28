@@ -2,16 +2,13 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 public class BiomeHandler extends TardisLink {
 

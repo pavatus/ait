@@ -5,7 +5,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.TardisLink;
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.particle.DustParticleEffect;
@@ -35,9 +35,7 @@ public class SequenceHandler extends TardisLink {
 	}
 
 	@Override
-	public void init(Tardis tardis, boolean deserialized) {
-		super.init(tardis, deserialized);
-
+	protected void onInit(InitContext ctx) {
 		recent = new RecentControls(tardis.getUuid());
 		activeSequence = null;
 	}

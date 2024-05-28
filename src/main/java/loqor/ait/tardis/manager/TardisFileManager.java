@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 public class TardisFileManager<T extends Tardis> {
 
@@ -43,14 +45,12 @@ public class TardisFileManager<T extends Tardis> {
         return result;
     }
 
-    public T loadTardis(MinecraftServer server, TardisManager<T, ?> manager, UUID uuid) {
+    public T loadTardis(MinecraftServer server, TardisManager<T, ?> manager, UUID uuid, BiFunction<String, Class<T>, T> function) {
         try {
             Path file = TardisFileManager.getSavePath(server, uuid, "json");
             String json = Files.readString(file);
 
-            T tardis = manager.getGson().fromJson(json, this.clazz);
-            tardis.init(true);
-
+            T tardis = function.apply(json, this.clazz);
             manager.getLookup().put(tardis.getUuid(), tardis);
             return tardis;
         } catch (IOException e) {

@@ -14,7 +14,6 @@ import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.util.gson.ItemStackSerializer;
 import loqor.ait.core.util.gson.NbtSerializer;
-import loqor.ait.tardis.data.TardisHandlersManager;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -137,6 +136,13 @@ public abstract class TardisManager<T extends Tardis, C> {
 		}
 
 		consumer.accept(result);
+	}
+
+	protected T readTardis(String json, Class<T> clazz) {
+		T tardis = gson.fromJson(json, clazz);
+		Tardis.init(tardis, true);
+
+		return tardis;
 	}
 
 	/**

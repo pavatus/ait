@@ -1,6 +1,7 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardisTravel;

@@ -8,6 +8,7 @@ import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.advancement.TardisCriterions;
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.item.AxeItem;
@@ -37,11 +38,6 @@ public class DoorData extends TardisLink {
 		super(Id.DOOR);
 
 		this.doorState = DoorStateEnum.CLOSED;
-	}
-
-	@Override
-	public void init(Tardis tardis, boolean deserialized) {
-		super.init(tardis, deserialized);
 	}
 
 	@Override

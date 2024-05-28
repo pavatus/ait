@@ -112,8 +112,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 	}
 
 	private void sync(UUID uuid, String json) {
-		ClientTardis tardis = this.gson.fromJson(json, ClientTardis.class);
-		tardis.init(true);
+		ClientTardis tardis = this.readTardis(json, ClientTardis.class);
 
 		synchronized (this) {
 			this.lookup.put(uuid, tardis);

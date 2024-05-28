@@ -1,5 +1,6 @@
 package loqor.ait.tardis.base;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.*;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
@@ -17,17 +18,18 @@ import java.util.function.BiConsumer;
 /**
  * Base class for all tardis components.
  *
- * @implNote There should be NO logic run in the constructor. If you need to have such logic, implement it in {@link TardisComponent#init(Tardis, boolean)} method!
+ * @implNote There should be NO logic run in the constructor. If you need to have such logic,
+ * implement it in an appropriate init method!
  */
-public abstract class TardisComponent {
+public abstract class TardisComponent extends Initializable<TardisComponent.InitContext> {
 
 	@Exclude
-	private Tardis tardis;
+	protected Tardis tardis;
 	private final Id id;
 
 	/**
 	 * Do NOT under any circumstances run logic in this constructor.
-	 * Default field values should be inlined. All logic should be done in {@link TardisComponent#init(Tardis, boolean)}
+	 * Default field values should be inlined. All logic should be done in an appropriate init method.
 	 * @implNote The {@link TardisComponent#tardis()} will always be null at the time this constructor gets called.
 	 */
 	public TardisComponent(Id id) {
@@ -39,22 +41,18 @@ public abstract class TardisComponent {
 	 * @implNote Server-side only.
 	 */
 	protected void sync() {
-		if (this.isClient())
+		if (this.isClient()) {
+			AITMod.LOGGER.warn("Attempted to sync a component ON a client!", new IllegalAccessException());
 			return;
+		}
 
 		ServerTardisManager.getInstance().sendToSubscribers(this);
 	}
 
 	/**
-	 * Don't forget to run the super when overriding this method, otherwise you might be left tardisless!
-	 * @param tardis the tardis getting linked
-	 * @param deserialized {@code true} if the component is deserialized and not initialized from scratch.
-	 *                     Use this if you want to do something when the component is created (e.g. generate an interior).
+	 * @deprecated Use direct field access to {@link #tardis}.
 	 */
-	public void init(Tardis tardis, boolean deserialized) {
-		this.setTardis(tardis);
-	}
-
+	@Deprecated
 	public Tardis tardis() {
 		return this.tardis;
 	}
@@ -73,6 +71,19 @@ public abstract class TardisComponent {
 
 	public boolean isServer() {
 		return this.tardis() instanceof ServerTardis;
+	}
+
+	public TardisManager<?, ?> parentManager() {
+		return TardisManager.getInstance(this.tardis);
+	}
+
+	public static void init(TardisComponent component, Tardis tardis, boolean deserialized) {
+		TardisComponent.init(component, tardis, new InitContext(deserialized));
+	}
+
+	public static void init(TardisComponent component, Tardis tardis, InitContext context) {
+		component.setTardis(tardis);
+		Initializable.init(component, context);
 	}
 
 	public enum Id implements Ordered {
@@ -131,6 +142,13 @@ public abstract class TardisComponent {
 
 		public boolean mutable() {
 			return this.setter != null;
+		}
+	}
+
+	public record InitContext(boolean deserialized) implements Initializable.Context {
+
+		public boolean created() {
+			return !deserialized;
 		}
 	}
 }

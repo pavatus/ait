@@ -11,17 +11,13 @@ import loqor.ait.tardis.base.TardisComponent;
 import net.minecraft.client.MinecraftClient;
 
 import java.lang.reflect.Type;
+import java.util.UUID;
 
 public class ClientTardis extends Tardis {
 
-	/**
-	 * @deprecated NEVER EVER use this constructor. It's for GSON to call upon deserialization!
-	 */
-	@Deprecated
-	@SuppressWarnings("unused")
 	private ClientTardis() {
-		super();
-	}
+        super();
+    }
 
 	public void setDesktop(TardisDesktop desktop) {
 		desktop.setTardis(this);

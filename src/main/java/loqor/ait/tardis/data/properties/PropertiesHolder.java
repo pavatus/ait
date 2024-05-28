@@ -1,6 +1,6 @@
 package loqor.ait.tardis.data.properties;
 
-import loqor.ait.tardis.data.TardisLink;
+import loqor.ait.tardis.base.TardisLink;
 
 import java.util.HashMap;
 

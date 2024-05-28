@@ -1,15 +1,18 @@
-package loqor.ait.tardis.data;
+package loqor.ait.tardis.base;
 
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.base.TardisTickable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 
 // todo move everything over to TardisComponent
+
+/**
+ * @deprecated Use {@link TardisComponent} instead. Implement {@link TardisTickable} if its functionality is needed.
+ */
+@Deprecated
 public abstract class TardisLink extends TardisComponent implements TardisTickable {
 
 	public TardisLink(Id id) {
@@ -36,12 +39,15 @@ public abstract class TardisLink extends TardisComponent implements TardisTickab
 		// Implementation of the server-side tick logic when it starts
 	}
 
+	// TODO move this to the correct handler
+	@Deprecated
 	public AbsoluteBlockPos.Directed getDoorPos() {
 		return tardis().getDesktop() != null && tardis().getDesktop().getInteriorDoorPos() != null ?
 				tardis().getDesktop().getInteriorDoorPos() :
 				new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), 0);
 	}
 
+	@Deprecated
 	public AbsoluteBlockPos.Directed getExteriorPos() {
 		return tardis().getTravel() != null ?
 				tardis().getTravel().getPosition() :

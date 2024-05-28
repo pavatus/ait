@@ -2,6 +2,7 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;

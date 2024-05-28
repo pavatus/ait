@@ -3,6 +3,7 @@ package loqor.ait.tardis.data;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.FlightUtil;

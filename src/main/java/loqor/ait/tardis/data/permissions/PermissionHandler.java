@@ -1,6 +1,6 @@
 package loqor.ait.tardis.data.permissions;
 
-import loqor.ait.tardis.data.TardisLink;
+import loqor.ait.tardis.base.TardisLink;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.HashMap;

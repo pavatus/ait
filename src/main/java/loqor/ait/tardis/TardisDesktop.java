@@ -8,11 +8,11 @@ import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.Corners;
-import loqor.ait.tardis.data.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
@@ -21,7 +21,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -55,18 +54,18 @@ public class TardisDesktop extends TardisLink {
 	}
 
 	@Override
-	public void init(Tardis tardis, boolean deserialized) {
-		super.init(tardis, deserialized);
+	public void onCreate() {
+		this.changeInterior(schema);
+	}
 
-		if (this.isServer() && !deserialized)
-			this.changeInterior(schema);
-
+	@Override
+	protected void onInit(InitContext ctx) {
 		// in some cases, an old and fucked up save can have no consoles field.
 		if (this.consoles == null)
 			this.consoles = new ConcurrentLinkedQueue<>();
 
 		for (TardisConsole console : this.consoles) {
-			console.init(tardis, deserialized);
+			TardisComponent.init(console, this.tardis, ctx);
 		}
 	}
 

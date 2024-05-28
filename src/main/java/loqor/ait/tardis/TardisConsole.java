@@ -3,7 +3,7 @@ package loqor.ait.tardis;
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.data.base.Exclude;
-import loqor.ait.tardis.data.TardisLink;
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockState;

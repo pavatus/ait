@@ -145,7 +145,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 	@Override
 	protected ServerTardis loadTardis(MinecraftServer server, UUID uuid) {
-		return this.fileManager.loadTardis(server, this, uuid);
+		return this.fileManager.loadTardis(server, this, uuid, this::readTardis);
 	}
 
 	@Override

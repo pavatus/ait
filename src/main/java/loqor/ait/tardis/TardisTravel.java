@@ -11,6 +11,7 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
@@ -67,18 +68,8 @@ public class TardisTravel extends TardisLink {
 		super(Id.TRAVEL);
 		this.position = pos;
 
-		if (this.lastPosition == null) this.lastPosition = pos;
-	}
-
-	public TardisTravel(AbsoluteBlockPos.Directed pos, AbsoluteBlockPos.Directed dest, State state) {
-		super(Id.TRAVEL);
-		this.position = pos;
-
 		if (this.lastPosition == null)
 			this.lastPosition = pos;
-
-		this.destination = dest;
-		this.state = state;
 	}
 
 	public boolean isCrashing() {

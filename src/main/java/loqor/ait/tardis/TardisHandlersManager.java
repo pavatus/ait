@@ -1,12 +1,13 @@
-package loqor.ait.tardis.data;
+package loqor.ait.tardis;
 
 import com.google.gson.*;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.util.LegacyUtil;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
+import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
@@ -26,35 +27,32 @@ public class TardisHandlersManager extends TardisLink {
     }
 
 	@Override
-	public void init(Tardis tardis, boolean deserialized) {
-		super.init(tardis, deserialized);
+	public void onCreate() {
+		this.createHandler(new DoorData());
+		this.createHandler(new PropertiesHolder());
+		this.createHandler(new WaypointHandler());
+		this.createHandler(new LoyaltyHandler());
+		this.createHandler(new OvergrownData());
+		this.createHandler(new ServerHumHandler());
+		this.createHandler(new ServerAlarmHandler());
+		this.createHandler(new InteriorChangingHandler());
+		this.createHandler(new SequenceHandler());
+		this.createHandler(new FuelData());
+		this.createHandler(new HADSData());
+		this.createHandler(new FlightData());
+		this.createHandler(new SiegeData());
+		this.createHandler(new CloakData());
+		this.createHandler(new StatsData());
+		this.createHandler(new TardisCrashData());
+		this.createHandler(new SonicHandler());
+		this.createHandler(new ShieldData());
+		this.createHandler(new BiomeHandler());
+		this.createHandler(new PermissionHandler());
+	}
 
-		if (!deserialized) {
-			this.createHandler(new DoorData());
-			this.createHandler(new PropertiesHolder());
-			this.createHandler(new WaypointHandler());
-			this.createHandler(new LoyaltyHandler());
-			this.createHandler(new OvergrownData());
-			this.createHandler(new ServerHumHandler());
-			this.createHandler(new ServerAlarmHandler());
-			this.createHandler(new InteriorChangingHandler());
-			this.createHandler(new SequenceHandler());
-			this.createHandler(new FuelData());
-			this.createHandler(new HADSData());
-			this.createHandler(new FlightData());
-			this.createHandler(new SiegeData());
-			this.createHandler(new CloakData());
-			this.createHandler(new StatsData());
-			this.createHandler(new TardisCrashData());
-			this.createHandler(new SonicHandler());
-			this.createHandler(new ShieldData());
-			this.createHandler(new BiomeHandler());
-			this.createHandler(new PermissionHandler());
-		}
-
-		this.forEach(component -> component.init(
-				tardis, deserialized)
-		);
+	@Override
+	protected void onInit(InitContext ctx) {
+		this.forEach(component -> TardisComponent.init(component, this.tardis, ctx));
 	}
 
 	private void forEach(Consumer<TardisComponent> consumer) {

@@ -11,6 +11,7 @@ import loqor.ait.core.util.TimeUtil;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
+import loqor.ait.tardis.base.Initializable;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.*;
@@ -19,6 +20,7 @@ import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -31,7 +33,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
-public abstract class Tardis {
+public abstract class Tardis extends Initializable<TardisComponent.InitContext> {
 
 	private UUID uuid;
 	protected TardisTravel travel;
@@ -52,12 +54,18 @@ public abstract class Tardis {
 		tardisHammerAnnoyance = 0;
 	}
 
-	/**
-	 * @deprecated NEVER EVER use this constructor. It's for GSON to call upon deserialization!
-	 */
-	@Deprecated
-	protected Tardis() {
+	protected Tardis() { }
 
+	@Override
+	protected void onInit(TardisComponent.InitContext ctx) {
+		TardisComponent.init(travel, this, ctx);
+		TardisComponent.init(desktop, this, ctx);
+		TardisComponent.init(exterior, this, ctx);
+		TardisComponent.init(handlers, this, ctx);
+	}
+
+	public static void init(Tardis tardis, boolean deserialized) {
+		Initializable.init(tardis, new TardisComponent.InitContext(deserialized));
 	}
 
 	public UUID getUuid() {
@@ -130,13 +138,6 @@ public abstract class Tardis {
 	@Override
 	public int hashCode() {
 		return uuid.hashCode();
-	}
-
-	public void init(boolean deserialized) {
-		travel.init(this, deserialized);
-		desktop.init(this, deserialized);
-		exterior.init(this, deserialized);
-		handlers.init(this, deserialized);
 	}
 
 	// todo clean up all this

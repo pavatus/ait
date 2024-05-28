@@ -1,5 +1,6 @@
 package loqor.ait.tardis.data;
 
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
 

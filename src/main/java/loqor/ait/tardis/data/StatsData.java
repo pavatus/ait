@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.resource.Resource;
@@ -34,13 +35,9 @@ public class StatsData extends TardisLink {
 	}
 
 	@Override
-	public void init(Tardis tardis, boolean deserialized) {
-		super.init(tardis, deserialized);
-
-		if (!deserialized) {
-			this.markCreationDate();
-			this.setName(StatsData.getRandomName());
-		}
+	public void onCreate() {
+		this.markCreationDate();
+		this.setName(StatsData.getRandomName());
 	}
 
 	public String getName() {
