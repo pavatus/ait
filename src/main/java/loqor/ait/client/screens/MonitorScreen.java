@@ -256,7 +256,7 @@ public class MonitorScreen extends ConsoleScreen {
 				uvOffset = UV_BASE;
 			}
 
-			context.drawTexture(TEXTURE, i + 101 + (index * 18), j + 78, tardis().getTravel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
+			context.drawTexture(TEXTURE, i + 101 + (index * 18), j + 78, tardis().travel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
 		}
 	}
 
@@ -328,7 +328,7 @@ public class MonitorScreen extends ConsoleScreen {
 		int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
 		int j = ((this.width - this.backgroundWidth) / 2);
 		if (getFromUUID(tardisId) == null) return;
-		TardisTravel travel = getFromUUID(tardisId).getTravel();
+		TardisTravel travel = getFromUUID(tardisId).travel();
         AbsoluteBlockPos.Directed abpd = travel.inFlight() ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.getDestination(), getFromUUID(tardisId).getHandlers().getFlight().getDurationAsPercentage()) : travel.getPosition();
 		AbsoluteBlockPos.Directed dabpd = travel.getDestination();
         if (abpd.getDimension() == null) return;
@@ -339,7 +339,7 @@ public class MonitorScreen extends ConsoleScreen {
 		String dDimensionText = convertWorldValueToModified(dabpd.getDimension().getValue());
 		String dDirectionText = DirectionControl.rotationToDirection(dabpd.getRotation()).toUpperCase();
 		String fuelText = String.valueOf(Math.round((getFromUUID(tardisId).getFuel() / FuelData.TARDIS_MAX_FUEL) * 100));
-		String flightTimeText = (tardis().getTravel().getState() == TardisTravel.State.LANDED ? "0" : String.valueOf(tardis().flight().getDurationAsPercentage()));
+		String flightTimeText = (tardis().travel().getState() == TardisTravel.State.LANDED ? "0" : String.valueOf(tardis().flight().getDurationAsPercentage()));
 		// position
 		//context.drawText(this.textRenderer, Text.literal("Position"), (width / 2 - 64), (height / 2 - 46), 5636095, true);
 		context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 + 7), (height / 2 - 36), 0xFFFFFF, true);

@@ -3,7 +3,6 @@ package loqor.ait.core.item;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableItem;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -46,19 +45,19 @@ public class SiegeTardisItem extends Item {
 			return;
 		}
 
-        if (!tardis.isSiegeMode()) {
+        if (!tardis.siege().isActive()) {
 			tardis.setSiegeBeingHeld(null);
 			stack.setCount(0);
 			return;
 		}
 
-		UUID heldId = tardis.getHandlers().getSiege().getHeldPlayerUUID();
+		UUID heldId = tardis.siege().getHeldPlayerUUID();
 
 		// todo this might be laggy
 		if (entity instanceof ServerPlayerEntity player) {
 			if (tardis.getExterior().findExteriorBlock().isEmpty()) {
 				if (heldId == null) {
-					tardis.getHandlers().getSiege().setSiegeBeingHeld(player.getUuid());
+					tardis.siege().setSiegeBeingHeld(player.getUuid());
 					return;
 				}
 			}
@@ -77,7 +76,7 @@ public class SiegeTardisItem extends Item {
 			}
 		}
 
-		tardis.getTravel().setPosition(fromEntity(entity));
+		tardis.travel().setPosition(fromEntity(entity));
 
 		if (!tardis.isSiegeBeingHeld()) {
 			tardis.setSiegeBeingHeld(entity.getUuid());
@@ -103,7 +102,7 @@ public class SiegeTardisItem extends Item {
 			return ActionResult.FAIL;
 		}
 
-        if (!tardis.isSiegeMode()) {
+        if (!tardis.siege().isActive()) {
 			tardis.setSiegeBeingHeld(null);
 			player.getInventory().markDirty();
 			return ActionResult.FAIL;
@@ -176,18 +175,18 @@ public class SiegeTardisItem extends Item {
 	}
 
 	public static void pickupTardis(Tardis tardis, ServerPlayerEntity player) {
-		if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE))
+		if (tardis.travel().handbrake().get())
 			return;
 
-		tardis.getTravel().deleteExterior();
-		tardis.getHandlers().getSiege().setSiegeBeingHeld(player.getUuid());
+		tardis.travel().deleteExterior();
+		tardis.siege().setSiegeBeingHeld(player.getUuid());
 		player.getInventory().insertStack(create(tardis));
 		player.getInventory().markDirty();
 	}
 
 	public static void placeTardis(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-		tardis.getTravel().setPosition(pos);
-		tardis.getTravel().placeExterior();
+		tardis.travel().setPosition(pos);
+		tardis.travel().placeExterior();
 		tardis.setSiegeBeingHeld(null);
 	}
 

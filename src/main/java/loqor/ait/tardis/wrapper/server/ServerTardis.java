@@ -39,12 +39,6 @@ public class ServerTardis extends Tardis {
 		super();
 	}
 
-	@Override
-	public void onCreate() {
-		this.travel.placeExterior();
-		this.travel.runAnimations();
-	}
-
 	public void sync() {
 		ServerTardisManager.getInstance().sendToSubscribers(this);
 	}
@@ -69,7 +63,7 @@ public class ServerTardis extends Tardis {
 			return;
 
 		// most of the logic is in the handlers, so we can just disable them if we're a growth
-		if (!this.hasPower() && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-driftingmusicdelay")) {
+		if (!this.engine().hasPower() && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-driftingmusicdelay")) {
 			List<PlayerEntity> playerEntities = TardisUtil.getPlayersInsideInterior(this);
 			for (PlayerEntity player : playerEntities) {
 				player.playSound(AITSounds.DRIFTING_MUSIC, SoundCategory.MUSIC, 1, 1);
@@ -94,7 +88,7 @@ public class ServerTardis extends Tardis {
 			}
 		}
 
-		if (this.isSiegeMode() && !this.getDoor().locked())
+		if (this.siege().isActive() && !this.getDoor().locked())
 			this.getDoor().setLocked(true);
 
 		this.getHandlers().tick(server);
@@ -117,7 +111,7 @@ public class ServerTardis extends Tardis {
 			PropertiesHandler.set(this, PropertiesHandler.IS_FALLING, false);
 		}
 
-		this.getTravel().tick(server);
+		this.travel().tick(server);
 		this.getDesktop().tick(server);
 	}
 

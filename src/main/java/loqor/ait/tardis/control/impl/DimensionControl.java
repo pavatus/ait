@@ -29,7 +29,7 @@ public class DimensionControl extends Control {
 			}
 		}
 
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 		AbsoluteBlockPos.Directed dest = travel.getDestination();
 		List<ServerWorld> dims = getDimensions(world.getServer());
 

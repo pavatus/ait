@@ -311,7 +311,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		Tardis tardis = LinkableItem.getTardis(world, stack);
 
 		if (tardis != null)
-			position = tardis.getTravel() == null || tardis.getTravel().getExteriorPos() == null ? "In Flight..." : tardis.getTravel().getExteriorPos().toShortString();
+			position = tardis.travel() == null || tardis.getExterior().getExteriorPos() == null ? "In Flight..." : tardis.getExterior().getExteriorPos().toShortString();
 
 		tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
 
@@ -439,7 +439,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 				world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
-				TardisTravel travel = tardis.getTravel();
+				TardisTravel travel = tardis.travel();
 				AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 
 				if (!ExteriorAnimation.isNearTardis(player, tardis, 256)) {

@@ -1,13 +1,8 @@
 package loqor.ait.tardis;
 
-import loqor.ait.AITMod;
-import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.core.blockentities.EngineCoreBlockEntity;
-import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
-import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.core.util.TimeUtil;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
@@ -20,17 +15,16 @@ import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.Random;
 import java.util.UUID;
 
 public abstract class Tardis extends Initializable<TardisComponent.InitContext> {
@@ -97,7 +91,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return this.getDoor().locked();
 	}
 
-	public TardisTravel getTravel() {
+	public TardisTravel travel() {
 		return travel;
 	}
 
@@ -111,6 +105,10 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 	public StatsData stats() {
 		return this.handler(TardisComponent.Id.STATS);
+	}
+
+	public EngineHandler engine() {
+		return this.handler(TardisComponent.Id.ENGINE);
 	}
 
 	/**
@@ -195,7 +193,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	}
 
 	public boolean inFlight() {
-		return this.getTravel().getState() != TardisTravel.State.LANDED;
+		return this.travel().getState() != TardisTravel.State.LANDED;
 	}
 
 	public boolean isUnlocked(Unlockable unlockable) {
@@ -217,50 +215,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return Objects.equals(getDesktop().getSchema(), DesktopRegistry.DEFAULT_CAVE);
 	}
 
-	public boolean hasPower() {
-		return PropertiesHandler.getBool(this.properties(), PropertiesHandler.HAS_POWER);
-	}
-
-	public void disablePower() {
-		if (!this.hasPower())
-			return;
-
-		DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1, 360)));
-
-		PropertiesHandler.set(this, PropertiesHandler.HAS_POWER, false);
-		if(this.position().getWorld() != null)
-			this.position().getWorld().setBlockState(this.position(), this.position().getBlockEntity().getCachedState().with(ExteriorBlock.LEVEL_9, 0), 3);
-		TardisEvents.LOSE_POWER.invoker().onLosePower(this);
-	}
-
-	public void enablePower() {
-		if (this.getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL))
-			return; // cant enable power if not enough fuel
-
-		if (this.isSiegeMode())
-			this.setSiegeMode(false);
-
-		if (this.hasPower())
-			return;
-
-		if (!PropertiesHandler.getBool(this.properties(), EngineCoreBlockEntity.HAS_ENGINE_CORE)) {
-			return;
-		}
-
-		if(this.position().getWorld() != null)
-			this.position().getWorld().setBlockState(this.position(), this.position().getBlockEntity().getCachedState().with(ExteriorBlock.LEVEL_9, 9), 3);
-
-		PropertiesHandler.set(this, PropertiesHandler.HAS_POWER, true);
-		TardisEvents.REGAIN_POWER.invoker().onRegainPower(this);
-	}
-
-	public void togglePower() {
-		if (hasPower())
-			disablePower();
-		else
-			enablePower();
-	}
-
 	public boolean areShieldsActive() {
 		return this.<ShieldData>handler(TardisComponent.Id.SHIELDS).areShieldsActive();
 	}
@@ -269,12 +223,8 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return this.<ShieldData>handler(TardisComponent.Id.SHIELDS).areVisualShieldsActive();
 	}
 
-	public boolean isSiegeMode() {
-		return this.<SiegeData>handler(TardisComponent.Id.SIEGE).isSiegeMode();
-	}
-
-	public void setSiegeMode(boolean b) {
-		this.<SiegeData>handler(TardisComponent.Id.SIEGE).setSiegeMode(b);
+	public SiegeData siege() {
+		return this.handler(TardisComponent.Id.SIEGE);
 	}
 
 	public boolean isSiegeBeingHeld() {
@@ -286,11 +236,11 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	}
 
 	public AbsoluteBlockPos.Directed position() {
-		return this.getTravel().getPosition();
+		return this.travel().getPosition();
 	}
 
 	public AbsoluteBlockPos.Directed destination() {
-		return this.getTravel().getDestination();
+		return this.travel().getDestination();
 	}
 
 	protected void generateInteriorWithItem() {
@@ -302,7 +252,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 						entity.isTouchingWater()).forEach(entity -> {
 					if (this.getExterior().getExteriorPos() == null) return;
 					this.setFuelCount(8000);
-					this.enablePower();
+					this.engine().enablePower();
 					entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
 					entity.getWorld().playSound(null, this.getExterior().getExteriorPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
 
@@ -323,6 +273,16 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 			}
 		}
 		return false;
+	}
+
+	public AbsoluteBlockPos.Directed getDoorPos() {
+		return this.desktop.getInteriorDoorPos() != null ? this.desktop.getInteriorDoorPos() :
+				new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), 0);
+	}
+
+	public AbsoluteBlockPos.Directed getExteriorPos() {
+		return this.travel != null ? this.travel.getPosition() :
+				new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), 0);
 	}
 
 	public boolean isDirty() {

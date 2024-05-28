@@ -49,10 +49,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		ServerTardisManager.getInstance().sendToSubscribers(this);
 	}
 
-	/**
-	 * @deprecated Use direct field access to {@link #tardis}.
-	 */
-	@Deprecated
 	public Tardis tardis() {
 		return this.tardis;
 	}
@@ -88,7 +84,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
 	public enum Id implements Ordered {
 		DESKTOP(TardisDesktop.class, ClientTardis::setDesktop),
-		TRAVEL(TardisTravel.class, ClientTardis::setTravel),
+		TRAVEL(TardisTravel.class, null),
 		EXTERIOR(TardisExterior.class, ClientTardis::setExterior),
 
 		DOOR(DoorData.class),
@@ -142,6 +138,15 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
 		public boolean mutable() {
 			return this.setter != null;
+		}
+
+		public TardisComponent get(ClientTardis tardis) {
+			return switch (this) {
+				case DESKTOP -> tardis.getDesktop();
+				case EXTERIOR -> tardis.getExterior();
+				case TRAVEL -> tardis.travel();
+				default -> tardis.handler(this);
+			};
 		}
 	}
 

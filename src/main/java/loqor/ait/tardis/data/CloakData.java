@@ -32,7 +32,7 @@ public class CloakData extends TardisLink {
 	public void tick(MinecraftServer server) {
 		super.tick(server);
 
-		if (this.isEnabled() && !tardis().hasPower())
+		if (this.isEnabled() && !tardis().engine().hasPower())
 			this.disable();
 
 		if (!this.isEnabled())

@@ -75,7 +75,7 @@ public class DoorData extends TardisLink {
 		if (getDoorPos() == null)
 			return false;
 
-		return (tardis().getTravel().getState() != LANDED && tardis().getTravel().getState() != MAT)
+		return (tardis().travel().getState() != LANDED && tardis().travel().getState() != MAT)
 				&& !this.tardis().areShieldsActive() && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(
 						tardis().getDesktop().getDoorPos()
 		) instanceof DoorBlockEntity;
@@ -204,7 +204,7 @@ public class DoorData extends TardisLink {
 			return false;
 		}
 
-		if (!tardis.hasPower() && tardis.getLockedTardis()) {
+		if (!tardis.engine().hasPower() && tardis.getLockedTardis()) {
 			// Bro cant escape
 			if (player == null)
 				return false;
@@ -212,15 +212,15 @@ public class DoorData extends TardisLink {
 			ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
 
 			// if holding a key and in siege mode and have an empty interior, disable siege mode !!
-			if (stack.getItem() instanceof KeyItem && tardis.isSiegeMode() && KeyItem.isOf(world, stack, tardis) && !TardisUtil.isInteriorNotEmpty(tardis)) {
+			if (stack.getItem() instanceof KeyItem && tardis.siege().isActive() && KeyItem.isOf(world, stack, tardis) && !TardisUtil.isInteriorNotEmpty(tardis)) {
 				player.swingHand(Hand.MAIN_HAND);
-				tardis.setSiegeMode(false);
+				tardis.siege().setActive(false);
 				lockTardis(false, tardis, player, true);
 			}
 
 			// if holding an axe then break open the door RAHHH
 			if (stack.getItem() instanceof AxeItem) {
-				if (tardis.isSiegeMode()) return false;
+				if (tardis.siege().isActive()) return false;
 
 				player.swingHand(Hand.MAIN_HAND);
 				stack.setDamage(stack.getDamage() - 1);
@@ -288,7 +288,7 @@ public class DoorData extends TardisLink {
 		if (tardis.getLockedTardis() == locked)
 			return true;
 
-		if (!forced && (tardis.getTravel().getState() == DEMAT || tardis.getTravel().getState() == MAT))
+		if (!forced && (tardis.travel().getState() == DEMAT || tardis.travel().getState() == MAT))
 			return false;
 
 		tardis.setLockedTardis(locked);
@@ -303,7 +303,7 @@ public class DoorData extends TardisLink {
 			PropertiesHandler.set(tardis, PropertiesHandler.PREVIOUSLY_LOCKED, locked);
 		}
 
-		if (tardis.isSiegeMode()) return true;
+		if (tardis.siege().isActive()) return true;
 
 		String lockedState = tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
 		if (player != null)

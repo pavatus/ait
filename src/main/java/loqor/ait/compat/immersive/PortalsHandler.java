@@ -55,7 +55,6 @@ public class PortalsHandler {
 		}
 
 		// i  have trust issues with code
-
 		portals.remove(tardis.getUuid());
 		tardis.markDirty();
 	}
@@ -68,7 +67,7 @@ public class PortalsHandler {
 		List<TardisPortal> list = new ArrayList<>();
 
 		TardisPortal interior = createInteriorPortal(tardis);
-		if (tardis.getTravel().getState() == TardisTravel.State.LANDED) {
+		if (tardis.travel().getState() == TardisTravel.State.LANDED) {
 			TardisPortal exterior = createExteriorPortal(tardis);
 			list.add(exterior);
 		}
@@ -80,8 +79,8 @@ public class PortalsHandler {
 	}
 
 	private static TardisPortal createExteriorPortal(Tardis tardis) {
-		AbsoluteBlockPos.Directed doorPos = tardis.getTravel().getDoorPos();
-		AbsoluteBlockPos.Directed exteriorPos = tardis.getTravel().getState() == TardisTravel.State.LANDED ? tardis.getTravel().getExteriorPos() : FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage());
+		AbsoluteBlockPos.Directed doorPos = tardis.getExterior().getDoorPos();
+		AbsoluteBlockPos.Directed exteriorPos = tardis.travel().getState() == TardisTravel.State.LANDED ? tardis.getExterior().getExteriorPos() : FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage());
 		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
 		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
 
@@ -113,8 +112,8 @@ public class PortalsHandler {
 
 	// todo allow for multiple interior doors
 	private static TardisPortal createInteriorPortal(Tardis tardis) {
-		AbsoluteBlockPos.Directed doorPos = tardis.getTravel().getDoorPos();
-		AbsoluteBlockPos.Directed exteriorPos = tardis.getTravel().getState() == TardisTravel.State.LANDED ? tardis.getTravel().getExteriorPos() : FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage());
+		AbsoluteBlockPos.Directed doorPos = tardis.getExterior().getDoorPos();
+		AbsoluteBlockPos.Directed exteriorPos = tardis.travel().getState() == TardisTravel.State.LANDED ? tardis.getExterior().getExteriorPos() : FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage());
 		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
 		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
 

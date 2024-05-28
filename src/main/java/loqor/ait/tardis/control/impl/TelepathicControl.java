@@ -71,14 +71,14 @@ public class TelepathicControl extends Control {
 		player.sendMessage(text, true);
 
 
-		BlockPos found = locateStructureOfInterest((ServerWorld) tardis.getTravel().getDestination().getWorld(), tardis.getTravel().getPosition());
+		BlockPos found = locateStructureOfInterest((ServerWorld) tardis.travel().getDestination().getWorld(), tardis.travel().getPosition());
 
 		text = Text.literal("The TARDIS chose where to go.."); // todo translatable
 
 		if (found == null) {
 			text = Text.literal("The TARDIS is happy where it is"); // todo translatable
 		} else {
-			tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(found.add(0, 75, 0), tardis.getTravel().getDestination().getWorld(), tardis.getTravel().getDestination().getRotation()), true);
+			tardis.travel().setDestination(new AbsoluteBlockPos.Directed(found.add(0, 75, 0), tardis.travel().getDestination().getWorld(), tardis.travel().getDestination().getRotation()), true);
 			tardis.removeFuel(500 * (tardis.tardisHammerAnnoyance + 1));
 		}
 

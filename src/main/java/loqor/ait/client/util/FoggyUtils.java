@@ -20,10 +20,10 @@ public class FoggyUtils {
 			RenderSystem.setShaderFogStart(MathHelper.lerp(ClientTardisUtil.getPowerDeltaForLerp(), -8, 24));
 			RenderSystem.setShaderFogEnd(MathHelper.lerp(ClientTardisUtil.getPowerDeltaForLerp(), 11, 32));
 			RenderSystem.setShaderFogShape(FogShape.SPHERE);
-			RenderSystem.setShaderFogColor(0, 0, 0, ClientTardisUtil.getCurrentTardis().isSiegeMode() ? 0.85f : 1f);
+			RenderSystem.setShaderFogColor(0, 0, 0, ClientTardisUtil.getCurrentTardis().siege().isActive() ? 0.85f : 1f);
 		}
-		if (ClientTardisUtil.isPlayerInATardis() && ClientTardisUtil.getCurrentTardis().getHandlers().getCrashData().isToxic() &&
-				ClientTardisUtil.getCurrentTardis().hasPower()) {
+		if (ClientTardisUtil.isPlayerInATardis() && ClientTardisUtil.getCurrentTardis().crash().isToxic() &&
+				ClientTardisUtil.getCurrentTardis().engine().hasPower()) {
 			RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));
 			RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 11, 32));
 			RenderSystem.setShaderFogShape(FogShape.SPHERE);
@@ -31,13 +31,13 @@ public class FoggyUtils {
 					.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.RESPIRATOR ? 0.015f: 0.35f);
 		}
 		if (ClientTardisUtil.isPlayerInATardis() &&
-				!ClientTardisUtil.getCurrentTardis().getHandlers().getCrashData().isToxic() &&
-				!ClientTardisUtil.getCurrentTardis().getHandlers().getAlarms().isEnabled() &&
-				ClientTardisUtil.getCurrentTardis().hasPower()) {
+				!ClientTardisUtil.getCurrentTardis().crash().isToxic() &&
+				!ClientTardisUtil.getCurrentTardis().alarm().isEnabled() &&
+				ClientTardisUtil.getCurrentTardis().engine().hasPower()) {
 			RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));
 			RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 11, 32));
 			RenderSystem.setShaderFogShape(FogShape.CYLINDER);
-			int loyaltyLevel = ClientTardisUtil.getCurrentTardis().getHandlers().getLoyalties().get(MinecraftClient.getInstance().player).level();
+			int loyaltyLevel = ClientTardisUtil.getCurrentTardis().loyalty().get(MinecraftClient.getInstance().player).level();
 			RenderSystem.setShaderFogColor(1 - loyaltyLevel / 100f, 0, loyaltyLevel / 100f, 0.025f);
 		}
 		/*if(MinecraftClient.getInstance().world != null &&MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {

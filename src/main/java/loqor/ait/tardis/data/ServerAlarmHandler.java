@@ -61,7 +61,7 @@ public class ServerAlarmHandler extends TardisLink {
 		}
 
 		if (!tardis.getHandlers().getAlarms().isEnabled()) return;
-		if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) return;
+		if (tardis.travel().getState() == TardisTravel.State.FLIGHT) return;
 
 		soundCounter++;
 

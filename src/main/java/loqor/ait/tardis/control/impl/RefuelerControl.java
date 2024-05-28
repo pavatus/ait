@@ -1,7 +1,6 @@
 package loqor.ait.tardis.control.impl;
 
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -27,7 +26,7 @@ public class RefuelerControl extends Control {
 				return false;
 			}
 		}
-		if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE)) {
+		if (tardis.travel().handbrake().get()) {
 			//if (TardisUtil.isRiftChunk((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getExteriorPos())) {
 			Random random = new Random();
 			tardis.setRefueling(!tardis.isRefueling());

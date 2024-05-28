@@ -12,10 +12,13 @@ import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.core.util.gson.IdentifierSerializer;
 import loqor.ait.core.util.gson.ItemStackSerializer;
 import loqor.ait.core.util.gson.NbtSerializer;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
+import loqor.ait.tardis.data.properties.v2.Property;
+import loqor.ait.tardis.data.properties.v2.PropertyMap;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -43,6 +46,8 @@ public abstract class TardisManager<T extends Tardis, C> {
 	public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_tardis");
 	public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_tardis");
 
+	public static final Identifier UPDATE_PROPERTY = new Identifier(AITMod.MOD_ID, "update_property");
+
 	protected final Map<UUID, T> lookup = new HashMap<>();
 	protected final Gson gson;
 
@@ -68,7 +73,9 @@ public abstract class TardisManager<T extends Tardis, C> {
 				.registerTypeAdapter(PermissionLike.class, Permission.serializer())
 				.registerTypeAdapter(NbtCompound.class, new NbtSerializer())
 				.registerTypeAdapter(ItemStack.class, new ItemStackSerializer())
-				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer());
+				.registerTypeAdapter(Identifier.class, new IdentifierSerializer())
+				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer())
+				.registerTypeAdapter(PropertyMap.class, PropertyMap.serializer());
 
 		if (!AITMod.AIT_CONFIG.MINIFY_JSON())
             builder.setPrettyPrinting();

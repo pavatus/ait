@@ -140,7 +140,7 @@ public class DetectorBlock extends WallMountedBlock implements BlockEntityProvid
 		if (state.get(INVERTED)) {
 			world.setBlockState(pos, state.with(POWER, tardis.inFlight() ? 15 : 0).with(POWERED, true), Block.NOTIFY_ALL);
 		} else {
-			world.setBlockState(pos, state.with(POWER, tardis.hasPower() ? 15 : 0).with(POWERED, true), Block.NOTIFY_ALL);
+			world.setBlockState(pos, state.with(POWER, tardis.engine().hasPower() ? 15 : 0).with(POWERED, true), Block.NOTIFY_ALL);
 		}
 	}
 

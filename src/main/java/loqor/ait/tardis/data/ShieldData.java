@@ -61,7 +61,7 @@ public class ShieldData extends TardisLink {
 	public void tick(MinecraftServer server) {
 		super.tick(server);
 
-		if (this.areShieldsActive() && !this.tardis().hasPower())
+		if (this.areShieldsActive() && !this.tardis().engine().hasPower())
 			this.disableAll();
 
 		if (!this.areShieldsActive())

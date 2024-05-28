@@ -48,7 +48,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 			console.animateBlockEntity(entity);
 			console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
 
-			if (entity.findTardis().get().hasPower())
+			if (entity.findTardis().get().engine().hasPower())
 				console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(variant.emission(), true)), maxLight, overlay, 1, 1, 1, 1);
 		}
 		matrices.pop();

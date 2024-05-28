@@ -16,6 +16,7 @@ import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.TardisDesktop;
+import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
@@ -407,11 +408,6 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		this.findParent();
 	}
 
-	public boolean wasPowered() {
-		if (this.findTardis().isEmpty()) return false;
-		return this.wasPowered ^ this.findTardis().get().hasPower();
-	}
-
 
 	public void onBroken() {
 		this.killControls();
@@ -497,7 +493,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 		SequenceHandler handler = this.findTardis().get().sequence();
 
-		if(this.findTardis().get().getTravel().inFlight() || this.findTardis().get().getTravel().isMaterialising()) {
+		if(this.findTardis().get().travel().inFlight() || this.findTardis().get().travel().getState() == TardisTravel.State.MAT) {
 			if (handler.hasActiveSequence() && handler.getActiveSequence() != null) {
 				//System.out.println("yes active sequence yum" + handler.getActiveSequence());
 				List<Control> sequence = handler.getActiveSequence().getControls();
@@ -524,7 +520,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 		boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.getExterior().getExteriorPos());
 
-		if (tardis.getTravel().isCrashing()) {
+		if (tardis.travel().isCrashing()) {
 			((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.025f);
 			((ServerWorld) world).spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX() + 0.5f, pos.getY() + 1.25,

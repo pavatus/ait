@@ -2,15 +2,10 @@ package loqor.ait.core.blockentities;
 
 import com.google.common.collect.Lists;
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableBlockEntity;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -40,7 +35,6 @@ import java.util.UUID;
 import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
 
 public class EngineCoreBlockEntity extends LinkableBlockEntity {
-    private static final Block[] ACTIVATING_BLOCKS;
     public int ticks;
     private float ticksActive;
     private boolean active;
@@ -51,7 +45,6 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     @Nullable
     private UUID targetUuid;
     private long nextAmbientSoundTime;
-    public static final String HAS_ENGINE_CORE = "has_engine_core";
 
     public EngineCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, pos, state);
@@ -149,8 +142,10 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
 
         // @TODO positively awful idea, IM GONNA DO IT ANYWAYS HAHAHA
         Optional<Tardis> tardis = blockEntity.findTardis();
-        if (tardis.isEmpty()) return;
-        PropertiesHandler.set(tardis.get(), HAS_ENGINE_CORE, blockEntity.isActive(), true);
+        if (tardis.isEmpty())
+            return;
+
+        tardis.get().engine().hasEngineCore().set(blockEntity.isActive());
     }
 
     private static void openEye(EngineCoreBlockEntity blockEntity, List<BlockPos> activatingBlocks) {
@@ -215,34 +210,6 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
 
         }
     }
-
-    /*private static void attackHostileEntity(World world, BlockPos pos, BlockState state, List<BlockPos> activatingBlocks, EngineCoreBlockEntity blockEntity) {
-        LivingEntity livingEntity = blockEntity.targetEntity;
-        int i = activatingBlocks.size();
-        if (i < 42) {
-            blockEntity.targetEntity = null;
-        } else if (blockEntity.targetEntity == null && blockEntity.targetUuid != null) {
-            blockEntity.targetEntity = findTargetEntity(world, pos, blockEntity.targetUuid);
-            blockEntity.targetUuid = null;
-        } else if (blockEntity.targetEntity == null) {
-            List<LivingEntity> list = world.getEntitiesByClass(LivingEntity.class, getAttackZone(pos), (entity) -> entity instanceof Monster && entity.isTouchingWaterOrRain());
-            if (!list.isEmpty()) {
-                blockEntity.targetEntity = list.get(world.random.nextInt(list.size()));
-            }
-        } else if (!blockEntity.targetEntity.isAlive() || !pos.isWithinDistance(blockEntity.targetEntity.getBlockPos(), 8.0)) {
-            blockEntity.targetEntity = null;
-        }
-
-        if (blockEntity.targetEntity != null) {
-            world.playSound(null, blockEntity.targetEntity.getX(), blockEntity.targetEntity.getY(), blockEntity.targetEntity.getZ(), SoundEvents.BLOCK_CONDUIT_ATTACK_TARGET, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            blockEntity.targetEntity.damage(world.getDamageSources().magic(), 4.0F);
-        }
-
-        if (livingEntity != blockEntity.targetEntity) {
-            world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
-        }
-
-    }*/
 
     private static void updateTargetEntity(World world, BlockPos pos, EngineCoreBlockEntity blockEntity) {
         if (blockEntity.targetUuid == null) {
@@ -315,19 +282,12 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
         return (this.ticksActive + tickDelta) * -0.0375F;
     }
 
-    static {
-        ACTIVATING_BLOCKS = new Block[] {
-                AITBlocks.ZEITON_BLOCK,
-                Blocks.MAGMA_BLOCK
-        };
-    }
-
     public void onBreak(WorldAccess world, BlockPos pos, BlockState state, PlayerEntity player) {
         if(world.isClient()) return;
         Optional<Tardis> tardis = this.findTardis();
         if (tardis.isEmpty()) return;
         System.out.println("what");
-        tardis.get().disablePower();
-        PropertiesHandler.set(tardis.get(), HAS_ENGINE_CORE, false, true);
+        tardis.get().engine().disablePower();
+        tardis.get().engine().hasEngineCore().set(false);
     }
 }

@@ -32,7 +32,7 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
 		if (console.findTardis().isEmpty())
 			return;
 
-		TardisTravel.State state = console.findTardis().get().getTravel().getState();
+		TardisTravel.State state = console.findTardis().get().travel().getState();
 
 		this.updateAnimation(console.ANIM_STATE, getAnimationForState(state), console.age);
 	}

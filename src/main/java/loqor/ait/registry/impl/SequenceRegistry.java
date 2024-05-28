@@ -103,7 +103,6 @@ public class SequenceRegistry {
 							player.damage(TardisUtil.getTardisDimension().getDamageSources().generic(), 0);
 						}
 					}
-					//missedTardis.getTravel().crash();
 				}), 100L, Text.literal("Debris incoming!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new DirectionControl(), new RandomiserControl()));
 
@@ -127,7 +126,7 @@ public class SequenceRegistry {
 					finishedTardis.addFuel(random.nextBetween(45, 125));
 				}), (missedTardis -> {
 					missedTardis.removeFuel(random.nextBetween(45, 125));
-					missedTardis.disablePower();
+					missedTardis.engine().disablePower();
 				}), 110L, Text.literal("Power drain imminent!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new PowerControl(), new RefuelerControl(), new RandomiserControl()));
 
@@ -136,7 +135,7 @@ public class SequenceRegistry {
 					finishedTardis.addFuel(random.nextBetween(45, 125));
 				}), (missedTardis -> {
 					missedTardis.removeFuel(random.nextBetween(45, 125));
-					missedTardis.disablePower();
+					missedTardis.engine().disablePower();
 				}), 110L, Text.literal("Ship computer offline! Crash imminent!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new AutoPilotControl()));
 
@@ -152,7 +151,7 @@ public class SequenceRegistry {
 					finishedTardis.getHandlers().getFlight().decreaseFlightTime(120);
 				}), (missedTardis -> {
 					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
 							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
@@ -164,7 +163,7 @@ public class SequenceRegistry {
 					finishedTardis.getHandlers().getFlight().decreaseFlightTime(120);
 				}), (missedTardis -> {
 					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
 							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
@@ -176,7 +175,7 @@ public class SequenceRegistry {
 					finishedTardis.getHandlers().getFlight().decreaseFlightTime(120);
 				}), (missedTardis -> {
 					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
 							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
@@ -244,7 +243,7 @@ public class SequenceRegistry {
 				}), (missedTardis -> {
 					missedTardis.removeFuel(random.nextBetween(65, 250));
 					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
 							random.nextBetween(pos.getX() - 24, pos.getX() + 24),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 24, pos.getZ() + 24), pos.getWorld(),

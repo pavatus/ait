@@ -64,7 +64,7 @@ public class TardisCrashData extends TardisLink {
 			setState(State.UNSTABLE);
 			alarms.disable();
 		}
-		AbsoluteBlockPos.Directed exteriorPosition = tardis.getTravel().getExteriorPos();
+		AbsoluteBlockPos.Directed exteriorPosition = tardis.getExterior().getExteriorPos();
 		ServerWorld exteriorWorld = (ServerWorld) exteriorPosition.getWorld();
 		if (tardis.getDoor().isOpen() && this.getState() != State.NORMAL) {
 			exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,

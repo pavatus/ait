@@ -245,7 +245,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				uvOffset = UV_BASE;
 			}
 
-			context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114, tardis().getTravel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
+			context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114, tardis().travel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
 		}
 
 		this.renderHums(context);

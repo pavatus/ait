@@ -70,7 +70,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 		boolean shouldEject = player.isSneaking();
 
 		if (player.getMainHandStack().getItem() instanceof KeyItem
-				&& !tardis.isSiegeMode()
+				&& !tardis.siege().isActive()
 				&& !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()) {
 			ItemStack key = player.getMainHandStack();
 			NbtCompound tag = key.getOrCreateNbt();
@@ -100,7 +100,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 		}
 
 		if (player.getMainHandStack().getItem() instanceof SonicItem &&
-				!tardis.isSiegeMode() &&
+				!tardis.siege().isActive() &&
 				!tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating() &&
 				!tardis.getDoor().isOpen()
 				&& tardis.crash().getRepairTicks() > 0) {
@@ -127,13 +127,13 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 			return;
 		}
 
-		if (sneaking && tardis.isSiegeMode() && !tardis.isSiegeBeingHeld()) {
+		if (sneaking && tardis.siege().isActive() && !tardis.isSiegeBeingHeld()) {
 			SiegeTardisItem.pickupTardis(tardis, (ServerPlayerEntity) player);
 			return;
 		}
 
-		if ((tardis.getTravel().getState() == LANDED
-				|| tardis.getTravel().getState() == CRASH)) {
+		if ((tardis.travel().getState() == LANDED
+				|| tardis.travel().getState() == CRASH)) {
 			DoorData.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
 		}
 	}
@@ -178,7 +178,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 
 		Tardis tardis = optional.get();
 
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 		TardisTravel.State state = travel.getState();
 
 		if (this.animation != null && state != LANDED)
@@ -219,10 +219,10 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 		Tardis tardis = optional.get();
 
 		this.animation = tardis.getExterior().getVariant().animation(this);
-		this.animation.setupAnimation(tardis.getTravel().getState());
+		this.animation.setupAnimation(tardis.travel().getState());
 
 		if (this.getWorld() != null && !this.getWorld().isClient()) {
-			this.animation.tellClientsToSetup(tardis.getTravel().getState());
+			this.animation.tellClientsToSetup(tardis.travel().getState());
 		}
 	}
 
@@ -285,7 +285,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 		Optional<Tardis> tardis = this.findTardis();
 		if (tardis.isEmpty())
 			return;
-		if (tardis.get().getTravel().getState() == TardisTravel.State.DEMAT || tardis.get().getTravel().getState() == TardisTravel.State.MAT) {
+		if (tardis.get().travel().getState() == TardisTravel.State.DEMAT || tardis.get().travel().getState() == TardisTravel.State.MAT) {
 			int light = (int) (this.getAlpha() * 9.0f);
 			light = Math.max(1, Math.min(light, 9));
 			this.getWorld().setBlockState(pos, this.getCachedState().with(ExteriorBlock.LEVEL_9, light), 3);
@@ -293,6 +293,6 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 	}
 
 	public void onBroken() {
-		this.findTardis().ifPresent((tardis -> tardis.getTravel().setState(TardisTravel.State.FLIGHT)));
+		this.findTardis().ifPresent((tardis -> tardis.travel().setState(TardisTravel.State.FLIGHT)));
 	}
 }

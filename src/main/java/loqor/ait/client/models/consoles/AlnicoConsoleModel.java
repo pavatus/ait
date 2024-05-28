@@ -13,7 +13,6 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Direction;
 
 public class AlnicoConsoleModel extends ConsoleModel {
 	private final ModelPart alnico;
@@ -825,22 +824,22 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		ModelPart throttle = alnico.getChild("section1").getChild("controls").getChild("fliplever1").getChild("bone5");
-		throttle.pitch = throttle.pitch + ((tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed()) * 1.5f);
+		throttle.pitch = throttle.pitch + ((tardis.travel().speed().get() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
 
 		ModelPart handbrake = alnico.getChild("section1").getChild("controls").getChild("biglever").getChild("bone");
-		handbrake.pitch = !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HANDBRAKE) ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;
+		handbrake.pitch = !tardis.travel().handbrake().get() ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;
 
 		ModelPart power = alnico.getChild("section4").getChild("controls4").getChild("biglever2").getChild("bone12");
-		power.pitch = !tardis.hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
+		power.pitch = !tardis.engine().hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
 
 		ModelPart autoPilot = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch1");
-		autoPilot.pitch = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.AUTO_LAND) ? autoPilot.pitch + 0.5f : autoPilot.pitch;
+		autoPilot.pitch = tardis.travel().autoLand().get() ? autoPilot.pitch + 0.5f : autoPilot.pitch;
 
 		ModelPart security = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch4");
 		security.pitch = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? security.pitch + 0.5f : security.pitch;
 
 		ModelPart siegeMode = alnico.getChild("section3").getChild("controls3").getChild("siegemode").getChild("lever");
-		siegeMode.pitch = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.SIEGE_MODE) ? siegeMode.pitch + 0.9f : siegeMode.pitch;
+		siegeMode.pitch = tardis.siege().isActive() ? siegeMode.pitch + 0.9f : siegeMode.pitch;
 
 		ModelPart refueler = alnico.getChild("section5").getChild("controls5").getChild("refueler").getChild("gasknob");
 		refueler.yaw = !tardis.isRefueling() ? refueler.yaw - 0.7854f : refueler.yaw;
@@ -874,7 +873,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		toast2.visible = tardis.waypoint().hasCartridge();
 
 		ModelPart direction = alnico.getChild("section5").getChild("controls5").getChild("tinyswitch9").getChild("bone26");
-		direction.yaw += (1.5708f * tardis.getTravel().getDestination().getRotation());
+		direction.yaw += (1.5708f * tardis.travel().getDestination().getRotation());
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

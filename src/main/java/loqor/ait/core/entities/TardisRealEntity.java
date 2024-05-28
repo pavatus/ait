@@ -11,7 +11,6 @@ import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.entity.EntityType;
@@ -79,7 +78,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		player.getAbilities().flying = true;
 		player.getAbilities().allowFlying = true;
 		player.getAbilities().setFlySpeed(player.getAbilities().getFlySpeed() * 1.5F);
-		tardis.getTravel().toFlight();
+		tardis.travel().toFlight();
 	}
 
 	@Override
@@ -119,10 +118,10 @@ public class TardisRealEntity extends LinkableLivingEntity {
 						shouldTriggerLandSound = true;
 					}
 					if (user.isSneaking()) {
-						getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(this.getBlockPos(), this.getWorld(), DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(user.getBodyYaw()))));
-						if (getTardis().getTravel().getState() == TardisTravel.State.LANDED)
+						getTardis().travel().setStateAndLand(new AbsoluteBlockPos.Directed(this.getBlockPos(), this.getWorld(), DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(user.getBodyYaw()))));
+						if (getTardis().travel().getState() == TardisTravel.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
-						PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, false);
+						getTardis().travel().autoLand().set(false);
 						user.dismountVehicle();
 					}
 				} else {
@@ -130,7 +129,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					user.getAbilities().allowFlying = true;
 				}
 			}
-		} else if (!getTardis().getTravel().inFlight()) {
+		} else if (!getTardis().travel().inFlight()) {
 			if (user.getWorld().isClient() && MinecraftClient.getInstance().player == user) {
 				MinecraftClient client = MinecraftClient.getInstance();
 				client.options.setPerspective(Perspective.FIRST_PERSON);
@@ -146,7 +145,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					TardisUtil.teleportToInteriorPosition(user, this.getPlayerBlockPos().get());
 				}
 				this.dataTracker.set(PLAYER_UUID, Optional.empty());
-				this.getTardis().getTravel().setState(TardisTravel.State.LANDED);
+				this.getTardis().travel().setState(TardisTravel.State.LANDED);
 				this.discard();
 			}
 		}

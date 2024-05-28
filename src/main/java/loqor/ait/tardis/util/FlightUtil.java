@@ -4,7 +4,6 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.TardisTravel;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -13,31 +12,29 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 public class FlightUtil {
+
 	private static final int BASE_FLIGHT_TICKS = 5 * 20; //  seconds minimum
 	private static final double FORCE_LAND_TIMER = 15;
-
 
 	public static void init() {
 
 	}
 
-	// todo use me in places where similar things are used
-
 	/**
 	 * Sets the destination, turns on autopilot and demats
-	 *
-	 * @param tardis
-	 * @param pos
 	 */
 	public static void travelTo(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-		PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, false);
-		PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, true);
-		tardis.getTravel().setDestination(pos, true);
+		TardisTravel travel = tardis.travel();
 
-		if (tardis.getTravel().getState() == TardisTravel.State.LANDED) {
-			tardis.getTravel().dematerialise(true);
-		} else if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
-			tardis.getTravel().materialise();
+		travel.handbrake().set(false);
+		travel.autoLand().set(true);
+
+		travel.setDestination(pos, true);
+
+		if (travel.getState() == TardisTravel.State.LANDED) {
+			travel.dematerialise(true);
+		} else if (travel.getState() == TardisTravel.State.FLIGHT) {
+			travel.materialise();
 		}
 	}
 

@@ -52,9 +52,8 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
-			if (door.findTardis().isPresent() && door.findTardis().get().isSiegeMode()) return VoxelShapes.empty();
-		}
+		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door && door.findTardis().isPresent() && door.findTardis().get().siege().isActive())
+			return VoxelShapes.empty();
 
 		return rotateShape(Direction.NORTH, state.get(FACING), NORTH_SHAPE);
 	}
@@ -79,13 +78,11 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if (world.isClient()) {
+		if (world.isClient())
 			return ActionResult.SUCCESS;
-		}
 
-		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door) {
+		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door)
 			door.useOn(world, player.isSneaking(), player);
-		}
 
 		return ActionResult.CONSUME;
 	}

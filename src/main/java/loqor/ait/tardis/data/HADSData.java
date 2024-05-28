@@ -66,7 +66,7 @@ public class HADSData extends TardisLink {
 	public void dematerialiseWhenInDanger() {
 		ServerTardis tardis = (ServerTardis) tardis();
 
-		ServerTardisTravel travel = (ServerTardisTravel) tardis.getTravel();
+		ServerTardisTravel travel = (ServerTardisTravel) tardis.travel();
 		TardisTravel.State state = travel.getState();
 
 		ServerAlarmHandler alarm = tardis.getHandlers().getAlarms();

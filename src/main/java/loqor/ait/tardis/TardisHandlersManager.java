@@ -4,7 +4,6 @@ import com.google.gson.*;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.*;
@@ -17,7 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class TardisHandlersManager extends TardisLink {
+public class TardisHandlersManager extends TardisComponent implements TardisTickable {
 
 	@Exclude
 	private final EnumMap<Id, TardisComponent> handlers = new EnumMap<>(Id::values, TardisComponent[]::new);
@@ -48,6 +47,7 @@ public class TardisHandlersManager extends TardisLink {
 		this.createHandler(new ShieldData());
 		this.createHandler(new BiomeHandler());
 		this.createHandler(new PermissionHandler());
+		this.createHandler(new EngineHandler());
 	}
 
 	@Override

@@ -118,9 +118,9 @@ public class ClientTardisUtil {
 		if (!isPlayerInATardis()) return;
 		Tardis tardis = getCurrentTardis();
 
-		if (tardis.hasPower() && getPowerDelta() < MAX_POWER_DELTA_TICKS) {
+		if (tardis.engine().hasPower() && getPowerDelta() < MAX_POWER_DELTA_TICKS) {
 			setPowerDelta(getPowerDelta() + 1);
-		} else if (!tardis.hasPower() && getPowerDelta() > 0) {
+		} else if (!tardis.engine().hasPower() && getPowerDelta() > 0) {
 			setPowerDelta(getPowerDelta() - 1);
 		}
 	}

@@ -6,7 +6,6 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
@@ -80,15 +79,15 @@ public class ClientFlightHandler extends SoundHandler {
 	}
 
 	private boolean shouldPlaySounds() {
-		return (ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE) && (inFlight() || hasThrottleAndHandbrakeDown()) && tardis().hasPower();
+		return (ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE) && (inFlight() || hasThrottleAndHandbrakeDown()) && this.tardis().engine().hasPower();
 	}
 
 	private boolean inFlight() {
-		return (isPlayerInATardis() && tardis() != null && tardis().getTravel().getState() == TardisTravel.State.FLIGHT);
+		return (isPlayerInATardis() && tardis() != null && tardis().travel().getState() == TardisTravel.State.FLIGHT);
 	}
 
 	public boolean hasThrottleAndHandbrakeDown() {
-		return (isPlayerInATardis() && tardis() != null && tardis().getTravel().getSpeed() > 0 && PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE));
+		return (isPlayerInATardis() && tardis() != null && tardis().travel().speed().get() > 0 && tardis().travel().handbrake().get());
 	}
 
 	public void tick(MinecraftClient client) {

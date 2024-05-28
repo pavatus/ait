@@ -2,11 +2,11 @@ package loqor.ait.tardis.base;
 
 public abstract class Initializable<T extends Initializable.Context> {
 
-    protected static <S extends Initializable<T>, T extends Initializable.Context> void init(S component, T context) {
+    protected static <T extends Initializable.Context> void init(Initializable<T> component, T context) {
         component.init(context);
     }
 
-    protected void init(T context) {
+    private void init(T context) {
         this.onEarlyInit(context);
 
         if (context.deserialized()) {

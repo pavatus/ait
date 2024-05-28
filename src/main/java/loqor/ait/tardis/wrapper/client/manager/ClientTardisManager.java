@@ -9,6 +9,7 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
@@ -42,11 +43,15 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
 	private ClientTardisManager() {
 		ClientPlayNetworking.registerGlobalReceiver(SEND,
-				(client, handler, buf, responseSender) -> ClientTardisManager.getInstance().sync(buf)
+				(client, handler, buf, responseSender) -> this.sync(buf)
 		);
 
 		ClientPlayNetworking.registerGlobalReceiver(UPDATE,
-				(client, handler, buf, responseSender) -> ClientTardisManager.getInstance().update(client, buf)
+				(client, handler, buf, responseSender) -> this.update(client, buf)
+		);
+
+		ClientPlayNetworking.registerGlobalReceiver(UPDATE_PROPERTY,
+				(client, handler, buf, responseSender) -> this.updatePropertyV2(client, buf)
 		);
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -143,8 +148,8 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		}
 	}
 
-	private void update(MinecraftClient client, UUID uuid, PacketByteBuf buf) {
-		ClientTardis tardis = this.demandTardis(client, uuid);
+	private void update(MinecraftClient client, PacketByteBuf buf) {
+		ClientTardis tardis = this.demandTardis(client, buf.readUuid());
 
 		if (tardis == null)
 			return;
@@ -164,8 +169,21 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		);
 	}
 
-	private void update(MinecraftClient client, PacketByteBuf buf) {
-		this.update(client, buf.readUuid(), buf);
+	private void updatePropertyV2(MinecraftClient client, PacketByteBuf buf) {
+		ClientTardis tardis = this.demandTardis(client, buf.readUuid());
+
+		if (tardis == null)
+			return;
+
+		TardisComponent.Id typeId = buf.readEnumConstant(TardisComponent.Id.class);
+		Identifier key = buf.readIdentifier();
+
+		if (!(typeId.get(tardis) instanceof KeyedTardisComponent keyed)) {
+			AITMod.LOGGER.error("Tried to update an un-keyed component: " + typeId, new IllegalAccessException());
+			return;
+		}
+
+		keyed.update(key, buf);
 	}
 
 	@Override

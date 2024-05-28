@@ -65,9 +65,9 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 			emission = null;
 		}
 
-		if (DependencyChecker.hasPortals() && entity.findTardis().get().getTravel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.findTardis().get().properties(), PropertiesHandler.IS_FALLING) && entity.findTardis().get().getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED) {
-			BlockPos pos = entity.findTardis().get().getTravel().getPosition();
-			World world = entity.findTardis().get().getTravel().getPosition().getWorld();
+		if (DependencyChecker.hasPortals() && entity.findTardis().get().travel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.findTardis().get().properties(), PropertiesHandler.IS_FALLING) && entity.findTardis().get().getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED) {
+			BlockPos pos = entity.findTardis().get().travel().getPosition();
+			World world = entity.findTardis().get().travel().getPosition().getWorld();
 			if (world != null) {
 				World doorWorld = entity.getWorld();
 				BlockPos doorPos = entity.getPos();
@@ -80,13 +80,13 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		}
 
 		if (model != null) {
-			if (!entity.findTardis().get().isSiegeMode()) {
+			if (!entity.findTardis().get().siege().isActive()) {
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
 				if (entity.findTardis().get().<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
 					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.findTardis().get().<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
 				}
 			}
-			if (emission != null && entity.findTardis().get().hasPower()) {
+			if (emission != null && entity.findTardis().get().engine().hasPower()) {
 				boolean alarms = PropertiesHandler.getBool(entity.findTardis().get().properties(), PropertiesHandler.ALARM_ENABLED);
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(emission, true)), maxLight, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
 			}

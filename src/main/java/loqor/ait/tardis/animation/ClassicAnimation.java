@@ -16,11 +16,11 @@ public class ClassicAnimation extends ExteriorAnimation {
 		if (exterior.findTardis().isEmpty())
 			return;
 
-		TardisTravel.State state = exterior.findTardis().get().getTravel().getState();
+		TardisTravel.State state = exterior.findTardis().get().travel().getState();
 
 
 		if (this.timeLeft < 0)
-			this.setupAnimation(exterior.findTardis().get().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+			this.setupAnimation(exterior.findTardis().get().travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 
 		if (state == TardisTravel.State.DEMAT) {
 			timeLeft--;

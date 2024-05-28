@@ -16,7 +16,7 @@ public class IncrementControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 
 		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
 			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {

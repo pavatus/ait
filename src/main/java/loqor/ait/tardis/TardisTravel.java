@@ -11,12 +11,16 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
-import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
-import loqor.ait.tardis.data.*;
+import loqor.ait.tardis.data.BiomeHandler;
+import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisUtil;
@@ -49,13 +53,10 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-// todo this class is like a monopoly, im gonna slash it into little corporate pieces
-public class TardisTravel extends TardisLink {
+public class TardisTravel extends KeyedTardisComponent {
 
 	public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
-	private static final String MAX_SPEED_KEY = "max_speed";
-	private static final int DEFAULT_MAX_SPEED = 7;
 	private State state = State.LANDED;
 	private AbsoluteBlockPos.Directed position;
 	private AbsoluteBlockPos.Directed destination;
@@ -64,12 +65,55 @@ public class TardisTravel extends TardisLink {
 	private static final int CHECK_LIMIT = AITMod.AIT_CONFIG.SEARCH_HEIGHT();
 	private static final Random random = new Random();
 
+	private final Property<Integer> speed = Property.forInt(this, "speed");
+	private final Property<Integer> maxSpeed = Property.forInt(this, "max_speed", 7);
+
+	private final Property<Boolean> autoLand = Property.forBool(this, "auto_land");
+	private final Property<Boolean> handbrake = Property.forBool(this, "handbrake", true);
+
 	public TardisTravel(AbsoluteBlockPos.Directed pos) {
 		super(Id.TRAVEL);
 		this.position = pos;
 
 		if (this.lastPosition == null)
 			this.lastPosition = pos;
+	}
+
+	@Override
+	public void onCreate() {
+		this.placeExterior();
+		this.runAnimations();
+	}
+
+	@Override
+	protected void onInit(InitContext ctx) {
+		speed.init(this);
+		maxSpeed.init(this);
+
+		autoLand.init(this);
+		handbrake.init(this);
+	}
+
+	static {
+		TardisEvents.LOSE_POWER.register(tardis -> {
+			tardis.travel().autoLand().set(false);
+		});
+	}
+
+	public Property<Integer> speed() {
+		return speed;
+	}
+
+	public Property<Integer> maxSpeed() {
+		return maxSpeed;
+	}
+
+	public Property<Boolean> autoLand() {
+		return autoLand;
+	}
+
+	public Property<Boolean> handbrake() {
+		return handbrake;
 	}
 
 	public boolean isCrashing() {
@@ -97,14 +141,16 @@ public class TardisTravel extends TardisLink {
 		this.tickMat();
 
 		ServerTardis tardis = (ServerTardis) this.tardis();
-		int speed = this.getSpeed();
+		int speed = this.speed.get();
 		State state = this.getState();
-		boolean handbrake = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HANDBRAKE);
-		boolean autopilot = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.AUTO_LAND);
+
+		boolean handbrake = tardis.travel().handbrake().get();
+		boolean autopilot = this.autoLand.get();
 
 		if (speed > 0 && state == State.LANDED && !handbrake && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
 			this.dematerialise(autopilot);
 		}
+
 		if (speed == 0 && state == State.FLIGHT) {
 			if (tardis.crash().getState() == TardisCrashData.State.UNSTABLE) {
 				int random_int = random.nextInt(0, 2);
@@ -122,58 +168,31 @@ public class TardisTravel extends TardisLink {
 				this.materialise();
 			}
 		}
+
 		// Should we just disable autopilot if the speed goes above 1?
 		if (speed > 1 && state == State.FLIGHT && autopilot) {
-			this.setSpeed(speed - 1);
+			this.speed.set(speed - 1);
 		}
 	}
 
 	public void increaseSpeed() {
 		// Stop speed from going above 1 if autopilot is enabled, and we're in flight
-		if (this.getSpeed() + 1 > 1 && this.getState() == State.FLIGHT
-				&& PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.AUTO_LAND)) {
+		if (this.speed.get() > 0 && this.getState() == State.FLIGHT && this.autoLand.get()) {
 			return;
 		}
 
-		this.setSpeed(MathHelper.clamp(this.getSpeed() + 1, 0, this.getMaxSpeed()));
+		this.speed.set(MathHelper.clamp(this.speed.get() + 1, 0, this.maxSpeed.get()));
 	}
 
 	public void decreaseSpeed() {
-		if (this.getState() == State.LANDED && this.getSpeed() == 1)
+		if (this.getState() == State.LANDED && this.speed.get() == 1)
 			FlightUtil.playSoundAtConsole(this.tardis(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
 
-		this.setSpeed(MathHelper.clamp(this.getSpeed() - 1, 0, this.getMaxSpeed()));
-	}
-
-	public int getSpeed() {
-		return PropertiesHandler.getInt(this.tardis().properties(), PropertiesHandler.SPEED);
-	}
-
-	public void setSpeed(int speed) {
-		PropertiesHandler.set(this.tardis(), PropertiesHandler.SPEED, speed);
-	}
-
-	public int getMaxSpeed() {
-		if (!this.tardis().properties().getData().containsKey(MAX_SPEED_KEY))
-			setMaxSpeed(DEFAULT_MAX_SPEED);
-
-		return PropertiesHandler.getInt(this.tardis().properties(), MAX_SPEED_KEY);
-	}
-
-	public void setMaxSpeed(int speed) {
-		PropertiesHandler.set(this.tardis(), MAX_SPEED_KEY, speed);
+		this.speed.set(MathHelper.clamp(this.speed.get() - 1, 0, this.maxSpeed.get()));
 	}
 
 	public boolean inFlight() {
 		return this.getState() == State.FLIGHT;
-	}
-
-	public boolean isMaterialising() {
-		return this.getState() == State.MAT;
-	}
-
-	public boolean isDematerialising() {
-		return this.getState() == State.DEMAT;
 	}
 
 	/**
@@ -226,7 +245,7 @@ public class TardisTravel extends TardisLink {
 
 		setDematTicks(getDematTicks() + 1);
 
-		if (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.HANDBRAKE)) {
+		if (tardis.travel().handbrake().get()) {
 			// cancel materialise
 			this.cancelDemat();
 			return;
@@ -268,7 +287,7 @@ public class TardisTravel extends TardisLink {
 			return;
 
 		Tardis tardis = tardis();
-		int crash_intensity = getSpeed() + tardis.tardisHammerAnnoyance + 1;
+		int crash_intensity = this.speed.get() + tardis.tardisHammerAnnoyance + 1;
 
 		FlightUtil.playSoundAtConsole(tardis,
 				SoundEvents.ENTITY_GENERIC_EXPLODE,
@@ -317,7 +336,7 @@ public class TardisTravel extends TardisLink {
 		tardis.setLockedTardis(true);
 		PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
 		PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
-		this.setSpeed(0);
+		this.speed.set(0);
 		tardis.removeFuel(500 * crash_intensity);
 		tardis.tardisHammerAnnoyance = 0;
 		int random_int = random.nextInt(0, 2);
@@ -473,7 +492,7 @@ public class TardisTravel extends TardisLink {
 		if (this.getState() != State.LANDED)
 			return;
 
-		if (!tardis().hasPower())
+		if (!this.tardis.engine().hasPower())
 			return; // no flying for you if you have no powa :)
 
 		if (this.getPosition().getWorld().isClient())
@@ -482,18 +501,18 @@ public class TardisTravel extends TardisLink {
 		if (FlightUtil.isDematerialiseOnCooldown(tardis()))
 			return; // cancelled
 
-
-		if (PropertiesHandler.willAutoPilot(tardis().properties())) {
+		if (this.autoLand.get()) {
 			// fulfill all the prerequisites
 			// DoorData.lockTardis(true, tardis(), null, false);
-			PropertiesHandler.set(tardis(), PropertiesHandler.HANDBRAKE, false);
-			this.tardis().getDoor().closeDoors();
-			tardis().setRefueling(false);
-			if (this.getSpeed() == 0) this.increaseSpeed();
+			this.handbrake.set(false);
+			this.tardis.getDoor().closeDoors();
+			this.tardis.setRefueling(false);
+
+			if (this.speed.get() == 0)
+				this.increaseSpeed();
 		}
 
-		PropertiesHandler.setAutoPilot(this.tardis().properties(), withRemat);
-
+		this.autoLand.set(withRemat);
 		ServerWorld world = (ServerWorld) this.getPosition().getWorld();
 
 		if (!ignoreChecks && TardisEvents.DEMAT.invoker().onDemat(tardis())) {
@@ -634,10 +653,8 @@ public class TardisTravel extends TardisLink {
 	}
 
 	public void forceLand(@Nullable ExteriorBlockEntity blockEntity) {
-		if (PropertiesHandler.willAutoPilot(this.tardis().properties())) {
-			if (this.getSpeed() > 0) {
-				this.setSpeed(0);
-			}
+		if (this.autoLand.get() && this.speed.get() > 0) {
+			this.speed.set(0);
 		}
 
 		this.setState(TardisTravel.State.LANDED);
@@ -676,7 +693,6 @@ public class TardisTravel extends TardisLink {
 
 	public void setCrashing(boolean crashing) {
 		this.crashing = crashing;
-		this.sync();
 	}
 
 	public void forceLand() {
@@ -713,7 +729,6 @@ public class TardisTravel extends TardisLink {
 
 		if (withChecks)
 			this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.FIND_GROUND));
-		this.sync();
 	}
 
 	public void setDestination(AbsoluteBlockPos.Directed pos) {
@@ -762,7 +777,6 @@ public class TardisTravel extends TardisLink {
 
 	public void setState(State state) {
 		this.state = state;
-		this.sync();
 	}
 
 	public void placeExterior() {

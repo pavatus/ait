@@ -49,8 +49,8 @@ public abstract class TardisLink extends TardisComponent implements TardisTickab
 
 	@Deprecated
 	public AbsoluteBlockPos.Directed getExteriorPos() {
-		return tardis().getTravel() != null ?
-				tardis().getTravel().getPosition() :
+		return tardis().travel() != null ?
+				tardis().travel().getPosition() :
 				new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), 0);
 	}
 }

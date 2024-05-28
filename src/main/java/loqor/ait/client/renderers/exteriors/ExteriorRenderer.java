@@ -44,7 +44,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		if (entity.findTardis().isEmpty())
 			return;
 
-		AbsoluteBlockPos.Directed exteriorPos = entity.findTardis().get().getHandlers().getExteriorPos();
+		AbsoluteBlockPos.Directed exteriorPos = entity.findTardis().get().getExteriorPos();
 
 		if (exteriorPos == null)
 			return;
@@ -87,7 +87,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 		try {
-			if (entity.findTardis().get().isSiegeMode()) {
+			if (entity.findTardis().get().siege().isActive()) {
 				if (siege == null) siege = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
 				siege.renderWithAnimations(entity, this.siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), maxLight, overlay, 1, 1, 1, 1);
 				matrices.pop();
@@ -108,13 +108,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			if (entity.findTardis().get().<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.findTardis().get().<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
 			}
-			if(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+			if (entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
 				Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
 				if (biomeTexture != null && !texture.equals(biomeTexture)) {
 					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
 				}
 			}
-			if (emission != null && entity.findTardis().get().hasPower()) {
+			if (emission != null && entity.findTardis().get().engine().hasPower()) {
 				boolean alarms = PropertiesHandler.getBool(entity.findTardis().get().properties(), PropertiesHandler.ALARM_ENABLED);
 
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(emission, true)), maxLight, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);

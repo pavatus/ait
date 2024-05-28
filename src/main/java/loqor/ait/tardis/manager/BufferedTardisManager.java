@@ -5,6 +5,7 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
@@ -35,10 +36,17 @@ public abstract class BufferedTardisManager<T extends ServerTardis, P extends Pl
 
     protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.Id id, String key, String type, String value);
 
+    protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.Id id, Property<?> property);
+
     protected abstract void updateTardis(@NotNull P player, T tardis, TardisComponent.Id id, String json);
 
     public void updateTardisProperty(@NotNull P player, T tardis, TardisComponent component, String key, String type, String value) {
         this.updateTardisProperty(player, tardis, component.getId(), key, type, value);
+        this.checkForceSync(player, tardis);
+    }
+
+    public void updateTardisPropertyV2(@NotNull P player, T tardis, Property<?> property) {
+        this.updateTardisProperty(player, tardis, property.getHolder().getId(), property);
         this.checkForceSync(player, tardis);
     }
 

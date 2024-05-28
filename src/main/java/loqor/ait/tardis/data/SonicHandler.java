@@ -125,7 +125,7 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 			if (this.hasMaxFuel(sonic)) return;
 			// Safe to get as ^ that method runs the check for us
 			ServerTardis tardis = (ServerTardis) this.tardis();
-			if (!tardis.hasPower()) return;
+			if (!tardis.engine().hasPower()) return;
 			this.addFuel(1, sonic);
 			tardis.fuel().removeFuel(1);
 		}

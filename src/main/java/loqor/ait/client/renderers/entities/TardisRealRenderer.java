@@ -84,7 +84,7 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 		if (getModel(entity) == null) return;
 		getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), entity.getWorld().getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light, 1, 1, 1, 1, 1);
 
-		if (exteriorVariantSchema.emission() != null && entity.getTardis().hasPower()) {
+		if (exteriorVariantSchema.emission() != null && entity.getTardis().engine().hasPower()) {
 			boolean alarms = PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
 			getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, 1, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
 		}

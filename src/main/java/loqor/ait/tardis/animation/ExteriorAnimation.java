@@ -33,10 +33,10 @@ public abstract class ExteriorAnimation {
 			return;
 
 		if (alpha <= 0f && state == TardisTravel.State.DEMAT) {
-			exterior.findTardis().get().getTravel().toFlight();
+			exterior.findTardis().get().travel().toFlight();
 		}
 		if (alpha >= 1f && state == TardisTravel.State.MAT) {
-			exterior.findTardis().get().getTravel().forceLand(this.exterior);
+			exterior.findTardis().get().travel().forceLand(this.exterior);
 		}
 	}
 
@@ -45,10 +45,10 @@ public abstract class ExteriorAnimation {
 		if (this.exterior.findTardis().isEmpty()) return 1f;
 
 		if (this.timeLeft < 0) {
-			this.setupAnimation(exterior.findTardis().get().getTravel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+			this.setupAnimation(exterior.findTardis().get().travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 			return 1f;
 		}
-		if (this.exterior.findTardis().get().getTravel().getState() == TardisTravel.State.LANDED && this.exterior.findTardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled()) {
+		if (this.exterior.findTardis().get().travel().getState() == TardisTravel.State.LANDED && this.exterior.findTardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled()) {
 			return 0.105f;
 		}
 

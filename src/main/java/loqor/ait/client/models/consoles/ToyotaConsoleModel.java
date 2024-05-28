@@ -840,20 +840,20 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPart throttle = this.toyota.getChild("panel4").getChild("controls4").getChild("throttle");
 		ModelPart throttleLights = this.toyota.getChild("panel4").getChild("flightlights").getChild("flightlights2");
 
-		throttle.pitch = throttle.pitch + ((tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed()) * 1.5f);
-		throttleLights.pivotY = !(tardis.getTravel().getSpeed() > 0) ? throttleLights.pivotY + 1 : throttleLights.pivotY;
+		throttle.pitch = throttle.pitch + ((tardis.travel().speed().get() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
+		throttleLights.pivotY = !(tardis.travel().speed().get() > 0) ? throttleLights.pivotY + 1 : throttleLights.pivotY;
 
 		//Handbrake Control and Lights
 		ModelPart handbrake = this.toyota.getChild("panel4").getChild("controls4").getChild("handbrake").getChild("pivot");
-		handbrake.yaw = !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? handbrake.yaw - 1.57f : handbrake.yaw;
+		handbrake.yaw = !tardis.travel().handbrake().get() ? handbrake.yaw - 1.57f : handbrake.yaw;
 		ModelPart handbrakeLights = this.toyota.getChild("panel4").getChild("flightlights").getChild("handbrakelights").getChild("handbrakelights2");
 
-		handbrakeLights.pivotY = !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? handbrakeLights.pivotY + 1 : handbrakeLights.pivotY;
+		handbrakeLights.pivotY = !tardis.travel().handbrake().get() ? handbrakeLights.pivotY + 1 : handbrakeLights.pivotY;
 
 		// @TODO MONSTER THE ONE ON THE LEFT IS THE POWER NOT THE RIGHT SMH
 		//Power Switch and Lights
 		ModelPart power = this.toyota.getChild("panel1").getChild("controls").getChild("dooropen");
-		power.pitch = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ? power.pitch : power.pitch - 1.55f;
+		power.pitch = tardis.engine().hasPower() ? power.pitch : power.pitch - 1.55f;
 
 		//Anti Gravity Control
 		ModelPart antigravs = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps1").getChild("pivot2");
@@ -884,12 +884,13 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		//Auto Pilot Control
 		ModelPart autopilot = this.toyota.getChild("panel4").getChild("controls4").getChild("tinyswitch2");
 		ModelPart autopilotLight = this.toyota.getChild("panel4").getChild("yellow4");
-		autopilot.pitch = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? autopilot.pitch + 1f : autopilot.pitch - 1f;
-		autopilotLight.pivotY = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? autopilotLight.pivotY : autopilotLight.pivotY + 1;
+
+		autopilot.pitch = tardis.travel().autoLand().get() ? autopilot.pitch + 1f : autopilot.pitch - 1f;
+		autopilotLight.pivotY = tardis.travel().autoLand().get() ? autopilotLight.pivotY : autopilotLight.pivotY + 1;
 
 		// Siege Mode Control
 		ModelPart siegeMode = this.toyota.getChild("panel2").getChild("controls3").getChild("siegemode").getChild("siegemodehandle");
-		siegeMode.pitch = tardis.isSiegeMode() ? siegeMode.pitch + 1.55f : siegeMode.pitch;
+		siegeMode.pitch = tardis.siege().isActive() ? siegeMode.pitch + 1.55f : siegeMode.pitch;
 
 
 		// Fuel Gauge
@@ -908,7 +909,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		// Direction Control
 		ModelPart direction = this.toyota.getChild("panel6").getChild("controls2").getChild("smallnob2");
-		direction.pitch = direction.pitch + tardis.getTravel().getDestination().getRotation();
+		direction.pitch = direction.pitch + tardis.travel().getDestination().getRotation();
 
 		// Increment Control
 		ModelPart increment = this.toyota.getChild("panel2").getChild("controls3").getChild("gears").getChild("largegear2");
@@ -923,9 +924,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPart fastReturnCover = this.toyota.getChild("panel4").getChild("controls4").getChild("tinyswitchcover");
 		ModelPart fastReturnLever = this.toyota.getChild("panel4").getChild("controls4").getChild("tinyswitch");
 
-
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-
 		matrices.pop();
 	}
 

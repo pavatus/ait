@@ -28,7 +28,6 @@ import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -138,12 +137,12 @@ public class TardisUtil {
 
 						tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
 						WorldOps.updateIfOnServer(server.getWorld(tardis
-										.getTravel().getPosition().getWorld().getRegistryKey()),
+										.travel().getPosition().getWorld().getRegistryKey()),
 								tardis.getDoor().getExteriorPos());
 						if (variantChange) {
 							tardis.getExterior().setVariant(schema);
 							WorldOps.updateIfOnServer(server.getWorld(tardis
-											.getTravel().getPosition().getWorld().getRegistryKey()),
+											.travel().getPosition().getWorld().getRegistryKey()),
 									tardis.getDoor().getExteriorPos());
 						}
 					});
@@ -210,13 +209,15 @@ public class TardisUtil {
 							FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
 							return;
 						}
-						tardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+
+						tardis.travel().setDestination(new AbsoluteBlockPos.Directed(
 										serverPlayer.getBlockX(),
 										serverPlayer.getBlockY(),
 										serverPlayer.getBlockZ(),
 										serverPlayer.getWorld(),
 										RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())),
-								PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.AUTO_LAND));
+								tardis.travel().autoLand().get());
+
 						FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
 					});
 				}
@@ -278,7 +279,7 @@ public class TardisUtil {
 	}
 
 	public static ExteriorBlockEntity getExterior(Tardis tardis) {
-		if (!(tardis.getTravel().getPosition().getBlockEntity() instanceof ExteriorBlockEntity exterior))
+		if (!(tardis.travel().getPosition().getBlockEntity() instanceof ExteriorBlockEntity exterior))
 			return null;
 
 		return exterior;
@@ -351,7 +352,7 @@ public class TardisUtil {
 	}
 
 	public static void teleportOutside(Tardis tardis, Entity entity) {
-		AbsoluteBlockPos.Directed pos = tardis.getTravel().getState() == TardisTravel.State.FLIGHT ? FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.flight().getDurationAsPercentage()) : tardis.position();
+		AbsoluteBlockPos.Directed pos = tardis.travel().getState() == TardisTravel.State.FLIGHT ? FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.flight().getDurationAsPercentage()) : tardis.position();
 		TardisUtil.teleportWithDoorOffset(entity, tardis.getDoor().getExteriorPos());
 	}
 

@@ -61,6 +61,10 @@ public class AbsoluteBlockPos extends BlockPos {
 		this.getWorld().setBlockState(this, state);
 	}
 
+	public void setBlockState(BlockState state, int flags) {
+		this.getWorld().setBlockState(this, state, flags);
+	}
+
 	public Chunk getChunk() {
 		return this.getWorld().getChunk(this);
 	}

@@ -42,23 +42,23 @@ public class FlightData extends TardisLink {
 				return false;
 
 			this.setFlightTicks(0);
-			this.setTargetTicks(FlightUtil.getFlightDuration(tardis.getTravel().getPosition(), tardis.getTravel().getDestination()));
+			this.setTargetTicks(FlightUtil.getFlightDuration(tardis.travel().getPosition(), tardis.travel().getDestination()));
 
 			return false;
 		}));
 	}
 
 	private boolean isInFlight() {
-		return this.tardis().getTravel().getState().equals(TardisTravel.State.FLIGHT) || this.tardis().getTravel().getState().equals(TardisTravel.State.MAT);
+		return this.tardis().travel().getState().equals(TardisTravel.State.FLIGHT) || this.tardis().travel().getState().equals(TardisTravel.State.MAT);
 	}
 
 	private boolean isFlightTicking() {
-		return this.tardis().getTravel().getState() == TardisTravel.State.FLIGHT && this.getTargetTicks() != 0;
+		return this.tardis().travel().getState() == TardisTravel.State.FLIGHT && this.getTargetTicks() != 0;
 	}
 
 	public boolean hasFinishedFlight() {
 		return (this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 ||
-				tardis().getTravel().isCrashing()) &&
+				tardis().travel().isCrashing()) &&
 				!PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 	}
 
@@ -69,12 +69,12 @@ public class FlightData extends TardisLink {
 		FlightUtil.playSoundAtConsole(this.tardis(), SoundEvents.BLOCK_BELL_RESONATE); // temp sound
 
 		if (shouldAutoLand()) {
-			this.tardis().getTravel().materialise();
+			this.tardis().travel().materialise();
 		}
 	}
 
 	private boolean shouldAutoLand() {
-		return (PropertiesHandler.willAutoPilot(this.tardis().properties())
+		return (this.tardis().travel().autoLand().get()
 				|| !TardisUtil.isInteriorNotEmpty(this.tardis()))
 				&& !PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 		// todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
@@ -91,7 +91,7 @@ public class FlightData extends TardisLink {
 	public int getDurationAsPercentage() {
 
 		if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0) {
-			if (this.tardis().getTravel().getState() == TardisTravel.State.DEMAT)
+			if (this.tardis().travel().getState() == TardisTravel.State.DEMAT)
 				return 0;
 
 			return 100;
@@ -135,10 +135,10 @@ public class FlightData extends TardisLink {
 		ServerTardis tardis = (ServerTardis) this.tardis();
 
 		TardisCrashData crash = tardis.crash();
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 
 		if (crash.getState() != TardisCrashData.State.NORMAL)
-			crash.addRepairTicks(2 * travel.getSpeed());
+			crash.addRepairTicks(2 * travel.speed().get());
 
 		if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && travel.getState() == TardisTravel.State.LANDED)
 			this.recalculate();
@@ -154,7 +154,7 @@ public class FlightData extends TardisLink {
 				this.onFlightFinished();
 			}
 
-			this.setFlightTicks(this.getFlightTicks() + (Math.max(travel.getSpeed() / 2, 1)));
+			this.setFlightTicks(this.getFlightTicks() + (Math.max(travel.speed().get() / 2, 1)));
 		}
 
 		if (!PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT)
@@ -164,14 +164,14 @@ public class FlightData extends TardisLink {
 
 	public void triggerSequencingDuringFlight(Tardis tardis) {
 		SequenceHandler sequences = tardis.sequence();
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 
-		if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.AUTO_LAND)
+		if (!tardis.travel().autoLand().get()
 				&& this.getDurationAsPercentage() < 100
 				&& travel.inFlight() && tardis.position() != tardis.destination() && !sequences.hasActiveSequence()) {
 			if (FlightUtil.getFlightDuration(tardis.position(),
 					tardis.destination()) > FlightUtil.convertSecondsToTicks(5)) {
-				int rand = random.nextBetween(0, 460 / (tardis.getTravel().getSpeed() == 0 ? 1 : tardis.getTravel().getSpeed()));
+				int rand = random.nextBetween(0, 460 / (tardis.travel().speed().get() == 0 ? 1 : tardis.travel().speed().get()));
 				if (rand == 7) {
 					sequences.triggerRandomSequence(true);
 				}

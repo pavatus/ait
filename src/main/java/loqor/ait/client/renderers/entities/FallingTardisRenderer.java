@@ -55,7 +55,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? 180f + h : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-		if (entity.getTardis().isSiegeMode()) {
+		if (entity.getTardis().siege().isActive()) {
 			model = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
 			model.renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), light, 1, 1, 1, 1, 1);
 		} else {

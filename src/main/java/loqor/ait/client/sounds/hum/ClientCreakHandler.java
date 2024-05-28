@@ -5,11 +5,10 @@ import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.client.sounds.PlayerFollowingSound;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.registry.impl.CreakRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.sound.CreakSound;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
@@ -26,10 +25,8 @@ import java.util.Random;
 import static loqor.ait.AITMod.AIT_CONFIG;
 
 public class ClientCreakHandler extends SoundHandler {
-	private static final Random random = new Random();
 
-	protected ClientCreakHandler() {
-	}
+	private static final Random random = new Random();
 
 	public static ClientCreakHandler create() {
 		if (MinecraftClient.getInstance().player == null) return null;
@@ -85,11 +82,12 @@ public class ClientCreakHandler extends SoundHandler {
 
 		assert current != null; // we cant get here if we're not in a tardis
 
-		if (current.isSiegeMode() && chosen.equals(CreakRegistry.WHISPER)) {
-
-			current.getDesktop().getConsoles().forEach(console -> {
-				startIfNotPlaying(new PositionedSoundInstance(chosen.sound(), SoundCategory.HOSTILE, 0.5f, 1.0f, net.minecraft.util.math.random.Random.create(), randomNearConsolePos(console.position())));
-			});
+		if (current.siege().isActive() && chosen.equals(CreakRegistry.WHISPER)) {
+			current.getDesktop().getConsoles().forEach(console -> startIfNotPlaying(new PositionedSoundInstance(
+					chosen.sound(), SoundCategory.HOSTILE, 0.5f, 1.0f,
+					net.minecraft.util.math.random.Random.create(),
+					randomNearConsolePos(console.position())))
+			);
 
 			return;
 		} else if (chosen.equals(CreakRegistry.WHISPER)) {
@@ -101,9 +99,11 @@ public class ClientCreakHandler extends SoundHandler {
 	}
 
 	public void tick(MinecraftClient client) {
-		if (this.sounds == null) this.generateCreaks();
+		if (this.sounds == null)
+			this.generateCreaks();
 
-		if (client.player == null) return;
+		if (client.player == null)
+			return;
 
 		ClientTardis current = (ClientTardis) ClientTardisUtil.getCurrentTardis();
 
@@ -112,9 +112,7 @@ public class ClientCreakHandler extends SoundHandler {
 			return;
 		}
 
-		assert current != null;
-
-		if ((current.hasPower() && (!current.inFlight() || PropertiesHandler.getBool(current.getHandlers().getProperties(), PropertiesHandler.AUTO_LAND)))) { // todo should they play even with power? just make them more rare??
+		if ((current.engine().hasPower() && (!current.inFlight() || current.travel().autoLand().get()))) { // todo should they play even with power? just make them more rare??
 			this.stopSounds();
 			return;
 		}

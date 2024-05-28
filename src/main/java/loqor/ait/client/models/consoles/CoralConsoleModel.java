@@ -1382,14 +1382,14 @@ public class CoralConsoleModel extends ConsoleModel {
 		}
 
 		// Power Lever
-		controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HAS_POWER) ?
+		controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll = tardis.engine().hasPower() ?
 				controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll : controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll - 1.5f;
-		controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HAS_POWER) ?
+		controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll = tardis.engine().hasPower() ?
 				controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll : controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll + 0.5f;
 
 		// Throttle
 		ModelPart throttle = controls.getChild("p_ctrl_5").getChild("bone49").getChild("lever3").getChild("bone52");
-		throttle.roll = throttle.roll + (tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed());
+		throttle.roll = throttle.roll + (tardis.travel().speed().get() / (float) tardis.travel().maxSpeed().get());
 
 		// Increment
 		ModelPart increment = controls.getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("crank2");
@@ -1406,11 +1406,11 @@ public class CoralConsoleModel extends ConsoleModel {
 		controls.getChild("ctrl_1").getChild("bone13").getChild("insert").getChild("bone96").visible = tardis.<WaypointHandler>handler(TardisComponent.Id.WAYPOINTS).hasCartridge();
 
 		// Handbrake
-		controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw = !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HANDBRAKE) ? controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw : controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw + 0.75f;
+		controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw = !tardis.travel().handbrake().get() ? controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw : controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw + 0.75f;
 
 		// Siege Mode
 		ModelPart siege = controls.getChild("p_ctrl_3").getChild("bone36").getChild("handbrake");
-		siege.roll = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.SIEGE_MODE) ? siege.roll + 0.45f : siege.roll;
+		siege.roll = tardis.siege().isActive() ? siege.roll + 0.45f : siege.roll;
 
 		// Shields
 		ModelPart shield = controls.getChild("p_ctrl_4").getChild("bone41").getChild("pully").getChild("bone47");
@@ -1418,7 +1418,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Autopilot
 		ModelPart autopilot = controls.getChild("ctrl_4").getChild("bone15").getChild("switch24").getChild("bone19");
-		autopilot.pivotY = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.AUTO_LAND) ? autopilot.pivotY + 1 : autopilot.pivotY;
+		autopilot.pivotY = tardis.travel().autoLand().get() ? autopilot.pivotY + 1 : autopilot.pivotY;
 
 		ModelPart security = controls.getChild("ctrl_4").getChild("bone15").getChild("switch25").getChild("bone20");
 		security.pivotY = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? security.pivotY + 1 : security.pivotY;

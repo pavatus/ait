@@ -17,21 +17,19 @@ public class SiegeModeControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-
-		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis, player);
-				return false;
-			}
+		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
+			this.addToControlSequence(tardis, player);
+			return false;
 		}
 
-		if (tardis.getTravel().isCrashing() || tardis.getTravel().inFlight()) return true;
+		if (tardis.travel().isCrashing() || tardis.travel().inFlight())
+			return true;
 
-		tardis.setSiegeMode(!tardis.isSiegeMode());
+		tardis.siege().setActive(!tardis.siege().isActive());
 		PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, false);
 		Text enabled = Text.translatable("tardis.message.control.siege.enabled");
 		Text disabled = Text.translatable("tardis.message.control.siege.disabled");
-		player.sendMessage((tardis.isSiegeMode() ? enabled : disabled), true);
+		player.sendMessage((tardis.siege().isActive() ? enabled : disabled), true);
 		return false;
 	}
 

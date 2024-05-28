@@ -95,9 +95,9 @@ public class FuelData extends TardisLink implements ArtronHolder {
 		// @TODO fix this because it seems that using any chunk references causes ticking to freak the hell out - Loqor
 
 		ServerTardis tardis = (ServerTardis) this.tardis();
-		AbsoluteBlockPos pos = tardis.getTravel().getExteriorPos();
+		AbsoluteBlockPos pos = tardis.getExterior().getExteriorPos();
 		World world = pos.getWorld();
-		TardisTravel.State state = tardis.getTravel().getState();
+		TardisTravel.State state = tardis.travel().getState();
 
 		if (state == TardisTravel.State.LANDED) {
 			if (this.isRefueling() && this.getCurrentFuel() < FuelData.TARDIS_MAX_FUEL && (!isRefuelOnDelay(tardis))) {
@@ -119,11 +119,11 @@ public class FuelData extends TardisLink implements ArtronHolder {
 		if (state == TardisTravel.State.FLIGHT) {
 			if (!isDrainOnDelay(tardis)) {
 				createDrainDelay(tardis);
-				removeFuel((4 ^ (tardis.getTravel().getSpeed())) * (tardis.tardisHammerAnnoyance + 1));
+				removeFuel((4 ^ (tardis.travel().speed().get())) * (tardis.tardisHammerAnnoyance + 1));
 			}
 
-			if (!tardis.hasPower())
-				tardis().getTravel().crash(); // hehe force land if you don't have enough fuel
+			if (!tardis.engine().hasPower())
+				tardis().travel().crash(); // hehe force land if you don't have enough fuel
 		}
 
 		if ((state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT) && !isDrainOnDelay(tardis)) {

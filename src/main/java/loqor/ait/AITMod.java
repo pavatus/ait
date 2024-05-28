@@ -13,7 +13,6 @@ import loqor.ait.core.commands.*;
 import loqor.ait.core.data.schema.MachineRecipeSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.TardisRealEntity;
-import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
@@ -25,7 +24,6 @@ import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.advancement.TardisCriterions;
@@ -33,12 +31,10 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.data.SiegeData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -47,7 +43,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
@@ -66,7 +61,6 @@ import net.minecraft.world.gen.feature.PlacedFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -150,13 +144,13 @@ public class AITMod implements ModInitializer {
 
 		TardisEvents.LANDED.register((tardis -> {
 			// stuff for resetting the ExteriorAnimation
-			if (tardis.getTravel().getPosition().getWorld().getBlockEntity(tardis.getTravel().getExteriorPos()) instanceof ExteriorBlockEntity entity) {
-				entity.getAnimation().setupAnimation(tardis.getTravel().getState());
+			if (tardis.travel().getPosition().getWorld().getBlockEntity(tardis.getDesktop().getExteriorPos()) instanceof ExteriorBlockEntity entity) {
+				entity.getAnimation().setupAnimation(tardis.travel().getState());
 			}
 		}));
 
 		TardisEvents.DEMAT.register((tardis -> {
-			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating() || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HANDBRAKE) || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
+			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating() || tardis.travel().handbrake().get() || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
 				return true; // cancelled
 
 			if (tardis.getDoor().isOpen() /*|| !tardis.getDoor().locked()*/)
@@ -173,8 +167,8 @@ public class AITMod implements ModInitializer {
 			boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
 
 			// Check if the destination is already occupied
-			boolean isDestinationOccupied = !tardis.getTravel().getDestination().equals(tardis.getExterior().getExteriorPos())
-					&& !tardis.getTravel().checkDestination();
+			boolean isDestinationOccupied = !tardis.travel().getDestination().equals(tardis.getExterior().getExteriorPos())
+					&& !tardis.travel().checkDestination();
 
 			return isCooldown || isDestinationOccupied;
 		}));
@@ -185,15 +179,12 @@ public class AITMod implements ModInitializer {
 			}
 		}));
 
-		TardisEvents.OUT_OF_FUEL.register(Tardis::disablePower);
-
 		TardisEvents.LOSE_POWER.register((tardis -> {
 			if (TardisUtil.getTardisDimension() != null) {
 				FlightUtil.playSoundAtConsole(tardis, AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
 			}
 
 			// disabling protocols
-			PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, false);
 			PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
 			PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
 			PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
@@ -221,7 +212,7 @@ public class AITMod implements ModInitializer {
 					return;
 
 				// nuh uh no interior changing during flight
-				if(tardis.getTravel().inFlight())
+				if(tardis.travel().inFlight())
 					return;
 
 				tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).queueInteriorChange(desktop);
@@ -336,17 +327,6 @@ public class AITMod implements ModInitializer {
 
 				StackUtil.playBreak(player);
 			});
-		});
-
-		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-			ServerPlayerEntity player = handler.getPlayer();
-
-			for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
-				if (!tardis.isSiegeMode()) continue;
-				if (!Objects.equals(tardis.<SiegeData>handler(TardisComponent.Id.SIEGE).getHeldPlayerUUID(), player.getUuid())) continue;
-
-				SiegeTardisItem.placeTardis(tardis, SiegeTardisItem.fromEntity(player));
-			}
 		});
 
 		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
