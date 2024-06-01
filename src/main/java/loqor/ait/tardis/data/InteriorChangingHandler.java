@@ -91,10 +91,12 @@ public class InteriorChangingHandler extends TardisLink {
 		DoorData.lockTardis(previouslyLocked, tardis, null, false);
 
 		if (tardis.hasGrowthExterior()) {
-			tardis.travel().handbrake().set(false);
-			tardis.travel().autoLand().set(true);
+			TardisTravel travel = tardis.travel();
 
-			tardis.travel().dematerialise(true, true);
+			travel.handbrake().set(false);
+			travel.autoLand().set(true);
+
+			travel.dematerialise(true, true);
 		}
 	}
 

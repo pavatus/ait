@@ -21,6 +21,7 @@ import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
+import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisUtil;
@@ -65,11 +66,17 @@ public class TardisTravel extends KeyedTardisComponent {
 	private static final int CHECK_LIMIT = AITMod.AIT_CONFIG.SEARCH_HEIGHT();
 	private static final Random random = new Random();
 
-	private final Property<Integer> speed = Property.forInt(this, "speed");
-	private final Property<Integer> maxSpeed = Property.forInt(this, "max_speed", 7);
+	private static final Property<Integer> SPEED = Property.forInt("speed", 0);
+	private static final Property<Integer> MAX_SPEED = Property.forInt("max_speed", 7);
 
-	private final Property<Boolean> autoLand = Property.forBool(this, "auto_land");
-	private final Property<Boolean> handbrake = Property.forBool(this, "handbrake", true);
+	private static final Property<Boolean> AUTO_LAND = Property.forBool("auto_land", false);
+	private static final Property<Boolean> HANDBRAKE = Property.forBool("handbrake", true);
+
+	private final Value<Integer> speed = SPEED.create(this);
+	private final Value<Integer> maxSpeed = MAX_SPEED.create(this);
+
+	private final Value<Boolean> autoLand = AUTO_LAND.create(this);
+	private final Value<Boolean> handbrake = HANDBRAKE.create(this);
 
 	public TardisTravel(AbsoluteBlockPos.Directed pos) {
 		super(Id.TRAVEL);
@@ -87,11 +94,11 @@ public class TardisTravel extends KeyedTardisComponent {
 
 	@Override
 	protected void onInit(InitContext ctx) {
-		speed.init(this);
-		maxSpeed.init(this);
+		speed.of(this, SPEED);
+		maxSpeed.of(this, MAX_SPEED);
 
-		autoLand.init(this);
-		handbrake.init(this);
+		autoLand.of(this, AUTO_LAND);
+		handbrake.of(this, HANDBRAKE);
 	}
 
 	static {
@@ -100,19 +107,19 @@ public class TardisTravel extends KeyedTardisComponent {
 		});
 	}
 
-	public Property<Integer> speed() {
+	public Value<Integer> speed() {
 		return speed;
 	}
 
-	public Property<Integer> maxSpeed() {
+	public Value<Integer> maxSpeed() {
 		return maxSpeed;
 	}
 
-	public Property<Boolean> autoLand() {
+	public Value<Boolean> autoLand() {
 		return autoLand;
 	}
 
-	public Property<Boolean> handbrake() {
+	public Value<Boolean> handbrake() {
 		return handbrake;
 	}
 

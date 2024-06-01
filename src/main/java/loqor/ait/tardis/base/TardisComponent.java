@@ -113,7 +113,9 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
 		// Special handling
 		HANDLERS(TardisHandlersManager.class, null),
-		PROPERTIES(PropertiesHolder.class, null);
+		PROPERTIES(PropertiesHolder.class, null),
+
+		TESTING(PropertyTestHandler.class, null);
 
 		private final BiConsumer<ClientTardis, TardisComponent> setter;
 		private final Class<? extends TardisComponent> clazz;

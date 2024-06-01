@@ -4,6 +4,7 @@ import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.PropertyMap;
+import loqor.ait.tardis.data.properties.v2.Value;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -26,15 +27,15 @@ public class KeyedTardisComponent extends TardisComponent {
         this.data = new PropertyMap();
     }
 
-    public void register(Property<?> property) {
-        this.data.put(property.getId(), property);
+    public void register(Value<?> property) {
+        this.data.put(property.getProperty().getName(), property);
     }
 
-    public void update(Identifier id, PacketByteBuf buf) {
-        Property<?> property = this.data.get(id);
+    public void update(String name, PacketByteBuf buf) {
+        Value<?> property = this.data.get(name);
 
         if (property == null) {
-            AITMod.LOGGER.error("No property with id '{}' on {}", id, this.getId());
+            AITMod.LOGGER.error("No property with id '{}' on {}", name, this.getId());
             return;
         }
 

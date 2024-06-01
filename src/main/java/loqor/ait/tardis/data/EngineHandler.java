@@ -8,6 +8,7 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.v2.Property;
+import loqor.ait.tardis.data.properties.v2.Value;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -27,11 +28,11 @@ public class EngineHandler extends KeyedTardisComponent {
 
     @Override
     protected void onInit(InitContext ctx) {
-        this.power.init(this);
-        this.hasEngineCore.init(this);
+        this.power.create(this);
+        this.hasEngineCore.create(this);
     }
 
-    public Property<Boolean> hasEngineCore() {
+    public Value<Boolean> hasEngineCore() {
         return hasEngineCore;
     }
 

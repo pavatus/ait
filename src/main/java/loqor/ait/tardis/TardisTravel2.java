@@ -1,31 +1,68 @@
 package loqor.ait.tardis;
 
 import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.v2.Property;
+import loqor.ait.tardis.travel.DematTravelState;
+import loqor.ait.tardis.travel.FlightTravelState;
+import loqor.ait.tardis.travel.LandedTravelState;
+import loqor.ait.tardis.travel.RematTravelState;
 
-public class TardisTravel2 extends KeyedTardisComponent {
+import java.util.function.Supplier;
 
-    private final Property<Integer> SPEED = Property.forInt(this, "speed");
-    private final Property<Integer> MAX_SPEED = Property.forInt(this, "max_speed", 7);
+public class TardisTravel2 extends KeyedTardisComponent implements TardisTickable {
+
+    private StateHolder holder;
 
     public TardisTravel2() {
         super(Id.TRAVEL);
     }
 
-    public int getSpeed() {
-        return PropertiesHandler.getInt(this.tardis.properties(), PropertiesHandler.SPEED);
+    @Override
+    protected void onInit(InitContext ctx) {
+
     }
 
-    public void setSpeed(int speed) {
-        PropertiesHandler.set(this.tardis, PropertiesHandler.SPEED, speed);
+    public State getState() {
+        return holder.state();
     }
 
-    public int getMaxSpeed() {
-        return PropertiesHandler.getInt(this.tardis.properties(), PropertiesHandler.MAX_SPEED);
+    public StateHolder getStateHolder() {
+        return holder;
     }
 
-    public void setMaxSpeed(int speed) {
-        PropertiesHandler.set(this.tardis, PropertiesHandler.MAX_SPEED, speed);
+    record StateHolder(State state, TravelState impl) {
+
+        StateHolder(State state) {
+            this(state, state.create());
+        }
+    }
+
+    public enum State {
+        LANDED(LandedTravelState::new),
+        DEMAT(DematTravelState::new),
+        FLIGHT(FlightTravelState::new),
+        REMAT(RematTravelState::new);
+
+        private final Supplier<TravelState> supplier;
+
+        State(Supplier<TravelState> supplier) {
+            this.supplier = supplier;
+        }
+
+        public TravelState create() {
+            return supplier.get();
+        }
+    }
+
+    public static abstract class TravelState {
+
+        public void onHandbrake(TardisTravel2 travel, boolean handbrake) { }
+
+        public abstract State getNext();
+
+        public void cycle() {
+
+        }
     }
 }

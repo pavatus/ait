@@ -176,7 +176,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 			return;
 
 		TardisComponent.Id typeId = buf.readEnumConstant(TardisComponent.Id.class);
-		Identifier key = buf.readIdentifier();
+		String key = buf.readString();
 
 		if (!(typeId.get(tardis) instanceof KeyedTardisComponent keyed)) {
 			AITMod.LOGGER.error("Tried to update an un-keyed component: " + typeId, new IllegalAccessException());

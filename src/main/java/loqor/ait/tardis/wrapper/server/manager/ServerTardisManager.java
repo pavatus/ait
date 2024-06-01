@@ -11,6 +11,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.v2.Property;
+import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.manager.BufferedTardisManager;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.manager.TardisFileManager;
@@ -136,13 +137,13 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	}
 
 	@Override
-	protected void updateTardisProperty(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.Id id, Property<?> property) {
+	protected void updateTardisProperty(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.Id id, Value<?> property) {
 		PacketByteBuf data = PacketByteBufs.create();
 
 		data.writeUuid(tardis.getUuid());
 		data.writeEnumConstant(id);
 
-		data.writeIdentifier(property.getId());
+		data.writeString(property.getProperty().getName());
 		property.write(data);
 
 		ServerPlayNetworking.send(player, UPDATE_PROPERTY, data);
@@ -213,7 +214,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		}
 	}
 
-	public void sendPropertyV2ToSubscribers(ServerTardis tardis, Property<?> property) {
+	public void sendPropertyV2ToSubscribers(ServerTardis tardis, Value<?> property) {
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
 			this.updateTardisPropertyV2(player, tardis, property);
 		}

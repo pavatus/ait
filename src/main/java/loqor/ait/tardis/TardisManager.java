@@ -74,8 +74,7 @@ public abstract class TardisManager<T extends Tardis, C> {
 				.registerTypeAdapter(NbtCompound.class, new NbtSerializer())
 				.registerTypeAdapter(ItemStack.class, new ItemStackSerializer())
 				.registerTypeAdapter(Identifier.class, new IdentifierSerializer())
-				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer())
-				.registerTypeAdapter(PropertyMap.class, PropertyMap.serializer());
+				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer());
 
 		if (!AITMod.AIT_CONFIG.MINIFY_JSON())
             builder.setPrettyPrinting();
