@@ -17,6 +17,7 @@ public class TardisComponentRegistry implements Registry {
         if (!id.creatable())
             return;
 
+        id.index(REGISTRY.size());
         REGISTRY.put(id.name(), id);
     }
 

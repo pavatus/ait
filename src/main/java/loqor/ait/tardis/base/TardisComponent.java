@@ -124,6 +124,8 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
 		private final Class<? extends TardisComponent> clazz;
 
+		private int index;
+
 		<T extends TardisComponent>Id(Class<T> clazz, Supplier<T> creator) {
 			this(clazz, creator, ClientTardis::set);
 		}
@@ -160,6 +162,16 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 			return this.setter != null;
 		}
 
+		@Override
+		public int index() {
+			return index;
+		}
+
+		@Override
+		public void index(int i) {
+			this.index = i;
+		}
+
 		public TardisComponent get(ClientTardis tardis) {
 			return switch (this) {
 				case DESKTOP -> tardis.getDesktop();
@@ -185,7 +197,9 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		boolean mutable();
 
 		String name();
-		int ordinal();
+
+		int index();
+		void index(int i);
 	}
 
 	public record InitContext(boolean deserialized) implements Initializable.Context {

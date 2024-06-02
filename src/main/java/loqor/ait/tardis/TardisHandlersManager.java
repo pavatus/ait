@@ -28,27 +28,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 
 	@Override
 	public void onCreate() {
-		this.createHandler(new DoorData());
-		this.createHandler(new PropertiesHolder());
-		this.createHandler(new WaypointHandler());
-		this.createHandler(new LoyaltyHandler());
-		this.createHandler(new OvergrownData());
-		this.createHandler(new ServerHumHandler());
-		this.createHandler(new ServerAlarmHandler());
-		this.createHandler(new InteriorChangingHandler());
-		this.createHandler(new SequenceHandler());
-		this.createHandler(new FuelData());
-		this.createHandler(new HADSData());
-		this.createHandler(new FlightData());
-		this.createHandler(new SiegeData());
-		this.createHandler(new CloakData());
-		this.createHandler(new StatsData());
-		this.createHandler(new TardisCrashData());
-		this.createHandler(new SonicHandler());
-		this.createHandler(new ShieldData());
-		this.createHandler(new BiomeHandler());
-		this.createHandler(new PermissionHandler());
-		this.createHandler(new EngineHandler());
+		TardisComponentRegistry.getInstance().fill(this::createHandler);
 	}
 
 	@Override

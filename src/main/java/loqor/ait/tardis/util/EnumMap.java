@@ -15,15 +15,15 @@ public class EnumMap<K extends Ordered, V> {
     }
 
     public void put(K k, V v) {
-        values[k.ordinal()] = v;
+        values[k.index()] = v;
     }
 
     public V get(K k) {
-        return values[k.ordinal()];
+        return values[k.index()];
     }
 
     public boolean containsKey(K k) {
-        return this.values[k.ordinal()] != null;
+        return this.values[k.index()] != null;
     }
 
     /**
