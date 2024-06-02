@@ -17,8 +17,6 @@ import loqor.ait.core.util.gson.ItemStackSerializer;
 import loqor.ait.core.util.gson.NbtSerializer;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
-import loqor.ait.tardis.data.properties.v2.Property;
-import loqor.ait.tardis.data.properties.v2.PropertyMap;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -49,13 +47,27 @@ public abstract class TardisManager<T extends Tardis, C> {
 	public static final Identifier UPDATE_PROPERTY = new Identifier(AITMod.MOD_ID, "update_property");
 
 	protected final Map<UUID, T> lookup = new HashMap<>();
-	protected final Gson gson;
+
+	protected final Gson networkGson;
+	protected final Gson fileGson;
 
 	protected TardisManager() {
-		GsonBuilder builder = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+		this.networkGson = this.getNetworkGson(this.createGsonBuilder(Exclude.Strategy.NETWORK)).create();
+		this.fileGson = this.getFileGson(this.createGsonBuilder(Exclude.Strategy.FILE)).create();
+	}
+
+	protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
+		return new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
 					@Override
 					public boolean shouldSkipField(FieldAttributes field) {
-						return field.getAnnotation(Exclude.class) != null;
+						Exclude exclude = field.getAnnotation(Exclude.class);
+
+						if (exclude == null)
+							return false;
+
+						Exclude.Strategy excluded = exclude.strategy();
+
+						return excluded == Exclude.Strategy.ALL || excluded == strategy;
 					}
 
 					@Override
@@ -75,15 +87,17 @@ public abstract class TardisManager<T extends Tardis, C> {
 				.registerTypeAdapter(ItemStack.class, new ItemStackSerializer())
 				.registerTypeAdapter(Identifier.class, new IdentifierSerializer())
 				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer());
-
-		if (!AITMod.AIT_CONFIG.MINIFY_JSON())
-            builder.setPrettyPrinting();
-
-		// TODO replace the type adapters with CODECs. Why do the same job twice?
-		this.gson = this.getGsonBuilder(builder).create();
 	}
 
-	protected GsonBuilder getGsonBuilder(GsonBuilder builder) {
+	protected GsonBuilder getNetworkGson(GsonBuilder builder) {
+		builder.setPrettyPrinting();
+		return builder;
+	}
+
+	protected GsonBuilder getFileGson(GsonBuilder builder) {
+		if (!AITMod.AIT_CONFIG.MINIFY_JSON())
+			builder.setPrettyPrinting();
+
 		return builder;
 	}
 
@@ -144,7 +158,7 @@ public abstract class TardisManager<T extends Tardis, C> {
 		consumer.accept(result);
 	}
 
-	protected T readTardis(String json, Class<T> clazz) {
+	protected T readTardis(Gson gson, String json, Class<T> clazz) {
 		T tardis = gson.fromJson(json, clazz);
 		Tardis.init(tardis, true);
 
@@ -177,8 +191,12 @@ public abstract class TardisManager<T extends Tardis, C> {
 		return this.lookup;
 	}
 
-	public Gson getGson() {
-		return this.gson;
+	public Gson getNetworkGson() {
+		return this.networkGson;
+	}
+
+	public Gson getFileGson() {
+		return fileGson;
 	}
 
 	@FunctionalInterface

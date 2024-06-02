@@ -2,11 +2,11 @@ package loqor.ait.tardis.data.properties.v2;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
 
@@ -26,9 +26,11 @@ public class Value<T> {
         this.value = value;
     }
 
-    public void of(TardisComponent holder, Property<T> property) {
+    public void of(KeyedTardisComponent holder, Property<T> property) {
         this.holder = holder;
         this.property = property;
+
+        holder.register(this);
     }
 
     public Property<T> getProperty() {
@@ -72,12 +74,11 @@ public class Value<T> {
         this.set(func.apply(this.value), sync);
     }
 
-    @SuppressWarnings("unchecked")
     public void read(PacketByteBuf buf) {
-        this.set((T) this.property.getType().getDecoder().apply(buf), false);
+        this.set(this.property.getType().decode(buf), false);
     }
 
     public void write(PacketByteBuf buf) {
-        this.property.getType().getEncoder().accept(buf, this.value);
+        this.property.getType().encode(buf, this.value);
     }
 }

@@ -1,5 +1,6 @@
 package loqor.ait.tardis.manager;
 
+import com.google.gson.Gson;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 public class TardisFileManager<T extends Tardis> {
@@ -45,12 +45,12 @@ public class TardisFileManager<T extends Tardis> {
         return result;
     }
 
-    public T loadTardis(MinecraftServer server, TardisManager<T, ?> manager, UUID uuid, BiFunction<String, Class<T>, T> function) {
+    public T loadTardis(MinecraftServer server, TardisManager<T, ?> manager, UUID uuid, TardisLoader<T> function) {
         try {
             Path file = TardisFileManager.getSavePath(server, uuid, "json");
             String json = Files.readString(file);
 
-            T tardis = function.apply(json, this.clazz);
+            T tardis = function.apply(manager.getFileGson(), json, this.clazz);
             manager.getLookup().put(tardis.getUuid(), tardis);
             return tardis;
         } catch (IOException e) {
@@ -70,9 +70,14 @@ public class TardisFileManager<T extends Tardis> {
     public void saveTardis(MinecraftServer server, TardisManager<T, ?> manager, T tardis) {
         try {
             Path savePath = TardisFileManager.getSavePath(server, tardis.getUuid(), "json");
-            Files.writeString(savePath, manager.getGson().toJson(tardis, ServerTardis.class));
+            Files.writeString(savePath, manager.getFileGson().toJson(tardis, ServerTardis.class));
         } catch (IOException e) {
             AITMod.LOGGER.warn("Couldn't save TARDIS " + tardis.getUuid(), e);
         }
+    }
+
+    @FunctionalInterface
+    public interface TardisLoader<T> {
+        T apply(Gson gson, String name, Class<T> clazz);
     }
 }

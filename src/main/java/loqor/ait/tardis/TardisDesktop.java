@@ -44,15 +44,6 @@ public class TardisDesktop extends TardisLink {
 		this.corners = TardisUtil.findInteriorSpot();
 	}
 
-	public TardisDesktop(TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed door, AbsoluteBlockPos.Directed console) {
-		super(Id.DESKTOP);
-
-		this.schema = schema;
-		this.corners = corners;
-		this.doorPos = door;
-		this.consolePos = console;
-	}
-
 	@Override
 	public void onCreate() {
 		this.changeInterior(schema);

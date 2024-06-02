@@ -2,15 +2,13 @@ package loqor.ait.tardis.base;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
-import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.PropertyMap;
 import loqor.ait.tardis.data.properties.v2.Value;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
 
 public class KeyedTardisComponent extends TardisComponent {
 
-    @Exclude private PropertyMap data;
+    @Exclude(strategy = Exclude.Strategy.FILE) private final PropertyMap data = new PropertyMap();
 
     /**
      * Do NOT under any circumstances run logic in this constructor.
@@ -20,11 +18,6 @@ public class KeyedTardisComponent extends TardisComponent {
      */
     public KeyedTardisComponent(Id id) {
         super(id);
-    }
-
-    @Override
-    protected void onEarlyInit(InitContext ctx) {
-        this.data = new PropertyMap();
     }
 
     public void register(Value<?> property) {

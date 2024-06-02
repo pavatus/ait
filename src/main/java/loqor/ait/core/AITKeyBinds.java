@@ -68,7 +68,7 @@ public class AITKeyBinds {
                     if (tardis == null)
                         return;
 
-                    PropertyTestHandler handler = tardis.handler(TardisComponent.Id.PROPERTIES);
+                    PropertyTestHandler handler = tardis.handler(TardisComponent.Id.TESTING);
                     player.sendMessage(Text.literal("Value: " + handler.getBool().get()));
                 }
             }

@@ -36,6 +36,8 @@ public class ClientTardis extends Tardis {
 
 	public void set(TardisComponent component) {
 		component.setTardis(this);
+		component.onLoaded();
+
 		this.handlers.set(component.getId(), component);
 	}
 

@@ -6,11 +6,11 @@ import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.manager.BufferedTardisManager;
 import loqor.ait.tardis.manager.TardisBuilder;
@@ -165,11 +165,10 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	}
 
 	@Override
-	protected GsonBuilder getGsonBuilder(GsonBuilder builder) {
-		builder.registerTypeAdapter(SerialDimension.class, SerialDimension.serializer())
+	protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
+		return super.createGsonBuilder(strategy)
+				.registerTypeAdapter(SerialDimension.class, SerialDimension.serializer())
 				.registerTypeAdapter(Tardis.class, ServerTardis.creator());
-
-		return builder;
 	}
 
 	@Override

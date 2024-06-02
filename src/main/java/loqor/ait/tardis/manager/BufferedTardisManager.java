@@ -5,7 +5,6 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,7 +51,7 @@ public abstract class BufferedTardisManager<T extends ServerTardis, P extends Pl
     }
 
     public void updateTardis(@NotNull P player, T tardis, TardisComponent component) {
-        this.updateTardis(player, tardis, component.getId(), this.gson.toJson(component));
+        this.updateTardis(player, tardis, component.getId(), this.networkGson.toJson(component));
         this.checkForceSync(player, tardis);
     }
 
@@ -85,7 +84,7 @@ public abstract class BufferedTardisManager<T extends ServerTardis, P extends Pl
     }
 
     protected void sendTardis(@NotNull P player, Tardis tardis) {
-        if (tardis == null || this.gson == null)
+        if (tardis == null || this.networkGson == null)
             return;
         
         if (this.isInBuffer(player, tardis.getUuid()))
@@ -96,7 +95,7 @@ public abstract class BufferedTardisManager<T extends ServerTardis, P extends Pl
             return;
         }
 
-        this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
+        this.sendTardis(player, tardis.getUuid(), this.networkGson.toJson(tardis, ServerTardis.class));
 
         this.createAskDelay(player);
         this.createForceSyncDelay(player);

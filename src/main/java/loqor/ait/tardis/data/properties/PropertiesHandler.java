@@ -35,8 +35,6 @@ public class PropertiesHandler {
 	public static final String IS_IN_REAL_FLIGHT = "is_in_real_flight";
 	public static final String DEMAT_TICKS = "demat_ticks";
 	public static final String MAT_TICKS = "mat_ticks";
-	public static final String SPEED = "speed";
-	public static final String MAX_SPEED = "max_speed";
 	public static final String IS_CLOAKED = "cloaked";
 	public static final String CONSOLE_DISABLED = "console_disabled";
 	public static final String LEAVE_BEHIND = "leave_behind";

@@ -174,22 +174,11 @@ public class AITMod implements ModInitializer {
 			return isCooldown || isDestinationOccupied;
 		}));
 
-		TardisEvents.CRASH.register((tardis -> {
+		TardisEvents.CRASH.register(tardis -> {
 			for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
 				TardisCriterions.CRASH.trigger((ServerPlayerEntity) player);
 			}
-		}));
-
-		TardisEvents.LOSE_POWER.register((tardis -> {
-			if (TardisUtil.getTardisDimension() != null) {
-				FlightUtil.playSoundAtConsole(tardis, AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
-			}
-
-			// disabling protocols
-			PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
-			PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
-			PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
-		}));
+		});
 
 		TardisEvents.REGAIN_POWER.register((tardis -> {
 			FlightUtil.playSoundAtConsole(tardis, AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);

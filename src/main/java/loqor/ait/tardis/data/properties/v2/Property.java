@@ -8,11 +8,11 @@ import java.util.function.Function;
 
 public class Property<T> {
 
-    private final Type type;
+    private final Type<T> type;
     private final String name;
     private final T def;
 
-    public Property(Type type, String name, T def) {
+    public Property(Type<T> type, String name, T def) {
         this.type = type;
         this.name = name;
         this.def = def;
@@ -29,7 +29,7 @@ public class Property<T> {
         return name;
     }
 
-    public Type getType() {
+    public Type<T> getType() {
         return type;
     }
 
@@ -49,25 +49,25 @@ public class Property<T> {
         return new Property<>(Type.BOOL, name, def);
     }
 
-    public enum Type {
-        INT(PacketByteBuf::writeInt, PacketByteBuf::readInt),
-        BOOL(PacketByteBuf::writeBoolean, PacketByteBuf::readBoolean);
+    public static class Type<T> {
 
-        private final BiConsumer<PacketByteBuf, Object> encoder;
-        private final Function<PacketByteBuf, Object> decoder;
+        public static final Type<Integer> INT = new Type<>(PacketByteBuf::writeInt, PacketByteBuf::readInt);
+        public static final Type<Boolean> BOOL = new Type<>(PacketByteBuf::writeBoolean, PacketByteBuf::readBoolean);
 
-        @SuppressWarnings("unchecked")
-        <T> Type(BiConsumer<PacketByteBuf, T> encoder, Function<PacketByteBuf, T> decoder) {
-            this.encoder = (BiConsumer<PacketByteBuf, Object>) encoder;
-            this.decoder = (Function<PacketByteBuf, Object>) decoder;
+        private final BiConsumer<PacketByteBuf, T> encoder;
+        private final Function<PacketByteBuf, T> decoder;
+
+        protected Type(BiConsumer<PacketByteBuf, T> encoder, Function<PacketByteBuf, T> decoder) {
+            this.encoder = encoder;
+            this.decoder = decoder;
         }
 
-        public Function<PacketByteBuf, Object> getDecoder() {
-            return decoder;
+        public void encode(PacketByteBuf buf, T value) {
+            this.encoder.accept(buf, value);
         }
 
-        public BiConsumer<PacketByteBuf, Object> getEncoder() {
-            return encoder;
+        public T decode(PacketByteBuf buf) {
+            return this.decoder.apply(buf);
         }
     }
 }

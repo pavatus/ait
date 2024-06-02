@@ -7,6 +7,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.KeyedTardisComponent;
@@ -117,7 +118,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 	}
 
 	private void sync(UUID uuid, String json) {
-		ClientTardis tardis = this.readTardis(json, ClientTardis.class);
+		ClientTardis tardis = this.readTardis(this.networkGson, json, ClientTardis.class);
 
 		synchronized (this) {
 			this.lookup.put(uuid, tardis);
@@ -164,7 +165,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		if (!typeId.mutable())
 			return;
 
-		typeId.set(tardis, this.gson.fromJson(
+		typeId.set(tardis, this.networkGson.fromJson(
 				buf.readString(), typeId.clazz())
 		);
 	}
@@ -183,15 +184,18 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 			return;
 		}
 
-		keyed.update(key, buf);
+		try {
+			keyed.update(key, buf);
+		} catch (Exception e) {
+			AITMod.LOGGER.error("Failed to update property for component " + typeId, e);
+		}
 	}
 
 	@Override
-	protected GsonBuilder getGsonBuilder(GsonBuilder builder) {
-		builder.registerTypeAdapter(SerialDimension.class, new SerialDimension.ClientSerializer())
+	protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
+		return super.createGsonBuilder(strategy)
+				.registerTypeAdapter(SerialDimension.class, new SerialDimension.ClientSerializer())
 				.registerTypeAdapter(Tardis.class, ClientTardis.creator());
-
-		return builder;
 	}
 
 	@Override

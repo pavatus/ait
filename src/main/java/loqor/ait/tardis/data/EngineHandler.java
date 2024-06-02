@@ -2,21 +2,29 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.util.FlightUtil;
+import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.World;
 
 import java.util.Random;
 
 public class EngineHandler extends KeyedTardisComponent {
 
-    private final Property<Boolean> power = Property.forBool(this, "power");
-    private final Property<Boolean> hasEngineCore = Property.forBool(this, "has_engine_core");
+    private static final Property<Boolean> POWER = Property.forBool("power");
+    private static final Property<Boolean> HAS_ENGINE_CORE = Property.forBool("has_engine_core");
+
+    private final Value<Boolean> power = POWER.create(this);
+    private final Value<Boolean> hasEngineCore = HAS_ENGINE_CORE.create(this);
 
     public EngineHandler() {
         super(Id.ENGINE);
@@ -24,12 +32,23 @@ public class EngineHandler extends KeyedTardisComponent {
 
     static {
         TardisEvents.OUT_OF_FUEL.register(tardis -> tardis.engine().disablePower());
+
+        TardisEvents.LOSE_POWER.register((tardis -> {
+            if (TardisUtil.getTardisDimension() != null) {
+                FlightUtil.playSoundAtConsole(tardis, AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+            }
+
+            // disabling protocols
+            PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
+            PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
+            PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
+        }));
     }
 
     @Override
-    protected void onInit(InitContext ctx) {
-        this.power.create(this);
-        this.hasEngineCore.create(this);
+    public void onLoaded() {
+        power.of(this, POWER);
+        hasEngineCore.of(this, HAS_ENGINE_CORE);
     }
 
     public Value<Boolean> hasEngineCore() {
