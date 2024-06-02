@@ -4,6 +4,7 @@ import com.google.gson.InstanceCreator;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
@@ -29,6 +30,7 @@ import java.util.UUID;
 
 public class ServerTardis extends Tardis {
 
+	@Exclude
 	private boolean lock = false;
 
 	public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorVariantSchema variantType) {

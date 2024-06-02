@@ -3,6 +3,7 @@ package loqor.ait.tardis;
 import com.google.gson.*;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.util.LegacyUtil;
+import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
 public class TardisHandlersManager extends TardisComponent implements TardisTickable {
 
 	@Exclude
-	private final EnumMap<Id, TardisComponent> handlers = new EnumMap<>(Id::values, TardisComponent[]::new);
+	private final EnumMap<IdLike, TardisComponent> handlers = new EnumMap<>(TardisComponentRegistry::values, TardisComponent[]::new);
 
 	public TardisHandlersManager() {
         super(Id.HANDLERS);
@@ -97,7 +98,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends TardisComponent> T get(Id id) {
+	public <T extends TardisComponent> T get(IdLike id) {
 		return (T) this.handlers.get(id);
 	}
 
@@ -226,9 +227,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 					throw new NullPointerException("Can't find a component id with name '" + entry.getKey() + "'!");
 				}
 
-				TardisComponent component = context.deserialize(element, id.clazz());
-
-				manager.set(id, component);
+				manager.set(id, context.deserialize(element, id.clazz()));
 			}
 
 			return manager;

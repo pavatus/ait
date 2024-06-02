@@ -75,7 +75,9 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 				}
 		);
 
+		ServerLifecycleEvents.SERVER_STARTING.register(server -> this.fileManager.setLocked(false));
 		ServerLifecycleEvents.SERVER_STOPPING.register(this::onShutdown);
+
 		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset
 
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
@@ -252,6 +254,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 				PortalsHandler.removePortals(tardis);
 		}
 
+		this.fileManager.setLocked(true);
 		this.fileManager.saveTardis(server, this);
 		this.reset();
 	}

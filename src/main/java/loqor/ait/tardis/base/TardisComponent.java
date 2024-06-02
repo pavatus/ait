@@ -14,6 +14,7 @@ import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 /**
  * Base class for all tardis components.
@@ -39,7 +40,9 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 	/**
 	 * Syncs this object and all its properties to the client.
 	 * @implNote Server-side only.
+	 * @deprecated Use properties v2.
 	 */
+	@Deprecated
 	protected void sync() {
 		if (this.isClient()) {
 			AITMod.LOGGER.warn("Attempted to sync a component ON a client!", new IllegalAccessException());
@@ -82,62 +85,77 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		Initializable.init(component, context);
 	}
 
-	public enum Id implements Ordered {
-		DESKTOP(TardisDesktop.class, ClientTardis::setDesktop),
+	public enum Id implements IdLike {
+		DESKTOP(TardisDesktop.class, null, ClientTardis::setDesktop),
 		TRAVEL(TardisTravel.class, null),
-		EXTERIOR(TardisExterior.class, ClientTardis::setExterior),
+		CONSOLE(TardisConsole.class, null, null),
+		EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
 
-		DOOR(DoorData.class),
-		SONIC(SonicHandler.class),
-		PERMISSIONS(PermissionHandler.class),
-		LOYALTY(LoyaltyHandler.class),
-		ENGINE(EngineHandler.class),
+		DOOR(DoorData.class, DoorData::new),
+		SONIC(SonicHandler.class, SonicHandler::new),
+		PERMISSIONS(PermissionHandler.class, PermissionHandler::new),
+		LOYALTY(LoyaltyHandler.class, LoyaltyHandler::new),
+		ENGINE(EngineHandler.class, EngineHandler::new),
 
 		// FIXME in future: currently handled by properties
-		BIOME(BiomeHandler.class, null),
-		SHIELDS(ShieldData.class, null),
-		CONSOLE(TardisConsole.class, null),
-		STATS(StatsData.class, null),
-		CRASH_DATA(TardisCrashData.class, null),
-		WAYPOINTS(WaypointHandler.class, null),
-		OVERGROWN(OvergrownData.class, null),
-		HUM(ServerHumHandler.class, null),
-		ALARMS(ServerAlarmHandler.class, null),
-		INTERIOR(InteriorChangingHandler.class, null),
-		SEQUENCE(SequenceHandler.class, null),
-		FUEL(FuelData.class, null),
-		HADS(HADSData.class, null),
-		FLIGHT(FlightData.class, null),
-		SIEGE(SiegeData.class, null),
-		CLOAK(CloakData.class, null),
+		BIOME(BiomeHandler.class, BiomeHandler::new, null),
+		SHIELDS(ShieldData.class, ShieldData::new, null),
+
+		STATS(StatsData.class, StatsData::new, null),
+		CRASH_DATA(TardisCrashData.class, TardisCrashData::new, null),
+		WAYPOINTS(WaypointHandler.class, WaypointHandler::new, null),
+		OVERGROWN(OvergrownData.class, OvergrownData::new, null),
+		HUM(ServerHumHandler.class, ServerHumHandler::new, null),
+		ALARMS(ServerAlarmHandler.class, ServerAlarmHandler::new, null),
+		INTERIOR(InteriorChangingHandler.class, InteriorChangingHandler::new, null),
+		SEQUENCE(SequenceHandler.class, SequenceHandler::new, null),
+		FUEL(FuelData.class, FuelData::new, null),
+		HADS(HADSData.class, HADSData::new, null),
+		FLIGHT(FlightData.class, FlightData::new, null),
+		SIEGE(SiegeData.class, SiegeData::new, null),
+		CLOAK(CloakData.class, CloakData::new, null),
 
 		// Special handling
-		HANDLERS(TardisHandlersManager.class, null),
-		PROPERTIES(PropertiesHolder.class, null),
-
-		TESTING(PropertyTestHandler.class, null);
+		HANDLERS(TardisHandlersManager.class, TardisHandlersManager::new, null),
+		PROPERTIES(PropertiesHolder.class, PropertiesHolder::new, null);
 
 		private final BiConsumer<ClientTardis, TardisComponent> setter;
+		private final Supplier<TardisComponent> creator;
+
 		private final Class<? extends TardisComponent> clazz;
 
-		<T extends TardisComponent>Id(Class<T> clazz) {
-			this(clazz, ClientTardis::set);
+		<T extends TardisComponent>Id(Class<T> clazz, Supplier<T> creator) {
+			this(clazz, creator, ClientTardis::set);
 		}
 
 		@SuppressWarnings("unchecked")
-		<T extends TardisComponent>Id(Class<T> clazz, BiConsumer<ClientTardis, T> setter) {
+		<T extends TardisComponent>Id(Class<T> clazz, Supplier<T> creator, BiConsumer<ClientTardis, T> setter) {
 			this.clazz = clazz;
+			this.creator = (Supplier<TardisComponent>) creator;
 			this.setter = (BiConsumer<ClientTardis, TardisComponent>) setter;
 		}
 
+		@Override
 		public Class<? extends TardisComponent> clazz() {
 			return clazz;
 		}
 
+		@Override
 		public void set(ClientTardis tardis, TardisComponent component) {
 			this.setter.accept(tardis, component);
 		}
 
+		@Override
+		public TardisComponent create() {
+			return this.creator.get();
+		}
+
+		@Override
+		public boolean creatable() {
+			return this.creator != null;
+		}
+
+		@Override
 		public boolean mutable() {
 			return this.setter != null;
 		}
@@ -150,6 +168,24 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 				default -> tardis.handler(this);
 			};
 		}
+
+		public static IdLike[] ids() {
+			return Id.values();
+		}
+	}
+
+	public interface IdLike extends Ordered {
+
+		Class<? extends TardisComponent> clazz();
+		void set(ClientTardis tardis, TardisComponent component);
+
+		TardisComponent create();
+		boolean creatable();
+
+		boolean mutable();
+
+		String name();
+		int ordinal();
 	}
 
 	public record InitContext(boolean deserialized) implements Initializable.Context {

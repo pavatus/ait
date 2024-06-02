@@ -126,11 +126,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-
-		return o instanceof Tardis other
-				&& uuid.equals(other.uuid);
+		return this == o;
 	}
 
 	@Override

@@ -1,9 +1,6 @@
 package loqor.ait.registry;
 
-import loqor.ait.registry.impl.CategoryRegistry;
-import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.registry.impl.MachineRecipeRegistry;
-import loqor.ait.registry.impl.SonicRegistry;
+import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
@@ -35,6 +32,7 @@ public class Registries {
         registries.add(MachineRecipeRegistry.getInstance());
         registries.add(ExteriorVariantRegistry.getInstance());
         registries.add(CategoryRegistry.getInstance());
+        registries.add(TardisComponentRegistry.getInstance());
     }
 
     private void onClientInit() {

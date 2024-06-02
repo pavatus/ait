@@ -20,11 +20,19 @@ public class KeyedTardisComponent extends TardisComponent {
         super(id);
     }
 
+    @SuppressWarnings("ConstantValue")
     public void register(Value<?> property) {
+        if (this.data == null)
+            return;
+
         this.data.put(property.getProperty().getName(), property);
     }
 
+    @SuppressWarnings("ConstantValue")
     public void update(String name, PacketByteBuf buf) {
+        if (this.data == null)
+            return;
+
         Value<?> property = this.data.get(name);
 
         if (property == null) {

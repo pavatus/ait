@@ -5,13 +5,10 @@ import loqor.ait.core.bind.KeyBind;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.PropertyTestHandler;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -49,27 +46,6 @@ public class AITKeyBinds {
                         return;
 
                     ClientTardisUtil.snapToOpenDoors(tardis);
-                }
-            }
-        }));
-
-        register(new KeyBind("test", "tardis", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_H, client -> {
-            ClientPlayerEntity player = client.player;
-
-            if (player == null)
-                return;
-
-            Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
-
-            for (ItemStack stack : keys) {
-                if (stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
-                    Tardis tardis = KeyItem.getTardis(player.getWorld(), stack);
-
-                    if (tardis == null)
-                        return;
-
-                    PropertyTestHandler handler = tardis.handler(TardisComponent.Id.TESTING);
-                    player.sendMessage(Text.literal("Value: " + handler.getBool().get()));
                 }
             }
         }));

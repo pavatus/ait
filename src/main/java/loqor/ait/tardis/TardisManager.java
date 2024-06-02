@@ -17,6 +17,7 @@ import loqor.ait.core.util.gson.ItemStackSerializer;
 import loqor.ait.core.util.gson.NbtSerializer;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
+import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -98,7 +99,7 @@ public abstract class TardisManager<T extends Tardis, C> {
 		if (!AITMod.AIT_CONFIG.MINIFY_JSON())
 			builder.setPrettyPrinting();
 
-		return builder;
+		return builder.registerTypeAdapter(Value.class, Value.serializer());
 	}
 
 	public static TardisManager<?, ?> getInstance(Entity entity) {

@@ -1,5 +1,6 @@
 package loqor.ait.tardis.data.properties.v2;
 
+import com.google.gson.*;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.base.KeyedTardisComponent;
@@ -8,6 +9,8 @@ import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.network.PacketByteBuf;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.function.Function;
 
 public class Value<T> {
@@ -23,6 +26,10 @@ public class Value<T> {
     public Value(TardisComponent holder, Property<T> property, T value) {
         this.holder = holder;
         this.property = property;
+        this.value = value;
+    }
+
+    private Value(T value) {
         this.value = value;
     }
 
@@ -80,5 +87,23 @@ public class Value<T> {
 
     public void write(PacketByteBuf buf) {
         this.property.getType().encode(buf, this.value);
+    }
+
+    public static Object serializer() {
+        return new Serializer();
+    }
+
+    static class Serializer implements JsonSerializer<Value<?>>, JsonDeserializer<Value<?>> {
+
+        @Override
+        public Value<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            ParameterizedType type = (ParameterizedType) typeOfT;
+            return new Value<>(context.deserialize(json, type.getActualTypeArguments()[0]));
+        }
+
+        @Override
+        public JsonElement serialize(Value<?> src, Type typeOfSrc, JsonSerializationContext context) {
+            return context.serialize(src.value);
+        }
     }
 }

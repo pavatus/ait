@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
-import java.util.function.BiFunction;
 
 public class TardisFileManager<T extends Tardis> {
 
     private final Class<T> clazz;
+    private boolean locked = false;
 
     public TardisFileManager(Class<T> clazz) {
         this.clazz = clazz;
@@ -46,6 +46,9 @@ public class TardisFileManager<T extends Tardis> {
     }
 
     public T loadTardis(MinecraftServer server, TardisManager<T, ?> manager, UUID uuid, TardisLoader<T> function) {
+        if (this.locked)
+            return null;
+
         try {
             Path file = TardisFileManager.getSavePath(server, uuid, "json");
             String json = Files.readString(file);
@@ -74,6 +77,10 @@ public class TardisFileManager<T extends Tardis> {
         } catch (IOException e) {
             AITMod.LOGGER.warn("Couldn't save TARDIS " + tardis.getUuid(), e);
         }
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
     @FunctionalInterface

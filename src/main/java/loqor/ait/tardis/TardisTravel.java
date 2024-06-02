@@ -102,9 +102,8 @@ public class TardisTravel extends KeyedTardisComponent {
 	}
 
 	static {
-		TardisEvents.LOSE_POWER.register(tardis -> {
-			tardis.travel().autoLand().set(false);
-		});
+		TardisEvents.LOSE_POWER.register(tardis ->
+				tardis.travel().autoLand().set(false));
 	}
 
 	public Value<Integer> speed() {

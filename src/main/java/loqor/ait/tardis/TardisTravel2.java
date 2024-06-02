@@ -3,16 +3,14 @@ package loqor.ait.tardis;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.v2.Property;
-import loqor.ait.tardis.travel.DematTravelState;
-import loqor.ait.tardis.travel.FlightTravelState;
-import loqor.ait.tardis.travel.LandedTravelState;
-import loqor.ait.tardis.travel.RematTravelState;
+import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.travel.*;
 
 import java.util.function.Supplier;
 
 public class TardisTravel2 extends KeyedTardisComponent implements TardisTickable {
 
-    private StateHolder holder;
+    private State state = State.LANDED;
 
     public TardisTravel2() {
         super(Id.TRAVEL);
@@ -23,46 +21,47 @@ public class TardisTravel2 extends KeyedTardisComponent implements TardisTickabl
 
     }
 
-    public State getState() {
-        return holder.state();
+    public Value<Integer> speed() {
+        return null;
     }
 
-    public StateHolder getStateHolder() {
-        return holder;
+    public void setState(State state) {
+        this.state.onDisable(this);
+
+        this.state = state;
+        this.state.onEnable(this);
     }
 
-    record StateHolder(State state, TravelState impl) {
+    public enum State implements TravelState {
+        LANDED(new LandedTravelState()),
+        DEMAT(new DematTravelState()),
+        FLIGHT(new FlightTravelState()),
+        REMAT(new RematTravelState());
 
-        StateHolder(State state) {
-            this(state, state.create());
-        }
-    }
+        private final TravelState parent;
 
-    public enum State {
-        LANDED(LandedTravelState::new),
-        DEMAT(DematTravelState::new),
-        FLIGHT(FlightTravelState::new),
-        REMAT(RematTravelState::new);
-
-        private final Supplier<TravelState> supplier;
-
-        State(Supplier<TravelState> supplier) {
-            this.supplier = supplier;
+        State(TravelState parent) {
+            this.parent = parent;
         }
 
-        public TravelState create() {
-            return supplier.get();
+        @Override
+        public void onEnable(TardisTravel2 travel) {
+            this.parent.onEnable(travel);
         }
-    }
 
-    public static abstract class TravelState {
+        @Override
+        public void onDisable(TardisTravel2 travel) {
+            this.parent.onDisable(travel);
+        }
 
-        public void onHandbrake(TardisTravel2 travel, boolean handbrake) { }
+        @Override
+        public void onHandbrake(TardisTravel2 travel, boolean handbrake) {
+            this.parent.onHandbrake(travel, handbrake);
+        }
 
-        public abstract State getNext();
-
-        public void cycle() {
-
+        @Override
+        public State getNext() {
+            return this.parent.getNext();
         }
     }
 }

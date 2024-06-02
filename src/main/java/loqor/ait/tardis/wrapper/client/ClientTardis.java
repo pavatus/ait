@@ -11,7 +11,6 @@ import loqor.ait.tardis.base.TardisComponent;
 import net.minecraft.client.MinecraftClient;
 
 import java.lang.reflect.Type;
-import java.util.UUID;
 
 public class ClientTardis extends Tardis {
 
@@ -34,6 +33,7 @@ public class ClientTardis extends Tardis {
 		this.exterior = exterior;
 	}
 
+	@SuppressWarnings("deprecation") // intended
 	public void set(TardisComponent component) {
 		component.setTardis(this);
 		component.onLoaded();
