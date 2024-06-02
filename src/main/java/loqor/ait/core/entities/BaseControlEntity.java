@@ -45,6 +45,16 @@ public abstract class BaseControlEntity extends MobEntity {
 	public void equipStack(EquipmentSlot slot, ItemStack stack) { }
 
 	@Override
+	public boolean isPushable() {
+		return false;
+	}
+
+	@Override
+	public boolean isInvulnerableTo(DamageSource damageSource) {
+		return true;
+	}
+
+	@Override
 	public Arm getMainArm() {
 		return Arm.LEFT;
 	}
