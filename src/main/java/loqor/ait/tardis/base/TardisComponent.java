@@ -86,10 +86,12 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 	}
 
 	public enum Id implements IdLike {
+		// Base parts.
 		DESKTOP(TardisDesktop.class, null, ClientTardis::setDesktop),
 		TRAVEL(TardisTravel.class, null),
 		CONSOLE(TardisConsole.class, null, null),
 		EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
+		HANDLERS(TardisHandlersManager.class, null, null),
 
 		DOOR(DoorData.class, DoorData::new),
 		SONIC(SonicHandler.class, SonicHandler::new),
@@ -115,8 +117,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		SIEGE(SiegeData.class, SiegeData::new, null),
 		CLOAK(CloakData.class, CloakData::new, null),
 
-		// Special handling
-		HANDLERS(TardisHandlersManager.class, TardisHandlersManager::new, null),
 		PROPERTIES(PropertiesHolder.class, PropertiesHolder::new, null);
 
 		private final BiConsumer<ClientTardis, TardisComponent> setter;
