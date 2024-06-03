@@ -82,6 +82,10 @@ public class Value<T> {
     }
 
     public void read(PacketByteBuf buf) {
+        if (this.property == null) {
+            throw new IllegalStateException("Couldn't get the parent property value! Maybe you forgot to initialize the value field on load?");
+        }
+
         this.set(this.property.getType().decode(buf), false);
     }
 
