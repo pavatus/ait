@@ -79,7 +79,7 @@ public class EngineHandler extends KeyedTardisComponent {
         World world = pos.getWorld();
 
         if (world != null)
-            world.setBlockState(pos, pos.getBlockEntity().getCachedState().with(ExteriorBlock.LEVEL_9, 0), 3);
+            world.setBlockState(pos, pos.getBlockEntity().getCachedState().with(ExteriorBlock.LEVEL_9, 0));
 
         TardisEvents.LOSE_POWER.invoker().onLosePower(this.tardis);
     }
@@ -101,7 +101,7 @@ public class EngineHandler extends KeyedTardisComponent {
         World world = pos.getWorld();
 
         if (world != null)
-            world.setBlockState(pos, pos.getBlockEntity().getCachedState().with(ExteriorBlock.LEVEL_9, 9), 3);
+            world.setBlockState(pos, pos.getBlockEntity().getCachedState().with(ExteriorBlock.LEVEL_9, 9));
 
         this.power.set(true);
         TardisEvents.REGAIN_POWER.invoker().onRegainPower(this.tardis);

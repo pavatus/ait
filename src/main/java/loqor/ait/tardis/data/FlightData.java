@@ -2,6 +2,7 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
@@ -14,6 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 
 public class FlightData extends TardisLink {
 	private static final String FLIGHT_TICKS_KEY = "flight_ticks";
@@ -22,30 +24,34 @@ public class FlightData extends TardisLink {
 
 	public FlightData() {
 		super(Id.FLIGHT);
+	}
 
-		// this does work actually, it just spams it 7 times.
-		TardisEvents.LANDED.register((tardis -> {
-			if (!tardis.equals(this.tardis()))
-				return;
+	static {
+		TardisEvents.LANDED.register(tardis -> {
+			FlightData flight = tardis.flight();
 
-			this.setFlightTicks(0);
-			this.setTargetTicks(0);
-			if(this.getExteriorPos().getWorld() != null) {
-				this.getExteriorPos().getWorld().setBlockState(
-						this.getExteriorPos(), this.getExteriorPos().getBlockState()
-								.with(ExteriorBlock.LEVEL_9, 9), 3);
+			flight.setFlightTicks(0);
+			flight.setTargetTicks(0);
+
+			AbsoluteBlockPos.Directed pos = flight.getExteriorPos();
+			World world = pos.getWorld();
+
+			if(world != null) {
+				world.setBlockState(pos, pos.getBlockState().with(ExteriorBlock.LEVEL_9, 9), 3);
 			}
-		}));
+		});
 
-		TardisEvents.DEMAT.register((tardis -> {
-			if (!tardis.equals(this.tardis()))
-				return false;
+		TardisEvents.DEMAT.register(tardis -> {
+			FlightData flight = tardis.flight();
+			TardisTravel travel = tardis.travel();
 
-			this.setFlightTicks(0);
-			this.setTargetTicks(FlightUtil.getFlightDuration(tardis.travel().getPosition(), tardis.travel().getDestination()));
+			flight.setFlightTicks(0);
+			flight.setTargetTicks(FlightUtil.getFlightDuration(
+					travel.getPosition(), travel.getDestination())
+			);
 
 			return false;
-		}));
+		});
 	}
 
 	private boolean isInFlight() {
