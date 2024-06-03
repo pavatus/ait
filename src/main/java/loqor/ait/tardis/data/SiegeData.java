@@ -49,7 +49,7 @@ public class SiegeData extends KeyedTardisComponent implements TardisTickable {
 	}
 
 	@Override
-	protected void onInit(InitContext ctx) {
+	public void onLoaded() {
 		active.of(this, ACTIVE);
 	}
 

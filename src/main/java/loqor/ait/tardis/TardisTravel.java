@@ -93,7 +93,7 @@ public class TardisTravel extends KeyedTardisComponent {
 	}
 
 	@Override
-	protected void onInit(InitContext ctx) {
+	public void onLoaded() {
 		speed.of(this, SPEED);
 		maxSpeed.of(this, MAX_SPEED);
 
