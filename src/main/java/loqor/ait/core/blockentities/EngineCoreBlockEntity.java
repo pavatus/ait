@@ -290,4 +290,26 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
         tardis.get().engine().disablePower();
         tardis.get().engine().hasEngineCore().set(false);
     }
+
+    public enum VortexEyeState {
+
+        // These three stages simply define from frozen (it's in your inventory),
+        // dormant (it's dormant, not producing power though - this is the state it goes into when there is no fuel in the TARDIS),
+        // and activated (it's producing power)
+        FROZEN,
+        DORMANT,
+        ACTIVATED,
+
+        // Aggravated is used when the player does something that pisses off the eye itself, since it's the semi-sentient part
+        // It's also used when trying to open the eye and etc., etc.
+        AGGRAVATED,
+
+        // These states are used for opening the eye, not related to the states above
+        // The eye needs to be open in order to refuel, do repairs, and change the interior.
+        // At first, you will need to manually open it, which leads to >> aggravated, meaning you have to get past it's attacks to force it open,
+        // where it becomes semi-dormant but open (the state dormant has nothing to do with being open)
+        OPENING_EYE_1,
+        OPENING_EYE_2,
+        EYE_OPEN
+    }
 }
