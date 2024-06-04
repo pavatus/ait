@@ -5,7 +5,7 @@ import loqor.ait.tardis.data.SonicHandler;
 
 public class LandedTravelState implements TravelState {
 
-    @Override
+    /*@Override
     public void onHandbrake(TardisTravel2 travel, boolean handbrake) {
         if (handbrake)
             return;
@@ -17,7 +17,7 @@ public class LandedTravelState implements TravelState {
             return;
 
         travel.setState(TardisTravel2.State.DEMAT);
-    }
+    }*/
 
     @Override
     public TardisTravel2.State getNext() {

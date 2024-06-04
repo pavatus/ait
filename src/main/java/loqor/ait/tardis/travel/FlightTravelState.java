@@ -32,7 +32,7 @@ public class FlightTravelState implements TravelState<FlightTravelState.Context>
         }
 
         if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT))
-            travel.setState(TardisTravel2.State.REMAT);
+            travel.setState(TardisTravel2.State.REMAT.get(), null); // FIXME
 
         // Should we just disable autopilot if the speed goes above 1?
         if (speed > 1 && travel.autoLand().get())

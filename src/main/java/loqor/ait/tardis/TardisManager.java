@@ -18,6 +18,9 @@ import loqor.ait.core.util.gson.NbtSerializer;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
 import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
+import loqor.ait.tardis.data.properties.v2.integer.IntValue;
+import loqor.ait.tardis.data.properties.v2.integer.ranged.RangedIntValue;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -67,7 +70,6 @@ public abstract class TardisManager<T extends Tardis, C> {
 							return false;
 
 						Exclude.Strategy excluded = exclude.strategy();
-
 						return excluded == Exclude.Strategy.ALL || excluded == strategy;
 					}
 
@@ -99,7 +101,10 @@ public abstract class TardisManager<T extends Tardis, C> {
 		if (!AITMod.AIT_CONFIG.MINIFY_JSON())
 			builder.setPrettyPrinting();
 
-		return builder.registerTypeAdapter(Value.class, Value.serializer());
+		return builder.registerTypeAdapter(Value.class, Value.serializer())
+				.registerTypeAdapter(BoolValue.class, BoolValue.serializer())
+				.registerTypeAdapter(IntValue.class, IntValue.serializer())
+				.registerTypeAdapter(RangedIntValue.class, RangedIntValue.serializer());
 	}
 
 	public static TardisManager<?, ?> getInstance(Entity entity) {

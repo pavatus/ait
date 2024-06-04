@@ -29,7 +29,7 @@ public class Value<T> {
         this.value = value;
     }
 
-    private Value(T value) {
+    protected Value(T value) {
         this.value = value;
     }
 
@@ -96,20 +96,36 @@ public class Value<T> {
     }
 
     public static Object serializer() {
-        return new Serializer();
+        return new Serializer<>(Value::new);
     }
 
-    static class Serializer implements JsonSerializer<Value<?>>, JsonDeserializer<Value<?>> {
+    protected static class Serializer<V, T extends Value<V>> implements JsonSerializer<T>, JsonDeserializer<T> {
 
-        @Override
-        public Value<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            ParameterizedType type = (ParameterizedType) typeOfT;
-            return new Value<>(context.deserialize(json, type.getActualTypeArguments()[0]));
+        private final Class<?> clazz;
+        private final Function<V, T> creator;
+
+        public Serializer(Function<V, T> creator) {
+            this(null, creator);
+        }
+
+        public Serializer(Class<?> clazz, Function<V, T> creator) {
+            this.clazz = clazz;
+            this.creator = creator;
         }
 
         @Override
-        public JsonElement serialize(Value<?> src, Type typeOfSrc, JsonSerializationContext context) {
-            return context.serialize(src.value);
+        public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            Type type = clazz;
+
+            if (typeOfT instanceof ParameterizedType parameter)
+                type = parameter.getActualTypeArguments()[0];
+
+            return this.creator.apply(context.deserialize(json, type));
+        }
+
+        @Override
+        public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
+            return context.serialize(src.get());
         }
     }
 }

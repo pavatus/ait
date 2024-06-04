@@ -9,8 +9,16 @@ public class BoolValue extends Value<Boolean> {
         super(holder, property, value);
     }
 
+    private BoolValue(Boolean value) {
+        super(value);
+    }
+
     @Override
     public void set(Boolean value, boolean sync) {
         super.set(BoolProperty.normalize(value), sync);
+    }
+
+    public static Object serializer() {
+        return new Serializer<Boolean, BoolValue>(Boolean.class, BoolValue::new);
     }
 }

@@ -76,12 +76,12 @@ public class TardisTravel2 extends KeyedTardisComponent implements TardisTickabl
     }
 
     public <T extends TravelState.AbstractContext> void setState(TravelState<T> state, T context) {
-        this.state.flatMap(original -> {
+        /*this.state.flatMap(original -> {
             TravelState<T> real = (TravelState<T>) original.get();
             original.get().onDisable(context);
             state.onEnable(context);
             return state;
-        });
+        });*/
     }
 
     public enum State {

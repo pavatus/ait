@@ -17,7 +17,7 @@ import net.minecraft.state.property.Properties;
 
 public class RematTravelState implements TravelState {
 
-    @Override
+    /*@Override
     public void onEnable(TardisTravel2 travel) {
         if (!(travel.tardis() instanceof ServerTardis tardis))
             return;
@@ -73,7 +73,7 @@ public class RematTravelState implements TravelState {
         this.runAnimations(blockEntity);
 
         this.onMaterialise(tardis);
-    }
+    }*/
 
     @Override
     public TardisTravel2.State getNext() {
