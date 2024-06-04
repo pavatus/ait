@@ -201,8 +201,10 @@ public class FallingTardisEntity extends Entity {
 				if (blockPos == null)
 					return;
 
-                if (!this.isOnGround() && (blockPos.getY() <= this.getWorld().getBottomY() || blockPos.getY() > this.getWorld().getTopY())) {
-					this.stopFalling();
+                if (!this.isOnGround()) {
+					if((blockPos.getY() <= this.getWorld().getBottomY() || blockPos.getY() > this.getWorld().getTopY())) {
+						this.stopFalling();
+					}
 				} else {
 					boolean crashing = tardis.travel().isCrashing();
 
@@ -211,7 +213,6 @@ public class FallingTardisEntity extends Entity {
 								10, true, World.ExplosionSourceType.MOB
 						);
 					}
-
 					tardis.getDoor().setLocked(crashing);
 					this.stopFalling(false);
 				}
