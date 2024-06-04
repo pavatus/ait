@@ -13,7 +13,9 @@ import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * This class should be immutable. It contains the BlockPos and a Dimension of the block position.
+ * @deprecated Use {@link net.minecraft.util.math.GlobalPos} instead.
  */
+@Deprecated
 @Unmodifiable
 public class AbsoluteBlockPos extends BlockPos {
 

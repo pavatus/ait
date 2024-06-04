@@ -1,0 +1,111 @@
+package loqor.ait.core.data;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.World;
+
+import java.util.Objects;
+
+public class DirectedGlobalPos {
+
+    public static final Codec<DirectedGlobalPos> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    World.CODEC.fieldOf("dimension")
+                            .forGetter(DirectedGlobalPos::getDimension),
+                    BlockPos.CODEC.fieldOf("pos")
+                            .forGetter(DirectedGlobalPos::getPos),
+                    Codec.BYTE.fieldOf("rotation")
+                            .forGetter(DirectedGlobalPos::getRotation)
+            ).apply(instance, DirectedGlobalPos::create));
+
+    private final RegistryKey<World> dimension;
+    private final BlockPos pos;
+    private final byte rotation;
+
+    private DirectedGlobalPos(RegistryKey<World> dimension, BlockPos pos, byte rotation) {
+        this.dimension = dimension;
+        this.pos = pos;
+
+        this.rotation = rotation;
+    }
+
+    public DirectedGlobalPos pos(int x, int y, int z) {
+        return DirectedGlobalPos.create(this.dimension, new BlockPos(x, y, z), this.rotation);
+    }
+
+    public DirectedGlobalPos offset(int x, int y, int z) {
+        return DirectedGlobalPos.create(this.dimension, this.pos.add(x, y, z), this.rotation);
+    }
+
+    public DirectedGlobalPos world(RegistryKey<World> world) {
+        return DirectedGlobalPos.create(world, this.pos, this.rotation);
+    }
+
+    public static DirectedGlobalPos create(RegistryKey<World> dimension, BlockPos pos, byte rotation) {
+        return new DirectedGlobalPos(dimension, pos, rotation);
+    }
+
+    public RegistryKey<World> getDimension() {
+        return this.dimension;
+    }
+
+    public BlockPos getPos() {
+        return this.pos;
+    }
+
+    public byte getRotation() {
+        return this.rotation;
+    }
+
+    public Vec3i getVector() {
+        return switch (this.rotation) {
+            default -> new Vec3i(0, 0, 0);
+            case 0 -> Direction.NORTH.getVector();
+            case 1, 2, 3 -> Direction.NORTH.getVector().add(Direction.EAST.getVector());
+            case 4 -> Direction.EAST.getVector();
+            case 5, 6, 7 -> Direction.EAST.getVector().add(Direction.SOUTH.getVector());
+            case 8 -> Direction.SOUTH.getVector();
+            case 9, 10, 11 -> Direction.SOUTH.getVector().add(Direction.WEST.getVector());
+            case 12 -> Direction.WEST.getVector();
+            case 13, 14, 15 -> Direction.NORTH.getVector().add(Direction.SOUTH.getVector());
+        };
+    }
+
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (!(o instanceof DirectedGlobalPos globalPos))
+            return false;
+
+        return Objects.equals(this.dimension, globalPos.dimension) && Objects.equals(this.pos, globalPos.pos);
+    }
+
+    public int hashCode() {
+        return Objects.hash(this.dimension, this.pos, this.rotation);
+    }
+
+    public String toString() {
+        return this.dimension + " " + this.pos + " " + this.rotation;
+    }
+
+    public void write(PacketByteBuf buf) {
+        buf.writeRegistryKey(this.getDimension());
+        buf.writeBlockPos(this.getPos());
+        buf.writeByte(this.rotation);
+    }
+
+    public static DirectedGlobalPos read(PacketByteBuf buf) {
+        RegistryKey<World> registryKey = buf.readRegistryKey(RegistryKeys.WORLD);
+        BlockPos blockPos = buf.readBlockPos();
+        byte rotation = buf.readByte();
+
+        return DirectedGlobalPos.create(registryKey, blockPos, rotation);
+    }
+}

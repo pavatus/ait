@@ -1,6 +1,7 @@
 package loqor.ait.tardis.util;
 
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
@@ -60,6 +61,14 @@ public class FlightUtil {
 		float per = percentage / 100f;
 		BlockPos diff = destination.subtract(source);
 		return new AbsoluteBlockPos.Directed(source.add(new BlockPos((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per))), destination.getDimension(), destination.getRotation());
+	}
+
+	public static DirectedGlobalPos getPositionFromPercentage(DirectedGlobalPos source, DirectedGlobalPos destination, int percentage) {
+		// https://stackoverflow.com/questions/33907276/calculate-point-between-two-coordinates-based-on-a-percentage
+
+		float per = percentage / 100f;
+		BlockPos diff = destination.getPos().subtract(source.getPos());
+		return destination.offset((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per));
 	}
 
 	public static int getSoundLength(MatSound sound) {

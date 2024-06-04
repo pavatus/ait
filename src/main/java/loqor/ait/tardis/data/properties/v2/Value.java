@@ -19,11 +19,11 @@ public class Value<T> {
      * Due to a circular-dependency between a component and a property, it should be excluded.
      */
     @Exclude private TardisComponent holder;
-    @Exclude private Property<T> property;
+    @Exclude protected Property<T> property;
 
     private T value;
 
-    public Value(TardisComponent holder, Property<T> property, T value) {
+    protected Value(TardisComponent holder, Property<T> property, T value) {
         this.holder = holder;
         this.property = property;
         this.value = value;
@@ -81,12 +81,14 @@ public class Value<T> {
         this.set(func.apply(this.value), sync);
     }
 
-    public void read(PacketByteBuf buf) {
-        if (this.property == null) {
+    public void read(PacketByteBuf buf, byte mode) {
+        if (this.property == null)
             throw new IllegalStateException("Couldn't get the parent property value! Maybe you forgot to initialize the value field on load?");
-        }
 
-        this.set(this.property.getType().decode(buf), false);
+        T value = mode == Property.Mode.UPDATE
+                ? this.property.getType().decode(buf) : null;
+
+        this.set(value, false);
     }
 
     public void write(PacketByteBuf buf) {

@@ -20,8 +20,10 @@ import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.properties.v2.Property;
-import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
+import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
+import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisUtil;
@@ -66,17 +68,18 @@ public class TardisTravel extends KeyedTardisComponent {
 	private static final int CHECK_LIMIT = AITMod.AIT_CONFIG.SEARCH_HEIGHT();
 	private static final Random random = new Random();
 
-	private static final Property<Integer> SPEED = Property.forInt("speed", 0);
-	private static final Property<Integer> MAX_SPEED = Property.forInt("max_speed", 7);
+	private static final IntProperty SPEED = new IntProperty("speed", 0);
+	private static final IntProperty MAX_SPEED = new IntProperty("max_speed", 7);
 
-	private static final Property<Boolean> AUTO_LAND = Property.forBool("auto_land", false);
-	private static final Property<Boolean> HANDBRAKE = Property.forBool("handbrake", true);
+	private static final BoolProperty AUTO_LAND = new BoolProperty("auto_land", false);
+	private static final BoolProperty HANDBRAKE = new BoolProperty("handbrake", true);
 
-	private final Value<Integer> speed = SPEED.create(this);
-	private final Value<Integer> maxSpeed = MAX_SPEED.create(this);
 
-	private final Value<Boolean> autoLand = AUTO_LAND.create(this);
-	private final Value<Boolean> handbrake = HANDBRAKE.create(this);
+	private final IntValue speed = SPEED.create(this);
+	private final IntValue maxSpeed = MAX_SPEED.create(this);
+
+	private final BoolValue autoLand = AUTO_LAND.create(this);
+	private final BoolValue handbrake = HANDBRAKE.create(this);
 
 	public TardisTravel(AbsoluteBlockPos.Directed pos) {
 		super(Id.TRAVEL);
@@ -106,19 +109,19 @@ public class TardisTravel extends KeyedTardisComponent {
 				tardis.travel().autoLand().set(false));
 	}
 
-	public Value<Integer> speed() {
+	public IntValue speed() {
 		return speed;
 	}
 
-	public Value<Integer> maxSpeed() {
+	public IntValue maxSpeed() {
 		return maxSpeed;
 	}
 
-	public Value<Boolean> autoLand() {
+	public BoolValue autoLand() {
 		return autoLand;
 	}
 
-	public Value<Boolean> handbrake() {
+	public BoolValue handbrake() {
 		return handbrake;
 	}
 
@@ -165,7 +168,9 @@ public class TardisTravel extends KeyedTardisComponent {
 				int new_x = getDestination().getX() + random_change;
 				int new_y = getDestination().getX();
 				int new_z = getDestination().getZ() + random_change;
+
 				this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, getDestination().getWorld(), getDestination().getRotation()));
+
 				if (getDestination().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
 					this.setDestination(new AbsoluteBlockPos.Directed(new_x, new_y, new_z, server.getOverworld(), getDestination().getRotation()));
 				}

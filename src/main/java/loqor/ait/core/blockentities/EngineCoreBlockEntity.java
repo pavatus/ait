@@ -108,8 +108,10 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
+        Optional<Tardis> tardis = blockEntity.findTardis();
 
-        if(blockEntity.findTardis().isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+        if(tardis.isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+            return;
 
         ++blockEntity.ticks;
         long l = world.getTime();
@@ -119,10 +121,13 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
             if (bl != blockEntity.active) {
                 SoundEvent soundEvent = bl ? SoundEvents.BLOCK_CONDUIT_ACTIVATE : SoundEvents.BLOCK_CONDUIT_DEACTIVATE;
                 world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
+                tardis.get().engine().hasEngineCore().set(bl);
             }
 
             blockEntity.active = bl;
             openEye(blockEntity, list);
+
             if (bl) {
                 givePlayersEffects(world, pos, list);
                 //attackHostileEntity(world, pos, state, list, blockEntity);
@@ -139,13 +144,6 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
                 world.playSound(null, pos, SoundEvents.BLOCK_CONDUIT_AMBIENT_SHORT, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
         }
-
-        // @TODO positively awful idea, IM GONNA DO IT ANYWAYS HAHAHA
-        Optional<Tardis> tardis = blockEntity.findTardis();
-        if (tardis.isEmpty())
-            return;
-
-        tardis.get().engine().hasEngineCore().set(blockEntity.isActive());
     }
 
     private static void openEye(EngineCoreBlockEntity blockEntity, List<BlockPos> activatingBlocks) {

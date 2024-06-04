@@ -1,5 +1,6 @@
 package loqor.ait.tardis.data.properties.v2;
 
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import net.minecraft.network.PacketByteBuf;
 
@@ -10,7 +11,7 @@ public class Property<T> {
 
     private final Type<T> type;
     private final String name;
-    private final T def;
+    protected final T def;
 
     public Property(Type<T> type, String name, T def) {
         this.type = type;
@@ -33,31 +34,26 @@ public class Property<T> {
         return type;
     }
 
-    public static Property<Integer> forInt(String name) {
-        return forInt(name, 0);
+    public Property<T> copy(String name) {
+        return new Property<>(this.type, name, this.def);
     }
 
-    public static Property<Integer> forInt(String name, int def) {
-        return new Property<>(Type.INT, name, def);
+    public Property<T> copy(String name, T def) {
+        return new Property<>(this.type, name, def);
     }
 
-    public static Property<Boolean> forBool(String name) {
-        return forBool(name, false);
-    }
-
-    public static Property<Boolean> forBool(String name, boolean def) {
-        return new Property<>(Type.BOOL, name, def);
+    public static <T extends Enum<T>> Property<T> forEnum(String name, Class<T> clazz, T def) {
+        return new Property<>(Type.forEnum(clazz), name, def);
     }
 
     public static class Type<T> {
 
-        public static final Type<Integer> INT = new Type<>(PacketByteBuf::writeInt, PacketByteBuf::readInt);
-        public static final Type<Boolean> BOOL = new Type<>(PacketByteBuf::writeBoolean, PacketByteBuf::readBoolean);
+        public static final Type<DirectedGlobalPos> DIRECTED_GLOBAL_POS = new Type<>((buf, pos) -> pos.write(buf), DirectedGlobalPos::read);
 
         private final BiConsumer<PacketByteBuf, T> encoder;
         private final Function<PacketByteBuf, T> decoder;
 
-        protected Type(BiConsumer<PacketByteBuf, T> encoder, Function<PacketByteBuf, T> decoder) {
+        public Type(BiConsumer<PacketByteBuf, T> encoder, Function<PacketByteBuf, T> decoder) {
             this.encoder = encoder;
             this.decoder = decoder;
         }
@@ -68,6 +64,19 @@ public class Property<T> {
 
         public T decode(PacketByteBuf buf) {
             return this.decoder.apply(buf);
+        }
+
+        public static <T extends Enum<T>> Type<T> forEnum(Class<T> clazz) {
+            return new Type<>(PacketByteBuf::writeEnumConstant, buf -> buf.readEnumConstant(clazz));
+        }
+    }
+
+    public interface Mode {
+        byte UPDATE = 0;
+        byte NULL = 1;
+
+        static byte forValue(Value<?> o) {
+            return o.get() == null ? NULL : UPDATE;
         }
     }
 }

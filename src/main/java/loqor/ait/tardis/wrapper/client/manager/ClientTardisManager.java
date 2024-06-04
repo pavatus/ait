@@ -13,6 +13,7 @@ import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -176,7 +177,9 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		if (tardis == null)
 			return;
 
+		byte mode = buf.readByte();
 		TardisComponent.Id typeId = buf.readEnumConstant(TardisComponent.Id.class);
+
 		String key = buf.readString();
 
 		if (!(typeId.get(tardis) instanceof KeyedTardisComponent keyed)) {
@@ -185,7 +188,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		}
 
 		try {
-			keyed.update(key, buf);
+			keyed.update(key, buf, mode);
 		} catch (Exception e) {
 			AITMod.LOGGER.error("Failed to update property for component " + typeId, e);
 		}

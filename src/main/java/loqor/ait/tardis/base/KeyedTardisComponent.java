@@ -2,6 +2,7 @@ package loqor.ait.tardis.base;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
+import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.PropertyMap;
 import loqor.ait.tardis.data.properties.v2.Value;
 import net.minecraft.network.PacketByteBuf;
@@ -29,7 +30,7 @@ public class KeyedTardisComponent extends TardisComponent {
     }
 
     @SuppressWarnings("ConstantValue")
-    public void update(String name, PacketByteBuf buf) {
+    public void update(String name, PacketByteBuf buf, byte mode) {
         if (this.data == null)
             return;
 
@@ -40,6 +41,6 @@ public class KeyedTardisComponent extends TardisComponent {
             return;
         }
 
-        property.read(buf);
+        property.read(buf, mode);
     }
 }

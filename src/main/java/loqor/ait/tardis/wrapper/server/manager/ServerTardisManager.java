@@ -11,6 +11,7 @@ import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.manager.BufferedTardisManager;
 import loqor.ait.tardis.manager.TardisBuilder;
@@ -143,8 +144,9 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		PacketByteBuf data = PacketByteBufs.create();
 
 		data.writeUuid(tardis.getUuid());
-		data.writeEnumConstant(id);
+		data.writeByte(Property.Mode.forValue(property));
 
+		data.writeEnumConstant(id);
 		data.writeString(property.getProperty().getName());
 		property.write(data);
 
