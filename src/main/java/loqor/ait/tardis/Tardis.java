@@ -1,7 +1,6 @@
 package loqor.ait.tardis;
 
 import loqor.ait.core.data.AbsoluteBlockPos;
-import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.registry.impl.DesktopRegistry;
@@ -15,6 +14,7 @@ import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
+import loqor.ait.tardis.util.Disposable;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
-public abstract class Tardis extends Initializable<TardisComponent.InitContext> {
+public abstract class Tardis extends Initializable<TardisComponent.InitContext> implements Disposable {
 
 	private UUID uuid;
 	protected TardisTravel travel;
@@ -57,6 +57,21 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		TardisComponent.init(desktop, this, ctx);
 		TardisComponent.init(exterior, this, ctx);
 		TardisComponent.init(handlers, this, ctx);
+	}
+
+	@Override
+	public void dispose() {
+		this.desktop.dispose();
+		this.desktop = null;
+
+		this.travel.dispose();
+		this.travel = null;
+
+		this.exterior.dispose();
+		this.exterior = null;
+
+		this.handlers.dispose();
+		this.handlers = null;
 	}
 
 	public static void init(Tardis tardis, boolean deserialized) {

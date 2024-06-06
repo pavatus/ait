@@ -8,12 +8,11 @@ import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.util.Disposable;
 import net.minecraft.client.MinecraftClient;
 
 import java.lang.reflect.Type;
 
-public class ClientTardis extends Tardis implements Disposable {
+public class ClientTardis extends Tardis {
 
 	private ClientTardis() {
         super();
@@ -52,21 +51,6 @@ public class ClientTardis extends Tardis implements Disposable {
 			ClientTardisUtil.tickPowerDelta();
 			ClientTardisUtil.tickAlarmDelta();
 		}
-	}
-
-	@Override
-	public void dispose() {
-		this.desktop.dispose();
-		this.desktop = null;
-
-		this.travel.dispose();
-		this.travel = null;
-
-		this.exterior.dispose();
-		this.exterior = null;
-
-		this.handlers.dispose();
-		this.handlers = null;
 	}
 
 	public static Object creator() {
