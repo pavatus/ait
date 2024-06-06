@@ -8,6 +8,7 @@ import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
+import loqor.ait.tardis.util.Disposable;
 import loqor.ait.tardis.util.Ordered;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -22,7 +23,7 @@ import java.util.function.Supplier;
  * @implNote There should be NO logic run in the constructor. If you need to have such logic,
  * implement it in an appropriate init method!
  */
-public abstract class TardisComponent extends Initializable<TardisComponent.InitContext> {
+public abstract class TardisComponent extends Initializable<TardisComponent.InitContext> implements Disposable {
 
 	@Exclude
 	protected Tardis tardis;
@@ -74,6 +75,11 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
 	public TardisManager<?, ?> parentManager() {
 		return TardisManager.getInstance(this.tardis);
+	}
+
+	@Override
+	public void dispose() {
+		this.tardis = null;
 	}
 
 	public static void init(TardisComponent component, Tardis tardis, boolean deserialized) {

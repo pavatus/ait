@@ -82,6 +82,14 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 		return (T) this.handlers.get(id);
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+
+		this.forEach(TardisComponent::dispose);
+		this.handlers.clear();
+	}
+
 	/**
 	 * Do NOT use this setter if you don't know what you're doing. Use {@link loqor.ait.tardis.wrapper.client.ClientTardis#set(TardisComponent)}.
 	 */

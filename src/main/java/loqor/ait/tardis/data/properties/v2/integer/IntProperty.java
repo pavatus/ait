@@ -4,6 +4,8 @@ import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.v2.Property;
 import net.minecraft.network.PacketByteBuf;
 
+import java.util.function.Supplier;
+
 public class IntProperty extends Property<Integer> {
 
     public static final Type<Integer> TYPE = new Type<>(PacketByteBuf::writeInt, PacketByteBuf::readInt);
@@ -17,15 +19,21 @@ public class IntProperty extends Property<Integer> {
     }
 
     public IntProperty(String name, int def) {
+        this(name, () -> def);
+    }
+
+    private IntProperty(String name, Supplier<Integer> def) {
         super(TYPE, name, def);
     }
 
     @Override
     public IntValue create(KeyedTardisComponent holder) {
-        IntValue result = new IntValue(holder, this, this.def);
-        holder.register(result);
+        return (IntValue) super.create(holder);
+    }
 
-        return result;
+    @Override
+    protected IntValue create(Integer integer) {
+        return new IntValue(integer);
     }
 
     public static int normalize(Integer value) {

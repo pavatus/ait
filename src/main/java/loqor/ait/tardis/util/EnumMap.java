@@ -1,5 +1,6 @@
 package loqor.ait.tardis.util;
 
+import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -32,5 +33,9 @@ public class EnumMap<K extends Ordered, V> {
      */
     public V[] values() {
         return this.values;
+    }
+    
+    public void clear() {
+        Arrays.fill(this.values, null);
     }
 }

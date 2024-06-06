@@ -1,6 +1,7 @@
 package loqor.ait.tardis;
 
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.registry.impl.DesktopRegistry;

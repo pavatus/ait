@@ -5,6 +5,7 @@ import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.util.Disposable;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.network.PacketByteBuf;
@@ -13,7 +14,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.function.Function;
 
-public class Value<T> {
+public class Value<T> implements Disposable {
 
     /**
      * Due to a circular-dependency between a component and a property, it should be excluded.
@@ -22,12 +23,6 @@ public class Value<T> {
     @Exclude protected Property<T> property;
 
     private T value;
-
-    protected Value(TardisComponent holder, Property<T> property, T value) {
-        this.holder = holder;
-        this.property = property;
-        this.value = value;
-    }
 
     protected Value(T value) {
         this.value = value;
@@ -93,6 +88,11 @@ public class Value<T> {
 
     public void write(PacketByteBuf buf) {
         this.property.getType().encode(buf, this.value);
+    }
+
+    @Override
+    public void dispose() {
+        this.holder = null;
     }
 
     public static Object serializer() {

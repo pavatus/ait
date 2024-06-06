@@ -2,7 +2,6 @@ package loqor.ait.tardis.base;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
-import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.PropertyMap;
 import loqor.ait.tardis.data.properties.v2.Value;
 import net.minecraft.network.PacketByteBuf;
@@ -42,5 +41,13 @@ public class KeyedTardisComponent extends TardisComponent {
         }
 
         property.read(buf, mode);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+
+        this.data.dispose();
+        this.data.clear();
     }
 }

@@ -6,24 +6,35 @@ import net.minecraft.network.PacketByteBuf;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Property<T> {
 
     private final Type<T> type;
     private final String name;
-    protected final T def;
 
-    public Property(Type<T> type, String name, T def) {
+    protected final Supplier<T> def;
+
+    public Property(Type<T> type, String name, Supplier<T> def) {
         this.type = type;
         this.name = name;
         this.def = def;
     }
 
-    public Value<T> create(KeyedTardisComponent holder) {
-        Value<T> result = new Value<>(holder, this, this.def);
-        holder.register(result);
+    public static <T> Property<T> of(Type<T> type, String name, T def) {
+        return new Property<>(type, name, () -> def);
+    }
 
+    public Value<T> create(KeyedTardisComponent holder) {
+        T t = this.def == null ? null : this.def.get();
+        Value<T> result = this.create(t);
+
+        result.of(holder, this);
         return result;
+    }
+
+    protected Value<T> create(T t) {
+        return new Value<>(t);
     }
 
     public String getName() {
@@ -39,11 +50,11 @@ public class Property<T> {
     }
 
     public Property<T> copy(String name, T def) {
-        return new Property<>(this.type, name, def);
+        return Property.of(this.type, name, def);
     }
 
     public static <T extends Enum<T>> Property<T> forEnum(String name, Class<T> clazz, T def) {
-        return new Property<>(Type.forEnum(clazz), name, def);
+        return Property.of(Type.forEnum(clazz), name, def);
     }
 
     public static class Type<T> {

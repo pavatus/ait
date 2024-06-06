@@ -1,12 +1,15 @@
 package loqor.ait.tardis.data.properties.v2.integer.ranged;
 
-import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.v2.Value;
 
 public class RangedIntValue extends Value<Integer> {
 
-    protected RangedIntValue(TardisComponent holder, RangedIntProperty property, int value) {
-        super(holder, property, value);
+    protected RangedIntValue(int value) {
+        super(value);
+    }
+
+    public static RangedIntValue of(int value) {
+        return new RangedIntValue(value);
     }
 
     private RangedIntValue(Integer value) {

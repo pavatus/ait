@@ -5,6 +5,8 @@ import loqor.ait.tardis.data.properties.v2.Property;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.function.Supplier;
+
 public class RangedIntProperty extends Property<Integer> {
 
     public static final Type<Integer> TYPE = new Type<>(PacketByteBuf::writeInt, PacketByteBuf::readInt);
@@ -21,14 +23,14 @@ public class RangedIntProperty extends Property<Integer> {
     }
 
     public RangedIntProperty(String name, int min, int max, Integer def) {
-        this(name, min, max, normalize(min, max, def));
+        this(name, min, max, () -> normalize(min, max, def));
     }
 
     public RangedIntProperty(String name, int max, int def) {
-        this(name, 0, max, def);
+        this(name, 0, max, () -> def);
     }
 
-    public RangedIntProperty(String name, int min, int max, int def) {
+    private RangedIntProperty(String name, int min, int max, Supplier<Integer> def) {
         super(TYPE, name, def);
 
         this.min = min;
@@ -37,10 +39,12 @@ public class RangedIntProperty extends Property<Integer> {
 
     @Override
     public RangedIntValue create(KeyedTardisComponent holder) {
-        RangedIntValue result = new RangedIntValue(holder, this, this.def);
-        holder.register(result);
+        return (RangedIntValue) super.create(holder);
+    }
 
-        return result;
+    @Override
+    protected RangedIntValue create(Integer integer) {
+        return new RangedIntValue(integer);
     }
 
     public static int normalize(int min, int max, Integer value) {

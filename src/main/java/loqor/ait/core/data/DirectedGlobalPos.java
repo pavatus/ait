@@ -11,6 +11,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 public class DirectedGlobalPos {
 
@@ -36,11 +37,23 @@ public class DirectedGlobalPos {
     }
 
     public DirectedGlobalPos pos(int x, int y, int z) {
-        return DirectedGlobalPos.create(this.dimension, new BlockPos(x, y, z), this.rotation);
+        return this.pos(new BlockPos(x, y, z));
+    }
+
+    public DirectedGlobalPos pos(BlockPos pos) {
+        return DirectedGlobalPos.create(this.dimension, pos, this.rotation);
     }
 
     public DirectedGlobalPos offset(int x, int y, int z) {
         return DirectedGlobalPos.create(this.dimension, this.pos.add(x, y, z), this.rotation);
+    }
+
+    public DirectedGlobalPos apply(Function<Integer, Integer> func) {
+        return DirectedGlobalPos.create(this.dimension, new BlockPos(
+                func.apply(this.pos.getX()),
+                func.apply(this.pos.getY()),
+                func.apply(this.pos.getZ())
+        ), this.rotation);
     }
 
     public DirectedGlobalPos world(RegistryKey<World> world) {

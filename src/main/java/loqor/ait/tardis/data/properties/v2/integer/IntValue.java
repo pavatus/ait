@@ -1,15 +1,10 @@
 package loqor.ait.tardis.data.properties.v2.integer;
 
-import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.v2.Value;
 
 public class IntValue extends Value<Integer> {
 
-    protected IntValue(TardisComponent holder, IntProperty property, int value) {
-        super(holder, property, value);
-    }
-
-    private IntValue(Integer value) {
+    protected IntValue(Integer value) {
         super(value);
     }
 
@@ -19,6 +14,6 @@ public class IntValue extends Value<Integer> {
     }
 
     public static Object serializer() {
-        return new Serializer<Integer, IntValue>(Integer.class, IntValue::new);
+        return new Serializer<>(Integer.class, IntValue::new);
     }
 }

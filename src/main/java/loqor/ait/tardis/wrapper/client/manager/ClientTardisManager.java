@@ -13,7 +13,6 @@ import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -24,6 +23,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -122,8 +122,12 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		ClientTardis tardis = this.readTardis(this.networkGson, json, ClientTardis.class);
 
 		synchronized (this) {
-			this.lookup.put(uuid, tardis);
+			ClientTardis old = this.lookup.put(uuid, tardis);
 			AITMod.LOGGER.info("Received TARDIS: " + uuid);
+
+			if (old != null) {
+				new Thread(old::dispose).start();
+			}
 
 			for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
 				consumer.accept(tardis);
@@ -204,6 +208,11 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 	@Override
 	public void reset() {
 		this.subscribers.clear();
+
+		for (ClientTardis tardis : this.lookup.values()) {
+			tardis.dispose();
+		}
+
 		super.reset();
 	}
 
