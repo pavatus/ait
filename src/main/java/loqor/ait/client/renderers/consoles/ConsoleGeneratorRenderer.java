@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleGeneratorModel;
 import loqor.ait.client.models.consoles.ConsoleModel;
+import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
@@ -63,15 +64,6 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
         }
 
 		matrices.push();
-
-		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-		matrices.translate(0.5f, -1.5f, -0.5f);
-
-		this.generator.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light, overlay, 1, 1, 1, 1);
-
-		matrices.pop();
-
-		matrices.push();
 		RenderSystem.disableDepthTest();
 		RenderSystem.disableBlend();
 
@@ -85,15 +77,22 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
 
 			if (tardis.isUnlocked(entity.getConsoleVariant())) {
 				console.render(matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(consoleTexture, true)), maxLight, OverlayTexture.DEFAULT_UV, 0.3607843137f, 0.9450980392f, 1, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
-				matrices.pop();
-				return;
+			} else {
+				console.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCullZOffset(consoleTexture)), maxLight, OverlayTexture.DEFAULT_UV, 0.2f, 0.2f, 0.2f, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
 			}
-
-			console.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(consoleTexture)), maxLight, OverlayTexture.DEFAULT_UV, 0.2f, 0.2f, 0.2f, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
 		}
 
 		RenderSystem.enableBlend();
 		RenderSystem.enableDepthTest();
+		matrices.pop();
+
+		matrices.push();
+
+		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+		matrices.translate(0.5f, -1.5f, -0.5f);
+
+		this.generator.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light, overlay, 1, 1, 1, 1);
+
 		matrices.pop();
 	}
 }

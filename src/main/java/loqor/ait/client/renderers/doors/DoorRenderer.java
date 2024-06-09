@@ -2,6 +2,7 @@ package loqor.ait.client.renderers.doors;
 
 import loqor.ait.client.models.doors.DoomDoorModel;
 import loqor.ait.client.models.doors.DoorModel;
+import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
@@ -86,9 +87,12 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.findTardis().get().<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
 				}
 			}
-			if (emission != null && entity.findTardis().get().engine().hasPower()) {
+			if (emission != null) {
 				boolean alarms = PropertiesHandler.getBool(entity.findTardis().get().properties(), PropertiesHandler.ALARM_ENABLED);
-				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(emission, true)), maxLight, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
+				ClientLightUtil.renderEmissivable(
+						entity.findTardis().get().engine().hasPower(), model::renderWithAnimations, emission, entity,
+						this.model.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
+				);
 			}
 			if(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
 				Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
