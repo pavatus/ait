@@ -8,7 +8,7 @@ import net.minecraft.network.PacketByteBuf;
 
 public class KeyedTardisComponent extends TardisComponent {
 
-    @Exclude(strategy = Exclude.Strategy.FILE) private final PropertyMap data = new PropertyMap();
+    @Exclude(strategy = Exclude.Strategy.FILE) private PropertyMap data = new PropertyMap();
 
     /**
      * Do NOT under any circumstances run logic in this constructor.
@@ -20,19 +20,19 @@ public class KeyedTardisComponent extends TardisComponent {
         super(id);
     }
 
-    @SuppressWarnings("ConstantValue")
-    public void register(Value<?> property) {
+    @Override
+    protected void init(InitContext context) {
         if (this.data == null)
-            return;
+            this.data = new PropertyMap();
 
+        super.init(context);
+    }
+
+    public void register(Value<?> property) {
         this.data.put(property.getProperty().getName(), property);
     }
 
-    @SuppressWarnings("ConstantValue")
     public void update(String name, PacketByteBuf buf, byte mode) {
-        if (this.data == null)
-            return;
-
         Value<?> property = this.data.get(name);
 
         if (property == null) {
@@ -44,12 +44,8 @@ public class KeyedTardisComponent extends TardisComponent {
     }
 
     @Override
-    @SuppressWarnings("ConstantValue")
     public void dispose() {
         super.dispose();
-
-        if (this.data == null)
-            return;
 
         this.data.dispose();
     }

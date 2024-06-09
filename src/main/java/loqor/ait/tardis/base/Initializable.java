@@ -6,7 +6,7 @@ public abstract class Initializable<T extends Initializable.Context> {
         component.init(context);
     }
 
-    private void init(T context) {
+    protected void init(T context) {
         this.onEarlyInit(context);
 
         if (context.deserialized()) {
