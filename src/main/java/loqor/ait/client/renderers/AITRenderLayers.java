@@ -36,4 +36,19 @@ public class AITRenderLayers extends RenderLayer {
 	private AITRenderLayers(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
 		super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
 	}
+
+	// @TODO Blurring for the exterior, referenced from the Tempad mod -> https://github.com/terrarium-earth/Tempad/blob/1.20.x/fabric/src/main/java/me/codexadrian/tempad/common/fabric/FabricTempadClient.java
+	/*public static final class RenderLayerAccessor extends RenderLayer {
+
+		public static final RenderLayer BLURRING_RENDER_LAYER = RenderLayer.of("exteriorBlur", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY).cull(new RenderPhase.Cull(false)).program(new RenderPhase.ShaderProgram(() -> exteriorBlur)).target(new RenderPhase.Target("exterior_blur", () -> {
+			Target target = INSTANCE.getBlurTarget();
+			if (target != null) {
+				target.startDrawing();
+			}
+		})))
+
+		private RenderLayerAccessor(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
+			super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
+		}
+	}*/
 }
