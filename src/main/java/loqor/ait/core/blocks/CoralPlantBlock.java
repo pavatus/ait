@@ -128,9 +128,11 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 				coral.markDirty();
 			}
 		}
-		if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) || (!RiftChunkManager.isRiftChunk(pos) && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
+		if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) ||
+				(!RiftChunkManager.isRiftChunk(pos) &&
+						!(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
 			// GET IT OUTTA HERE!!!
-			world.breakBlock(pos, true);
+			world.breakBlock(pos, placer.isPlayer() ? !((PlayerEntity) placer).isCreative() : true);
 			return;
 		}
 
