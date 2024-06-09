@@ -11,6 +11,7 @@ import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
@@ -28,6 +29,8 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
+import java.util.Optional;
+
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
 
 	private DoorModel model;
@@ -37,10 +40,14 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		if (entity.findTardis().isEmpty())
+		Optional<Tardis> optionalTardis = entity.findTardis();
+
+		if (optionalTardis.isEmpty())
 			return;
 
-		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(entity.findTardis().get().getExterior().getVariant());
+		Tardis tardis = optionalTardis.get();
+
+		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardis.getExterior().getVariant());
 		ClientDoorSchema variant = ClientDoorRegistry.withParent(exteriorVariant.parent().door());
 		Class<? extends DoorModel> modelClass = variant.model().getClass();
 
@@ -52,50 +59,49 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
 		BlockState blockState = entity.getCachedState();
 		float k = blockState.get(DoorBlock.FACING).asRotation();
-		int maxLight = 0xF000F0;
-		matrices.push();
+
+        matrices.push();
 		matrices.translate(0.5, 0, 0.5);
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(k));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+
 		Identifier texture = exteriorVariant.texture();
 
-		Identifier emission = exteriorVariant.emission();
-
 		if (exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM)) {
-			texture = entity.findTardis().get().getDoor().isOpen() ? DoomDoorModel.DOOM_DOOR_OPEN : DoomDoorModel.DOOM_DOOR;
-			emission = null;
+			texture = tardis.getDoor().isOpen() ? DoomDoorModel.DOOM_DOOR_OPEN : DoomDoorModel.DOOM_DOOR;
 		}
 
-		if (DependencyChecker.hasPortals() && entity.findTardis().get().travel().getState() == TardisTravel.State.LANDED && !PropertiesHandler.getBool(entity.findTardis().get().properties(), PropertiesHandler.IS_FALLING) && entity.findTardis().get().getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED) {
-			BlockPos pos = entity.findTardis().get().travel().getPosition();
-			World world = entity.findTardis().get().travel().getPosition().getWorld();
+		if (DependencyChecker.hasPortals() && tardis.travel().getState() == TardisTravel.State.LANDED
+				&& !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
+				&& tardis.getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED
+		) {
+			BlockPos pos = tardis.travel().getPosition();
+			World world = tardis.travel().getPosition().getWorld();
 			if (world != null) {
-				World doorWorld = entity.getWorld();
-				BlockPos doorPos = entity.getPos();
-				int lightConst = 524296; // 1 / maxLight;
+                int lightConst = 524296; // 1 / maxLight;
 				int i = world.getLightLevel(LightType.SKY, pos);
 				int j = world.getLightLevel(LightType.BLOCK, pos);
-				int p = doorWorld.getLightLevel(LightType.BLOCK, doorPos);
-				light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight() ? (i / 15) + j > 0 ? j + 13 : j : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j)) * lightConst;
+                light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight()
+						? (i / 15) + j > 0 ? j + 13 : j
+						: i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j)) * lightConst;
 			}
 		}
 
 		if (model != null) {
-			if (!entity.findTardis().get().siege().isActive()) {
+			if (!tardis.siege().isActive()) {
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
-				if (entity.findTardis().get().<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
-					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(entity.findTardis().get().<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+				if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
+					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
 				}
 			}
-			if (emission != null) {
-				boolean alarms = PropertiesHandler.getBool(entity.findTardis().get().properties(), PropertiesHandler.ALARM_ENABLED);
-				ClientLightUtil.renderEmissivable(
-						entity.findTardis().get().engine().hasPower(), model::renderWithAnimations, emission, entity,
-						this.model.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
-				);
-			}
-			if(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-				Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(entity.findTardis().get().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
+
+			ClientLightUtil.renderEmissivable(
+					tardis.engine().hasPower(), model::renderWithAnimations, exteriorVariant.emission(), entity,
+					this.model.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
+			);
+
+			if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+				Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
 				if (biomeTexture != null && !texture.equals(biomeTexture)) {
 					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
 				}

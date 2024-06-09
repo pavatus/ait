@@ -1,6 +1,5 @@
 package loqor.ait.client.renderers.consoles;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
