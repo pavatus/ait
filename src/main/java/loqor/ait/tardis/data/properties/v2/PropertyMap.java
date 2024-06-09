@@ -11,5 +11,7 @@ public class PropertyMap extends HashMap<String, Value<?>> implements Disposable
         for (Value<?> value : this.values()) {
             value.dispose();
         }
+
+        this.clear();
     }
 }

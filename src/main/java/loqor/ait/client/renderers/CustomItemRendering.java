@@ -4,7 +4,6 @@ import loqor.ait.AITMod;
 import loqor.ait.client.renderers.model.OverriddenBakedModel;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
@@ -21,7 +20,7 @@ public class CustomItemRendering {
      * @param model the model to load
      */
     public static void load(Identifier model) {
-        System.out.println("Loaded " + model + " to the force-load list");
+        AITMod.LOGGER.info("Loaded " + model + " to the force-load list");
         MODEL_POOL.add(model);
     }
 

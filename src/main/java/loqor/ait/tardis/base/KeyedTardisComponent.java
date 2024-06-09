@@ -44,10 +44,13 @@ public class KeyedTardisComponent extends TardisComponent {
     }
 
     @Override
+    @SuppressWarnings("ConstantValue")
     public void dispose() {
         super.dispose();
 
+        if (this.data == null)
+            return;
+
         this.data.dispose();
-        this.data.clear();
     }
 }

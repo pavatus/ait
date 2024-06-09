@@ -120,7 +120,9 @@ public class PoliceBoxModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (exterior.findTardis().isEmpty()) return;
+		if (exterior.findTardis().isEmpty())
+			return;
+
 		matrices.push();
 		matrices.scale(0.63F, 0.63F, 0.63F);
 		matrices.translate(0, -1.5f, 0);
@@ -134,9 +136,7 @@ public class PoliceBoxModel extends ExteriorModel {
 		//if (DependencyChecker.hasPortals())
 		//    this.TARDIS.getChild("Doors").visible = exterior.getTardis().get().getDoor().getDoorState() == DoorData.DoorStateEnum.CLOSED;
 
-
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-
 		matrices.pop();
 	}
 

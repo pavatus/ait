@@ -2,9 +2,9 @@ package loqor.ait.core.data.schema.console;
 
 import com.google.gson.*;
 import loqor.ait.client.models.consoles.ConsoleModel;
+import loqor.ait.core.data.base.Identifiable;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import loqor.ait.core.data.base.Identifiable;
 import loqor.ait.tardis.console.variant.hartnell.HartnellVariant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -31,8 +31,8 @@ public abstract class ClientConsoleVariantSchema implements Identifiable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() == null) return false;
+		if (this == o)
+			return true;
 
 		ClientConsoleVariantSchema that = (ClientConsoleVariantSchema) o;
 
@@ -50,6 +50,10 @@ public abstract class ClientConsoleVariantSchema implements Identifiable {
 	public abstract Identifier texture();
 
 	public abstract Identifier emission();
+
+	public Identifier noEmission() {
+		return null;
+	}
 
 	@Environment(EnvType.CLIENT)
 	public abstract ConsoleModel model();

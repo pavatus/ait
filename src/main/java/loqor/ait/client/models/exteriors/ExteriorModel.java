@@ -41,7 +41,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 		DoorData.DoorStateEnum state = exterior.findTardis().get().getDoor().getDoorState();
 		Animation anim = getAnimationForDoorState(state);
 
-
 		int max = (int) getAnimationLengthInTicks(anim);
 		if (exterior.animationTimer > max) {
 			exterior.animationTimer = max;

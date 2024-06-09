@@ -57,6 +57,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.ToIntFunction;
 
+@SuppressWarnings("deprecation")
 public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak, Waterloggable {
 
 	public static final int MAX_ROTATION_INDEX = RotationPropertyHelper.getMax();
@@ -266,7 +267,6 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
 
-
 		if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) {
 			if (world.isClient()) {
 				if (exteriorBlockEntity.findTardis().isEmpty()) {
@@ -360,8 +360,6 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		if (state.get(WATERLOGGED)) {
 			state.with(WATERLOGGED, false);
 		}
-
-		this.configureFallingTardis(falling, world, pos);
 	}
 
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
@@ -392,9 +390,6 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
 		DoorData.lockTardis(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis, null, false);
-	}
-
-	protected void configureFallingTardis(FallingTardisEntity entity, ServerWorld world, BlockPos pos) {
 	}
 
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
