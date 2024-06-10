@@ -49,7 +49,6 @@ public class ArtronCollectorBlock extends HorizontalDirectionalBlock implements 
 		};
 	}
 
-
 	@Override
 	public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
 		return false;

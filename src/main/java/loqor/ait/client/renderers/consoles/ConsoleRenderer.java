@@ -19,20 +19,31 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
 
+import java.util.Optional;
+
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
 	private ConsoleModel console;
 
-	public ConsoleRenderer(BlockEntityRendererFactory.Context ctx) {
-	}
+	public ConsoleRenderer(BlockEntityRendererFactory.Context ctx) { }
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		if (entity.findTardis().isEmpty())
+		this.renderConsole(entity, matrices, vertexConsumers, light, overlay);
+		entity.getWorld().getProfiler().swap("console");
+	}
+
+	private void renderConsole(T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+		Optional<Tardis> optionalTardis = entity.findTardis();
+
+		if (optionalTardis.isEmpty())
 			return;
+
+		Tardis tardis = optionalTardis.get();
 
 		ClientConsoleVariantSchema variant = ClientConsoleVariantRegistry.withParent(entity.getVariant());
 
-		if (variant == null) return;
+		if (variant == null)
+			return;
 
 		Class<? extends ConsoleModel> modelClass = variant.model().getClass();
 
@@ -42,22 +53,18 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 		if (console == null)
 			this.console = variant.model();
 
-        matrices.push();
+		matrices.push();
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-		Tardis tardis = entity.findTardis().get();
+		console.animateBlockEntity(entity);
+		console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
 
-		if (console != null) {
-			console.animateBlockEntity(entity);
-			console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1);
+		boolean hasPower = tardis.engine().hasPower();
 
-			boolean hasPower = tardis.engine().hasPower();
-
-			ClientLightUtil.renderEmissivable(
-					hasPower, console::renderWithAnimations, variant.noEmission(), variant.emission(), entity,
-					this.console.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
-			);
-		}
+		ClientLightUtil.renderEmissivable(
+				hasPower, console::renderWithAnimations, variant.noEmission(), variant.emission(), entity,
+				this.console.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
+		);
 
 		matrices.pop();
 
@@ -66,7 +73,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
 		ItemStack stack = tardis.sonic().get(SonicHandler.HAS_CONSOLE_SONIC);
 
-		if(stack == null)
+		if (stack == null)
 			return;
 
 		matrices.push();
@@ -77,6 +84,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
 		int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
 		MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), 0);
+
 		matrices.pop();
 	}
 }

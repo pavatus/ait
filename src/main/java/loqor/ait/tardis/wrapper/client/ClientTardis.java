@@ -1,6 +1,7 @@
 package loqor.ait.tardis.wrapper.client;
 
 import com.google.gson.InstanceCreator;
+import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.tardis.Tardis;
@@ -11,12 +12,24 @@ import loqor.ait.tardis.base.TardisComponent;
 import net.minecraft.client.MinecraftClient;
 
 import java.lang.reflect.Type;
+import java.util.UUID;
 
 public class ClientTardis extends Tardis {
 
+	private final UUID check;
+
 	private ClientTardis() {
         super();
+
+		this.check = UUID.randomUUID();
     }
+
+	@Override
+	public void dispose() {
+		AITMod.LOGGER.info("Disposing {}... ", Integer.toHexString(check.hashCode()));
+
+		super.dispose();
+	}
 
 	public void setDesktop(TardisDesktop desktop) {
 		desktop.setTardis(this);
@@ -51,6 +64,11 @@ public class ClientTardis extends Tardis {
 			ClientTardisUtil.tickPowerDelta();
 			ClientTardisUtil.tickAlarmDelta();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return this.getUuid() + " (" + Integer.toHexString(check.hashCode()) + ")";
 	}
 
 	public static Object creator() {

@@ -29,7 +29,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -38,7 +37,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -161,6 +159,10 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 			return;
 
 		Tardis tardis = optional.get();
+		boolean previouslyLocked = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED);
+
+		if (!previouslyLocked && tardis.travel().getState() == MAT && this.getAlpha() >= 0.9f)
+			TardisUtil.teleportInside(tardis, entity);
 
 		if (!tardis.getDoor().isOpen())
 			return;
@@ -186,23 +188,13 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 
 		if (world.isClient()) {
 			this.checkAnimations();
-			this.exteriorLightBlockState();
+			this.exteriorLightBlockState(tardis);
 			return;
 		}
 
 		if (blockState.getBlock() instanceof ExteriorBlock) {
 			// For checking falling
 			((ExteriorBlock) blockState.getBlock()).tryFall(blockState, (ServerWorld) world, pos);
-		}
-
-		boolean previouslyLocked = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED);
-
-		if (!previouslyLocked
-				&& state == MAT
-				&& this.getAlpha() >= 0.9f) {
-			for (ServerPlayerEntity entity : world.getEntitiesByClass(ServerPlayerEntity.class, new Box(this.getPos()).expand(0, 1, 0), EntityPredicates.EXCEPT_SPECTATOR)) {
-				TardisUtil.teleportInside(tardis, entity);
-			}
 		}
 
 		// ensures we don't exist during flight
@@ -281,15 +273,13 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 		return this.getAnimation().getAlpha();
 	}
 
-	public void exteriorLightBlockState() {
-		this.findTardis().ifPresent(tardis -> {
-			TardisTravel.State state = tardis.travel().getState();
+	private void exteriorLightBlockState(Tardis tardis) {
+		TardisTravel.State state = tardis.travel().getState();
 
-			if (state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT) {
-				int light = (int) Math.max(1, Math.min(this.getAlpha() * 9.0f, 9));
-				this.getWorld().setBlockState(pos, this.getCachedState().with(ExteriorBlock.LEVEL_9, light));
-			}
-		});
+		if (state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT) {
+			int light = (int) Math.max(1, Math.min(this.getAlpha() * 9.0f, 9));
+			this.getWorld().setBlockState(pos, this.getCachedState().with(ExteriorBlock.LEVEL_9, light));
+		}
 	}
 
 	public void onBroken() {

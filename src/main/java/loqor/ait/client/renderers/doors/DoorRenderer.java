@@ -2,15 +2,15 @@ package loqor.ait.client.renderers.doors;
 
 import loqor.ait.client.models.doors.DoomDoorModel;
 import loqor.ait.client.models.doors.DoorModel;
-import loqor.ait.client.util.ClientLightUtil;
-import loqor.ait.core.blocks.DoorBlock;
-import loqor.ait.registry.impl.door.ClientDoorRegistry;
-import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import loqor.ait.core.data.schema.door.ClientDoorSchema;
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
+import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
+import loqor.ait.core.blocks.DoorBlock;
+import loqor.ait.core.data.schema.door.ClientDoorSchema;
+import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
+import loqor.ait.registry.impl.door.ClientDoorRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
@@ -35,11 +35,15 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
 	private DoorModel model;
 
-	public DoorRenderer(BlockEntityRendererFactory.Context ctx) {
-	}
+	public DoorRenderer(BlockEntityRendererFactory.Context ctx) { }
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+		this.renderDoor(entity, matrices, vertexConsumers, light, overlay);
+		entity.getWorld().getProfiler().swap("door");
+	}
+
+	private void renderDoor(T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 		Optional<Tardis> optionalTardis = entity.findTardis();
 
 		if (optionalTardis.isEmpty())
@@ -60,7 +64,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		BlockState blockState = entity.getCachedState();
 		float k = blockState.get(DoorBlock.FACING).asRotation();
 
-        matrices.push();
+		matrices.push();
 		matrices.translate(0.5, 0, 0.5);
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(k));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
@@ -78,10 +82,10 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 			BlockPos pos = tardis.travel().getPosition();
 			World world = tardis.travel().getPosition().getWorld();
 			if (world != null) {
-                int lightConst = 524296; // 1 / maxLight;
+				int lightConst = 524296; // 1 / maxLight;
 				int i = world.getLightLevel(LightType.SKY, pos);
 				int j = world.getLightLevel(LightType.BLOCK, pos);
-                light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight()
+				light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight()
 						? (i / 15) + j > 0 ? j + 13 : j
 						: i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j)) * lightConst;
 			}
@@ -107,6 +111,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 				}
 			}
 		}
+
 		matrices.pop();
 	}
 }

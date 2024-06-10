@@ -3,6 +3,10 @@ package loqor.ait.tardis.data.properties.v2;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -60,6 +64,9 @@ public class Property<T> {
     public static class Type<T> {
 
         public static final Type<DirectedGlobalPos> DIRECTED_GLOBAL_POS = new Type<>((buf, pos) -> pos.write(buf), DirectedGlobalPos::read);
+        public static final Type<Identifier> IDENTIFIER = new Type<>(PacketByteBuf::writeIdentifier, PacketByteBuf::readIdentifier);
+
+        public static final Type<RegistryKey<World>> WORLD_KEY = new Type<>(PacketByteBuf::writeRegistryKey, buf -> buf.readRegistryKey(RegistryKeys.WORLD));
 
         private final BiConsumer<PacketByteBuf, T> encoder;
         private final Function<PacketByteBuf, T> decoder;

@@ -123,7 +123,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
 		synchronized (this) {
 			ClientTardis old = this.lookup.put(uuid, tardis);
-			AITMod.LOGGER.info("Received TARDIS: " + uuid);
+			AITMod.LOGGER.info("Received TARDIS: {}", tardis);
 
 			if (old != null) {
 				new Thread(old::dispose).start();

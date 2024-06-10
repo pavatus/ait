@@ -293,8 +293,12 @@ public class TardisUtil {
 		);
 	}
 
+	public static Random random() {
+		return RANDOM;
+	}
+
 	public static BlockPos findRandomPlace() {
-		return new BlockPos(RANDOM.nextInt(100000), 0, RANDOM.nextInt(100000));
+		return new BlockPos(RANDOM.nextInt(100_000), 0, RANDOM.nextInt(100_000));
 	}
 
 	public static BlockPos findBlockInTemplate(StructureTemplate template, BlockPos pos, Direction direction, Block targetBlock) {
@@ -363,11 +367,9 @@ public class TardisUtil {
 
 	public static void teleportInside(Tardis tardis, Entity entity) {
 		TardisUtil.teleportWithDoorOffset(entity, tardis.getDoor().getDoorPos());
-		TardisDesktop tardisDesktop = tardis.getDesktop();
 
-		tardis.getDesktop().getConsoles().forEach(console -> {
-			console.findEntity().ifPresent(ConsoleBlockEntity::sync);
-		});
+		tardis.getDesktop().getConsoles().forEach(console ->
+				console.findEntity().ifPresent(ConsoleBlockEntity::sync));
 	}
 
 	public static void teleportToInteriorPosition(Entity entity, BlockPos pos) {
@@ -395,9 +397,11 @@ public class TardisUtil {
 						WorldOps.teleportToWorld(player, world, vec, RotationPropertyHelper.toDegrees(pos.getRotation()) + (isDoor ? 0 : 180f), player.getPitch());
 						player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 					} else {
-						if(entity instanceof EnderDragonEntity
+						if (entity instanceof EnderDragonEntity
 								|| entity instanceof WitherEntity
-								|| entity instanceof WardenEntity) return;
+								|| entity instanceof WardenEntity)
+							return;
+
 						if (entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
 							entity.refreshPositionAndAngles(offset(vec, pos, 0.5f).x, vec.y, offset(vec, pos, 0.5f).z, RotationPropertyHelper.toDegrees(pos.getRotation()) + (isDoor ? 0 : 180f), entity.getPitch());
 						} else {

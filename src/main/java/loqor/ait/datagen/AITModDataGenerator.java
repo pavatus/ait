@@ -22,6 +22,7 @@ import net.minecraft.util.Identifier;
 import java.util.concurrent.CompletableFuture;
 
 public class AITModDataGenerator implements DataGeneratorEntrypoint {
+
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
@@ -517,10 +518,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
 
         provider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
+
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-        provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
-        provider.addTranslation(AITBlocks.CONSOLE, "Console");
-        provider.addTranslation(AITBlocks.CONSOLE_GENERATOR, "Console Generator");
         provider.addTranslation(AITItems.IRON_KEY, "Iron Key");
         provider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
         provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
@@ -541,12 +540,15 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+        provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
+        provider.addTranslation(AITItems.ZEITON_SHARD, "Zeiton Shard");
+        provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
+        provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
+
         provider.addTranslation(AITBlocks.DETECTOR_BLOCK, "Interior Detector Block");
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
         provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
         provider.addTranslation(AITBlocks.MONITOR_BLOCK, "Monitor");
-        //provider.addTranslation(AITBlocks.CONSOLE_ROOM_PORT_BLOCK, "Console Room Port");
-        //provider.addTranslation(AITBlocks.ENGINE_ROOM_PORT_BLOCK, "Engine Room Port");
         provider.addTranslation(AITBlocks.ARTRON_COLLECTOR_BLOCK, "Artron Collector");
         provider.addTranslation(AITBlocks.ZEITON_BLOCK, "Zeiton Block");
         provider.addTranslation(AITBlocks.ZEITON_CLUSTER, "Zeiton Cluster");
@@ -554,25 +556,19 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.LARGE_ZEITON_BUD, "Large Zeiton Bud");
         provider.addTranslation(AITBlocks.MEDIUM_ZEITON_BUD, "Medium Zeiton Bud");
         provider.addTranslation(AITBlocks.SMALL_ZEITON_BUD, "Small Zeiton Bud");
-        provider.addTranslation(AITItems.ZEITON_SHARD, "Zeiton Shard");
-        provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
-        provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
         provider.addTranslation(AITBlocks.PLAQUE_BLOCK, "TARDIS Plaque");
         provider.addTranslation(AITBlocks.WALL_MONITOR_BLOCK, "Wall Monitor");
+        provider.addTranslation(AITBlocks.ENVIRONMENT_PROJECTOR, "Environment Projector");
+        provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
+        provider.addTranslation(AITBlocks.CONSOLE, "Console");
+        provider.addTranslation(AITBlocks.CONSOLE_GENERATOR, "Console Generator");
+
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
-        provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
-        provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
-        provider.addTranslation("message.ait.riftscanner.info3", "This is not a rift chunk");
-        provider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
+
         provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ACTIVE");
         provider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocol 116: INACTIVE");
-        provider.addTranslation("message.ait.remoteitem.warning1", "The TARDIS is out of fuel and cannot dematerialise");
-        provider.addTranslation("message.ait.remoteitem.warning2", "The TARDIS is refueling and is unable to dematerialise");
-        provider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
-        provider.addTranslation("tooltip.ait.remoteitem.notardis", "Remote does not identify with any TARDIS");
         provider.addTranslation("tardis.message.control.antigravs.active", "Antigravs: ACTIVE");
         provider.addTranslation("tardis.message.control.antigravs.inactive", "Antigravs: INACTIVE");
-        provider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
         provider.addTranslation("tardis.message.control.fast_return.destination_nonexistent", "Fast Return: Last Position Nonexistent!");
         provider.addTranslation("tardis.message.control.fast_return.last_position", "Fast Return: LAST POSITION SET");
         provider.addTranslation("tardis.message.control.fast_return.current_position", "Fast Return: CURRENT POSITION SET");
@@ -588,6 +584,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.destination_biome", "Destination Biome: ");
         provider.addTranslation("tardis.message.control.increment.info", "Increment: ");
         provider.addTranslation("tardis.message.control.randomiser.poscontrol", "Destination: ");
+        provider.addTranslation("tardis.exterior.sonic.repairing", "Repairing");
+        provider.addTranslation("tardis.tool.cannot_repair", "Unable to repair TARDIS with current tool");
+        provider.addTranslation("tardis.key.identity_error", "TARDIS does not identify with key");
+        provider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
+        provider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
+        provider.addTranslation("tardis.message.control.siege.enabled", "Siege Mode: Enabled");
+        provider.addTranslation("tardis.message.control.siege.disabled", "Siege Mode: Disabled");
+
         provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
         provider.addTranslation("message.ait.sonic.handbrakedisengaged", "Handbrake disengaged, destination set to current position");
@@ -599,15 +603,19 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
+        provider.addTranslation("message.ait.environment_projector", "Now projecting: %s");
+        provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
+        provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
+        provider.addTranslation("message.ait.riftscanner.info3", "This is not a rift chunk");
+        provider.addTranslation("message.ait.remoteitem.warning1", "The TARDIS is out of fuel and cannot dematerialise");
+        provider.addTranslation("message.ait.remoteitem.warning2", "The TARDIS is refueling and is unable to dematerialise");
+        provider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
+        provider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
+
         provider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
-        provider.addTranslation("tardis.exterior.sonic.repairing", "Repairing");
-        provider.addTranslation("tardis.tool.cannot_repair", "Unable to repair TARDIS with current tool");
-        provider.addTranslation("tardis.key.identity_error", "TARDIS does not identify with key");
-        //
-        provider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
-        provider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
-        provider.addTranslation("tardis.message.control.siege.enabled", "Siege Mode: Enabled");
-        provider.addTranslation("tardis.message.control.siege.disabled", "Siege Mode: Disabled");
+        provider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
+        provider.addTranslation("tooltip.ait.remoteitem.notardis", "Remote does not identify with any TARDIS");
+
         provider.addTranslation("screen.ait.monitor.apply", "Apply");
         provider.addTranslation("screen.ait.monitor.fuel", "Fuel");
         provider.addTranslation("screen.ait.monitor.traveltime", "Travel Time");
@@ -638,7 +646,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("command.ait.riftchunk.getlevel", "AU in rift chunk: %s");
         provider.addTranslation("riftchunk.ait.tracking", "Rift Tracking");
         provider.addTranslation("riftchunk.ait.cooldown", "Rift tracking is on cooldown");
-        provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
         provider.addTranslation("waypoint.position.tooltip", "Position");
         provider.addTranslation("waypoint.dimension.tooltip", "Dimension");
         provider.addTranslation("waypoint.direction.tooltip", "Direction");

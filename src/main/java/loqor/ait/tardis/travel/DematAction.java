@@ -11,6 +11,6 @@ public class DematAction extends Action {
 
     @Override
     public void end(TardisTravel2 travel) {
-        travel.setAction();
+
     }
 }

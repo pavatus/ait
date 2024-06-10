@@ -4,12 +4,13 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.client.models.machines.ShieldsModel;
-import loqor.ait.client.util.ClientLightUtil;
-import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
+import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
@@ -18,7 +19,6 @@ import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -34,9 +34,11 @@ import net.minecraft.util.math.RotationPropertyHelper;
 
 import java.util.Optional;
 
-import static loqor.ait.tardis.animation.ExteriorAnimation.*;
+import static loqor.ait.tardis.animation.ExteriorAnimation.distanceFromTardis;
+import static loqor.ait.tardis.animation.ExteriorAnimation.isNearTardis;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
+
 	private ExteriorModel model;
 	private SiegeModeModel siege;
 	private ShieldsModel shieldsModel;
@@ -45,13 +47,17 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+		this.renderExterior(entity, tickDelta, matrices, vertexConsumers, light, overlay);
+		entity.getWorld().getProfiler().swap("exterior");
+	}
+
+	private void renderExterior(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 		Optional<Tardis> optionalTardis = entity.findTardis();
 
 		if (optionalTardis.isEmpty())
 			return;
 
 		Tardis tardis = optionalTardis.get();
-
 		AbsoluteBlockPos.Directed exteriorPos = tardis.getExteriorPos();
 
 		if (exteriorPos == null)
@@ -78,7 +84,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		matrices.push();
 		matrices.translate(0.5, 0, 0.5);
 
-		if (MinecraftClient.getInstance().player == null) return;
+		if (MinecraftClient.getInstance().player == null)
+			return;
 
 		Identifier texture = exteriorVariant.texture();
 		Identifier emission = exteriorVariant.emission();
@@ -126,7 +133,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			}
 
 			if (emission != null) {
-                boolean alarms = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED);
+				boolean alarms = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED);
 
 				ClientLightUtil.renderEmissivable(
 						tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),
@@ -170,6 +177,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		matrices.scale(0.9f, 0.9f, 0.9f);
 		int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
 		MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), 0);
+
 		matrices.pop();
 	}
 

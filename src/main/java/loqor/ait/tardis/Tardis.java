@@ -1,5 +1,6 @@
 package loqor.ait.tardis;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
@@ -23,7 +24,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -136,7 +136,12 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return handlers;
 	}
 
-	public @NotNull <T extends TardisComponent> T handler(TardisComponent.Id type) {
+	public <T extends TardisComponent> T handler(TardisComponent.Id type) {
+		if (this.handlers == null) {
+			AITMod.LOGGER.error("Asked for a handler too early on {}", Integer.toHexString(hashCode()));
+			return null;
+		}
+
 		return this.handlers.get(type);
 	}
 

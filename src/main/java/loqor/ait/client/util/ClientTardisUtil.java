@@ -1,10 +1,6 @@
 package loqor.ait.client.util;
 
-import loqor.ait.client.models.doors.DoorModel;
-import loqor.ait.client.models.exteriors.ExteriorModel;
-import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.AITMod;
-import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.tardis.Tardis;
@@ -20,7 +16,8 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.UUID;
 
-import static loqor.ait.tardis.util.TardisUtil.*;
+import static loqor.ait.tardis.util.TardisUtil.CHANGE_EXTERIOR;
+import static loqor.ait.tardis.util.TardisUtil.SNAP;
 
 public class ClientTardisUtil {
 	public static final int MAX_POWER_DELTA_TICKS = 3 * 20;
@@ -57,41 +54,34 @@ public class ClientTardisUtil {
 		ClientPlayNetworking.send(SNAP, buf);
 	}
 
-	public static void setDestinationFromScreen(UUID tardisId, UUID playerUuid) {
-		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeUuid(tardisId);
-		buf.writeUuid(playerUuid);
-		ClientPlayNetworking.send(FIND_PLAYER, buf);
-	}
-
 	public static boolean isPlayerInATardis() {
-		if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
-			return false;
-		ClientPlayerEntity player = MinecraftClient.getInstance().player;
-		Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-
-		return found != null;
-	}
+        return MinecraftClient.getInstance().world != null && MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD;
+    }
 
 	/**
 	 * Gets the tardis the player is currently inside
-	 *
-	 * @return
 	 */
+	// FIXME: wow what a waste of resources.
 	public static Tardis getCurrentTardis() {
-		if (!isPlayerInATardis()) return null;
+		if (!isPlayerInATardis())
+			return null;
 
 		ClientPlayerEntity player = MinecraftClient.getInstance().player;
-		if (player == null) return null;
-		Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-		return found;
+
+		if (player == null)
+			return null;
+
+        return TardisUtil.findTardisByInterior(player.getBlockPos(), false);
 	}
 
 	public static double distanceFromConsole() {
-		if (!isPlayerInATardis()) return 0;
+		if (!isPlayerInATardis())
+			return 0;
 
 		ClientPlayerEntity player = MinecraftClient.getInstance().player;
-		if (player == null) return 0;
+
+		if (player == null)
+			return 0;
 
 		Tardis tardis = getCurrentTardis();
 		BlockPos pos = player.getBlockPos();
@@ -100,22 +90,18 @@ public class ClientTardisUtil {
 
 		for (TardisConsole console : tardis.getDesktop().getConsoles()) {
 			double distance = Math.sqrt(pos.getSquaredDistance(console.position()));
-			if (distance < lowest) lowest = distance;
+
+			if (distance < lowest)
+				lowest = distance;
 		}
 
 		return lowest;
 	}
 
-	public static ExteriorModel getExteriorModel(Tardis tardis) {
-		return ClientExteriorVariantRegistry.withParent(tardis.getExterior().getVariant()).model();
-	}
-
-	public static DoorModel getDoorModel(Tardis tardis) {
-		return ClientDoorRegistry.withParent(tardis.getExterior().getVariant().door()).model();
-	}
-
 	public static void tickPowerDelta() {
-		if (!isPlayerInATardis()) return;
+		if (!isPlayerInATardis())
+			return;
+
 		Tardis tardis = getCurrentTardis();
 
 		if (tardis.engine().hasPower() && getPowerDelta() < MAX_POWER_DELTA_TICKS) {

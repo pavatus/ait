@@ -19,4 +19,5 @@ public class AITConfigModel {
 	public float INTERIOR_HUM_VOLUME = 0.2f;
 	public boolean CUSTOM_MENU = true;
 	public boolean SHOW_EXPERIMENTAL_WARNING = false;
+	public boolean PROJECTOR_SKYBOX = true;
 }

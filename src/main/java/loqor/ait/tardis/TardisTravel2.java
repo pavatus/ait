@@ -9,11 +9,6 @@ import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.data.properties.v2.integer.ranged.RangedIntProperty;
 import loqor.ait.tardis.data.properties.v2.integer.ranged.RangedIntValue;
-import loqor.ait.tardis.travel.Action;
-import loqor.ait.tardis.travel.TravelScript;
-import net.minecraft.server.MinecraftServer;
-
-import java.util.List;
 
 public class TardisTravel2 extends KeyedTardisComponent implements TardisTickable {
 
@@ -38,8 +33,6 @@ public class TardisTravel2 extends KeyedTardisComponent implements TardisTickabl
     private final Value<DirectedGlobalPos> lastPosition = LAST_POS.create(this);
     private final Value<DirectedGlobalPos> position = POSITION.create(this);
 
-    private Action action;
-
     public TardisTravel2() {
         super(Id.TRAVEL);
     }
@@ -56,6 +49,14 @@ public class TardisTravel2 extends KeyedTardisComponent implements TardisTickabl
         position.of(this, POSITION);
     }
 
+    public void setHandbrake(boolean value) {
+        handbrake.set(value);
+    }
+
+    public boolean getHandbrake() {
+        return handbrake.get();
+    }
+
     public RangedIntValue speed() {
         return speed;
     }
@@ -70,21 +71,5 @@ public class TardisTravel2 extends KeyedTardisComponent implements TardisTickabl
 
     public Value<DirectedGlobalPos> destination() {
         return destination;
-    }
-
-    public void execute(TravelScript.Builder<?> builder) {
-        List<TravelScript.Builder<?>> streamlined = builder.streamline();
-        streamlined.get(0);
-        this.action = streamlined.get(0);
-
-
-        for (TravelScript.Builder<?> part : streamlined) {
-            part.action()
-        }
-    }
-
-    @Override
-    public void tick(MinecraftServer server) {
-        action.tick(this, server);
     }
 }

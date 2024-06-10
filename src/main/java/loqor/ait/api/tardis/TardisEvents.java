@@ -9,64 +9,77 @@ public final class TardisEvents {
 
 	// Flight
 
-	public static final Event<Demat> DEMAT = EventFactory.createArrayBacked(Demat.class, callbacks -> (tardis) -> {
+	public static final Event<Demat> DEMAT = EventFactory.createArrayBacked(Demat.class, callbacks -> tardis -> {
 		for (Demat callback : callbacks) {
 			return callback.onDemat(tardis);
 		}
 
 		return false;
 	});
-	public static final Event<Mat> MAT = EventFactory.createArrayBacked(Mat.class, callbacks -> (tardis) -> {
+
+	public static final Event<Mat> MAT = EventFactory.createArrayBacked(Mat.class, callbacks -> tardis -> {
 		for (Mat callback : callbacks) {
 			return callback.onMat(tardis);
 		}
 
 		return false;
 	});
-	public static final Event<Landed> LANDED = EventFactory.createArrayBacked(Landed.class, callbacks -> (tardis) -> {
+
+	public static final Event<Landed> LANDED = EventFactory.createArrayBacked(Landed.class, callbacks -> tardis -> {
 		for (Landed callback : callbacks) {
 			callback.onLanded(tardis);
 		}
 	});
-	public static final Event<Crash> CRASH = EventFactory.createArrayBacked(Crash.class, callbacks -> (tardis) -> {
+
+	public static final Event<Crash> CRASH = EventFactory.createArrayBacked(Crash.class, callbacks -> tardis -> {
 		for (Crash callback : callbacks) {
 			callback.onCrash(tardis);
 		}
 	});
 
 	// Power / Fuel
-	public static final Event<NoFuel> OUT_OF_FUEL = EventFactory.createArrayBacked(NoFuel.class, callbacks -> (tardis) -> {
+	public static final Event<NoFuel> OUT_OF_FUEL = EventFactory.createArrayBacked(NoFuel.class, callbacks -> tardis -> {
 		for (NoFuel callback : callbacks) {
 			callback.onNoFuel(tardis);
 		}
 	});
-	public static final Event<LosePower> LOSE_POWER = EventFactory.createArrayBacked(LosePower.class, callbacks -> (tardis) -> {
+
+	public static final Event<LosePower> LOSE_POWER = EventFactory.createArrayBacked(LosePower.class, callbacks -> tardis -> {
 		for (LosePower callback : callbacks) {
 			callback.onLosePower(tardis);
 		}
 	});
-	public static final Event<RegainPower> REGAIN_POWER = EventFactory.createArrayBacked(RegainPower.class, callbacks -> (tardis) -> {
+
+	public static final Event<RegainPower> REGAIN_POWER = EventFactory.createArrayBacked(RegainPower.class, callbacks -> tardis -> {
 		for (RegainPower callback : callbacks) {
 			callback.onRegainPower(tardis);
 		}
 	});
 
 	// Door
-	public static final Event<OpenDoor> DOOR_OPEN = EventFactory.createArrayBacked(OpenDoor.class, callbacks -> ((tardis) -> {
+	public static final Event<OpenDoor> DOOR_OPEN = EventFactory.createArrayBacked(OpenDoor.class, callbacks -> tardis -> {
 		for (OpenDoor callback : callbacks) {
 			callback.onOpen(tardis);
 		}
-	}));
-	public static final Event<CloseDoor> DOOR_CLOSE = EventFactory.createArrayBacked(CloseDoor.class, callbacks -> (((tardis) -> {
+	});
+
+	public static final Event<CloseDoor> DOOR_CLOSE = EventFactory.createArrayBacked(CloseDoor.class, callbacks -> (tardis) -> {
 		for (CloseDoor callback : callbacks) {
 			callback.onClose(tardis);
 		}
-	})));
-	public static final Event<MoveDoor> DOOR_MOVE = EventFactory.createArrayBacked(MoveDoor.class, callbacks -> (((tardis, prev) -> {
+	});
+
+	public static final Event<MoveDoor> DOOR_MOVE = EventFactory.createArrayBacked(MoveDoor.class, callbacks -> (tardis, prev) -> {
 		for (MoveDoor callback : callbacks) {
 			callback.onMove(tardis, prev);
 		}
-	})));
+	});
+
+	public static final Event<EnterTardis> ENTER_TARDIS = EventFactory.createArrayBacked(EnterTardis.class, callbacks -> tardis -> {
+		for (EnterTardis callback : callbacks) {
+			callback.onEnter(tardis);
+		}
+	});
 
 	// Interfaces go down here
 	// todo add functionality for cancelling things ( start by removing the void i think lol ) ( look at PlayerBlockBreakEvents )
@@ -171,5 +184,10 @@ public final class TardisEvents {
 	@FunctionalInterface
 	public interface MoveDoor {
 		void onMove(Tardis tardis, AbsoluteBlockPos.Directed previous);
+	}
+
+	@FunctionalInterface
+	public interface EnterTardis {
+		void onEnter(Tardis tardis);
 	}
 }

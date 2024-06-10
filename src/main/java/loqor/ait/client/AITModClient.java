@@ -17,6 +17,7 @@ import loqor.ait.client.renderers.wearables.AITHudOverlay;
 import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.screens.MonitorScreen;
 import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
+import loqor.ait.client.util.SkyboxUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
@@ -39,6 +40,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -48,6 +50,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.render.DimensionEffects;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.network.PacketByteBuf;
@@ -56,6 +59,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -81,6 +85,8 @@ public class AITModClient implements ClientModInitializer {
         chargedZeitonCrystalPredicate();
         waypointPredicate();
         hammerPredicate();
+
+        DimensionRenderingRegistry.registerSkyRenderer(AITDimensions.TARDIS_DIM_WORLD, SkyboxUtil::renderTardisSky);
 
         AITKeyBinds.init();
 

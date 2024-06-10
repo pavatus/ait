@@ -16,7 +16,6 @@ import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -134,9 +133,8 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 		if (tardis.getDoor().isClosed())
 			return;
 
-		if (tardis.getLockedTardis()) {
+		if (tardis.getLockedTardis())
 			return;
-		}
 
 		if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
 			return;
@@ -153,9 +151,8 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 			return;
 		}
 
-		if (travel.getState() != TardisTravel.State.LANDED) {
+		if (travel.getState() != TardisTravel.State.LANDED)
 			return;
-		}
 
 		TardisUtil.teleportOutside(tardis, entity);
 	}
