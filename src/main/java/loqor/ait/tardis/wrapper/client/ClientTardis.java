@@ -4,6 +4,7 @@ import com.google.gson.InstanceCreator;
 import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisExterior;
@@ -16,20 +17,12 @@ import java.util.UUID;
 
 public class ClientTardis extends Tardis {
 
-	private final UUID check;
+	@Exclude private final UUID check;
 
-	private ClientTardis() {
+	private ClientTardis(UUID check) {
         super();
-
-		this.check = UUID.randomUUID();
+		this.check = check;
     }
-
-	@Override
-	public void dispose() {
-		AITMod.LOGGER.info("Disposing {}... ", Integer.toHexString(check.hashCode()));
-
-		super.dispose();
-	}
 
 	public void setDesktop(TardisDesktop desktop) {
 		desktop.setTardis(this);
@@ -67,6 +60,16 @@ public class ClientTardis extends Tardis {
 	}
 
 	@Override
+	public <T extends TardisComponent> T handler(TardisComponent.Id type) {
+		if (this.handlers == null) {
+			AITMod.LOGGER.error("Asked for a handler too early on {}", this);
+			return null;
+		}
+
+		return super.handler(type);
+	}
+
+	@Override
 	public String toString() {
 		return this.getUuid() + " (" + Integer.toHexString(check.hashCode()) + ")";
 	}
@@ -79,7 +82,7 @@ public class ClientTardis extends Tardis {
 
 		@Override
 		public ClientTardis createInstance(Type type) {
-			return new ClientTardis();
+			return new ClientTardis(UUID.randomUUID());
 		}
 	}
 }

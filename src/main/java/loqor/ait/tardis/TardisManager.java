@@ -12,6 +12,7 @@ import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.tardis.util.TardisMap;
 import loqor.ait.core.util.gson.IdentifierSerializer;
 import loqor.ait.core.util.gson.ItemStackSerializer;
 import loqor.ait.core.util.gson.NbtSerializer;
@@ -34,10 +35,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class TardisManager<T extends Tardis, C> {
@@ -50,7 +51,7 @@ public abstract class TardisManager<T extends Tardis, C> {
 
 	public static final Identifier UPDATE_PROPERTY = new Identifier(AITMod.MOD_ID, "update_property");
 
-	protected final Map<UUID, T> lookup = new HashMap<>();
+	protected final TardisMap<T> lookup = new TardisMap<>();
 
 	protected final Gson networkGson;
 	protected final Gson fileGson;
@@ -164,8 +165,9 @@ public abstract class TardisManager<T extends Tardis, C> {
 		consumer.accept(result);
 	}
 
-	protected T readTardis(Gson gson, String json, Class<T> clazz) {
-		T tardis = gson.fromJson(json, clazz);
+	@SuppressWarnings("unchecked")
+	protected T readTardis(Gson gson, String json) {
+		T tardis = (T) gson.fromJson(json, Tardis.class);
 		Tardis.init(tardis, true);
 
 		return tardis;
@@ -189,12 +191,21 @@ public abstract class TardisManager<T extends Tardis, C> {
 		this.lookup.clear();
 	}
 
-	/**
-	 * @deprecated This method allows you to get currently loaded TARDIS'.
-	 */
-	@Deprecated
-	public Map<UUID, T> getLookup() {
-		return this.lookup;
+	public Collection<UUID> ids() {
+		return this.lookup.keySet();
+	}
+
+	public void forEach(Consumer<T> consumer) {
+		this.lookup.forEach((uuid, t) -> consumer.accept(t));
+	}
+
+	public T find(Predicate<T> predicate) {
+		for (T t : this.lookup.values()) {
+			if (predicate.test(t))
+				return t;
+		}
+
+		return null;
 	}
 
 	public Gson getNetworkGson() {

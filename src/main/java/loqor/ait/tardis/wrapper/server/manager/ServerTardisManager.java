@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 public class ServerTardisManager extends BufferedTardisManager<ServerTardis, ServerPlayerEntity, MinecraftServer> {
 
 	private static ServerTardisManager instance;
-	private final TardisFileManager<ServerTardis> fileManager = new TardisFileManager<>(ServerTardis.class);
+	private final TardisFileManager<ServerTardis> fileManager = new TardisFileManager<>();
 
 	public static void init() {
 		instance = new ServerTardisManager();
@@ -165,7 +165,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 	@Override
 	protected ServerTardis loadTardis(MinecraftServer server, UUID uuid) {
-		return this.fileManager.loadTardis(server, this, uuid, this::readTardis);
+		return this.fileManager.loadTardis(server, this, uuid, this::readTardis, this.lookup::put);
 	}
 
 	@Override

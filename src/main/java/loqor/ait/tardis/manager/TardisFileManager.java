@@ -12,15 +12,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class TardisFileManager<T extends Tardis> {
 
-    private final Class<T> clazz;
     private boolean locked = false;
-
-    public TardisFileManager(Class<T> clazz) {
-        this.clazz = clazz;
-    }
 
     public void delete(MinecraftServer server, UUID uuid) {
         try {
@@ -45,7 +41,7 @@ public class TardisFileManager<T extends Tardis> {
         return result;
     }
 
-    public T loadTardis(MinecraftServer server, TardisManager<T, ?> manager, UUID uuid, TardisLoader<T> function) {
+    public T loadTardis(MinecraftServer server, TardisManager<T, ?> manager, UUID uuid, TardisLoader<T> function, Consumer<T> consumer) {
         if (this.locked)
             return null;
 
@@ -53,8 +49,8 @@ public class TardisFileManager<T extends Tardis> {
             Path file = TardisFileManager.getSavePath(server, uuid, "json");
             String json = Files.readString(file);
 
-            T tardis = function.apply(manager.getFileGson(), json, this.clazz);
-            manager.getLookup().put(tardis.getUuid(), tardis);
+            T tardis = function.apply(manager.getFileGson(), json);
+            consumer.accept(tardis);
             return tardis;
         } catch (IOException e) {
             AITMod.LOGGER.warn("Failed to load tardis with uuid {}!", uuid);
@@ -65,9 +61,7 @@ public class TardisFileManager<T extends Tardis> {
     }
 
     public void saveTardis(MinecraftServer server, TardisManager<T, ?> manager) {
-        for (T tardis : manager.getLookup().values()) {
-            this.saveTardis(server, manager, tardis);
-        }
+        manager.forEach(tardis -> this.saveTardis(server, manager, tardis));
     }
 
     public void saveTardis(MinecraftServer server, TardisManager<T, ?> manager, T tardis) {
@@ -85,6 +79,6 @@ public class TardisFileManager<T extends Tardis> {
 
     @FunctionalInterface
     public interface TardisLoader<T> {
-        T apply(Gson gson, String name, Class<T> clazz);
+        T apply(Gson gson, String name);
     }
 }

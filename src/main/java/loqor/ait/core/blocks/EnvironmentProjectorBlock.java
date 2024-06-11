@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
@@ -27,9 +28,11 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
 
     public static final BooleanProperty ENABLED = Properties.ENABLED;
     public static final BooleanProperty POWERED = Properties.POWERED;
+    public static final BooleanProperty SILENT = BooleanProperty.of("silent");
 
     public EnvironmentProjectorBlock(Settings settings) {
-        super(settings);
+        super(settings.emissiveLighting((state, world, pos) -> state.get(EnvironmentProjectorBlock.ENABLED))
+                .nonOpaque().luminance(value -> value.get(EnvironmentProjectorBlock.ENABLED) ? 9 : 3));
     }
 
     @Nullable
@@ -40,12 +43,14 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
         if (ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos()))
             blockState = blockState.with(ENABLED, true).with(POWERED, true);
 
-        return blockState;
+        return blockState.with(SILENT, ctx.getWorld().getBlockState(
+                ctx.getBlockPos().down()
+        ).isIn(BlockTags.WOOL));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(ENABLED, POWERED);
+        builder.add(ENABLED, POWERED, SILENT);
     }
 
     @Override
@@ -64,11 +69,15 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
                 if (tardis == null)
                     return;
 
-                this.toggle(tardis, null, world, pos, powered);
+                this.toggle(tardis, null, world, pos, state, powered);
             }
 
-            world.setBlockState(pos, state.with(POWERED, powered), Block.NOTIFY_LISTENERS);
+            state = state.with(POWERED, powered);
         }
+
+        world.setBlockState(pos, state.with(SILENT, world.getBlockState(
+                pos.down()).isIn(BlockTags.WOOL)
+        ), Block.NOTIFY_LISTENERS);
     }
 
     @Override
@@ -85,20 +94,23 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
             return ActionResult.PASS;
 
         if (player.isSneaking() && world.getBlockEntity(pos) instanceof EnvironmentProjectorBlockEntity projector) {
-            projector.switchSkybox(tardis, player);
+            projector.switchSkybox(tardis, state, player);
             return ActionResult.SUCCESS;
         }
 
         state = state.cycle(ENABLED);
         world.setBlockState(pos, state, Block.NOTIFY_LISTENERS);
 
-        this.toggle(tardis, player, world, pos, state.get(ENABLED));
+        this.toggle(tardis, player, world, pos, state, state.get(ENABLED));
         return ActionResult.SUCCESS;
     }
 
-    protected void toggle(Tardis tardis, @Nullable PlayerEntity player, World world, BlockPos pos, boolean active) {
+    protected void toggle(Tardis tardis, @Nullable PlayerEntity player, World world, BlockPos pos, BlockState state, boolean active) {
         if (world.getBlockEntity(pos) instanceof EnvironmentProjectorBlockEntity projector)
             projector.toggle(tardis, active);
+
+        if (state.get(SILENT))
+            return;
 
         world.playSound(player, pos, active ? SoundEvents.BLOCK_BEACON_ACTIVATE : SoundEvents.BLOCK_BEACON_DEACTIVATE,
                 SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.1f + 0.9f

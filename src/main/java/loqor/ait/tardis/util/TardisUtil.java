@@ -66,7 +66,6 @@ import qouteall.imm_ptl.core.api.PortalAPI;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
@@ -419,42 +418,17 @@ public class TardisUtil {
 	}
 
 	public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
-		TardisManager<?, ?> manager = TardisManager.getInstance(isServer);
-
-		if (manager == null) {
-			AITMod.LOGGER.error("TardisManager is NULL in findTardisByInterior");
-			AITMod.LOGGER.error("Called server side? " + isServer);
-
-			return null;
-		}
-
-		for (Tardis tardis : manager.getLookup().values()) {
-			if (TardisUtil.inBox(tardis.getDesktop().getCorners(), pos))
-				return tardis;
-		}
-
-		return null;
+		return TardisManager.getInstance(isServer).find(tardis -> TardisUtil.inBox(
+				tardis.getDesktop().getCorners(), pos));
 	}
 
-	public static Tardis findTardisByPosition(AbsoluteBlockPos pos, Supplier<TardisManager<?, ?>> supplier) {
-		Map<UUID, Tardis> matching = new HashMap<>();
-		TardisManager<?, ?> manager = supplier.get();
+	public static Tardis findTardisByPosition(AbsoluteBlockPos pos, TardisManager<?, ?> manager) {
+		Tardis result = manager.find(tardis -> tardis.getDoor().getExteriorPos().equals(pos));
 
-		for (Map.Entry<UUID, ?> entry : manager.getLookup().entrySet()) {
-			Tardis tardis = (Tardis) entry.getValue();
-
-			if (tardis.getDoor().getExteriorPos().equals(pos)) {
-				matching.put(entry.getKey(), tardis);
-			}
-		}
-
-		if (!matching.isEmpty())
-			return matching.values().iterator().next(); // Return the first Tardis object in the Map
-
-		if (manager instanceof ClientTardisManager client)
+		if (result == null && manager instanceof ClientTardisManager client)
 			client.askTardis(pos);
 
-		return null;
+		return result;
 	}
 
 	public static void giveEffectToInteriorPlayers(Tardis tardis, StatusEffectInstance effect) {

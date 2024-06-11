@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public abstract class BufferedTardisManager<T extends ServerTardis, P extends PlayerEntity, C> extends TardisManager<T, C> {
+public abstract class BufferedTardisManager<T extends Tardis, P extends PlayerEntity, C> extends TardisManager<T, C> {
 
     private final ConcurrentHashMap<UUID, List<UUID>> subscribers = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, List<UUID>> buffers = new ConcurrentHashMap<>();

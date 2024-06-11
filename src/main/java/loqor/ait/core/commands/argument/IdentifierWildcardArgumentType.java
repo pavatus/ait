@@ -5,6 +5,8 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.Wildcard;
 import loqor.ait.core.data.base.Identifiable;
@@ -15,12 +17,14 @@ import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.TardisDesktopSchema;
+import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 
 public class IdentifierWildcardArgumentType implements ArgumentType<Wildcard<Identifier>> {
 
@@ -68,10 +72,16 @@ public class IdentifierWildcardArgumentType implements ArgumentType<Wildcard<Ide
         return context.getArgument(name, Wildcard.class);
     }
 
+    public static <T extends Identifiable> CompletableFuture<Suggestions> suggestWildcardIds(SuggestionsBuilder builder, DatapackRegistry<T> registry) {
+        return CommandSource.suggestMatching(registry.toList().stream().map(schema -> schema.id().toString()), builder.suggest("*"));
+    }
+
     @Override
     public Wildcard<Identifier> parse(StringReader reader) throws CommandSyntaxException {
-        if (reader.peek() == '*')
+        if (reader.peek() == '*') {
+            reader.skip();
             return Wildcard.wildcard();
+        }
 
         return Wildcard.of(Identifier.fromCommandInput(reader));
     }

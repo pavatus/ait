@@ -50,7 +50,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.render.DimensionEffects;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.network.PacketByteBuf;
@@ -59,7 +58,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
-import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -72,10 +70,10 @@ public class AITModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
-        ClientDoorRegistry.init(); // TODO move to Registries
 
+        // TODO move to Registries
+        ClientDoorRegistry.init();
         ClientTardisManager.init();
-
 
         setupBlockRendering();
         sonicModelPredicate();
@@ -336,5 +334,6 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.SMALL_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.MACHINE_CASING, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.FABRICATOR, RenderLayer.getTranslucent());
+        map.putBlock(AITBlocks.ENVIRONMENT_PROJECTOR, RenderLayer.getTranslucent());
     }
 }

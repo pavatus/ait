@@ -9,7 +9,6 @@ import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -39,12 +38,15 @@ public class SiegeData extends KeyedTardisComponent implements TardisTickable {
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
 			ServerPlayerEntity player = handler.getPlayer();
 
-			for (ServerTardis tardis : ServerTardisManager.getInstance().getLookup().values()) {
-				if (!tardis.siege().isActive()) continue;
-				if (!Objects.equals(tardis.siege().getHeldPlayerUUID(), player.getUuid())) continue;
+			ServerTardisManager.getInstance().forEach(tardis -> {
+				if (!tardis.siege().isActive())
+					return;
+
+				if (!Objects.equals(tardis.siege().getHeldPlayerUUID(), player.getUuid()))
+					return;
 
 				SiegeTardisItem.placeTardis(tardis, SiegeTardisItem.fromEntity(player));
-			}
+			});
 		});
 	}
 

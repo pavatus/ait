@@ -31,6 +31,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
+import net.minecraft.util.profiler.Profiler;
 
 import java.util.Optional;
 
@@ -40,33 +41,58 @@ import static loqor.ait.tardis.animation.ExteriorAnimation.isNearTardis;
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 
 	private ExteriorModel model;
-	private SiegeModeModel siege;
-	private ShieldsModel shieldsModel;
+	private static final SiegeModeModel siege = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
+	private static final ShieldsModel shieldsModel = new ShieldsModel(ShieldsModel.getTexturedModelData().createModel());;
 
-	public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) {}
+	public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) { }
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		this.renderExterior(entity, tickDelta, matrices, vertexConsumers, light, overlay);
-		entity.getWorld().getProfiler().swap("exterior");
-	}
+		Profiler profiler = entity.getWorld().getProfiler();
+		profiler.push("exterior");
 
-	private void renderExterior(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+		profiler.push("find_tardis");
 		Optional<Tardis> optionalTardis = entity.findTardis();
 
 		if (optionalTardis.isEmpty())
 			return;
 
 		Tardis tardis = optionalTardis.get();
+		profiler.swap("render");
+
+		this.renderExterior(profiler, tardis, entity, tickDelta, matrices, vertexConsumers, light, overlay);
+		profiler.pop();
+
+		profiler.pop();
+	}
+
+	private void renderExterior(Profiler profiler, Tardis tardis, T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+		if (tardis.siege().isActive()) {
+			profiler.push("siege");
+
+			siege.renderWithAnimations(entity, this.siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), light, overlay, 1, 1, 1, 1);
+
+			matrices.pop();
+			profiler.pop();
+
+			profiler.pop();
+			return;
+		}
+
 		AbsoluteBlockPos.Directed exteriorPos = tardis.getExteriorPos();
 
-		if (exteriorPos == null)
+		if (exteriorPos == null) {
+			profiler.pop();
 			return;
+		}
 
 		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardis.getExterior().getVariant());
 		TardisExterior tardisExterior = tardis.getExterior();
 
-		if (tardisExterior == null || exteriorVariant == null) return;
+		if (tardisExterior == null || exteriorVariant == null) {
+			profiler.pop();
+			return;
+		}
 
 		Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
 
@@ -79,13 +105,14 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		BlockState blockState = entity.getCachedState();
 		int k = blockState.get(ExteriorBlock.ROTATION);
 		float h = RotationPropertyHelper.toDegrees(k);
-		int maxLight = LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE;
 
 		matrices.push();
 		matrices.translate(0.5, 0, 0.5);
 
-		if (MinecraftClient.getInstance().player == null)
+		if (MinecraftClient.getInstance().player == null) {
+			profiler.pop();
 			return;
+		}
 
 		Identifier texture = exteriorVariant.texture();
 		Identifier emission = exteriorVariant.emission();
@@ -102,83 +129,97 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-		try {
-			if (tardis.siege().isActive()) {
-				if (siege == null) siege = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
-				siege.renderWithAnimations(entity, this.siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), maxLight, overlay, 1, 1, 1, 1);
-				matrices.pop();
-				return;
-			}
-		} catch (Exception e) {
-			AITMod.LOGGER.error("Failed to render siege mode", e);
+		if (model == null) {
+			profiler.pop();
+			return;
 		}
 
-		String name = tardis.<StatsData>handler(TardisComponent.Id.STATS).getName();
+		String name = tardis.stats().getName();
 		if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
 			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-180f));
 		}
 
-		if (model != null) {
-			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
-			// @TODO uhhh, should we make it so the biome textures are the overgrowth per biome, or should they be separate? - Loqor
-			if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
-				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
-			}
+		model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
+		// @TODO uhhh, should we make it so the biome textures are the overgrowth per biome, or should they be separate? - Loqor
+		if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
+			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+		}
 
-			if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-				Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
-				if (biomeTexture != null && !texture.equals(biomeTexture)) {
-					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
-				}
-			}
+		profiler.push("biome");
 
-			if (emission != null) {
-				boolean alarms = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED);
-
-				ClientLightUtil.renderEmissivable(
-						tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),
-						matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1
-				);
+		if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+			Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
+			if (biomeTexture != null && !texture.equals(biomeTexture)) {
+				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
 			}
+		}
+
+		profiler.pop();
+
+		if (emission != null) {
+			profiler.push("emission");
+			boolean alarms = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED);
+
+			ClientLightUtil.renderEmissivable(
+					tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),
+					matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1
+			);
+
+			profiler.pop();
 		}
 
 		matrices.pop();
 
 		if (tardis.areVisualShieldsActive()) {
+			profiler.push("shields");
 			float alpha;
+
 			float delta = ((tickDelta + MinecraftClient.getInstance().player.age) * 0.03f);
-			if(shieldsModel == null) shieldsModel = new ShieldsModel(ShieldsModel.getTexturedModelData().createModel());
+
 			VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEnergySwirl(this.getEnergySwirlTexture(), delta % 1.0F, (delta * 0.1F) % 1.0F));
+
 			if (isNearTardis(MinecraftClient.getInstance().player, tardis, 15)) {
 				alpha = 1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, tardis) / 15);
+
 				if (entity.getAlpha() != 0.105f)
 					alpha = alpha * entity.getAlpha();
 			} else {
 				alpha = 0f;
 			}
+
 			matrices.push();
 			matrices.translate(0.5F, 0.0F, 0.5F);
-			shieldsModel.render(matrices, vertexConsumer, maxLight, overlay, 0f, 0.25f, 0.5f, Math.min(entity.getAlpha(), alpha));
+
+			shieldsModel.render(matrices, vertexConsumer, light, overlay, 0f, 0.25f, 0.5f, Math.min(entity.getAlpha(), alpha));
+
 			matrices.pop();
+			profiler.pop();
 		}
 
-		if (!tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
+		if (!tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
+			profiler.pop();
 			return;
+		}
 
+		profiler.push("sonic");
 		ItemStack stack = tardis.sonic().get(SonicHandler.HAS_EXTERIOR_SONIC);
 
-		if (stack == null || entity.getWorld() == null)
+		if (stack == null || entity.getWorld() == null) {
+			profiler.pop();
 			return;
+		}
 
 		matrices.push();
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f + h + exteriorVariant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());
 		matrices.translate(exteriorVariant.sonicItemTranslations().x(), exteriorVariant.sonicItemTranslations().y(), exteriorVariant.sonicItemTranslations().z());
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(exteriorVariant.sonicItemRotations()[1]));
 		matrices.scale(0.9f, 0.9f, 0.9f);
+
 		int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
 		MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), 0);
 
 		matrices.pop();
+		profiler.pop();
 	}
 
 	@Override

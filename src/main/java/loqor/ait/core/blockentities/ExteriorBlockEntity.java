@@ -249,8 +249,9 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 	}
 
 	private void findTardisFromPosition() { // should only be used if tardisId is null so we can hopefully refind the tardis
-		Tardis found = TardisUtil.findTardisByPosition(new AbsoluteBlockPos(this.getPos(), this.getWorld()),
-				() -> TardisManager.getInstance(this)
+		Tardis found = TardisUtil.findTardisByPosition(
+				new AbsoluteBlockPos(this.getPos(), this.getWorld()),
+				TardisManager.getInstance(this)
 		);
 
 		if (found == null)

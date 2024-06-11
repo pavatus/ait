@@ -5,9 +5,8 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleGeneratorModel;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.util.ClientLightUtil;
-import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
-import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -37,10 +36,8 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-
-		if (ClientConsoleVariantRegistry.getInstance().get(entity.getConsoleVariant().id()) == null) return;
-
-		int maxLight = 0xF000F0;
+		if (ClientConsoleVariantRegistry.getInstance().get(entity.getConsoleVariant().id()) == null)
+			return;
 
         ConsoleModel console = ClientConsoleVariantRegistry.getInstance().get(entity.getConsoleVariant().id()).model();
         Identifier consoleTexture = ClientConsoleVariantRegistry.getInstance().get(entity.getConsoleVariant().id()).texture();
@@ -57,7 +54,7 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
 				Text text = Text.literal("\uD83D\uDD12");
 				TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 				float h = (float) (-textRenderer.getWidth(text) / 2);
-				textRenderer.draw(text, h + 0.35f, 0.0F, 0xFFFFFFFF, false, matrix4f, vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0x000000, maxLight);
+				textRenderer.draw(text, h + 0.35f, 0.0F, 0xFFFFFFFF, false, matrix4f, vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0x000000, light);
 
 				matrices.pop();
 			}
@@ -68,7 +65,10 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
 		RenderSystem.disableBlend();
 
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-		if (entity.getWorld() == null) return;
+
+		if (entity.getWorld() == null)
+			return;
+
 		matrices.translate(0.5f, -1.5f + entity.getWorld().random.nextFloat() * 0.02, -0.5f);
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
 
@@ -76,9 +76,14 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
 			Tardis tardis = entity.findTardis().get();
 
 			if (tardis.isUnlocked(entity.getConsoleVariant())) {
-				console.render(matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(consoleTexture, true)), maxLight, OverlayTexture.DEFAULT_UV, 0.3607843137f, 0.9450980392f, 1, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+				ClientLightUtil.renderEmissive(
+						ClientLightUtil.Renderable.create(console::render), consoleTexture, entity, this.generator.getPart(), matrices, vertexConsumers,
+						light, overlay, 0.3607843137f, 0.9450980392f, 1, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f
+				);
 			} else {
-				console.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCullZOffset(consoleTexture)), maxLight, OverlayTexture.DEFAULT_UV, 0.2f, 0.2f, 0.2f, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+				console.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCullZOffset(consoleTexture)), light,
+						OverlayTexture.DEFAULT_UV, 0.2f, 0.2f, 0.2f, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f
+				);
 			}
 		}
 

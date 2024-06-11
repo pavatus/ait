@@ -9,10 +9,10 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.manager.AgingTardisManager;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -23,14 +23,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftClient> {
+public class ClientTardisManager extends AgingTardisManager<ClientTardis, MinecraftClient> {
 
 	private static ClientTardisManager instance;
 
@@ -119,15 +117,11 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 	}
 
 	private void sync(UUID uuid, String json) {
-		ClientTardis tardis = this.readTardis(this.networkGson, json, ClientTardis.class);
+		ClientTardis tardis = this.readTardis(this.networkGson, json);
+		AITMod.LOGGER.info("Received {}", tardis);
 
 		synchronized (this) {
-			ClientTardis old = this.lookup.put(uuid, tardis);
-			AITMod.LOGGER.info("Received TARDIS: {}", tardis);
-
-			if (old != null) {
-				new Thread(old::dispose).start();
-			}
+			this.updateAge(tardis);
 
 			for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
 				consumer.accept(tardis);
@@ -214,16 +208,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		}
 
 		super.reset();
-	}
-
-	/**
-	 * @deprecated By using this method on the client you accept that the tardis,
-	 * even though exists on the server, might not on the client and client cba to actually ask for it.
-	 */
-	@Override
-	@Deprecated
-	public Map<UUID, ClientTardis> getLookup() {
-		return super.getLookup();
 	}
 
 	public static ClientTardisManager getInstance() {

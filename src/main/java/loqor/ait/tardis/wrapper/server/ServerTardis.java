@@ -30,8 +30,7 @@ import java.util.UUID;
 
 public class ServerTardis extends Tardis {
 
-	@Exclude
-	private boolean lock = false;
+	@Exclude private boolean lock;
 
 	public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorVariantSchema variantType) {
 		super(uuid, new ServerTardisTravel(pos), new ServerTardisDesktop(schema), new ServerTardisExterior(variantType));
@@ -39,6 +38,7 @@ public class ServerTardis extends Tardis {
 
 	private ServerTardis() {
 		super();
+		this.lock = false;
 	}
 
 	public void sync() {

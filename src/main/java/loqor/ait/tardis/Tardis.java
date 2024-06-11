@@ -95,7 +95,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	}
 
 	public SonicHandler sonic() {
-		return this.getHandlers().get(TardisComponent.Id.SONIC);
+		return this.handler(TardisComponent.Id.SONIC);
 	}
 
 	@Deprecated
@@ -137,11 +137,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	}
 
 	public <T extends TardisComponent> T handler(TardisComponent.Id type) {
-		if (this.handlers == null) {
-			AITMod.LOGGER.error("Asked for a handler too early on {}", Integer.toHexString(hashCode()));
-			return null;
-		}
-
 		return this.handlers.get(type);
 	}
 

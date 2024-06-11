@@ -26,6 +26,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
@@ -39,17 +40,27 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		this.renderDoor(entity, matrices, vertexConsumers, light, overlay);
-		entity.getWorld().getProfiler().swap("door");
-	}
+		Profiler profiler = entity.getWorld().getProfiler();
+		profiler.push("door");
 
-	private void renderDoor(T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+		profiler.push("find_tardis");
 		Optional<Tardis> optionalTardis = entity.findTardis();
 
 		if (optionalTardis.isEmpty())
 			return;
 
 		Tardis tardis = optionalTardis.get();
+		profiler.swap("render");
+
+		this.renderDoor(profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
+		profiler.pop();
+
+		profiler.pop();
+	}
+
+	private void renderDoor(Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+		if (tardis.siege().isActive())
+			return;
 
 		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardis.getExterior().getVariant());
 		ClientDoorSchema variant = ClientDoorRegistry.withParent(exteriorVariant.parent().door());
@@ -61,13 +72,11 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		if (model == null)
 			this.model = variant.model();
 
+		if (model == null)
+			return;
+
 		BlockState blockState = entity.getCachedState();
 		float k = blockState.get(DoorBlock.FACING).asRotation();
-
-		matrices.push();
-		matrices.translate(0.5, 0, 0.5);
-		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(k));
-		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
 		Identifier texture = exteriorVariant.texture();
 
@@ -81,37 +90,43 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		) {
 			BlockPos pos = tardis.travel().getPosition();
 			World world = tardis.travel().getPosition().getWorld();
+
 			if (world != null) {
-				int lightConst = 524296; // 1 / maxLight;
+				int lightConst = 524296;
 				int i = world.getLightLevel(LightType.SKY, pos);
 				int j = world.getLightLevel(LightType.BLOCK, pos);
-				light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight()
-						? (i / 15) + j > 0 ? j + 13 : j
+
+				light = (i + j > 15 ? (15 * 2) + (j > 0 ? 0 : -5) : world.isNight() ? (i / 15) + j > 0 ? j + 13 : j
 						: i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j)) * lightConst;
 			}
 		}
 
-		if (model != null) {
-			if (!tardis.siege().isActive()) {
-				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
-				if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
-					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
-				}
-			}
+		matrices.push();
+		matrices.translate(0.5, 0, 0.5);
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(k));
+		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-			ClientLightUtil.renderEmissivable(
-					tardis.engine().hasPower(), model::renderWithAnimations, exteriorVariant.emission(), entity,
-					this.model.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
-			);
+		model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
 
-			if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-				Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
-				if (biomeTexture != null && !texture.equals(biomeTexture)) {
-					model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
-				}
-			}
+		if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
+			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
 		}
 
-		matrices.pop();
+        profiler.push("emission");
+        ClientLightUtil.renderEmissivable(
+                tardis.engine().hasPower(), model::renderWithAnimations, exteriorVariant.emission(), entity,
+                this.model.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
+        );
+
+        profiler.swap("biome");
+        if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+            Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
+            if (biomeTexture != null && !texture.equals(biomeTexture)) {
+                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
+            }
+        }
+
+        matrices.pop();
+		profiler.pop();
 	}
 }

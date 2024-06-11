@@ -3,7 +3,9 @@ package loqor.ait.core.blockentities;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.core.blocks.EnvironmentProjectorBlock;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -44,14 +46,16 @@ public class EnvironmentProjectorBlockEntity extends LinkableBlockEntity {
         nbt.putString("dimension", this.current.getValue().toString());
     }
 
-    public void switchSkybox(Tardis tardis, PlayerEntity player) {
+    public void switchSkybox(Tardis tardis, BlockState state, PlayerEntity player) {
         RegistryKey<World> next = findNext(world.getServer(), this.current);
 
-        player.sendMessage(Text.translatable("message.ait.environment_projector", next.getValue()));
+        player.sendMessage(Text.translatable("message.ait.environment_projector", next.getValue().toString()));
         AITMod.LOGGER.debug("Last: {}, next: {}", this.current, next);
 
         this.current = next;
-        this.apply(tardis);
+
+        if (state.get(EnvironmentProjectorBlock.ENABLED))
+            this.apply(tardis);
     }
 
     public void toggle(Tardis tardis, boolean active) {
@@ -67,7 +71,10 @@ public class EnvironmentProjectorBlockEntity extends LinkableBlockEntity {
     }
 
     public void disable(Tardis tardis) {
-        tardis.stats().skybox().set(DEFAULT);
+        Value<RegistryKey<World>> value = tardis.stats().skybox();
+
+        if (same(this.current, value.get()))
+            value.set(DEFAULT);
     }
 
     @Override
@@ -89,7 +96,7 @@ public class EnvironmentProjectorBlockEntity extends LinkableBlockEntity {
         ServerWorld found = first;
 
         while (iter.hasNext()) {
-            if (found.getRegistryKey().getValue().equals(last.getValue())) {
+            if (same(found.getRegistryKey(), last)) {
                 if (!iter.hasNext())
                     break;
 
@@ -100,5 +107,9 @@ public class EnvironmentProjectorBlockEntity extends LinkableBlockEntity {
         }
 
         return first.getRegistryKey();
+    }
+
+    private static boolean same(RegistryKey<World> a, RegistryKey<World> b) {
+        return a == b || a.getValue().equals(b.getValue());
     }
 }
