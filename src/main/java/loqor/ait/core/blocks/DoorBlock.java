@@ -105,6 +105,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 				expansionForward.multiply(1.2)).stretch(
 						expansionBehind);
 
+		// FIXME: loqor fix this pls, siege mode makes the door have no shape and it crashes the game
 		Box doorShape = this.getOutlineShape(state, world, pos, ShapeContext.of(entity)).getBoundingBox().offset(pos);
 
 		double insideBlockExpanded = 1.0E-7D;
@@ -113,7 +114,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 		Box biggerDoorShape = doorShape.expand(insideBlockExpanded);
 
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if(biggerEntityBox.intersects(biggerDoorShape)) {
+		if (biggerEntityBox.intersects(biggerDoorShape)) {
 			if (blockEntity instanceof DoorBlockEntity door)
 				door.onEntityCollision(entity);
 		}

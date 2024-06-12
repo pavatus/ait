@@ -39,13 +39,11 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState blockState = this.getDefaultState();
+        boolean powered = ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos());
 
-        if (ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos()))
-            blockState = blockState.with(ENABLED, true).with(POWERED, true);
-
-        return blockState.with(SILENT, ctx.getWorld().getBlockState(
-                ctx.getBlockPos().down()
-        ).isIn(BlockTags.WOOL));
+        return blockState.with(ENABLED, powered).with(POWERED, powered)
+                .with(SILENT, ctx.getWorld().getBlockState(ctx.getBlockPos().down())
+                        .isIn(BlockTags.WOOL));
     }
 
     @Override

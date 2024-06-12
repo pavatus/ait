@@ -80,6 +80,7 @@ public class IdentifierWildcardArgumentType implements ArgumentType<Wildcard<Ide
     public Wildcard<Identifier> parse(StringReader reader) throws CommandSyntaxException {
         if (reader.peek() == '*') {
             reader.skip();
+
             return Wildcard.wildcard();
         }
 
