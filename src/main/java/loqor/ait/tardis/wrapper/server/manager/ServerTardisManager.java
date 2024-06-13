@@ -126,11 +126,11 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	}
 
 	@Override
-	protected void updateTardisProperty(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.Id id, String key, String type, String value) {
+	protected void updateTardisProperty(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.IdLike id, String key, String type, String value) {
 		PacketByteBuf data = PacketByteBufs.create();
 
 		data.writeUuid(tardis.getUuid());
-		data.writeEnumConstant(id);
+		data.writeVarInt(id.index());
 
 		data.writeString(key);
 		data.writeString(type);
@@ -140,13 +140,13 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	}
 
 	@Override
-	protected void updateTardisProperty(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.Id id, Value<?> property) {
+	protected void updateTardisProperty(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.IdLike id, Value<?> property) {
 		PacketByteBuf data = PacketByteBufs.create();
 
 		data.writeUuid(tardis.getUuid());
 		data.writeByte(Property.Mode.forValue(property));
 
-		data.writeEnumConstant(id);
+		data.writeVarInt(id.index());
 		data.writeString(property.getProperty().getName());
 		property.write(data);
 
@@ -154,10 +154,10 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	}
 
 	@Override
-	protected void updateTardis(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.Id id, String json) {
+	protected void updateTardis(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.IdLike id, String json) {
 		PacketByteBuf data = PacketByteBufs.create();
 		data.writeUuid(tardis.getUuid());
-		data.writeEnumConstant(id);
+		data.writeVarInt(id.index());
 
 		data.writeString(json);
 		ServerPlayNetworking.send(player, UPDATE, data);

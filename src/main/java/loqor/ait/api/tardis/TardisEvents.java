@@ -1,7 +1,8 @@
 package loqor.ait.api.tardis;
 
-import loqor.ait.tardis.Tardis;
+import loqor.ait.client.screens.interior.InteriorSettingsScreen;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.Tardis;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
@@ -78,6 +79,12 @@ public final class TardisEvents {
 	public static final Event<EnterTardis> ENTER_TARDIS = EventFactory.createArrayBacked(EnterTardis.class, callbacks -> tardis -> {
 		for (EnterTardis callback : callbacks) {
 			callback.onEnter(tardis);
+		}
+	});
+
+	public static final Event<SettingsSetup> SETTINGS_SETUP = EventFactory.createArrayBacked(SettingsSetup.class, callbacks -> screen -> {
+		for (SettingsSetup callback : callbacks) {
+			callback.onSetup(screen);
 		}
 	});
 
@@ -189,5 +196,10 @@ public final class TardisEvents {
 	@FunctionalInterface
 	public interface EnterTardis {
 		void onEnter(Tardis tardis);
+	}
+
+	@FunctionalInterface
+	public interface SettingsSetup {
+		void onSetup(InteriorSettingsScreen screen);
 	}
 }

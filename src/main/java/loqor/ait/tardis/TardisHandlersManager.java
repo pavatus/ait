@@ -94,7 +94,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 	 * Do NOT use this setter if you don't know what you're doing. Use {@link loqor.ait.tardis.wrapper.client.ClientTardis#set(TardisComponent)}.
 	 */
 	@Deprecated
-	public <T extends TardisComponent> void set(Id id, T t) {
+	public <T extends TardisComponent> void set(IdLike id, T t) {
 		this.handlers.put(id, t);
 	}
 
@@ -209,11 +209,10 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 				if (LegacyUtil.isLegacyComponent(element))
 					continue;
 
-				Id id = legacy ? LegacyUtil.getLegacyId(key) : Id.valueOf(key);
+				IdLike id = legacy ? LegacyUtil.getLegacyId(key) : TardisComponentRegistry.getInstance().get(key);
 
-				if (id == null) {
-					throw new NullPointerException("Can't find a component id with name '" + entry.getKey() + "'!");
-				}
+				if (id == null)
+					throw new NullPointerException("Can't find a component id with name '" + key + "'!");
 
 				manager.set(id, context.deserialize(element, id.clazz()));
 			}
@@ -226,7 +225,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 			JsonObject result = new JsonObject();
 
 			manager.forEach(component -> result.add(
-                    component.getId().toString(),
+                    component.getId().name(),
                     context.serialize(component)
             ));
 

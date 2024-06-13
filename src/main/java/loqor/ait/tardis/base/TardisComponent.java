@@ -27,14 +27,14 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
 	@Exclude
 	protected Tardis tardis;
-	private final Id id;
+	private final IdLike id;
 
 	/**
 	 * Do NOT under any circumstances run logic in this constructor.
 	 * Default field values should be inlined. All logic should be done in an appropriate init method.
 	 * @implNote The {@link TardisComponent#tardis()} will always be null at the time this constructor gets called.
 	 */
-	public TardisComponent(Id id) {
+	public TardisComponent(IdLike id) {
 		this.id = id;
 	}
 
@@ -57,7 +57,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		return this.tardis;
 	}
 
-	public Id getId() {
+	public IdLike getId() {
 		return id;
 	}
 
@@ -154,6 +154,17 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		}
 
 		@Override
+		public TardisComponent get(ClientTardis tardis) {
+			return switch (this) {
+				case DESKTOP -> tardis.getDesktop();
+				case EXTERIOR -> tardis.getExterior();
+				case TRAVEL -> tardis.travel();
+				case HANDLERS -> tardis.getHandlers();
+				default -> tardis.handler(this);
+			};
+		}
+
+		@Override
 		public TardisComponent create() {
 			return this.creator.get();
 		}
@@ -178,15 +189,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 			this.index = i;
 		}
 
-		public TardisComponent get(ClientTardis tardis) {
-			return switch (this) {
-				case DESKTOP -> tardis.getDesktop();
-				case EXTERIOR -> tardis.getExterior();
-				case TRAVEL -> tardis.travel();
-				default -> tardis.handler(this);
-			};
-		}
-
 		public static IdLike[] ids() {
 			return Id.values();
 		}
@@ -197,6 +199,10 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		Class<? extends TardisComponent> clazz();
 		void set(ClientTardis tardis, TardisComponent component);
 
+		default TardisComponent get(ClientTardis tardis) {
+			return tardis.handler(this);
+		}
+
 		TardisComponent create();
 		boolean creatable();
 
@@ -206,6 +212,61 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
 		int index();
 		void index(int i);
+	}
+
+	public static class AbstractId<T extends TardisComponent> implements IdLike {
+
+		private final String name;
+		private final Supplier<T> creator;
+		private final Class<T> clazz;
+
+		private int index;
+
+		public AbstractId(String name, Supplier<T> creator, Class<T> clazz) {
+			this.name = name;
+			this.creator = creator;
+			this.clazz = clazz;
+		}
+
+		@Override
+		public Class<T> clazz() {
+			return this.clazz;
+		}
+
+		@Override
+		public void set(ClientTardis tardis, TardisComponent component) {
+			tardis.set(component);
+		}
+
+		@Override
+		public TardisComponent create() {
+			return this.creator.get();
+		}
+
+		@Override
+		public boolean creatable() {
+			return true;
+		}
+
+		@Override
+		public boolean mutable() {
+			return true;
+		}
+
+		@Override
+		public String name() {
+			return this.name;
+		}
+
+		@Override
+		public int index() {
+			return this.index;
+		}
+
+		@Override
+		public void index(int i) {
+			this.index = i;
+		}
 	}
 
 	public record InitContext(boolean deserialized) implements Initializable.Context {

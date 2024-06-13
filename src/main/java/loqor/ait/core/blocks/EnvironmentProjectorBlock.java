@@ -2,11 +2,10 @@ package loqor.ait.core.blocks;
 
 import loqor.ait.core.blockentities.EnvironmentProjectorBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.link.InteriorLinkableBlock;
+import loqor.ait.tardis.link.InteriorLinkableBlockEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.registry.tag.BlockTags;
@@ -24,7 +23,7 @@ import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
-public class EnvironmentProjectorBlock extends Block implements BlockEntityProvider {
+public class EnvironmentProjectorBlock extends InteriorLinkableBlock {
 
     public static final BooleanProperty ENABLED = Properties.ENABLED;
     public static final BooleanProperty POWERED = Properties.POWERED;
@@ -56,26 +55,8 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
         if (world.isClient())
             return;
 
-        boolean powered = world.isReceivingRedstonePower(pos);
-
-        if (powered != state.get(POWERED)) {
-            if (state.get(ENABLED) != powered) {
-                state = state.with(ENABLED, powered);
-
-                Tardis tardis = TardisUtil.findTardisByInterior(pos, true);
-
-                if (tardis == null)
-                    return;
-
-                this.toggle(tardis, null, world, pos, state, powered);
-            }
-
-            state = state.with(POWERED, powered);
-        }
-
-        world.setBlockState(pos, state.with(SILENT, world.getBlockState(
-                pos.down()).isIn(BlockTags.WOOL)
-        ), Block.NOTIFY_LISTENERS);
+        if (world.getBlockEntity(pos) instanceof EnvironmentProjectorBlockEntity projector)
+            projector.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
     }
 
     @Override
@@ -86,24 +67,13 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
         if (hand != Hand.MAIN_HAND)
             return ActionResult.PASS;
 
-        Tardis tardis = TardisUtil.findTardisByInterior(pos, true);
+        if (world.getBlockEntity(pos) instanceof EnvironmentProjectorBlockEntity projector)
+            return projector.onUse(state, world, pos, player, hand, hit);
 
-        if (tardis == null)
-            return ActionResult.PASS;
-
-        if (player.isSneaking() && world.getBlockEntity(pos) instanceof EnvironmentProjectorBlockEntity projector) {
-            projector.switchSkybox(tardis, state, player);
-            return ActionResult.SUCCESS;
-        }
-
-        state = state.cycle(ENABLED);
-        world.setBlockState(pos, state, Block.NOTIFY_LISTENERS);
-
-        this.toggle(tardis, player, world, pos, state, state.get(ENABLED));
-        return ActionResult.SUCCESS;
+        return ActionResult.PASS;
     }
 
-    protected void toggle(Tardis tardis, @Nullable PlayerEntity player, World world, BlockPos pos, BlockState state, boolean active) {
+    public static void toggle(Tardis tardis, @Nullable PlayerEntity player, World world, BlockPos pos, BlockState state, boolean active) {
         if (world.getBlockEntity(pos) instanceof EnvironmentProjectorBlockEntity projector)
             projector.toggle(tardis, active);
 
@@ -119,7 +89,7 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public InteriorLinkableBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new EnvironmentProjectorBlockEntity(pos, state);
     }
 }

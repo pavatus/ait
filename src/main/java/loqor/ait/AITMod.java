@@ -5,6 +5,7 @@ import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
+import loqor.ait.compat.gravity.GravityHandler;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
@@ -87,6 +88,7 @@ public class AITMod implements ModInitializer {
 		CreakRegistry.init();
 		SequenceRegistry.init();
 
+
 		Registries.getInstance().subscribe(Registries.InitType.COMMON);
 		DoorRegistry.init();
 
@@ -112,6 +114,9 @@ public class AITMod implements ModInitializer {
 		// ip support
 		if (DependencyChecker.hasPortals())
 			PortalsHandler.init();
+
+		if (DependencyChecker.hasGravity())
+			GravityHandler.init();
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
 			TeleportInteriorCommand.register(dispatcher);
@@ -323,6 +328,8 @@ public class AITMod implements ModInitializer {
 		});
 
 		AIT_ITEM_GROUP.initialize();
+
+		Registries.getInstance().subscribe(Registries.InitType.LATE_COMMON);
 	}
 
 	public void entityAttributeRegister() {

@@ -27,10 +27,6 @@ public class PortalsHandler {
 	private static final HashMap<UUID, List<TardisPortal>> portals = new HashMap<>();
 
 	public static void init() {
-		if (!DependencyChecker.hasPortals()) {
-			AITMod.LOGGER.info("no immersive stuff for u pal"); // shouldnt be possible to get here anyway
-			return;
-		}
 		AITMod.LOGGER.info("AIT - Setting up BOTI");
 
 		TardisEvents.DOOR_OPEN.register((PortalsHandler::createPortals));

@@ -66,6 +66,7 @@ import qouteall.imm_ptl.core.api.PortalAPI;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
@@ -458,6 +459,10 @@ public class TardisUtil {
 				list.add(player);
 		}
 		return list;
+	}
+
+	public static List<LivingEntity> getLivingEntitiesInsideInterior(Tardis tardis, Predicate<LivingEntity> predicate) {
+		return TardisUtil.getTardisDimension().getEntitiesByClass(LivingEntity.class, tardis.getDesktop().getCorners().getBox(), predicate);
 	}
 
 	public static List<ServerPlayerEntity> getPlayersInInterior(Tardis tardis) {

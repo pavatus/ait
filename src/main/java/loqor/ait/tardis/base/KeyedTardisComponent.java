@@ -16,7 +16,7 @@ public class KeyedTardisComponent extends TardisComponent {
      *
      * @implNote The {@link TardisComponent#tardis()} will always be null at the time this constructor gets called.
      */
-    public KeyedTardisComponent(Id id) {
+    public KeyedTardisComponent(IdLike id) {
         super(id);
     }
 

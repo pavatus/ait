@@ -6,31 +6,80 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blocks.EnvironmentProjectorBlock;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.v2.Value;
-import loqor.ait.tardis.link.LinkableBlockEntity;
+import loqor.ait.tardis.link.InteriorLinkableBlockEntity;
+import loqor.ait.tardis.link.TardisRef;
+import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Iterator;
-import java.util.Optional;
 
-import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
+import static loqor.ait.core.blocks.EnvironmentProjectorBlock.*;
 
-public class EnvironmentProjectorBlockEntity extends LinkableBlockEntity {
+public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity {
 
     private static final RegistryKey<World> DEFAULT = AITDimensions.TARDIS_DIM_WORLD;
     private RegistryKey<World> current = DEFAULT;
 
     public EnvironmentProjectorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.ENVIRONMENT_PROJECTOR_BLOCK_ENTITY_TYPE, pos, state);
+    }
+
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        boolean powered = world.isReceivingRedstonePower(pos);
+
+        if (powered != state.get(POWERED)) {
+            if (state.get(ENABLED) != powered) {
+                state = state.with(ENABLED, powered);
+
+                Tardis tardis = TardisUtil.findTardisByInterior(pos, true);
+
+                if (tardis == null)
+                    return;
+
+                EnvironmentProjectorBlock.toggle(tardis, null, world, pos, state, powered);
+            }
+
+            state = state.with(POWERED, powered);
+        }
+
+        world.setBlockState(pos, state.with(SILENT, world.getBlockState(
+                pos.down()).isIn(BlockTags.WOOL)
+        ), Block.NOTIFY_LISTENERS);
+    }
+
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        TardisRef ref = this.tardis();
+
+        if (ref.isEmpty())
+            return ActionResult.PASS;
+
+        Tardis tardis = ref.get();
+
+        if (player.isSneaking()) {
+            this.switchSkybox(tardis, state, player);
+            return ActionResult.SUCCESS;
+        }
+
+        state = state.cycle(ENABLED);
+        world.setBlockState(pos, state, Block.NOTIFY_LISTENERS);
+
+        EnvironmentProjectorBlock.toggle(tardis, player, world, pos, state, state.get(ENABLED));
+        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -43,6 +92,7 @@ public class EnvironmentProjectorBlockEntity extends LinkableBlockEntity {
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+
         nbt.putString("dimension", this.current.getValue().toString());
     }
 
@@ -75,18 +125,6 @@ public class EnvironmentProjectorBlockEntity extends LinkableBlockEntity {
 
         if (same(this.current, value.get()))
             value.set(DEFAULT);
-    }
-
-    @Override
-    public Optional<Tardis> findTardis() {
-        if (this.tardisId == null && this.world != null) {
-            Tardis found = findTardisByInterior(pos, !this.world.isClient());
-
-            if (found != null)
-                this.setTardis(found);
-        }
-
-        return super.findTardis();
     }
 
     private static RegistryKey<World> findNext(MinecraftServer server, RegistryKey<World> last) {

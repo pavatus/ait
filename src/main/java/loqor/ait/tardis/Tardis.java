@@ -1,8 +1,8 @@
 package loqor.ait.tardis;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
@@ -29,6 +29,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 public abstract class Tardis extends Initializable<TardisComponent.InitContext> implements Disposable {
+
+	@Exclude private boolean disposed = false;
+	@Exclude private boolean aged = false;
 
 	private UUID uuid;
 	protected TardisTravel travel;
@@ -61,6 +64,8 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 	@Override
 	public void dispose() {
+		this.disposed = true;
+
 		this.desktop.dispose();
 		this.desktop = null;
 
@@ -136,7 +141,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return handlers;
 	}
 
-	public <T extends TardisComponent> T handler(TardisComponent.Id type) {
+	public <T extends TardisComponent> T handler(TardisComponent.IdLike type) {
 		return this.handlers.get(type);
 	}
 
@@ -304,5 +309,17 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	@Deprecated
 	public void markDirty() {
 		this.dirty = false;
+	}
+
+	public boolean isDisposed() {
+		return disposed;
+	}
+
+	public void age() {
+		this.aged = true;
+	}
+
+	public boolean isAged() {
+		return aged;
 	}
 }

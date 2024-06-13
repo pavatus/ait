@@ -8,8 +8,7 @@ import net.minecraft.util.math.Box;
 import java.lang.reflect.Type;
 
 public class Corners {
-	@Exclude
-	private final Box box;
+	@Exclude private final Box box;
 	private final BlockPos first;
 	private final BlockPos second;
 

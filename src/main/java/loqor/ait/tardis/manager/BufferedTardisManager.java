@@ -34,11 +34,11 @@ public abstract class BufferedTardisManager<T extends Tardis, P extends PlayerEn
 
     protected abstract T loadTardis(C c, UUID uuid);
 
-    protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.Id id, String key, String type, String value);
+    protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.IdLike id, String key, String type, String value);
 
-    protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.Id id, Value<?> property);
+    protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.IdLike id, Value<?> property);
 
-    protected abstract void updateTardis(@NotNull P player, T tardis, TardisComponent.Id id, String json);
+    protected abstract void updateTardis(@NotNull P player, T tardis, TardisComponent.IdLike id, String json);
 
     public void updateTardisProperty(@NotNull P player, T tardis, TardisComponent component, String key, String type, String value) {
         this.updateTardisProperty(player, tardis, component.getId(), key, type, value);

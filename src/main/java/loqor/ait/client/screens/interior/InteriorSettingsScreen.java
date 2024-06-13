@@ -2,6 +2,7 @@ package loqor.ait.client.screens.interior;
 
 import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
+import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
@@ -97,6 +98,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 					}
 				}));
 
+		TardisEvents.SETTINGS_SETUP.invoker().onSetup(this);
+
 		this.addButton(
 				new PressableTextWidget(
 						(int) (left + (bgWidth * 0.59f)),
@@ -164,7 +167,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	// this might be useful, so remember this exists and use it later on ( although its giving NTM vibes.. )
-	private void createTextButton(Text text, ButtonWidget.PressAction onPress) {
+	public void createTextButton(Text text, ButtonWidget.PressAction onPress) {
 		this.addButton(
 				new PressableTextWidget(
 						(int) (left + (bgWidth * 0.06f)),

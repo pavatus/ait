@@ -8,6 +8,7 @@ import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
+import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
@@ -176,7 +177,7 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 			return;
 
 		byte mode = buf.readByte();
-		TardisComponent.Id typeId = buf.readEnumConstant(TardisComponent.Id.class);
+		TardisComponent.IdLike typeId = TardisComponentRegistry.getInstance().get(buf.readVarInt());
 
 		String key = buf.readString();
 

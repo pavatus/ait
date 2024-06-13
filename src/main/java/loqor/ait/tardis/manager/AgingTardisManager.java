@@ -22,7 +22,8 @@ public abstract class AgingTardisManager<T extends Tardis, C> extends TardisMana
         if (old == null)
             return;
 
-        AITMod.LOGGER.info("Marking {} as deprecated", old);
+        old.age();
+        AITMod.LOGGER.info("Marking {} as aged", old);
         T realOld = this.ageBuffer.put(old);
 
         if (realOld == null)
@@ -34,7 +35,7 @@ public abstract class AgingTardisManager<T extends Tardis, C> extends TardisMana
 
     @Override
     public void reset() {
-        ageBuffer.clear();
+        this.ageBuffer.clear();
         super.reset();
     }
 }

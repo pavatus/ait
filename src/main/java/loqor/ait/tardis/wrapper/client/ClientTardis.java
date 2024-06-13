@@ -60,7 +60,7 @@ public class ClientTardis extends Tardis {
 	}
 
 	@Override
-	public <T extends TardisComponent> T handler(TardisComponent.Id type) {
+	public <T extends TardisComponent> T handler(TardisComponent.IdLike type) {
 		if (this.handlers == null) {
 			AITMod.LOGGER.error("Asked for a handler too early on {}", this);
 			return null;

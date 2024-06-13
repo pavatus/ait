@@ -12,6 +12,8 @@ import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.registry.impl.TardisComponentRegistry;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.util.TardisMap;
 import loqor.ait.core.util.gson.IdentifierSerializer;
 import loqor.ait.core.util.gson.ItemStackSerializer;
@@ -90,7 +92,8 @@ public abstract class TardisManager<T extends Tardis, C> {
 				.registerTypeAdapter(NbtCompound.class, new NbtSerializer())
 				.registerTypeAdapter(ItemStack.class, new ItemStackSerializer())
 				.registerTypeAdapter(Identifier.class, new IdentifierSerializer())
-				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer());
+				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer())
+				.registerTypeAdapter(TardisComponent.IdLike.class, TardisComponentRegistry.idSerializer());
 	}
 
 	protected GsonBuilder getNetworkGson(GsonBuilder builder) {
