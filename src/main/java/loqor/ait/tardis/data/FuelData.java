@@ -1,18 +1,17 @@
 package loqor.ait.tardis.data;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.tardis.ArtronHolder;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.AITMod;
-import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
-
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -130,4 +129,4 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 			removeFuel(5 * (tardis.tardisHammerAnnoyance + 1));
 		}
 	}
-}\
+}
