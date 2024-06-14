@@ -1389,7 +1389,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Throttle
 		ModelPart throttle = controls.getChild("p_ctrl_5").getChild("bone49").getChild("lever3").getChild("bone52");
-		throttle.roll = throttle.roll + (tardis.travel().speed().get() / (float) tardis.travel().maxSpeed().get());
+		throttle.roll = throttle.roll + (tardis.flight().speed().get() / (float) tardis.flight().maxSpeed().get());
 
 		// Increment
 		ModelPart increment = controls.getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("crank2");

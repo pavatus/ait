@@ -118,7 +118,7 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 		if (state == TardisTravel.State.FLIGHT) {
 			if (!isDrainOnDelay(tardis)) {
 				createDrainDelay(tardis);
-				removeFuel((4 ^ (tardis.travel().speed().get())) * (tardis.tardisHammerAnnoyance + 1));
+				removeFuel((4 ^ (tardis.flight().speed().get())) * (tardis.tardisHammerAnnoyance + 1));
 			}
 
 			if (!tardis.engine().hasPower())

@@ -72,7 +72,7 @@ public class RemoteItem extends LinkableItem {
                     if (world.getBlockState(pos).isReplaceable())
 						temp = pos;
 
-                    tardis.travel().speed().set(tardis.travel().maxSpeed());
+                    tardis.flight().speed().set(tardis.flight().maxSpeed());
                     FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw()))));
                 } else {
                     world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);

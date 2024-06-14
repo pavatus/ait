@@ -824,7 +824,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		ModelPart throttle = alnico.getChild("section1").getChild("controls").getChild("fliplever1").getChild("bone5");
-		throttle.pitch = throttle.pitch + ((tardis.travel().speed().get() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
+		throttle.pitch = throttle.pitch + ((tardis.flight().speed().get() / (float) tardis.flight().maxSpeed().get()) * 1.5f);
 
 		ModelPart handbrake = alnico.getChild("section1").getChild("controls").getChild("biglever").getChild("bone");
 		handbrake.pitch = !tardis.flight().handbrake().get() ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;

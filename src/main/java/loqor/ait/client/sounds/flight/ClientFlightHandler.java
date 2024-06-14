@@ -87,7 +87,7 @@ public class ClientFlightHandler extends SoundHandler {
 	}
 
 	public boolean hasThrottleAndHandbrakeDown() {
-		return (isPlayerInATardis() && tardis() != null && tardis().travel().speed().get() > 0 && tardis().flight().handbrake().get());
+		return (isPlayerInATardis() && tardis() != null && tardis().flight().speed().get() > 0 && tardis().flight().handbrake().get());
 	}
 
 	public void tick(MinecraftClient client) {

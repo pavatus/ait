@@ -903,7 +903,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		ModelPart throttle = steam.getChild("controls").getChild("panel_6").getChild("rot6").getChild("lever9").getChild("bone50");
-		throttle.roll = throttle.roll - ((tardis.travel().speed().get() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
+		throttle.roll = throttle.roll - ((tardis.flight().speed().get() / (float) tardis.flight().maxSpeed().get()) * 1.5f);
 
 		ModelPart increment = steam.getChild("controls").getChild("panel_6").getChild("rot6").getChild("lever10").getChild("bone54");
 		increment.roll = IncrementManager.increment(tardis) >= 10 ? IncrementManager.increment(tardis) >= 100 ? IncrementManager.increment(tardis) >= 1000 ? IncrementManager.increment(tardis) >= 10000 ? increment.roll - (1.3963F * 2) : increment.roll - (1.047225F * 2) : increment.roll - (0.69815F * 2) : increment.roll - 0.69815F : increment.roll;
