@@ -103,7 +103,7 @@ public class SonicHandler extends TardisComponent implements ArtronHolderItem, T
 
 		if (Objects.equals(sonicWhere, HAS_CONSOLE_SONIC) && tardis.getDesktop().findCurrentConsole().isEmpty()) return;
 
-		spawnItem(sonic, Objects.equals(sonicWhere, HAS_CONSOLE_SONIC) ? tardis.getDesktop().findCurrentConsole().get().position() : tardis.getExterior().getExteriorPos());
+		spawnItem(sonic, Objects.equals(sonicWhere, HAS_CONSOLE_SONIC) ? tardis.getDesktop().findCurrentConsole().get().position() : tardis.getExteriorPos());
 		this.clearSonicMark(sonicWhere);
 	}
 
@@ -149,7 +149,7 @@ public class SonicHandler extends TardisComponent implements ArtronHolderItem, T
 			crash.setRepairTicks(repairTicks <= 0 ? 0 : repairTicks - 5);
 
 			if (sfxTicks % SonicItem.SONIC_SFX_LENGTH == 0) {
-				tardis.getExterior().getExteriorPos().getWorld().playSound(null, tardis.getExterior().getExteriorPos(),
+				tardis.getExteriorPos().getWorld().playSound(null, tardis.getExteriorPos(),
 						AITSounds.SONIC_USE, SoundCategory.BLOCKS, 0.5f, 1f);
 			}
 

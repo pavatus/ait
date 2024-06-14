@@ -25,8 +25,8 @@ public class AntiGravsControl extends Control {
 			}
 		}
 		PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED));
-		if(tardis.getExterior().getExteriorPos() != null) {
-			WorldOps.updateIfOnServer(world, tardis.getExterior().getExteriorPos());
+		if(tardis.getExteriorPos() != null) {
+			WorldOps.updateIfOnServer(world, tardis.getExteriorPos());
 		}
 		//messagePlayer(player, PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED));
 		return true;
