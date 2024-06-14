@@ -3,6 +3,7 @@ package loqor.ait.compat.gravity;
 import gravity_changer.EntityTags;
 import gravity_changer.api.GravityChangerAPI;
 import loqor.ait.AITMod;
+import loqor.ait.api.tardis.TardisClientEvents;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
 import loqor.ait.core.entities.BaseControlEntity;
@@ -92,7 +93,14 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
             });
         });
 
-        TardisEvents.SETTINGS_SETUP.register(screen ->
+        TardisComponentRegistry.getInstance().register(ID);
+
+        TardisEvents.LEAVE_TARDIS.register((tardis, entity) -> GravityChangerAPI.getGravityComponent(entity)
+                .setBaseGravityDirection(Direction.DOWN));
+    }
+
+    public static void clientInit() {
+        TardisClientEvents.SETTINGS_SETUP.register(screen ->
                 screen.createDynamicTextButton(() -> Text.translatableWithFallback(
                         "screen.ait.gravity", "> Gravity: %s", screen.tardis().
                                 <GravityHandler>handler(ID).direction.get().getName()
@@ -106,11 +114,6 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
                     DynamicPressableTextWidget dynamic = (DynamicPressableTextWidget) b;
                     dynamic.refresh();
                 }));
-
-        TardisComponentRegistry.getInstance().register(ID);
-
-        TardisEvents.LEAVE_TARDIS.register((tardis, entity) -> GravityChangerAPI.getGravityComponent(entity)
-                .setBaseGravityDirection(Direction.DOWN));
     }
 
     static IdLike ID = new AbstractId<>("GRAVITY", GravityHandler::new, GravityHandler.class);

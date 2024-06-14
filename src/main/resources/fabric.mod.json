@@ -37,7 +37,8 @@
 			"loqor.ait.AITMod"
 		],
 		"client": [
-			"loqor.ait.client.AITModClient"
+			"loqor.ait.client.AITModClient",
+			"loqor.ait.compat.Compat"
 		],
 		"fabric-datagen": [
 			"loqor.ait.datagen.AITModDataGenerator"

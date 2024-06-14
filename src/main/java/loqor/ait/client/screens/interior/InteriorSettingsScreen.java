@@ -2,6 +2,7 @@ package loqor.ait.client.screens.interior;
 
 import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
+import loqor.ait.api.tardis.TardisClientEvents;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
@@ -17,6 +18,9 @@ import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.sound.HumSound;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -100,7 +104,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 					}
 				}));
 
-		TardisEvents.SETTINGS_SETUP.invoker().onSetup(this);
+		TardisClientEvents.SETTINGS_SETUP.invoker().onSetup(this);
 
 		this.addButton(
 				new PressableTextWidget(
