@@ -93,8 +93,8 @@ public class InteriorChangingHandler extends TardisLink {
 		if (tardis.hasGrowthExterior()) {
 			TardisTravel travel = tardis.travel();
 
-			travel.handbrake().set(false);
-			travel.autoLand().set(true);
+			tardis.flight().handbrake().set(false);
+			tardis.flight().autoLand().set(true);
 
 			travel.dematerialise(true, true);
 		}

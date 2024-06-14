@@ -27,8 +27,8 @@ public class FlightUtil {
 	public static void travelTo(Tardis tardis, AbsoluteBlockPos.Directed pos) {
 		TardisTravel travel = tardis.travel();
 
-		travel.handbrake().set(false);
-		travel.autoLand().set(true);
+		tardis.flight().handbrake().set(false);
+		tardis.flight().autoLand().set(true);
 
 		travel.setDestination(pos, true);
 
