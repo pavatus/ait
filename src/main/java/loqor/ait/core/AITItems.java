@@ -4,6 +4,7 @@ import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import loqor.ait.AITMod;
 import loqor.ait.core.item.*;
+import loqor.ait.core.item.blueprint.BlueprintItem;
 import loqor.ait.core.item.link.AbstractLinkItem;
 import loqor.ait.core.item.link.FluidLinkItem;
 import loqor.ait.core.item.link.MercurialLinkItem;

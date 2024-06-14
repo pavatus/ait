@@ -98,19 +98,6 @@ public class DimensionControl extends Control {
 		return String.join(" ", words);
 	}
 
-	public static String capitalizeAndReplaceEach(String input) {
-		// Split the string into words
-		String[] words = input.split("_");
-
-		// Capitalize the first letter of each word
-		for (int i = 0; i < words.length; i++) {
-			words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
-		}
-
-		// Join the words back together with spaces
-		return String.join(" ", words);
-	}
-
 	public static List<ServerWorld> getDimensions(MinecraftServer server) {
 		List<ServerWorld> dims = new ArrayList<>();
 		Iterable<ServerWorld> allDims = server.getWorlds();

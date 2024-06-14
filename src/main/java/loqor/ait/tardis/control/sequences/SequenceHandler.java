@@ -29,6 +29,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 	private int ticks = 0;
 	@Exclude
 	private Sequence activeSequence;
+	private static final Random random = Random.create();
 	private UUID playerUUID;
 
 	public SequenceHandler() {
@@ -86,8 +87,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 
 	public void triggerRandomSequence(boolean setTicksTo0) {
 		if (setTicksTo0) ticks = 0;
-		// TODO: replace with built-in registry random
-		int rand = Random.create().nextBetween(0, SequenceRegistry.REGISTRY.size());
+		int rand = random.nextBetween(0, SequenceRegistry.REGISTRY.size());
 		Sequence sequence = SequenceRegistry.REGISTRY.get(rand);
 
 		if (sequence == null)
