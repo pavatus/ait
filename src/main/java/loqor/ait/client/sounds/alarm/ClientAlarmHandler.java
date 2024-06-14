@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 // All this is CLIENT ONLY!!
 // Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
-// todo create a ServerAlarmHandler if necessary eg in future when we do more of the stuff on the trello to do with alarms.
 public class ClientAlarmHandler extends SoundHandler {
 	public static LoopingSound CLOISTER_INTERIOR;
 

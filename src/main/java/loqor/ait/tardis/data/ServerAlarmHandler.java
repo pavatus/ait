@@ -2,7 +2,9 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
@@ -14,7 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 
 // use this as reference for starting other looping sounds on the exterior
-public class ServerAlarmHandler extends TardisLink {
+public class ServerAlarmHandler extends TardisComponent implements TardisTickable {
 	public static final int CLOISTER_LENGTH_TICKS = 3 * 20;
 	private int soundCounter = 0; // decides when to start the next cloister sound
 
@@ -45,9 +47,7 @@ public class ServerAlarmHandler extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
-
-		ServerTardis tardis = (ServerTardis) tardis();
+		if(tardis.getExteriorPos().getWorld().isClient()) return;
 
 		// @TODO make a new control that makes it (by default) detect hostile entities in the interior plus a check when it's been cleared of all hostile entities - Loqor
 		if (!isEnabled() && PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE)) {
@@ -67,7 +67,7 @@ public class ServerAlarmHandler extends TardisLink {
 
 		if (soundCounter >= CLOISTER_LENGTH_TICKS) {
 			soundCounter = 0;
-			this.getExteriorPos().getWorld().playSound(null, getExteriorPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
+			tardis.getExteriorPos().getWorld().playSound(null, tardis.getExteriorPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
 		}
 	}
 }
