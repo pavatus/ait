@@ -25,6 +25,9 @@ public abstract class InteriorLinkableBlockEntity extends AbstractLinkableBlockE
                         manager.demandTardis(o, uuid))
         );
 
+        if (this.ref.isPresent())
+            this.onLinked();
+
         this.sync();
         this.markDirty();
     }

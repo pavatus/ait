@@ -47,6 +47,13 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity {
         this.ref = new TardisRef(NbtHelper.toUuid(id), uuid -> TardisManager.with(
                 this.world, (o, manager) -> manager.demandTardis(o, uuid))
         );
+
+        if (this.ref.isPresent())
+            this.onLinked();
+    }
+
+    protected void onLinked() {
+
     }
 
     @Override
