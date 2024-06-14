@@ -8,7 +8,7 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.manager.TardisBuilder;
-import loqor.ait.tardis.advancement.TardisCriterions;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;

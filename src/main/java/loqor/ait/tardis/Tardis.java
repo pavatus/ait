@@ -322,4 +322,9 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	public boolean isAged() {
 		return aged;
 	}
+
+	@Override
+	public String toString() {
+		return uuid.toString();
+	}
 }

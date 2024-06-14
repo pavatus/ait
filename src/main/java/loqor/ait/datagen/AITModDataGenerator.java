@@ -632,6 +632,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");
         provider.addTranslation("screen.ait.sonicsettings.back", "Back");
+        provider.addTranslation("screen.ait.gravity", "> Gravity: %s");
 
 
         provider.addTranslation("screen.ait.interor_select.title", "Interior Select");

@@ -3,9 +3,9 @@ package loqor.ait;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
+import loqor.ait.api.AITModInitializer;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
-import loqor.ait.compat.gravity.GravityHandler;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
@@ -27,7 +27,7 @@ import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.advancement.TardisCriterions;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
@@ -47,6 +47,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -67,6 +68,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class AITMod implements ModInitializer {
+
 	public static final String MOD_ID = "ait";
 	public static final Logger LOGGER = LoggerFactory.getLogger("ait");
 	public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
@@ -88,6 +90,8 @@ public class AITMod implements ModInitializer {
 		CreakRegistry.init();
 		SequenceRegistry.init();
 
+		// For all the addon devs
+		FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class, AITModInitializer::onInitializeAIT);
 
 		Registries.getInstance().subscribe(Registries.InitType.COMMON);
 		DoorRegistry.init();
@@ -114,9 +118,6 @@ public class AITMod implements ModInitializer {
 		// ip support
 		if (DependencyChecker.hasPortals())
 			PortalsHandler.init();
-
-		if (DependencyChecker.hasGravity())
-			GravityHandler.init();
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
 			TeleportInteriorCommand.register(dispatcher);
@@ -179,8 +180,8 @@ public class AITMod implements ModInitializer {
 		}));
 
 		TardisEvents.CRASH.register(tardis -> {
-			for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
-				TardisCriterions.CRASH.trigger((ServerPlayerEntity) player);
+			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+				TardisCriterions.CRASH.trigger(player);
 			}
 		});
 
@@ -328,8 +329,6 @@ public class AITMod implements ModInitializer {
 		});
 
 		AIT_ITEM_GROUP.initialize();
-
-		Registries.getInstance().subscribe(Registries.InitType.LATE_COMMON);
 	}
 
 	public void entityAttributeRegister() {

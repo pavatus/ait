@@ -7,7 +7,7 @@ import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.advancement.TardisCriterions;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;

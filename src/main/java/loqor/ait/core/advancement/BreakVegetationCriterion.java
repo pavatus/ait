@@ -1,4 +1,4 @@
-package loqor.ait.tardis.advancement;
+package loqor.ait.core.advancement;
 
 import com.google.gson.JsonObject;
 import loqor.ait.AITMod;
@@ -9,12 +9,12 @@ import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class CrashCriterion extends AbstractCriterion<CrashCriterion.Conditions> {
-	public static final Identifier ID = new Identifier(AITMod.MOD_ID, "tardis_crash");
+public class BreakVegetationCriterion extends AbstractCriterion<BreakVegetationCriterion.Conditions> {
+	public static final Identifier ID = new Identifier(AITMod.MOD_ID, "break_vegetation");
 
 	@Override
-	protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
-		return new Conditions();
+	protected BreakVegetationCriterion.Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+		return new BreakVegetationCriterion.Conditions();
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class CrashCriterion extends AbstractCriterion<CrashCriterion.Conditions>
 	}
 
 	public void trigger(ServerPlayerEntity player) {
-		this.trigger(player, Conditions::requirementsMet);
+		this.trigger(player, BreakVegetationCriterion.Conditions::requirementsMet);
 	}
 
 	public static class Conditions extends AbstractCriterionConditions {

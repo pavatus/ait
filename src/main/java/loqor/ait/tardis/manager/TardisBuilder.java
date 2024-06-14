@@ -72,6 +72,7 @@ public class TardisBuilder {
     }
 
     public ServerTardis build() {
+        long start = System.currentTimeMillis();
         this.validate();
 
         ServerTardis tardis = new ServerTardis(this.uuid, this.pos, this.desktop, this.exterior);
@@ -81,6 +82,7 @@ public class TardisBuilder {
             consumer.accept(tardis);
         }
 
+        AITMod.LOGGER.info("Built {} in {}mst", tardis, System.currentTimeMillis() - start);
         return tardis;
     }
 }

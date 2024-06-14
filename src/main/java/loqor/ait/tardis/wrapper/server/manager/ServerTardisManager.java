@@ -112,7 +112,8 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 	public ServerTardis create(TardisBuilder builder) {
 		ServerTardis tardis = builder.build();
-		this.lookup.put(tardis.getUuid(), tardis);
+		this.lookup.put(tardis);
+
 		return tardis;
 	}
 
@@ -154,10 +155,10 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	}
 
 	@Override
-	protected void updateTardis(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.IdLike id, String json) {
+	protected void updateTardis(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.Id id, String json) {
 		PacketByteBuf data = PacketByteBufs.create();
 		data.writeUuid(tardis.getUuid());
-		data.writeVarInt(id.index());
+		data.writeEnumConstant(id);
 
 		data.writeString(json);
 		ServerPlayNetworking.send(player, UPDATE, data);
@@ -165,7 +166,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 	@Override
 	protected ServerTardis loadTardis(MinecraftServer server, UUID uuid) {
-		return this.fileManager.loadTardis(server, this, uuid, this::readTardis, this.lookup::put);
+        return this.fileManager.loadTardis(server, this, uuid, this::readTardis, this.lookup::put);
 	}
 
 	@Override

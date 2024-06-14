@@ -4,10 +4,10 @@ import gravity_changer.EntityTags;
 import gravity_changer.api.GravityChangerAPI;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
@@ -48,12 +48,10 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     }
 
     private void onTick() {
-        List<LivingEntity> list = TardisUtil.getLivingEntitiesInsideInterior(this.tardis, EntityTags::canChangeGravity);
+        List<LivingEntity> list = TardisUtil.getEntitiesInsideInterior(this.tardis, EntityTags::canChangeGravity);
 
         for (LivingEntity entity : list) {
-            GravityChangerAPI.getGravityComponent(entity).applyGravityDirectionEffect(
-                    this.direction.get(), null, 10
-            );
+            GravityChangerAPI.getGravityComponent(entity).setBaseGravityDirection(this.direction.get());
         }
     }
 
@@ -86,17 +84,32 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
                     return;
 
                 GravityHandler gravity = tardis.handler(ID);
-                gravity.direction.set(buf.readEnumConstant(Direction.class));
+                Direction direction = buf.readEnumConstant(Direction.class);
+
+                gravity.direction.set(direction);
             });
         });
 
-        TardisEvents.SETTINGS_SETUP.register(screen -> screen.createTextButton(Text.translatable("screen.ait.gravity"), button -> {
-            GravityHandler gravity = screen.tardis().handler(ID);
-            syncToServer(screen.tardis(), nextDirection(gravity.direction.get()));
-        }));
+        TardisEvents.SETTINGS_SETUP.register(screen ->
+                screen.createDynamicTextButton(() -> Text.translatableWithFallback(
+                        "screen.ait.gravity", "> Gravity: %s", screen.tardis().
+                                <GravityHandler>handler(ID).direction.get().getName()
+                ), b -> {
+                    GravityHandler gravity = screen.tardis().handler(ID);
+                    Direction next = nextDirection(gravity.direction.get());
+
+                    gravity.direction.set(next, false);
+                    syncToServer(screen.tardis(), next);
+
+                    DynamicPressableTextWidget dynamic = (DynamicPressableTextWidget) b;
+                    dynamic.refresh();
+                }));
 
         TardisComponentRegistry.getInstance().register(ID);
+
+        TardisEvents.LEAVE_TARDIS.register((tardis, entity) -> GravityChangerAPI.getGravityComponent(entity)
+                .setBaseGravityDirection(Direction.DOWN));
     }
 
-    static TardisComponent.IdLike ID = new AbstractId<>("GRAVITY", GravityHandler::new, GravityHandler.class);
+    static IdLike ID = new AbstractId<>("GRAVITY", GravityHandler::new, GravityHandler.class);
 }

@@ -33,11 +33,6 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
     }
 
     @Override
-    public void onCommonInit() {
-        super.onCommonInit();
-    }
-
-    @Override
     public void onClientInit() {
         this.defaults();
         super.onClientInit();

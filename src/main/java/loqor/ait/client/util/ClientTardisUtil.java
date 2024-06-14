@@ -84,8 +84,11 @@ public class ClientTardisUtil {
 			return 0;
 
 		Tardis tardis = getCurrentTardis();
-		BlockPos pos = player.getBlockPos();
 
+		if (tardis == null)
+			return 0;
+
+		BlockPos pos = player.getBlockPos();
 		double lowest = Double.MAX_VALUE;
 
 		for (TardisConsole console : tardis.getDesktop().getConsoles()) {

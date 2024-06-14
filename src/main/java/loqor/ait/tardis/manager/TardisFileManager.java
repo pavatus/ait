@@ -45,15 +45,19 @@ public class TardisFileManager<T extends Tardis> {
         if (this.locked)
             return null;
 
+        long start = System.currentTimeMillis();
+
         try {
             Path file = TardisFileManager.getSavePath(server, uuid, "json");
             String json = Files.readString(file);
 
             T tardis = function.apply(manager.getFileGson(), json);
             consumer.accept(tardis);
+
+            AITMod.LOGGER.info("Deserialized {} in {}ms", tardis, System.currentTimeMillis() - start);
             return tardis;
         } catch (IOException e) {
-            AITMod.LOGGER.warn("Failed to load tardis with uuid {}!", uuid);
+            AITMod.LOGGER.warn("Failed to load {}!", uuid);
             AITMod.LOGGER.warn(e.getMessage());
         }
 

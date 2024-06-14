@@ -5,6 +5,7 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.entity.Entity;
 
 public final class TardisEvents {
 
@@ -76,9 +77,15 @@ public final class TardisEvents {
 		}
 	});
 
-	public static final Event<EnterTardis> ENTER_TARDIS = EventFactory.createArrayBacked(EnterTardis.class, callbacks -> tardis -> {
+	public static final Event<EnterTardis> ENTER_TARDIS = EventFactory.createArrayBacked(EnterTardis.class, callbacks -> (tardis, entity) -> {
 		for (EnterTardis callback : callbacks) {
-			callback.onEnter(tardis);
+			callback.onEnter(tardis, entity);
+		}
+	});
+
+	public static final Event<LeaveTardis> LEAVE_TARDIS = EventFactory.createArrayBacked(LeaveTardis.class, callbacks -> (tardis, entity) -> {
+		for (LeaveTardis callback : callbacks) {
+			callback.onLeave(tardis, entity);
 		}
 	});
 
@@ -195,7 +202,12 @@ public final class TardisEvents {
 
 	@FunctionalInterface
 	public interface EnterTardis {
-		void onEnter(Tardis tardis);
+		void onEnter(Tardis tardis, Entity entity);
+	}
+
+	@FunctionalInterface
+	public interface LeaveTardis {
+		void onLeave(Tardis tardis, Entity entity);
 	}
 
 	@FunctionalInterface

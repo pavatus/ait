@@ -71,7 +71,7 @@ public class ClientTardis extends Tardis {
 
 	@Override
 	public String toString() {
-		return this.getUuid() + " (" + Integer.toHexString(check.hashCode()) + ")";
+		return super.toString() + " (" + Integer.toHexString(check.hashCode()) + ")";
 	}
 
 	public static Object creator() {

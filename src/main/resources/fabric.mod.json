@@ -41,6 +41,9 @@
 		],
 		"fabric-datagen": [
 			"loqor.ait.datagen.AITModDataGenerator"
+		],
+		"ait-main": [
+			"loqor.ait.compat.Compat"
 		]
 	},
 	"mixins": [

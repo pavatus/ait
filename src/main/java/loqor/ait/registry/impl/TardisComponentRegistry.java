@@ -39,18 +39,15 @@ public class TardisComponentRegistry implements Registry {
     @Override
     public void onCommonInit() {
         register(TardisComponent.Id.ids());
-    }
-
-    @Override
-    public void onLateCommonInit() {
-        this.frozen = true;
 
         LOOKUP = new TardisComponent.IdLike[REGISTRY.size()];
         REGISTRY.forEach((name, idLike) -> LOOKUP[idLike.index()] = idLike);
+
+        this.frozen = true;
     }
 
     public void fill(Consumer<TardisComponent> consumer) {
-        for (TardisComponent.IdLike id : REGISTRY.values()) {
+        for (TardisComponent.IdLike id : LOOKUP) {
             consumer.accept(id.create());
         }
     }

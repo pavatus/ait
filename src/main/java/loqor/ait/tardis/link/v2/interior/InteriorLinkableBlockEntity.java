@@ -1,13 +1,13 @@
-package loqor.ait.tardis.link;
+package loqor.ait.tardis.link.v2.interior;
 
-import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.link.v2.AbstractLinkableBlockEntity;
+import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -27,19 +27,5 @@ public abstract class InteriorLinkableBlockEntity extends AbstractLinkableBlockE
 
         this.sync();
         this.markDirty();
-    }
-
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        if(this.hasWorld() && world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
-            super.readNbt(nbt);
-        }
-    }
-
-    @Override
-    public void writeNbt(NbtCompound nbt) {
-        if(this.hasWorld() && world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
-            super.writeNbt(nbt);
-        }
     }
 }

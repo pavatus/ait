@@ -1,10 +1,12 @@
-package loqor.ait.tardis.link;
+package loqor.ait.tardis.link.v2;
 
 import loqor.ait.tardis.TardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -27,6 +29,9 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity {
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
 
+        if (this.ref == null)
+            return;
+
         nbt.putUuid("tardisId", this.ref.getId());
     }
 
@@ -34,7 +39,12 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity {
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
 
-        this.ref = new TardisRef(nbt.getUuid("tardisId"), uuid -> TardisManager.with(
+        NbtElement id = nbt.get("tardisId");
+
+        if (id == null)
+            return;
+
+        this.ref = new TardisRef(NbtHelper.toUuid(id), uuid -> TardisManager.with(
                 this.world, (o, manager) -> manager.demandTardis(o, uuid))
         );
     }

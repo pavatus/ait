@@ -6,6 +6,7 @@ import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
+import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.HumsRegistry;
@@ -32,6 +33,7 @@ import net.minecraft.util.math.RotationAxis;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static loqor.ait.tardis.TardisTravel.State.FLIGHT;
 import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
@@ -167,20 +169,28 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	// this might be useful, so remember this exists and use it later on ( although its giving NTM vibes.. )
-	public void createTextButton(Text text, ButtonWidget.PressAction onPress) {
-		this.addButton(
-				new PressableTextWidget(
-						(int) (left + (bgWidth * 0.06f)),
-						(int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
-						this.textRenderer.getWidth(text),
-						10,
-						text,
-						onPress,
-						this.textRenderer
-				)
+	public PressableTextWidget createTextButton(Text text, ButtonWidget.PressAction onPress) {
+		PressableTextWidget result = new PressableTextWidget(
+				(int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
+				this.textRenderer.getWidth(text), 10, text, onPress, this.textRenderer
 		);
 
+		this.addButton(result);
 		choicesCount++;
+
+		return result;
+	}
+
+	public DynamicPressableTextWidget createDynamicTextButton(Supplier<Text> text, ButtonWidget.PressAction onPress) {
+		DynamicPressableTextWidget result = new DynamicPressableTextWidget(
+				(int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
+				this.textRenderer.getWidth(text.get()), 10, text, onPress, this.textRenderer
+		);
+
+		this.addButton(result);
+		choicesCount++;
+
+		return result;
 	}
 
 	public void backToExteriorChangeScreen() {

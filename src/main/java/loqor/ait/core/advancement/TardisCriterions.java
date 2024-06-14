@@ -1,4 +1,4 @@
-package loqor.ait.tardis.advancement;
+package loqor.ait.core.advancement;
 
 import net.minecraft.advancement.criterion.Criteria;
 

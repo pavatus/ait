@@ -1,4 +1,4 @@
-package loqor.ait.tardis.link;
+package loqor.ait.tardis.link.v2.interior;
 
 import loqor.ait.core.AITDimensions;
 import net.minecraft.block.Block;

@@ -38,7 +38,7 @@ public abstract class BufferedTardisManager<T extends Tardis, P extends PlayerEn
 
     protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.IdLike id, Value<?> property);
 
-    protected abstract void updateTardis(@NotNull P player, T tardis, TardisComponent.IdLike id, String json);
+    protected abstract void updateTardis(@NotNull P player, T tardis, TardisComponent.Id id, String json);
 
     public void updateTardisProperty(@NotNull P player, T tardis, TardisComponent component, String key, String type, String value) {
         this.updateTardisProperty(player, tardis, component.getId(), key, type, value);
@@ -51,7 +51,12 @@ public abstract class BufferedTardisManager<T extends Tardis, P extends PlayerEn
     }
 
     public void updateTardis(@NotNull P player, T tardis, TardisComponent component) {
-        this.updateTardis(player, tardis, component.getId(), this.networkGson.toJson(component));
+        if (!(component.getId() instanceof TardisComponent.Id id)) {
+            AITMod.LOGGER.error("Part-update for non-AIT components is not supported! Use properties instead.");
+            return;
+        }
+
+        this.updateTardis(player, tardis, id, this.networkGson.toJson(component));
         this.checkForceSync(player, tardis);
     }
 

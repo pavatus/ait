@@ -1,4 +1,4 @@
-package loqor.ait.tardis.link;
+package loqor.ait.tardis.link.v2;
 
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.Disposable;

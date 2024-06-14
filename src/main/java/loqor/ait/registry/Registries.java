@@ -59,8 +59,7 @@ public class Registries {
     public enum InitType {
         CLIENT(Registry::onClientInit),
         SERVER(Registry::onServerInit),
-        COMMON(Registry::onCommonInit),
-        LATE_COMMON(Registry::onLateCommonInit);
+        COMMON(Registry::onCommonInit);
 
         private final Consumer<Registry> consumer;
 

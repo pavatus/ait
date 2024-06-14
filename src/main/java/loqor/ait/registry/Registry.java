@@ -1,7 +1,6 @@
 package loqor.ait.registry;
 
 public interface Registry {
-    default void onLateCommonInit() { }
     default void onCommonInit() { }
     default void onClientInit() { }
     default void onServerInit() { }

@@ -6,8 +6,8 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blocks.EnvironmentProjectorBlock;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.v2.Value;
-import loqor.ait.tardis.link.InteriorLinkableBlockEntity;
-import loqor.ait.tardis.link.TardisRef;
+import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
+import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -78,7 +78,7 @@ public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity
         state = state.cycle(ENABLED);
         world.setBlockState(pos, state, Block.NOTIFY_LISTENERS);
 
-        EnvironmentProjectorBlock.toggle(tardis, player, world, pos, state, state.get(ENABLED));
+        EnvironmentProjectorBlock.toggle(tardis, null, world, pos, state, state.get(ENABLED));
         return ActionResult.SUCCESS;
     }
 

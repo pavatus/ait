@@ -1,6 +1,7 @@
 package loqor.ait.tardis;
 
 import com.google.gson.*;
+import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.registry.impl.TardisComponentRegistry;
@@ -200,6 +201,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 			Map<String, JsonElement> map = json.getAsJsonObject().asMap();
 
 			boolean legacy = LegacyUtil.isHandlersLegacy(map);
+			TardisComponentRegistry registry = TardisComponentRegistry.getInstance();
 
 			for (Map.Entry<String, JsonElement> entry : map.entrySet()) {
 				String key = entry.getKey();
@@ -209,12 +211,24 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 				if (LegacyUtil.isLegacyComponent(element))
 					continue;
 
-				IdLike id = legacy ? LegacyUtil.getLegacyId(key) : TardisComponentRegistry.getInstance().get(key);
+				IdLike id = legacy ? LegacyUtil.getLegacyId(key) : registry.get(key);
 
-				if (id == null)
-					throw new NullPointerException("Can't find a component id with name '" + key + "'!");
+				if (id == null) {
+					AITMod.LOGGER.error("Can't find a component id with name '{}'!", key);
+					continue;
+				}
 
 				manager.set(id, context.deserialize(element, id.clazz()));
+			}
+
+			for (int i = 0; i < manager.handlers.size(); i++) {
+				if (manager.handlers.get(i) != null)
+					continue;
+
+				IdLike id = registry.get(i);
+				AITMod.LOGGER.warn("Appending new component {}", id);
+
+				manager.set(id, id.create());
 			}
 
 			return manager;
