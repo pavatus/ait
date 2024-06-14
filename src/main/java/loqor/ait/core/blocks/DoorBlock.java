@@ -98,6 +98,9 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 		if (world.isClient())
 			return;
 
+		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door && door.findTardis().isPresent() && door.findTardis().get().siege().isActive())
+			return;
+
 		Vec3d expansionBehind = new Vec3d(entity.prevX, entity.prevY, entity.prevZ).subtract(entity.getPos());
 		Vec3d expansionForward = entity.getVelocity();
 
@@ -105,7 +108,6 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 				expansionForward.multiply(1.2)).stretch(
 						expansionBehind);
 
-		// FIXME: loqor fix this pls, siege mode makes the door have no shape and it crashes the game
 		Box doorShape = this.getOutlineShape(state, world, pos, ShapeContext.of(entity)).getBoundingBox().offset(pos);
 
 		double insideBlockExpanded = 1.0E-7D;
