@@ -5,6 +5,7 @@ import gravity_changer.api.GravityChangerAPI;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
+import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.KeyedTardisComponent;
@@ -48,7 +49,8 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     }
 
     private void onTick() {
-        List<LivingEntity> list = TardisUtil.getEntitiesInsideInterior(this.tardis, EntityTags::canChangeGravity);
+        List<LivingEntity> list = TardisUtil.getEntitiesInsideInterior(this.tardis, entity ->
+                !(entity instanceof BaseControlEntity) && EntityTags.canChangeGravity(entity));
 
         for (LivingEntity entity : list) {
             GravityChangerAPI.getGravityComponent(entity).setBaseGravityDirection(this.direction.get());

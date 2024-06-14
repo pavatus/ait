@@ -34,7 +34,7 @@ public class StatsData extends KeyedTardisComponent {
 	private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
 	private static List<String> NAME_CACHE;
 
-	private static final String NAME_KEY = "permission";
+	private static final String NAME_KEY = "name";
 	private static final String PLAYER_CREATOR_NAME_KEY = "player_creator_name";
 	private static final String DATE_KEY = "date";
 
