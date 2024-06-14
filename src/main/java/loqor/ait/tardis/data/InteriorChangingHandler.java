@@ -4,7 +4,9 @@ import loqor.ait.AITMod;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.util.TardisUtil;
@@ -18,7 +20,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.Random;
 
-public class InteriorChangingHandler extends TardisLink {
+public class InteriorChangingHandler extends TardisComponent implements TardisTickable {
     public static final String IS_REGENERATING = "is_regenerating";
 	public static final String QUEUED_INTERIOR = "queued_interior";
 	public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
@@ -121,7 +123,6 @@ public class InteriorChangingHandler extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		if (!isGenerating())
 			return;

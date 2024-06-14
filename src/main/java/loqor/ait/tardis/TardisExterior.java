@@ -4,14 +4,15 @@ import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.tardis.base.TardisTickable;
 import net.minecraft.block.entity.BlockEntity;
 
 import java.util.Optional;
 
-public class TardisExterior extends TardisLink {
+public class TardisExterior extends TardisComponent {
 	private ExteriorCategorySchema exterior;
 	private ExteriorVariantSchema variant;
 
@@ -56,7 +57,7 @@ public class TardisExterior extends TardisLink {
 	}
 
 	public Optional<ExteriorBlockEntity> findExteriorBlock() {
-		BlockEntity found = this.getExteriorPos().getWorld().getBlockEntity(this.getExteriorPos());
+		BlockEntity found = tardis.getExteriorPos().getWorld().getBlockEntity(tardis.getExteriorPos());
 
 		if (!(found instanceof ExteriorBlockEntity))
 			return Optional.empty();

@@ -2,7 +2,8 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
 import loqor.ait.registry.impl.HumsRegistry;
-import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -11,7 +12,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class ServerHumHandler extends TardisLink {
+public class ServerHumHandler extends TardisComponent {
 	public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_hum");
 	public static final Identifier RECEIVE = new Identifier(AITMod.MOD_ID, "receive_hum");
 	private HumSound current;

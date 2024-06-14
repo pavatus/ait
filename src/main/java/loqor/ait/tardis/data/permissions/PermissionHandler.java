@@ -1,13 +1,14 @@
 package loqor.ait.tardis.data.permissions;
 
-import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PermissionHandler extends TardisLink {
+public class PermissionHandler extends TardisComponent {
     private final Map<UUID, PermissionMap> data;
 
     public PermissionHandler(Map<UUID, PermissionMap> map) {

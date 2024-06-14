@@ -5,7 +5,9 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -17,7 +19,7 @@ import net.minecraft.sound.SoundCategory;
 import java.util.Objects;
 import java.util.Optional;
 
-public class SonicHandler extends TardisLink implements ArtronHolderItem {
+public class SonicHandler extends TardisComponent implements ArtronHolderItem, TardisTickable {
 	public static final String HAS_CONSOLE_SONIC = "has_console_sonic";
 	public static final String HAS_EXTERIOR_SONIC = "has_exterior_sonic";
 	private ItemStack console; // The current sonic in the console
@@ -118,7 +120,6 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		if (this.hasSonic(HAS_CONSOLE_SONIC)) {
 			ItemStack sonic = this.get(HAS_CONSOLE_SONIC);

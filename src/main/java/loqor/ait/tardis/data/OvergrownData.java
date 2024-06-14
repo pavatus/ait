@@ -3,14 +3,16 @@ package loqor.ait.tardis.data;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
 import java.util.Random;
 
-public class OvergrownData extends TardisLink {
+public class OvergrownData extends TardisComponent implements TardisTickable {
 	public static final String IS_OVERGROWN = "overgrown";
 	public static final int MAXIMUM_TICKS = 600;
 	public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
@@ -65,7 +67,6 @@ public class OvergrownData extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		if (tardis().isGrowth())
 			return;

@@ -5,7 +5,9 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
@@ -21,7 +23,7 @@ import net.minecraft.server.world.ServerWorld;
 import org.joml.Vector3f;
 
 
-public class TardisCrashData extends TardisLink {
+public class TardisCrashData extends TardisComponent implements TardisTickable {
 	public static final String TARDIS_RECOVERY_STATE = "tardis_recovery_state";
 	public static final String TARDIS_REPAIR_TICKS = "tardis_recovery_ticks";
 
@@ -39,7 +41,6 @@ public class TardisCrashData extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		if (PropertiesHandler.get(tardis(), TARDIS_RECOVERY_STATE) == null) {
 			PropertiesHandler.set(tardis(), TARDIS_RECOVERY_STATE, State.NORMAL);
