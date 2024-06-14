@@ -121,7 +121,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 						getTardis().travel().setStateAndLand(new AbsoluteBlockPos.Directed(this.getBlockPos(), this.getWorld(), DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(user.getBodyYaw()))));
 						if (getTardis().travel().getState() == TardisTravel.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
-						getTardis().travel().autoLand().set(false);
+						getTardis().flight().autoLand().set(false);
 						user.dismountVehicle();
 					}
 				} else {

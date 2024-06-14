@@ -26,7 +26,7 @@ public class RefuelerControl extends Control {
 				return false;
 			}
 		}
-		if (tardis.travel().handbrake().get()) {
+		if (tardis.flight().handbrake().get()) {
 			//if (TardisUtil.isRiftChunk((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getExteriorPos())) {
 			Random random = new Random();
 			tardis.setRefueling(!tardis.isRefueling());

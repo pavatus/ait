@@ -226,7 +226,7 @@ public class TardisUtil {
 										serverPlayer.getBlockZ(),
 										serverPlayer.getWorld(),
 										RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())),
-								tardis.travel().autoLand().get());
+								tardis.flight().autoLand().get());
 
 						FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
 					});

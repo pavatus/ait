@@ -66,7 +66,7 @@ public class WaypointHandler extends TardisLink {
 		if (!this.hasWaypoint())
 			return; // todo move this check to the DEMAT event so the fail to takeoff happens
 
-		this.tardis().travel().autoLand().set(true);
+		this.tardis().flight().autoLand().set(true);
 		FlightUtil.travelTo(tardis(), this.get());
 	}
 

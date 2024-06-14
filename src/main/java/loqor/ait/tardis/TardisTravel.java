@@ -12,6 +12,7 @@ import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
@@ -72,15 +73,8 @@ public class TardisTravel extends KeyedTardisComponent {
 	private static final IntProperty SPEED = new IntProperty("speed", 0);
 	private static final IntProperty MAX_SPEED = new IntProperty("max_speed", 7);
 
-	private static final BoolProperty AUTO_LAND = new BoolProperty("auto_land", false);
-	private static final BoolProperty HANDBRAKE = new BoolProperty("handbrake", true);
-
-
 	private final IntValue speed = SPEED.create(this);
 	private final IntValue maxSpeed = MAX_SPEED.create(this);
-
-	private final BoolValue autoLand = AUTO_LAND.create(this);
-	private final BoolValue handbrake = HANDBRAKE.create(this);
 
 	public TardisTravel(AbsoluteBlockPos.Directed pos) {
 		super(Id.TRAVEL);
@@ -100,14 +94,11 @@ public class TardisTravel extends KeyedTardisComponent {
 	public void onLoaded() {
 		speed.of(this, SPEED);
 		maxSpeed.of(this, MAX_SPEED);
-
-		autoLand.of(this, AUTO_LAND);
-		handbrake.of(this, HANDBRAKE);
 	}
 
 	static {
 		TardisEvents.LOSE_POWER.register(tardis ->
-				tardis.travel().autoLand().set(false));
+				tardis.flight().autoLand().set(false));
 	}
 
 	public IntValue speed() {
@@ -116,14 +107,6 @@ public class TardisTravel extends KeyedTardisComponent {
 
 	public IntValue maxSpeed() {
 		return maxSpeed;
-	}
-
-	public BoolValue autoLand() {
-		return autoLand;
-	}
-
-	public BoolValue handbrake() {
-		return handbrake;
 	}
 
 	public boolean isCrashing() {
@@ -154,8 +137,8 @@ public class TardisTravel extends KeyedTardisComponent {
 		int speed = this.speed.get();
 		State state = this.getState();
 
-		boolean handbrake = tardis.travel().handbrake().get();
-		boolean autopilot = this.autoLand.get();
+		boolean handbrake = tardis.flight().handbrake().get();
+		boolean autopilot = tardis.flight().autoLand().get();
 
 		if (speed > 0 && state == State.LANDED && !handbrake && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
 			this.dematerialise(autopilot);
@@ -189,7 +172,7 @@ public class TardisTravel extends KeyedTardisComponent {
 
 	public void increaseSpeed() {
 		// Stop speed from going above 1 if autopilot is enabled, and we're in flight
-		if (this.speed.get() > 0 && this.getState() == State.FLIGHT && this.autoLand.get()) {
+		if (this.speed.get() > 0 && this.getState() == State.FLIGHT && tardis.flight().autoLand().get()) {
 			return;
 		}
 
@@ -257,7 +240,7 @@ public class TardisTravel extends KeyedTardisComponent {
 
 		setDematTicks(getDematTicks() + 1);
 
-		if (tardis.travel().handbrake().get()) {
+		if (tardis.flight().handbrake().get()) {
 			// cancel materialise
 			this.cancelDemat();
 			return;
@@ -513,10 +496,10 @@ public class TardisTravel extends KeyedTardisComponent {
 		if (FlightUtil.isDematerialiseOnCooldown(tardis()))
 			return; // cancelled
 
-		if (this.autoLand.get()) {
+		if (tardis.flight().autoLand().get()) {
 			// fulfill all the prerequisites
 			// DoorData.lockTardis(true, tardis(), null, false);
-			this.handbrake.set(false);
+			tardis.flight().handbrake().set(false);
 			this.tardis.getDoor().closeDoors();
 			this.tardis.setRefueling(false);
 
@@ -524,7 +507,7 @@ public class TardisTravel extends KeyedTardisComponent {
 				this.increaseSpeed();
 		}
 
-		this.autoLand.set(withRemat);
+		tardis.flight().autoLand().set(withRemat);
 		ServerWorld world = (ServerWorld) this.getPosition().getWorld();
 
 		if (!ignoreChecks && TardisEvents.DEMAT.invoker().onDemat(tardis())) {
@@ -665,7 +648,7 @@ public class TardisTravel extends KeyedTardisComponent {
 	}
 
 	public void forceLand(@Nullable ExteriorBlockEntity blockEntity) {
-		if (this.autoLand.get() && this.speed.get() > 0) {
+		if (tardis.flight().autoLand().get() && this.speed.get() > 0) {
 			this.speed.set(0);
 		}
 

@@ -926,7 +926,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		refueling.roll = (tardis.isRefueling() ? 0.4363F : -0.5672F);
 
 		ModelPart handbrake = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("lever6").getChild("bone41");
-		handbrake.roll = handbrake.roll + (tardis.travel().handbrake().get() ? -0f : 1.5f);
+		handbrake.roll = handbrake.roll + (tardis.flight().handbrake().get() ? -0f : 1.5f);
 
 		ModelPart power = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever7").getChild("bone45");
 		power.roll = power.roll + (tardis.engine().hasPower() ? 0f : 1.5f);
@@ -947,7 +947,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		doorLock.roll = doorLock.roll - (tardis.getDoor().locked() ? 1.5708f : 0);
 
 		ModelPart autopilot = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone48");
-		autopilot.roll = autopilot.roll - (tardis.travel().autoLand().get() ? 1.5708f : 0);
+		autopilot.roll = autopilot.roll - (tardis.flight().autoLand().get() ? 1.5708f : 0);
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();

@@ -4,9 +4,14 @@ import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -17,13 +22,31 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
-public class FlightData extends TardisLink {
+public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	private static final String FLIGHT_TICKS_KEY = "flight_ticks";
 	private static final String TARGET_TICKS_KEY = "target_ticks";
 	private static final Random random = Random.create();
+	private static final BoolProperty HANDBRAKE = new BoolProperty("handbrake", true);
+	private final BoolValue handbrake = HANDBRAKE.create(this);
+	private static final BoolProperty AUTO_LAND = new BoolProperty("auto_land", false);
+	private final BoolValue autoLand = AUTO_LAND.create(this);
 
 	public FlightData() {
 		super(Id.FLIGHT);
+	}
+
+	@Override
+	public void onLoaded() {
+		handbrake.of(this, HANDBRAKE);
+		autoLand.of(this, AUTO_LAND);
+	}
+
+	public BoolValue handbrake() {
+		return handbrake;
+	}
+
+	public BoolValue autoLand() {
+		return autoLand;
 	}
 
 	static {
@@ -33,7 +56,7 @@ public class FlightData extends TardisLink {
 			flight.setFlightTicks(0);
 			flight.setTargetTicks(0);
 
-			AbsoluteBlockPos.Directed pos = flight.getExteriorPos();
+			AbsoluteBlockPos.Directed pos = tardis.getExteriorPos();
 			World world = pos.getWorld();
 
 			if(world != null) {
@@ -80,7 +103,7 @@ public class FlightData extends TardisLink {
 	}
 
 	private boolean shouldAutoLand() {
-		return (this.tardis().travel().autoLand().get()
+		return (this.autoLand().get()
 				|| !TardisUtil.isInteriorNotEmpty(this.tardis()))
 				&& !PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 		// todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
@@ -136,7 +159,6 @@ public class FlightData extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		ServerTardis tardis = (ServerTardis) this.tardis();
 
@@ -172,7 +194,7 @@ public class FlightData extends TardisLink {
 		SequenceHandler sequences = tardis.sequence();
 		TardisTravel travel = tardis.travel();
 
-		if (!tardis.travel().autoLand().get()
+		if (!tardis.flight().autoLand().get()
 				&& this.getDurationAsPercentage() < 100
 				&& travel.inFlight() && tardis.position() != tardis.destination() && !sequences.hasActiveSequence()) {
 			if (FlightUtil.getFlightDuration(tardis.position(),

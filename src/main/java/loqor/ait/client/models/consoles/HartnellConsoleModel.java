@@ -869,7 +869,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Handbrake Control Movements
 		ModelPart handbrake = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_2").getChild("bone46");
-		handbrake.roll = tardis.travel().handbrake().get() ? handbrake.roll + 1 : handbrake.roll;
+		handbrake.roll = tardis.flight().handbrake().get() ? handbrake.roll + 1 : handbrake.roll;
 
 		// Power Control Movements
 		ModelPart powerControl = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("m_lever_3").getChild("bone142");
@@ -950,7 +950,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Auto Pilot Control Movements
 		ModelPart autoPilot = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("st_switch").getChild("bone26");
-		autoPilot.yaw = !tardis.travel().autoLand().get() ? autoPilot.yaw + 1 : autoPilot.yaw;
+		autoPilot.yaw = !tardis.flight().autoLand().get() ? autoPilot.yaw + 1 : autoPilot.yaw;
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}

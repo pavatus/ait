@@ -156,7 +156,7 @@ public class AITMod implements ModInitializer {
 		}));
 
 		TardisEvents.DEMAT.register((tardis -> {
-			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating() || tardis.travel().handbrake().get() || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
+			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating() || tardis.flight().handbrake().get() || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
 				return true; // cancelled
 
 			if (tardis.getDoor().isOpen() /*|| !tardis.getDoor().locked()*/)

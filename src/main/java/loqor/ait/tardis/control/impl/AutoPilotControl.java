@@ -43,7 +43,7 @@ public class AutoPilotControl extends Control {
 			return true;
 		}
 
-		tardis.travel().autoLand().flatMap(autoLand -> !autoLand);
+		tardis.flight().autoLand().flatMap(autoLand -> !autoLand);
 		return true;
 	}
 
