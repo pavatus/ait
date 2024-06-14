@@ -1,5 +1,6 @@
 package loqor.ait.tardis.link;
 
+import loqor.ait.core.AITDimensions;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -17,7 +18,7 @@ public abstract class InteriorLinkableBlock extends Block implements BlockEntity
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (world.getBlockEntity(pos) instanceof InteriorLinkableBlockEntity linkable)
+        if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD && world.getBlockEntity(pos) instanceof InteriorLinkableBlockEntity linkable)
             linkable.onPlaced(world, pos, state, placer, itemStack);
     }
 
