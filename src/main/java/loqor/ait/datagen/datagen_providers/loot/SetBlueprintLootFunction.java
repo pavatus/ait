@@ -5,14 +5,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSyntaxException;
 import loqor.ait.AITMod;
-import loqor.ait.core.item.blueprint.BlueprintRegistry;
+import loqor.ait.registry.impl.BlueprintRegistry;
 import loqor.ait.core.item.blueprint.BlueprintType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.function.ConditionalLootFunction;
 import net.minecraft.loot.function.LootFunctionType;
-import net.minecraft.loot.function.LootFunctionTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -24,9 +23,6 @@ public class SetBlueprintLootFunction
         extends ConditionalLootFunction {
     final BlueprintType blueprint;
     public Random random = AITMod.RANDOM;
-    private static final LootFunctionType BLUEPRINT_TYPE = Registry.register(Registries.LOOT_FUNCTION_TYPE,
-            new Identifier(AITMod.MOD_ID, "set_blueprint"),
-            new LootFunctionType(new SetBlueprintLootFunction.Serializer()));
 
     SetBlueprintLootFunction(LootCondition[] conditions, BlueprintType blueprint) {
         super(conditions);
@@ -35,7 +31,7 @@ public class SetBlueprintLootFunction
 
     @Override
     public LootFunctionType getType() {
-        return BLUEPRINT_TYPE;
+        return BlueprintRegistry.BLUEPRINT_TYPE;
     }
 
     @Override
@@ -45,7 +41,7 @@ public class SetBlueprintLootFunction
     }
 
     public static ConditionalLootFunction.Builder<?> builder(BlueprintType blueprint) {
-        return SetBlueprintLootFunction.builder((LootCondition[] conditions) -> new SetBlueprintLootFunction(conditions, BlueprintRegistry.getRandomEntry()));
+        return SetBlueprintLootFunction.builder((LootCondition[] conditions) -> new SetBlueprintLootFunction(conditions, blueprint));
     }
 
     public static class Serializer

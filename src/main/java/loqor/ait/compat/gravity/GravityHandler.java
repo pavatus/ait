@@ -101,9 +101,8 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
 
     public static void clientInit() {
         TardisClientEvents.SETTINGS_SETUP.register(screen ->
-                screen.createDynamicTextButton(() -> Text.translatableWithFallback(
-                        "screen.ait.gravity", "> Gravity: %s", screen.tardis().
-                                <GravityHandler>handler(ID).direction.get().getName()
+                screen.createDynamicTextButton(() -> Text.translatable("screen.ait.gravity",
+                        screen.tardis().<GravityHandler>handler(ID).direction.get().getName()
                 ), b -> {
                     GravityHandler gravity = screen.tardis().handler(ID);
                     Direction next = nextDirection(gravity.direction.get());

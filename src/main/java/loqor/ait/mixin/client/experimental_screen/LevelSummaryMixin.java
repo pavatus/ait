@@ -1,4 +1,4 @@
-package loqor.ait.mixin.client;
+package loqor.ait.mixin.client.experimental_screen;
 
 import net.minecraft.world.level.storage.LevelSummary;
 import org.spongepowered.asm.mixin.Mixin;

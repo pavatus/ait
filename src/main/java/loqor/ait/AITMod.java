@@ -15,7 +15,7 @@ import loqor.ait.core.data.schema.MachineRecipeSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.item.blueprint.BlueprintRegistry;
+import loqor.ait.registry.impl.BlueprintRegistry;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.managers.RiftChunkManager;
@@ -90,7 +90,6 @@ public class AITMod implements ModInitializer {
 		HumsRegistry.init();
 		CreakRegistry.init();
 		SequenceRegistry.init();
-		BlueprintRegistry.init();
 
 		// For all the addon devs
 		FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class, AITModInitializer::onInitializeAIT);
@@ -107,6 +106,9 @@ public class AITMod implements ModInitializer {
 		FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
 		FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
+
+		// important to init after items registration
+		BlueprintRegistry.init();
 
 		TardisUtil.init();
 		ServerTardisManager.init();

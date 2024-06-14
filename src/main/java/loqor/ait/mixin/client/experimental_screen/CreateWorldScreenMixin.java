@@ -1,4 +1,4 @@
-package loqor.ait.mixin.client;
+package loqor.ait.mixin.client.experimental_screen;
 
 import com.mojang.serialization.Lifecycle;
 import loqor.ait.AITMod;
@@ -28,9 +28,8 @@ public abstract class CreateWorldScreenMixin {
 			CombinedDynamicRegistries<ServerDynamicRegistryType> registries, Lifecycle lifecycle,
 			Lifecycle lifecycle2, Lifecycle lifecycle3, boolean showWarnings
 	) {
-		if (this.recreated) {
+		if (this.recreated)
 			return;
-		}
 
 		if (!AITMod.AIT_CONFIG.SHOW_EXPERIMENTAL_WARNING()) {
 			this.startServer(config.specialWorldProperty(), registries, lifecycle3);

@@ -1,20 +1,21 @@
 package loqor.ait.core.item.blueprint;
 
-import loqor.ait.tardis.control.impl.DimensionControl;
+import loqor.ait.AITMod;
+import loqor.ait.registry.impl.BlueprintRegistry;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class BlueprintItem extends Item {
-
-    public static final String BLUEPRINT_TYPE = "blueprint_type";
 
     public BlueprintItem(Settings settings) {
         super(settings);
@@ -24,21 +25,9 @@ public class BlueprintItem extends Item {
     public ItemStack getDefaultStack() {
         ItemStack stack = new ItemStack(this);
         NbtCompound nbt = stack.getOrCreateNbt();
-        nbt.putString(BLUEPRINT_TYPE, formatString(BlueprintRegistry.getRandomEntry().id()));
+
+        nbt.putString("id", BlueprintRegistry.getRandomEntry().id().toString());
         return stack;
-    }
-
-    public static String formatString(String input) {
-        // Split the string into words
-        String[] words = input.split("_");
-
-        // Capitalize the first letter of each word
-        for (int i = 0; i < words.length; i++) {
-            words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
-        }
-
-        // Join the words back together with spaces
-        return String.join(" ", words);
     }
 
     @Override
@@ -46,10 +35,26 @@ public class BlueprintItem extends Item {
         super.appendTooltip(stack, world, tooltip, context);
 
         NbtCompound nbt = stack.getOrCreateNbt();
+        NbtElement element = nbt.get("id");
 
-        if (!nbt.contains(BLUEPRINT_TYPE)) return;
+        if (element == null)
+            return;
 
-        tooltip.add(Text.translatable("ait.blueprint.tooltip").formatted(Formatting.BLUE));
-        tooltip.add(Text.literal(nbt.getString(BLUEPRINT_TYPE)).formatted(Formatting.GRAY));
+        Identifier id = Identifier.tryParse(element.asString());
+
+        if (id == null) {
+            AITMod.LOGGER.warn("Couldn't parse blueprint id: '{}'", element.asString());
+            return;
+        }
+
+        BlueprintType blueprint = BlueprintRegistry.REGISTRY.get(new Identifier(element.asString()));
+
+        if (blueprint == null) {
+            AITMod.LOGGER.warn("Couldn't find blueprint with id: '{}'!", id);
+            return;
+        }
+
+        tooltip.add(Text.translatable("ait.blueprint.tooltip").formatted(Formatting.BLUE)
+                .append(blueprint.text().copy().formatted(Formatting.GRAY)));
     }
 }

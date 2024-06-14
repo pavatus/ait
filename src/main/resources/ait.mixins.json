@@ -5,11 +5,11 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "DismountEntityMixin",
+    "client.experimental_screen.LevelSummaryMixin",
     "lookup.EntityTrackingSectionAccessor",
     "lookup.SectionedEntityCacheAccessor",
     "lookup.SimpleEntityLookupAccessor",
     "lookup.WorldInvoker",
-    "client.LevelSummaryMixin",
     "server.ItemEntityMixin",
     "server.MinecraftServerMixin",
     "server.ServerPlayerInteractionManagerMixin",
@@ -17,10 +17,11 @@
     "server.StructureTemplateMixin"
   ],
   "client": [
-    "client.CreateWorldScreenMixin",
     "client.ClientPlayerInteractionManagerMixin",
     "client.DefaultLogoMixin",
     "client.TitleScreenMixin",
+    "client.experimental_screen.CreateWorldScreenMixin",
+    "client.experimental_screen.WorldOpenFlowsMixin",
     "client.rendering.BakedModelManagerMixin",
     "client.rendering.BGRendererMixin",
     "client.rendering.GameRendererMixin",
