@@ -39,7 +39,7 @@ public class AutoPilotControl extends Control {
 
 			TardisUtil.teleportOutside(tardis, player);
 			player.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));
-			TardisRealEntity.spawnFromTardisId(tardis.getExterior().getExteriorPos().getWorld(), tardis.getUuid(), tardis.getExterior().getExteriorPos(), player, player.getBlockPos());
+			TardisRealEntity.spawnFromTardisId(tardis.getExteriorPos().getWorld(), tardis.getUuid(), tardis.getExteriorPos(), player, player.getBlockPos());
 			return true;
 		}
 

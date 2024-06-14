@@ -65,7 +65,7 @@ public class TardisCrashData extends TardisComponent implements TardisTickable {
 			setState(State.UNSTABLE);
 			alarms.disable();
 		}
-		AbsoluteBlockPos.Directed exteriorPosition = tardis.getExterior().getExteriorPos();
+		AbsoluteBlockPos.Directed exteriorPosition = tardis.getExteriorPos();
 		ServerWorld exteriorWorld = (ServerWorld) exteriorPosition.getWorld();
 		if (tardis.getDoor().isOpen() && this.getState() != State.NORMAL) {
 			exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,

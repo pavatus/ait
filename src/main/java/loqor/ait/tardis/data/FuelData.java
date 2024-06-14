@@ -94,7 +94,7 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 	public void tick(MinecraftServer server) {
 
 		ServerTardis tardis = (ServerTardis) this.tardis();
-		AbsoluteBlockPos pos = tardis.getExterior().getExteriorPos();
+		AbsoluteBlockPos pos = tardis.getExteriorPos();
 		World world = pos.getWorld();
 		TardisTravel.State state = tardis.travel().getState();
 

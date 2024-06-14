@@ -150,7 +150,7 @@ public class AITMod implements ModInitializer {
 
 		TardisEvents.LANDED.register((tardis -> {
 			// stuff for resetting the ExteriorAnimation
-			if (tardis.travel().getPosition().getWorld().getBlockEntity(tardis.getDesktop().getExteriorPos()) instanceof ExteriorBlockEntity entity) {
+			if (tardis.travel().getPosition().getWorld().getBlockEntity(tardis.getExteriorPos()) instanceof ExteriorBlockEntity entity) {
 				entity.getAnimation().setupAnimation(tardis.travel().getState());
 			}
 		}));
@@ -173,7 +173,7 @@ public class AITMod implements ModInitializer {
 			boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
 
 			// Check if the destination is already occupied
-			boolean isDestinationOccupied = !tardis.travel().getDestination().equals(tardis.getExterior().getExteriorPos())
+			boolean isDestinationOccupied = !tardis.travel().getDestination().equals(tardis.getExteriorPos())
 					&& !tardis.travel().checkDestination();
 
 			return isCooldown || isDestinationOccupied;

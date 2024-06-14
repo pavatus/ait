@@ -267,11 +267,11 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 						(((ItemEntity) entity).getStack().getItem() == Items.NETHER_STAR ||
 								isChargedCrystal(((ItemEntity) entity).getStack())) &&
 						entity.isTouchingWater()).forEach(entity -> {
-					if (this.getExterior().getExteriorPos() == null) return;
+					if (this.getExteriorPos() == null) return;
 					this.setFuelCount(8000);
 					this.engine().enablePower();
 					entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
-					entity.getWorld().playSound(null, this.getExterior().getExteriorPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
+					entity.getWorld().playSound(null, this.getExteriorPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
 
 					InteriorChangingHandler interior = this.handler(TardisComponent.Id.INTERIOR);
 					interior.queueInteriorChange(DesktopRegistry.getInstance().getRandom(this));

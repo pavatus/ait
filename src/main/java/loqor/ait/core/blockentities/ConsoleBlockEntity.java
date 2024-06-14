@@ -518,7 +518,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 		ServerTardis tardis = (ServerTardis) this.findTardis().get();
 
-		boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.getExterior().getExteriorPos());
+		boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.getExteriorPos());
 
 		if (tardis.travel().isCrashing()) {
 			((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
