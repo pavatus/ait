@@ -1,6 +1,7 @@
 package loqor.ait.core.blocks;
 
 import loqor.ait.core.blockentities.FabricatorBlockEntity;
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -19,10 +20,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
-public class FabricatorBlock extends BlockWithEntity implements BlockEntityProvider {
+public class FabricatorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
     public static final VoxelShape DEFAULT_SHAPE = VoxelShapes.cuboid(0, 0, 0, 1, (double) 2 / 16, 1);
-    public static final DirectionProperty FACING = Properties.FACING;
 
 
     // @TODO MAKE THIS GO ON TOP OF A MACHINE CASING WHICH ENCASES A BLOCK LIKE A SMITHING TABLE OR SOME OTHER CRAFTING TABLE THING
