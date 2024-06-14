@@ -9,7 +9,7 @@ import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.Corners;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class TardisDesktop extends TardisLink {
+public class TardisDesktop extends TardisComponent implements TardisTickable {
 
 	public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
 
@@ -125,7 +125,6 @@ public class TardisDesktop extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		for (TardisConsole console : this.getConsoles()) {
 			console.tick(server);

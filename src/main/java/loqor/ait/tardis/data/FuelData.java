@@ -8,14 +8,16 @@ import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
-public class FuelData extends TardisLink implements ArtronHolder {
+public class FuelData extends TardisComponent implements ArtronHolder, TardisTickable {
 	@Exclude
 	public static final double TARDIS_MAX_FUEL = 50000;
 	public static final String FUEL_COUNT = "fuel_count"; // todo this gets synced too much, needs changing.
@@ -90,9 +92,6 @@ public class FuelData extends TardisLink implements ArtronHolder {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
-
-		// @TODO fix this because it seems that using any chunk references causes ticking to freak the hell out - Loqor
 
 		ServerTardis tardis = (ServerTardis) this.tardis();
 		AbsoluteBlockPos pos = tardis.getExterior().getExteriorPos();

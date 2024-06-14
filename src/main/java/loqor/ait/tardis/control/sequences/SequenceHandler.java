@@ -2,10 +2,11 @@ package loqor.ait.tardis.control.sequences;
 
 import loqor.ait.registry.impl.SequenceRegistry;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.particle.DustParticleEffect;
@@ -22,7 +23,7 @@ import org.joml.Vector3f;
 
 import java.util.UUID;
 
-public class SequenceHandler extends TardisLink {
+public class SequenceHandler extends TardisComponent implements TardisTickable {
 	@Exclude
 	private RecentControls recent;
 	private int ticks = 0;
@@ -161,7 +162,6 @@ public class SequenceHandler extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		if (this.getActiveSequence() == null) return;
 

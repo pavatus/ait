@@ -2,7 +2,8 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.core.item.WaypointItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
@@ -12,7 +13,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.Optional;
 
-public class WaypointHandler extends TardisLink {
+public class WaypointHandler extends TardisComponent {
 	public static final String HAS_CARTRIDGE = "has_cartridge";
 	private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
 
