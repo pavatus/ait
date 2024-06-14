@@ -102,8 +102,8 @@ public class Property<T> {
     }
 
     @Deprecated(forRemoval = true)
-    public static <T> T warnCompat(T val) {
-        AITMod.LOGGER.warn("Property {} needs to get v1 compatibility!");
+    public static <T> T warnCompat(String name, T val) {
+        AITMod.LOGGER.warn("Property {} needs to get v1 compatibility!", name);
         return val;
     }
 }

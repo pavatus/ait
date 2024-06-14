@@ -22,8 +22,8 @@ import java.util.Random;
 
 public class EngineHandler extends KeyedTardisComponent {
 
-    private static final BoolProperty POWER = new BoolProperty("power", Property.warnCompat(false));
-    private static final BoolProperty HAS_ENGINE_CORE = new BoolProperty("has_engine_core", Property.warnCompat(false));
+    private static final BoolProperty POWER = new BoolProperty("power", Property.warnCompat("power", false));
+    private static final BoolProperty HAS_ENGINE_CORE = new BoolProperty("has_engine_core", false);
 
     private final BoolValue power = POWER.create(this);
     private final BoolValue hasEngineCore = HAS_ENGINE_CORE.create(this);

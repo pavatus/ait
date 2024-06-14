@@ -28,11 +28,11 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	private static final String TARGET_TICKS_KEY = "target_ticks";
 	private static final Random random = Random.create();
 
-	private static final BoolProperty HANDBRAKE = new BoolProperty("handbrake", Property.warnCompat(true));
-	private static final BoolProperty AUTO_LAND = new BoolProperty("auto_land", Property.warnCompat(false));
+	private static final BoolProperty HANDBRAKE = new BoolProperty("handbrake", Property.warnCompat("handbrake", true));
+	private static final BoolProperty AUTO_LAND = new BoolProperty("auto_land", Property.warnCompat("auto_land", false));
 
-	private static final IntProperty SPEED = new IntProperty("speed", Property.warnCompat(0));
-	private static final IntProperty MAX_SPEED = new IntProperty("max_speed", Property.warnCompat(7));
+	private static final IntProperty SPEED = new IntProperty("speed", Property.warnCompat("speed", 0));
+	private static final IntProperty MAX_SPEED = new IntProperty("max_speed", Property.warnCompat("max_speed", 7));
 
 	private final BoolValue handbrake = HANDBRAKE.create(this);
 	private final BoolValue autoLand = AUTO_LAND.create(this);
