@@ -29,7 +29,7 @@ import java.util.List;
 public class GravityHandler extends KeyedTardisComponent implements TardisTickable {
 
     private static final Identifier SYNC = new Identifier(AITMod.MOD_ID, "sync_gravity");
-    private static final Property<Direction> DIRECTION = Property.of(Property.Type.DIRECTION, "direction", Direction.DOWN);
+    private static final Property<Direction> DIRECTION = new Property<>(Property.Type.DIRECTION, "direction", Direction.DOWN);
 
     private final Value<Direction> direction = DIRECTION.create(this);
 

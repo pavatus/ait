@@ -5,7 +5,7 @@ import loqor.ait.tardis.data.properties.v2.Property;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class RangedIntProperty extends Property<Integer> {
 
@@ -23,15 +23,21 @@ public class RangedIntProperty extends Property<Integer> {
     }
 
     public RangedIntProperty(String name, int min, int max, Integer def) {
-        this(name, min, max, () -> normalize(min, max, def));
+        super(TYPE, name, normalize(min, max, def));
+
+        this.min = min;
+        this.max = max;
     }
 
     public RangedIntProperty(String name, int max, int def) {
-        this(name, 0, max, () -> def);
+        super(TYPE, name, def);
+
+        this.min = 0;
+        this.max = max;
     }
 
-    private RangedIntProperty(String name, int min, int max, Supplier<Integer> def) {
-        super(TYPE, name, def);
+    public RangedIntProperty(String name, int min, int max, Function<KeyedTardisComponent, Integer> def) {
+        super(TYPE, name, def.andThen(i -> RangedIntProperty.normalize(min, max, i)));
 
         this.min = min;
         this.max = max;

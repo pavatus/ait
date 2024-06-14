@@ -9,6 +9,7 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.data.properties.v2.Value;
@@ -21,8 +22,8 @@ import java.util.Random;
 
 public class EngineHandler extends KeyedTardisComponent {
 
-    private static final BoolProperty POWER = new BoolProperty("power");
-    private static final BoolProperty HAS_ENGINE_CORE = new BoolProperty("has_engine_core");
+    private static final BoolProperty POWER = new BoolProperty("power", Property.warnCompat(false));
+    private static final BoolProperty HAS_ENGINE_CORE = new BoolProperty("has_engine_core", Property.warnCompat(false));
 
     private final BoolValue power = POWER.create(this);
     private final BoolValue hasEngineCore = HAS_ENGINE_CORE.create(this);

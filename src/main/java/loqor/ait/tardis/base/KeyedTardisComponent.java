@@ -6,7 +6,7 @@ import loqor.ait.tardis.data.properties.v2.PropertyMap;
 import loqor.ait.tardis.data.properties.v2.Value;
 import net.minecraft.network.PacketByteBuf;
 
-public class KeyedTardisComponent extends TardisComponent {
+public abstract class KeyedTardisComponent extends TardisComponent {
 
     @Exclude(strategy = Exclude.Strategy.FILE) private PropertyMap data = new PropertyMap();
 

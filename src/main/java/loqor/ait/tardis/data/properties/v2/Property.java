@@ -1,5 +1,6 @@
 package loqor.ait.tardis.data.properties.v2;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import net.minecraft.network.PacketByteBuf;
@@ -18,20 +19,20 @@ public class Property<T> {
     private final Type<T> type;
     private final String name;
 
-    protected final Supplier<T> def;
+    protected final Function<KeyedTardisComponent, T> def;
 
-    public Property(Type<T> type, String name, Supplier<T> def) {
+    public Property(Type<T> type, String name, Function<KeyedTardisComponent, T> def) {
         this.type = type;
         this.name = name;
         this.def = def;
     }
 
-    public static <T> Property<T> of(Type<T> type, String name, T def) {
-        return new Property<>(type, name, () -> def);
+    public Property(Type<T> type, String name, T def) {
+        this(type, name, o -> def);
     }
 
     public Value<T> create(KeyedTardisComponent holder) {
-        T t = this.def == null ? null : this.def.get();
+        T t = this.def == null ? null : this.def.apply(holder);
         Value<T> result = this.create(t);
 
         result.of(holder, this);
@@ -55,11 +56,11 @@ public class Property<T> {
     }
 
     public Property<T> copy(String name, T def) {
-        return Property.of(this.type, name, def);
+        return new Property<>(this.type, name, def);
     }
 
     public static <T extends Enum<T>> Property<T> forEnum(String name, Class<T> clazz, T def) {
-        return Property.of(Type.forEnum(clazz), name, def);
+        return new Property<>(Type.forEnum(clazz), name, def);
     }
 
     public static class Type<T> {
@@ -98,5 +99,11 @@ public class Property<T> {
         static byte forValue(Value<?> o) {
             return o.get() == null ? NULL : UPDATE;
         }
+    }
+
+    @Deprecated
+    public static <T> T warnCompat(T val) {
+        AITMod.LOGGER.warn("Property {} needs to get v1 compatibility!");
+        return val;
     }
 }

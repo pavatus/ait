@@ -34,14 +34,19 @@ public abstract class BufferedTardisManager<T extends Tardis, P extends PlayerEn
 
     protected abstract T loadTardis(C c, UUID uuid);
 
-    protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.IdLike id, String key, String type, String value);
+    protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.Id id, String key, String type, String value);
 
     protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.IdLike id, Value<?> property);
 
     protected abstract void updateTardis(@NotNull P player, T tardis, TardisComponent.Id id, String json);
 
     public void updateTardisProperty(@NotNull P player, T tardis, TardisComponent component, String key, String type, String value) {
-        this.updateTardisProperty(player, tardis, component.getId(), key, type, value);
+        if (!(component.getId() instanceof TardisComponent.Id id)) {
+            AITMod.LOGGER.error("Can't update v1 properties on non-standard components!");
+            return;
+        }
+
+        this.updateTardisProperty(player, tardis, id, key, type, value);
         this.checkForceSync(player, tardis);
     }
 

@@ -21,10 +21,6 @@ import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
-import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
-import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
-import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisUtil;
@@ -56,9 +52,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.function.Function;
 
-public class TardisTravel extends KeyedTardisComponent {
+public class TardisTravel extends TardisComponent {
 
 	public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
@@ -69,12 +64,6 @@ public class TardisTravel extends KeyedTardisComponent {
 	private boolean crashing = false;
 	private static final int CHECK_LIMIT = AITMod.AIT_CONFIG.SEARCH_HEIGHT();
 	private static final Random random = new Random();
-
-	private static final IntProperty SPEED = new IntProperty("speed", 0);
-	private static final IntProperty MAX_SPEED = new IntProperty("max_speed", 7);
-
-	private final IntValue speed = SPEED.create(this);
-	private final IntValue maxSpeed = MAX_SPEED.create(this);
 
 	public TardisTravel(AbsoluteBlockPos.Directed pos) {
 		super(Id.TRAVEL);
@@ -90,23 +79,9 @@ public class TardisTravel extends KeyedTardisComponent {
 		this.runAnimations();
 	}
 
-	@Override
-	public void onLoaded() {
-		speed.of(this, SPEED);
-		maxSpeed.of(this, MAX_SPEED);
-	}
-
 	static {
 		TardisEvents.LOSE_POWER.register(tardis ->
 				tardis.flight().autoLand().set(false));
-	}
-
-	public IntValue speed() {
-		return speed;
-	}
-
-	public IntValue maxSpeed() {
-		return maxSpeed;
 	}
 
 	public boolean isCrashing() {
@@ -134,7 +109,7 @@ public class TardisTravel extends KeyedTardisComponent {
 		this.tickMat();
 
 		ServerTardis tardis = (ServerTardis) this.tardis();
-		int speed = this.speed.get();
+		int speed = this.tardis.flight().speed().get();
 		State state = this.getState();
 
 		boolean handbrake = tardis.flight().handbrake().get();
@@ -166,24 +141,24 @@ public class TardisTravel extends KeyedTardisComponent {
 
 		// Should we just disable autopilot if the speed goes above 1?
 		if (speed > 1 && state == State.FLIGHT && autopilot) {
-			this.speed.set(speed - 1);
+			this.tardis.flight().speed().set(speed - 1);
 		}
 	}
 
 	public void increaseSpeed() {
 		// Stop speed from going above 1 if autopilot is enabled, and we're in flight
-		if (this.speed.get() > 0 && this.getState() == State.FLIGHT && tardis.flight().autoLand().get()) {
+		if (this.tardis.flight().speed().get() > 0 && this.getState() == State.FLIGHT && tardis.flight().autoLand().get()) {
 			return;
 		}
 
-		this.speed.set(MathHelper.clamp(this.speed.get() + 1, 0, this.maxSpeed.get()));
+		this.tardis.flight().speed().set(MathHelper.clamp(this.tardis.flight().speed().get() + 1, 0, this.tardis.flight().maxSpeed().get()));
 	}
 
 	public void decreaseSpeed() {
-		if (this.getState() == State.LANDED && this.speed.get() == 1)
+		if (this.getState() == State.LANDED && this.tardis.flight().speed().get() == 1)
 			FlightUtil.playSoundAtConsole(this.tardis(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
 
-		this.speed.set(MathHelper.clamp(this.speed.get() - 1, 0, this.maxSpeed.get()));
+		this.tardis.flight().speed().set(MathHelper.clamp(this.tardis.flight().speed().get() - 1, 0, this.tardis.flight().maxSpeed().get()));
 	}
 
 	public boolean inFlight() {
@@ -282,7 +257,7 @@ public class TardisTravel extends KeyedTardisComponent {
 			return;
 
 		Tardis tardis = tardis();
-		int crash_intensity = this.speed.get() + tardis.tardisHammerAnnoyance + 1;
+		int crash_intensity = this.tardis.flight().speed().get() + tardis.tardisHammerAnnoyance + 1;
 
 		FlightUtil.playSoundAtConsole(tardis,
 				SoundEvents.ENTITY_GENERIC_EXPLODE,
@@ -331,7 +306,7 @@ public class TardisTravel extends KeyedTardisComponent {
 		tardis.setLockedTardis(true);
 		PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
 		PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
-		this.speed.set(0);
+		this.tardis.flight().speed().set(0);
 		tardis.removeFuel(500 * crash_intensity);
 		tardis.tardisHammerAnnoyance = 0;
 		int random_int = random.nextInt(0, 2);
@@ -503,7 +478,7 @@ public class TardisTravel extends KeyedTardisComponent {
 			this.tardis.getDoor().closeDoors();
 			this.tardis.setRefueling(false);
 
-			if (this.speed.get() == 0)
+			if (this.tardis.flight().speed().get() == 0)
 				this.increaseSpeed();
 		}
 
@@ -648,8 +623,8 @@ public class TardisTravel extends KeyedTardisComponent {
 	}
 
 	public void forceLand(@Nullable ExteriorBlockEntity blockEntity) {
-		if (tardis.flight().autoLand().get() && this.speed.get() > 0) {
-			this.speed.set(0);
+		if (tardis.flight().autoLand().get() && this.tardis.flight().speed().get() > 0) {
+			this.tardis.flight().speed().set(0);
 		}
 
 		this.setState(TardisTravel.State.LANDED);

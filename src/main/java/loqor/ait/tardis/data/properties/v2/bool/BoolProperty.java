@@ -4,7 +4,7 @@ import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.v2.Property;
 import net.minecraft.network.PacketByteBuf;
 
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class BoolProperty extends Property<Boolean> {
 
@@ -19,11 +19,11 @@ public class BoolProperty extends Property<Boolean> {
     }
 
     public BoolProperty(String name, boolean def) {
-        this(name, () -> def);
+        super(TYPE, name, def);
     }
 
-    private BoolProperty(String name, Supplier<Boolean> def) {
-        super(TYPE, name, def);
+    public BoolProperty(String name, Function<KeyedTardisComponent, Boolean> def) {
+        super(TYPE, name, def.andThen(BoolProperty::normalize));
     }
 
     @Override

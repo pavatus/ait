@@ -4,7 +4,7 @@ import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.v2.Property;
 import net.minecraft.network.PacketByteBuf;
 
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class IntProperty extends Property<Integer> {
 
@@ -19,11 +19,11 @@ public class IntProperty extends Property<Integer> {
     }
 
     public IntProperty(String name, int def) {
-        this(name, () -> def);
+        super(TYPE, name, def);
     }
 
-    private IntProperty(String name, Supplier<Integer> def) {
-        super(TYPE, name, def);
+    public IntProperty(String name, Function<KeyedTardisComponent, Integer> def) {
+        super(TYPE, name, def.andThen(IntProperty::normalize));
     }
 
     @Override

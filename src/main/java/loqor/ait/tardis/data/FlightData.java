@@ -4,18 +4,19 @@ import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.base.TardisLink;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
+import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
+import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import loqor.ait.tardis.TardisTravel;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
@@ -26,10 +27,18 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	private static final String FLIGHT_TICKS_KEY = "flight_ticks";
 	private static final String TARGET_TICKS_KEY = "target_ticks";
 	private static final Random random = Random.create();
-	private static final BoolProperty HANDBRAKE = new BoolProperty("handbrake", true);
+
+	private static final BoolProperty HANDBRAKE = new BoolProperty("handbrake", Property.warnCompat(true));
+	private static final BoolProperty AUTO_LAND = new BoolProperty("auto_land", Property.warnCompat(false));
+
+	private static final IntProperty SPEED = new IntProperty("speed", Property.warnCompat(0));
+	private static final IntProperty MAX_SPEED = new IntProperty("max_speed", Property.warnCompat(7));
+
 	private final BoolValue handbrake = HANDBRAKE.create(this);
-	private static final BoolProperty AUTO_LAND = new BoolProperty("auto_land", false);
 	private final BoolValue autoLand = AUTO_LAND.create(this);
+
+	private final IntValue speed = SPEED.create(this);
+	private final IntValue maxSpeed = MAX_SPEED.create(this);
 
 	public FlightData() {
 		super(Id.FLIGHT);
@@ -37,8 +46,19 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 
 	@Override
 	public void onLoaded() {
+		speed.of(this, SPEED);
+		maxSpeed.of(this, MAX_SPEED);
+
 		handbrake.of(this, HANDBRAKE);
 		autoLand.of(this, AUTO_LAND);
+	}
+
+	public IntValue speed() {
+		return speed;
+	}
+
+	public IntValue maxSpeed() {
+		return maxSpeed;
 	}
 
 	public BoolValue handbrake() {
@@ -166,7 +186,7 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 		TardisTravel travel = tardis.travel();
 
 		if (crash.getState() != TardisCrashData.State.NORMAL)
-			crash.addRepairTicks(2 * travel.speed().get());
+			crash.addRepairTicks(2 * this.speed().get());
 
 		if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && travel.getState() == TardisTravel.State.LANDED)
 			this.recalculate();
@@ -182,7 +202,7 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 				this.onFlightFinished();
 			}
 
-			this.setFlightTicks(this.getFlightTicks() + (Math.max(travel.speed().get() / 2, 1)));
+			this.setFlightTicks(this.getFlightTicks() + (Math.max(this.speed().get() / 2, 1)));
 		}
 
 		if (!PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT)
@@ -199,7 +219,7 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 				&& travel.inFlight() && tardis.position() != tardis.destination() && !sequences.hasActiveSequence()) {
 			if (FlightUtil.getFlightDuration(tardis.position(),
 					tardis.destination()) > FlightUtil.convertSecondsToTicks(5)) {
-				int rand = random.nextBetween(0, 460 / (tardis.travel().speed().get() == 0 ? 1 : tardis.travel().speed().get()));
+				int rand = random.nextBetween(0, 460 / (this.speed().get() == 0 ? 1 : this.speed().get()));
 				if (rand == 7) {
 					sequences.triggerRandomSequence(true);
 				}

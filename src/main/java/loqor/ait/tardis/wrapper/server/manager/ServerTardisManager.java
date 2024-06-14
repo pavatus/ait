@@ -127,11 +127,11 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	}
 
 	@Override
-	protected void updateTardisProperty(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.IdLike id, String key, String type, String value) {
+	protected void updateTardisProperty(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.Id id, String key, String type, String value) {
 		PacketByteBuf data = PacketByteBufs.create();
 
 		data.writeUuid(tardis.getUuid());
-		data.writeVarInt(id.index());
+		data.writeEnumConstant(id);
 
 		data.writeString(key);
 		data.writeString(type);

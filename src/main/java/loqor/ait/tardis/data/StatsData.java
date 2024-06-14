@@ -10,8 +10,6 @@ import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
-import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
-import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;
@@ -38,8 +36,7 @@ public class StatsData extends KeyedTardisComponent {
 	private static final String PLAYER_CREATOR_NAME_KEY = "player_creator_name";
 	private static final String DATE_KEY = "date";
 
-	private static final BoolProperty USE_SKYBOX = new BoolProperty("use_skybox", true);
-	private static final Property<RegistryKey<World>> SKYBOX = Property.of(Property.Type.WORLD_KEY, "skybox", AITDimensions.TARDIS_DIM_WORLD);
+    private static final Property<RegistryKey<World>> SKYBOX = new Property<>(Property.Type.WORLD_KEY, "skybox", AITDimensions.TARDIS_DIM_WORLD);
 
 	private final Value<RegistryKey<World>> skybox = SKYBOX.create(this);
 

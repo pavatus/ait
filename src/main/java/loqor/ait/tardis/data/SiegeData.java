@@ -5,6 +5,7 @@ import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.util.FlightUtil;
@@ -26,7 +27,7 @@ import java.util.UUID;
 public class SiegeData extends KeyedTardisComponent implements TardisTickable {
 	public static final String HELD_KEY = "siege_held_uuid";
 
-	private static final BoolProperty ACTIVE = new BoolProperty("siege_mode");
+	private static final BoolProperty ACTIVE = new BoolProperty("siege_mode", Property.warnCompat(false));
 
 	private final BoolValue active = ACTIVE.create(this);
 
