@@ -148,12 +148,12 @@ public class TardisUtil {
 						tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
 						WorldOps.updateIfOnServer(server.getWorld(tardis
 										.travel().getPosition().getWorld().getRegistryKey()),
-								tardis.getDoor().getExteriorPos());
+								tardis.getExteriorPos());
 						if (variantChange) {
 							tardis.getExterior().setVariant(schema);
 							WorldOps.updateIfOnServer(server.getWorld(tardis
 											.travel().getPosition().getWorld().getRegistryKey()),
-									tardis.getDoor().getExteriorPos());
+									tardis.getExteriorPos());
 						}
 					});
 				}
@@ -187,8 +187,8 @@ public class TardisUtil {
 						}
 
 						BlockPos pos = player.getWorld().getRegistryKey() ==
-								TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoor().getDoorPos() : tardis.getDoor().getExteriorPos();
-						if ((player.squaredDistanceTo(tardis.getDoor().getExteriorPos().getX(), tardis.getDoor().getExteriorPos().getY(), tardis.getDoor().getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
+								TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoorPos() : tardis.getExteriorPos();
+						if ((player.squaredDistanceTo(tardis.getExteriorPos().getX(), tardis.getExteriorPos().getY(), tardis.getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
 							if (!player.isSneaking()) {
 								// annoying bad code
 
@@ -373,7 +373,7 @@ public class TardisUtil {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
 
 		AbsoluteBlockPos.Directed pos = tardis.travel().getState() == TardisTravel.State.FLIGHT ? FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.flight().getDurationAsPercentage()) : tardis.position();
-		TardisUtil.teleportWithDoorOffset(entity, tardis.getDoor().getExteriorPos());
+		TardisUtil.teleportWithDoorOffset(entity, tardis.getExteriorPos());
 	}
 
 	public static void dropOutside(Tardis tardis, Entity entity) {
@@ -386,7 +386,7 @@ public class TardisUtil {
 	public static void teleportInside(Tardis tardis, Entity entity) {
 		TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
 
-		TardisUtil.teleportWithDoorOffset(entity, tardis.getDoor().getDoorPos());
+		TardisUtil.teleportWithDoorOffset(entity, tardis.getDoorPos());
 
 		tardis.getDesktop().getConsoles().forEach(console ->
 				console.findEntity().ifPresent(ConsoleBlockEntity::sync));
@@ -446,7 +446,7 @@ public class TardisUtil {
 	}
 
 	public static Tardis findTardisByPosition(AbsoluteBlockPos pos, TardisManager<?, ?> manager) {
-		Tardis result = manager.find(tardis -> tardis.getDoor().getExteriorPos().equals(pos));
+		Tardis result = manager.find(tardis -> tardis.getExteriorPos().equals(pos));
 
 		if (result == null && manager instanceof ClientTardisManager client)
 			client.askTardis(pos);
@@ -581,11 +581,11 @@ public class TardisUtil {
 	}
 
 	public static List<LivingEntity> getLivingEntitiesInInterior(Tardis tardis, int area) {
-		return getTardisDimension().getEntitiesByClass(LivingEntity.class, new Box(tardis.getDoor().getDoorPos().north(area).east(area).up(area), tardis.getDoor().getDoorPos().south(area).west(area).down(area)), (e) -> true);
+		return getTardisDimension().getEntitiesByClass(LivingEntity.class, new Box(tardis.getDoorPos().north(area).east(area).up(area), tardis.getDoorPos().south(area).west(area).down(area)), (e) -> true);
 	}
 
 	public static List<Entity> getEntitiesInInterior(Tardis tardis, int area) {
-		return getTardisDimension().getEntitiesByClass(Entity.class, new Box(tardis.getDoor().getDoorPos().north(area).east(area).up(area), tardis.getDoor().getDoorPos().south(area).west(area).down(area)), (e) -> true);
+		return getTardisDimension().getEntitiesByClass(Entity.class, new Box(tardis.getDoorPos().north(area).east(area).up(area), tardis.getDoorPos().south(area).west(area).down(area)), (e) -> true);
 	}
 
 	public static List<LivingEntity> getLivingEntitiesInInterior(Tardis tardis) {
@@ -623,7 +623,7 @@ public class TardisUtil {
 		if (tardis instanceof ClientTardis)
 			return null;
 
-		return (ExteriorBlockEntity) tardis.getDoor().getExteriorPos().getWorld().getBlockEntity(tardis.getDoor().getExteriorPos());
+		return (ExteriorBlockEntity) tardis.getExteriorPos().getWorld().getBlockEntity(tardis.getExteriorPos());
 	}
 
 	public static BlockPos addRandomAmount(PosType type, BlockPos pos, int limit, Random random) {
