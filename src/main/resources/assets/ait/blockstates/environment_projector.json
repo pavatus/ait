@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "enabled=true,powered=true": {
+      "model": "ait:block/environment_projector"
+    },
+    "enabled=false,powered=false": {
+      "model": "ait:block/environment_projector"
+    },
+    "enabled=false,powered=true": {
+      "model": "ait:block/environment_projector"
+    },
+    "enabled=true,powered=false": {
+      "model": "ait:block/environment_projector"
+    }
+  }
+}

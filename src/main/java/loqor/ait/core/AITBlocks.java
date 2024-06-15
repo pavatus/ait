@@ -57,6 +57,8 @@ public class AITBlocks implements BlockRegistryContainer {
     @NoBlockItem
     public static final Block BUTTON_CONTROL_BLOCK = new ButtonControlBlock(FabricBlockSettings.create().nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
+    public static final Block ENVIRONMENT_PROJECTOR = new EnvironmentProjectorBlock(FabricBlockSettings.create());
+
     /*public static final Block CONSOLE_ROOM_PORT_BLOCK = new ConsoleRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F, 6.0F));
     public static final Block ENGINE_ROOM_PORT_BLOCK = new EngineRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()

@@ -8,11 +8,11 @@ import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.Corners;
-import loqor.ait.tardis.data.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
@@ -21,14 +21,13 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class TardisDesktop extends TardisLink {
+public class TardisDesktop extends TardisComponent implements TardisTickable {
 
 	public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
 
@@ -45,28 +44,19 @@ public class TardisDesktop extends TardisLink {
 		this.corners = TardisUtil.findInteriorSpot();
 	}
 
-	public TardisDesktop(TardisDesktopSchema schema, Corners corners, AbsoluteBlockPos.Directed door, AbsoluteBlockPos.Directed console) {
-		super(Id.DESKTOP);
-
-		this.schema = schema;
-		this.corners = corners;
-		this.doorPos = door;
-		this.consolePos = console;
+	@Override
+	public void onCreate() {
+		this.changeInterior(schema);
 	}
 
 	@Override
-	public void init(Tardis tardis, boolean deserialized) {
-		super.init(tardis, deserialized);
-
-		if (this.isServer() && !deserialized)
-			this.changeInterior(schema);
-
+	protected void onInit(InitContext ctx) {
 		// in some cases, an old and fucked up save can have no consoles field.
 		if (this.consoles == null)
 			this.consoles = new ConcurrentLinkedQueue<>();
 
 		for (TardisConsole console : this.consoles) {
-			console.init(tardis, deserialized);
+			TardisComponent.init(console, this.tardis, ctx);
 		}
 	}
 
@@ -135,7 +125,6 @@ public class TardisDesktop extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		for (TardisConsole console : this.getConsoles()) {
 			console.tick(server);

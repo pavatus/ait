@@ -5,6 +5,9 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
@@ -17,11 +20,10 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Direction;
 import org.joml.Vector3f;
 
 
-public class TardisCrashData extends TardisLink {
+public class TardisCrashData extends TardisComponent implements TardisTickable {
 	public static final String TARDIS_RECOVERY_STATE = "tardis_recovery_state";
 	public static final String TARDIS_REPAIR_TICKS = "tardis_recovery_ticks";
 
@@ -39,7 +41,6 @@ public class TardisCrashData extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		if (PropertiesHandler.get(tardis(), TARDIS_RECOVERY_STATE) == null) {
 			PropertiesHandler.set(tardis(), TARDIS_RECOVERY_STATE, State.NORMAL);
@@ -64,7 +65,7 @@ public class TardisCrashData extends TardisLink {
 			setState(State.UNSTABLE);
 			alarms.disable();
 		}
-		AbsoluteBlockPos.Directed exteriorPosition = tardis.getTravel().getExteriorPos();
+		AbsoluteBlockPos.Directed exteriorPosition = tardis.getExteriorPos();
 		ServerWorld exteriorWorld = (ServerWorld) exteriorPosition.getWorld();
 		if (tardis.getDoor().isOpen() && this.getState() != State.NORMAL) {
 			exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,

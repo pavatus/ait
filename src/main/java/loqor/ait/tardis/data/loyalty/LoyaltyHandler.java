@@ -7,7 +7,9 @@ import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,7 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class LoyaltyHandler extends TardisLink {
+public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     private final Map<UUID, Loyalty> data;
 
     public LoyaltyHandler(HashMap<UUID, Loyalty> data) {
@@ -53,7 +55,6 @@ public class LoyaltyHandler extends TardisLink {
 
     @Override
     public void tick(ServerWorld world) {
-        super.tick(world);
         if(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
             Tardis tardis = this.tardis();
 

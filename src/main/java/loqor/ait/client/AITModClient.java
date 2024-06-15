@@ -17,6 +17,8 @@ import loqor.ait.client.renderers.wearables.AITHudOverlay;
 import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.screens.MonitorScreen;
 import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
+import loqor.ait.client.util.SkyboxUtil;
+import loqor.ait.compat.gravity.GravityHandler;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
@@ -39,6 +41,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -68,10 +71,10 @@ public class AITModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
-        ClientDoorRegistry.init(); // TODO move to Registries
 
+        // TODO move to Registries
+        ClientDoorRegistry.init();
         ClientTardisManager.init();
-
 
         setupBlockRendering();
         sonicModelPredicate();
@@ -81,6 +84,8 @@ public class AITModClient implements ClientModInitializer {
         chargedZeitonCrystalPredicate();
         waypointPredicate();
         hammerPredicate();
+
+        DimensionRenderingRegistry.registerSkyRenderer(AITDimensions.TARDIS_DIM_WORLD, SkyboxUtil::renderTardisSky);
 
         AITKeyBinds.init();
 
@@ -183,7 +188,7 @@ public class AITModClient implements ClientModInitializer {
                             return;
 
                         // todo remember to use the right world in future !!
-                        BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.getExterior().getExteriorPos());
+                        BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.getExteriorPos());
 
                         if (!(block instanceof ExteriorBlockEntity exterior))
                             return;
@@ -330,5 +335,6 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.SMALL_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.MACHINE_CASING, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.FABRICATOR, RenderLayer.getTranslucent());
+        map.putBlock(AITBlocks.ENVIRONMENT_PROJECTOR, RenderLayer.getTranslucent());
     }
 }

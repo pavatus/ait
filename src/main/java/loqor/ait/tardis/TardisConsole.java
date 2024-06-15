@@ -2,13 +2,13 @@ package loqor.ait.tardis;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.core.data.base.Exclude;
-import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.base.Exclude;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -16,9 +16,7 @@ import net.minecraft.world.World;
 
 import java.util.Optional;
 import java.util.UUID;
-
-// TODO - move variant and type over to here
-public class TardisConsole extends TardisLink {
+public class TardisConsole extends TardisComponent implements TardisTickable {
 	private static final int VALIDATE_TICK = 30 * 20;
 
 	private final UUID uuid;
@@ -103,11 +101,6 @@ public class TardisConsole extends TardisLink {
 
 	private void remove() {
 		this.tardis().getDesktop().removeConsole(this);
-	}
-
-	@Override
-	public void tick(MinecraftServer server) {
-		super.tick(server);
 	}
 
 	/**

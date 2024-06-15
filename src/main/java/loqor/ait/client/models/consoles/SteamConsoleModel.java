@@ -12,7 +12,6 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Direction;
 
 public class SteamConsoleModel extends ConsoleModel {
 	private final ModelPart steam;
@@ -895,63 +894,62 @@ public class SteamConsoleModel extends ConsoleModel {
 
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (console.findTardis().isEmpty()) return;
+		Tardis tardis = console.findTardis().orElse(null);
 
-		Tardis tardis = console.findTardis().get();
+		if (tardis == null)
+			return;
 
 		matrices.push();
-
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		ModelPart throttle = steam.getChild("controls").getChild("panel_6").getChild("rot6").getChild("lever9").getChild("bone50");
-		throttle.roll = throttle.roll - ((tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed()) * 1.5f);
+		throttle.roll = throttle.roll - ((tardis.flight().speed().get() / (float) tardis.flight().maxSpeed().get()) * 1.5f);
 
 		ModelPart increment = steam.getChild("controls").getChild("panel_6").getChild("rot6").getChild("lever10").getChild("bone54");
-		increment.roll = IncrementManager.increment(console.findTardis().get()) >= 10 ? IncrementManager.increment(console.findTardis().get()) >= 100 ? IncrementManager.increment(console.findTardis().get()) >= 1000 ? IncrementManager.increment(console.findTardis().get()) >= 10000 ? increment.roll - (1.3963F * 2) : increment.roll - (1.047225F * 2) : increment.roll - (0.69815F * 2) : increment.roll - 0.69815F : increment.roll;
+		increment.roll = IncrementManager.increment(tardis) >= 10 ? IncrementManager.increment(tardis) >= 100 ? IncrementManager.increment(tardis) >= 1000 ? IncrementManager.increment(tardis) >= 10000 ? increment.roll - (1.3963F * 2) : increment.roll - (1.047225F * 2) : increment.roll - (0.69815F * 2) : increment.roll - 0.69815F : increment.roll;
 
 		ModelPart alarms = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever4").getChild("bone22");
-		alarms.roll = (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED) ? 0.4363F : -0.5672F);
+		alarms.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED) ? 0.4363F : -0.5672F);
 
 		ModelPart security = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever2").getChild("bone20");
-		security.roll = (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), SecurityControl.SECURITY_KEY) ? 0.4363F : -0.5672F);
+		security.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY) ? 0.4363F : -0.5672F);
 
 		ModelPart antigrav = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever3").getChild("bone19");
-		antigrav.roll = (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? 0.4363F : -0.5672F);
+		antigrav.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? 0.4363F : -0.5672F);
 
 		ModelPart shields = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever5").getChild("bone21");
-		shields.roll = (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(),
-				ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(),
+		shields.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(),
+				ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(tardis.getHandlers().getProperties(),
 				ShieldData.IS_VISUALLY_SHIELDED) ? 0.0F : 0.4363F : -0.5672F);
 
 		ModelPart refueling = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever").getChild("bone23");
-		refueling.roll = (console.findTardis().get().isRefueling() ? 0.4363F : -0.5672F);
+		refueling.roll = (tardis.isRefueling() ? 0.4363F : -0.5672F);
 
 		ModelPart handbrake = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("lever6").getChild("bone41");
-		handbrake.roll = handbrake.roll + (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HANDBRAKE) ? -0f : 1.5f);
+		handbrake.roll = handbrake.roll + (tardis.flight().handbrake().get() ? -0f : 1.5f);
 
 		ModelPart power = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever7").getChild("bone45");
-		power.roll = power.roll + (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.HAS_POWER) ? 0f : 1.5f);
+		power.roll = power.roll + (tardis.engine().hasPower() ? 0f : 1.5f);
 
 		ModelPart landType = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("valve").getChild("bone9");
-		landType.pivotY = landType.pivotY + (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? 0.5f : 0);
+		landType.pivotY = landType.pivotY + (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? 0.5f : 0);
 
 		ModelPart direction = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("crank").getChild("bone42");
-		direction.yaw = direction.yaw + (1.5708f * console.findTardis().get().getTravel().getDestination().getRotation());
+		direction.yaw = direction.yaw + (1.5708f * tardis.travel().getDestination().getRotation());
 
 		ModelPart doorControl = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("crank2").getChild("bone18");
-		doorControl.yaw = doorControl.yaw + (console.findTardis().get().getDoor().isOpen() ? console.findTardis().get().getDoor().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
+		doorControl.yaw = doorControl.yaw + (tardis.getDoor().isOpen() ? tardis.getDoor().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
 
 		ModelPart cloak = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone46");
-		cloak.roll = cloak.roll - (console.findTardis().get().getHandlers().getCloak().isEnabled() ? 1.5708f : 0);
+		cloak.roll = cloak.roll - (tardis.getHandlers().getCloak().isEnabled() ? 1.5708f : 0);
 
 		ModelPart doorLock = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone47");
-		doorLock.roll = doorLock.roll - (console.findTardis().get().getDoor().locked() ? 1.5708f : 0);
+		doorLock.roll = doorLock.roll - (tardis.getDoor().locked() ? 1.5708f : 0);
 
 		ModelPart autopilot = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone48");
-		autopilot.roll = autopilot.roll - (PropertiesHandler.getBool(console.findTardis().get().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND) ? 1.5708f : 0);
+		autopilot.roll = autopilot.roll - (tardis.flight().autoLand().get() ? 1.5708f : 0);
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-
 		matrices.pop();
 	}
 

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import loqor.ait.AITMod;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.registry.impl.SonicRegistry;
+import loqor.ait.tardis.TardisHandlersManager;
 import loqor.ait.tardis.base.TardisComponent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -38,7 +39,7 @@ public class LegacyUtil {
     }
 
     /**
-     * @return `true` if the map, representing the serialized {@link loqor.ait.tardis.data.TardisHandlersManager} object is legacy.
+     * @return `true` if the map, representing the serialized {@link TardisHandlersManager} object is legacy.
      */
     public static boolean isHandlersLegacy(Map<String, JsonElement> map) {
         return map.containsKey("tardisId");

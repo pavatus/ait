@@ -1,6 +1,8 @@
 package loqor.ait.tardis.control.impl;
 
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.ServerAlarmHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.control.Control;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -24,10 +26,10 @@ public class HADSControl extends Control {
 			}
 		}
 
-		PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED));
+		((ServerAlarmHandler) tardis.getHandlers().get(TardisComponent.Id.ALARMS)).toggle();
 
-		Text alarm_enabled = Text.translatable("tardis.message.control.hads.alarm_enabled");
-		Text alarms_disabled = Text.translatable("tardis.message.control.hads.alarms_disabled");
+		// Text alarm_enabled = Text.translatable("tardis.message.control.hads.alarm_enabled");
+		// Text alarms_disabled = Text.translatable("tardis.message.control.hads.alarms_disabled");
 		// player.sendMessage(((PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)) ? alarm_enabled : alarms_disabled), true);
 
 		return true;

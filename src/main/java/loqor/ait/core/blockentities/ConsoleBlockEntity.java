@@ -13,14 +13,14 @@ import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.TardisDesktop;
+import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
-import loqor.ait.tardis.link.LinkableBlockEntity;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -49,9 +49,7 @@ import org.joml.Vector3f;
 
 import java.util.*;
 
-import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
-
-public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
+public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
 	private static final Random RANDOM = new Random();
 	public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
 	public final AnimationState ANIM_STATE = new AnimationState();
@@ -60,8 +58,7 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	private boolean needsSync = true;
 	private Identifier type;
 	private Identifier variant;
-	private final boolean wasPowered = false;
-	private boolean needsReloading = true;
+    private boolean needsReloading = true;
 	private UUID parent;
 
 	public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
@@ -71,27 +68,20 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 	public ConsoleBlockEntity(BlockPos pos, BlockState state) {
 		super(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
-
-		if (!this.hasWorld())
-			return;
-
-		if (this.findTardis().isEmpty())
-			return;
-
-		this.linkDesktop();
 	}
 
 	@Override
 	public void writeNbt(NbtCompound nbt) {
+		super.writeNbt(nbt);
+
 		if (type != null)
 			nbt.putString("type", type.toString());
+
 		if (variant != null)
 			nbt.putString("variant", variant.toString());
-		if (parent != null) {
-			nbt.put("parent", NbtHelper.fromUuid(parent));
-		}
 
-		super.writeNbt(nbt);
+		if (parent != null)
+			nbt.put("parent", NbtHelper.fromUuid(parent));
 	}
 
 	@Override
@@ -99,58 +89,43 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		super.readNbt(nbt);
 
 		if (nbt.contains("type"))
-			setType(Identifier.tryParse(nbt.getString("type")));
-		if (nbt.contains("variant")) {
-			setVariant(Identifier.tryParse(nbt.getString("variant")));
-		}
-		if (nbt.contains("parent")) {
-			setParent(NbtHelper.toUuid(nbt.get("parent")));
-		}
+			this.setType(Identifier.tryParse(nbt.getString("type")));
 
-		spawnControls();
-		markNeedsSyncing();
+		if (nbt.contains("variant"))
+			this.setVariant(Identifier.tryParse(nbt.getString("variant")));
+
+		if (nbt.contains("parent"))
+			this.setParent(NbtHelper.toUuid(nbt.get("parent")));
+
+		this.spawnControls();
+		this.markNeedsSyncing();
 	}
 
 	@Override
 	public NbtCompound toInitialChunkDataNbt() {
 		NbtCompound nbt = super.toInitialChunkDataNbt();
+
 		if (nbt.contains("type"))
-			setType(ConsoleRegistry.REGISTRY.get(Identifier.tryParse(nbt.getString("type"))));
-		if (nbt.contains("variant")) {
-			setVariant(Identifier.tryParse(nbt.getString("variant")));
-		}
+			this.setType(ConsoleRegistry.REGISTRY.get(Identifier.tryParse(nbt.getString("type"))));
+
+		if (nbt.contains("variant"))
+			this.setVariant(Identifier.tryParse(nbt.getString("variant")));
+
 		if (nbt.contains("parent"))
-			setParent(NbtHelper.toUuid(nbt.get("parent")));
+			this.setParent(NbtHelper.toUuid(nbt.get("parent")));
 
 		if (type != null)
 			nbt.putString("type", type.toString());
+
 		if (variant != null)
 			nbt.putString("variant", variant.toString());
+
 		if (parent != null)
 			nbt.put("parent", NbtHelper.fromUuid(parent));
-		markNeedsControl();
-		markNeedsSyncing();
+
+		this.markNeedsControl();
+		this.markNeedsSyncing();
 		return nbt;
-	}
-
-	@Override
-	public Optional<Tardis> findTardis() {
-		if (this.tardisId == null)
-			this.refindTardis();
-
-		Optional<Tardis> found = super.findTardis();
-
-		if (found.isEmpty())
-			refindTardis();
-
-		return found;
-	}
-
-	private void refindTardis() {
-		Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
-
-		if (found != null)
-			this.setTardis(found);
 	}
 
 	@Nullable
@@ -160,33 +135,34 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	public void ask() {
-		if (!getWorld().isClient())
+		if (this.world != null && !this.world.isClient())
 			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeBlockPos(this.getPos());
+
 		ClientPlayNetworking.send(ASK, buf);
 	}
 
 	public void sync() {
-		if (this.getWorld().isClient())
+		if (this.world == null || this.world.isClient())
 			return;
 
-		syncType();
-		syncVariant();
+		this.syncType();
+		this.syncVariant();
 
 		this.syncParent();
-		needsSync = false;
+		this.needsSync = false;
 	}
 
 	private void syncType() {
-		if (!hasWorld() || world.isClient())
+		if (this.world == null || this.world.isClient())
 			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
 
-		buf.writeString(getConsoleSchema().id().toString());
-		buf.writeBlockPos(getPos());
+		buf.writeString(this.getConsoleSchema().id().toString());
+		buf.writeBlockPos(this.getPos());
 
 		for (PlayerEntity player : world.getPlayers()) {
 			ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_TYPE, buf); // safe cast as we know its server
@@ -194,48 +170,22 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	private void syncVariant() {
-		if (!hasWorld() || world.isClient())
+		if (this.world == null || world.isClient())
 			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
 
-		buf.writeString(getVariant().id().toString());
-		buf.writeBlockPos(getPos());
+		buf.writeString(this.getVariant().id().toString());
+		buf.writeBlockPos(this.getPos());
 
 		for (PlayerEntity player : world.getPlayers()) {
 			ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_VARIANT, buf); // safe cast as we know its server
 		}
 	}
 
-	public void setTardis(Tardis tardis) {
-		if (tardis == null)
-			return;
-
-		this.tardisId = tardis.getUuid();
-		// force re-link a desktop if it's not null
-		this.linkDesktop();
-	}
-
-	public void setTardis(UUID uuid) {
-		this.tardisId = uuid;
-		markDirty();
-
-		this.linkDesktop();
-	}
-
-	public void linkDesktop() {
-		if (this.findTardis().isEmpty())
-			return;
-		this.setDesktop(this.getDesktop());
-	}
-
-	public TardisDesktop getDesktop() {
-		if (this.findTardis().isEmpty()) return null;
-		return this.findTardis().get().getDesktop();
-	}
-
 	public ConsoleTypeSchema getConsoleSchema() {
-		if (type == null) setType(ConsoleRegistry.HARTNELL);
+		if (type == null)
+			this.setType(ConsoleRegistry.HARTNELL);
 
 		return ConsoleRegistry.REGISTRY.get(type);
 	}
@@ -243,20 +193,17 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	public void setType(Identifier var) {
 		type = var;
 
-		syncType();
-		markDirty();
+		this.syncType();
+		this.markDirty();
 	}
 
 	public void setType(ConsoleTypeSchema schema) {
-		setType(schema.id());
+		this.setType(schema.id());
 	}
 
 	public ConsoleVariantSchema getVariant() {
-		if (variant == null) {
-			// oh no : (
-			// lets just pick any
-			setVariant(this.getConsoleSchema().getDefaultVariant());
-		}
+		if (variant == null)
+			this.setVariant(this.getConsoleSchema().getDefaultVariant());
 
 		return ConsoleVariantRegistry.getInstance().get(variant);
 	}
@@ -268,25 +215,25 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 			AITMod.LOGGER.warn("Variant was set and it doesnt match this consoles type!");
 			AITMod.LOGGER.warn(variant + " | " + type);
 
-			if (hasWorld() && getWorld().isClient()) ask();
+			if (this.world != null && this.world.isClient())
+				this.ask();
 		}
 
-		syncVariant();
-		markDirty();
+		this.syncVariant();
+		this.markDirty();
 	}
 
 	public void setVariant(ConsoleVariantSchema schema) {
-		setVariant(schema.id());
+		this.setVariant(schema.id());
 	}
 
 	public void setParent(UUID uuid) {
 		this.parent = uuid;
-
 		this.syncParent();
 	}
 
 	private void syncParent() {
-		if (!hasWorld() || world.isClient() || this.findParent().isEmpty())
+		if (this.world == null || this.world.isClient() || this.findParent().isEmpty())
 			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
@@ -300,14 +247,14 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	}
 
 	public Optional<TardisConsole> findParent() {
-		if (this.findTardis().isEmpty()) {
+		if (this.tardis().isEmpty()) {
 			AITMod.LOGGER.warn("No tardis found for ConsoleBlockEntity!");
 			return Optional.empty();
 		}
 
-		TardisDesktop desktop = this.getDesktop();
-		TardisConsole found;
+		TardisDesktop desktop = this.tardis().get().getDesktop();
 
+		TardisConsole found;
 		if (this.parent == null) {
 			found = desktop.findConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
 
@@ -329,38 +276,21 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		AITMod.LOGGER.warn("Fixing missing console entry...");
 		TardisConsole found = new TardisConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
 
-		found.init(this.findTardis().get(), false);
-		this.getDesktop().addConsole(found);
+		TardisComponent.init(found, this.tardis().get(), false);
+		this.tardis().get().getDesktop().addConsole(found);
 
 		this.setParent(found.uuid());
 		return found;
-	}
-
-	/**
-	 * Sets the new {@link ConsoleTypeSchema} and refreshes the console entities
-	 */
-	private void changeConsole(ConsoleTypeSchema var) {
-		changeConsole(var, ConsoleVariantRegistry.withParent(var).stream().findAny().get());
-	}
-
-	private void changeConsole(ConsoleTypeSchema var, ConsoleVariantSchema variant) {
-		setType(var);
-		setVariant(variant);
-
-		if (!world.isClient() && world == TardisUtil.getTardisDimension())
-			redoControls();
-	}
-
-	private void redoControls() {
-		killControls();
-		markNeedsControl();
 	}
 
 	public static ConsoleTypeSchema nextConsole(ConsoleTypeSchema current) {
 		List<ConsoleTypeSchema> list = ConsoleRegistry.REGISTRY.stream().toList();
 
 		int idx = list.indexOf(current);
-		if (idx < 0 || idx + 1 == list.size()) return list.get(0);
+
+		if (idx < 0 || idx + 1 == list.size())
+			return list.get(0);
+
 		return list.get(idx + 1);
 	}
 
@@ -368,7 +298,10 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParent(current.parent());
 
 		int idx = list.indexOf(current);
-		if (idx < 0 || idx + 1 == list.size()) return list.get(0);
+
+		if (idx < 0 || idx + 1 == list.size())
+			return list.get(0);
+
 		return list.get(idx + 1);
 	}
 
@@ -376,17 +309,26 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		if (!world.isClient())
 			return;
 
-		if (this.findTardis().isEmpty())
+		if (this.tardis().isEmpty())
 			return;
 
 		ItemStack itemStack = player.getMainHandStack();
 		if (itemStack.getItem() == AITBlocks.ZEITON_CLUSTER.asItem()) {
-			this.findTardis().get().addFuel(15);
-			if (!player.isCreative()) itemStack.decrement(1);
-		} else if (itemStack.getItem() instanceof ChargedZeitonCrystalItem) {
+			this.tardis().get().addFuel(15);
+
+			if (!player.isCreative())
+				itemStack.decrement(1);
+
+			return;
+		}
+
+		if (itemStack.getItem() instanceof ChargedZeitonCrystalItem) {
 			NbtCompound nbt = itemStack.getOrCreateNbt();
-			if(!nbt.contains(ChargedZeitonCrystalItem.FUEL_KEY)) return;
-			this.findTardis().get().addFuel(nbt.getDouble(ChargedZeitonCrystalItem.FUEL_KEY));
+
+			if(!nbt.contains(ChargedZeitonCrystalItem.FUEL_KEY))
+				return;
+
+			this.tardis().get().addFuel(nbt.getDouble(ChargedZeitonCrystalItem.FUEL_KEY));
 			nbt.putDouble(ChargedZeitonCrystalItem.FUEL_KEY, 0);
 		}
 	}
@@ -397,21 +339,6 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		super.markRemoved();
 	}
 
-	public void setDesktop(TardisDesktop desktop) {
-		if (this.getWorld() == null || this.getWorld().isClient())
-			return;
-
-		AITMod.LOGGER.info("Linking desktop " + this.findTardis().get().getUuid());
-
-		this.findParent();
-	}
-
-	public boolean wasPowered() {
-		if (this.findTardis().isEmpty()) return false;
-		return this.wasPowered ^ this.findTardis().get().hasPower();
-	}
-
-
 	public void onBroken() {
 		this.killControls();
 	}
@@ -419,22 +346,23 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 	public void killControls() {
 		controlEntities.forEach(Entity::discard);
 		controlEntities.clear();
-		sync();
+		this.sync();
 	}
 
 	public void spawnControls() {
-		BlockPos current = getPos();
+		BlockPos current = this.getPos();
 
-		if (!(getWorld() instanceof ServerWorld server))
-			return;
-		if (getWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+		if (!(this.world instanceof ServerWorld serverWorld))
 			return;
 
-		killControls();
+		if (this.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+			return;
+
+		this.killControls();
 		ConsoleTypeSchema consoleType = getConsoleSchema();
 		ControlTypes[] controls = consoleType.getControlTypes();
-		Arrays.stream(controls).toList().forEach(control -> {
 
+		for (ControlTypes control : controls) {
 			ConsoleControlEntity controlEntity = new ConsoleControlEntity(AITEntityTypes.CONTROL_ENTITY_TYPE, getWorld());
 
 			Vector3f position = current.toCenterPos().toVector3f().add(control.getOffset().x(), control.getOffset().y(), control.getOffset().z());
@@ -444,9 +372,9 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 			controlEntity.setControlData(consoleType, control, this.getPos());
 
-			server.spawnEntity(controlEntity);
+			serverWorld.spawnEntity(controlEntity);
 			this.controlEntities.add(controlEntity);
-		});
+		}
 
 		this.needsControls = false;
 	}
@@ -466,15 +394,14 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 
 	@Override
 	public void tick(World world, BlockPos pos, BlockState state, ConsoleBlockEntity blockEntity) {
-		if (this.needsControls) {
-			spawnControls();
-		}
+		if (this.needsControls)
+			this.spawnControls();
 
 		if (needsSync)
-			sync();
+			this.sync();
 
 		if (needsReloading) {
-			markNeedsSyncing();
+			this.markNeedsSyncing();
 			needsReloading = false;
 		}
 
@@ -483,20 +410,20 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 		}
 
 		// idk
-		if (world.isClient()) {
+		if (!(world instanceof ServerWorld serverWorld)) {
 			this.tickAge();
 			return;
 		}
 
-		if (this.findTardis().isEmpty())
+		if (this.tardis().isEmpty())
 			return;
 
 		// FIXME the findParent method is not exactly cheap. You sure you want to run it every tick?
 		this.findParent().ifPresent(parent -> parent.tickConsole(this));
 
-		SequenceHandler handler = this.findTardis().get().sequence();
+		SequenceHandler handler = this.tardis().get().sequence();
 
-		if(this.findTardis().get().getTravel().inFlight() || this.findTardis().get().getTravel().isMaterialising()) {
+		if(this.tardis().get().travel().inFlight() || this.tardis().get().travel().getState() == TardisTravel.State.MAT) {
 			if (handler.hasActiveSequence() && handler.getActiveSequence() != null) {
 				//System.out.println("yes active sequence yum" + handler.getActiveSequence());
 				List<Control> sequence = handler.getActiveSequence().getControls();
@@ -519,35 +446,35 @@ public class ConsoleBlockEntity extends LinkableBlockEntity implements BlockEnti
 			}
 		}
 
-		ServerTardis tardis = (ServerTardis) this.findTardis().get();
+		ServerTardis tardis = (ServerTardis) this.tardis().get();
+		boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.getExteriorPos());
 
-		boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.getExterior().getExteriorPos());
-
-		if (tardis.getTravel().isCrashing()) {
-			((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
+		if (tardis.travel().isCrashing()) {
+			serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.025f);
-			((ServerWorld) world).spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX() + 0.5f, pos.getY() + 1.25,
+			serverWorld.spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.01f);
-			((ServerWorld) world).spawnParticles(new DustColorTransitionParticleEffect(
+			serverWorld.spawnParticles(new DustColorTransitionParticleEffect(
 							new Vector3f(0.75f, 0.75f, 0.75f), new Vector3f(0.1f, 0.1f, 0.1f), 1), pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 1, 0, 0, 0, 0.01f);
 		}
 
 		if (tardis.crash().isToxic() || tardis.crash().isUnstable()) {
-			((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
+			serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.025f);
-			((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, pos.getX() + 0.5f, pos.getY() + 1.25,
+			serverWorld.spawnParticles(ParticleTypes.CLOUD, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 1, 0, 0.05f, 0, 0.025f);
 		}
 
 		if (tardis.crash().isToxic()) {
-			((ServerWorld) world).spawnParticles(new DustColorTransitionParticleEffect(
+			serverWorld.spawnParticles(new DustColorTransitionParticleEffect(
 							new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 1),
 					pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 1, RANDOM.nextBoolean() ? 0.5f : -0.5f, 3f, RANDOM.nextBoolean() ? 0.5f : -0.5f, 0.025f);
 		}
+
 		if (tardis.isRefueling()) {
-			((ServerWorld) world).spawnParticles((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD, pos.getX() + 0.5f, pos.getY() + 1.25,
+			serverWorld.spawnParticles((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 1, 0, 0, 0, (isRiftChunk) ? 0.05f : 0.025f);
 		}
 	}

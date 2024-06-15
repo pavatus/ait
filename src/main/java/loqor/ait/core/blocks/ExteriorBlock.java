@@ -57,6 +57,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.ToIntFunction;
 
+@SuppressWarnings("deprecation")
 public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak, Waterloggable {
 
 	public static final int MAX_ROTATION_INDEX = RotationPropertyHelper.getMax();
@@ -141,20 +142,25 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
+		VoxelShape normal = this.getNormalShape(state);
 
-		if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).findTardis().isEmpty())
-			return getNormalShape(state);
+		if (!(blockEntity instanceof ExteriorBlockEntity))
+			return normal;
 
-		if (((ExteriorBlockEntity) blockEntity).findTardis().get().isSiegeMode())
+		Tardis tardis = ((ExteriorBlockEntity) blockEntity).findTardis().orElse(null);
+
+		if (tardis == null)
+			return normal;
+
+		if (tardis.siege().isActive())
 			return SIEGE_SHAPE;
 
-		TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().getTravel().getState();
+		TardisTravel.State travelState = tardis.travel().getState();
 		if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
-			return getNormalShape(state);
+			return normal;
 
-		if (DependencyChecker.hasPortals()) {
+		if (DependencyChecker.hasPortals())
 			return PORTALS_SHAPE;
-		}
 
 		return VoxelShapes.empty();
 	}
@@ -179,7 +185,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
 		Tardis tardis = ((ExteriorBlockEntity) blockEntity).findTardis().get();
 
-		if (tardis.isSiegeMode())
+		if (tardis.siege().isActive())
 			return SIEGE_SHAPE;
 
 		if (tardis.getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM))
@@ -190,7 +196,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 			if (tardis.getDoor().isOpen() && ((ExteriorBlockEntity) blockEntity).findTardis().get().getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
 				return getLedgeShape(state);
 
-		TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().getTravel().getState();
+		TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().travel().getState();
 		if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
 			return getNormalShape(state);
 
@@ -242,7 +248,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		if (!(blockEntity instanceof ExteriorBlockEntity) || ((ExteriorBlockEntity) blockEntity).findTardis().isEmpty())
 			return getNormalShape(state);
 
-		TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().getTravel().getState();
+		TardisTravel.State travelState = ((ExteriorBlockEntity) blockEntity).findTardis().get().travel().getState();
 		if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
 			return getNormalShape(state);
 
@@ -260,7 +266,6 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-
 
 		if (blockEntity instanceof ExteriorBlockEntity exteriorBlockEntity) {
 			if (world.isClient()) {
@@ -344,7 +349,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		if (antigravs)
 			return;
 
-		if (tardis.getTravel().getState() != TardisTravel.State.LANDED)
+		if (tardis.travel().getState() != TardisTravel.State.LANDED)
 			return;
 
 		if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))
@@ -355,8 +360,6 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		if (state.get(WATERLOGGED)) {
 			state.with(WATERLOGGED, false);
 		}
-
-		this.configureFallingTardis(falling, world, pos);
 	}
 
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
@@ -379,7 +382,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		Tardis tardis = falling.getTardis();
 
 		if (tardis == null) return;
-		tardis.getTravel().setPosition(new AbsoluteBlockPos.Directed(pos, world, tardis.getTravel().getPosition().getRotation()));
+		tardis.travel().setPosition(new AbsoluteBlockPos.Directed(pos, world, tardis.travel().getPosition().getRotation()));
 
 		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).setBiome(tardis);
@@ -387,9 +390,6 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
 		DoorData.lockTardis(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis, null, false);
-	}
-
-	protected void configureFallingTardis(FallingTardisEntity entity, ServerWorld world, BlockPos pos) {
 	}
 
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {

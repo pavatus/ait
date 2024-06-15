@@ -9,32 +9,32 @@ import net.minecraft.server.world.ServerWorld;
 
 public class TardisChunkUtil {
 	public static void forceLoadExteriorChunk(Tardis tardis) {
-		if (!(tardis.getTravel().getPosition().getWorld() instanceof ServerWorld)) return;
+		if (!(tardis.travel().getPosition().getWorld() instanceof ServerWorld)) return;
 
-		ForcedChunkUtil.keepChunkLoaded((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getPosition());
+		ForcedChunkUtil.keepChunkLoaded((ServerWorld) tardis.travel().getPosition().getWorld(), tardis.travel().getPosition());
 	}
 
 	public static void stopForceExteriorChunk(Tardis tardis) {
-		if (!(tardis.getTravel().getPosition().getWorld() instanceof ServerWorld)) return;
+		if (!(tardis.travel().getPosition().getWorld() instanceof ServerWorld)) return;
 
-		ForcedChunkUtil.stopForceLoading((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getPosition());
+		ForcedChunkUtil.stopForceLoading((ServerWorld) tardis.travel().getPosition().getWorld(), tardis.travel().getPosition());
 	}
 
 	public static boolean isExteriorChunkForced(Tardis tardis) {
-		if (!(tardis.getTravel().getPosition().getWorld() instanceof ServerWorld)) return false;
+		if (!(tardis.travel().getPosition().getWorld() instanceof ServerWorld)) return false;
 
-		return ForcedChunkUtil.isChunkForced((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getPosition());
+		return ForcedChunkUtil.isChunkForced((ServerWorld) tardis.travel().getPosition().getWorld(), tardis.travel().getPosition());
 	}
 
 	public static boolean shouldExteriorChunkBeForced(Tardis tardis) {
-		if (!(tardis.getTravel().getPosition().getWorld() instanceof ServerWorld)) return false;
+		if (!(tardis.travel().getPosition().getWorld() instanceof ServerWorld)) return false;
 		if (DependencyChecker.hasPortals()) {
 			return (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
-					|| (tardis.getTravel().getState() == TardisTravel.State.DEMAT)
-					|| (tardis.getTravel().getState() == TardisTravel.State.MAT) || (!TardisUtil.getPlayersInInterior(tardis).isEmpty());
+					|| (tardis.travel().getState() == TardisTravel.State.DEMAT)
+					|| (tardis.travel().getState() == TardisTravel.State.MAT) || (!TardisUtil.getPlayersInInterior(tardis).isEmpty());
 		}
 		return (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
-				|| (tardis.getTravel().getState() == TardisTravel.State.DEMAT)
-				|| (tardis.getTravel().getState() == TardisTravel.State.MAT);
+				|| (tardis.travel().getState() == TardisTravel.State.DEMAT)
+				|| (tardis.travel().getState() == TardisTravel.State.MAT);
 	}
 }

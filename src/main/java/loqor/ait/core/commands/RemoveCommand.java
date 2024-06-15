@@ -36,7 +36,7 @@ public class RemoveCommand {
         );
 
         // Remove the exterior if it exists
-        AbsoluteBlockPos exterior = tardis.getHandlers().getExteriorPos();
+        AbsoluteBlockPos exterior = tardis.getExteriorPos();
 
         if (exterior != null) {
             exterior.getWorld().removeBlock(exterior, false);

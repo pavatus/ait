@@ -17,7 +17,6 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
@@ -26,9 +25,9 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 public class UnlockCommand {
 
-    public static final SuggestionProvider<ServerCommandSource> CONSOLE_SUGGESTION = (context, builder) -> CommandSource.suggestMatching(ConsoleVariantRegistry.getInstance().toList().stream().map(schema -> schema.id().toString()), builder);
-    public static final SuggestionProvider<ServerCommandSource> DESKTOP_SUGGESTION = (context, builder) -> CommandSource.suggestMatching(DesktopRegistry.getInstance().toList().stream().map(schema -> schema.id().toString()), builder);
-    public static final SuggestionProvider<ServerCommandSource> EXTERIOR_SUGGESTION = (context, builder) -> CommandSource.suggestMatching(ExteriorVariantRegistry.getInstance().toList().stream().map(schema -> schema.id().toString()), builder);
+    public static final SuggestionProvider<ServerCommandSource> CONSOLE_SUGGESTION = (context, builder) -> IdentifierWildcardArgumentType.suggestWildcardIds(builder, ConsoleVariantRegistry.getInstance());
+    public static final SuggestionProvider<ServerCommandSource> DESKTOP_SUGGESTION = (context, builder) -> IdentifierWildcardArgumentType.suggestWildcardIds(builder, DesktopRegistry.getInstance());
+    public static final SuggestionProvider<ServerCommandSource> EXTERIOR_SUGGESTION = (context, builder) -> IdentifierWildcardArgumentType.suggestWildcardIds(builder, ExteriorVariantRegistry.getInstance());
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(AITMod.MOD_ID)
@@ -54,7 +53,7 @@ public class UnlockCommand {
             T t = wildcard.get();
             tardis.unlock(t);
 
-            source.sendMessage(Text.translatableWithFallback("unlock.some",
+            source.sendMessage(Text.translatableWithFallback("command.ait.unlock.some",
                     "Granted [%s] %s %s", tardis.getUuid(), t.name(), type)
             );
 
@@ -62,7 +61,7 @@ public class UnlockCommand {
         }
 
         registry.unlockAll(tardis);
-        source.sendMessage(Text.translatableWithFallback("unlock.every",
+        source.sendMessage(Text.translatableWithFallback("command.ait.unlock.all",
                 "Granted [%s] every %s", tardis.getUuid(), type)
         );
 

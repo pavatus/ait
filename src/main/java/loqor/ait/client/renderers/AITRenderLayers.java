@@ -1,11 +1,11 @@
 package loqor.ait.client.renderers;
 
+import loqor.ait.client.util.ClientLightUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderPhase;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
@@ -25,6 +25,10 @@ public class AITRenderLayers extends RenderLayer {
 		return RenderLayer.of("tardis", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, VertexFormat.DrawMode.QUADS, 256, false, true, multiPhaseParameters);
 	});
 
+	/**
+	 * @see loqor.ait.client.util.ClientLightUtil#renderEmissive(ClientLightUtil.Renderable, Identifier, Object, ModelPart, MatrixStack, VertexConsumerProvider, int, int, float, float, float, float) 
+	 */
+	@Deprecated
 	public static RenderLayer tardisRenderEmissionCull(Identifier texture, boolean affectsOutline) {
 		return TARDIS_EMISSION.apply(texture, false);
 	}
@@ -36,4 +40,19 @@ public class AITRenderLayers extends RenderLayer {
 	private AITRenderLayers(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
 		super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
 	}
+
+	// @TODO Blurring for the exterior, referenced from the Tempad mod -> https://github.com/terrarium-earth/Tempad/blob/1.20.x/fabric/src/main/java/me/codexadrian/tempad/common/fabric/FabricTempadClient.java
+	/*public static final class RenderLayerAccessor extends RenderLayer {
+
+		public static final RenderLayer BLURRING_RENDER_LAYER = RenderLayer.of("exteriorBlur", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY).cull(new RenderPhase.Cull(false)).program(new RenderPhase.ShaderProgram(() -> exteriorBlur)).target(new RenderPhase.Target("exterior_blur", () -> {
+			Target target = INSTANCE.getBlurTarget();
+			if (target != null) {
+				target.startDrawing();
+			}
+		})))
+
+		private RenderLayerAccessor(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
+			super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
+		}
+	}*/
 }

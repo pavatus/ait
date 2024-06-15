@@ -5,6 +5,7 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -71,15 +72,17 @@ public class TardisBuilder {
     }
 
     public ServerTardis build() {
+        long start = System.currentTimeMillis();
         this.validate();
 
         ServerTardis tardis = new ServerTardis(this.uuid, this.pos, this.desktop, this.exterior);
-        tardis.init(false);
+        Tardis.init(tardis, false);
 
         for (Consumer<ServerTardis> consumer : this.postInit) {
             consumer.accept(tardis);
         }
 
+        AITMod.LOGGER.info("Built {} in {}mst", tardis, System.currentTimeMillis() - start);
         return tardis;
     }
 }

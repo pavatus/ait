@@ -4,6 +4,9 @@ import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
@@ -19,7 +22,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ShieldData extends TardisLink {
+public class ShieldData extends TardisComponent implements TardisTickable {
 	public static String IS_SHIELDED = "is_shielded";
 	public static String IS_VISUALLY_SHIELDED = "is_visually_shielded";
 
@@ -58,23 +61,22 @@ public class ShieldData extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
-		if (this.areShieldsActive() && !this.tardis().hasPower())
+		if (this.areShieldsActive() && !this.tardis().engine().hasPower())
 			this.disableAll();
 
 		if (!this.areShieldsActive())
 			return;
 
-		if (this.tardis().getExterior().getExteriorPos() == null)
+		if (this.tardis().getExteriorPos() == null)
 			return;
 
 		Tardis tardis = this.tardis();
 
 		tardis.removeFuel(2 * (tardis.tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick
-		World world = tardis.getExterior().getExteriorPos().getWorld();
+		World world = tardis.getExteriorPos().getWorld();
 		world.getOtherEntities(null,
-						new Box(getExteriorPos()).expand(8f),
+						new Box(tardis.getExteriorPos()).expand(8f),
 						EntityPredicates.EXCEPT_SPECTATOR)
 				.stream()
 				.filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
@@ -87,8 +89,8 @@ public class ShieldData extends TardisLink {
 						((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
 					}
 					if(this.areVisualShieldsActive()) {
-						if (entity.squaredDistanceTo(this.getExteriorPos().toCenterPos()) <= 8f) {
-							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(this.getExteriorPos().toCenterPos()).normalize().multiply(0.1f);
+						if (entity.squaredDistanceTo(tardis.getExteriorPos().toCenterPos()) <= 8f) {
+							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(tardis.getExteriorPos().toCenterPos()).normalize().multiply(0.1f);
 							if(entity instanceof ProjectileEntity projectile) {
 								if(projectile instanceof TridentEntity) {
 									projectile.getVelocity().add(motion.multiply(2f));

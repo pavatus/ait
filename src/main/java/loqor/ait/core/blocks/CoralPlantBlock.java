@@ -8,7 +8,7 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.manager.TardisBuilder;
-import loqor.ait.tardis.advancement.TardisCriterions;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
@@ -128,9 +128,11 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 				coral.markDirty();
 			}
 		}
-		if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) || (!RiftChunkManager.isRiftChunk(pos) && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
+		if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) ||
+				(!RiftChunkManager.isRiftChunk(pos) &&
+						!(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
 			// GET IT OUTTA HERE!!!
-			world.breakBlock(pos, true);
+			world.breakBlock(pos, placer.isPlayer() ? !((PlayerEntity) placer).isCreative() : true);
 			return;
 		}
 

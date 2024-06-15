@@ -13,7 +13,6 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Direction;
 
 public class AlnicoConsoleModel extends ConsoleModel {
 	private final ModelPart alnico;
@@ -816,65 +815,65 @@ public class AlnicoConsoleModel extends ConsoleModel {
 
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (console.findTardis().isEmpty()) return;
+		Tardis tardis = console.findTardis().orElse(null);
 
-		Tardis tardis = console.findTardis().get();
+		if (tardis == null)
+			return;
 
 		matrices.push();
-
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		ModelPart throttle = alnico.getChild("section1").getChild("controls").getChild("fliplever1").getChild("bone5");
-		throttle.pitch = throttle.pitch + ((tardis.getTravel().getSpeed() / (float) tardis.getTravel().getMaxSpeed()) * 1.5f);
+		throttle.pitch = throttle.pitch + ((tardis.flight().speed().get() / (float) tardis.flight().maxSpeed().get()) * 1.5f);
 
 		ModelPart handbrake = alnico.getChild("section1").getChild("controls").getChild("biglever").getChild("bone");
-		handbrake.pitch = !PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.HANDBRAKE) ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;
+		handbrake.pitch = !tardis.flight().handbrake().get() ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;
 
 		ModelPart power = alnico.getChild("section4").getChild("controls4").getChild("biglever2").getChild("bone12");
-		power.pitch = !console.findTardis().get().hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
+		power.pitch = !tardis.engine().hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
 
 		ModelPart autoPilot = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch1");
-		autoPilot.pitch = PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.AUTO_LAND) ? autoPilot.pitch + 0.5f : autoPilot.pitch;
+		autoPilot.pitch = tardis.flight().autoLand().get() ? autoPilot.pitch + 0.5f : autoPilot.pitch;
 
 		ModelPart security = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch4");
-		security.pitch = PropertiesHandler.getBool(console.findTardis().get().properties(), SecurityControl.SECURITY_KEY) ? security.pitch + 0.5f : security.pitch;
+		security.pitch = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? security.pitch + 0.5f : security.pitch;
 
 		ModelPart siegeMode = alnico.getChild("section3").getChild("controls3").getChild("siegemode").getChild("lever");
-		siegeMode.pitch = PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.SIEGE_MODE) ? siegeMode.pitch + 0.9f : siegeMode.pitch;
+		siegeMode.pitch = tardis.siege().isActive() ? siegeMode.pitch + 0.9f : siegeMode.pitch;
 
 		ModelPart refueler = alnico.getChild("section5").getChild("controls5").getChild("refueler").getChild("gasknob");
-		refueler.yaw = !console.findTardis().get().isRefueling() ? refueler.yaw - 0.7854f : refueler.yaw;
+		refueler.yaw = !tardis.isRefueling() ? refueler.yaw - 0.7854f : refueler.yaw;
 
 		ModelPart fuelGauge = alnico.getChild("section3").getChild("controls3").getChild("geiger").getChild("needle");
-		fuelGauge.roll = (float) (((console.findTardis().get().getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
+		fuelGauge.roll = (float) (((tardis.getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
 
 		ModelPart increment = alnico.getChild("section5").getChild("controls5").getChild("multiswitchpanel2").getChild("longswitch5");
-		increment.pitch = IncrementManager.increment(console.findTardis().get()) >= 10 ? IncrementManager.increment(console.findTardis().get()) >= 100 ? IncrementManager.increment(console.findTardis().get()) >= 1000 ? IncrementManager.increment(console.findTardis().get()) >= 10000 ? increment.pitch + 1.5f : increment.pitch + 1.25f : increment.pitch + 1f : increment.pitch + 0.5f : increment.pitch;
+		increment.pitch = IncrementManager.increment(tardis) >= 10 ? IncrementManager.increment(tardis) >= 100 ? IncrementManager.increment(tardis) >= 1000 ? IncrementManager.increment(tardis) >= 10000 ? increment.pitch + 1.5f : increment.pitch + 1.25f : increment.pitch + 1f : increment.pitch + 0.5f : increment.pitch;
 
 		ModelPart shield = alnico.getChild("section5").getChild("controls5").getChild("multiswitchpanel2").getChild("longswitch8");
-		shield.pitch = PropertiesHandler.getBool(console.findTardis().get().properties(), ShieldData.IS_SHIELDED) ? shield.pitch + 1f : shield.pitch;
+		shield.pitch = PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED) ? shield.pitch + 1f : shield.pitch;
 
 		ModelPart landtype = alnico.getChild("section1").getChild("controls").getChild("tinyswitch2").getChild("bone2");
-		landtype.yaw = landtype.yaw + (PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.FIND_GROUND) ? 1.5708f : 0);
+		landtype.yaw = landtype.yaw + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? 1.5708f : 0);
 
 		ModelPart antigravs = alnico.getChild("section1").getChild("controls").getChild("tinyswitch").getChild("bone3");
-		antigravs.yaw = antigravs.yaw + (PropertiesHandler.getBool(console.findTardis().get().properties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? 1.5708f : 0);
+		antigravs.yaw = antigravs.yaw + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? 1.5708f : 0);
 
 		ModelPart doorControl = alnico.getChild("section5").getChild("controls5").getChild("tinyswitch6").getChild("bone24");
-		doorControl.yaw = doorControl.yaw + (console.findTardis().get().getDoor().isOpen() ? console.findTardis().get().getDoor().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
+		doorControl.yaw = doorControl.yaw + (tardis.getDoor().isOpen() ? tardis.getDoor().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
 
 		ModelPart doorLock = alnico.getChild("section5").getChild("controls5").getChild("tinyswitch7").getChild("bone25");
-		doorLock.yaw = doorLock.yaw + (console.findTardis().get().getDoor().locked() ? 1.5708f : 0);
+		doorLock.yaw = doorLock.yaw + (tardis.getDoor().locked() ? 1.5708f : 0);
 
 		ModelPart toast1 = alnico.getChild("section2").getChild("controls2").getChild("waypointcatridge").getChild("toast1");
 		ModelPart toastlever = alnico.getChild("section2").getChild("controls2").getChild("waypointcatridge").getChild("toastlever");
 		ModelPart toast2 = alnico.getChild("section2").getChild("controls2").getChild("waypointcatridge").getChild("toast2");
-		toast1.visible = console.findTardis().get().waypoint().hasCartridge();
-		toastlever.pivotY = toastlever.pivotY + (!console.findTardis().get().waypoint().hasCartridge() ? 2f : 0);
-		toast2.visible = console.findTardis().get().waypoint().hasCartridge();
+		toast1.visible = tardis.waypoint().hasCartridge();
+		toastlever.pivotY = toastlever.pivotY + (!tardis.waypoint().hasCartridge() ? 2f : 0);
+		toast2.visible = tardis.waypoint().hasCartridge();
 
 		ModelPart direction = alnico.getChild("section5").getChild("controls5").getChild("tinyswitch9").getChild("bone26");
-		direction.yaw += (1.5708f * console.findTardis().get().getTravel().getDestination().getRotation());
+		direction.yaw += (1.5708f * tardis.travel().getDestination().getRotation());
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

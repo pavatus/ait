@@ -34,7 +34,7 @@ public class InteriorFlightSound extends PlayerFollowingLoopingSound {
 	private static float getRandomPitch() {
 		if (ClientTardisUtil.getCurrentTardis() == null) return 1f;
 
-		int speed = ClientTardisUtil.getCurrentTardis().getTravel().getSpeed();
+		int speed = ClientTardisUtil.getCurrentTardis().flight().speed().get();
 
 		if (ClientSoundManager.getFlight().hasThrottleAndHandbrakeDown()) {
 			// todo i hate switch

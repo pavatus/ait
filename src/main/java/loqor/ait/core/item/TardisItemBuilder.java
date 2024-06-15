@@ -65,7 +65,7 @@ public class TardisItemBuilder extends Item {
 			if (consoleBlock.findTardis().isEmpty())
 				return ActionResult.FAIL;
 
-			TardisTravel.State state = consoleBlock.findTardis().get().getTravel().getState();
+			TardisTravel.State state = consoleBlock.findTardis().get().travel().getState();
 
 			if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
 				return ActionResult.PASS;

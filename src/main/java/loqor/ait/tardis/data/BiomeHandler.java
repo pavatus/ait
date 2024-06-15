@@ -2,18 +2,14 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-public class BiomeHandler extends TardisLink {
+public class BiomeHandler extends TardisComponent {
 
     public static final String BIOME_KEY = "biome_key";
 
@@ -21,14 +17,14 @@ public class BiomeHandler extends TardisLink {
         super(Id.BIOME);
     }
 
-    @Override
+    /*@Override
     public void tick(MinecraftServer server) {
         super.tick(server);
-    }
+    }*/
 
     public void setBiome(Tardis tardis) {
-        if(tardis.getExterior().getExteriorPos() == null) return;
-        World world = tardis.getExterior().getExteriorPos().getWorld();
+        if(tardis.getExteriorPos() == null) return;
+        World world = tardis.getExteriorPos().getWorld();
 
         if(world.isClient())
             return;

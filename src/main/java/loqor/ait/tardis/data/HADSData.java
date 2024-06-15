@@ -1,6 +1,9 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardisTravel;
@@ -14,7 +17,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class HADSData extends TardisLink {
+public class HADSData extends TardisComponent implements TardisTickable {
 
 	public HADSData() {
 		super(Id.HADS);
@@ -35,15 +38,15 @@ public class HADSData extends TardisLink {
 	@Override
 	public void tick(MinecraftServer server) {
 		if (isHADSActive())
-			tickingForDanger(getExteriorPos().getWorld());
+			tickingForDanger(tardis.getExteriorPos().getWorld());
 	}
 
 
 	// @TODO Fix hads idk why its broken. duzo did something to the demat idk what happened lol
 	public void tickingForDanger(World world) {
-		if (getExteriorPos() == null) return;
+		if (tardis.getExteriorPos() == null) return;
 		List<Entity> listOfEntities = world.getOtherEntities(null,
-				new Box(getExteriorPos()).expand(3f),
+				new Box(tardis.getExteriorPos()).expand(3f),
 				EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
 		/*if(isHADSActive()) {*/
 		for (Entity entity : listOfEntities) {
@@ -65,7 +68,7 @@ public class HADSData extends TardisLink {
 	public void dematerialiseWhenInDanger() {
 		ServerTardis tardis = (ServerTardis) tardis();
 
-		ServerTardisTravel travel = (ServerTardisTravel) tardis.getTravel();
+		ServerTardisTravel travel = (ServerTardisTravel) tardis.travel();
 		TardisTravel.State state = travel.getState();
 
 		ServerAlarmHandler alarm = tardis.getHandlers().getAlarms();

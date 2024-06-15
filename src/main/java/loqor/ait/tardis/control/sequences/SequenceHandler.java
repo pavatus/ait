@@ -2,10 +2,11 @@ package loqor.ait.tardis.control.sequences;
 
 import loqor.ait.registry.impl.SequenceRegistry;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.TardisLink;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.particle.DustParticleEffect;
@@ -22,12 +23,13 @@ import org.joml.Vector3f;
 
 import java.util.UUID;
 
-public class SequenceHandler extends TardisLink {
+public class SequenceHandler extends TardisComponent implements TardisTickable {
 	@Exclude
 	private RecentControls recent;
 	private int ticks = 0;
 	@Exclude
 	private Sequence activeSequence;
+	private static final Random random = Random.create();
 	private UUID playerUUID;
 
 	public SequenceHandler() {
@@ -35,9 +37,7 @@ public class SequenceHandler extends TardisLink {
 	}
 
 	@Override
-	public void init(Tardis tardis, boolean deserialized) {
-		super.init(tardis, deserialized);
-
+	protected void onInit(InitContext ctx) {
 		recent = new RecentControls(tardis.getUuid());
 		activeSequence = null;
 	}
@@ -87,8 +87,7 @@ public class SequenceHandler extends TardisLink {
 
 	public void triggerRandomSequence(boolean setTicksTo0) {
 		if (setTicksTo0) ticks = 0;
-		// TODO: replace with built-in registry random
-		int rand = Random.create().nextBetween(0, SequenceRegistry.REGISTRY.size());
+		int rand = random.nextBetween(0, SequenceRegistry.REGISTRY.size());
 		Sequence sequence = SequenceRegistry.REGISTRY.get(rand);
 
 		if (sequence == null)
@@ -163,7 +162,6 @@ public class SequenceHandler extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		if (this.getActiveSequence() == null) return;
 

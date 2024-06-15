@@ -362,7 +362,7 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
 
 		ClientTardis tardis = (ClientTardis) exterior.findTardis().get();
 
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 		TardisTravel.State state = travel.getState();
 
 		root = (tardis.getHandlers().getInteriorChanger().isGenerating() || (state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT)) ? coral.getChild("six") : coral.getChild("seven");

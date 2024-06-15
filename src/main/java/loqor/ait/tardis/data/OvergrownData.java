@@ -3,13 +3,16 @@ package loqor.ait.tardis.data;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
 import java.util.Random;
 
-public class OvergrownData extends TardisLink {
+public class OvergrownData extends TardisComponent implements TardisTickable {
 	public static final String IS_OVERGROWN = "overgrown";
 	public static final int MAXIMUM_TICKS = 600;
 	public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
@@ -64,12 +67,11 @@ public class OvergrownData extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		if (tardis().isGrowth())
 			return;
 
-		if (this.isOvergrown() && (this.tardis().getTravel().getState() == TardisTravel.State.FLIGHT || this.tardis().getTravel().getState() == TardisTravel.State.MAT)) {
+		if (this.isOvergrown() && (this.tardis().travel().getState() == TardisTravel.State.FLIGHT || this.tardis().travel().getState() == TardisTravel.State.MAT)) {
 			this.setOvergrown(false);
 			this.setTicks(0);
 			return;
@@ -77,7 +79,7 @@ public class OvergrownData extends TardisLink {
 
 		//if (!this.getExteriorPos().getWorld().getBiome(this.getTardis().get().getTravel().getPosition()).isIn(BiomeTags.IS_FOREST)) return;
 
-		if (this.isOvergrown() || this.tardis().getTravel().getState() != TardisTravel.State.LANDED)
+		if (this.isOvergrown() || this.tardis().travel().getState() != TardisTravel.State.LANDED)
 			return;
 
 		// We know the tardis is landed so we can start ticking away

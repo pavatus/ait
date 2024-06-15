@@ -54,7 +54,7 @@ public class TardisArgumentType implements ArgumentType<TardisArgumentType.Serve
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return CommandSource.suggestMatching(ServerTardisManager.getInstance().getLookup().keySet().stream().map(UUID::toString), builder);
+        return CommandSource.suggestMatching(ServerTardisManager.getInstance().ids().stream().map(UUID::toString), builder);
     }
 
     @Override

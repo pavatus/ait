@@ -132,7 +132,7 @@ public class ClientHumHandler extends SoundHandler {
 			return;
 		}
 
-		if (isPlayerInATardis() && isEnabled() && tardis().hasPower()) {
+		if (isPlayerInATardis() && isEnabled() && tardis().engine().hasPower()) {
 			this.startIfNotPlaying(this.getHum());
 		} else {
 			this.stopSounds();

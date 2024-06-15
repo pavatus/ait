@@ -3,11 +3,9 @@ package loqor.ait.core.item;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -109,7 +107,7 @@ public class KeyItem extends LinkableItem {
 
 		KeyItem keyType = (KeyItem) stack.getItem().asItem();
 
-		if (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HANDBRAKE))
+		if (tardis.flight().handbrake().get())
 			return;
 
 		if (!keyType.hasProtocol(Protocols.HAIL))
@@ -118,12 +116,12 @@ public class KeyItem extends LinkableItem {
 		if (player.getHealth() > 4 || player.getWorld() == TardisUtil.getTardisDimension())
 			return;
 
-		tardis.getTravel().setDestination(TardisUtil.createFromPlayer(player), true);
+		tardis.travel().setDestination(TardisUtil.createFromPlayer(player), true);
 
-		if (tardis.getTravel().getState() == TardisTravel.State.LANDED) {
-			tardis.getTravel().dematerialise(true);
-		} else if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
-			tardis.getTravel().materialise();
+		if (tardis.travel().getState() == TardisTravel.State.LANDED) {
+			tardis.travel().dematerialise(true);
+		} else if (tardis.travel().getState() == TardisTravel.State.FLIGHT) {
+			tardis.travel().materialise();
 		}
 
 		player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3));

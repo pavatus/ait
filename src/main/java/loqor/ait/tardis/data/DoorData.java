@@ -7,7 +7,9 @@ import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.advancement.TardisCriterions;
+import loqor.ait.core.advancement.TardisCriterions;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.item.AxeItem;
@@ -27,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static loqor.ait.tardis.TardisTravel.State.*;
 
-public class DoorData extends TardisLink {
+public class DoorData extends TardisComponent implements TardisTickable {
 	private boolean locked, left, right;
 	private DoorStateEnum doorState;
 	public DoorStateEnum tempExteriorState; // this is the previous state before it was changed, used for checking when the door has been changed so the animation can start. Set on server, used on client
@@ -40,13 +42,7 @@ public class DoorData extends TardisLink {
 	}
 
 	@Override
-	public void init(Tardis tardis, boolean deserialized) {
-		super.init(tardis, deserialized);
-	}
-
-	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		if (shouldSucc())
 			this.succ();
@@ -66,7 +62,7 @@ public class DoorData extends TardisLink {
 				.filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
 				.forEach(entity -> {
 					// Calculate the motion vector away from the door
-					Vec3d motion = this.getDoorPos().offset(RotationPropertyHelper.toDirection(this.getDoorPos().getRotation()).get().getOpposite()).toCenterPos().subtract(entity.getPos()).normalize().multiply(0.05);
+					Vec3d motion = tardis.getDoorPos().offset(RotationPropertyHelper.toDirection(tardis.getDoorPos().getRotation()).get().getOpposite()).toCenterPos().subtract(entity.getPos()).normalize().multiply(0.05);
 
 					// Apply the motion to the entity
 					entity.setVelocity(entity.getVelocity().add(motion));
@@ -76,12 +72,12 @@ public class DoorData extends TardisLink {
 	}
 
 	private boolean shouldSucc() {
-		if (getDoorPos() == null)
+		if (tardis.getDoorPos() == null)
 			return false;
 
-		return (tardis().getTravel().getState() != LANDED && tardis().getTravel().getState() != MAT)
-				&& !this.tardis().areShieldsActive() && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(
-						tardis().getDesktop().getDoorPos()
+		return (tardis.travel().getState() != LANDED && tardis().travel().getState() != MAT)
+				&& !tardis.areShieldsActive() && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(
+						tardis.getDoorPos()
 		) instanceof DoorBlockEntity;
 	}
 
@@ -195,7 +191,7 @@ public class DoorData extends TardisLink {
 
 				if (pos != null)
 					world.playSound(null, pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 1f, 1f);
-				tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
+				tardis.getDoorPos().getWorld().playSound(null, tardis.getDoorPos(), SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
 
 				TardisCriterions.VEGETATION.trigger(player);
 				return true;
@@ -204,11 +200,11 @@ public class DoorData extends TardisLink {
 			if (pos != null) // fixme will play sound twice on interior door
 				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
 
-			tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+			tardis.getDoorPos().getWorld().playSound(null, tardis.getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
 			return false;
 		}
 
-		if (!tardis.hasPower() && tardis.getLockedTardis()) {
+		if (!tardis.engine().hasPower() && tardis.getLockedTardis()) {
 			// Bro cant escape
 			if (player == null)
 				return false;
@@ -216,22 +212,22 @@ public class DoorData extends TardisLink {
 			ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
 
 			// if holding a key and in siege mode and have an empty interior, disable siege mode !!
-			if (stack.getItem() instanceof KeyItem && tardis.isSiegeMode() && KeyItem.isOf(world, stack, tardis) && !TardisUtil.isInteriorNotEmpty(tardis)) {
+			if (stack.getItem() instanceof KeyItem && tardis.siege().isActive() && KeyItem.isOf(world, stack, tardis) && !TardisUtil.isInteriorNotEmpty(tardis)) {
 				player.swingHand(Hand.MAIN_HAND);
-				tardis.setSiegeMode(false);
+				tardis.siege().setActive(false);
 				lockTardis(false, tardis, player, true);
 			}
 
 			// if holding an axe then break open the door RAHHH
 			if (stack.getItem() instanceof AxeItem) {
-				if (tardis.isSiegeMode()) return false;
+				if (tardis.siege().isActive()) return false;
 
 				player.swingHand(Hand.MAIN_HAND);
 				stack.setDamage(stack.getDamage() - 1);
 
 				if (pos != null)
 					world.playSound(null, pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 1f, 1f);
-				tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
+				tardis.getDoorPos().getWorld().playSound(null, tardis.getDoorPos(), SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
 
 				lockTardis(false, tardis, player, true); // forcefully unlock the tardis
 				tardis.getDoor().openDoors();
@@ -242,7 +238,7 @@ public class DoorData extends TardisLink {
 			if (pos != null) // fixme will play sound twice on interior door
 				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
 
-			tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+			tardis.getDoorPos().getWorld().playSound(null, tardis.getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
 			return false;
 		}
 
@@ -250,7 +246,7 @@ public class DoorData extends TardisLink {
 			if (player != null && pos != null) {
 				player.sendMessage(Text.literal("\uD83D\uDD12"), true);
 				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
-				tardis.getDoor().getDoorPos().getWorld().playSound(null, tardis.getDoor().getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+				tardis.getDoorPos().getWorld().playSound(null, tardis.getDoorPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
 			}
 
 			return false;
@@ -261,8 +257,8 @@ public class DoorData extends TardisLink {
 		DoorSchema doorSchema = tardis.getExterior().getVariant().door();
 		SoundEvent sound = doorSchema.isDouble() && door.isBothOpen() ? doorSchema.closeSound() : doorSchema.openSound();
 
-		tardis.getDoor().getExteriorPos().getWorld().playSound(null, door.getExteriorPos(), sound, SoundCategory.BLOCKS, 0.6F, 1F);
-		tardis.getDoor().getDoorPos().getWorld().playSound(null, door.getDoorPos(), sound, SoundCategory.BLOCKS, 0.6F, 1F);
+		tardis.getExteriorPos().getWorld().playSound(null, tardis.getExteriorPos(), sound, SoundCategory.BLOCKS, 0.6F, 1F);
+		tardis.getDoorPos().getWorld().playSound(null, tardis.getDoorPos(), sound, SoundCategory.BLOCKS, 0.6F, 1F);
 
 		if (!doorSchema.isDouble()) {
 			door.setDoorState(door.getDoorState() == DoorStateEnum.FIRST ? DoorStateEnum.CLOSED : DoorStateEnum.FIRST);
@@ -292,7 +288,7 @@ public class DoorData extends TardisLink {
 		if (tardis.getLockedTardis() == locked)
 			return true;
 
-		if (!forced && (tardis.getTravel().getState() == DEMAT || tardis.getTravel().getState() == MAT))
+		if (!forced && (tardis.travel().getState() == DEMAT || tardis.travel().getState() == MAT))
 			return false;
 
 		tardis.setLockedTardis(locked);
@@ -307,14 +303,14 @@ public class DoorData extends TardisLink {
 			PropertiesHandler.set(tardis, PropertiesHandler.PREVIOUSLY_LOCKED, locked);
 		}
 
-		if (tardis.isSiegeMode()) return true;
+		if (tardis.siege().isActive()) return true;
 
 		String lockedState = tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
 		if (player != null)
 			player.sendMessage(Text.literal(lockedState), true);
 
-		door.getExteriorPos().getWorld().playSound(null, door.getExteriorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
-		door.getDoorPos().getWorld().playSound(null, door.getDoorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+		tardis.getExteriorPos().getWorld().playSound(null, tardis.getExteriorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+		tardis.getDoorPos().getWorld().playSound(null, tardis.getDoorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
 
 		return true;
 	}

@@ -32,7 +32,7 @@ public class DesktopGenerator {
 		if (optional.isPresent()) {
 			StructureTemplate template = optional.get();
 
-			template.place(level, BlockPos.ofFloored(corners.getBox().getCenter())/*centreTemplateAtCentre(centreTemplate(template), centreCorners(corners))*/, BlockPos.ofFloored(corners.getBox().getCenter()), new StructurePlacementData(), level.getRandom(), Block.NO_REDRAW);
+			template.place(level, BlockPos.ofFloored(corners.getBox().getCenter())/*centreTemplateAtCentre(centreTemplate(template), centreCorners(corners))*/, BlockPos.ofFloored(corners.getBox().getCenter()), new StructurePlacementData(), level.getRandom(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
 			return TardisUtil.findBlockInTemplate(template, BlockPos.ofFloored(corners.getBox().getCenter()), Direction.SOUTH, AITBlocks.DOOR_BLOCK);
 		}
 

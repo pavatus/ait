@@ -48,7 +48,7 @@ public class HammerItem extends SwordItem {
 			if (player == null) return ActionResult.PASS;
 			if (consoleBlockEntity.findTardis().isEmpty()) return ActionResult.PASS;
 			Tardis tardis = consoleBlockEntity.findTardis().get();
-			if (!(tardis.getTravel().getState() == TardisTravel.State.FLIGHT)) {
+			if (!(tardis.travel().getState() == TardisTravel.State.FLIGHT)) {
 				world.playSound(null, consoleBlockEntity.getPos(),
 						SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS, 1f, 1.0f);
 				return ActionResult.SUCCESS;
@@ -56,7 +56,7 @@ public class HammerItem extends SwordItem {
 			FlightData flightData = tardis.flight();
 			int targetTicks = flightData.getTargetTicks();
 			int current_flight_ticks = flightData.getFlightTicks();
-			int added_flight_ticks = 500 * tardis.getTravel().getSpeed();
+			int added_flight_ticks = 500 * tardis.flight().speed().get();
 			double current_fuel = tardis.fuel().getCurrentFuel();
 			double max_fuel = tardis.fuel().getMaxFuel();
 			if (tardis.tardisHammerAnnoyance > 0) {
@@ -64,10 +64,10 @@ public class HammerItem extends SwordItem {
 			}
 			double estimated_fuel_cost_for_hit = added_flight_ticks / 5.0;
 			if (tardis.tardisHammerAnnoyance > 0) {
-				estimated_fuel_cost_for_hit += (150 * tardis.getTravel().getSpeed() * tardis.tardisHammerAnnoyance) / 7.0;
+				estimated_fuel_cost_for_hit += (150 * tardis.flight().speed().get() * tardis.tardisHammerAnnoyance) / 7.0;
 			}
 			if (!world.isClient() && current_fuel + estimated_fuel_cost_for_hit > max_fuel) {
-				tardis.getTravel().crash();
+				tardis.travel().crash();
 				tardis.fuel().setCurrentFuel(0.0);
 				return ActionResult.SUCCESS;
 			}
@@ -75,7 +75,7 @@ public class HammerItem extends SwordItem {
 			tardis.fuel().setCurrentFuel(current_fuel - estimated_fuel_cost_for_hit);
 			tardis.tardisHammerAnnoyance++;
 			if (!world.isClient() && shouldCrashTardis(tardis.tardisHammerAnnoyance)) {
-				tardis.getTravel().crash();
+				tardis.travel().crash();
 			} else {
 				world.playSound(null, consoleBlockEntity.getPos(),
 						SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.25f * tardis.tardisHammerAnnoyance, 1.0f);

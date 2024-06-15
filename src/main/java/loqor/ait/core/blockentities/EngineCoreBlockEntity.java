@@ -2,15 +2,10 @@ package loqor.ait.core.blockentities;
 
 import com.google.common.collect.Lists;
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableBlockEntity;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -40,7 +35,6 @@ import java.util.UUID;
 import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
 
 public class EngineCoreBlockEntity extends LinkableBlockEntity {
-    private static final Block[] ACTIVATING_BLOCKS;
     public int ticks;
     private float ticksActive;
     private boolean active;
@@ -51,7 +45,6 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     @Nullable
     private UUID targetUuid;
     private long nextAmbientSoundTime;
-    public static final String HAS_ENGINE_CORE = "has_engine_core";
 
     public EngineCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, pos, state);
@@ -115,8 +108,10 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
+        Optional<Tardis> tardis = blockEntity.findTardis();
 
-        if(blockEntity.findTardis().isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+        if(tardis.isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+            return;
 
         ++blockEntity.ticks;
         long l = world.getTime();
@@ -126,10 +121,13 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
             if (bl != blockEntity.active) {
                 SoundEvent soundEvent = bl ? SoundEvents.BLOCK_CONDUIT_ACTIVATE : SoundEvents.BLOCK_CONDUIT_DEACTIVATE;
                 world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
+                tardis.get().engine().hasEngineCore().set(bl);
             }
 
             blockEntity.active = bl;
             openEye(blockEntity, list);
+
             if (bl) {
                 givePlayersEffects(world, pos, list);
                 //attackHostileEntity(world, pos, state, list, blockEntity);
@@ -146,11 +144,6 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
                 world.playSound(null, pos, SoundEvents.BLOCK_CONDUIT_AMBIENT_SHORT, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
         }
-
-        // @TODO positively awful idea, IM GONNA DO IT ANYWAYS HAHAHA
-        Optional<Tardis> tardis = blockEntity.findTardis();
-        if (tardis.isEmpty()) return;
-        PropertiesHandler.set(tardis.get(), HAS_ENGINE_CORE, blockEntity.isActive(), true);
     }
 
     private static void openEye(EngineCoreBlockEntity blockEntity, List<BlockPos> activatingBlocks) {
@@ -215,34 +208,6 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
 
         }
     }
-
-    /*private static void attackHostileEntity(World world, BlockPos pos, BlockState state, List<BlockPos> activatingBlocks, EngineCoreBlockEntity blockEntity) {
-        LivingEntity livingEntity = blockEntity.targetEntity;
-        int i = activatingBlocks.size();
-        if (i < 42) {
-            blockEntity.targetEntity = null;
-        } else if (blockEntity.targetEntity == null && blockEntity.targetUuid != null) {
-            blockEntity.targetEntity = findTargetEntity(world, pos, blockEntity.targetUuid);
-            blockEntity.targetUuid = null;
-        } else if (blockEntity.targetEntity == null) {
-            List<LivingEntity> list = world.getEntitiesByClass(LivingEntity.class, getAttackZone(pos), (entity) -> entity instanceof Monster && entity.isTouchingWaterOrRain());
-            if (!list.isEmpty()) {
-                blockEntity.targetEntity = list.get(world.random.nextInt(list.size()));
-            }
-        } else if (!blockEntity.targetEntity.isAlive() || !pos.isWithinDistance(blockEntity.targetEntity.getBlockPos(), 8.0)) {
-            blockEntity.targetEntity = null;
-        }
-
-        if (blockEntity.targetEntity != null) {
-            world.playSound(null, blockEntity.targetEntity.getX(), blockEntity.targetEntity.getY(), blockEntity.targetEntity.getZ(), SoundEvents.BLOCK_CONDUIT_ATTACK_TARGET, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            blockEntity.targetEntity.damage(world.getDamageSources().magic(), 4.0F);
-        }
-
-        if (livingEntity != blockEntity.targetEntity) {
-            world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
-        }
-
-    }*/
 
     private static void updateTargetEntity(World world, BlockPos pos, EngineCoreBlockEntity blockEntity) {
         if (blockEntity.targetUuid == null) {
@@ -315,19 +280,31 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
         return (this.ticksActive + tickDelta) * -0.0375F;
     }
 
-    static {
-        ACTIVATING_BLOCKS = new Block[] {
-                AITBlocks.ZEITON_BLOCK,
-                Blocks.MAGMA_BLOCK
-        };
-    }
-
     public void onBreak(WorldAccess world, BlockPos pos, BlockState state, PlayerEntity player) {
         if(world.isClient()) return;
         Optional<Tardis> tardis = this.findTardis();
         if (tardis.isEmpty()) return;
         System.out.println("what");
-        tardis.get().disablePower();
-        PropertiesHandler.set(tardis.get(), HAS_ENGINE_CORE, false, true);
+        tardis.get().engine().disablePower();
+        tardis.get().engine().hasEngineCore().set(false);
+    }
+
+    public enum VortexEyeState {
+        // These three stages simply define from frozen (it's in your inventory),
+        // dormant (it's dormant, not producing power though - this is the state it goes into when there is no fuel in the TARDIS),
+        // and activated (it's producing power)
+        FROZEN,
+        DORMANT,
+        ACTIVATED,
+        // Aggravated is used when the player does something that pisses off the eye itself, since it's the semi-sentient part
+        // It's also used when trying to open the eye and etc.
+        AGGRAVATED,
+        // These states are used for opening the eye, not related to the states above
+        // The eye needs to be open in order to refuel, do repairs, and change the interior.
+        // At first, you will need to manually open it, which leads to >> aggravated, meaning you have to get past it's attacks to force it open,
+        // where it becomes semi-dormant but open (the state dormant has nothing to do with being open)
+        OPENING_EYE_1,
+        OPENING_EYE_2,
+        EYE_OPEN
     }
 }

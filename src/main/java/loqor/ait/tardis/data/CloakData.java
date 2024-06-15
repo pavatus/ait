@@ -1,9 +1,12 @@
 package loqor.ait.tardis.data;
 
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.MinecraftServer;
 
-public class CloakData extends TardisLink {
+public class CloakData extends TardisComponent implements TardisTickable {
 	public static String CLOAKED = "is_cloaked";
 
 	public CloakData() {
@@ -29,15 +32,14 @@ public class CloakData extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
-		if (this.isEnabled() && !tardis().hasPower())
+		if (this.isEnabled() && !tardis().engine().hasPower())
 			this.disable();
 
 		if (!this.isEnabled())
 			return;
 
-		if (this.tardis().getExterior().getExteriorPos() == null)
+		if (tardis.getExteriorPos() == null)
 			return;
 
 		this.tardis().removeFuel(2 * (this.tardis().tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick

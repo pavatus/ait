@@ -1,10 +1,10 @@
 package loqor.ait.tardis.util;
 
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.TardisTravel;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -13,31 +13,29 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 public class FlightUtil {
+
 	private static final int BASE_FLIGHT_TICKS = 5 * 20; //  seconds minimum
 	private static final double FORCE_LAND_TIMER = 15;
-
 
 	public static void init() {
 
 	}
 
-	// todo use me in places where similar things are used
-
 	/**
 	 * Sets the destination, turns on autopilot and demats
-	 *
-	 * @param tardis
-	 * @param pos
 	 */
 	public static void travelTo(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-		PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, false);
-		PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, true);
-		tardis.getTravel().setDestination(pos, true);
+		TardisTravel travel = tardis.travel();
 
-		if (tardis.getTravel().getState() == TardisTravel.State.LANDED) {
-			tardis.getTravel().dematerialise(true);
-		} else if (tardis.getTravel().getState() == TardisTravel.State.FLIGHT) {
-			tardis.getTravel().materialise();
+		tardis.flight().handbrake().set(false);
+		tardis.flight().autoLand().set(true);
+
+		travel.setDestination(pos, true);
+
+		if (travel.getState() == TardisTravel.State.LANDED) {
+			travel.dematerialise(true);
+		} else if (travel.getState() == TardisTravel.State.FLIGHT) {
+			travel.materialise();
 		}
 	}
 
@@ -63,6 +61,14 @@ public class FlightUtil {
 		float per = percentage / 100f;
 		BlockPos diff = destination.subtract(source);
 		return new AbsoluteBlockPos.Directed(source.add(new BlockPos((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per))), destination.getDimension(), destination.getRotation());
+	}
+
+	public static DirectedGlobalPos getPositionFromPercentage(DirectedGlobalPos source, DirectedGlobalPos destination, int percentage) {
+		// https://stackoverflow.com/questions/33907276/calculate-point-between-two-coordinates-based-on-a-percentage
+
+		float per = percentage / 100f;
+		BlockPos diff = destination.getPos().subtract(source.getPos());
+		return destination.offset((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per));
 	}
 
 	public static int getSoundLength(MatSound sound) {

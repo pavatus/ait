@@ -1,10 +1,12 @@
 package loqor.ait.tardis.data.properties;
 
-import loqor.ait.tardis.data.TardisLink;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 
 import java.util.HashMap;
 
-public class PropertiesHolder extends TardisLink {
+public class PropertiesHolder extends TardisComponent {
 	private final HashMap<String, Object> data; // might replace the generic object with a property class that has impls eg Property.Boolean, etc
 
 	public PropertiesHolder(HashMap<String, Object> data) {

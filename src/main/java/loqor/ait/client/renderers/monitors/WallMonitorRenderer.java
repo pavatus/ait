@@ -64,9 +64,9 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         float xVal = 0f;
         matrices.translate(xVal, -35f, 35f);
 
-        TardisTravel travel = tardis.getTravel();
+        TardisTravel travel = tardis.travel();
         AbsoluteBlockPos.Directed abpp = travel.inFlight() ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.getDestination(), tardis.getHandlers().getFlight().getDurationAsPercentage()) : travel.getPosition();
-        AbsoluteBlockPos.Directed abpd = tardis.getTravel().getDestination();
+        AbsoluteBlockPos.Directed abpd = tardis.travel().getDestination();
 
         String positionPosText = abpp.getX() + ", " + abpp.getY() + ", " + abpp.getZ();
         String positionDimensionText = DimensionControl.convertWorldValueToModified(abpp.getDimension().getValue());
@@ -92,7 +92,7 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
 
         this.textRenderer.drawWithOutline(Text.of("⛽").asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth("⛽") / 2), 40, 0xFAF000, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(fuelText).asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth(fuelText) / 2), 48, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
-        String flightTimeText = tardis.getTravel().getState() == TardisTravel.State.LANDED ? "0%" : tardis.getHandlers().getFlight().getDurationAsPercentage() + "%";
+        String flightTimeText = tardis.travel().getState() == TardisTravel.State.LANDED ? "0%" : tardis.getHandlers().getFlight().getDurationAsPercentage() + "%";
 
         this.textRenderer.drawWithOutline(Text.of("⏳").asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth("⏳") / 2), 60, 0x00FF0F, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(flightTimeText).asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth(flightTimeText) / 2), 68, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);

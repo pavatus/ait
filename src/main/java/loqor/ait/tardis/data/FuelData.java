@@ -1,20 +1,22 @@
 package loqor.ait.tardis.data;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.tardis.ArtronHolder;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.AITMod;
-import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
-public class FuelData extends TardisLink implements ArtronHolder {
+public class FuelData extends TardisComponent implements ArtronHolder, TardisTickable {
 	@Exclude
 	public static final double TARDIS_MAX_FUEL = 50000;
 	public static final String FUEL_COUNT = "fuel_count"; // todo this gets synced too much, needs changing.
@@ -89,14 +91,11 @@ public class FuelData extends TardisLink implements ArtronHolder {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
-
-		// @TODO fix this because it seems that using any chunk references causes ticking to freak the hell out - Loqor
 
 		ServerTardis tardis = (ServerTardis) this.tardis();
-		AbsoluteBlockPos pos = tardis.getTravel().getExteriorPos();
+		AbsoluteBlockPos pos = tardis.getExteriorPos();
 		World world = pos.getWorld();
-		TardisTravel.State state = tardis.getTravel().getState();
+		TardisTravel.State state = tardis.travel().getState();
 
 		if (state == TardisTravel.State.LANDED) {
 			if (this.isRefueling() && this.getCurrentFuel() < FuelData.TARDIS_MAX_FUEL && (!isRefuelOnDelay(tardis))) {
@@ -118,11 +117,11 @@ public class FuelData extends TardisLink implements ArtronHolder {
 		if (state == TardisTravel.State.FLIGHT) {
 			if (!isDrainOnDelay(tardis)) {
 				createDrainDelay(tardis);
-				removeFuel((4 ^ (tardis.getTravel().getSpeed())) * (tardis.tardisHammerAnnoyance + 1));
+				removeFuel((4 ^ (tardis.flight().speed().get())) * (tardis.tardisHammerAnnoyance + 1));
 			}
 
-			if (!tardis.hasPower())
-				tardis().getTravel().crash(); // hehe force land if you don't have enough fuel
+			if (!tardis.engine().hasPower())
+				tardis().travel().crash(); // hehe force land if you don't have enough fuel
 		}
 
 		if ((state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT) && !isDrainOnDelay(tardis)) {

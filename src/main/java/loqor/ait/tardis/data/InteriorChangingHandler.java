@@ -4,6 +4,9 @@ import loqor.ait.AITMod;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.util.TardisUtil;
@@ -17,9 +20,8 @@ import net.minecraft.util.Identifier;
 
 import java.util.Random;
 
-public class InteriorChangingHandler extends TardisLink {
-	private static final int WARN_TIME = 10 * 40;
-	public static final String IS_REGENERATING = "is_regenerating";
+public class InteriorChangingHandler extends TardisComponent implements TardisTickable {
+    public static final String IS_REGENERATING = "is_regenerating";
 	public static final String QUEUED_INTERIOR = "queued_interior";
 	public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
 	private static Random random;
@@ -45,10 +47,6 @@ public class InteriorChangingHandler extends TardisLink {
 		return this.ticks;
 	}
 
-	public boolean hasReachedMax() {
-		return getTicks() >= WARN_TIME;
-	}
-
 	private void setQueuedInterior(TardisDesktopSchema schema) {
 		PropertiesHandler.set(this.tardis(), QUEUED_INTERIOR, schema.id());
 	}
@@ -60,7 +58,8 @@ public class InteriorChangingHandler extends TardisLink {
 	public void queueInteriorChange(TardisDesktopSchema schema) {
 		Tardis tardis = this.tardis();
 
-		if (!tardis.isGrowth() && !tardis.hasPower() && !tardis.crash().isToxic()) return;
+		if (!tardis.isGrowth() && !tardis.engine().hasPower() && !tardis.crash().isToxic())
+			return;
 
 		if (tardis.fuel().getCurrentFuel() < 5000 && !(tardis.isGrowth() && tardis.hasGrowthDesktop())) {
 			for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
@@ -94,10 +93,12 @@ public class InteriorChangingHandler extends TardisLink {
 		DoorData.lockTardis(previouslyLocked, tardis, null, false);
 
 		if (tardis.hasGrowthExterior()) {
-			PropertiesHandler.set(tardis, PropertiesHandler.HANDBRAKE, false);
-			PropertiesHandler.set(tardis, PropertiesHandler.AUTO_LAND, true);
+			TardisTravel travel = tardis.travel();
 
-			tardis.getTravel().dematerialise(true, true);
+			tardis.flight().handbrake().set(false);
+			tardis.flight().autoLand().set(true);
+
+			travel.dematerialise(true, true);
 		}
 	}
 
@@ -122,7 +123,6 @@ public class InteriorChangingHandler extends TardisLink {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		if (!isGenerating())
 			return;
@@ -130,7 +130,7 @@ public class InteriorChangingHandler extends TardisLink {
 		if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + this.tardis().getUuid().toString()))
 			return;
 
-		TardisTravel travel = this.tardis().getTravel();
+		TardisTravel travel = this.tardis().travel();
 
 		if (travel.getState() == TardisTravel.State.FLIGHT)
 			travel.crash();
@@ -140,7 +140,7 @@ public class InteriorChangingHandler extends TardisLink {
 				this.tardis().alarm().enable();
 		}
 
-		if (!this.tardis().hasPower()) {
+		if (!this.tardis().engine().hasPower()) {
 			setGenerating(false);
 			this.tardis().alarm().disable();
 			return;

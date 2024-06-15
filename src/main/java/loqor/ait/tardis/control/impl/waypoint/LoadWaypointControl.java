@@ -27,7 +27,7 @@ public class LoadWaypointControl extends Control {
 		ItemStack itemStack = player.getMainHandStack();
 		if (!(itemStack.getItem() instanceof WaypointItem)) return false;
 
-		if (WaypointItem.getPos(itemStack) == null) WaypointItem.setPos(itemStack, tardis.getTravel().getPosition());
+		if (WaypointItem.getPos(itemStack) == null) WaypointItem.setPos(itemStack, tardis.travel().getPosition());
 
 		tardis.getHandlers().getWaypoints().markHasCartridge();
 		tardis.getHandlers().getWaypoints().set(Waypoint.fromDirected(WaypointItem.getPos(itemStack)).setName(itemStack.getName().getString()), true);

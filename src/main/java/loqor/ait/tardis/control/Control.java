@@ -14,30 +14,6 @@ import net.minecraft.sound.SoundEvents;
 
 public class Control {
 
-    /*public static HashMap<Integer, ControlAnimationState> animationStates = HartnellAnimations.animationStatePerControl(listOfControlAnimations());
-
-// Start animation for control with ID 0
-    public void start(int id, int age) {
-        animationStates.get(id).start(age);
-    }
-
-    public AnimationState getAnimationState(int id) {
-        return animationStates.get(id).getAnimationState();
-    }
-
-    public Animation getAnimation(int id) {
-        return animationStates.get(id).getAnimation();
-    }
-
-    public void startIfNotRunning(int id, int age) {
-        animationStates.get(id).startIfNotRunning(age);
-    }
-
-// Stop animation for control with ID 1
-    public void stop(int id) {
-        animationStates.get(id).stop();
-    }*/
-
 
 	public String id; // a name to represent the control
 
@@ -126,7 +102,7 @@ public class Control {
 	}
 
 	public boolean canRun(Tardis tardis, ServerPlayerEntity user) {
-		if ((this.shouldFailOnNoPower() && !tardis.hasPower()) || tardis.sequence().isConsoleDisabled()) {
+		if ((this.shouldFailOnNoPower() && !tardis.engine().hasPower()) || tardis.sequence().isConsoleDisabled()) {
 			return false;
 		}
 

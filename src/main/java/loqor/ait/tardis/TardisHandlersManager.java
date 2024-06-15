@@ -1,12 +1,14 @@
-package loqor.ait.tardis.data;
+package loqor.ait.tardis;
 
 import com.google.gson.*;
+import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.util.LegacyUtil;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
+import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
@@ -16,45 +18,23 @@ import net.minecraft.server.MinecraftServer;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class TardisHandlersManager extends TardisLink {
+public class TardisHandlersManager extends TardisComponent implements TardisTickable {
 
 	@Exclude
-	private final EnumMap<Id, TardisComponent> handlers = new EnumMap<>(Id::values, TardisComponent[]::new);
+	private final EnumMap<IdLike, TardisComponent> handlers = new EnumMap<>(TardisComponentRegistry::values, TardisComponent[]::new);
 
 	public TardisHandlersManager() {
         super(Id.HANDLERS);
     }
 
 	@Override
-	public void init(Tardis tardis, boolean deserialized) {
-		super.init(tardis, deserialized);
+	public void onCreate() {
+		TardisComponentRegistry.getInstance().fill(this::createHandler);
+	}
 
-		if (!deserialized) {
-			this.createHandler(new DoorData());
-			this.createHandler(new PropertiesHolder());
-			this.createHandler(new WaypointHandler());
-			this.createHandler(new LoyaltyHandler());
-			this.createHandler(new OvergrownData());
-			this.createHandler(new ServerHumHandler());
-			this.createHandler(new ServerAlarmHandler());
-			this.createHandler(new InteriorChangingHandler());
-			this.createHandler(new SequenceHandler());
-			this.createHandler(new FuelData());
-			this.createHandler(new HADSData());
-			this.createHandler(new FlightData());
-			this.createHandler(new SiegeData());
-			this.createHandler(new CloakData());
-			this.createHandler(new StatsData());
-			this.createHandler(new TardisCrashData());
-			this.createHandler(new SonicHandler());
-			this.createHandler(new ShieldData());
-			this.createHandler(new BiomeHandler());
-			this.createHandler(new PermissionHandler());
-		}
-
-		this.forEach(component -> component.init(
-				tardis, deserialized)
-		);
+	@Override
+	protected void onInit(InitContext ctx) {
+		this.forEach(component -> TardisComponent.init(component, this.tardis, ctx));
 	}
 
 	private void forEach(Consumer<TardisComponent> consumer) {
@@ -99,15 +79,23 @@ public class TardisHandlersManager extends TardisLink {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends TardisComponent> T get(Id id) {
+	public <T extends TardisComponent> T get(IdLike id) {
 		return (T) this.handlers.get(id);
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+
+		this.forEach(TardisComponent::dispose);
+		this.handlers.clear();
 	}
 
 	/**
 	 * Do NOT use this setter if you don't know what you're doing. Use {@link loqor.ait.tardis.wrapper.client.ClientTardis#set(TardisComponent)}.
 	 */
 	@Deprecated
-	public <T extends TardisComponent> void set(Id id, T t) {
+	public <T extends TardisComponent> void set(IdLike id, T t) {
 		this.handlers.put(id, t);
 	}
 
@@ -213,6 +201,7 @@ public class TardisHandlersManager extends TardisLink {
 			Map<String, JsonElement> map = json.getAsJsonObject().asMap();
 
 			boolean legacy = LegacyUtil.isHandlersLegacy(map);
+			TardisComponentRegistry registry = TardisComponentRegistry.getInstance();
 
 			for (Map.Entry<String, JsonElement> entry : map.entrySet()) {
 				String key = entry.getKey();
@@ -222,15 +211,24 @@ public class TardisHandlersManager extends TardisLink {
 				if (LegacyUtil.isLegacyComponent(element))
 					continue;
 
-				Id id = legacy ? LegacyUtil.getLegacyId(key) : Id.valueOf(key);
+				IdLike id = legacy ? LegacyUtil.getLegacyId(key) : registry.get(key);
 
 				if (id == null) {
-					throw new NullPointerException("Can't find a component id with name '" + entry.getKey() + "'!");
+					AITMod.LOGGER.error("Can't find a component id with name '{}'!", key);
+					continue;
 				}
 
-				TardisComponent component = context.deserialize(element, id.clazz());
+				manager.set(id, context.deserialize(element, id.clazz()));
+			}
 
-				manager.set(id, component);
+			for (int i = 0; i < manager.handlers.size(); i++) {
+				if (manager.handlers.get(i) != null)
+					continue;
+
+				IdLike id = registry.get(i);
+				AITMod.LOGGER.warn("Appending new component {}", id);
+
+				manager.set(id, id.create());
 			}
 
 			return manager;
@@ -241,7 +239,7 @@ public class TardisHandlersManager extends TardisLink {
 			JsonObject result = new JsonObject();
 
 			manager.forEach(component -> result.add(
-                    component.getId().toString(),
+                    component.getId().name(),
                     context.serialize(component)
             ));
 

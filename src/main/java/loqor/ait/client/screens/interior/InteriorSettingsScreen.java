@@ -2,9 +2,12 @@ package loqor.ait.client.screens.interior;
 
 import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
+import loqor.ait.api.tardis.TardisClientEvents;
+import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
+import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.HumsRegistry;
@@ -15,6 +18,9 @@ import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.sound.HumSound;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -31,6 +37,7 @@ import net.minecraft.util.math.RotationAxis;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static loqor.ait.tardis.TardisTravel.State.FLIGHT;
 import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
@@ -96,6 +103,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 						toSonicScreen();
 					}
 				}));
+
+		TardisClientEvents.SETTINGS_SETUP.invoker().onSetup(this);
 
 		this.addButton(
 				new PressableTextWidget(
@@ -164,20 +173,28 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	// this might be useful, so remember this exists and use it later on ( although its giving NTM vibes.. )
-	private void createTextButton(Text text, ButtonWidget.PressAction onPress) {
-		this.addButton(
-				new PressableTextWidget(
-						(int) (left + (bgWidth * 0.06f)),
-						(int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
-						this.textRenderer.getWidth(text),
-						10,
-						text,
-						onPress,
-						this.textRenderer
-				)
+	public PressableTextWidget createTextButton(Text text, ButtonWidget.PressAction onPress) {
+		PressableTextWidget result = new PressableTextWidget(
+				(int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
+				this.textRenderer.getWidth(text), 10, text, onPress, this.textRenderer
 		);
 
+		this.addButton(result);
 		choicesCount++;
+
+		return result;
+	}
+
+	public DynamicPressableTextWidget createDynamicTextButton(Supplier<Text> text, ButtonWidget.PressAction onPress) {
+		DynamicPressableTextWidget result = new DynamicPressableTextWidget(
+				(int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
+				this.textRenderer.getWidth(text.get()), 10, text, onPress, this.textRenderer
+		);
+
+		this.addButton(result);
+		choicesCount++;
+
+		return result;
 	}
 
 	public void backToExteriorChangeScreen() {
@@ -245,7 +262,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				uvOffset = UV_BASE;
 			}
 
-			context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114, tardis().getTravel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
+			context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114, tardis().travel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
 		}
 
 		this.renderHums(context);

@@ -29,7 +29,7 @@ public class DimensionControl extends Control {
 			}
 		}
 
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 		AbsoluteBlockPos.Directed dest = travel.getDestination();
 		List<ServerWorld> dims = getDimensions(world.getServer());
 
@@ -88,19 +88,6 @@ public class DimensionControl extends Control {
 
 		// Split the string into words
 		String[] words = value.split("_");
-
-		// Capitalize the first letter of each word
-		for (int i = 0; i < words.length; i++) {
-			words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
-		}
-
-		// Join the words back together with spaces
-		return String.join(" ", words);
-	}
-
-	public static String capitalizeAndReplaceEach(String input) {
-		// Split the string into words
-		String[] words = input.split("_");
 
 		// Capitalize the first letter of each word
 		for (int i = 0; i < words.length; i++) {

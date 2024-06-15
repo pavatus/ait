@@ -4,6 +4,7 @@ import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import loqor.ait.AITMod;
 import loqor.ait.core.item.*;
+import loqor.ait.core.item.blueprint.BlueprintItem;
 import loqor.ait.core.item.link.AbstractLinkItem;
 import loqor.ait.core.item.link.FluidLinkItem;
 import loqor.ait.core.item.link.MercurialLinkItem;
@@ -57,7 +58,7 @@ public class AITItems implements ItemRegistryContainer {
 	// Components
 	public static final Item DEMATERIALIZATION_CIRCUIT = new MachineItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
-	// Blueprints (there's only 1 lol idk why the fuck i made it plural)
+	// Blueprint
 	public static final Item BLUEPRINT = new BlueprintItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).rarity(Rarity.EPIC));
 
 

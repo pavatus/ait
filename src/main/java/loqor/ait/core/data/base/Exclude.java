@@ -8,4 +8,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Exclude {
+    Strategy strategy() default Strategy.ALL;
+
+    enum Strategy {
+        ALL,
+        NETWORK,
+        FILE
+    }
 }

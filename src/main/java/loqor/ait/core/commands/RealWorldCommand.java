@@ -29,17 +29,22 @@ public class RealWorldCommand {
 
 	private static int runSpawnRealTardisTestCommand(CommandContext<ServerCommandSource> context) {
 		ServerPlayerEntity source = context.getSource().getPlayer();
+
+		if (source == null)
+			return 0;
+
 		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
 		// TODO: better error handling
-		if (tardis.getTravel().getState() != TardisTravel.State.LANDED)
+		if (tardis.travel().getState() != TardisTravel.State.LANDED)
 			return 0;
 
-		BlockPos spawnBlockPos = tardis.getExterior().getExteriorPos();
+		BlockPos spawnBlockPos = tardis.getExteriorPos();
 
 		TardisUtil.teleportOutside(tardis, source);
-		source.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));
-		TardisRealEntity.spawnFromTardisId(tardis.getExterior().getExteriorPos().getWorld(), tardis.getUuid(), spawnBlockPos, source, tardis.getDoor().getDoorPos());
+		source.setInvisible(true);
+
+		TardisRealEntity.spawnFromTardisId(tardis.getExteriorPos().getWorld(), tardis.getUuid(), spawnBlockPos, source, tardis.getDoorPos());
 
 		Text textResponse = Text.translatableWithFallback("command.ait.realworld.response",
 				"Spawned a real world TARDIS at: ", spawnBlockPos

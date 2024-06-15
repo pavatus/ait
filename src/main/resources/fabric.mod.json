@@ -34,13 +34,18 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"loqor.ait.AITMod"
+			"loqor.ait.AITMod",
+			"loqor.ait.datagen.datagen_providers.loot.LootTableModification"
 		],
 		"client": [
-			"loqor.ait.client.AITModClient"
+			"loqor.ait.client.AITModClient",
+			"loqor.ait.compat.Compat"
 		],
 		"fabric-datagen": [
 			"loqor.ait.datagen.AITModDataGenerator"
+		],
+		"ait-main": [
+			"loqor.ait.compat.Compat"
 		]
 	},
 	"mixins": [

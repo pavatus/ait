@@ -16,7 +16,6 @@ import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -44,8 +43,6 @@ import java.util.UUID;
 import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
 
 public class DoorBlockEntity extends LinkableBlockEntity {
-	public AnimationState DOOR_STATE = new AnimationState();
-	public int animationTimer = 0;
 
 	public DoorBlockEntity(BlockPos pos, BlockState state) {
 		super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -62,24 +59,21 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T tDoor) {
 		DoorBlockEntity door = (DoorBlockEntity) tDoor;
 
-		if (world.isClient())
-			door.checkAnimations();
-
 		if (door.tardisId == null)
 			door.findTardis();
 
 		if (door.findTardis().isEmpty())
 			return;
 
-		if (!world.isClient() && door.findTardis().get().getTravel().getExteriorPos() == null)
+		if (!world.isClient() && door.findTardis().get().getExteriorPos() == null)
 			return;
 
-		World exteriorWorld = door.findTardis().get().getTravel().getExteriorPos().getWorld();
+		World exteriorWorld = door.findTardis().get().getExteriorPos().getWorld();
 
 		if (exteriorWorld == null)
 			return;
 
-		BlockState exteriorBlockState = exteriorWorld.getBlockState(door.findTardis().get().getTravel().getExteriorPos());
+		BlockState exteriorBlockState = exteriorWorld.getBlockState(door.findTardis().get().getExteriorPos());
 
 		if (exteriorBlockState.getBlock() instanceof ExteriorBlock && !door.findTardis().get().areShieldsActive()) {
 			world.setBlockState(pos, blockState.with(Properties.WATERLOGGED, exteriorBlockState.get(Properties.WATERLOGGED) && door.findTardis().get().getDoor().isOpen()), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
@@ -97,7 +91,7 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 		if (tardis.isGrowth() && tardis.hasGrowthExterior())
 			return;
 
-		if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis.isSiegeMode()) {
+		if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis.siege().isActive()) {
 			ItemStack key = player.getMainHandStack();
 			NbtCompound tag = key.getOrCreateNbt();
 
@@ -139,9 +133,8 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 		if (tardis.getDoor().isClosed())
 			return;
 
-		if (tardis.getLockedTardis()) {
+		if (tardis.getLockedTardis())
 			return;
-		}
 
 		if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
 			return;
@@ -151,30 +144,17 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 			return;
 		}
 
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 
 		if (travel.getState() == TardisTravel.State.FLIGHT) {
 			TardisUtil.dropOutside(tardis, entity); // SHOULD properly drop someone out at the correct position instead of the not correct position :)
 			return;
 		}
 
-		if (travel.getState() != TardisTravel.State.LANDED) {
+		if (travel.getState() != TardisTravel.State.LANDED)
 			return;
-		}
 
 		TardisUtil.teleportOutside(tardis, entity);
-	}
-
-	public void checkAnimations() {
-		// DO NOT RUN THIS ON SERVER!!
-		// Commented as we do not have door anims anymore.
-/*		if (findTardis().isEmpty()) return;
-		animationTimer++;
-
-		if (findTardis().get().getHandlers().getDoor().getAnimationInteriorState() == null || !(findTardis().get().getHandlers().getDoor().getAnimationInteriorState().equals(findTardis().get().getDoor().getDoorState()))) {
-			DOOR_STATE.start(animationTimer);
-			findTardis().get().getHandlers().getDoor().tempInteriorState = findTardis().get().getDoor().getDoorState();
-		}*/
 	}
 
 	@Override

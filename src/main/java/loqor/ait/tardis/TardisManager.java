@@ -12,11 +12,18 @@ import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.registry.impl.TardisComponentRegistry;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.util.TardisMap;
+import loqor.ait.core.util.gson.IdentifierSerializer;
 import loqor.ait.core.util.gson.ItemStackSerializer;
 import loqor.ait.core.util.gson.NbtSerializer;
-import loqor.ait.tardis.data.TardisHandlersManager;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
+import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
+import loqor.ait.tardis.data.properties.v2.integer.IntValue;
+import loqor.ait.tardis.data.properties.v2.integer.ranged.RangedIntValue;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -30,10 +37,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class TardisManager<T extends Tardis, C> {
@@ -44,14 +51,29 @@ public abstract class TardisManager<T extends Tardis, C> {
 	public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_tardis");
 	public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_tardis");
 
-	protected final Map<UUID, T> lookup = new HashMap<>();
-	protected final Gson gson;
+	public static final Identifier UPDATE_PROPERTY = new Identifier(AITMod.MOD_ID, "update_property");
+
+	protected final TardisMap<T> lookup = new TardisMap<>();
+
+	protected final Gson networkGson;
+	protected final Gson fileGson;
 
 	protected TardisManager() {
-		GsonBuilder builder = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+		this.networkGson = this.getNetworkGson(this.createGsonBuilder(Exclude.Strategy.NETWORK)).create();
+		this.fileGson = this.getFileGson(this.createGsonBuilder(Exclude.Strategy.FILE)).create();
+	}
+
+	protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
+		return new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
 					@Override
 					public boolean shouldSkipField(FieldAttributes field) {
-						return field.getAnnotation(Exclude.class) != null;
+						Exclude exclude = field.getAnnotation(Exclude.class);
+
+						if (exclude == null)
+							return false;
+
+						Exclude.Strategy excluded = exclude.strategy();
+						return excluded == Exclude.Strategy.ALL || excluded == strategy;
 					}
 
 					@Override
@@ -69,17 +91,24 @@ public abstract class TardisManager<T extends Tardis, C> {
 				.registerTypeAdapter(PermissionLike.class, Permission.serializer())
 				.registerTypeAdapter(NbtCompound.class, new NbtSerializer())
 				.registerTypeAdapter(ItemStack.class, new ItemStackSerializer())
-				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer());
-
-		if (!AITMod.AIT_CONFIG.MINIFY_JSON())
-            builder.setPrettyPrinting();
-
-		// TODO replace the type adapters with CODECs. Why do the same job twice?
-		this.gson = this.getGsonBuilder(builder).create();
+				.registerTypeAdapter(Identifier.class, new IdentifierSerializer())
+				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer())
+				.registerTypeAdapter(TardisComponent.IdLike.class, TardisComponentRegistry.idSerializer());
 	}
 
-	protected GsonBuilder getGsonBuilder(GsonBuilder builder) {
+	protected GsonBuilder getNetworkGson(GsonBuilder builder) {
+		builder.setPrettyPrinting();
 		return builder;
+	}
+
+	protected GsonBuilder getFileGson(GsonBuilder builder) {
+		if (!AITMod.AIT_CONFIG.MINIFY_JSON())
+			builder.setPrettyPrinting();
+
+		return builder.registerTypeAdapter(Value.class, Value.serializer())
+				.registerTypeAdapter(BoolValue.class, BoolValue.serializer())
+				.registerTypeAdapter(IntValue.class, IntValue.serializer())
+				.registerTypeAdapter(RangedIntValue.class, RangedIntValue.serializer());
 	}
 
 	public static TardisManager<?, ?> getInstance(Entity entity) {
@@ -139,6 +168,14 @@ public abstract class TardisManager<T extends Tardis, C> {
 		consumer.accept(result);
 	}
 
+	@SuppressWarnings("unchecked")
+	protected T readTardis(Gson gson, String json) {
+		T tardis = (T) gson.fromJson(json, Tardis.class);
+		Tardis.init(tardis, true);
+
+		return tardis;
+	}
+
 	/**
 	 * By all means a bad practice. Use {@link #getTardis(Object, UUID, Consumer)} instead.
 	 * Ensures to return a {@link Tardis} instance as fast as possible.
@@ -157,16 +194,29 @@ public abstract class TardisManager<T extends Tardis, C> {
 		this.lookup.clear();
 	}
 
-	/**
-	 * @deprecated This method allows you to get currently loaded TARDIS'.
-	 */
-	@Deprecated
-	public Map<UUID, T> getLookup() {
-		return this.lookup;
+	public Collection<UUID> ids() {
+		return this.lookup.keySet();
 	}
 
-	public Gson getGson() {
-		return this.gson;
+	public void forEach(Consumer<T> consumer) {
+		this.lookup.forEach((uuid, t) -> consumer.accept(t));
+	}
+
+	public T find(Predicate<T> predicate) {
+		for (T t : this.lookup.values()) {
+			if (predicate.test(t))
+				return t;
+		}
+
+		return null;
+	}
+
+	public Gson getNetworkGson() {
+		return this.networkGson;
+	}
+
+	public Gson getFileGson() {
+		return fileGson;
 	}
 
 	@FunctionalInterface

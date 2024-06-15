@@ -31,7 +31,7 @@ public abstract class PosControl extends Control {
 			}
 		}
 
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 		AbsoluteBlockPos.Directed destination = travel.getDestination();
 
 		BlockPos pos = this.type.add(destination, (leftClick) ? -IncrementManager.increment(tardis) : IncrementManager.increment(tardis), destination.getWorld());

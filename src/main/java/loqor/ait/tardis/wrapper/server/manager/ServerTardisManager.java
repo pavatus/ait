@@ -6,9 +6,13 @@ import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
-import loqor.ait.tardis.*;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.properties.v2.Property;
+import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.manager.BufferedTardisManager;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.manager.TardisFileManager;
@@ -33,7 +37,7 @@ import java.util.function.Consumer;
 public class ServerTardisManager extends BufferedTardisManager<ServerTardis, ServerPlayerEntity, MinecraftServer> {
 
 	private static ServerTardisManager instance;
-	private final TardisFileManager<ServerTardis> fileManager = new TardisFileManager<>(ServerTardis.class);
+	private final TardisFileManager<ServerTardis> fileManager = new TardisFileManager<>();
 
 	public static void init() {
 		instance = new ServerTardisManager();
@@ -59,7 +63,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 					ServerTardis found = null;
 					for (ServerTardis tardis : this.lookup.values()) {
-						if (!tardis.getTravel().getPosition().equals(pos))
+						if (!tardis.travel().getPosition().equals(pos))
 							continue;
 
 						found = tardis;
@@ -72,7 +76,9 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 				}
 		);
 
+		ServerLifecycleEvents.SERVER_STARTING.register(server -> this.fileManager.setLocked(false));
 		ServerLifecycleEvents.SERVER_STOPPING.register(this::onShutdown);
+
 		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset
 
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
@@ -106,7 +112,8 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 	public ServerTardis create(TardisBuilder builder) {
 		ServerTardis tardis = builder.build();
-		this.lookup.put(tardis.getUuid(), tardis);
+		this.lookup.put(tardis);
+
 		return tardis;
 	}
 
@@ -134,6 +141,20 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	}
 
 	@Override
+	protected void updateTardisProperty(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.IdLike id, Value<?> property) {
+		PacketByteBuf data = PacketByteBufs.create();
+
+		data.writeUuid(tardis.getUuid());
+		data.writeByte(Property.Mode.forValue(property));
+
+		data.writeVarInt(id.index());
+		data.writeString(property.getProperty().getName());
+		property.write(data);
+
+		ServerPlayNetworking.send(player, UPDATE_PROPERTY, data);
+	}
+
+	@Override
 	protected void updateTardis(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.Id id, String json) {
 		PacketByteBuf data = PacketByteBufs.create();
 		data.writeUuid(tardis.getUuid());
@@ -145,15 +166,14 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 	@Override
 	protected ServerTardis loadTardis(MinecraftServer server, UUID uuid) {
-		return this.fileManager.loadTardis(server, this, uuid);
+        return this.fileManager.loadTardis(server, this, uuid, this::readTardis, this.lookup::put);
 	}
 
 	@Override
-	protected GsonBuilder getGsonBuilder(GsonBuilder builder) {
-		builder.registerTypeAdapter(SerialDimension.class, SerialDimension.serializer())
+	protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
+		return super.createGsonBuilder(strategy)
+				.registerTypeAdapter(SerialDimension.class, SerialDimension.serializer())
 				.registerTypeAdapter(Tardis.class, ServerTardis.creator());
-
-		return builder;
 	}
 
 	@Override
@@ -198,6 +218,12 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		}
 	}
 
+	public void sendPropertyV2ToSubscribers(ServerTardis tardis, Value<?> property) {
+		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
+			this.updateTardisPropertyV2(player, tardis, property);
+		}
+	}
+
 	public void remove(MinecraftServer server, UUID uuid) {
 		this.fileManager.delete(server, uuid);
 		super.remove(uuid);
@@ -218,12 +244,12 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		for (Tardis tardis : this.lookup.values()) {
 			// stop forcing all chunks
 			TardisChunkUtil.stopForceExteriorChunk(tardis);
-			TardisTravel.State state = tardis.getTravel().getState();
+			TardisTravel.State state = tardis.travel().getState();
 
 			if (state == TardisTravel.State.DEMAT) {
-				tardis.getTravel().toFlight();
+				tardis.travel().toFlight();
 			} else if (state == TardisTravel.State.MAT) {
-				tardis.getTravel().forceLand();
+				tardis.travel().forceLand();
 			}
 
 			tardis.getDoor().closeDoors();
@@ -231,6 +257,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 				PortalsHandler.removePortals(tardis);
 		}
 
+		this.fileManager.setLocked(true);
 		this.fileManager.saveTardis(server, this);
 		this.reset();
 	}

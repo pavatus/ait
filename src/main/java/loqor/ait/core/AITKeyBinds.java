@@ -5,7 +5,6 @@ import loqor.ait.core.bind.KeyBind;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.InputUtil;

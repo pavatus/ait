@@ -1,4 +1,4 @@
-package loqor.ait.tardis.advancement;
+package loqor.ait.core.advancement;
 
 import com.google.gson.JsonObject;
 import loqor.ait.AITMod;
@@ -9,8 +9,8 @@ import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class TakeOffCriterion extends AbstractCriterion<TakeOffCriterion.Conditions> {
-	public static final Identifier ID = new Identifier(AITMod.MOD_ID, "tardis_takeoff");
+public class CrashCriterion extends AbstractCriterion<CrashCriterion.Conditions> {
+	public static final Identifier ID = new Identifier(AITMod.MOD_ID, "tardis_crash");
 
 	@Override
 	protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {

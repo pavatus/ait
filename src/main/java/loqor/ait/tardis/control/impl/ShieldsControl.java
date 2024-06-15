@@ -38,8 +38,8 @@ public class ShieldsControl extends Control {
 			}
 		}
 		this.soundEvent = player.isSneaking() ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : AITSounds.HANDBRAKE_LEVER_PULL;
-		if(tardis.getExterior().getExteriorPos() != null) {
-			WorldOps.updateIfOnServer(world, tardis.getExterior().getExteriorPos());
+		if(tardis.getExteriorPos() != null) {
+			WorldOps.updateIfOnServer(world, tardis.getExteriorPos());
 		}
 		return true;
 	}

@@ -11,7 +11,6 @@ import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.entity.EntityType;
@@ -45,6 +44,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 	public static final TrackedData<Optional<UUID>> PLAYER_UUID;
 	public static final TrackedData<Optional<BlockPos>> PLAYER_INTERIOR_POSITION;
+
 	protected Vec3d lastVelocity;
 	private boolean shouldTriggerLandSound = false;
 
@@ -68,18 +68,19 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	}
 
 	public static void spawnFromTardisId(World world, UUID tardisId, BlockPos spawnPos, PlayerEntity player, BlockPos pos) {
-		if(world.isClient())
+		if (world.isClient())
 			return;
 
 		Tardis tardis = TardisManager.with(world, (o, manager) -> manager.demandTardis(o, tardisId));
 		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_IN_REAL_FLIGHT, true, true);
 		world.spawnEntity(tardisRealEntity);
-		tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(DirectionControl.getGeneralizedRotation(tardis.getExterior().getExteriorPos().getRotation())), 0);
+
+		tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(DirectionControl.getGeneralizedRotation(tardis.getExteriorPos().getRotation())), 0);
 		player.getAbilities().flying = true;
 		player.getAbilities().allowFlying = true;
 		player.getAbilities().setFlySpeed(player.getAbilities().getFlySpeed() * 1.5F);
-		tardis.getTravel().toFlight();
+		tardis.travel().toFlight();
 	}
 
 	@Override
@@ -119,10 +120,10 @@ public class TardisRealEntity extends LinkableLivingEntity {
 						shouldTriggerLandSound = true;
 					}
 					if (user.isSneaking()) {
-						getTardis().getTravel().setStateAndLand(new AbsoluteBlockPos.Directed(this.getBlockPos(), this.getWorld(), DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(user.getBodyYaw()))));
-						if (getTardis().getTravel().getState() == TardisTravel.State.LANDED)
+						getTardis().travel().setStateAndLand(new AbsoluteBlockPos.Directed(this.getBlockPos(), this.getWorld(), DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(user.getBodyYaw()))));
+						if (getTardis().travel().getState() == TardisTravel.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
-						PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.AUTO_LAND, false);
+						getTardis().flight().autoLand().set(false);
 						user.dismountVehicle();
 					}
 				} else {
@@ -130,7 +131,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					user.getAbilities().allowFlying = true;
 				}
 			}
-		} else if (!getTardis().getTravel().inFlight()) {
+		} else if (!getTardis().travel().inFlight()) {
 			if (user.getWorld().isClient() && MinecraftClient.getInstance().player == user) {
 				MinecraftClient client = MinecraftClient.getInstance();
 				client.options.setPerspective(Perspective.FIRST_PERSON);
@@ -143,10 +144,10 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				if(this.getPlayerBlockPos().isEmpty()) {
 					TardisUtil.teleportInside(this.getTardis(), user);
 				} else {
-					TardisUtil.teleportToInteriorPosition(user, this.getPlayerBlockPos().get());
+					TardisUtil.teleportToInteriorPosition(this.getTardis(), user, this.getPlayerBlockPos().get());
 				}
 				this.dataTracker.set(PLAYER_UUID, Optional.empty());
-				this.getTardis().getTravel().setState(TardisTravel.State.LANDED);
+				this.getTardis().travel().setState(TardisTravel.State.LANDED);
 				this.discard();
 			}
 		}

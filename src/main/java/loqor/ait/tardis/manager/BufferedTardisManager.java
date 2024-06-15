@@ -5,6 +5,7 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public abstract class BufferedTardisManager<T extends ServerTardis, P extends PlayerEntity, C> extends TardisManager<T, C> {
+public abstract class BufferedTardisManager<T extends Tardis, P extends PlayerEntity, C> extends TardisManager<T, C> {
 
     private final ConcurrentHashMap<UUID, List<UUID>> subscribers = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, List<UUID>> buffers = new ConcurrentHashMap<>();
@@ -35,15 +36,32 @@ public abstract class BufferedTardisManager<T extends ServerTardis, P extends Pl
 
     protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.Id id, String key, String type, String value);
 
+    protected abstract void updateTardisProperty(@NotNull P player, T tardis, TardisComponent.IdLike id, Value<?> property);
+
     protected abstract void updateTardis(@NotNull P player, T tardis, TardisComponent.Id id, String json);
 
     public void updateTardisProperty(@NotNull P player, T tardis, TardisComponent component, String key, String type, String value) {
-        this.updateTardisProperty(player, tardis, component.getId(), key, type, value);
+        if (!(component.getId() instanceof TardisComponent.Id id)) {
+            AITMod.LOGGER.error("Can't update v1 properties on non-standard components!");
+            return;
+        }
+
+        this.updateTardisProperty(player, tardis, id, key, type, value);
+        this.checkForceSync(player, tardis);
+    }
+
+    public void updateTardisPropertyV2(@NotNull P player, T tardis, Value<?> property) {
+        this.updateTardisProperty(player, tardis, property.getHolder().getId(), property);
         this.checkForceSync(player, tardis);
     }
 
     public void updateTardis(@NotNull P player, T tardis, TardisComponent component) {
-        this.updateTardis(player, tardis, component.getId(), this.gson.toJson(component));
+        if (!(component.getId() instanceof TardisComponent.Id id)) {
+            AITMod.LOGGER.error("Part-update for non-AIT components is not supported! Use properties instead.");
+            return;
+        }
+
+        this.updateTardis(player, tardis, id, this.networkGson.toJson(component));
         this.checkForceSync(player, tardis);
     }
 
@@ -76,7 +94,7 @@ public abstract class BufferedTardisManager<T extends ServerTardis, P extends Pl
     }
 
     protected void sendTardis(@NotNull P player, Tardis tardis) {
-        if (tardis == null || this.gson == null)
+        if (tardis == null || this.networkGson == null)
             return;
         
         if (this.isInBuffer(player, tardis.getUuid()))
@@ -87,7 +105,7 @@ public abstract class BufferedTardisManager<T extends ServerTardis, P extends Pl
             return;
         }
 
-        this.sendTardis(player, tardis.getUuid(), this.gson.toJson(tardis, ServerTardis.class));
+        this.sendTardis(player, tardis.getUuid(), this.networkGson.toJson(tardis, ServerTardis.class));
 
         this.createAskDelay(player);
         this.createForceSyncDelay(player);

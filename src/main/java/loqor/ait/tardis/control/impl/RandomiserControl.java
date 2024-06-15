@@ -8,8 +8,6 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class RandomiserControl extends Control {
 
@@ -19,7 +17,7 @@ public class RandomiserControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 
 		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
 			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
@@ -28,7 +26,7 @@ public class RandomiserControl extends Control {
 			}
 		}
 
-		tardis.getTravel().setDestination(randomiseDestination(tardis, 10));
+		tardis.travel().setDestination(randomiseDestination(tardis, 10));
 		tardis.removeFuel((0.1d * IncrementManager.increment(tardis)) * (tardis.tardisHammerAnnoyance + 1));
 
 		messagePlayer(player, travel);
@@ -38,7 +36,7 @@ public class RandomiserControl extends Control {
 
 	// fixme this is LAGGYYY @TODO
 	public static AbsoluteBlockPos.Directed randomiseDestination(Tardis tardis, int limit) {
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 		int increment = IncrementManager.increment(tardis);
 		AbsoluteBlockPos.Directed dest = travel.getDestination();
 		ServerWorld world = (ServerWorld) dest.getWorld();

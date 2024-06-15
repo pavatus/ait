@@ -50,10 +50,10 @@ public class WaypointItem extends Item {
 		if (hand != Hand.MAIN_HAND) return ActionResult.FAIL;
 		if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity console)) return ActionResult.FAIL;
 
-		if (console.findTardis().isEmpty() || console.findTardis().get().getTravel().getPosition() == null)
+		if (console.findTardis().isEmpty() || console.findTardis().get().travel().getPosition() == null)
 			return ActionResult.PASS;
 
-		if (getPos(itemStack) == null) setPos(itemStack, console.findTardis().get().getTravel().getPosition());
+		if (getPos(itemStack) == null) setPos(itemStack, console.findTardis().get().travel().getPosition());
 
 		console.findTardis().get().getHandlers().getWaypoints().markHasCartridge();
 		console.findTardis().get().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);

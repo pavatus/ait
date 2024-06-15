@@ -103,7 +103,6 @@ public class SequenceRegistry {
 							player.damage(TardisUtil.getTardisDimension().getDamageSources().generic(), 0);
 						}
 					}
-					//missedTardis.getTravel().crash();
 				}), 100L, Text.literal("Debris incoming!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new DirectionControl(), new RandomiserControl()));
 
@@ -127,7 +126,7 @@ public class SequenceRegistry {
 					finishedTardis.addFuel(random.nextBetween(45, 125));
 				}), (missedTardis -> {
 					missedTardis.removeFuel(random.nextBetween(45, 125));
-					missedTardis.disablePower();
+					missedTardis.engine().disablePower();
 				}), 110L, Text.literal("Power drain imminent!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new PowerControl(), new RefuelerControl(), new RandomiserControl()));
 
@@ -136,7 +135,7 @@ public class SequenceRegistry {
 					finishedTardis.addFuel(random.nextBetween(45, 125));
 				}), (missedTardis -> {
 					missedTardis.removeFuel(random.nextBetween(45, 125));
-					missedTardis.disablePower();
+					missedTardis.engine().disablePower();
 				}), 110L, Text.literal("Ship computer offline! Crash imminent!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new AutoPilotControl()));
 
@@ -152,7 +151,7 @@ public class SequenceRegistry {
 					finishedTardis.getHandlers().getFlight().decreaseFlightTime(120);
 				}), (missedTardis -> {
 					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
 							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
@@ -164,7 +163,7 @@ public class SequenceRegistry {
 					finishedTardis.getHandlers().getFlight().decreaseFlightTime(120);
 				}), (missedTardis -> {
 					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
 							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
@@ -176,7 +175,7 @@ public class SequenceRegistry {
 					finishedTardis.getHandlers().getFlight().decreaseFlightTime(120);
 				}), (missedTardis -> {
 					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
 							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
@@ -186,26 +185,26 @@ public class SequenceRegistry {
 
 		CLOAK_TO_AVOID_VORTEX_TRAPPED_MOBS = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "cloak_to_avoid_vortex_trapped_mobs"), (finishedTardis -> {
 					finishedTardis.getHandlers().getFlight().decreaseFlightTime(180);
-					if (finishedTardis.getDoor().getDoorPos() == null) return;
+					if (finishedTardis.getDoorPos() == null) return;
 					if (finishedTardis.getDoor().isOpen() || TardisUtil.getTardisDimension().isClient()) return;
 					ItemEntity rewardForCloaking = new ItemEntity(EntityType.ITEM, TardisUtil.getTardisDimension());
-					rewardForCloaking.setPosition(finishedTardis.getDoor().getDoorPos().getX() + 0.5f,
-							finishedTardis.getDoor().getDoorPos().getY() + 0.5f, finishedTardis.getDoor().getDoorPos().getZ() + 0.5f);
+					rewardForCloaking.setPosition(finishedTardis.getDoorPos().getX() + 0.5f,
+							finishedTardis.getDoorPos().getY() + 0.5f, finishedTardis.getDoorPos().getZ() + 0.5f);
 					rewardForCloaking.setStack(random.nextBoolean() ? Items.GOLD_NUGGET.getDefaultStack() : Items.POPPY.getDefaultStack());
 					TardisUtil.getTardisDimension().spawnEntity(rewardForCloaking);
 				}), (missedTardis -> {
 					missedTardis.getHandlers().getFlight().increaseFlightTime(120);
-					if (missedTardis.getDoor().getDoorPos() == null) return;
+					if (missedTardis.getDoorPos() == null) return;
 					if (missedTardis.getDoor().isOpen() || TardisUtil.getTardisDimension().isClient()) return;
 					ZombieEntity zombieEntity = new ZombieEntity(EntityType.ZOMBIE, TardisUtil.getTardisDimension());
-					zombieEntity.setPosition(missedTardis.getDoor().getDoorPos().getX() + 0.5f,
-							missedTardis.getDoor().getDoorPos().getY() + 0.5f, missedTardis.getDoor().getDoorPos().getZ() + 0.5f);
+					zombieEntity.setPosition(missedTardis.getDoorPos().getX() + 0.5f,
+							missedTardis.getDoorPos().getY() + 0.5f, missedTardis.getDoorPos().getZ() + 0.5f);
 					DrownedEntity drownedEntity = new DrownedEntity(EntityType.DROWNED, TardisUtil.getTardisDimension());
-					drownedEntity.setPosition(missedTardis.getDoor().getDoorPos().getX() + 0.5f,
-							missedTardis.getDoor().getDoorPos().getY() + 0.5f, missedTardis.getDoor().getDoorPos().getZ() + 0.5f);
+					drownedEntity.setPosition(missedTardis.getDoorPos().getX() + 0.5f,
+							missedTardis.getDoorPos().getY() + 0.5f, missedTardis.getDoorPos().getZ() + 0.5f);
 					PhantomEntity phantomEntity = new PhantomEntity(EntityType.PHANTOM, TardisUtil.getTardisDimension());
-					phantomEntity.setPosition(missedTardis.getDoor().getDoorPos().getX() + 0.5f,
-							missedTardis.getDoor().getDoorPos().getY() + 0.5f, missedTardis.getDoor().getDoorPos().getZ() + 0.5f);
+					phantomEntity.setPosition(missedTardis.getDoorPos().getX() + 0.5f,
+							missedTardis.getDoorPos().getY() + 0.5f, missedTardis.getDoorPos().getZ() + 0.5f);
 					TardisUtil.getTardisDimension().spawnEntity(random.nextBoolean() ? random.nextBoolean() ? drownedEntity : zombieEntity : phantomEntity);
 				}), 80L, Text.literal("Immediate cloaking necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new CloakControl(), new RandomiserControl()));
@@ -244,7 +243,7 @@ public class SequenceRegistry {
 				}), (missedTardis -> {
 					missedTardis.removeFuel(random.nextBetween(65, 250));
 					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.getTravel().setDestination(new AbsoluteBlockPos.Directed(
+					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
 							random.nextBetween(pos.getX() - 24, pos.getX() + 24),
 							pos.getY(),
 							random.nextBetween(pos.getZ() - 24, pos.getZ() + 24), pos.getWorld(),

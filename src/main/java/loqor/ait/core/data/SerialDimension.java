@@ -9,8 +9,7 @@ import net.minecraft.world.World;
 import java.lang.reflect.Type;
 
 public class SerialDimension {
-	@Exclude
-	private final World dimension;
+	@Exclude private final World dimension;
 	private final String value;
 
 	public SerialDimension(World dimension) {

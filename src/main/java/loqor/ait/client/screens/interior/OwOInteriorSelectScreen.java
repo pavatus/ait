@@ -41,7 +41,7 @@ public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
 	}
 
 	protected Tardis tardis() {
-		return ClientTardisManager.getInstance().getLookup().get(this.tardisid);
+		return ClientTardisManager.getInstance().demandTardis(this.tardisid);
 	}
 
 	@Override

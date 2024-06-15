@@ -60,7 +60,7 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
             if (serverTardis.isUnlocked(schema))
                 continue;
 
-            if (!schema.getRequirement().greaterOrEqual(loyalty))
+            if (loyalty.smallerThan(schema.getRequirement()))
                 continue;
 
             AITMod.LOGGER.debug("Unlocked " + schema.unlockType() + " "

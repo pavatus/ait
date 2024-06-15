@@ -5,6 +5,9 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
+
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -16,7 +19,7 @@ import net.minecraft.sound.SoundCategory;
 import java.util.Objects;
 import java.util.Optional;
 
-public class SonicHandler extends TardisLink implements ArtronHolderItem {
+public class SonicHandler extends TardisComponent implements ArtronHolderItem, TardisTickable {
 	public static final String HAS_CONSOLE_SONIC = "has_console_sonic";
 	public static final String HAS_EXTERIOR_SONIC = "has_exterior_sonic";
 	private ItemStack console; // The current sonic in the console
@@ -100,7 +103,7 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 
 		if (Objects.equals(sonicWhere, HAS_CONSOLE_SONIC) && tardis.getDesktop().findCurrentConsole().isEmpty()) return;
 
-		spawnItem(sonic, Objects.equals(sonicWhere, HAS_CONSOLE_SONIC) ? tardis.getDesktop().findCurrentConsole().get().position() : tardis.getExterior().getExteriorPos());
+		spawnItem(sonic, Objects.equals(sonicWhere, HAS_CONSOLE_SONIC) ? tardis.getDesktop().findCurrentConsole().get().position() : tardis.getExteriorPos());
 		this.clearSonicMark(sonicWhere);
 	}
 
@@ -117,14 +120,13 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		super.tick(server);
 
 		if (this.hasSonic(HAS_CONSOLE_SONIC)) {
 			ItemStack sonic = this.get(HAS_CONSOLE_SONIC);
 			if (this.hasMaxFuel(sonic)) return;
 			// Safe to get as ^ that method runs the check for us
 			ServerTardis tardis = (ServerTardis) this.tardis();
-			if (!tardis.hasPower()) return;
+			if (!tardis.engine().hasPower()) return;
 			this.addFuel(1, sonic);
 			tardis.fuel().removeFuel(1);
 		}
@@ -147,7 +149,7 @@ public class SonicHandler extends TardisLink implements ArtronHolderItem {
 			crash.setRepairTicks(repairTicks <= 0 ? 0 : repairTicks - 5);
 
 			if (sfxTicks % SonicItem.SONIC_SFX_LENGTH == 0) {
-				tardis.getExterior().getExteriorPos().getWorld().playSound(null, tardis.getExterior().getExteriorPos(),
+				tardis.getExteriorPos().getWorld().playSound(null, tardis.getExteriorPos(),
 						AITSounds.SONIC_USE, SoundCategory.BLOCKS, 0.5f, 1f);
 			}
 

@@ -193,31 +193,32 @@ public class FallingTardisEntity extends Entity {
 					return;
 				}
 
-				tardis.getTravel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(),
-						DirectionControl.getGeneralizedRotation(this.getTardis().getTravel().getPosition().getRotation())));
+				tardis.travel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(),
+						DirectionControl.getGeneralizedRotation(this.getTardis().travel().getPosition().getRotation())));
 
 				BlockPos blockPos = this.getBlockPos();
 
 				if (blockPos == null)
 					return;
 
-                if (!this.isOnGround() && (blockPos.getY() <= this.getWorld().getBottomY() || blockPos.getY() > this.getWorld().getTopY())) {
-					this.stopFalling();
+                if (!this.isOnGround()) {
+					if((blockPos.getY() <= this.getWorld().getBottomY() || blockPos.getY() > this.getWorld().getTopY())) {
+						this.stopFalling();
+					}
 				} else {
-					boolean crashing = tardis.getTravel().isCrashing();
+					boolean crashing = tardis.travel().isCrashing();
 
 					if (crashing) {
 						this.getWorld().createExplosion(this, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
 								10, true, World.ExplosionSourceType.MOB
 						);
 					}
-
 					tardis.getDoor().setLocked(crashing);
 					this.stopFalling(false);
 				}
 			}
 
-			this.setVelocity(this.getVelocity().multiply(tardis.getTravel().isCrashing() ? 1.5f : 0.98f));
+			this.setVelocity(this.getVelocity().multiply(tardis.travel().isCrashing() ? 1.5f : 0.98f));
 		}
 	}
 
@@ -230,7 +231,7 @@ public class FallingTardisEntity extends Entity {
 			PropertiesHandler.set(this.getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
 
 		Tardis tardis = this.getTardis();
-		boolean isCrashing = tardis.getTravel().isCrashing();
+		boolean isCrashing = tardis.travel().isCrashing();
 
 		if (isCrashing)
 			tardis.setLockedTardis(false);
@@ -248,7 +249,7 @@ public class FallingTardisEntity extends Entity {
 		if (!this.getWorld().isClient() && ForcedChunkUtil.isChunkForced((ServerWorld) this.getWorld(), this.getBlockPos()))
 			ForcedChunkUtil.stopForceLoading((ServerWorld) this.getWorld(), this.getBlockPos());
 
-		tardis.getTravel().setCrashing(false);
+		tardis.travel().setCrashing(false);
 
 		Block block = this.block.getBlock();
 		BlockPos blockPos = this.getBlockPos();

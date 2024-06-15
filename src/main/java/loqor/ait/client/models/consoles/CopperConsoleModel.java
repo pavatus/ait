@@ -1200,24 +1200,19 @@ public class CopperConsoleModel extends ConsoleModel {
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		matrices.push();
-
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(150f));
 
 		copper.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-
 		matrices.pop();
 	}
 
 	@Override
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		matrices.push();
-
 		matrices.translate(0.5f, -1.5f, -0.5f);
-
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(150f));
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-
 		matrices.pop();
 	}
 

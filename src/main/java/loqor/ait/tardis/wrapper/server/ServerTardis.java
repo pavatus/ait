@@ -4,7 +4,7 @@ import com.google.gson.InstanceCreator;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.AbsoluteBlockPos;
-import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
@@ -30,27 +30,15 @@ import java.util.UUID;
 
 public class ServerTardis extends Tardis {
 
-	private boolean lock = false;
+	@Exclude private boolean lock;
 
 	public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorVariantSchema variantType) {
 		super(uuid, new ServerTardisTravel(pos), new ServerTardisDesktop(schema), new ServerTardisExterior(variantType));
 	}
 
-	@Override
-	public void init(boolean deserialized) {
-		super.init(deserialized);
-		if (!deserialized) {
-			this.getTravel().placeExterior();
-			this.getTravel().runAnimations();
-		}
-	}
-
-	/**
-	 * @deprecated NEVER EVER use this constructor. It's for GSON to call upon deserialization!
-	 */
-	@Deprecated
-    private ServerTardis() {
+	private ServerTardis() {
 		super();
+		this.lock = false;
 	}
 
 	public void sync() {
@@ -77,7 +65,7 @@ public class ServerTardis extends Tardis {
 			return;
 
 		// most of the logic is in the handlers, so we can just disable them if we're a growth
-		if (!this.hasPower() && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-driftingmusicdelay")) {
+		if (!this.engine().hasPower() && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-driftingmusicdelay")) {
 			List<PlayerEntity> playerEntities = TardisUtil.getPlayersInsideInterior(this);
 			for (PlayerEntity player : playerEntities) {
 				player.playSound(AITSounds.DRIFTING_MUSIC, SoundCategory.MUSIC, 1, 1);
@@ -102,7 +90,7 @@ public class ServerTardis extends Tardis {
 			}
 		}
 
-		if (this.isSiegeMode() && !this.getDoor().locked())
+		if (this.siege().isActive() && !this.getDoor().locked())
 			this.getDoor().setLocked(true);
 
 		this.getHandlers().tick(server);
@@ -117,7 +105,7 @@ public class ServerTardis extends Tardis {
 		if (PropertiesHandler.getBool(this.properties(), PropertiesHandler.IS_FALLING))
 			DoorData.lockTardis(true, this, null, true);
 
-		AbsoluteBlockPos.Directed pos = this.getExterior().getExteriorPos();
+		AbsoluteBlockPos.Directed pos = this.getExteriorPos();
 		// If we're falling nearly out of the world, freak out.
 		if (PropertiesHandler.getBool(this.properties(), PropertiesHandler.IS_FALLING)
 				&& pos.getY() <= pos.getWorld().getBottomY() + 2) {
@@ -125,7 +113,7 @@ public class ServerTardis extends Tardis {
 			PropertiesHandler.set(this, PropertiesHandler.IS_FALLING, false);
 		}
 
-		this.getTravel().tick(server);
+		this.travel().tick(server);
 		this.getDesktop().tick(server);
 	}
 

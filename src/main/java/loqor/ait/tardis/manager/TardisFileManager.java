@@ -1,5 +1,6 @@
 package loqor.ait.tardis.manager;
 
+import com.google.gson.Gson;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
@@ -11,14 +12,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class TardisFileManager<T extends Tardis> {
 
-    private final Class<T> clazz;
-
-    public TardisFileManager(Class<T> clazz) {
-        this.clazz = clazz;
-    }
+    private boolean locked = false;
 
     public void delete(MinecraftServer server, UUID uuid) {
         try {
@@ -43,18 +41,23 @@ public class TardisFileManager<T extends Tardis> {
         return result;
     }
 
-    public T loadTardis(MinecraftServer server, TardisManager<T, ?> manager, UUID uuid) {
+    public T loadTardis(MinecraftServer server, TardisManager<T, ?> manager, UUID uuid, TardisLoader<T> function, Consumer<T> consumer) {
+        if (this.locked)
+            return null;
+
+        long start = System.currentTimeMillis();
+
         try {
             Path file = TardisFileManager.getSavePath(server, uuid, "json");
             String json = Files.readString(file);
 
-            T tardis = manager.getGson().fromJson(json, this.clazz);
-            tardis.init(true);
+            T tardis = function.apply(manager.getFileGson(), json);
+            consumer.accept(tardis);
 
-            manager.getLookup().put(tardis.getUuid(), tardis);
+            AITMod.LOGGER.info("Deserialized {} in {}ms", tardis, System.currentTimeMillis() - start);
             return tardis;
         } catch (IOException e) {
-            AITMod.LOGGER.warn("Failed to load tardis with uuid {}!", uuid);
+            AITMod.LOGGER.warn("Failed to load {}!", uuid);
             AITMod.LOGGER.warn(e.getMessage());
         }
 
@@ -62,17 +65,24 @@ public class TardisFileManager<T extends Tardis> {
     }
 
     public void saveTardis(MinecraftServer server, TardisManager<T, ?> manager) {
-        for (T tardis : manager.getLookup().values()) {
-            this.saveTardis(server, manager, tardis);
-        }
+        manager.forEach(tardis -> this.saveTardis(server, manager, tardis));
     }
 
     public void saveTardis(MinecraftServer server, TardisManager<T, ?> manager, T tardis) {
         try {
             Path savePath = TardisFileManager.getSavePath(server, tardis.getUuid(), "json");
-            Files.writeString(savePath, manager.getGson().toJson(tardis, ServerTardis.class));
+            Files.writeString(savePath, manager.getFileGson().toJson(tardis, ServerTardis.class));
         } catch (IOException e) {
             AITMod.LOGGER.warn("Couldn't save TARDIS " + tardis.getUuid(), e);
         }
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    @FunctionalInterface
+    public interface TardisLoader<T> {
+        T apply(Gson gson, String name);
     }
 }

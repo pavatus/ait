@@ -6,7 +6,6 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -29,7 +28,7 @@ public class SetSiegeCommand {
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 		boolean sieged = BoolArgumentType.getBool(context, "siege");
 
-		PropertiesHandler.set(tardis, PropertiesHandler.SIEGE_MODE, sieged);
+		tardis.siege().setActive(true);
 		return Command.SINGLE_SUCCESS;
 	}
 }

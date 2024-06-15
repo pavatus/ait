@@ -1,5 +1,8 @@
 package loqor.ait.tardis.util;
 
+import loqor.ait.tardis.base.TardisComponent;
+
+import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -15,15 +18,19 @@ public class EnumMap<K extends Ordered, V> {
     }
 
     public void put(K k, V v) {
-        values[k.ordinal()] = v;
+        values[k.index()] = v;
     }
 
     public V get(K k) {
-        return values[k.ordinal()];
+        return this.get(k.index());
+    }
+
+    public V get(int index) {
+        return values[index];
     }
 
     public boolean containsKey(K k) {
-        return this.values[k.ordinal()] != null;
+        return this.values[k.index()] != null;
     }
 
     /**
@@ -32,5 +39,13 @@ public class EnumMap<K extends Ordered, V> {
      */
     public V[] values() {
         return this.values;
+    }
+    
+    public void clear() {
+        Arrays.fill(this.values, null);
+    }
+
+    public int size() {
+        return this.values.length;
     }
 }

@@ -4,11 +4,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import loqor.ait.AITMod;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.v2.Property;
+import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,26 +27,36 @@ import java.util.List;
 import java.util.Optional;
 
 // is StatsData a good name for this class?
-public class StatsData extends TardisLink {
+public class StatsData extends KeyedTardisComponent {
+
 	private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
-	private static final String NAME_KEY = "permission";
-	private static final String PLAYER_CREATOR_NAME_KEY = "player_creator_name";
 	private static List<String> NAME_CACHE;
 
+	private static final String NAME_KEY = "name";
+	private static final String PLAYER_CREATOR_NAME_KEY = "player_creator_name";
 	private static final String DATE_KEY = "date";
+
+    private static final Property<RegistryKey<World>> SKYBOX = new Property<>(Property.Type.WORLD_KEY, "skybox", AITDimensions.TARDIS_DIM_WORLD);
+
+	private final Value<RegistryKey<World>> skybox = SKYBOX.create(this);
 
 	public StatsData() {
 		super(Id.STATS);
 	}
 
 	@Override
-	public void init(Tardis tardis, boolean deserialized) {
-		super.init(tardis, deserialized);
+	public void onCreate() {
+		this.markCreationDate();
+		this.setName(StatsData.getRandomName());
+	}
 
-		if (!deserialized) {
-			this.markCreationDate();
-			this.setName(StatsData.getRandomName());
-		}
+	@Override
+	public void onLoaded() {
+		skybox.of(this, SKYBOX);
+	}
+
+	public Value<RegistryKey<World>> skybox() {
+		return skybox;
 	}
 
 	public String getName() {

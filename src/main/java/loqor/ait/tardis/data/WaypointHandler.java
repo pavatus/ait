@@ -2,6 +2,8 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.core.item.WaypointItem;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
+
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
@@ -11,7 +13,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.Optional;
 
-public class WaypointHandler extends TardisLink {
+public class WaypointHandler extends TardisComponent {
 	public static final String HAS_CARTRIDGE = "has_cartridge";
 	private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
 
@@ -65,7 +67,7 @@ public class WaypointHandler extends TardisLink {
 		if (!this.hasWaypoint())
 			return; // todo move this check to the DEMAT event so the fail to takeoff happens
 
-		PropertiesHandler.setAutoPilot(this.tardis().getHandlers().getProperties(), true);
+		this.tardis().flight().autoLand().set(true);
 		FlightUtil.travelTo(tardis(), this.get());
 	}
 
@@ -73,7 +75,7 @@ public class WaypointHandler extends TardisLink {
 		if (!this.hasWaypoint())
 			return;
 
-		this.tardis().getTravel().setDestination(this.get(), true);
+		this.tardis().travel().setDestination(this.get(), true);
 	}
 
 	public void spawnItem() {

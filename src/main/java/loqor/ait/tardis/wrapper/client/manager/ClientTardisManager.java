@@ -7,10 +7,13 @@ import loqor.ait.AITMod;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
+import loqor.ait.core.data.base.Exclude;
+import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.manager.AgingTardisManager;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -23,11 +26,10 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftClient> {
+public class ClientTardisManager extends AgingTardisManager<ClientTardis, MinecraftClient> {
 
 	private static ClientTardisManager instance;
 
@@ -42,11 +44,15 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
 	private ClientTardisManager() {
 		ClientPlayNetworking.registerGlobalReceiver(SEND,
-				(client, handler, buf, responseSender) -> ClientTardisManager.getInstance().sync(buf)
+				(client, handler, buf, responseSender) -> this.sync(buf)
 		);
 
 		ClientPlayNetworking.registerGlobalReceiver(UPDATE,
-				(client, handler, buf, responseSender) -> ClientTardisManager.getInstance().update(client, buf)
+				(client, handler, buf, responseSender) -> this.update(client, buf)
+		);
+
+		ClientPlayNetworking.registerGlobalReceiver(UPDATE_PROPERTY,
+				(client, handler, buf, responseSender) -> this.updatePropertyV2(client, buf)
 		);
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -112,12 +118,11 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 	}
 
 	private void sync(UUID uuid, String json) {
-		ClientTardis tardis = this.gson.fromJson(json, ClientTardis.class);
-		tardis.init(true);
+		ClientTardis tardis = this.readTardis(this.networkGson, json);
+		AITMod.LOGGER.info("Received {}", tardis);
 
 		synchronized (this) {
-			this.lookup.put(uuid, tardis);
-			AITMod.LOGGER.info("Received TARDIS: " + uuid);
+			this.updateAge(tardis);
 
 			for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
 				consumer.accept(tardis);
@@ -144,8 +149,8 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		}
 	}
 
-	private void update(MinecraftClient client, UUID uuid, PacketByteBuf buf) {
-		ClientTardis tardis = this.demandTardis(client, uuid);
+	private void update(MinecraftClient client, PacketByteBuf buf) {
+		ClientTardis tardis = this.demandTardis(client, buf.readUuid());
 
 		if (tardis == null)
 			return;
@@ -160,37 +165,50 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		if (!typeId.mutable())
 			return;
 
-		typeId.set(tardis, this.gson.fromJson(
+		typeId.set(tardis, this.networkGson.fromJson(
 				buf.readString(), typeId.clazz())
 		);
 	}
 
-	private void update(MinecraftClient client, PacketByteBuf buf) {
-		this.update(client, buf.readUuid(), buf);
+	private void updatePropertyV2(MinecraftClient client, PacketByteBuf buf) {
+		ClientTardis tardis = this.demandTardis(client, buf.readUuid());
+
+		if (tardis == null)
+			return;
+
+		byte mode = buf.readByte();
+		TardisComponent.IdLike typeId = TardisComponentRegistry.getInstance().get(buf.readVarInt());
+
+		String key = buf.readString();
+
+		if (!(typeId.get(tardis) instanceof KeyedTardisComponent keyed)) {
+			AITMod.LOGGER.error("Tried to update an un-keyed component: " + typeId, new IllegalAccessException());
+			return;
+		}
+
+		try {
+			keyed.update(key, buf, mode);
+		} catch (Exception e) {
+			AITMod.LOGGER.error("Failed to update property for component " + typeId, e);
+		}
 	}
 
 	@Override
-	protected GsonBuilder getGsonBuilder(GsonBuilder builder) {
-		builder.registerTypeAdapter(SerialDimension.class, new SerialDimension.ClientSerializer())
+	protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
+		return super.createGsonBuilder(strategy)
+				.registerTypeAdapter(SerialDimension.class, new SerialDimension.ClientSerializer())
 				.registerTypeAdapter(Tardis.class, ClientTardis.creator());
-
-		return builder;
 	}
 
 	@Override
 	public void reset() {
 		this.subscribers.clear();
-		super.reset();
-	}
 
-	/**
-	 * @deprecated By using this method on the client you accept that the tardis,
-	 * even though exists on the server, might not on the client and client cba to actually ask for it.
-	 */
-	@Override
-	@Deprecated
-	public Map<UUID, ClientTardis> getLookup() {
-		return super.getLookup();
+		for (ClientTardis tardis : this.lookup.values()) {
+			tardis.dispose();
+		}
+
+		super.reset();
 	}
 
 	public static ClientTardisManager getInstance() {

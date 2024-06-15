@@ -8,8 +8,6 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationPropertyHelper;
 
 public class DirectionControl extends Control {
 	public DirectionControl() {
@@ -18,7 +16,7 @@ public class DirectionControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-		TardisTravel travel = tardis.getTravel();
+		TardisTravel travel = tardis.travel();
 		AbsoluteBlockPos.Directed dest = travel.getDestination();
 
 		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
