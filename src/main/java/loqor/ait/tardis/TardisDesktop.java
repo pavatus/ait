@@ -33,24 +33,24 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 	private AbsoluteBlockPos.Directed doorPos;
 
 	private final Corners corners;
-	private final Set<BlockPos> consoles;
+	private final Set<BlockPos> consolePos;
 
 	public TardisDesktop(TardisDesktopSchema schema) {
 		super(Id.DESKTOP);
 		this.schema = schema;
 
 		this.corners = TardisUtil.findInteriorSpot();
-		this.consoles = new HashSet<>();
+		this.consolePos = new HashSet<>();
 	}
 
-	private TardisDesktop(TardisDesktopSchema schema, AbsoluteBlockPos.Directed doorPos, Corners corners, Set<BlockPos> consoles) {
+	private TardisDesktop(TardisDesktopSchema schema, AbsoluteBlockPos.Directed doorPos, Corners corners, Set<BlockPos> consolePos) {
 		super(Id.DESKTOP);
 
 		this.schema = schema;
 		this.doorPos = doorPos;
 
 		this.corners = corners;
-		this.consoles = consoles;
+		this.consolePos = consolePos;
 	}
 
 	@Override
@@ -106,8 +106,8 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 		dim.addBlockEntity(generator);
 	}
 
-	public Set<BlockPos> getConsoles() {
-		return consoles;
+	public Set<BlockPos> getConsolePos() {
+		return consolePos;
 	}
 
 	public static Object updater() {
@@ -123,7 +123,7 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 			TardisDesktopSchema schema = context.deserialize(obj.get("schema"), TardisDesktopSchema.class);
 			AbsoluteBlockPos.Directed doorPos = context.deserialize(obj.get("doorPos"), AbsoluteBlockPos.Directed.class);
 			Corners corners = context.deserialize(obj.get("corners"), Corners.class);
-			Set<BlockPos> consoles = null;
+			Set<BlockPos> consoles;
 
 			JsonArray jsonConsolePos = obj.getAsJsonArray("consolePos");
 
@@ -134,9 +134,7 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 				consoles = context.deserialize(jsonConsolePos, HashSet.class);
 			}
 
-
 			return new TardisDesktop(schema, doorPos, corners, consoles);
 		}
 	}
-
 }

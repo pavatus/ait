@@ -113,7 +113,7 @@ public class FlightUtil {
 
 	public static void playSoundAtEveryConsole(TardisDesktop desktop, SoundEvent sound, SoundCategory category, float volume, float pitch) {
 		ServerWorld dim = (ServerWorld) TardisUtil.getTardisDimension();
-		desktop.getConsoles().forEach(console -> dim.playSound(null, console, sound, category, volume, pitch));
+		desktop.getConsolePos().forEach(console -> dim.playSound(null, console, sound, category, volume, pitch));
 	}
 
 	public static void playSoundAtConsole(BlockPos console, SoundEvent sound, SoundCategory category) {

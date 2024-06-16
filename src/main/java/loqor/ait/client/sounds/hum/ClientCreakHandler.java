@@ -83,7 +83,7 @@ public class ClientCreakHandler extends SoundHandler {
 			return;
 
 		if (current.siege().isActive() && chosen.equals(CreakRegistry.WHISPER)) {
-			current.getDesktop().getConsoles().forEach(console ->
+			current.getDesktop().getConsolePos().forEach(console ->
 					startIfNotPlaying(new PositionedSoundInstance(
 							chosen.sound(), SoundCategory.HOSTILE, 0.5f, 1.0f,
 							net.minecraft.util.math.random.Random.create(),

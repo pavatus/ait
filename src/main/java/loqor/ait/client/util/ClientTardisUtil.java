@@ -90,7 +90,7 @@ public class ClientTardisUtil {
 		BlockPos pos = player.getBlockPos();
 		double lowest = Double.MAX_VALUE;
 
-		for (BlockPos console : tardis.getDesktop().getConsoles()) {
+		for (BlockPos console : tardis.getDesktop().getConsolePos()) {
 			double distance = Math.sqrt(pos.getSquaredDistance(console));
 
 			if (distance < lowest)

@@ -74,7 +74,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		DeltaTimeManager.createDelay("interior_change-" + tardis.getUuid().toString(), 100L);
 		tardis.alarm().enable();
 
-		tardis.getDesktop().getConsoles().clear();
+		tardis.getDesktop().getConsolePos().clear();
 
 		if (!(tardis.hasGrowthDesktop()))
 			tardis.removeFuel(5000 * (tardis.tardisHammerAnnoyance + 1));

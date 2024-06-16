@@ -142,7 +142,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 		Consumer<BlockPos> effects = SequenceHandler::missedControlEffects;
 
 		if (console == null) {
-			this.tardis.getDesktop().getConsoles().forEach(effects);
+			this.tardis.getDesktop().getConsolePos().forEach(effects);
 			return;
 		}
 
@@ -164,7 +164,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 		Consumer<BlockPos> effects = SequenceHandler::completedControlEffects;
 
 		if (console == null) {
-			this.tardis.getDesktop().getConsoles().forEach(effects);
+			this.tardis.getDesktop().getConsolePos().forEach(effects);
 			return;
 		}
 

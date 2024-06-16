@@ -1,6 +1,5 @@
 package loqor.ait.mixin.server;
 
-import com.google.common.collect.Lists;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.painting.PaintingEntity;
@@ -25,7 +24,7 @@ public abstract class StructureTemplateMixin {
 
 	@Shadow
 	@Final
-	private final List<StructureTemplate.StructureEntityInfo> entities = Lists.newArrayList();
+	private List<StructureTemplate.StructureEntityInfo> entities;
 
 	@Redirect(method = "saveFromWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/structure/StructureTemplate;addEntitiesFromWorld(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;)V", ordinal = 0))
 	private void ait$saveFromWorld(StructureTemplate instance, World world, BlockPos firstCorner, BlockPos secondCorner) {

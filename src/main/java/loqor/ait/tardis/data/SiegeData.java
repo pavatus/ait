@@ -104,7 +104,7 @@ public class SiegeData extends KeyedTardisComponent implements TardisTickable {
 				this.tardis.travel().placeExterior();
 		}
 
-		for (BlockPos console : this.tardis.getDesktop().getConsoles()) {
+		for (BlockPos console : this.tardis.getDesktop().getConsolePos()) {
 			FlightUtil.playSoundAtConsole(console, sound, SoundCategory.BLOCKS, 3f, 1f);
 		}
 

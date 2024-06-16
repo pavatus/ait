@@ -69,7 +69,7 @@ public class SequenceRegistry {
 					missedTardis.getDoor().openDoors();
 					List<Explosion> explosions = new ArrayList<>();
 
-					missedTardis.getDesktop().getConsoles().forEach(console -> {
+					missedTardis.getDesktop().getConsolePos().forEach(console -> {
 						Explosion explosion = TardisUtil.getTardisDimension().createExplosion(
 								null, null, null, console.toCenterPos(),
 								3f * 2, false, World.ExplosionSourceType.MOB

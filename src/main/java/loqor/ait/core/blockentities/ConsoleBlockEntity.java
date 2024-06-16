@@ -1,5 +1,6 @@
 package loqor.ait.core.blockentities;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
@@ -52,7 +53,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
 	@Override
 	public void onLinked() {
-		this.tardis().ifPresent(tardis -> tardis.getDesktop().getConsoles().add(this.pos));
+		this.tardis().ifPresent(tardis -> tardis.getDesktop().getConsolePos().add(this.pos));
 	}
 
 	@Override
@@ -142,7 +143,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		this.killControls();
 
 		this.tardis().get().getDesktop()
-				.getConsoles().remove(this.pos);
+				.getConsolePos().remove(this.pos);
 
 		super.markRemoved();
 	}

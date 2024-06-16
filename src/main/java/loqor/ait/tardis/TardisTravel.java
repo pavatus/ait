@@ -260,7 +260,7 @@ public class TardisTravel extends TardisComponent {
 
 		List<Explosion> explosions = new ArrayList<>();
 
-		tardis.getDesktop().getConsoles().forEach(console -> {
+		tardis.getDesktop().getConsolePos().forEach(console -> {
 			FlightUtil.playSoundAtConsole(console,
 					SoundEvents.ENTITY_GENERIC_EXPLODE,
 					SoundCategory.BLOCKS,

@@ -389,7 +389,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).setBiome(tardis);
 
-		for (BlockPos console : tardis.getDesktop().getConsoles()) {
+		for (BlockPos console : tardis.getDesktop().getConsolePos()) {
 			FlightUtil.playSoundAtConsole(console, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 		}
 
