@@ -1,12 +1,13 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.api.ICantBreak;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.HammerItem;
+import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -109,10 +110,11 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 			return;
 		}
 
+		super.onPlaced(world, pos, state, placer, itemStack);
+
 		if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
 			consoleBlockEntity.markNeedsControl();
 		}
-		super.onPlaced(world, pos, state, placer, itemStack);
 	}
 
 	@Override

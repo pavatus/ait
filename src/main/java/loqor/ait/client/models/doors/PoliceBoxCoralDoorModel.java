@@ -11,6 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
 public class PoliceBoxCoralDoorModel extends DoorModel {
+
 	private final ModelPart TARDIS;
 
 	public PoliceBoxCoralDoorModel(ModelPart root) {
@@ -25,17 +26,12 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
 
 		ModelPartData Posts = TARDIS.addChild("Posts", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData cube_r1 = Posts.addChild("cube_r1", ModelPartBuilder.create().uv(236, 42).cuboid(-18.0F, -60.0F, -17.0F, 4.0F, 56.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -32.0F, 0.0F, 1.5708F, 0.0F));
-
-		ModelPartData cube_r2 = Posts.addChild("cube_r2", ModelPartBuilder.create().uv(236, 102).cuboid(-2.0F, -30.0F, 17.0F, 3.0F, 30.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -34.5F, -18.0F, -1.5708F, 1.4835F, -1.5708F));
-
-		ModelPartData cube_r3 = Posts.addChild("cube_r3", ModelPartBuilder.create().uv(236, 127).cuboid(-2.0F, 0.0F, 17.0F, 3.0F, 31.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -34.6743F, -18.0F, 1.5708F, 1.4835F, 1.5708F));
-
-		ModelPartData cube_r4 = Posts.addChild("cube_r4", ModelPartBuilder.create().uv(251, 127).cuboid(-2.0F, 0.0F, 17.0F, 3.0F, 31.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-38.0F, -34.6743F, -18.0F, 1.5708F, 1.4835F, 1.5708F));
-
-		ModelPartData cube_r5 = Posts.addChild("cube_r5", ModelPartBuilder.create().uv(251, 102).cuboid(-2.0F, -30.0F, 17.0F, 3.0F, 30.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-38.0F, -34.5F, -18.0F, -1.5708F, 1.4835F, -1.5708F));
-
-		ModelPartData cube_r6 = Posts.addChild("cube_r6", ModelPartBuilder.create().uv(251, 41).cuboid(-17.0F, -60.0F, -18.0F, 3.0F, 56.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -32.0F, -3.1416F, 0.0F, 3.1416F));
+		Posts.addChild("cube_r1", ModelPartBuilder.create().uv(236, 42).cuboid(-18.0F, -60.0F, -17.0F, 4.0F, 56.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -32.0F, 0.0F, 1.5708F, 0.0F));
+		Posts.addChild("cube_r2", ModelPartBuilder.create().uv(236, 102).cuboid(-2.0F, -30.0F, 17.0F, 3.0F, 30.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -34.5F, -18.0F, -1.5708F, 1.4835F, -1.5708F));
+		Posts.addChild("cube_r3", ModelPartBuilder.create().uv(236, 127).cuboid(-2.0F, 0.0F, 17.0F, 3.0F, 31.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -34.6743F, -18.0F, 1.5708F, 1.4835F, 1.5708F));
+		Posts.addChild("cube_r4", ModelPartBuilder.create().uv(251, 127).cuboid(-2.0F, 0.0F, 17.0F, 3.0F, 31.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-38.0F, -34.6743F, -18.0F, 1.5708F, 1.4835F, 1.5708F));
+		Posts.addChild("cube_r5", ModelPartBuilder.create().uv(251, 102).cuboid(-2.0F, -30.0F, 17.0F, 3.0F, 30.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-38.0F, -34.5F, -18.0F, -1.5708F, 1.4835F, -1.5708F));
+		Posts.addChild("cube_r6", ModelPartBuilder.create().uv(251, 41).cuboid(-17.0F, -60.0F, -18.0F, 3.0F, 56.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -32.0F, -3.1416F, 0.0F, 3.1416F));
 
 		ModelPartData Doors = TARDIS.addChild("Doors", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
@@ -44,7 +40,7 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
 				.uv(0, 10).cuboid(9.5F, -9.5F, -1.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F))
 				.uv(5, 51).cuboid(2.5F, -9.5F, -1.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-13.5F, -29.5F, -15.5F));
 
-		ModelPartData phone = right_door.addChild("phone", ModelPartBuilder.create().uv(268, 37).cuboid(-3.75F, -40.0F, -13.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
+		right_door.addChild("phone", ModelPartBuilder.create().uv(268, 37).cuboid(-3.75F, -40.0F, -13.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
 				.uv(268, 37).cuboid(-3.75F, -39.8F, -13.5F, 2.0F, 0.0F, 2.0F, new Dilation(0.0F))
 				.uv(268, 43).cuboid(-3.75F, -37.75F, -13.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.5F))
 				.uv(265, 25).cuboid(-8.5F, -40.0F, -13.5F, 5.0F, 6.0F, 2.0F, new Dilation(0.0F))
@@ -55,18 +51,18 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
 				.uv(250, 35).cuboid(-8.5F, -42.0F, -13.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.2F))
 				.uv(250, 25).cuboid(-9.0F, -41.5F, -14.5F, 6.0F, 8.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(12.5F, 28.5F, 14.5F));
 
-		ModelPartData phone_t = right_door.addChild("phone_t", ModelPartBuilder.create().uv(266, 74).cuboid(-9.25F, -40.0F, -13.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
+		right_door.addChild("phone_t", ModelPartBuilder.create().uv(266, 74).cuboid(-9.25F, -40.0F, -13.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
 				.uv(266, 74).cuboid(-9.25F, -39.8F, -13.5F, 2.0F, 0.0F, 2.0F, new Dilation(0.0F))
 				.uv(266, 80).cuboid(-9.0F, -37.75F, -13.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.5F))
 				.uv(266, 60).cuboid(-7.5F, -41.0F, -14.5F, 3.0F, 7.0F, 3.0F, new Dilation(0.0F))
 				.uv(266, 71).cuboid(-7.0F, -40.0F, -11.25F, 2.0F, 2.0F, 0.0F, new Dilation(0.0F))
 				.uv(266, 71).cuboid(-7.0F, -37.0F, -11.25F, 2.0F, 2.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(13.25F, 28.5F, 14.5F));
 
-		ModelPartData left_door = Doors.addChild("left_door", ModelPartBuilder.create().uv(189, 41).cuboid(-13.5F, -29.5F, -0.5F, 13.0F, 55.0F, 1.0F, new Dilation(0.0F))
+		Doors.addChild("left_door", ModelPartBuilder.create().uv(189, 41).cuboid(-13.5F, -29.5F, -0.5F, 13.0F, 55.0F, 1.0F, new Dilation(0.0F))
 				.uv(0, 0).cuboid(-12.5F, -10.5F, -1.5F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F))
 				.uv(0, 51).cuboid(-12.5F, -4.5F, -1.5F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(13.5F, -29.5F, -15.5F));
 
-		ModelPartData Walls = TARDIS.addChild("Walls", ModelPartBuilder.create().uv(63, 227).cuboid(-14.0F, -60.0F, -16.0F, 1.0F, 56.0F, 1.0F, new Dilation(0.0F))
+		TARDIS.addChild("Walls", ModelPartBuilder.create().uv(63, 227).cuboid(-14.0F, -60.0F, -16.0F, 1.0F, 56.0F, 1.0F, new Dilation(0.0F))
 				.uv(116, 170).cuboid(13.0F, -60.0F, -16.0F, 1.0F, 56.0F, 1.0F, new Dilation(0.0F))
 				.uv(115, 0).cuboid(-13.0F, -60.0F, -16.0F, 26.0F, 1.0F, 1.0F, new Dilation(0.0F))
 				.uv(59, 113).cuboid(13.0F, -60.0F, -16.5F, 1.0F, 56.0F, 0.0F, new Dilation(0.0F))
@@ -81,7 +77,7 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
 				.uv(277, 5).cuboid(-16.0F, -63.0F, -17.0F, 0.0F, 3.0F, 4.0F, new Dilation(0.0F))
 				.uv(243, 3).cuboid(-16.0F, -63.0F, -17.0F, 32.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
 
-		ModelPartData lights = PCB.addChild("lights", ModelPartBuilder.create().uv(241, 28).cuboid(10.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
+		PCB.addChild("lights", ModelPartBuilder.create().uv(241, 28).cuboid(10.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
 				.uv(241, 22).cuboid(10.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
 				.uv(241, 22).cuboid(4.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
 				.uv(241, 28).cuboid(4.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
@@ -100,7 +96,7 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
 				.uv(38, 437).cuboid(-11.0F, -63.0F, -17.0F, 0.0F, 3.0F, 4.0F, new Dilation(0.0F))
 				.uv(21, 435).cuboid(-11.0F, -63.0F, -17.0F, 22.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
 
-		ModelPartData lights2 = PCB_t.addChild("lights2", ModelPartBuilder.create().uv(241, 28).cuboid(10.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
+		PCB_t.addChild("lights2", ModelPartBuilder.create().uv(241, 28).cuboid(10.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
 				.uv(241, 22).cuboid(10.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
 				.uv(241, 22).cuboid(4.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
 				.uv(241, 28).cuboid(4.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
@@ -109,7 +105,7 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
 				.uv(241, 22).cuboid(-12.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
 				.uv(241, 28).cuboid(-12.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F)), ModelTransform.pivot(0.0F, -3.0F, 0.0F));
 
-		ModelPartData lights_t2 = PCB_t.addChild("lights_t2", ModelPartBuilder.create().uv(267, 55).cuboid(7.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
+		PCB_t.addChild("lights_t2", ModelPartBuilder.create().uv(267, 55).cuboid(7.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
 				.uv(267, 49).cuboid(7.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
 				.uv(267, 49).cuboid(1.75F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
 				.uv(267, 55).cuboid(1.75F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
@@ -117,6 +113,7 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
 				.uv(267, 55).cuboid(-3.75F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F))
 				.uv(267, 49).cuboid(-9.0F, -60.4F, -16.5F, 2.0F, 3.0F, 2.0F, new Dilation(-0.3F))
 				.uv(267, 55).cuboid(-9.0F, -59.3F, -16.5F, 2.0F, 2.0F, 2.0F, new Dilation(-0.15F)), ModelTransform.pivot(0.0F, -3.0F, 0.0F));
+
 		return TexturedModelData.of(modelData, 512, 512);
 	}
 
@@ -127,10 +124,7 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        /*this.TARDIS.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
-        this.TARDIS.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();*/
-
-		DoorData door = doorEntity.findTardis().get().getDoor();
+		DoorData door = doorEntity.tardis().get().getDoor();
 
 		this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;

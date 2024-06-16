@@ -98,7 +98,8 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	}
 
 	private boolean isInFlight() {
-		return this.tardis().travel().getState().equals(TardisTravel.State.FLIGHT) || this.tardis().travel().getState().equals(TardisTravel.State.MAT);
+		return this.tardis().travel().getState().equals(TardisTravel.State.FLIGHT)
+				|| this.tardis().travel().getState().equals(TardisTravel.State.MAT);
 	}
 
 	private boolean isFlightTicking() {
@@ -106,8 +107,7 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	}
 
 	public boolean hasFinishedFlight() {
-		return (this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 ||
-				tardis().travel().isCrashing()) &&
+		return (this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 || tardis().travel().isCrashing()) &&
 				!PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 	}
 
@@ -115,7 +115,7 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 		this.setFlightTicks(0);
 		this.setTargetTicks(0);
 
-		FlightUtil.playSoundAtConsole(this.tardis(), SoundEvents.BLOCK_BELL_RESONATE); // temp sound
+		FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), SoundEvents.BLOCK_BELL_RESONATE); // temp sound
 
 		if (shouldAutoLand()) {
 			this.tardis().travel().materialise();
@@ -218,11 +218,9 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 				&& this.getDurationAsPercentage() < 100
 				&& travel.inFlight() && tardis.position() != tardis.destination() && !sequences.hasActiveSequence()) {
 			if (FlightUtil.getFlightDuration(tardis.position(),
-					tardis.destination()) > FlightUtil.convertSecondsToTicks(5)) {
-				int rand = random.nextBetween(0, 460 / (this.speed().get() == 0 ? 1 : this.speed().get()));
-				if (rand == 7) {
-					sequences.triggerRandomSequence(true);
-				}
+					tardis.destination()) > FlightUtil.convertSecondsToTicks(5)
+					&& random.nextBetween(0, 460 / (this.speed().get() == 0 ? 1 : this.speed().get())) == 7) {
+				sequences.triggerRandomSequence(true);
 			}
 		}
 	}

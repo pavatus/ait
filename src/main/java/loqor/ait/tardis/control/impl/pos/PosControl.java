@@ -22,13 +22,10 @@ public abstract class PosControl extends Control {
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
-
-		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis, player);
-				return false;
-			}
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
+		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
+			this.addToControlSequence(tardis, player, console);
+			return false;
 		}
 
 		TardisTravel travel = tardis.travel();
@@ -38,7 +35,6 @@ public abstract class PosControl extends Control {
 		travel.setDestination(new AbsoluteBlockPos.Directed(pos, destination.getWorld(), destination.getRotation()), false);
 
 		messagePlayerDestination(player, travel);
-
 		return true;
 	}
 

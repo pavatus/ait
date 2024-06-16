@@ -8,17 +8,22 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 
 public class SiegeModeControl extends Control {
+
+	private static final Text enabled = Text.translatable("tardis.message.control.siege.enabled");
+	private static final Text disabled = Text.translatable("tardis.message.control.siege.disabled");
+
 	public SiegeModeControl() {
 		// Ⓢ ?
 		super("protocol_1913");
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-			this.addToControlSequence(tardis, player);
+			this.addToControlSequence(tardis, player, console);
 			return false;
 		}
 
@@ -27,8 +32,7 @@ public class SiegeModeControl extends Control {
 
 		tardis.siege().setActive(!tardis.siege().isActive());
 		PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, false);
-		Text enabled = Text.translatable("tardis.message.control.siege.enabled");
-		Text disabled = Text.translatable("tardis.message.control.siege.disabled");
+
 		player.sendMessage((tardis.siege().isActive() ? enabled : disabled), true);
 		return false;
 	}

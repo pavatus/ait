@@ -20,12 +20,12 @@ public class RenegadeDoorModel extends DoorModel {
 		ModelPartData modelPartData = modelData.getRoot();
 		ModelPartData renegade = modelPartData.addChild("renegade", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 26.0F, 0.0F));
 
-		ModelPartData walls = renegade.addChild("walls", ModelPartBuilder.create().uv(0, 127).cuboid(8.0F, -38.0F, -8.0F, 3.0F, 36.0F, 4.0F, new Dilation(0.0F))
+		renegade.addChild("walls", ModelPartBuilder.create().uv(0, 127).cuboid(8.0F, -38.0F, -8.0F, 3.0F, 36.0F, 4.0F, new Dilation(0.0F))
 				.uv(15, 127).cuboid(7.0F, -37.0F, -7.0F, 5.0F, 35.0F, 2.0F, new Dilation(0.0F))
 				.uv(0, 127).cuboid(-10.0F, -38.0F, -8.0F, 3.0F, 36.0F, 4.0F, new Dilation(0.0F))
 				.uv(15, 127).cuboid(-11.0F, -37.0F, -7.0F, 5.0F, 35.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(-0.5F, 0.3F, 0.0F));
 
-		ModelPartData roof = renegade.addChild("roof", ModelPartBuilder.create().uv(30, 151).cuboid(-12.5F, -40.75F, -8.5F, 26.0F, 1.0F, 5.0F, new Dilation(0.2F))
+		renegade.addChild("roof", ModelPartBuilder.create().uv(30, 151).cuboid(-12.5F, -40.75F, -8.5F, 26.0F, 1.0F, 5.0F, new Dilation(0.2F))
 				.uv(30, 158).cuboid(-12.0F, -39.0F, -8.0F, 25.0F, 1.0F, 4.0F, new Dilation(0.2F))
 				.uv(0, 168).cuboid(-11.0F, -42.0F, -7.0F, 23.0F, 5.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(-0.5F, 0.3F, 0.0F));
 
@@ -35,20 +35,21 @@ public class RenegadeDoorModel extends DoorModel {
 				.uv(123, 98).cuboid(1.0F, -27.5F, -1.05F, 10.0F, 20.0F, 1.0F, new Dilation(-0.0499F))
 				.uv(70, 0).cuboid(1.0F, -22.5F, -1.3F, 10.0F, 10.0F, 1.0F, new Dilation(-0.05F)), ModelTransform.pivot(-6.0F, -1.7F, -6.0F));
 
-		ModelPartData cube_r1 = door.addChild("cube_r1", ModelPartBuilder.create().uv(42, 77).cuboid(3.55F, 3.55F, -0.75F, 7.0F, 7.0F, 1.0F, new Dilation(0.001F))
+		door.addChild("cube_r1", ModelPartBuilder.create().uv(42, 77).cuboid(3.55F, 3.55F, -0.75F, 7.0F, 7.0F, 1.0F, new Dilation(0.001F))
 				.uv(25, 77).cuboid(0.0F, 0.0F, -1.0F, 7.0F, 7.0F, 1.0F, new Dilation(0.001F))
 				.uv(66, 19).cuboid(-3.5F, -3.5F, -1.25F, 7.0F, 7.0F, 1.0F, new Dilation(0.0F))
 				.uv(0, 19).cuboid(-7.0F, -7.0F, -1.0F, 7.0F, 7.0F, 1.0F, new Dilation(0.001F))
 				.uv(0, 0).cuboid(-10.55F, -10.55F, -0.75F, 7.0F, 7.0F, 1.0F, new Dilation(0.001F)), ModelTransform.of(6.0F, -17.5F, -0.25F, 3.1416F, 0.0F, 2.3562F));
 
-		ModelPartData cube_r2 = door.addChild("cube_r2", ModelPartBuilder.create().uv(70, 0).cuboid(-5.0F, -5.0F, -1.05F, 10.0F, 10.0F, 1.0F, new Dilation(-0.05F))
+		door.addChild("cube_r2", ModelPartBuilder.create().uv(70, 0).cuboid(-5.0F, -5.0F, -1.05F, 10.0F, 10.0F, 1.0F, new Dilation(-0.05F))
 				.uv(123, 98).cuboid(-5.0F, -10.0F, -0.8F, 10.0F, 20.0F, 1.0F, new Dilation(-0.0499F)), ModelTransform.of(6.0F, -17.5F, -0.25F, -3.1416F, 0.0F, 3.1416F));
 
-		ModelPartData cube_r3 = door.addChild("cube_r3", ModelPartBuilder.create().uv(42, 77).cuboid(3.55F, 3.55F, -0.75F, 7.0F, 7.0F, 1.0F, new Dilation(0.001F))
+		door.addChild("cube_r3", ModelPartBuilder.create().uv(42, 77).cuboid(3.55F, 3.55F, -0.75F, 7.0F, 7.0F, 1.0F, new Dilation(0.001F))
 				.uv(0, 19).cuboid(-7.0F, -7.0F, -1.0F, 7.0F, 7.0F, 1.0F, new Dilation(0.001F))
 				.uv(25, 77).cuboid(0.0F, 0.0F, -1.0F, 7.0F, 7.0F, 1.0F, new Dilation(0.001F))
 				.uv(66, 19).cuboid(-3.5F, -3.5F, -1.25F, 7.0F, 7.0F, 1.0F, new Dilation(0.0F))
 				.uv(0, 0).cuboid(-10.55F, -10.55F, -0.75F, 7.0F, 7.0F, 1.0F, new Dilation(0.001F)), ModelTransform.of(6.0F, -17.5F, -0.25F, 0.0F, 0.0F, 0.7854F));
+
 		return TexturedModelData.of(modelData, 256, 256);
 	}
 
@@ -60,13 +61,10 @@ public class RenegadeDoorModel extends DoorModel {
 	@Override
 	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		matrices.push();
-
 		matrices.translate(0, -1.5f, 0);
-
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f));
 
-		renegade.getChild("door").yaw = door.findTardis().get().getHandlers().getDoor().isOpen() ? 1.75f : 0f;
-
+		renegade.getChild("door").yaw = door.tardis().get().getDoor().isOpen() ? 1.75f : 0f;
 		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
 		matrices.pop();

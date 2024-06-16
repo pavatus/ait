@@ -8,6 +8,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
@@ -47,8 +48,9 @@ public abstract class LinkableItem extends Item {
 			return;
 
 		NbtCompound nbt = stack.getOrCreateNbt();
+		NbtElement id = nbt.get("tardis");
 
-		if (!nbt.contains("tardis"))
+		if (id == null)
 			return;
 
 		if (!Screen.hasShiftDown()) {
@@ -56,10 +58,10 @@ public abstract class LinkableItem extends Item {
 			return;
 		}
 
-		ClientTardisManager.getInstance().getTardis(UUID.fromString(nbt.getString("tardis")), tardis -> {
+		ClientTardisManager.getInstance().getTardis(UUID.fromString(id.asString()), tardis -> {
 			if (tardis != null) {
 				tooltip.add(Text.literal("TARDIS: ").formatted(Formatting.BLUE));
-				tooltip.add(Text.literal("> " + tardis.getHandlers().getStats().getName()));
+				tooltip.add(Text.literal("> " + tardis.stats().getName()));
 				tooltip.add(Text.literal("> " + tardis.getUuid().toString().substring(0, 8)).formatted(Formatting.DARK_GRAY));
 			}
 		});

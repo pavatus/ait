@@ -8,7 +8,6 @@ import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.SonicHandler;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
@@ -20,8 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.profiler.Profiler;
 
-import java.util.Optional;
-
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
 
 	private ConsoleModel console;
@@ -31,21 +28,23 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 		Profiler profiler = entity.getWorld().getProfiler();
-		profiler.push("console");
+		profiler.push("console"); // console {
 
-		profiler.push("find_tardis");
-		Optional<Tardis> optionalTardis = entity.findTardis();
+		profiler.push("find_tardis"); // find_console {
 
-		if (optionalTardis.isEmpty())
+		if (entity.tardis().isEmpty()) {
+			profiler.pop(); // } find_console
+			profiler.pop(); // } console
 			return;
+		}
 
-		Tardis tardis = optionalTardis.get();
-		profiler.swap("render");
+		Tardis tardis = entity.tardis().get();
+		profiler.swap("render"); // } find_tardis / render {
 
 		this.renderConsole(profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
-		profiler.pop();
+		profiler.pop(); // } render
 
-		profiler.pop();
+		profiler.pop(); // } console
 	}
 
 	private void renderConsole(Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
@@ -70,7 +69,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 				RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1
 		);
 
-		profiler.push("emission");
+		profiler.push("emission"); // emission {
 		boolean hasPower = tardis.engine().hasPower();
 
 		ClientLightUtil.renderEmissivable(
@@ -79,17 +78,17 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 		);
 
 		matrices.pop();
-		profiler.swap("sonic");
+		profiler.swap("sonic"); // } emission / sonic {
 
 		if (!tardis.sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) {
-			profiler.pop();
+			profiler.pop(); // } sonic
 			return;
 		}
 
 		ItemStack stack = tardis.sonic().get(SonicHandler.HAS_CONSOLE_SONIC);
 
 		if (stack == null) {
-			profiler.pop();
+			profiler.pop(); // } sonic
 			return;
 		}
 
@@ -103,6 +102,6 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 		MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, lightAbove, overlay, matrices, vertexConsumers, entity.getWorld(), 0);
 
 		matrices.pop();
-		profiler.pop();
+		profiler.pop(); // } sonic
 	}
 }

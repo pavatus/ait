@@ -11,7 +11,6 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
-import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
@@ -156,7 +155,7 @@ public class TardisTravel extends TardisComponent {
 
 	public void decreaseSpeed() {
 		if (this.getState() == State.LANDED && this.tardis.flight().speed().get() == 1)
-			FlightUtil.playSoundAtConsole(this.tardis(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+			FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
 
 		this.tardis.flight().speed().set(MathHelper.clamp(this.tardis.flight().speed().get() - 1, 0, this.tardis.flight().maxSpeed().get()));
 	}
@@ -245,7 +244,7 @@ public class TardisTravel extends TardisComponent {
 
 	public void playThudSound() {
 		this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
-		FlightUtil.playSoundAtConsole(this.tardis(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+		FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
 	}
 
 	/**
@@ -259,29 +258,30 @@ public class TardisTravel extends TardisComponent {
 		Tardis tardis = tardis();
 		int crash_intensity = this.tardis.flight().speed().get() + tardis.tardisHammerAnnoyance + 1;
 
-		FlightUtil.playSoundAtConsole(tardis,
-				SoundEvents.ENTITY_GENERIC_EXPLODE,
-				SoundCategory.BLOCKS,
-				3f,
-				1f);
-
 		List<Explosion> explosions = new ArrayList<>();
 
 		tardis.getDesktop().getConsoles().forEach(console -> {
+			FlightUtil.playSoundAtConsole(console,
+					SoundEvents.ENTITY_GENERIC_EXPLODE,
+					SoundCategory.BLOCKS,
+					3f,
+					1f);
+
 			Explosion explosion = TardisUtil.getTardisDimension().createExplosion(
 					null,
 					null,
 					null,
-					console.position().toCenterPos(),
+					console.toCenterPos(),
 					3f * crash_intensity,
 					false,
 					World.ExplosionSourceType.MOB
 			);
+
 			explosions.add(explosion);
 		});
 
-		if (tardis().sequence().hasActiveSequence()) {
-			tardis().sequence().setActiveSequence(null, true);
+		if (this.tardis.sequence().hasActiveSequence()) {
+			this.tardis.sequence().setActiveSequence(null, true);
 		}
 
 		Random random = new Random();
@@ -428,7 +428,7 @@ public class TardisTravel extends TardisComponent {
 		// Play materialize sound at the destination
 		this.getDestination().getWorld().playSound(null, this.getDestination(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
 
-		FlightUtil.playSoundAtConsole(tardis, this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
+		FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 1f, 1f);
 
 		// Set the destination block to the Tardis exterior block
 		ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
@@ -495,7 +495,7 @@ public class TardisTravel extends TardisComponent {
 		this.setState(State.DEMAT);
 
 		world.playSound(null, this.getPosition(), this.getSoundForCurrentState(), SoundCategory.BLOCKS);
-		FlightUtil.playSoundAtConsole(this.tardis(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 10f, 1f);
+		FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), this.getSoundForCurrentState(), SoundCategory.BLOCKS, 10f, 1f);
 
 		this.runAnimations();
 	}
@@ -513,7 +513,7 @@ public class TardisTravel extends TardisComponent {
 		this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
 		// Play failure sound at the Tardis console position if the interior is not empty
-		FlightUtil.playSoundAtConsole(this.tardis(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
+		FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
 		// Create materialization delay and return
 		FlightUtil.createMaterialiseDelay(this.tardis());
@@ -524,7 +524,7 @@ public class TardisTravel extends TardisComponent {
 		this.getPosition().getWorld().playSound(null, this.getPosition(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
 
 		if (TardisUtil.isInteriorNotEmpty(tardis()))
-			FlightUtil.playSoundAtConsole(this.tardis(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
+			FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
 
 		// TardisUtil.sendMessageToPilot(this.getTardis().get(), Text.literal("Unable to takeoff!")); // fixme translatable
 		FlightUtil.createDematerialiseDelay(this.tardis());

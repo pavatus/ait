@@ -10,7 +10,7 @@ import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.SmithingTransformRecipeJsonBuilder;
 import net.minecraft.item.Items;
@@ -20,6 +20,9 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 
 import java.util.concurrent.CompletableFuture;
+
+import static net.minecraft.data.server.recipe.RecipeProvider.conditionsFromItem;
+import static net.minecraft.data.server.recipe.RecipeProvider.hasItem;
 
 public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
@@ -55,31 +58,31 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('I', Items.IRON_INGOT)
                     .input('E', Items.ENDER_PEARL)
                     .input('R', Items.REDSTONE)
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_NUGGET),
-                            FabricRecipeProvider.conditionsFromItem(Items.IRON_NUGGET))
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT),
-                            FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_PEARL),
-                            FabricRecipeProvider.conditionsFromItem(Items.ENDER_PEARL))
-                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE),
-                            FabricRecipeProvider.conditionsFromItem(Items.REDSTONE))
+                    .criterion(hasItem(Items.IRON_NUGGET),
+                            conditionsFromItem(Items.IRON_NUGGET))
+                    .criterion(hasItem(Items.IRON_INGOT),
+                            conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Items.ENDER_PEARL),
+                            conditionsFromItem(Items.ENDER_PEARL))
+                    .criterion(hasItem(Items.REDSTONE),
+                            conditionsFromItem(Items.REDSTONE))
             );
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_BLOCK, 1)
                     .pattern("ZZ ")
                     .pattern("ZZ ")
                     .pattern("   ")
                     .input('Z', AITItems.ZEITON_SHARD)
-                    .criterion(FabricRecipeProvider.hasItem(AITItems.ZEITON_SHARD), FabricRecipeProvider.conditionsFromItem(AITItems.ZEITON_SHARD)));
+                    .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, 1)
                     .pattern("GGG")
                     .pattern("GNG")
                     .pattern("GGG")
                     .input('N', Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE)
                     .input('G', Items.GOLD_NUGGET)
-                    .criterion(FabricRecipeProvider.hasItem(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
-                            FabricRecipeProvider.conditionsFromItem(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE))
-                    .criterion(FabricRecipeProvider.hasItem(Items.GOLD_NUGGET),
-                            FabricRecipeProvider.conditionsFromItem(Items.GOLD_NUGGET))
+                    .criterion(hasItem(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
+                            conditionsFromItem(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE))
+                    .criterion(hasItem(Items.GOLD_NUGGET),
+                            conditionsFromItem(Items.GOLD_NUGGET))
             );
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.CHARGED_ZEITON_CRYSTAL, 1)
                     .pattern("ZZZ")
@@ -88,12 +91,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('Z', AITItems.ZEITON_SHARD)
                     .input('C', AITBlocks.ZEITON_CLUSTER)
                     .input('A', AITItems.ARTRON_COLLECTOR)
-                    .criterion(FabricRecipeProvider.hasItem(AITItems.ZEITON_SHARD),
-                            FabricRecipeProvider.conditionsFromItem(AITItems.ZEITON_SHARD))
-                    .criterion(FabricRecipeProvider.hasItem(AITBlocks.ZEITON_CLUSTER),
-                            FabricRecipeProvider.conditionsFromItem(AITBlocks.ZEITON_CLUSTER))
-                    .criterion(FabricRecipeProvider.hasItem(AITItems.ARTRON_COLLECTOR),
-                            FabricRecipeProvider.conditionsFromItem(AITItems.ARTRON_COLLECTOR))
+                    .criterion(hasItem(AITItems.ZEITON_SHARD),
+                            conditionsFromItem(AITItems.ZEITON_SHARD))
+                    .criterion(hasItem(AITBlocks.ZEITON_CLUSTER),
+                            conditionsFromItem(AITBlocks.ZEITON_CLUSTER))
+                    .criterion(hasItem(AITItems.ARTRON_COLLECTOR),
+                            conditionsFromItem(AITItems.ARTRON_COLLECTOR))
             );
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, 1)
                     .pattern("SSS")
@@ -101,10 +104,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .pattern("SSS")
                     .input('G', AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE)
                     .input('S', Items.NETHERITE_SCRAP)
-                    .criterion(FabricRecipeProvider.hasItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE),
-                            FabricRecipeProvider.conditionsFromItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE))
-                    .criterion(FabricRecipeProvider.hasItem(Items.NETHERITE_SCRAP),
-                            FabricRecipeProvider.conditionsFromItem(Items.NETHERITE_SCRAP))
+                    .criterion(hasItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE),
+                            conditionsFromItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE))
+                    .criterion(hasItem(Items.NETHERITE_SCRAP),
+                            conditionsFromItem(Items.NETHERITE_SCRAP))
             );
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, 1)
                     .pattern("SAS")
@@ -114,14 +117,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('N', AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE)
                     .input('S', Items.NETHERITE_SCRAP)
                     .input('A', Items.AMETHYST_SHARD)
-                    .criterion(FabricRecipeProvider.hasItem(Items.NETHERITE_INGOT),
-                            FabricRecipeProvider.conditionsFromItem(Items.NETHERITE_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE),
-                            FabricRecipeProvider.conditionsFromItem(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE))
-                    .criterion(FabricRecipeProvider.hasItem(Items.NETHERITE_SCRAP),
-                            FabricRecipeProvider.conditionsFromItem(Items.NETHERITE_SCRAP))
-                    .criterion(FabricRecipeProvider.hasItem(Items.AMETHYST_SHARD),
-                            FabricRecipeProvider.conditionsFromItem(Items.AMETHYST_SHARD))
+                    .criterion(hasItem(Items.NETHERITE_INGOT),
+                            conditionsFromItem(Items.NETHERITE_INGOT))
+                    .criterion(hasItem(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE),
+                            conditionsFromItem(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE))
+                    .criterion(hasItem(Items.NETHERITE_SCRAP),
+                            conditionsFromItem(Items.NETHERITE_SCRAP))
+                    .criterion(hasItem(Items.AMETHYST_SHARD),
+                            conditionsFromItem(Items.AMETHYST_SHARD))
             );
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.ARTRON_COLLECTOR_BLOCK, 1)
                     .pattern(" L ")
@@ -131,32 +134,15 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('R', Items.IRON_INGOT)
                     .input('S', Items.SMOOTH_STONE_SLAB)
                     .input('B', Items.REDSTONE_BLOCK)
-                    .criterion(FabricRecipeProvider.hasItem(Items.LIGHTNING_ROD),
-                            FabricRecipeProvider.conditionsFromItem(Items.LIGHTNING_ROD))
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT),
-                            FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.SMOOTH_STONE_SLAB),
-                            FabricRecipeProvider.conditionsFromItem(Items.SMOOTH_STONE_SLAB))
-                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK),
-                            FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK))
+                    .criterion(hasItem(Items.LIGHTNING_ROD),
+                            conditionsFromItem(Items.LIGHTNING_ROD))
+                    .criterion(hasItem(Items.IRON_INGOT),
+                            conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Items.SMOOTH_STONE_SLAB),
+                            conditionsFromItem(Items.SMOOTH_STONE_SLAB))
+                    .criterion(hasItem(Items.REDSTONE_BLOCK),
+                            conditionsFromItem(Items.REDSTONE_BLOCK))
             );
-            /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.REMOTE_ITEM, 1)
-                    .pattern(" R ")
-                    .pattern("ICI")
-                    .pattern("IPI")
-                    .input('R', Items.REDSTONE_BLOCK)
-                    .input('I', Items.NETHERITE_INGOT)
-                    .input('C', Items.COPPER_INGOT)
-                    .input('P', Items.REPEATER)
-                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK),
-                            FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK))
-                    .criterion(FabricRecipeProvider.hasItem(Items.NETHERITE_INGOT),
-                            FabricRecipeProvider.conditionsFromItem(Items.NETHERITE_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.COPPER_INGOT),
-                            FabricRecipeProvider.conditionsFromItem(Items.COPPER_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.REPEATER),
-                            FabricRecipeProvider.conditionsFromItem(Items.REPEATER))
-            );*/
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.ARTRON_COLLECTOR, 1)
                     .pattern("CCC")
                     .pattern("IRI")
@@ -164,12 +150,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('C', Items.COPPER_INGOT)
                     .input('I', Items.IRON_INGOT)
                     .input('R', Items.REDSTONE_BLOCK)
-                    .criterion(FabricRecipeProvider.hasItem(Items.COPPER_INGOT),
-                            FabricRecipeProvider.conditionsFromItem(Items.COPPER_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT),
-                            FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK),
-                            FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK))
+                    .criterion(hasItem(Items.COPPER_INGOT),
+                            conditionsFromItem(Items.COPPER_INGOT))
+                    .criterion(hasItem(Items.IRON_INGOT),
+                            conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Items.REDSTONE_BLOCK),
+                            conditionsFromItem(Items.REDSTONE_BLOCK))
             );
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RIFT_SCANNER, 1)
                     .pattern(" A ")
@@ -180,11 +166,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('D', Items.DIAMOND)
                     .input('R', Items.REDSTONE_BLOCK)
                     .input('Q', Items.QUARTZ)
-                    .criterion(FabricRecipeProvider.hasItem(Items.AMETHYST_SHARD), FabricRecipeProvider.conditionsFromItem(Items.AMETHYST_SHARD))
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.DIAMOND), FabricRecipeProvider.conditionsFromItem(Items.DIAMOND))
-                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK))
-                    .criterion(FabricRecipeProvider.hasItem(Items.QUARTZ), FabricRecipeProvider.conditionsFromItem(Items.QUARTZ))
+                    .criterion(hasItem(Items.AMETHYST_SHARD), conditionsFromItem(Items.AMETHYST_SHARD))
+                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Items.DIAMOND), conditionsFromItem(Items.DIAMOND))
+                    .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK))
+                    .criterion(hasItem(Items.QUARTZ), conditionsFromItem(Items.QUARTZ))
             );
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.CORAL_PLANT, 1)
                     .pattern("SRS")
@@ -195,11 +181,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('E', Items.ENDER_EYE)
                     .input('S', Items.BLAZE_ROD)
                     .input('B', Items.REDSTONE_BLOCK)
-                    .criterion(FabricRecipeProvider.hasItem(Items.DEAD_BRAIN_CORAL), FabricRecipeProvider.conditionsFromItem(Items.DEAD_BRAIN_CORAL))
-                    .criterion(FabricRecipeProvider.hasItem(Items.END_CRYSTAL), FabricRecipeProvider.conditionsFromItem(Items.END_CRYSTAL))
-                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE))
-                    .criterion(FabricRecipeProvider.hasItem(Items.BLAZE_ROD), FabricRecipeProvider.conditionsFromItem(Items.BLAZE_ROD))
-                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK)));
+                    .criterion(hasItem(Items.DEAD_BRAIN_CORAL), conditionsFromItem(Items.DEAD_BRAIN_CORAL))
+                    .criterion(hasItem(Items.END_CRYSTAL), conditionsFromItem(Items.END_CRYSTAL))
+                    .criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE))
+                    .criterion(hasItem(Items.BLAZE_ROD), conditionsFromItem(Items.BLAZE_ROD))
+                    .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITBlocks.PLAQUE_BLOCK, 1)
                     .pattern("GSG")
                     .pattern("SBS")
@@ -207,9 +193,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('G', Items.GOLD_NUGGET)
                     .input('S', Items.SPRUCE_SLAB)
                     .input('B', Items.BLACK_CONCRETE)
-                    .criterion(FabricRecipeProvider.hasItem(Items.GOLD_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.GOLD_NUGGET))
-                    .criterion(FabricRecipeProvider.hasItem(Items.SPRUCE_SLAB), FabricRecipeProvider.conditionsFromItem(Items.SPRUCE_SLAB))
-                    .criterion(FabricRecipeProvider.hasItem(Items.BLACK_CONCRETE), FabricRecipeProvider.conditionsFromItem(Items.BLACK_CONCRETE)));
+                    .criterion(hasItem(Items.GOLD_NUGGET), conditionsFromItem(Items.GOLD_NUGGET))
+                    .criterion(hasItem(Items.SPRUCE_SLAB), conditionsFromItem(Items.SPRUCE_SLAB))
+                    .criterion(hasItem(Items.BLACK_CONCRETE), conditionsFromItem(Items.BLACK_CONCRETE)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.SONIC_SCREWDRIVER, 1)
                     .pattern(" QZ")
                     .pattern("IRQ")
@@ -220,11 +206,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('Z', AITItems.ZEITON_SHARD)
                     .input('R', Items.REDSTONE_BLOCK)
                     .group("sonic_item")
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.QUARTZ), FabricRecipeProvider.conditionsFromItem(Items.QUARTZ))
-                    .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
-                    .criterion(FabricRecipeProvider.hasItem(AITItems.ZEITON_SHARD), FabricRecipeProvider.conditionsFromItem(AITItems.ZEITON_SHARD))
-                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK)));
+                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Items.QUARTZ), conditionsFromItem(Items.QUARTZ))
+                    .criterion(hasItem(Items.COMPARATOR), conditionsFromItem(Items.COMPARATOR))
+                    .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
+                    .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.CONSOLE_GENERATOR, 1)
                     .pattern(" G ")
                     .pattern("CEC")
@@ -233,10 +219,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('C', Items.COMPARATOR)
                     .input('E', Items.END_CRYSTAL)
                     .input('I', Items.IRON_INGOT)
-                    .criterion(FabricRecipeProvider.hasItem(Items.GLASS), FabricRecipeProvider.conditionsFromItem(Items.GLASS))
-                    .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
-                    .criterion(FabricRecipeProvider.hasItem(Items.END_CRYSTAL), FabricRecipeProvider.conditionsFromItem(Items.END_CRYSTAL))
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT)));
+                    .criterion(hasItem(Items.GLASS), conditionsFromItem(Items.GLASS))
+                    .criterion(hasItem(Items.COMPARATOR), conditionsFromItem(Items.COMPARATOR))
+                    .criterion(hasItem(Items.END_CRYSTAL), conditionsFromItem(Items.END_CRYSTAL))
+                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.DETECTOR_BLOCK, 4)
                     .pattern(" D ")
                     .pattern("ICI")
@@ -245,10 +231,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('I', Items.IRON_INGOT)
                     .input('C', Items.COMPARATOR)
                     .input('R', Items.REDSTONE)
-                    .criterion(FabricRecipeProvider.hasItem(Items.DAYLIGHT_DETECTOR), FabricRecipeProvider.conditionsFromItem(Items.DAYLIGHT_DETECTOR))
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.COMPARATOR), FabricRecipeProvider.conditionsFromItem(Items.COMPARATOR))
-                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE)));
+                    .criterion(hasItem(Items.DAYLIGHT_DETECTOR), conditionsFromItem(Items.DAYLIGHT_DETECTOR))
+                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Items.COMPARATOR), conditionsFromItem(Items.COMPARATOR))
+                    .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.DOOR_BLOCK, 1)
                     .pattern("GCG")
                     .pattern("CDC")
@@ -256,9 +242,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('D', Items.IRON_DOOR)
                     .input('G', Items.GLASS_PANE)
                     .input('C', Items.LIGHT_GRAY_CONCRETE)
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_DOOR), FabricRecipeProvider.conditionsFromItem(Items.IRON_DOOR))
-                    .criterion(FabricRecipeProvider.hasItem(Items.GLASS_PANE), FabricRecipeProvider.conditionsFromItem(Items.GLASS_PANE))
-                    .criterion(FabricRecipeProvider.hasItem(Items.LIGHT_GRAY_CONCRETE), FabricRecipeProvider.conditionsFromItem(Items.LIGHT_GRAY_CONCRETE)));
+                    .criterion(hasItem(Items.IRON_DOOR), conditionsFromItem(Items.IRON_DOOR))
+                    .criterion(hasItem(Items.GLASS_PANE), conditionsFromItem(Items.GLASS_PANE))
+                    .criterion(hasItem(Items.LIGHT_GRAY_CONCRETE), conditionsFromItem(Items.LIGHT_GRAY_CONCRETE)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.WAYPOINT_CARTRIDGE, 1)
                     .pattern("III")
                     .pattern("IBI")
@@ -267,10 +253,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('B', Items.REDSTONE_BLOCK)
                     .input('C', Items.GREEN_DYE)
                     .input('G', Items.GOLD_NUGGET)
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE_BLOCK), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE_BLOCK))
-                    .criterion(FabricRecipeProvider.hasItem(Items.GREEN_DYE), FabricRecipeProvider.conditionsFromItem(Items.GREEN_DYE))
-                    .criterion(FabricRecipeProvider.hasItem(Items.GOLD_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.GOLD_NUGGET)));
+                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK))
+                    .criterion(hasItem(Items.GREEN_DYE), conditionsFromItem(Items.GREEN_DYE))
+                    .criterion(hasItem(Items.GOLD_NUGGET), conditionsFromItem(Items.GOLD_NUGGET)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.HAMMER, 1)
                     .pattern("DSD")
                     .pattern(" A ")
@@ -279,10 +265,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('S', Items.STRING)
                     .input('A', Items.IRON_AXE)
                     .input('T', Items.STICK)
-                    .criterion(FabricRecipeProvider.hasItem(Items.DRIED_KELP), FabricRecipeProvider.conditionsFromItem(Items.DRIED_KELP))
-                    .criterion(FabricRecipeProvider.hasItem(Items.STRING), FabricRecipeProvider.conditionsFromItem(Items.STRING))
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_AXE), FabricRecipeProvider.conditionsFromItem(Items.IRON_AXE))
-                    .criterion(FabricRecipeProvider.hasItem(Items.STICK), FabricRecipeProvider.conditionsFromItem(Items.STICK)));
+                    .criterion(hasItem(Items.DRIED_KELP), conditionsFromItem(Items.DRIED_KELP))
+                    .criterion(hasItem(Items.STRING), conditionsFromItem(Items.STRING))
+                    .criterion(hasItem(Items.IRON_AXE), conditionsFromItem(Items.IRON_AXE))
+                    .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK)));
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.MONITOR_BLOCK, 1)
                     .pattern("III")
@@ -290,8 +276,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .pattern("III")
                     .input('I', Items.IRON_INGOT)
                     .input('B', Items.ENDER_EYE)
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE)));
+                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE)));
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.WALL_MONITOR_BLOCK, 1)
                     .pattern("QIQ")
@@ -300,9 +286,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('Q', Items.QUARTZ)
                     .input('I', Items.IRON_INGOT)
                     .input('B', Items.ENDER_EYE)
-                    .criterion(FabricRecipeProvider.hasItem(Items.QUARTZ), FabricRecipeProvider.conditionsFromItem(Items.QUARTZ))
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(Items.ENDER_EYE), FabricRecipeProvider.conditionsFromItem(Items.ENDER_EYE)));
+                    .criterion(hasItem(Items.QUARTZ), conditionsFromItem(Items.QUARTZ))
+                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE)));
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RESPIRATOR, 1)
                     .pattern("NNN")
@@ -312,10 +298,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('S', Items.STRING)
                     .input('P', Items.GLASS_PANE)
                     .input('W', Items.PINK_WOOL)
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.IRON_NUGGET))
-                    .criterion(FabricRecipeProvider.hasItem(Items.STRING), FabricRecipeProvider.conditionsFromItem(Items.STRING))
-                    .criterion(FabricRecipeProvider.hasItem(Items.GLASS_PANE), FabricRecipeProvider.conditionsFromItem(Items.GLASS_PANE))
-                    .criterion(FabricRecipeProvider.hasItem(Items.PINK_WOOL), FabricRecipeProvider.conditionsFromItem(Items.PINK_WOOL)));
+                    .criterion(hasItem(Items.IRON_NUGGET), conditionsFromItem(Items.IRON_NUGGET))
+                    .criterion(hasItem(Items.STRING), conditionsFromItem(Items.STRING))
+                    .criterion(hasItem(Items.GLASS_PANE), conditionsFromItem(Items.GLASS_PANE))
+                    .criterion(hasItem(Items.PINK_WOOL), conditionsFromItem(Items.PINK_WOOL)));
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.FACELESS_RESPIRATOR, 1)
                     .pattern("   ")
@@ -324,18 +310,19 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('R', Items.REDSTONE)
                     .input('N', Items.IRON_NUGGET)
                     .input('W', Items.BLACK_WOOL)
-                    .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE), FabricRecipeProvider.conditionsFromItem(Items.REDSTONE))
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_NUGGET), FabricRecipeProvider.conditionsFromItem(Items.IRON_NUGGET))
-                    .criterion(FabricRecipeProvider.hasItem(Items.BLACK_WOOL), FabricRecipeProvider.conditionsFromItem(Items.BLACK_WOOL)));
+                    .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE))
+                    .criterion(hasItem(Items.IRON_NUGGET), conditionsFromItem(Items.IRON_NUGGET))
+                    .criterion(hasItem(Items.BLACK_WOOL), conditionsFromItem(Items.BLACK_WOOL)));
 
-            /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.CONSOLE_ROOM_PORT_BLOCK, 1)
-                    .pattern("III")
-                    .pattern("ICI")
-                    .pattern("III")
-                    .input('I', Items.IRON_INGOT)
-                    .input('C', AITBlocks.CONSOLE_GENERATOR)
-                    .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT), FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(FabricRecipeProvider.hasItem(AITBlocks.CONSOLE_GENERATOR), FabricRecipeProvider.conditionsFromItem(AITBlocks.CONSOLE_GENERATOR)));*/
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.ENVIRONMENT_PROJECTOR, 1)
+                    .pattern("IGI")
+                    .pattern("GPG")
+                    .pattern("ISI")
+                    .input('I', Items.IRON_INGOT).criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_NUGGET))
+                    .input('G', Blocks.GLASS_PANE).criterion(hasItem(Blocks.GLASS_PANE), conditionsFromItem(Blocks.GLASS_PANE))
+                    .input('P', Items.ENDER_PEARL).criterion(hasItem(Items.ENDER_PEARL), conditionsFromItem(Items.ENDER_PEARL))
+                    .input('S', Blocks.SEA_LANTERN).criterion(hasItem(Blocks.SEA_LANTERN), conditionsFromItem(Blocks.SEA_LANTERN))
+            );
 
             generateSmithingRecipes(provider);
             return provider;
@@ -348,42 +335,42 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                                 Ingredient.ofItems(AITItems.IRON_KEY),
                                 Ingredient.ofItems(Items.GOLD_NUGGET),
                                 RecipeCategory.TOOLS, AITItems.GOLD_KEY)
-                        .criterion(FabricRecipeProvider.hasItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE),
-                                FabricRecipeProvider.conditionsFromItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE))
-                        .criterion(FabricRecipeProvider.hasItem(AITItems.IRON_KEY),
-                                FabricRecipeProvider.conditionsFromItem(AITItems.IRON_KEY))
-                        .criterion(FabricRecipeProvider.hasItem(Items.GOLD_NUGGET),
-                                FabricRecipeProvider.conditionsFromItem(Items.GOLD_NUGGET))
-                        .criterion(FabricRecipeProvider.hasItem(AITItems.GOLD_KEY),
-                                FabricRecipeProvider.conditionsFromItem(AITItems.GOLD_KEY)),
+                        .criterion(hasItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE),
+                                conditionsFromItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE))
+                        .criterion(hasItem(AITItems.IRON_KEY),
+                                conditionsFromItem(AITItems.IRON_KEY))
+                        .criterion(hasItem(Items.GOLD_NUGGET),
+                                conditionsFromItem(Items.GOLD_NUGGET))
+                        .criterion(hasItem(AITItems.GOLD_KEY),
+                                conditionsFromItem(AITItems.GOLD_KEY)),
                 new Identifier(AITMod.MOD_ID, "gold_key_smithing"));
         provider.addSmithingTransformRecipe(SmithingTransformRecipeJsonBuilder.create(
                                 Ingredient.ofItems(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE),
                                 Ingredient.ofItems(AITItems.GOLD_KEY),
                                 Ingredient.ofItems(Items.NETHERITE_SCRAP),
                                 RecipeCategory.TOOLS, AITItems.NETHERITE_KEY)
-                        .criterion(FabricRecipeProvider.hasItem(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE),
-                                FabricRecipeProvider.conditionsFromItem(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE))
-                        .criterion(FabricRecipeProvider.hasItem(AITItems.GOLD_KEY),
-                                FabricRecipeProvider.conditionsFromItem(AITItems.GOLD_KEY))
-                        .criterion(FabricRecipeProvider.hasItem(Items.NETHERITE_SCRAP),
-                                FabricRecipeProvider.conditionsFromItem(Items.NETHERITE_SCRAP))
-                        .criterion(FabricRecipeProvider.hasItem(AITItems.NETHERITE_KEY),
-                                FabricRecipeProvider.conditionsFromItem(AITItems.NETHERITE_KEY)),
+                        .criterion(hasItem(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE),
+                                conditionsFromItem(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE))
+                        .criterion(hasItem(AITItems.GOLD_KEY),
+                                conditionsFromItem(AITItems.GOLD_KEY))
+                        .criterion(hasItem(Items.NETHERITE_SCRAP),
+                                conditionsFromItem(Items.NETHERITE_SCRAP))
+                        .criterion(hasItem(AITItems.NETHERITE_KEY),
+                                conditionsFromItem(AITItems.NETHERITE_KEY)),
                 new Identifier(AITMod.MOD_ID, "netherite_key_smithing"));
         provider.addSmithingTransformRecipe(SmithingTransformRecipeJsonBuilder.create(
                                 Ingredient.ofItems(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE),
                                 Ingredient.ofItems(AITItems.NETHERITE_KEY),
                                 Ingredient.ofItems(Items.AMETHYST_SHARD),
                                 RecipeCategory.TOOLS, AITItems.CLASSIC_KEY)
-                        .criterion(FabricRecipeProvider.hasItem(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE),
-                                FabricRecipeProvider.conditionsFromItem(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE))
-                        .criterion(FabricRecipeProvider.hasItem(AITItems.NETHERITE_KEY),
-                                FabricRecipeProvider.conditionsFromItem(AITItems.NETHERITE_KEY))
-                        .criterion(FabricRecipeProvider.hasItem(Items.AMETHYST_SHARD),
-                                FabricRecipeProvider.conditionsFromItem(Items.AMETHYST_SHARD))
-                        .criterion(FabricRecipeProvider.hasItem(AITItems.CLASSIC_KEY),
-                                FabricRecipeProvider.conditionsFromItem(AITItems.CLASSIC_KEY)),
+                        .criterion(hasItem(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE),
+                                conditionsFromItem(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE))
+                        .criterion(hasItem(AITItems.NETHERITE_KEY),
+                                conditionsFromItem(AITItems.NETHERITE_KEY))
+                        .criterion(hasItem(Items.AMETHYST_SHARD),
+                                conditionsFromItem(Items.AMETHYST_SHARD))
+                        .criterion(hasItem(AITItems.CLASSIC_KEY),
+                                conditionsFromItem(AITItems.CLASSIC_KEY)),
                 new Identifier(AITMod.MOD_ID, "classic_key_smithing"));
     }
 

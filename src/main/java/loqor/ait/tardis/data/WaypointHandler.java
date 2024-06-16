@@ -1,15 +1,14 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.core.item.WaypointItem;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-
-import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.AbsoluteBlockPos;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.core.data.Waypoint;
+import loqor.ait.core.item.WaypointItem;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.util.FlightUtil;
+import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
 
@@ -78,32 +77,27 @@ public class WaypointHandler extends TardisComponent {
 		this.tardis().travel().setDestination(this.get(), true);
 	}
 
-	public void spawnItem() {
-		if (!this.hasWaypoint()) return;
+	public void spawnItem(BlockPos console) {
+		if (!this.hasWaypoint())
+			return;
 
-		spawnItem(this.get());
+		this.spawnItem(console, this.get());
 		this.clear(false);
 	}
 
-	public void spawnItem(Waypoint waypoint) {
+	public void spawnItem(BlockPos console, Waypoint waypoint) {
 		if (!this.hasCartridge())
 			return;
 
-		Tardis tardis = this.tardis();
+		ItemEntity entity = new ItemEntity(TardisUtil.getTardisDimension(),
+				console.getX(), console.getY(), console.getZ(), createWaypointItem(waypoint)
+		);
 
-		if (tardis.getDesktop().findCurrentConsole().isEmpty())
-			return;
-
-		spawnItem(waypoint, tardis.getDesktop().findCurrentConsole().get().position());
+		TardisUtil.getTardisDimension().spawnEntity(entity);
 		this.clearCartridge();
 	}
 
 	public static ItemStack createWaypointItem(Waypoint waypoint) {
 		return WaypointItem.create(waypoint);
-	}
-
-	public static void spawnItem(Waypoint waypoint, AbsoluteBlockPos pos) {
-		ItemEntity entity = new ItemEntity(pos.getWorld(), pos.getX(), pos.getY(), pos.getZ(), createWaypointItem(waypoint));
-		pos.getWorld().spawnEntity(entity);
 	}
 }

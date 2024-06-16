@@ -44,23 +44,30 @@ public class WaypointItem extends Item {
 
 		if (player == null)
 			return ActionResult.FAIL;
-		if (world.isClient()) return ActionResult.SUCCESS;
 
-		if (!player.isSneaking()) return ActionResult.FAIL;
-		if (hand != Hand.MAIN_HAND) return ActionResult.FAIL;
-		if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity console)) return ActionResult.FAIL;
+		if (world.isClient())
+			return ActionResult.SUCCESS;
 
-		if (console.findTardis().isEmpty() || console.findTardis().get().travel().getPosition() == null)
+		if (!player.isSneaking())
+			return ActionResult.FAIL;
+
+		if (hand != Hand.MAIN_HAND)
+			return ActionResult.FAIL;
+
+		if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity console))
+			return ActionResult.FAIL;
+
+		if (console.tardis().isEmpty() || console.tardis().get().travel().getPosition() == null)
 			return ActionResult.PASS;
 
-		if (getPos(itemStack) == null) setPos(itemStack, console.findTardis().get().travel().getPosition());
+		if (getPos(itemStack) == null)
+			setPos(itemStack, console.tardis().get().travel().getPosition());
 
-		console.findTardis().get().getHandlers().getWaypoints().markHasCartridge();
-		console.findTardis().get().getHandlers().getWaypoints().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
+		console.tardis().get().waypoint().markHasCartridge();
+		console.tardis().get().waypoint().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
 		player.setStackInHand(hand, ItemStack.EMPTY);
 
 		world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
-
 		return ActionResult.SUCCESS;
 	}
 
@@ -73,7 +80,8 @@ public class WaypointItem extends Item {
 
 		NbtCompound main = stack.getOrCreateNbt();
 
-		if (!(main.contains(POS_KEY))) return;
+		if (!(main.contains(POS_KEY)))
+			return;
 
 		NbtCompound nbt = main.getCompound(POS_KEY);
 
@@ -84,9 +92,11 @@ public class WaypointItem extends Item {
 		tooltip.add(Text.translatable("waypoint.position.tooltip").append(Text.literal(
 						" > " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ()))
 				.formatted(Formatting.BLUE));
+
 		tooltip.add(Text.translatable("waypoint.direction.tooltip").append(Text.literal(
 						" > " + dir.asString().toUpperCase()))
 				.formatted(Formatting.BLUE));
+
 		tooltip.add(Text.translatable("waypoint.dimension.tooltip").append(Text.literal(
 						" > " + convertWorldValueToModified(dimension)))
 				.formatted(Formatting.BLUE));
@@ -95,27 +105,24 @@ public class WaypointItem extends Item {
 	public static ItemStack create(Waypoint pos) {
 		ItemStack stack = new ItemStack(AITItems.WAYPOINT_CARTRIDGE);
 		setPos(stack, pos);
-		if (pos.hasName()) {
+
+		if (pos.hasName())
 			stack.setCustomName(Text.literal(pos.name()));
-		}
+
 		return stack;
 	}
 
 	public static AbsoluteBlockPos.Directed getPos(ItemStack stack) {
 		NbtCompound nbt = stack.getOrCreateNbt();
 
-		if (!nbt.contains(POS_KEY)) return null;
+		if (!nbt.contains(POS_KEY))
+			return null;
 
 		return AbsoluteBlockPos.Directed.fromNbt(nbt.getCompound(POS_KEY));
 	}
 
 	public static void setPos(ItemStack stack, AbsoluteBlockPos.Directed pos) {
 		NbtCompound nbt = stack.getOrCreateNbt();
-
 		nbt.put(POS_KEY, pos.toNbt());
-	}
-
-	public static boolean hasPos(ItemStack stack) {
-		return stack.getOrCreateNbt().contains(POS_KEY);
 	}
 }

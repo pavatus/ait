@@ -1,11 +1,9 @@
 package loqor.ait.core.blockentities;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITEntityTypes;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
@@ -13,18 +11,12 @@ import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import loqor.ait.tardis.TardisConsole;
-import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
@@ -32,155 +24,53 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.*;
 
 public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
 	private static final Random RANDOM = new Random();
+
 	public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
 	public final AnimationState ANIM_STATE = new AnimationState();
-	public int age;
+
 	private boolean needsControls = true;
-	private boolean needsSync = true;
 	private Identifier type;
 	private Identifier variant;
-    private boolean needsReloading = true;
-	private UUID parent;
 
-	public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_console_type");
-	public static final Identifier SYNC_VARIANT = new Identifier(AITMod.MOD_ID, "sync_console_variant");
-	public static final Identifier SYNC_PARENT = new Identifier(AITMod.MOD_ID, "sync_console_parent");
-	public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "client_ask_console");
+	public int age;
 
 	public ConsoleBlockEntity(BlockPos pos, BlockState state) {
 		super(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, pos, state);
 	}
 
 	@Override
+	public void onLinked() {
+		this.tardis().ifPresent(tardis -> tardis.getDesktop().getConsoles().add(this.pos));
+	}
+
+	@Override
 	public void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
 
-		if (type != null)
-			nbt.putString("type", type.toString());
-
-		if (variant != null)
-			nbt.putString("variant", variant.toString());
-
-		if (parent != null)
-			nbt.put("parent", NbtHelper.fromUuid(parent));
+		nbt.putString("type", type.toString());
+		nbt.putString("variant", variant.toString());
 	}
 
 	@Override
 	public void readNbt(NbtCompound nbt) {
 		super.readNbt(nbt);
 
-		if (nbt.contains("type"))
-			this.setType(Identifier.tryParse(nbt.getString("type")));
-
-		if (nbt.contains("variant"))
-			this.setVariant(Identifier.tryParse(nbt.getString("variant")));
-
-		if (nbt.contains("parent"))
-			this.setParent(NbtHelper.toUuid(nbt.get("parent")));
+		this.setType(Identifier.tryParse(nbt.getString("type")));
+		this.setVariant(Identifier.tryParse(nbt.getString("variant")));
 
 		this.spawnControls();
-		this.markNeedsSyncing();
-	}
-
-	@Override
-	public NbtCompound toInitialChunkDataNbt() {
-		NbtCompound nbt = super.toInitialChunkDataNbt();
-
-		if (nbt.contains("type"))
-			this.setType(ConsoleRegistry.REGISTRY.get(Identifier.tryParse(nbt.getString("type"))));
-
-		if (nbt.contains("variant"))
-			this.setVariant(Identifier.tryParse(nbt.getString("variant")));
-
-		if (nbt.contains("parent"))
-			this.setParent(NbtHelper.toUuid(nbt.get("parent")));
-
-		if (type != null)
-			nbt.putString("type", type.toString());
-
-		if (variant != null)
-			nbt.putString("variant", variant.toString());
-
-		if (parent != null)
-			nbt.put("parent", NbtHelper.fromUuid(parent));
-
-		this.markNeedsControl();
-		this.markNeedsSyncing();
-		return nbt;
-	}
-
-	@Nullable
-	@Override
-	public Packet<ClientPlayPacketListener> toUpdatePacket() {
-		return BlockEntityUpdateS2CPacket.create(this);
-	}
-
-	public void ask() {
-		if (this.world != null && !this.world.isClient())
-			return;
-
-		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeBlockPos(this.getPos());
-
-		ClientPlayNetworking.send(ASK, buf);
-	}
-
-	public void sync() {
-		if (this.world == null || this.world.isClient())
-			return;
-
-		this.syncType();
-		this.syncVariant();
-
-		this.syncParent();
-		this.needsSync = false;
-	}
-
-	private void syncType() {
-		if (this.world == null || this.world.isClient())
-			return;
-
-		PacketByteBuf buf = PacketByteBufs.create();
-
-		buf.writeString(this.getConsoleSchema().id().toString());
-		buf.writeBlockPos(this.getPos());
-
-		for (PlayerEntity player : world.getPlayers()) {
-			ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_TYPE, buf); // safe cast as we know its server
-		}
-	}
-
-	private void syncVariant() {
-		if (this.world == null || world.isClient())
-			return;
-
-		PacketByteBuf buf = PacketByteBufs.create();
-
-		buf.writeString(this.getVariant().id().toString());
-		buf.writeBlockPos(this.getPos());
-
-		for (PlayerEntity player : world.getPlayers()) {
-			ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_VARIANT, buf); // safe cast as we know its server
-		}
 	}
 
 	public ConsoleTypeSchema getConsoleSchema() {
@@ -190,10 +80,12 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		return ConsoleRegistry.REGISTRY.get(type);
 	}
 
-	public void setType(Identifier var) {
-		type = var;
+	public int getAge() {
+		return age;
+	}
 
-		this.syncType();
+	public void setType(Identifier var) {
+		this.type = var;
 		this.markDirty();
 	}
 
@@ -201,25 +93,8 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		this.setType(schema.id());
 	}
 
-	public ConsoleVariantSchema getVariant() {
-		if (variant == null)
-			this.setVariant(this.getConsoleSchema().getDefaultVariant());
-
-		return ConsoleVariantRegistry.getInstance().get(variant);
-	}
-
 	public void setVariant(Identifier var) {
-		variant = var;
-
-		if (!(getVariant().parent().id().equals(type))) {
-			AITMod.LOGGER.warn("Variant was set and it doesnt match this consoles type!");
-			AITMod.LOGGER.warn(variant + " | " + type);
-
-			if (this.world != null && this.world.isClient())
-				this.ask();
-		}
-
-		this.syncVariant();
+		this.variant = var;
 		this.markDirty();
 	}
 
@@ -227,82 +102,11 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		this.setVariant(schema.id());
 	}
 
-	public void setParent(UUID uuid) {
-		this.parent = uuid;
-		this.syncParent();
-	}
+	public ConsoleVariantSchema getVariant() {
+		if (variant == null)
+			this.setVariant(this.getConsoleSchema().getDefaultVariant());
 
-	private void syncParent() {
-		if (this.world == null || this.world.isClient() || this.findParent().isEmpty())
-			return;
-
-		PacketByteBuf buf = PacketByteBufs.create();
-
-		buf.writeUuid(this.parent);
-		buf.writeBlockPos(getPos());
-
-		for (PlayerEntity player : world.getPlayers()) {
-			ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_PARENT, buf); // safe cast as we know its server
-		}
-	}
-
-	public Optional<TardisConsole> findParent() {
-		if (this.tardis().isEmpty()) {
-			AITMod.LOGGER.warn("No tardis found for ConsoleBlockEntity!");
-			return Optional.empty();
-		}
-
-		TardisDesktop desktop = this.tardis().get().getDesktop();
-
-		TardisConsole found;
-		if (this.parent == null) {
-			found = desktop.findConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
-
-			if (found == null)
-				found = this.fixConsole();
-
-			this.setParent(found.uuid());
-		} else {
-			found = desktop.findConsole(this.parent);
-		}
-
-		if (found == null)
-			found = this.fixConsole();
-
-		return Optional.of(found);
-	}
-
-	private TardisConsole fixConsole() {
-		AITMod.LOGGER.warn("Fixing missing console entry...");
-		TardisConsole found = new TardisConsole(new AbsoluteBlockPos(this.getPos(), this.getWorld()));
-
-		TardisComponent.init(found, this.tardis().get(), false);
-		this.tardis().get().getDesktop().addConsole(found);
-
-		this.setParent(found.uuid());
-		return found;
-	}
-
-	public static ConsoleTypeSchema nextConsole(ConsoleTypeSchema current) {
-		List<ConsoleTypeSchema> list = ConsoleRegistry.REGISTRY.stream().toList();
-
-		int idx = list.indexOf(current);
-
-		if (idx < 0 || idx + 1 == list.size())
-			return list.get(0);
-
-		return list.get(idx + 1);
-	}
-
-	public static ConsoleVariantSchema nextVariant(ConsoleVariantSchema current) {
-		List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParent(current.parent());
-
-		int idx = list.indexOf(current);
-
-		if (idx < 0 || idx + 1 == list.size())
-			return list.get(0);
-
-		return list.get(idx + 1);
+		return ConsoleVariantRegistry.getInstance().get(variant);
 	}
 
 	public void useOn(World world, boolean sneaking, PlayerEntity player) {
@@ -336,6 +140,10 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 	@Override
 	public void markRemoved() {
 		this.killControls();
+
+		this.tardis().get().getDesktop()
+				.getConsoles().remove(this.pos);
+
 		super.markRemoved();
 	}
 
@@ -379,17 +187,8 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		this.needsControls = false;
 	}
 
-	public void tickAge() {
-		age++;
-		ANIM_STATE.startIfNotRunning(age);
-	}
-
 	public void markNeedsControl() {
 		this.needsControls = true;
-	}
-
-	public void markNeedsSyncing() {
-		this.needsSync = true;
 	}
 
 	@Override
@@ -397,43 +196,31 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		if (this.needsControls)
 			this.spawnControls();
 
-		if (needsSync)
-			this.sync();
-
-		if (needsReloading) {
-			this.markNeedsSyncing();
-			needsReloading = false;
-		}
-
-		if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
+		if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
 			this.markRemoved();
-		}
 
-		// idk
+
 		if (!(world instanceof ServerWorld serverWorld)) {
-			this.tickAge();
+			this.age++;
+
+			ANIM_STATE.startIfNotRunning(this.age);
 			return;
 		}
 
 		if (this.tardis().isEmpty())
 			return;
 
-		// FIXME the findParent method is not exactly cheap. You sure you want to run it every tick?
-		this.findParent().ifPresent(parent -> parent.tickConsole(this));
-
 		SequenceHandler handler = this.tardis().get().sequence();
 
 		if(this.tardis().get().travel().inFlight() || this.tardis().get().travel().getState() == TardisTravel.State.MAT) {
 			if (handler.hasActiveSequence() && handler.getActiveSequence() != null) {
-				//System.out.println("yes active sequence yum" + handler.getActiveSequence());
 				List<Control> sequence = handler.getActiveSequence().getControls();
 
 				// Convert the sequence to a Set for efficient lookups
 				Set<Control> sequenceSet = new HashSet<>(sequence);
 
 				// Iterate only through entities whose controls are in the sequenceSet
-				this.controlEntities/*.stream() // Convert to a stream for easy filtering
-						.filter(entity -> sequenceSet.contains(entity.getControl())) // Filter entities with controls in the sequence*/
+				this.controlEntities
 						.forEach(entity -> {
 							// Since we're here, the entity's control is part of the sequence
 							Control control = entity.getControl();
@@ -452,30 +239,57 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		if (tardis.travel().isCrashing()) {
 			serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.025f);
+
 			serverWorld.spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.01f);
+
 			serverWorld.spawnParticles(new DustColorTransitionParticleEffect(
-							new Vector3f(0.75f, 0.75f, 0.75f), new Vector3f(0.1f, 0.1f, 0.1f), 1), pos.getX() + 0.5f, pos.getY() + 1.25,
-					pos.getZ() + 0.5f, 1, 0, 0, 0, 0.01f);
+							new Vector3f(0.75f, 0.75f, 0.75f), new Vector3f(0.1f, 0.1f, 0.1f), 1
+					), pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, 1, 0, 0, 0, 0.01f
+			);
 		}
 
 		if (tardis.crash().isToxic() || tardis.crash().isUnstable()) {
 			serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.025f);
+
 			serverWorld.spawnParticles(ParticleTypes.CLOUD, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 1, 0, 0.05f, 0, 0.025f);
 		}
 
 		if (tardis.crash().isToxic()) {
 			serverWorld.spawnParticles(new DustColorTransitionParticleEffect(
-							new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 1),
-					pos.getX() + 0.5f, pos.getY() + 1.25,
-					pos.getZ() + 0.5f, 1, RANDOM.nextBoolean() ? 0.5f : -0.5f, 3f, RANDOM.nextBoolean() ? 0.5f : -0.5f, 0.025f);
+					new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 1
+			), pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, 1, RANDOM.nextBoolean()
+					? 0.5f : -0.5f, 3f, RANDOM.nextBoolean() ? 0.5f : -0.5f, 0.025f
+			);
 		}
 
 		if (tardis.isRefueling()) {
 			serverWorld.spawnParticles((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 1, 0, 0, 0, (isRiftChunk) ? 0.05f : 0.025f);
 		}
+	}
+
+	public static ConsoleTypeSchema nextConsole(ConsoleTypeSchema current) {
+		List<ConsoleTypeSchema> list = ConsoleRegistry.REGISTRY.stream().toList();
+
+		int idx = list.indexOf(current);
+
+		if (idx < 0 || idx + 1 == list.size())
+			return list.get(0);
+
+		return list.get(idx + 1);
+	}
+
+	public static ConsoleVariantSchema nextVariant(ConsoleVariantSchema current) {
+		List<ConsoleVariantSchema> list = ConsoleVariantRegistry.withParent(current.parent());
+
+		int idx = list.indexOf(current);
+
+		if (idx < 0 || idx + 1 == list.size())
+			return list.get(0);
+
+		return list.get(idx + 1);
 	}
 }

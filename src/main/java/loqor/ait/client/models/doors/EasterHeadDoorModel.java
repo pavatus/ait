@@ -21,9 +21,8 @@ public class EasterHeadDoorModel extends DoorModel {
 		ModelPartData modelPartData = modelData.getRoot();
 		ModelPartData bottom = modelPartData.addChild("bottom", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 54.0F, 0.0F));
 
-		ModelPartData cube_r1 = bottom.addChild("cube_r1", ModelPartBuilder.create().uv(0, 0).cuboid(-12.0F, 30.0F, -12.0F, 24.0F, 14.0F, 24.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -3.1416F));
-
-		ModelPartData door = bottom.addChild("door", ModelPartBuilder.create().uv(8, 1).mirrored().cuboid(-9.0F, -30.0F, -8.0F, 18.0F, 0.0F, 19.0F, new Dilation(0.005F)).mirrored(false), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+		bottom.addChild("cube_r1", ModelPartBuilder.create().uv(0, 0).cuboid(-12.0F, 30.0F, -12.0F, 24.0F, 14.0F, 24.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -3.1416F));
+		bottom.addChild("door", ModelPartBuilder.create().uv(8, 1).mirrored().cuboid(-9.0F, -30.0F, -8.0F, 18.0F, 0.0F, 19.0F, new Dilation(0.005F)).mirrored(false), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 		return TexturedModelData.of(modelData, 256, 256);
 	}
 
@@ -35,10 +34,9 @@ public class EasterHeadDoorModel extends DoorModel {
 	@Override
 	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		matrices.push();
-
 		matrices.translate(0, -1.5f, 0);
 
-		if (door.findTardis().get().getDoor().isOpen())
+		if (door.tardis().get().getDoor().isOpen())
 			this.bottom.translate(new Vector3f(0, -30, 0));
 
 		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);

@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public abstract class LinkableLivingEntity extends LivingEntity {
+
     public static final TrackedData<Optional<UUID>> TARDIS_ID;
 
     static {

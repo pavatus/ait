@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,19 +26,16 @@ public class SecurityControl extends Control {
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-		if (tardis.sequence().hasActiveSequence()) {
-			if (tardis.sequence().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis, player);
-				return false;
-			}
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
+			this.addToControlSequence(tardis, player, console);
+			return false;
 		}
 
 		if (!hasMatchingKey(player, tardis))
 			return false;
 
 		boolean security = PropertiesHandler.getBool(tardis.properties(), SECURITY_KEY);
-
 		PropertiesHandler.set(tardis, SECURITY_KEY, !security);
         return true;
 	}

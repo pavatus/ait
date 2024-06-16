@@ -31,28 +31,28 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("deprecation")
 public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, Waterloggable {
 
 	public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 12.1, 16.0, 32.0, 16.0);
-
-	public static final BooleanProperty WATERLOGGED;
+	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
 	public DoorBlock(Settings settings) {
 		super(settings);
+
 		this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
 	}
 
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-		if (state.get(WATERLOGGED)) {
+		if (state.get(WATERLOGGED))
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-		}
 
 		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door && door.findTardis().isPresent() && door.findTardis().get().siege().isActive())
+		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door && door.tardis().get().siege().isActive())
 			return VoxelShapes.empty();
 
 		return rotateShape(Direction.NORTH, state.get(FACING), NORTH_SHAPE);
@@ -98,7 +98,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 		if (world.isClient())
 			return;
 
-		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door && door.findTardis().isPresent() && door.findTardis().get().siege().isActive())
+		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door && door.tardis().get().siege().isActive())
 			return;
 
 		Vec3d expansionBehind = new Vec3d(entity.prevX, entity.prevY, entity.prevZ).subtract(entity.getPos());
@@ -120,10 +120,6 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 			if (blockEntity instanceof DoorBlockEntity door)
 				door.onEntityCollision(entity);
 		}
-		//if(Objects.equals(this.getOutlineShape(state, world, pos, ShapeContext.of(entity)).getClosestPointTo(entity.getPos()), Optional.of(new Vec3d(0, 0, 0)))) {
-		//if (blockEntity instanceof DoorBlockEntity door)
-		//	door.onEntityCollision(entity);
-		//}
 	}
 
 	@Nullable
@@ -155,9 +151,5 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
 	public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
 		return !(Boolean) state.get(WATERLOGGED);
-	}
-
-	static {
-		WATERLOGGED = Properties.WATERLOGGED;
 	}
 }

@@ -8,29 +8,24 @@ import loqor.ait.tardis.control.Control;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 
 public class HADSControl extends Control {
 
 	// @TODO fix hads but for now it's changed to the alarm toggle
 	public HADSControl() {
-		super(/*"protocol_81419"*/"alarms");
+		super("alarms");
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-
-		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis, player);
-				return false;
-			}
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
+			this.addToControlSequence(tardis, player, console);
+			return false;
 		}
 
-		((ServerAlarmHandler) tardis.getHandlers().get(TardisComponent.Id.ALARMS)).toggle();
-
-		// Text alarm_enabled = Text.translatable("tardis.message.control.hads.alarm_enabled");
-		// Text alarms_disabled = Text.translatable("tardis.message.control.hads.alarms_disabled");
-		// player.sendMessage(((PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED)) ? alarm_enabled : alarms_disabled), true);
+		ServerAlarmHandler alarms = tardis.getHandlers().get(TardisComponent.Id.ALARMS);
+		alarms.toggle();
 
 		return true;
 	}

@@ -34,8 +34,6 @@ public class Sequence {
 	 * @param recent Compares the recent controls to this sequence, if everything matches then it is finished
 	 */
 	public boolean isFinished(RecentControls recent) {
-        /*if(recent.size() > this.getControls().size())
-            return false;*/
 		return recent.equals(this.getControls());
 	}
 

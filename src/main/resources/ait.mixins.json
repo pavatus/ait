@@ -14,7 +14,9 @@
     "server.MinecraftServerMixin",
     "server.ServerPlayerInteractionManagerMixin",
     "server.ServerPlayerMixin",
-    "server.StructureTemplateMixin"
+    "server.StructureTemplateMixin",
+    "server.structure.StructureTemplateAccessor",
+    "server.structure.StructureTemplateInvoker"
   ],
   "client": [
     "client.ClientPlayerInteractionManagerMixin",

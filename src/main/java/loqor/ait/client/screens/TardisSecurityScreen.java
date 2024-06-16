@@ -1,6 +1,5 @@
 package loqor.ait.client.screens;
 
-import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.StatsData;
@@ -16,25 +15,26 @@ import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class TardisSecurityScreen extends ConsoleScreen {
 	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/security_menu.png");
-	private final List<ButtonWidget> buttons = Lists.newArrayList();
+	private final List<ButtonWidget> buttons = new ArrayList<>();
 	int bgHeight = 117;
 	int bgWidth = 191;
 	int left, top;
-	private final int tickForSpin = 0;
 	int choicesCount = 0;
 	private final Screen parent;
 
-	public TardisSecurityScreen(UUID tardis, UUID console, Screen parent) {
+	public TardisSecurityScreen(UUID tardis, BlockPos console, Screen parent) {
 		super(Text.translatable("screen.ait.security.title"), tardis, console);
 		this.parent = parent;
-		updateTardis();
+		this.updateTardis();
 	}
 
 	@Override
@@ -58,8 +58,6 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
 		createTextButton(Text.translatable("screen.ait.security.leave_behind"), (button -> toggleLeaveBehind()));
 		createTextButton(Text.translatable("screen.ait.security.hostile_alarms"), (button -> toggleHostileAlarms()));
-		/*createTextButton(Text.literal("> Shields"), (button -> toggleShields()));
-		createTextButton(Text.literal("> Visual Shields"), (button -> toggleVisualShields()));*/
 	}
 
 	private void toggleLeaveBehind() {
@@ -81,26 +79,6 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		ClientPlayNetworking.send(PropertiesHandler.HOSTILEALARMS, buf);
 		updateTardis();
 	}
-
-	/*private void toggleShields() {
-		PacketByteBuf buf = PacketByteBufs.create();
-
-		buf.writeUuid(tardis().getUuid());
-		buf.writeBoolean(!PropertiesHandler.getBool(tardis().properties(), ShieldData.IS_SHIELDED));
-
-		ClientPlayNetworking.send(PropertiesHandler.SHIELDS, buf);
-		updateTardis();
-	}
-
-	private void toggleVisualShields() {
-		PacketByteBuf buf = PacketByteBufs.create();
-
-		buf.writeUuid(tardis().getUuid());
-		buf.writeBoolean(!PropertiesHandler.getBool(tardis().properties(), ShieldData.IS_VISUALLY_SHIELDED));
-
-		ClientPlayNetworking.send(PropertiesHandler.VISUAL_SHIELDS, buf);
-		updateTardis();
-	}*/
 
 	private <T extends ClickableWidget> void addButton(T button) {
 		this.addDrawableChild(button);
@@ -134,9 +112,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		this.drawBackground(context);
 		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.LEAVE_BEHIND) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
 		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
-		//context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), ShieldData.IS_SHIELDED) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.3f)), (int) (top + (bgHeight * (0.1f * 4))), Color.ORANGE.getRGB(), false);
-		//context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), ShieldData.IS_VISUALLY_SHIELDED) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 5))), Color.ORANGE.getRGB(), false);
-		//
+
 		context.drawText(this.textRenderer, Text.literal("Date created:"), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 5))), 0xadcaf7, false);
 		context.drawText(this.textRenderer, Text.literal(this.tardis().<StatsData>handler(TardisComponent.Id.STATS).getCreationString()), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 6))), 0xadcaf7, false);
 		super.render(context, mouseX, mouseY, delta);

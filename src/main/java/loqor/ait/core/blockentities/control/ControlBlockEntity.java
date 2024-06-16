@@ -4,7 +4,8 @@ import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.registry.impl.ControlRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.link.LinkableBlockEntity;
+import loqor.ait.tardis.link.v2.TardisRef;
+import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -15,9 +16,8 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
 
-import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
+public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
 
-public abstract class ControlBlockEntity extends LinkableBlockEntity {
 	private Control control;
 
 	protected ControlBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -28,18 +28,16 @@ public abstract class ControlBlockEntity extends LinkableBlockEntity {
 	public void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
 
-		if (this.getControl() != null) {
+		if (this.getControl() != null)
 			nbt.putString(ControlBlockItem.CONTROL_ID_KEY, this.getControl().getId());
-		}
 	}
 
 	@Override
 	public void readNbt(NbtCompound nbt) {
 		super.readNbt(nbt);
 
-		if (nbt.contains(ControlBlockItem.CONTROL_ID_KEY)) {
+		if (nbt.contains(ControlBlockItem.CONTROL_ID_KEY))
 			this.setControl(nbt.getString(ControlBlockItem.CONTROL_ID_KEY));
-		}
 	}
 
 	/**
@@ -52,57 +50,39 @@ public abstract class ControlBlockEntity extends LinkableBlockEntity {
 	}
 	public void setControl(String id) {
 		Optional<Control> found = ControlRegistry.fromId(id);
-		if (found.isEmpty()) return;
+		if (found.isEmpty())
+			return;
 
 		this.control = found.get();
 	}
 
 	public boolean run(ServerPlayerEntity user, boolean isMine) {
-		if (this.getControl() != null) {
-			Optional<Tardis> found = this.findTardis();
+		if (this.getControl() == null)
+			return false;
 
-			if (found.isEmpty()) return false;
+		TardisRef found = this.tardis();
 
-			ServerTardis tardis = (ServerTardis) found.get();
+		if (found.isEmpty())
+			return false;
 
-			if (!this.control.canRun(tardis, user)) return false;
+		if (!(found.get() instanceof ServerTardis tardis))
+			return false;
 
-			if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
-				this.createDelay(this.control.getDelayLength());
-			}
+		if (!this.control.canRun(tardis, user))
+			return false;
 
-			this.getWorld().playSound(null, pos, this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
+		if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay(tardis))
+			this.createDelay(tardis, this.control.getDelayLength());
 
-
-			return this.control.runServer(tardis, user, user.getServerWorld(), isMine);
-		}
-
-		return false;
+		this.getWorld().playSound(null, pos, this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
+		return this.control.runServer(tardis, user, user.getServerWorld(), this.pos, isMine);
 	}
 
-	public void createDelay(long millis) {
-		Control.createDelay(this.getControl(), this.findTardis().get(), millis);
+	public void createDelay(Tardis tardis, long millis) {
+		Control.createDelay(this.getControl(), tardis, millis);
 	}
 
-	public boolean isOnDelay() {
-		return Control.isOnDelay(this.getControl(), this.findTardis().get());
-	}
-
-	/**
-	 * Whether the control has been used
-	 */
-	public boolean isBeingUsed() {
-		return this.isOnDelay();
-	}
-
-	@Override
-	public Optional<Tardis> findTardis() {
-		if (this.tardisId == null && this.hasWorld()) {
-			assert this.getWorld() != null;
-			Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
-			if (found != null)
-				this.setTardis(found);
-		}
-		return super.findTardis();
+	public boolean isOnDelay(Tardis tardis) {
+		return Control.isOnDelay(this.getControl(), tardis);
 	}
 }

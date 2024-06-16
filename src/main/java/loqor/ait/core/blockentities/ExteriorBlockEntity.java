@@ -87,7 +87,7 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 		if (hasSonic) {
 			if (shouldEject) {
 				player.giveItemStack(handler.get(SonicHandler.HAS_EXTERIOR_SONIC));
-				handler.clear(false, SonicHandler.HAS_EXTERIOR_SONIC);
+				handler.clear(false, SonicHandler.HAS_EXTERIOR_SONIC, null);
 				handler.clearSonicMark(SonicHandler.HAS_EXTERIOR_SONIC);
 				world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 				return;
@@ -99,22 +99,23 @@ public class ExteriorBlockEntity extends LinkableBlockEntity implements BlockEnt
 
 		if (player.getMainHandStack().getItem() instanceof SonicItem &&
 				!tardis.siege().isActive() &&
-				!tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating() &&
-				!tardis.getDoor().isOpen()
+				!tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()
+				&& tardis.getDoor().isClosed()
 				&& tardis.crash().getRepairTicks() > 0) {
 			ItemStack sonic = player.getMainHandStack();
 			NbtCompound tag = sonic.getOrCreateNbt();
-			if (!tag.contains("tardis")) {
+			if (!tag.contains("tardis"))
 				return;
-			}
-			if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
 
+			if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
 				ItemStack stack = player.getMainHandStack();
 
-				if (!(stack.getItem() instanceof SonicItem)) return;
+				if (!(stack.getItem() instanceof SonicItem))
+					return;
 
-				handler.set(stack, true, SonicHandler.HAS_EXTERIOR_SONIC);
+				handler.set(stack, true, SonicHandler.HAS_EXTERIOR_SONIC, this.pos);
 				handler.markHasSonic(SonicHandler.HAS_EXTERIOR_SONIC);
+
 				player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 				world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1F, 0.2F);
 			} else {

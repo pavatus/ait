@@ -34,7 +34,6 @@ import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -208,6 +207,7 @@ public class TardisUtil {
 					});
 				}
 		);
+
 		ServerPlayNetworking.registerGlobalReceiver(FIND_PLAYER,
 				(server, currentPlayer, handler, buf, responseSender) -> {
 					UUID tardisId = buf.readUuid();
@@ -215,8 +215,9 @@ public class TardisUtil {
 
 					ServerTardisManager.getInstance().getTardis(server, tardisId, tardis -> {
 						ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(playerUuid);
+
 						if (serverPlayer == null) {
-							FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
+							FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
 							return;
 						}
 
@@ -228,7 +229,7 @@ public class TardisUtil {
 										RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())),
 								tardis.flight().autoLand().get());
 
-						FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
+						FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
 					});
 				}
 		);
@@ -385,11 +386,7 @@ public class TardisUtil {
 
 	public static void teleportInside(Tardis tardis, Entity entity) {
 		TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
-
 		TardisUtil.teleportWithDoorOffset(entity, tardis.getDoorPos());
-
-		tardis.getDesktop().getConsoles().forEach(console ->
-				console.findEntity().ifPresent(ConsoleBlockEntity::sync));
 	}
 
 	public static void teleportToInteriorPosition(Tardis tardis, Entity entity, BlockPos pos) {
@@ -618,54 +615,22 @@ public class TardisUtil {
 		return TardisUtil.findWorld(new Identifier(identifier));
 	}
 
-	@Nullable
-	public static ExteriorBlockEntity findExteriorEntity(Tardis tardis) {
-		if (tardis instanceof ClientTardis)
-			return null;
-
-		return (ExteriorBlockEntity) tardis.getExteriorPos().getWorld().getBlockEntity(tardis.getExteriorPos());
-	}
-
 	public static BlockPos addRandomAmount(PosType type, BlockPos pos, int limit, Random random) {
 		return type.add(pos, random.nextInt(limit));
-	}
-
-	public static BlockPos getRandomPos(Corners corners, Random random) {
-		BlockPos temp;
-
-		temp = addRandomAmount(PosType.X, corners.getFirst(), corners.getSecond().getX() - corners.getFirst().getX(), random);
-		temp = addRandomAmount(PosType.Y, temp, corners.getSecond().getY(), random);
-		temp = addRandomAmount(PosType.Z, temp, corners.getSecond().getZ() - corners.getFirst().getZ(), random);
-
-		return temp;
-	}
-
-	public static BlockPos getRandomPosInWholeInterior(Tardis tardis, Random random) {
-		return getRandomPos(tardis.getDesktop().getCorners(), random);
-	}
-
-	public static BlockPos getRandomPosInWholeInterior(Tardis tardis) {
-		return getRandomPosInWholeInterior(tardis, new Random());
-	}
-
-	public static BlockPos getRandomPosInPlacedInterior(Tardis tardis, Random random) {
-		return getRandomPos(getPlacedInteriorCorners(tardis), random);
-	}
-
-	public static BlockPos getRandomPosInPlacedInterior(Tardis tardis) {
-		return getRandomPosInPlacedInterior(tardis, new Random());
 	}
 
 	public static Corners getPlacedInteriorCorners(Tardis tardis) {
 		BlockPos centre = BlockPos.ofFloored(tardis.getDesktop().getCorners().getBox().getCenter());
 		BlockPos first, second;
 
-		if (tardis.getDesktop().getSchema().findTemplate().isEmpty()) {
+		Optional<StructureTemplate> template = tardis.getDesktop().getSchema().findTemplate();
+
+		if (template.isEmpty()) {
 			AITMod.LOGGER.warn("Could not get desktop schema! Using whole interior instead.");
 			return tardis.getDesktop().getCorners();
 		}
 
-		Vec3i size = tardis.getDesktop().getSchema().findTemplate().get().getSize();
+		Vec3i size = template.get().getSize();
 
 		first = PosType.X.add(centre, -size.getX() / 2);
 		first = PosType.Z.add(first, -size.getZ() / 2);
@@ -675,17 +640,5 @@ public class TardisUtil {
 		second = PosType.Z.add(second, size.getZ() / 2);
 
         return new Corners(first, second);
-	}
-
-	public static BlockPos getPlacedInteriorCentre(Tardis tardis) {
-		Corners corners = getPlacedInteriorCorners(tardis);
-
-		if (tardis.getDesktop().getSchema().findTemplate().isEmpty()) {
-			AITMod.LOGGER.warn("Could not get desktop schema! Returning bad centre instead.");
-			return BlockPos.ofFloored(corners.getBox().getCenter());
-		}
-
-		Vec3i size = tardis.getDesktop().getSchema().findTemplate().get().getSize();
-		return corners.getFirst().add(size.getX(), size.getY() / 2, size.getZ());
 	}
 }

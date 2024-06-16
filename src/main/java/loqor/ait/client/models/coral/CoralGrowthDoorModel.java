@@ -28,31 +28,31 @@ public class CoralGrowthDoorModel extends DoorModel {
 				.uv(104, 7).cuboid(-12.0F, -39.0F, -12.0F, 24.0F, 0.0F, 17.0F, new Dilation(0.0F))
 				.uv(7, 7).cuboid(-12.0F, 0.0F, -12.0F, 24.0F, 0.0F, 17.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData cube_r1 = seven.addChild("cube_r1", ModelPartBuilder.create().uv(390, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-9.0F, -19.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
+        seven.addChild("cube_r1", ModelPartBuilder.create().uv(390, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-9.0F, -19.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
 
-		ModelPartData cube_r2 = seven.addChild("cube_r2", ModelPartBuilder.create().uv(260, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(9.0F, -7.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
+        seven.addChild("cube_r2", ModelPartBuilder.create().uv(260, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(9.0F, -7.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
 
-		ModelPartData cube_r3 = seven.addChild("cube_r3", ModelPartBuilder.create().uv(195, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-9.0F, -7.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
+        seven.addChild("cube_r3", ModelPartBuilder.create().uv(195, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-9.0F, -7.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
 
-		ModelPartData cube_r4 = seven.addChild("cube_r4", ModelPartBuilder.create().uv(325, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(9.0F, -19.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
+        seven.addChild("cube_r4", ModelPartBuilder.create().uv(325, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(9.0F, -19.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
 
-		ModelPartData cube_r5 = seven.addChild("cube_r5", ModelPartBuilder.create().uv(0, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-9.0F, -31.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
+		seven.addChild("cube_r5", ModelPartBuilder.create().uv(0, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-9.0F, -31.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
 
-		ModelPartData cube_r6 = seven.addChild("cube_r6", ModelPartBuilder.create().uv(65, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(9.0F, -31.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
+		seven.addChild("cube_r6", ModelPartBuilder.create().uv(65, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(9.0F, -31.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
 
-		ModelPartData cube_r7 = seven.addChild("cube_r7", ModelPartBuilder.create().uv(130, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -31.0F, -9.0F, 2.3562F, 0.0F, -3.1416F));
+		seven.addChild("cube_r7", ModelPartBuilder.create().uv(130, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -31.0F, -9.0F, 2.3562F, 0.0F, -3.1416F));
 
-		ModelPartData cube_r8 = seven.addChild("cube_r8", ModelPartBuilder.create().uv(0, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(12.0F, 3.0F, 0.0F, 0.0F, 1.5708F, 0.2618F));
+		seven.addChild("cube_r8", ModelPartBuilder.create().uv(0, 103).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(12.0F, 3.0F, 0.0F, 0.0F, 1.5708F, 0.2618F));
 
-		ModelPartData cube_r9 = seven.addChild("cube_r9", ModelPartBuilder.create().uv(520, 86).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-12.0F, 3.0F, 0.0F, 0.0F, -1.5708F, -0.2618F));
+		seven.addChild("cube_r9", ModelPartBuilder.create().uv(520, 86).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-12.0F, 3.0F, 0.0F, 0.0F, -1.5708F, -0.2618F));
 
-		ModelPartData cube_r10 = seven.addChild("cube_r10", ModelPartBuilder.create().uv(455, 86).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 3.0F, -12.0F, 2.8798F, 0.0F, -3.1416F));
+		seven.addChild("cube_r10", ModelPartBuilder.create().uv(455, 86).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 3.0F, -12.0F, 2.8798F, 0.0F, -3.1416F));
 
-		ModelPartData cube_r11 = seven.addChild("cube_r11", ModelPartBuilder.create().uv(260, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-9.0F, -37.0F, 0.0F, 0.0F, -1.5708F, -0.2618F));
+		seven.addChild("cube_r11", ModelPartBuilder.create().uv(260, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(-9.0F, -37.0F, 0.0F, 0.0F, -1.5708F, -0.2618F));
 
-		ModelPartData cube_r12 = seven.addChild("cube_r12", ModelPartBuilder.create().uv(325, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -37.0F, -9.0F, 2.8798F, 0.0F, -3.1416F));
+		seven.addChild("cube_r12", ModelPartBuilder.create().uv(325, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -37.0F, -9.0F, 2.8798F, 0.0F, -3.1416F));
 
-		ModelPartData cube_r13 = seven.addChild("cube_r13", ModelPartBuilder.create().uv(390, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(9.0F, -37.0F, 0.0F, 0.0F, 1.5708F, 0.2618F));
+		seven.addChild("cube_r13", ModelPartBuilder.create().uv(390, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.of(9.0F, -37.0F, 0.0F, 0.0F, 1.5708F, 0.2618F));
 
 		ModelPartData bone9 = seven.addChild("bone9", ModelPartBuilder.create().uv(65, 290).cuboid(27.2752F, -21.0F, -0.8776F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F))
 				.uv(21, 343).cuboid(10.3046F, -21.0F, 9.093F, 9.9411F, 42.0F, 0.0F, new Dilation(0.25F))
@@ -62,16 +62,16 @@ public class CoralGrowthDoorModel extends DoorModel {
 				.uv(42, 427).cuboid(10.3046F, -21.0F, -7.907F, 9.9411F, 8.0F, 0.0F, new Dilation(0.0F))
 				.uv(63, 427).cuboid(10.3046F, 20.0F, -7.907F, 9.9411F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(-15.2752F, -21.0F, -4.093F));
 
-		ModelPartData octagon_r1 = bone9.addChild("octagon_r1", ModelPartBuilder.create().uv(171, 386).cuboid(-4.9706F, -13.0F, -12.0F, 9.9411F, 33.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.309F, 0.0F));
+		bone9.addChild("octagon_r1", ModelPartBuilder.create().uv(171, 386).cuboid(-4.9706F, -13.0F, -12.0F, 9.9411F, 33.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.309F, 0.0F));
 
-		ModelPartData octagon_r2 = bone9.addChild("octagon_r2", ModelPartBuilder.create().uv(233, 290).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F))
+		bone9.addChild("octagon_r2", ModelPartBuilder.create().uv(233, 290).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 42.0F, 0.0F, new Dilation(0.0F))
 				.uv(86, 290).cuboid(-12.0F, -21.0F, -4.9706F, 0.0F, 42.0F, 9.9411F, new Dilation(0.0F)), ModelTransform.of(15.2752F, 0.0F, 4.093F, 0.0F, -0.7854F, 0.0F));
 
-		ModelPartData octagon_r3 = bone9.addChild("octagon_r3", ModelPartBuilder.create().uv(0, 427).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 8.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(15.2752F, 37.6777F, -8.6141F, -0.7854F, 0.0F, 0.0F));
+		bone9.addChild("octagon_r3", ModelPartBuilder.create().uv(0, 427).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 8.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(15.2752F, 37.6777F, -8.6141F, -0.7854F, 0.0F, 0.0F));
 
-		ModelPartData octagon_r4 = bone9.addChild("octagon_r4", ModelPartBuilder.create().uv(21, 427).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 8.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(15.2752F, -6.636F, 15.4275F, 0.7854F, 0.0F, 0.0F));
+		bone9.addChild("octagon_r4", ModelPartBuilder.create().uv(21, 427).cuboid(-4.9706F, -21.0F, -12.0F, 9.9411F, 8.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(15.2752F, -6.636F, 15.4275F, 0.7854F, 0.0F, 0.0F));
 
-		ModelPartData octagon_r5 = bone9.addChild("octagon_r5", ModelPartBuilder.create().uv(218, 386).cuboid(-12.0F, -13.0F, -4.9706F, 0.0F, 33.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(30.5514F, 0.0F, 0.0003F, 0.0F, -0.2618F, 0.0F));
+		bone9.addChild("octagon_r5", ModelPartBuilder.create().uv(218, 386).cuboid(-12.0F, -13.0F, -4.9706F, 0.0F, 33.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(30.5514F, 0.0F, 0.0003F, 0.0F, -0.2618F, 0.0F));
 		return TexturedModelData.of(modelData, 1024, 1024);
 	}
 
@@ -82,7 +82,9 @@ public class CoralGrowthDoorModel extends DoorModel {
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (door.findTardis().get() == null) return;
+		if (door.tardis().get() == null)
+			return;
+
 		matrices.push();
 		matrices.translate(0, -1.5f, 0);
 

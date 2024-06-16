@@ -7,10 +7,8 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -39,12 +37,9 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 public class ConsoleControlEntity extends BaseControlEntity {
-	private BlockPos consoleBlockPos;
-	private Control control;
+
 	private static final TrackedData<String> IDENTITY = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.STRING);
 	private static final TrackedData<Float> WIDTH = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Float> HEIGHT = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -52,6 +47,9 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	private static final TrackedData<Boolean> PART_OF_SEQUENCE = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	private static final TrackedData<Integer> SEQUENCE_COLOR = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.INTEGER); // <--->
 	private static final TrackedData<Boolean> WAS_SEQUENCED = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+	private BlockPos consoleBlockPos;
+	private Control control;
 
 	public ConsoleControlEntity(EntityType<? extends BaseControlEntity> entityType, World world) {
 		super(entityType, world);
@@ -68,14 +66,15 @@ public class ConsoleControlEntity extends BaseControlEntity {
 			super.onRemoved();
 			return;
 		}
-		if (this.getWorld().getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
+
+		if (this.getWorld().getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console)
 			console.markNeedsControl();
-		}
 	}
 
 	@Override
 	protected void initDataTracker() {
 		super.initDataTracker();
+
 		this.dataTracker.startTracking(IDENTITY, "");
 		this.dataTracker.startTracking(WIDTH, 0.125f);
 		this.dataTracker.startTracking(HEIGHT, 0.125f);
@@ -110,7 +109,9 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	}
 
 	public Control getControl() {
-		if (control == null) return null; // exploding head emoji
+		if (control == null)
+			return null; // exploding head emoji
+
 		return control;
 	}
 
@@ -156,8 +157,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	@Override
 	public void writeCustomDataToNbt(NbtCompound nbt) {
 		super.writeCustomDataToNbt(nbt);
-		//if(this.controlTypes != null)
-		//    nbt.put("controlTypes", this.controlTypes.serializeTypes(nbt));
+
 		if (consoleBlockPos != null)
 			nbt.put("console", NbtHelper.fromBlockPos(this.consoleBlockPos));
 
@@ -175,30 +175,32 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt) {
 		super.readCustomDataFromNbt(nbt);
-		var console = (NbtCompound) nbt.get("console");
+
+		NbtCompound console = nbt.getCompound("console");
+
 		if (console != null)
 			this.consoleBlockPos = NbtHelper.toBlockPos(console);
-		if (nbt.contains("identity")) {
+
+		if (nbt.contains("identity"))
 			this.setIdentity(nbt.getString("identity"));
-		}
+
 		if (nbt.contains("width") && nbt.contains("height")) {
 			this.setControlWidth(nbt.getFloat("width"));
 			this.setControlWidth(nbt.getFloat("height"));
 			this.calculateDimensions();
 		}
-		if (nbt.contains("offsetX") && nbt.contains("offsetY") && nbt.contains("offsetZ")) {
-			this.setOffset(new Vector3f(nbt.getFloat("offsetX"), nbt.getFloat("offsetY"), nbt.getFloat("offsetZ")));
-		}
-		if (nbt.contains("partOfSequence")) {
-			this.setPartOfSequence(nbt.getBoolean("partOfSequence"));
-		}
-		if (nbt.contains("sequenceColor")) {
-			this.setSequenceColor(nbt.getInt("sequenceColor"));
-		}
 
-		if (nbt.contains("wasSequenced")) {
+		if (nbt.contains("offsetX") && nbt.contains("offsetY") && nbt.contains("offsetZ"))
+			this.setOffset(new Vector3f(nbt.getFloat("offsetX"), nbt.getFloat("offsetY"), nbt.getFloat("offsetZ")));
+
+		if (nbt.contains("partOfSequence"))
+			this.setPartOfSequence(nbt.getBoolean("partOfSequence"));
+
+		if (nbt.contains("sequenceColor"))
+			this.setSequenceColor(nbt.getInt("sequenceColor"));
+
+		if (nbt.contains("wasSequenced"))
 			this.setWasSequenced(nbt.getBoolean("wasSequenced"));
-		}
 	}
 
 	@Override
@@ -217,9 +219,8 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
 		handStack.useOnEntity(player, this, hand);
 
-		if (handStack.getItem() instanceof ControlBlockItem) {
+		if (handStack.getItem() instanceof ControlBlockItem)
 			return ActionResult.FAIL;
-		}
 
 		if (hand == Hand.MAIN_HAND)
 			this.run(player, player.getWorld(), false);
@@ -232,36 +233,28 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		if (source.getAttacker() instanceof PlayerEntity player) {
 			if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
 				controlEditorHandler(player);
-			} else
-				this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld(), true);
+			} else this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld(), true);
 		}
 
 		return super.damage(source, source.getAttacker() instanceof PlayerEntity ? 0 : amount);
 	}
 
 	public boolean run(PlayerEntity player, World world, boolean leftClick) {
-		Random random = new Random();
-		int chance_int = random.nextInt(1, 10_000);
-		if (chance_int == 72) {
-			// play sound
+		if (world.getRandom().nextBetween(1, 10_000) == 72)
 			this.getWorld().playSound(null, this.getBlockPos(), AITSounds.EVEN_MORE_SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
-		}
 
 		if (!world.isClient()) {
-			if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM) {
+			if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM)
 				this.remove(RemovalReason.DISCARDED);
-			}/* else if (player.getMainHandStack().getItem() == Items.COMMAND_BLOCK) {
-                controlEditorHandler(player);
-            }*/
 
 			if (this.getTardis() == null)
-				return false; // AAAAAAAAAAA
+				return false;
 
 			Tardis tardis = this.getTardis(world);
 
-			if (tardis == null || this.findConsole().isEmpty()) {
-				AITMod.LOGGER.warn("Discarding invalid control entity at {}; tardis = {}; console = {}", this.getPos(), tardis, this.findConsole());
-				AITMod.LOGGER.warn("> console pos: {}; parent = {}", this.consoleBlockPos, this.getConsoleBlock().findParent());
+			if (tardis == null) {
+				AITMod.LOGGER.warn("Discarding invalid control entity at {}; console pos: {}", this.getPos(), this.consoleBlockPos);
+
 				this.discard();
 				return false;
 			}
@@ -278,8 +271,9 @@ public class ConsoleControlEntity extends BaseControlEntity {
 			if (this.consoleBlockPos != null)
 				this.getWorld().playSound(null, this.getBlockPos(), this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
 
-			return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, leftClick, this.findConsole().get()); // i dont gotta check these cus i know its server
+			return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, this.consoleBlockPos, leftClick); // i dont gotta check these cus i know its server
 		}
+
 		return false;
 	}
 
@@ -288,10 +282,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		if (!(this.consoleBlockPos != null && this.control != null && world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))
 			return null;
 
-		if (console.findTardis().isEmpty())
-			return null;
-
-		return console.findTardis().get();
+		return console.tardis().get();
 	}
 
 	public void setScaleAndCalculate(float width, float height) {
@@ -302,15 +293,14 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
 	@Override
 	public Text getName() {
-		if (this.control != null)
-			return Text.translatable(this.control.getId());
-		else
-			return super.getName();
+		if (this.control != null) return Text.translatable(this.control.getId());
+		else return super.getName();
 	}
 
 	public void setControlData(ConsoleTypeSchema consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
 		this.consoleBlockPos = consoleBlockPosition;
 		this.control = type.getControl();
+
 		if (consoleType != null) {
 			this.setControlWidth(type.getScale().width);
 			this.setControlHeight(type.getScale().height);
@@ -325,26 +315,25 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
 	@Override
 	public void onTrackedDataSet(TrackedData<?> data) {
-		if(PART_OF_SEQUENCE.equals(data)) {
-			if(this.getWorld().isClient()) {
-				this.setPartOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
-			}
-		} else if(SEQUENCE_COLOR.equals(data)) {
-			if(this.getWorld().isClient()) {
-				this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
-			}
-		} else if(WAS_SEQUENCED.equals(data)) {
-			if(this.getWorld().isClient()) {
-				this.setWasSequenced(this.getDataTracker().get(WAS_SEQUENCED));
-			}
-		}
 		super.onTrackedDataSet(data);
+
+		if (!this.getWorld().isClient())
+			return;
+
+		if (PART_OF_SEQUENCE.equals(data)) {
+			this.setPartOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
+		} else if (SEQUENCE_COLOR.equals(data)) {
+			this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
+		} else if (WAS_SEQUENCED.equals(data)) {
+			this.setWasSequenced(this.getDataTracker().get(WAS_SEQUENCED));
+		}
 	}
 
 	@Override
 	public EntityDimensions getDimensions(EntityPose pose) {
 		if (this.getDataTracker().containsKey(WIDTH) && this.getDataTracker().containsKey(HEIGHT))
 			return EntityDimensions.changing(this.getControlWidth(), this.getControlHeight());
+
 		return super.getDimensions(pose);
 	}
 
@@ -356,21 +345,11 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
 	@Override
 	public void tick() {
-		if (getWorld() instanceof ServerWorld server) {
-			if (this.control == null) {
-				if (this.consoleBlockPos != null) {
-					if (server.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console) {
-						// todo this wont be good for server performance..
-						console.markDirty();
-					}
-					discard();
-				}
-			}
-            /*SequenceHandler sqnc = this.getTardis().getHandlers().getSequenceHandler();
-            if(sqnc.hasActiveSequence() && sqnc.getActiveSequence() != null && sqnc.getRecent() != null && !sqnc.getRecent().isEmpty() && this.getSequenceColor() >= 0) {
-                this.setSequenced(sqnc.getRecent().contains(this.getControl()));
-            }*/
-		}
+		if (this.getWorld().isClient())
+			return;
+
+		if (this.control == null && this.consoleBlockPos != null)
+			this.discard();
 	}
 
 	@Override
@@ -383,37 +362,25 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		return true;
 	}
 
-	protected @Nullable ConsoleBlockEntity getConsoleBlock() {
-		if (this.consoleBlockPos == null || !(this.getWorld() instanceof ServerWorld world))
-			return null;
-
-		BlockEntity found = world.getBlockEntity(this.consoleBlockPos);
-		return found instanceof ConsoleBlockEntity ? (ConsoleBlockEntity) found : null;
-	}
-
-	protected Optional<TardisConsole> findConsole() {
-		return (this.getConsoleBlock() == null) ? Optional.empty() : this.getConsoleBlock().findParent();
-	}
-
 	public void controlEditorHandler(PlayerEntity player) {
 		float increment = 0.0125f;
-		if (player.getMainHandStack().getItem() == Items.EMERALD_BLOCK) {
+		if (player.getMainHandStack().getItem() == Items.EMERALD_BLOCK)
 			this.setPosition(this.getPos().add(player.isSneaking() ? -increment : increment, 0, 0));
-		}
-		if (player.getMainHandStack().getItem() == Items.DIAMOND_BLOCK) {
+
+		if (player.getMainHandStack().getItem() == Items.DIAMOND_BLOCK)
 			this.setPosition(this.getPos().add(0, player.isSneaking() ? -increment : increment, 0));
-		}
-		if (player.getMainHandStack().getItem() == Items.REDSTONE_BLOCK) {
+
+		if (player.getMainHandStack().getItem() == Items.REDSTONE_BLOCK)
 			this.setPosition(this.getPos().add(0, 0, player.isSneaking() ? -increment : increment));
-		}
-		if (player.getMainHandStack().getItem() == Items.COD) {
+
+		if (player.getMainHandStack().getItem() == Items.COD)
 			this.setScaleAndCalculate(player.isSneaking() ? this.getDataTracker().get(WIDTH) - increment : this.getDataTracker().get(WIDTH) + increment,
 					this.getDataTracker().get(HEIGHT));
-		}
-		if (player.getMainHandStack().getItem() == Items.COOKED_COD) {
+
+		if (player.getMainHandStack().getItem() == Items.COOKED_COD)
 			this.setScaleAndCalculate(this.getDataTracker().get(WIDTH),
 					player.isSneaking() ? this.getDataTracker().get(HEIGHT) - increment : this.getDataTracker().get(HEIGHT) + increment);
-		}
+
 		if (this.consoleBlockPos != null) {
 			Vec3d centered = this.getPos().subtract(this.consoleBlockPos.toCenterPos());
 			if (this.control != null)

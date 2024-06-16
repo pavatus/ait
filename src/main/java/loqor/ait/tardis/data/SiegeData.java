@@ -20,6 +20,8 @@ import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -87,23 +89,27 @@ public class SiegeData extends KeyedTardisComponent implements TardisTickable {
 		if (this.tardis.getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL))
 			return; // The required amount of fuel to enable/disable siege mode
 
+		SoundEvent sound;
+
 		if (siege) {
+			sound = AITSounds.SIEGE_ENABLE;
 			this.tardis.engine().disablePower();
 
 			TardisUtil.giveEffectToInteriorPlayers(this.tardis, new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0, false, false));
-			FlightUtil.playSoundAtConsole(this.tardis, AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 3f, 1f);
 		} else {
+			sound = AITSounds.SIEGE_DISABLE;
 			this.tardis.alarm().disable();
 
 			if (this.tardis.getExterior().findExteriorBlock().isEmpty())
 				this.tardis.travel().placeExterior();
+		}
 
-			FlightUtil.playSoundAtConsole(this.tardis, AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 3f, 1f);
+		for (BlockPos console : this.tardis.getDesktop().getConsoles()) {
+			FlightUtil.playSoundAtConsole(console, sound, SoundCategory.BLOCKS, 3f, 1f);
 		}
 
 		this.tardis.removeFuel((0.01 * FuelData.TARDIS_MAX_FUEL) * (this.tardis.tardisHammerAnnoyance + 1));
 		this.active.set(siege);
-		this.sync();
 	}
 
 	private static boolean hasLeatherArmour(ServerPlayerEntity player) {

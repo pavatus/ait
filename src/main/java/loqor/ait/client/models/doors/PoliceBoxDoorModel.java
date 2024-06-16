@@ -11,6 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
 public class PoliceBoxDoorModel extends DoorModel {
+
 	private final ModelPart TARDIS;
 
 	public PoliceBoxDoorModel(ModelPart root) {
@@ -25,21 +26,21 @@ public class PoliceBoxDoorModel extends DoorModel {
 
 		ModelPartData Posts = TARDIS.addChild("Posts", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, -32.0F));
 
-		ModelPartData cube_r1 = Posts.addChild("cube_r1", ModelPartBuilder.create().uv(68, 227).cuboid(-18.0F, -65.0F, -18.0F, 4.0F, 61.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 4.0F, 10.0F, 0.0F, 3.1416F, 0.0F));
+		Posts.addChild("cube_r1", ModelPartBuilder.create().uv(68, 227).cuboid(-18.0F, -65.0F, -18.0F, 4.0F, 61.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 4.0F, 10.0F, 0.0F, 3.1416F, 0.0F));
 
-		ModelPartData cube_r2 = Posts.addChild("cube_r2", ModelPartBuilder.create().uv(85, 227).cuboid(-18.0F, -65.0F, -18.0F, 4.0F, 61.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 4.0F, 10.0F, 0.0F, 1.5708F, 0.0F));
+		Posts.addChild("cube_r2", ModelPartBuilder.create().uv(85, 227).cuboid(-18.0F, -65.0F, -18.0F, 4.0F, 61.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 4.0F, 10.0F, 0.0F, 1.5708F, 0.0F));
 
 		ModelPartData Doors = TARDIS.addChild("Doors", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData right_door = Doors.addChild("right_door", ModelPartBuilder.create().uv(181, 177).cuboid(0.5F, -25.5F, -0.5F, 13.0F, 55.0F, 1.0F, new Dilation(0.0F))
+		Doors.addChild("right_door", ModelPartBuilder.create().uv(181, 177).cuboid(0.5F, -25.5F, -0.5F, 13.0F, 55.0F, 1.0F, new Dilation(0.0F))
 				.uv(102, 228).cuboid(1.5F, -10.5F, 0.5F, 10.0F, 12.0F, 3.0F, new Dilation(0.0F))
 				.uv(0, 198).cuboid(0.5F, -25.5F, -1.0F, 14.0F, 55.0F, 0.0F, new Dilation(0.0F))
 				.uv(0, 10).cuboid(9.5F, -5.5F, -1.5F, 1.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-13.5F, -29.5F, -5.5F));
 
-		ModelPartData left_door = Doors.addChild("left_door", ModelPartBuilder.create().uv(189, 41).cuboid(-13.5F, -25.5F, -0.5F, 13.0F, 55.0F, 1.0F, new Dilation(0.0F))
+		Doors.addChild("left_door", ModelPartBuilder.create().uv(189, 41).cuboid(-13.5F, -25.5F, -0.5F, 13.0F, 55.0F, 1.0F, new Dilation(0.0F))
 				.uv(0, 0).cuboid(-12.5F, -6.5F, -1.5F, 1.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(13.5F, -29.5F, -5.5F));
 
-		ModelPartData Walls = TARDIS.addChild("Walls", ModelPartBuilder.create().uv(63, 227).cuboid(-14.0F, -56.0F, -6.0F, 1.0F, 56.0F, 1.0F, new Dilation(0.0F))
+		TARDIS.addChild("Walls", ModelPartBuilder.create().uv(63, 227).cuboid(-14.0F, -56.0F, -6.0F, 1.0F, 56.0F, 1.0F, new Dilation(0.0F))
 				.uv(116, 170).cuboid(13.0F, -56.0F, -6.0F, 1.0F, 56.0F, 1.0F, new Dilation(0.0F))
 				.uv(115, 0).cuboid(-13.0F, -56.0F, -6.0F, 26.0F, 1.0F, 1.0F, new Dilation(0.0F))
 				.uv(59, 113).cuboid(13.0F, -56.0F, -6.5F, 1.0F, 56.0F, 0.0F, new Dilation(0.0F))
@@ -48,7 +49,7 @@ public class PoliceBoxDoorModel extends DoorModel {
 
 		ModelPartData PCB = TARDIS.addChild("PCB", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
 
-		ModelPartData cube_r3 = PCB.addChild("cube_r3", ModelPartBuilder.create().uv(160, 9).cuboid(-17.0F, -61.0F, 13.0F, 34.0F, 5.0F, 6.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 1.0F, 10.0F, 0.0F, 3.1416F, 0.0F));
+		PCB.addChild("cube_r3", ModelPartBuilder.create().uv(160, 9).cuboid(-17.0F, -61.0F, 13.0F, 34.0F, 5.0F, 6.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 1.0F, 10.0F, 0.0F, 3.1416F, 0.0F));
 		return TexturedModelData.of(modelData, 512, 512);
 	}
 
@@ -59,10 +60,7 @@ public class PoliceBoxDoorModel extends DoorModel {
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        /*this.TARDIS.getChild("Doors").getChild("right_door").yaw = -doorEntity.getRightDoorRotation();
-        this.TARDIS.getChild("Doors").getChild("left_door").yaw = doorEntity.getLeftDoorRotation();*/
-
-		DoorData door = doorEntity.findTardis().get().getDoor();
+		DoorData door = doorEntity.tardis().get().getDoor();
 
 		this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;

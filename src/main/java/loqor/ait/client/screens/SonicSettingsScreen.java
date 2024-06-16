@@ -20,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
@@ -36,9 +37,10 @@ public class SonicSettingsScreen extends ConsoleScreen {
     private final Screen parent;
     private int selectedSonic;
 
-    public SonicSettingsScreen(UUID tardis, UUID console, Screen parent) {
+    public SonicSettingsScreen(UUID tardis, BlockPos console, Screen parent) {
         super(Text.translatable("screen.ait.sonicsettings.title"), tardis, console);
         this.parent = parent;
+
         sendSonicChangePacket();
         updateTardis();
     }

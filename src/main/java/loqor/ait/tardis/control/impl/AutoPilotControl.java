@@ -12,6 +12,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 
 public class AutoPilotControl extends Control {
 
@@ -21,23 +22,23 @@ public class AutoPilotControl extends Control {
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-			this.addToControlSequence(tardis, player);
+			this.addToControlSequence(tardis, player, console);
 			return false;
 		}
 
 		// @TODO make a real world flight control.. later
-		if(player.isSneaking() && tardis.travel().getState() == TardisTravel.State.LANDED) {
-			if(tardis.getDoor().isOpen()) {
+		if (player.isSneaking() && tardis.travel().getState() == TardisTravel.State.LANDED) {
+			if (tardis.getDoor().isOpen()) {
 				world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_CHAIN_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
 				return true;
 			} else {
 				world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_CLUSTER_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
 
-
 			TardisUtil.teleportOutside(tardis, player);
+
 			player.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));
 			TardisRealEntity.spawnFromTardisId(tardis.getExteriorPos().getWorld(), tardis.getUuid(), tardis.getExteriorPos(), player, player.getBlockPos());
 			return true;

@@ -1,5 +1,7 @@
 package loqor.ait.core.util;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import loqor.ait.AITMod;
 import loqor.ait.core.item.SonicItem;
@@ -8,8 +10,11 @@ import loqor.ait.tardis.TardisHandlersManager;
 import loqor.ait.tardis.base.TardisComponent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.util.math.BlockPos;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Omega utility class for handling legacy stuff.
@@ -53,8 +58,6 @@ public class LegacyUtil {
      * Fixes the old schema format for sonics.
      */
     public static void fixSonicType(NbtCompound compound) {
-
-
         if (compound.get(SonicItem.SONIC_TYPE).getType() != NbtElement.INT_TYPE)
             return;
 
@@ -64,4 +67,16 @@ public class LegacyUtil {
         compound.remove(SonicItem.SONIC_TYPE);
         compound.putString(SonicItem.SONIC_TYPE, SonicRegistry.getInstance().toList().get(id).id().toString());
     }
+
+    public static Set<BlockPos> flatConsoles(JsonArray array, JsonDeserializationContext context) {
+        Set<BlockPos> pos = new HashSet<>();
+
+        array.getAsJsonArray().forEach(element -> pos.add(
+                context.<Console>deserialize(element, Console.class).pos())
+        );
+
+        return pos;
+    }
+
+    private record Console(BlockPos pos) { }
 }

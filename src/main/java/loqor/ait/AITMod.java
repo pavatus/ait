@@ -8,14 +8,13 @@ import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.*;
-import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.commands.*;
 import loqor.ait.core.data.schema.MachineRecipeSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.registry.impl.BlueprintRegistry;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.managers.RiftChunkManager;
@@ -28,7 +27,6 @@ import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
@@ -42,14 +40,12 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
@@ -145,13 +141,6 @@ public class AITMod implements ModInitializer {
 			UnlockCommand.register(dispatcher);
 		}));
 
-		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(((blockEntity, world) -> {
-			// fixme this doesnt seem to run??
-			if (blockEntity instanceof ConsoleBlockEntity console) {
-				console.markNeedsSyncing();
-			}
-		}));
-
 		TardisEvents.LANDED.register((tardis -> {
 			// stuff for resetting the ExteriorAnimation
 			if (tardis.travel().getPosition().getWorld().getBlockEntity(tardis.getExteriorPos()) instanceof ExteriorBlockEntity entity) {
@@ -160,15 +149,19 @@ public class AITMod implements ModInitializer {
 		}));
 
 		TardisEvents.DEMAT.register((tardis -> {
-			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating() || tardis.flight().handbrake().get() || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING) || tardis.isRefueling())
+			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()
+					|| tardis.flight().handbrake().get() || PropertiesHandler.getBool(
+							tardis.properties(), PropertiesHandler.IS_FALLING
+			) || tardis.isRefueling())
 				return true; // cancelled
 
-			if (tardis.getDoor().isOpen() /*|| !tardis.getDoor().locked()*/)
+			if (tardis.getDoor().isOpen())
 				return true;
 
-			for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
-				TardisCriterions.TAKEOFF.trigger((ServerPlayerEntity) player);
+			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+				TardisCriterions.TAKEOFF.trigger(player);
 			}
+
 			return false;
 		}));
 
@@ -189,19 +182,9 @@ public class AITMod implements ModInitializer {
 			}
 		});
 
-		TardisEvents.REGAIN_POWER.register((tardis -> {
-			FlightUtil.playSoundAtConsole(tardis, AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
-		}));
-
-		ServerPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.ASK, ((server, player, handler, buf, responseSender) -> {
-			if (player.getServerWorld().getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
-				return;
-
-			BlockPos consolePos = buf.readBlockPos();
-			// fixme the gotten block entity is always null, shit.
-			if (player.getServerWorld().getBlockEntity(consolePos) instanceof ConsoleBlockEntity console)
-				console.markNeedsSyncing();
-		}));
+		TardisEvents.REGAIN_POWER.register(tardis -> FlightUtil.playSoundAtEveryConsole(
+				tardis.getDesktop(), AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f)
+		);
 
 		ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ((server, player, handler, buf, responseSender) -> {
 			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
@@ -231,7 +214,7 @@ public class AITMod implements ModInitializer {
 
 		ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
 			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
-				UUID console = buf.readUuid();
+				BlockPos console = buf.readBlockPos();
 
 				server.execute(() -> {
 					if (tardis == null)
@@ -344,12 +327,6 @@ public class AITMod implements ModInitializer {
 	public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
 	public static final Identifier OPEN_SCREEN_CONSOLE = new Identifier(AITMod.MOD_ID, "open_screen_console");
 
-	public static void openScreen(ServerPlayerEntity player, int id) {
-		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeInt(id);
-		ServerPlayNetworking.send(player, OPEN_SCREEN, buf);
-	}
-
 	public static void openScreen(ServerPlayerEntity player, int id, UUID tardis) {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeInt(id);
@@ -357,11 +334,12 @@ public class AITMod implements ModInitializer {
 		ServerPlayNetworking.send(player, OPEN_SCREEN_TARDIS, buf);
 	}
 
-	public static void openScreen(ServerPlayerEntity player, int id, UUID tardis, UUID console) {
+	public static void openScreen(ServerPlayerEntity player, int id, UUID tardis, BlockPos console) {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeInt(id);
 		buf.writeUuid(tardis);
-		buf.writeUuid(console);
+		buf.writeBlockPos(console);
+
 		ServerPlayNetworking.send(player, OPEN_SCREEN_CONSOLE, buf);
 	}
 }

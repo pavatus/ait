@@ -185,7 +185,7 @@ public class FallingTardisEntity extends Entity {
 
 			if (!this.getWorld().isClient()) {
 				this.getTardis().getDesktop().getConsoles().forEach(console -> this.getWorld().playSound(
-						null, console.position(), SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F)
+						null, console, SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F)
 				);
 
 				if (PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {

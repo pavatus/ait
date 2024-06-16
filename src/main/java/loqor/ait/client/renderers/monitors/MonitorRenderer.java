@@ -24,9 +24,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
 
-// Made with Blockbench 4.8.3
-// Exported for Minecraft version 1.17+ for Yarn
-// Paste this class into your mod and generate all required imports
 public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntityRenderer<T> {
 
 	public static final Identifier MONITOR_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/monitors/crt_monitor.png"));
@@ -40,18 +37,14 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 
 	@Override
 	public void render(MonitorBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-
 		BlockState blockState = entity.getCachedState();
 
 		int k = blockState.get(SkullBlock.ROTATION);
 		float h = RotationPropertyHelper.toDegrees(k);
 
 		matrices.push();
-
 		matrices.translate(0.5f, 1.5f, 0.5f);
-
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(h));
-
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
 		this.crtMonitorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(MONITOR_TEXTURE)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
@@ -59,8 +52,10 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 
 		matrices.pop();
 
-		if (entity.findTardis().isEmpty()) return;
-		Tardis tardis = entity.findTardis().get();
+		if (entity.tardis().isEmpty())
+			return;
+
+		Tardis tardis = entity.tardis().get();
 
 		matrices.push();
 		matrices.translate(0.5, 0.75, 0.5);
@@ -75,7 +70,6 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		String positionPosText = " " + abpp.getX() + ", " + abpp.getY() + ", " + abpp.getZ();
 		String positionDimensionText = " " + DimensionControl.convertWorldValueToModified(abpp.getDimension().getValue());
 		String positionDirectionText = " " + DirectionControl.rotationToDirection(abpp.getRotation()).toUpperCase();
-
 
 		this.textRenderer.drawWithOutline(Text.of("❌").asOrderedText(), 0, 0, 0xF00F00, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(positionPosText).asOrderedText(), 0, 8, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
@@ -94,23 +88,18 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		this.textRenderer.drawWithOutline(Text.of(destinationDirectionText).asOrderedText(), 0, 64, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
 		String fuelText = Math.round((tardis.getFuel() / FuelData.TARDIS_MAX_FUEL) * 100) + "%";
-
 		this.textRenderer.drawWithOutline(Text.of("⛽").asOrderedText(), 0, 78, 0xFAF000, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(fuelText).asOrderedText(), 8, 78, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
-		String flightTimeText = tardis.travel().getState() == TardisTravel.State.LANDED ? "0%" : tardis.getHandlers().getFlight().getDurationAsPercentage() + "%";
-
+		String flightTimeText = tardis.travel().getState() == TardisTravel.State.LANDED ? "0%" : tardis.flight().getDurationAsPercentage() + "%";
 		this.textRenderer.drawWithOutline(Text.of("⏳").asOrderedText(), 0, 92, 0x00FF0F, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(flightTimeText).asOrderedText(), 8, 92, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
-		String name = tardis.getHandlers().getStats().getName();
-
+		String name = tardis.stats().getName();
 		this.textRenderer.drawWithOutline(Text.of(name).asOrderedText(), 98 - (this.textRenderer.getWidth(name)), 90, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
-
-		if (tardis.getHandlers().getAlarms().isEnabled()) {
+		if (tardis.alarm().isEnabled())
 			this.textRenderer.drawWithOutline(Text.of("⚠").asOrderedText(), 84, 0, 0xFE0000, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
-		}
 
 		matrices.pop();
 	}

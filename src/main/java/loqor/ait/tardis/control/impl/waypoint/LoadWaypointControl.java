@@ -11,6 +11,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 
 public class LoadWaypointControl extends Control {
 	public LoadWaypointControl() {
@@ -18,22 +19,24 @@ public class LoadWaypointControl extends Control {
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
 		if (leftClick) {
-			tardis.getHandlers().getWaypoints().spawnItem();
+			tardis.waypoint().spawnItem(console);
 			return true;
 		}
 
 		ItemStack itemStack = player.getMainHandStack();
-		if (!(itemStack.getItem() instanceof WaypointItem)) return false;
+		if (!(itemStack.getItem() instanceof WaypointItem))
+			return false;
 
-		if (WaypointItem.getPos(itemStack) == null) WaypointItem.setPos(itemStack, tardis.travel().getPosition());
+		if (WaypointItem.getPos(itemStack) == null)
+			WaypointItem.setPos(itemStack, tardis.travel().getPosition());
 
-		tardis.getHandlers().getWaypoints().markHasCartridge();
-		tardis.getHandlers().getWaypoints().set(Waypoint.fromDirected(WaypointItem.getPos(itemStack)).setName(itemStack.getName().getString()), true);
+		tardis.waypoint().markHasCartridge();
+		tardis.waypoint().set(Waypoint.fromDirected(WaypointItem.getPos(itemStack)).setName(itemStack.getName().getString()), true);
 		player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
-		FlightUtil.playSoundAtConsole(tardis, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
+		FlightUtil.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
 		return true;
 	}
 }

@@ -4,7 +4,6 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -91,8 +90,8 @@ public class ClientTardisUtil {
 		BlockPos pos = player.getBlockPos();
 		double lowest = Double.MAX_VALUE;
 
-		for (TardisConsole console : tardis.getDesktop().getConsoles()) {
-			double distance = Math.sqrt(pos.getSquaredDistance(console.position()));
+		for (BlockPos console : tardis.getDesktop().getConsoles()) {
+			double distance = Math.sqrt(pos.getSquaredDistance(console));
 
 			if (distance < lowest)
 				lowest = distance;

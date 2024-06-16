@@ -5,7 +5,6 @@ import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.client.sounds.PlayerFollowingSound;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.registry.impl.CreakRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.sound.CreakSound;
@@ -59,13 +58,14 @@ public class ClientCreakHandler extends SoundHandler {
 	public boolean isPlayerInATardis() {
 		if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
 			return false;
+
 		ClientPlayerEntity player = MinecraftClient.getInstance().player;
 		Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
 
 		return found != null;
 	}
 
-	public BlockPos randomNearConsolePos(AbsoluteBlockPos consolePos) {
+	public BlockPos randomNearConsolePos(BlockPos consolePos) {
 		return consolePos.add(random.nextInt(8) - 1, 0, random.nextInt(8) - 1);
 	}
 
@@ -77,16 +77,18 @@ public class ClientCreakHandler extends SoundHandler {
 
 	public void playRandomCreak() {
 		CreakSound chosen = CreakRegistry.getRandomCreak();
-
 		ClientTardis current = (ClientTardis) ClientTardisUtil.getCurrentTardis();
 
-		assert current != null; // we cant get here if we're not in a tardis
+		if (current == null)
+			return;
 
 		if (current.siege().isActive() && chosen.equals(CreakRegistry.WHISPER)) {
-			current.getDesktop().getConsoles().forEach(console -> startIfNotPlaying(new PositionedSoundInstance(
-					chosen.sound(), SoundCategory.HOSTILE, 0.5f, 1.0f,
-					net.minecraft.util.math.random.Random.create(),
-					randomNearConsolePos(console.position())))
+			current.getDesktop().getConsoles().forEach(console ->
+					startIfNotPlaying(new PositionedSoundInstance(
+							chosen.sound(), SoundCategory.HOSTILE, 0.5f, 1.0f,
+							net.minecraft.util.math.random.Random.create(),
+							randomNearConsolePos(console))
+					)
 			);
 
 			return;

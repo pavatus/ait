@@ -7,11 +7,10 @@ import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.link.LinkableBlockEntity;
+import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -37,56 +36,46 @@ import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
-import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
-
-public class DoorBlockEntity extends LinkableBlockEntity {
+public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
 	public DoorBlockEntity(BlockPos pos, BlockState state) {
 		super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
-
-		if (!this.hasWorld())
-			return;
-
-		if (this.findTardis().isEmpty())
-			return;
-
-		this.linkDesktop();
 	}
 
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T tDoor) {
 		DoorBlockEntity door = (DoorBlockEntity) tDoor;
 
-		if (door.tardisId == null)
-			door.findTardis();
-
-		if (door.findTardis().isEmpty())
+		if (door.tardis().isEmpty())
 			return;
 
-		if (!world.isClient() && door.findTardis().get().getExteriorPos() == null)
+		Tardis tardis = door.tardis().get();
+
+		if (!world.isClient() && tardis.getExteriorPos() == null)
 			return;
 
-		World exteriorWorld = door.findTardis().get().getExteriorPos().getWorld();
+		World exteriorWorld = tardis.getExteriorPos().getWorld();
 
 		if (exteriorWorld == null)
 			return;
 
-		BlockState exteriorBlockState = exteriorWorld.getBlockState(door.findTardis().get().getExteriorPos());
+		BlockState exteriorBlockState = exteriorWorld.getBlockState(tardis.getExteriorPos());
 
-		if (exteriorBlockState.getBlock() instanceof ExteriorBlock && !door.findTardis().get().areShieldsActive()) {
-			world.setBlockState(pos, blockState.with(Properties.WATERLOGGED, exteriorBlockState.get(Properties.WATERLOGGED) && door.findTardis().get().getDoor().isOpen()), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+		if (exteriorBlockState.getBlock() instanceof ExteriorBlock && !tardis.areShieldsActive()) {
+			world.setBlockState(pos, blockState.with(Properties.WATERLOGGED,
+					exteriorBlockState.get(Properties.WATERLOGGED) && tardis.getDoor().isOpen()
+			), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+
 			world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
 			world.scheduleFluidTick(pos, blockState.getFluidState().getFluid(), blockState.getFluidState().getFluid().getTickRate(world));
 		}
 	}
 
 	public void useOn(World world, boolean sneaking, PlayerEntity player) {
-		if (player == null || this.findTardis().isEmpty())
+		if (player == null || this.tardis().isEmpty())
 			return;
 
-		Tardis tardis = this.findTardis().get();
+		Tardis tardis = this.tardis().get();
 
 		if (tardis.isGrowth() && tardis.hasGrowthExterior())
 			return;
@@ -125,10 +114,10 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 		if (this.getWorld() != TardisUtil.getTardisDimension())
 			return;
 
-		if (this.findTardis().isEmpty())
+		if (this.tardis().isEmpty())
 			return;
 
-		Tardis tardis = this.findTardis().get();
+		Tardis tardis = this.tardis().get();
 
 		if (tardis.getDoor().isClosed())
 			return;
@@ -136,16 +125,13 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 		if (tardis.getLockedTardis())
 			return;
 
-		if (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING)) {
+		if (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING))
 			return;
-		}
 
-		if (DependencyChecker.hasPortals() && tardis.getExterior().getVariant().hasPortals()) {
+		if (DependencyChecker.hasPortals() && tardis.getExterior().getVariant().hasPortals())
 			return;
-		}
 
 		TardisTravel travel = tardis.travel();
-
 		if (travel.getState() == TardisTravel.State.FLIGHT) {
 			TardisUtil.dropOutside(tardis, entity); // SHOULD properly drop someone out at the correct position instead of the not correct position :)
 			return;
@@ -158,41 +144,11 @@ public class DoorBlockEntity extends LinkableBlockEntity {
 	}
 
 	@Override
-	public Optional<Tardis> findTardis() {
-		if (this.tardisId == null) {
-			Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
-			if (found != null)
-				this.setTardis(found);
-		}
-
-		return super.findTardis();
-	}
-
-	public void setTardis(UUID uuid) {
-		super.setTardis(uuid);
-
-		this.linkDesktop();
-	}
-
-	public void linkDesktop() {
-		if (this.findTardis().isEmpty())
+	public void onLinked() {
+		if (this.tardis().isEmpty())
 			return;
 
-		this.setDesktop(this.getDesktop());
-	}
-
-	public TardisDesktop getDesktop() {
-		if (this.findTardis().isEmpty())
-			return null;
-
-		return this.findTardis().get().getDesktop();
-	}
-
-	public void setDesktop(TardisDesktop desktop) {
-		if (!this.hasWorld() || this.getWorld().isClient())
-			return;
-
-		desktop.setInteriorDoorPos(new AbsoluteBlockPos.Directed(
+		this.tardis().get().getDesktop().setInteriorDoorPos(new AbsoluteBlockPos.Directed(
 				this.pos, TardisUtil.getTardisDimension(), RotationPropertyHelper.fromDirection(this.getFacing()))
 		);
 	}

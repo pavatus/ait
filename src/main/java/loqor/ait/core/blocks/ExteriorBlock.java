@@ -381,12 +381,17 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingTardisEntity falling) {
 		Tardis tardis = falling.getTardis();
 
-		if (tardis == null) return;
+		if (tardis == null)
+			return;
+
 		tardis.travel().setPosition(new AbsoluteBlockPos.Directed(pos, world, tardis.travel().getPosition().getRotation()));
 
 		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).setBiome(tardis);
-		FlightUtil.playSoundAtConsole(tardis, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+
+		for (BlockPos console : tardis.getDesktop().getConsoles()) {
+			FlightUtil.playSoundAtConsole(console, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+		}
 
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
 		DoorData.lockTardis(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis, null, false);

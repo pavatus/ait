@@ -8,6 +8,7 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 
 public class RandomiserControl extends Control {
 
@@ -16,21 +17,18 @@ public class RandomiserControl extends Control {
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
 		TardisTravel travel = tardis.travel();
 
-		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis, player);
-				return false;
-			}
+		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
+			this.addToControlSequence(tardis, player, console);
+			return false;
 		}
 
 		tardis.travel().setDestination(randomiseDestination(tardis, 10));
 		tardis.removeFuel((0.1d * IncrementManager.increment(tardis)) * (tardis.tardisHammerAnnoyance + 1));
 
 		messagePlayer(player, travel);
-
 		return true;
 	}
 

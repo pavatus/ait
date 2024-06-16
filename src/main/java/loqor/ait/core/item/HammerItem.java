@@ -45,35 +45,43 @@ public class HammerItem extends SwordItem {
 		BlockPos pos = context.getBlockPos();
 		PlayerEntity player = context.getPlayer();
 		if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
-			if (player == null) return ActionResult.PASS;
-			if (consoleBlockEntity.findTardis().isEmpty()) return ActionResult.PASS;
-			Tardis tardis = consoleBlockEntity.findTardis().get();
+			if (player == null)
+				return ActionResult.PASS;
+
+			if (consoleBlockEntity.tardis().isEmpty())
+				return ActionResult.PASS;
+
+			Tardis tardis = consoleBlockEntity.tardis().get();
 			if (!(tardis.travel().getState() == TardisTravel.State.FLIGHT)) {
 				world.playSound(null, consoleBlockEntity.getPos(),
 						SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS, 1f, 1.0f);
 				return ActionResult.SUCCESS;
 			}
+
 			FlightData flightData = tardis.flight();
 			int targetTicks = flightData.getTargetTicks();
 			int current_flight_ticks = flightData.getFlightTicks();
 			int added_flight_ticks = 500 * tardis.flight().speed().get();
 			double current_fuel = tardis.fuel().getCurrentFuel();
 			double max_fuel = tardis.fuel().getMaxFuel();
-			if (tardis.tardisHammerAnnoyance > 0) {
+
+			if (tardis.tardisHammerAnnoyance > 0)
 				added_flight_ticks -= (int) Math.round(added_flight_ticks * 0.1 * tardis.tardisHammerAnnoyance);
-			}
+
 			double estimated_fuel_cost_for_hit = added_flight_ticks / 5.0;
-			if (tardis.tardisHammerAnnoyance > 0) {
+			if (tardis.tardisHammerAnnoyance > 0)
 				estimated_fuel_cost_for_hit += (150 * tardis.flight().speed().get() * tardis.tardisHammerAnnoyance) / 7.0;
-			}
+
 			if (!world.isClient() && current_fuel + estimated_fuel_cost_for_hit > max_fuel) {
 				tardis.travel().crash();
 				tardis.fuel().setCurrentFuel(0.0);
 				return ActionResult.SUCCESS;
 			}
+
             flightData.setFlightTicks(Math.min(current_flight_ticks + added_flight_ticks, targetTicks));
 			tardis.fuel().setCurrentFuel(current_fuel - estimated_fuel_cost_for_hit);
 			tardis.tardisHammerAnnoyance++;
+
 			if (!world.isClient() && shouldCrashTardis(tardis.tardisHammerAnnoyance)) {
 				tardis.travel().crash();
 			} else {
@@ -81,7 +89,8 @@ public class HammerItem extends SwordItem {
 						SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.25f * tardis.tardisHammerAnnoyance, 1.0f);
 			}
 
-			if (world.isClient()) return ActionResult.PASS;
+			if (world.isClient())
+				return ActionResult.PASS;
 
 			((ServerWorld) world).spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5 * tardis.tardisHammerAnnoyance, 0, 0, 0, 0.1f * tardis.tardisHammerAnnoyance);
@@ -94,6 +103,7 @@ public class HammerItem extends SwordItem {
 
 			return ActionResult.SUCCESS;
 		}
+
 		return ActionResult.PASS;
 	}
 

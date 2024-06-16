@@ -18,9 +18,7 @@ import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.screens.MonitorScreen;
 import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
 import loqor.ait.client.util.SkyboxUtil;
-import loqor.ait.compat.gravity.GravityHandler;
 import loqor.ait.core.*;
-import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.RiftTarget;
@@ -111,71 +109,60 @@ public class AITModClient implements ClientModInitializer {
         });
         */
 
-        ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN,
-                (client, handler, buf, responseSender) -> {
-                    int id = buf.readInt();
+        ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN, (client, handler, buf, responseSender) -> {
+            int id = buf.readInt();
+            Screen screen = screenFromId(id);
 
-                    Screen screen = screenFromId(id);
-                    if (screen == null) return;
-                    MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
-                });
-        ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN_TARDIS, // fixme this might not be necessary could just be easier to always use the other method.
-                (client, handler, buf, responseSender) -> {
-                    int id = buf.readInt();
-                    UUID uuid = buf.readUuid();
+            if (screen == null)
+                return;
 
-                    Screen screen = screenFromId(id, uuid);
-                    if (screen == null) return;
-                    MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
+            client.execute(() -> client.setScreenAndRender(screen));
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN_TARDIS, (client, handler, buf, responseSender) -> {
+            int id = buf.readInt();
+            UUID uuid = buf.readUuid();
+            Screen screen = screenFromId(id, uuid);
+
+            if (screen == null)
+                return;
+
+            client.execute(() -> client.setScreenAndRender(screen));
+        });
+
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN_CONSOLE, (client, handler, buf, responseSender) -> {
             int id = buf.readInt();
             UUID tardis = buf.readUuid();
-            UUID console = buf.readUuid();
-
+            BlockPos console = buf.readBlockPos();
             Screen screen = screenFromId(id, tardis, console);
-            if (screen == null) return;
 
-            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreenAndRender(screen));
-        });
+            if (screen == null)
+                return;
 
-        ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
-            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
-
-            String id = buf.readString();
-            ConsoleTypeSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
-            BlockPos consolePos = buf.readBlockPos();
-            if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setType(type);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_VARIANT, (client, handler, buf, responseSender) -> {
-            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
-            Identifier id = Identifier.tryParse(buf.readString());
-            BlockPos consolePos = buf.readBlockPos();
-            if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setVariant(id);
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ConsoleBlockEntity.SYNC_PARENT, (client, handler, buf, responseSender) -> {
-            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
-            UUID uuid = buf.readUuid();
-            BlockPos consolePos = buf.readBlockPos();
-            if (client.world.getBlockEntity(consolePos) instanceof ConsoleBlockEntity console) console.setParent(uuid);
+            client.execute(() -> client.setScreenAndRender(screen));
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
-            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+                return;
 
             String id = buf.readString();
             ConsoleTypeSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
             BlockPos consolePos = buf.readBlockPos();
-            if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console) console.setConsoleSchema(type.id());
+
+            if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console)
+                console.setConsoleSchema(type.id());
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_VARIANT, (client, handler, buf, responseSender) -> {
-            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
+            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+                return;
+
             Identifier id = Identifier.tryParse(buf.readString());
             BlockPos consolePos = buf.readBlockPos();
-            if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console) console.setVariant(id);
+
+            if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console)
+                console.setVariant(id);
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ExteriorAnimation.UPDATE,
@@ -216,12 +203,6 @@ public class AITModClient implements ClientModInitializer {
         });
     }
 
-    public static void openScreen(ServerPlayerEntity player, int id) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(id);
-        ServerPlayNetworking.send(player, OPEN_SCREEN, buf);
-    }
-
     /**
      * This is for screens without a tardis
      */
@@ -232,7 +213,7 @@ public class AITModClient implements ClientModInitializer {
     public static Screen screenFromId(int id, @Nullable UUID tardis) {
         return screenFromId(id, tardis, null);
     }
-    public static Screen screenFromId(int id, @Nullable UUID tardis, @Nullable UUID console) {
+    public static Screen screenFromId(int id, @Nullable UUID tardis, @Nullable BlockPos console) {
         return switch (id) {
             default -> null;
             case 0 -> new MonitorScreen(tardis, console);

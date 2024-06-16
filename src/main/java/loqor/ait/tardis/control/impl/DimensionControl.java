@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -21,12 +22,10 @@ public class DimensionControl extends Control {
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-		if (tardis.sequence().hasActiveSequence()) {
-			if (tardis.sequence().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis, player);
-				return false;
-			}
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
+			this.addToControlSequence(tardis, player, console);
+			return false;
 		}
 
 		TardisTravel travel = tardis.travel();
@@ -34,7 +33,7 @@ public class DimensionControl extends Control {
 		List<ServerWorld> dims = getDimensions(world.getServer());
 
 		int current = dims.indexOf(dest.getWorld() == null ? World.OVERWORLD : dest.getWorld());
-		int next = 0;
+		int next;
 
 		if (!player.isSneaking()) {
 			next = ((current + 1) > dims.size() - 1) ? 0 : current + 1;
@@ -44,19 +43,8 @@ public class DimensionControl extends Control {
 
 		// FIXME we should make it so that once the ender dragon is defeated, the end is unlocked; also make that a config option as well for the server. - Loqor
 
-		/*if (dest.getWorld().getRegistryKey() != World.END) {*/
 		travel.setDestination(new AbsoluteBlockPos.Directed(PosType.Y.add(dest, 0), dims.get(next), dest.getRotation()), false); // postype.y.add means it clamps the y coord fixme doesnt work for nether as u can go above the bedrock but dont hardcode it like you did loqor :(
 		messagePlayer(player, (ServerWorld) travel.getDestination().getWorld());
-        /*} else {
-            if(dest.getWorld().getServer().getWorld(dest.getWorld().getRegistryKey()).getAliveEnderDragons().isEmpty()) {
-                messagePlayer(player, (ServerWorld) travel.getDestination().getWorld());
-                travel.setDestination(new AbsoluteBlockPos.Directed(PosType.Y.add(dest, 0), dims.get(next), dest.getDirection()), false);
-            } else {
-                player.sendMessage(Text.literal("The End is forbidden."), true); // fixme translatable is preferred
-                travel.setDestination(new AbsoluteBlockPos.Directed(PosType.Y.add(dest, 0), world.getServer().getWorld(World.OVERWORLD), dest.getDirection()), false);
-            }
-        }*/
-
 		return true;
 	}
 

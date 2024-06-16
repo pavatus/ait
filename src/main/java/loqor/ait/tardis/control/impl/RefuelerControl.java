@@ -8,43 +8,33 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-
-import java.util.Random;
+import net.minecraft.util.math.BlockPos;
 
 public class RefuelerControl extends Control {
+
 	public RefuelerControl() {
 		super("refueler");
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-		if (tardis.isGrowth()) return false;
-		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis, player);
-				return false;
-			}
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+		if (tardis.isGrowth())
+			return false;
+
+		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
+			this.addToControlSequence(tardis, player, console);
+			return false;
 		}
+
 		if (tardis.flight().handbrake().get()) {
-			//if (TardisUtil.isRiftChunk((ServerWorld) tardis.getTravel().getPosition().getWorld(), tardis.getTravel().getExteriorPos())) {
-			Random random = new Random();
 			tardis.setRefueling(!tardis.isRefueling());
-			Text enabled = Text.translatable("tardis.message.control.refueler.enabled");
-			Text disabled = Text.translatable("tardis.message.control.refueler.disabled");
-			// player.sendMessage((tardis.isRefueling() ? enabled : disabled), true);
-			if (tardis.isRefueling()) {
-				FlightUtil.playSoundAtConsole(tardis, SoundEvents.BLOCK_CANDLE_EXTINGUISH, SoundCategory.BLOCKS, 10, 1);
-			}
-			//return true;
-			//}
-			//player.sendMessage(Text.literal("Not positioned within a viable rift!"), true);
-			//if (tardis.getDesktop().getConsolePos() != null && !tardis.isRefueling()) {
-			//    world.playSound(null, tardis.getDesktop().getConsolePos(), SoundEvents.BLOCK_NOTE_BLOCK_IMITATE_WITHER_SKELETON.value(), SoundCategory.BLOCKS, 10, 1);
-			//}
-			//if (tardis.isRefueling()) tardis.setRefueling(false); // we shouldnt be refueling if we're not in a rift
+
+			if (tardis.isRefueling())
+				FlightUtil.playSoundAtConsole(console, SoundEvents.BLOCK_CANDLE_EXTINGUISH, SoundCategory.BLOCKS, 10, 1);
+
 			return true;
 		}
+
 		return false;
 	}
 

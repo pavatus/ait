@@ -1,8 +1,7 @@
 package loqor.ait.core.item;
 
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import net.minecraft.block.Block;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -64,27 +63,28 @@ public class ArtronCollectorItem extends Item {
 
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
-
 		PlayerEntity player = context.getPlayer();
 		World world = context.getWorld();
 		BlockPos clickedPos = context.getBlockPos();
-		Block block = world.getBlockState(clickedPos).getBlock();
-		ItemStack cellItemStack = context.getStack();
+        ItemStack cellItemStack = context.getStack();
 		NbtCompound nbt = cellItemStack.getOrCreateNbt();
 
-		if (world.isClient()) return ActionResult.SUCCESS;
+		if (world.isClient())
+			return ActionResult.SUCCESS;
 
 		if (player.isSneaking()) {
 			if (world.getBlockEntity(clickedPos) instanceof ExteriorBlockEntity exterior) {
 				if (exterior.findTardis().isEmpty())
 					return ActionResult.FAIL;
+
 				double residual = exterior.findTardis().get().addFuel(nbt.getDouble(AU_LEVEL));
 				nbt.putDouble(AU_LEVEL, residual);
 				return ActionResult.CONSUME;
 			} else if (world.getBlockEntity(clickedPos) instanceof ConsoleBlockEntity console) {
-				if (console.findTardis().isEmpty())
+				if (console.tardis().isEmpty())
 					return ActionResult.FAIL;
-				double residual = console.findTardis().get().addFuel(nbt.getDouble(AU_LEVEL));
+
+				double residual = console.tardis().get().addFuel(nbt.getDouble(AU_LEVEL));
 				nbt.putDouble(AU_LEVEL, residual);
 				return ActionResult.CONSUME;
 			}

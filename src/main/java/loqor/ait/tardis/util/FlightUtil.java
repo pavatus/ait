@@ -5,6 +5,7 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisTravel;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -105,16 +106,29 @@ public class FlightUtil {
 		DeltaTimeManager.createDelay(getDematerialiseDelayId(tardis), 5000L);
 	}
 
-	public static void playSoundAtConsole(Tardis tardis, SoundEvent sound, SoundCategory category, float volume, float pitch) {
+	public static void playSoundAtConsole(BlockPos console, SoundEvent sound, SoundCategory category, float volume, float pitch) {
 		ServerWorld dim = (ServerWorld) TardisUtil.getTardisDimension();
-		tardis.getDesktop().getConsoles().forEach(console -> dim.playSound(null, console.position(), sound, category, volume, pitch));
+		dim.playSound(null, console, sound, category, volume, pitch);
 	}
 
-	public static void playSoundAtConsole(Tardis tardis, SoundEvent sound, SoundCategory category) {
-		playSoundAtConsole(tardis, sound, category, 1f, 1f);
+	public static void playSoundAtEveryConsole(TardisDesktop desktop, SoundEvent sound, SoundCategory category, float volume, float pitch) {
+		ServerWorld dim = (ServerWorld) TardisUtil.getTardisDimension();
+		desktop.getConsoles().forEach(console -> dim.playSound(null, console, sound, category, volume, pitch));
 	}
 
-	public static void playSoundAtConsole(Tardis tardis, SoundEvent sound) {
-		playSoundAtConsole(tardis, sound, SoundCategory.MASTER);
+	public static void playSoundAtConsole(BlockPos console, SoundEvent sound, SoundCategory category) {
+		playSoundAtConsole(console, sound, category, 1f, 1f);
+	}
+
+	public static void playSoundAtEveryConsole(TardisDesktop desktop, SoundEvent sound, SoundCategory category) {
+		playSoundAtEveryConsole(desktop, sound, category, 1f, 1f);
+	}
+
+	public static void playSoundAtConsole(BlockPos console, SoundEvent sound) {
+		playSoundAtConsole(console, sound, SoundCategory.BLOCKS);
+	}
+
+	public static void playSoundAtEveryConsole(TardisDesktop desktop, SoundEvent sound) {
+		playSoundAtEveryConsole(desktop, sound, SoundCategory.BLOCKS);
 	}
 }

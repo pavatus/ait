@@ -6,6 +6,7 @@ import loqor.ait.tardis.control.Control;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 
 public class PowerControl extends Control {
 
@@ -16,9 +17,9 @@ public class PowerControl extends Control {
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-			this.addToControlSequence(tardis, player);
+			this.addToControlSequence(tardis, player, console);
 
 			this.noDelay = true;
 			return false;

@@ -35,16 +35,16 @@ public class EngineHandler extends KeyedTardisComponent {
     static {
         TardisEvents.OUT_OF_FUEL.register(tardis -> tardis.engine().disablePower());
 
-        TardisEvents.LOSE_POWER.register((tardis -> {
+        TardisEvents.LOSE_POWER.register(tardis -> {
             if (TardisUtil.getTardisDimension() != null) {
-                FlightUtil.playSoundAtConsole(tardis, AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+                FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
             }
 
             // disabling protocols
             PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
             PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
             PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
-        }));
+        });
     }
 
     @Override

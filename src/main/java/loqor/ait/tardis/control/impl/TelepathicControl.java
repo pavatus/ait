@@ -32,20 +32,20 @@ public class TelepathicControl extends Control {
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-
-		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis, player);
-				return false;
-			}
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
+			this.addToControlSequence(tardis, player, console);
+			return false;
 		}
 
-		boolean security = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY);
-		if (!KeyItem.hasMatchingKeyInInventory(player, tardis) && security) return false;
+		boolean security = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY);
+
+		if (!KeyItem.hasMatchingKeyInInventory(player, tardis) && security)
+			return false;
 
 		if (player.getMainHandStack().getItem() instanceof LinkableItem linker) {
-			if (linker instanceof SonicItem) return false;
+			if (linker instanceof SonicItem)
+				return false;
 
 			linker.link(player.getMainHandStack(), tardis);
 			world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -55,24 +55,23 @@ public class TelepathicControl extends Control {
 		if (player.getMainHandStack().getItem() instanceof NameTagItem) {
 			ItemStack hand = player.getMainHandStack();
 
-			if (!hand.hasCustomName()) return false;
+			if (!hand.hasCustomName())
+				return false;
 
-			tardis.getHandlers().getStats().setName(hand.getName().getString());
+			tardis.stats().setName(hand.getName().getString());
 			world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1F, 1.0F);
 
 			if (!player.isCreative())
 				hand.decrement(1);
 
-			this.addToControlSequence(tardis, player);
+			this.addToControlSequence(tardis, player, console);
 			return true;
 		}
 
 		Text text = Text.literal("The TARDIS is choosing.."); // todo translatable
 		player.sendMessage(text, true);
 
-
 		BlockPos found = locateStructureOfInterest((ServerWorld) tardis.travel().getDestination().getWorld(), tardis.travel().getPosition());
-
 		text = Text.literal("The TARDIS chose where to go.."); // todo translatable
 
 		if (found == null) {
@@ -83,76 +82,34 @@ public class TelepathicControl extends Control {
 		}
 
 		player.sendMessage(text, true);
-
 		return true;
 	}
 
 	public static BlockPos locateStructureOfInterest(ServerWorld world, BlockPos source) {
 		// TODO - create a tag "TardisStructureLikesTag" to save on performance + to make this code simpler
 
-		BlockPos found = null;
+		BlockPos found;
 		int radius = 256;
 
 		if (world.getRegistryKey() == World.NETHER) {
-
 			found = getFortress(world, source, radius);
 			if (found != null) return found;
 
 			found = getBastion(world, source, radius);
 			if (found != null) return found;
-
 		} else if (world.getRegistryKey() == World.END) {
-
 			found = getEndCity(world, source, radius);
 			if (found != null) return found;
-
 		} else if (world.getRegistryKey() == World.OVERWORLD) {
-
 			found = getVillage(world, source, radius);
 			if (found != null) return found;
-
-			/*found = getDesertPyramid(world, source, radius);
-			if (found != null) return found;
-
-			found = getJunglePyramid(world, source, radius);
-			if (found != null) return found;
-
-			found = getMineshaft(world, source, radius);
-			if (found != null) return found;
-
-			found = getSwampHut(world, source, radius);
-			if (found != null) return found;
-
-			found = getStronghold(world, source, radius);
-			if (found != null) return found;*/
-
 		}
 
-		return found;
+		return null;
 	}
 
 	public static BlockPos getVillage(ServerWorld world, BlockPos pos, int radius) {
 		return world.locateStructure(StructureTags.VILLAGE, pos, radius, false);
-	}
-
-	public static BlockPos getStronghold(ServerWorld world, BlockPos pos, int radius) {
-		return getStructure(world, pos, radius, StructureKeys.STRONGHOLD);
-	}
-
-	public static BlockPos getMineshaft(ServerWorld world, BlockPos pos, int radius) {
-		return getStructure(world, pos, radius, StructureKeys.MINESHAFT);
-	}
-
-	public static BlockPos getDesertPyramid(ServerWorld world, BlockPos pos, int radius) {
-		return getStructure(world, pos, radius, StructureKeys.DESERT_PYRAMID);
-	}
-
-	public static BlockPos getJunglePyramid(ServerWorld world, BlockPos pos, int radius) {
-		return getStructure(world, pos, radius, StructureKeys.JUNGLE_PYRAMID);
-	}
-
-	public static BlockPos getSwampHut(ServerWorld world, BlockPos pos, int radius) {
-		return getStructure(world, pos, radius, StructureKeys.SWAMP_HUT);
 	}
 
 	public static BlockPos getFortress(ServerWorld world, BlockPos pos, int radius) {

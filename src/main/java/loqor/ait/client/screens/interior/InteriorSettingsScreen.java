@@ -3,7 +3,6 @@ package loqor.ait.client.screens.interior;
 import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisClientEvents;
-import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
@@ -18,9 +17,6 @@ import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.sound.HumSound;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -33,6 +29,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 
 import java.util.List;
@@ -57,10 +54,11 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	private TardisDesktopSchema selectedDesktop;
 
 	// loqor DONT rewrite with owo lib : (
-	public InteriorSettingsScreen(UUID tardis, UUID console, Screen parent) {
+	public InteriorSettingsScreen(UUID tardis, BlockPos console, Screen parent) {
 		super(Text.translatable("screen.ait.interiorsettings.title"), tardis, console);
+
 		this.parent = parent;
-		updateTardis();
+		this.updateTardis();
 	}
 
 	@Override
@@ -81,10 +79,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 
 	private void sendCachePacket() {
 		PacketByteBuf buf = PacketByteBufs.create();
-
 		buf.writeUuid(this.tardis().getUuid());
-		if (this.findConsole() == null) return;
-		buf.writeUuid(this.findConsole().uuid());
+		buf.writeBlockPos(this.console);
 
 		ClientPlayNetworking.send(TardisDesktop.CACHE_CONSOLE, buf);
 		this.close();
@@ -352,7 +348,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private void applyDesktop() {
-		if (this.selectedDesktop == null) return;
+		if (this.selectedDesktop == null)
+			return;
 
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeUuid(tardis().getUuid());

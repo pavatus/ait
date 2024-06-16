@@ -18,6 +18,7 @@ import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.link.v2.TardisRef;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -44,7 +45,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		profiler.push("door");
 
 		profiler.push("find_tardis");
-		Optional<Tardis> optionalTardis = entity.findTardis();
+		TardisRef optionalTardis = entity.tardis();
 
 		if (optionalTardis.isEmpty())
 			return;

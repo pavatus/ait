@@ -2,10 +2,11 @@ package loqor.ait.core.blocks;
 
 import loqor.ait.core.blockentities.EnvironmentProjectorBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlock;
 import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.registry.tag.BlockTags;
@@ -23,7 +24,7 @@ import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
-public class EnvironmentProjectorBlock extends InteriorLinkableBlock {
+public class EnvironmentProjectorBlock extends Block implements BlockEntityProvider {
 
     public static final BooleanProperty ENABLED = Properties.ENABLED;
     public static final BooleanProperty POWERED = Properties.POWERED;
@@ -89,7 +90,7 @@ public class EnvironmentProjectorBlock extends InteriorLinkableBlock {
 
     @Nullable
     @Override
-    public InteriorLinkableBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new EnvironmentProjectorBlockEntity(pos, state);
     }
 }

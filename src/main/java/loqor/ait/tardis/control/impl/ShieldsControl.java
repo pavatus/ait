@@ -10,6 +10,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 
 public class ShieldsControl extends Control {
 
@@ -20,27 +21,27 @@ public class ShieldsControl extends Control {
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
+			this.addToControlSequence(tardis, player, console);
+			return false;
+		}
 
-		if (tardis.getHandlers().getSequenceHandler().hasActiveSequence()) {
-			if (tardis.getHandlers().getSequenceHandler().controlPartOfSequence(this)) {
-				this.addToControlSequence(tardis, player);
-				return false;
-			}
-		}
 		if(player.isSneaking()) {
-			if(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), ShieldData.IS_SHIELDED))
-				PropertiesHandler.set(tardis, ShieldData.IS_VISUALLY_SHIELDED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED));
+			if (PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED))
+				PropertiesHandler.set(tardis, ShieldData.IS_VISUALLY_SHIELDED, !PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_VISUALLY_SHIELDED));
 		} else {
-			PropertiesHandler.set(tardis, ShieldData.IS_SHIELDED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), ShieldData.IS_SHIELDED));
-			if(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), ShieldData.IS_VISUALLY_SHIELDED)) {
+			PropertiesHandler.set(tardis, ShieldData.IS_SHIELDED, !PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED));
+
+			if (PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_VISUALLY_SHIELDED))
 				PropertiesHandler.set(tardis, ShieldData.IS_VISUALLY_SHIELDED, false);
-			}
 		}
+
 		this.soundEvent = player.isSneaking() ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : AITSounds.HANDBRAKE_LEVER_PULL;
-		if(tardis.getExteriorPos() != null) {
+
+		if (tardis.getExteriorPos() != null)
 			WorldOps.updateIfOnServer(world, tardis.getExteriorPos());
-		}
+
 		return true;
 	}
 

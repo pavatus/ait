@@ -3,7 +3,6 @@ package loqor.ait.tardis.control;
 import loqor.ait.AITMod;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisConsole;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.particle.ParticleTypes;
@@ -11,9 +10,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 
 public class Control {
-
 
 	public String id; // a name to represent the control
 
@@ -29,25 +28,21 @@ public class Control {
 		this.id = id;
 	}
 
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
 		return false;
 	}
 
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
-		return runServer(tardis, player, world);
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
+		return runServer(tardis, player, world, console);
 	}
 
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick, TardisConsole console) {
-		return runServer(tardis, player, world, leftClick);
-	}
+	public void addToControlSequence(Tardis tardis, ServerPlayerEntity player, BlockPos pos) {
+		tardis.sequence().add(this, player, pos);
 
-	public void addToControlSequence(Tardis tardis, ServerPlayerEntity player) {
-		tardis.sequence().add(this, player);
 		if(AITMod.RANDOM.nextInt(0, 20) == 4) {
 			tardis.loyalty().addLevel(player, 1);
-			for (TardisConsole console : tardis.getDesktop().getConsoles()) {
-				player.getServerWorld().spawnParticles(ParticleTypes.HEART, console.position().toCenterPos().getX(), console.position().toCenterPos().getY() + 1, console.position().toCenterPos().getZ(), 1, 0f, 1F, 0f, 5.0F);
-			}
+
+			player.getServerWorld().spawnParticles(ParticleTypes.HEART, pos.toCenterPos().getX(), pos.toCenterPos().getY() + 1, pos.toCenterPos().getZ(), 1, 0f, 1F, 0f, 5.0F);
 		}
 	}
 
@@ -93,6 +88,7 @@ public class Control {
 	public static void createDelay(Control control, Tardis tardis, long millis) {
 		DeltaTimeManager.createDelay(createDelayId(control, tardis), millis);
 	}
+
 	public static void createDelay(Control control, Tardis tardis) {
 		createDelay(control, tardis, control.getDelayLength());
 	}
@@ -102,32 +98,34 @@ public class Control {
 	}
 
 	public boolean canRun(Tardis tardis, ServerPlayerEntity user) {
-		if ((this.shouldFailOnNoPower() && !tardis.engine().hasPower()) || tardis.sequence().isConsoleDisabled()) {
+		if ((this.shouldFailOnNoPower() && !tardis.engine().hasPower()) || tardis.sequence().isConsoleDisabled())
 			return false;
-		}
 
-		if (isOnDelay(this, tardis)) return false;
+		if (isOnDelay(this, tardis))
+			return false;
 
 		boolean security = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY);
-		if (!this.ignoresSecurity() && security) {
+
+		if (!this.ignoresSecurity() && security)
 			return SecurityControl.hasMatchingKey(user, tardis);
-		}
 
 		return true;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+
+		if (o == null || this.getClass() != o.getClass())
+			return false;
 
 		Control control = (Control) o;
-
-		return getId().equals(control.getId());
+		return this.id.equals(control.getId());
 	}
 
 	@Override
 	public int hashCode() {
-		return getId().hashCode();
+		return this.id.hashCode();
 	}
 }

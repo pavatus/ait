@@ -60,9 +60,11 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 	private TardisRealEntity(World world, UUID tardisID, double x, double y, double z, UUID playerUuid, BlockPos pos) {
 		this(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, world);
+
 		this.dataTracker.set(TARDIS_ID, Optional.of(tardisID));
 		this.dataTracker.set(PLAYER_UUID, Optional.of(playerUuid));
 		this.dataTracker.set(PLAYER_INTERIOR_POSITION, Optional.of(pos));
+
 		this.setPosition(x, y, z);
 		this.setVelocity(Vec3d.ZERO);
 	}
@@ -74,6 +76,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		Tardis tardis = TardisManager.with(world, (o, manager) -> manager.demandTardis(o, tardisId));
 		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_IN_REAL_FLIGHT, true, true);
+
 		world.spawnEntity(tardisRealEntity);
 
 		tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(DirectionControl.getGeneralizedRotation(tardis.getExteriorPos().getRotation())), 0);
@@ -85,19 +88,23 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 	@Override
 	public void tick() {
-		if(this.getWorld().isClient()) {
+		if (this.getWorld().isClient())
 			this.lastVelocity = this.getVelocity();
-		}
+
 		boolean gravs = PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED);
 		this.setRotation(0, 0);
+
 		super.tick();
-		if(this.getPlayer().isEmpty()) return;
+
+		if(this.getPlayer().isEmpty())
+			return;
+
 		PlayerEntity user = this.getPlayer().get();
 
-		boolean bl = PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
+		boolean realFlight = PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 		user.startRiding(this);
 
-		if (bl) {
+		if (realFlight) {
 			if (user.getWorld().isClient() && MinecraftClient.getInstance().player == user) {
 				MinecraftClient client = MinecraftClient.getInstance();
 				client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
@@ -269,12 +276,16 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	}
 
 	public Optional<PlayerEntity> getPlayer() {
-		if(this.getWorld() == null || this.dataTracker.get(PLAYER_UUID).isEmpty()) return Optional.empty();
+		if (this.getWorld() == null || this.dataTracker.get(PLAYER_UUID).isEmpty())
+			return Optional.empty();
+
 		return Optional.ofNullable(this.getWorld().getPlayerByUuid(this.dataTracker.get(PLAYER_UUID).get()));
 	}
 
 	public Optional<BlockPos> getPlayerBlockPos() {
-		if(this.getWorld() == null || this.dataTracker.get(PLAYER_INTERIOR_POSITION).isEmpty()) return Optional.empty();
+		if (this.getWorld() == null || this.dataTracker.get(PLAYER_INTERIOR_POSITION).isEmpty())
+			return Optional.empty();
+
 		return Optional.of(this.dataTracker.get(PLAYER_INTERIOR_POSITION).get());
 	}
 

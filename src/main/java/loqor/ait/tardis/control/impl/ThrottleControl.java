@@ -8,6 +8,7 @@ import loqor.ait.tardis.data.FlightData;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 
 public class ThrottleControl extends Control {
 	public ThrottleControl() {
@@ -15,9 +16,9 @@ public class ThrottleControl extends Control {
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, boolean leftClick) {
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this))
-			this.addToControlSequence(tardis, player);
+			this.addToControlSequence(tardis, player, console);
 
 		if (tardis.isInDanger())
 			return false;

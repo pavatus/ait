@@ -1,6 +1,5 @@
 package loqor.ait.client.models.doors;
 
-
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.tardis.data.DoorData;
@@ -10,10 +9,13 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class GeometricDoorModel extends DoorModel {
+
 	private final ModelPart geometric;
+
 	public GeometricDoorModel(ModelPart root) {
 		this.geometric = root.getChild("geometric");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -21,7 +23,7 @@ public class GeometricDoorModel extends DoorModel {
 		.uv(48, 24).cuboid(-16.0F, -44.0F, 8.05F, 32.0F, 44.0F, 0.0F, new Dilation(0.005F))
 		.uv(113, 0).cuboid(-8.0F, -38.0F, 6.9F, 16.0F, 36.0F, 0.0F, new Dilation(0.001F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 
-		ModelPartData door = geometric.addChild("door", ModelPartBuilder.create().uv(98, 97).cuboid(-8.0F, -40.0F, -7.0F, 16.0F, 40.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 1.0F, 0.0F, 3.1416F, 0.0F));
+		geometric.addChild("door", ModelPartBuilder.create().uv(98, 97).cuboid(-8.0F, -40.0F, -7.0F, 16.0F, 40.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 1.0F, 0.0F, 3.1416F, 0.0F));
 		return TexturedModelData.of(modelData, 256, 256);
 	}
 	@Override
@@ -31,8 +33,7 @@ public class GeometricDoorModel extends DoorModel {
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-
-		DoorData door = doorEntity.findTardis().get().getDoor();
+		DoorData door = doorEntity.tardis().get().getDoor();
 
 		this.geometric.getChild("door").pivotZ += door.isOpen() ? 1f : 0f;
 

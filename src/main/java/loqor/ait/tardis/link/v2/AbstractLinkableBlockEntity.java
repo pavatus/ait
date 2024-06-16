@@ -1,5 +1,6 @@
 package loqor.ait.tardis.link.v2;
 
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -13,7 +14,9 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class AbstractLinkableBlockEntity extends BlockEntity {
+import java.util.UUID;
+
+public abstract class AbstractLinkableBlockEntity extends BlockEntity implements Linkable {
 
     protected TardisRef ref;
 
@@ -32,14 +35,14 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity {
         if (this.ref == null)
             return;
 
-        nbt.putUuid("tardisId", this.ref.getId());
+        nbt.putUuid("tardis", this.ref.getId());
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
 
-        NbtElement id = nbt.get("tardisId");
+        NbtElement id = nbt.get("tardis");
 
         if (id == null)
             return;
@@ -48,12 +51,34 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity {
                 this.world, (o, manager) -> manager.demandTardis(o, uuid))
         );
 
-        if (this.ref.isPresent())
-            this.onLinked();
+        if (this.world == null)
+            return;
+
+        this.onLinked();
     }
 
-    protected void onLinked() {
+    @Override
+    public void link(Tardis tardis) {
+        this.ref = new TardisRef(tardis, uuid -> TardisManager.with(
+                this.world, (o, manager) -> manager.demandTardis(o, uuid))
+        );
 
+        this.onLinked();
+
+        this.sync();
+        this.markDirty();
+    }
+
+    @Override
+    public void link(UUID id) {
+        this.ref = new TardisRef(id, uuid -> TardisManager.with(
+                this.world, (o, manager) -> manager.demandTardis(o, uuid))
+        );
+
+        this.onLinked();
+
+        this.sync();
+        this.markDirty();
     }
 
     @Override

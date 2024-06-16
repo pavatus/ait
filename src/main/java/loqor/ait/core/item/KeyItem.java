@@ -150,10 +150,10 @@ public class KeyItem extends LinkableItem {
 			return ActionResult.PASS;
 
 		if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock) {
-			if (consoleBlock.findTardis().isEmpty())
+			if (consoleBlock.tardis().isEmpty())
 				return ActionResult.FAIL;
 
-			this.link(stack, consoleBlock.findTardis().get());
+			this.link(stack, consoleBlock.tardis().get());
 			return ActionResult.SUCCESS;
 		}
 

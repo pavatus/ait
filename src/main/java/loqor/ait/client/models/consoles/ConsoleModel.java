@@ -2,6 +2,7 @@ package loqor.ait.client.models.consoles;
 
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.TardisTravel;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -15,7 +16,6 @@ import java.util.function.Function;
 
 @SuppressWarnings("rawtypes")
 public abstract class ConsoleModel extends SinglePartEntityModel {
-	public static int MAX_TICK_COUNT = 2 * 20;
 
 	public ConsoleModel() {
 		this(RenderLayer::getEntityCutoutNoCull);
@@ -29,12 +29,12 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
 		// fyi, this is directly referencing camel animation code, its just specific according to the block entity that is being used
 		// to detect different states. - Loqor
 		this.getPart().traverse().forEach(ModelPart::resetTransform);
-		if (console.findTardis().isEmpty())
+
+		if (console.tardis().isEmpty())
 			return;
 
-		TardisTravel.State state = console.findTardis().get().travel().getState();
-
-		this.updateAnimation(console.ANIM_STATE, getAnimationForState(state), console.age);
+		TardisTravel.State state = console.tardis().get().travel().getState();
+		this.updateAnimation(console.ANIM_STATE, getAnimationForState(state), console.getAge());
 	}
 
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {

@@ -31,6 +31,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 
 import java.awt.*;
@@ -50,7 +51,7 @@ public class MonitorScreen extends ConsoleScreen {
 	int backgroundWidth = 208;
 	private int tickForSpin = 0;
 
-	public MonitorScreen(UUID tardis, UUID console) {
+	public MonitorScreen(UUID tardis, BlockPos console) {
 		super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis, console);
 		this.tardisId = tardis;
 	}
@@ -107,8 +108,6 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	private void createButtons() {
-		int i = (this.width - this.backgroundWidth / 2);
-		int j = (this.height - this.backgroundHeight / 2);
 		this.buttons.clear();
 		// exterior change text button
 		Text applyText = Text.literal("Apply");
@@ -153,13 +152,15 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	public void toInteriorSettingsScreen() {
-		if (tardis() == null || tardis().isGrowth()) return;
+		if (tardis() == null || tardis().isGrowth())
+			return;
+
 		MinecraftClient.getInstance().setScreenAndRender(new InteriorSettingsScreen(this.tardisId, this.console, this));
 	}
 
 	public void changeCategory(boolean direction) {
-
-		if (MinecraftClient.getInstance().player == null) return;
+		if (MinecraftClient.getInstance().player == null)
+			return;
 
 		if (direction) setCategory(nextCategory());
 		else setCategory(previousCategory());

@@ -1,12 +1,9 @@
 package loqor.ait.tardis.control;
 
 import loqor.ait.core.blocks.ConsoleBlock;
-import loqor.ait.core.entities.ConsoleControlEntity;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.core.entities.ConsoleControlEntity;
 import net.minecraft.entity.EntityDimensions;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import org.joml.Vector3f;
 
 /**
@@ -18,7 +15,7 @@ import org.joml.Vector3f;
  * @see ConsoleControlEntity
  */
 public class ControlTypes {
-	private Control control;
+	private final Control control;
 	private EntityDimensions scale;
 	private Vector3f offset;
 
@@ -39,15 +36,6 @@ public class ControlTypes {
 
 	public Control getControl() {
 		return this.control;
-	}
-
-	public void setControl(String id) {
-		this.control = new Control(id) {
-			@Override
-			public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
-				return true;
-			}
-		};
 	}
 
 	public EntityDimensions getScale() {

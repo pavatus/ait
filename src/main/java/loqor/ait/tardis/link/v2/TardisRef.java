@@ -4,12 +4,13 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.Disposable;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class TardisRef implements Disposable {
 
     private final LoadFunc load;
-    private final UUID id;
+    private UUID id;
 
     private Tardis cached;
 
@@ -19,9 +20,10 @@ public class TardisRef implements Disposable {
     }
 
     public TardisRef(Tardis tardis, LoadFunc load) {
-        this.id = tardis.getUuid();
-        this.load = load;
+        if (tardis != null)
+            this.id = tardis.getUuid();
 
+        this.load = load;
         this.cached = tardis;
     }
 
@@ -43,6 +45,16 @@ public class TardisRef implements Disposable {
 
     public boolean isEmpty() {
         return this.get() == null;
+    }
+
+    /**
+     * @return the result of the function, {@literal null} otherwise.
+     */
+    public <T> T ifPresent(Function<Tardis, T> consumer) {
+        if (this.isPresent())
+            return consumer.apply(this.cached);
+
+        return null;
     }
 
     @Override

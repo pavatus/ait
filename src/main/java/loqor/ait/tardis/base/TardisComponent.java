@@ -95,7 +95,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		// Base parts.
 		DESKTOP(TardisDesktop.class, null, ClientTardis::setDesktop),
 		TRAVEL(TardisTravel.class, null, ClientTardis::setTravel),
-		CONSOLE(TardisConsole.class, null, null),
 		EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
 		HANDLERS(TardisHandlersManager.class, null),
 

@@ -1,12 +1,11 @@
 package loqor.ait.tardis.control.sequences;
 
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.registry.impl.SequenceRegistry;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.particle.DustParticleEffect;
@@ -16,12 +15,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class SequenceHandler extends TardisComponent implements TardisTickable {
 	@Exclude
@@ -47,25 +48,33 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 	}
 
 	public ServerPlayerEntity getActivePlayer() {
-		if(this.playerUUID == null) return null;
+		if (this.playerUUID == null)
+			return null;
+
 		return (ServerPlayerEntity) TardisUtil.getTardisDimension().getPlayerByUuid(this.playerUUID);
 	}
 
-	public void add(Control control, ServerPlayerEntity player) {
-		if (this.getActiveSequence() == null || recent == null) return;
+	public void add(Control control, ServerPlayerEntity player, BlockPos console) {
+		if (this.getActiveSequence() == null || recent == null)
+			return;
+
 		recent.add(control);
 		ticks = 0;
+
 		this.setActivePlayer(player);
 		this.doesControlIndexMatch(control);
-		this.compareToSequences();
+		this.compareToSequences(console);
 	}
 
 	public boolean doesControlIndexMatch(Control control) {
-		if (recent == null || this.getActiveSequence() == null) return false;
+		if (recent == null || this.getActiveSequence() == null)
+			return false;
+
 		if (recent.indexOf(control) != this.getActiveSequence().getControls().indexOf(control)) {
 			recent.remove(control);
 			return false;
 		}
+
 		return true;
 	}
 
@@ -86,7 +95,9 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 	}
 
 	public void triggerRandomSequence(boolean setTicksTo0) {
-		if (setTicksTo0) ticks = 0;
+		if (setTicksTo0)
+			ticks = 0;
+
 		int rand = random.nextBetween(0, SequenceRegistry.REGISTRY.size());
 		Sequence sequence = SequenceRegistry.REGISTRY.get(rand);
 
@@ -94,7 +105,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 			return;
 
 		this.activeSequence = sequence;
-        FlightUtil.playSoundAtConsole(tardis(), SoundEvents.BLOCK_BEACON_POWER_SELECT);
+        FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), SoundEvents.BLOCK_BEACON_POWER_SELECT);
 		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(tardis()));
 	}
 
@@ -103,7 +114,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 		return activeSequence;
 	}
 
-	private void compareToSequences() {
+	private void compareToSequences(BlockPos console) {
 		if (this.getActiveSequence() == null)
 			return;
 
@@ -113,47 +124,61 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 		if (this.getActiveSequence().isFinished(this.recent)) {
 			recent.clear();
 			this.getActiveSequence().execute(this.tardis());
-			completedControlEffects(this.tardis());
+
+			this.doCompletedControlEffects(console);
 			this.setActiveSequence(null, true);
 		} else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
 			recent.clear();
 			this.getActiveSequence().executeMissed(this.tardis(), this.getActivePlayer());
-			missedControlEffects(this.tardis());
+
+			this.doMissedControlEffects(console);
 			this.setActiveSequence(null, true);
 		} else if (recent.size() >= this.getActiveSequence().getControls().size()) {
 			recent.clear();
 		}
 	}
 
-	public static void missedControlEffects(Tardis tardis) {
-		FlightUtil.playSoundAtConsole(tardis,
-				SoundEvents.ENTITY_GENERIC_EXPLODE,
-				SoundCategory.BLOCKS,
-				3f,
-				1f);
-		tardis.getDesktop().getConsoles().forEach(console -> {
-			Vec3d vec3d = Vec3d.ofBottomCenter(console.position()).add(0.0, 1.2f, 0.0);
-			if (TardisUtil.getTardisDimension() instanceof ServerWorld world) {
-				world.spawnParticles(ParticleTypes.SMALL_FLAME, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.4F, 1F, 0.4F, 5.0F);
-				world.spawnParticles(ParticleTypes.FLASH, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 4, 0.4F, 1F, 0.4F, 5.0F);
-				world.spawnParticles(new DustParticleEffect(new Vector3f(0.2f, 0.2f, 0.2f), 4f), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.0F, 1F, 0.0F, 2.0F);
-			}
-		});
+	private void doMissedControlEffects(@Nullable BlockPos console) {
+		Consumer<BlockPos> effects = SequenceHandler::missedControlEffects;
+
+		if (console == null) {
+			this.tardis.getDesktop().getConsoles().forEach(effects);
+			return;
+		}
+
+		effects.accept(console);
 	}
 
-	public static void completedControlEffects(Tardis tardis) {
-		FlightUtil.playSoundAtConsole(tardis,
-				SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP,
-				SoundCategory.BLOCKS,
-				3f,
-				1f);
-		tardis.getDesktop().getConsoles().forEach(console -> {
-			Vec3d vec3d = Vec3d.ofBottomCenter(console.position()).add(0.0, 1.2f, 0.0);
-			if (TardisUtil.getTardisDimension() instanceof ServerWorld world) {
-				world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
-				world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
-			}
-		});
+	public static void missedControlEffects(BlockPos console) {
+		ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
+
+		FlightUtil.playSoundAtConsole(console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
+		Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
+
+		world.spawnParticles(ParticleTypes.SMALL_FLAME, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.4F, 1F, 0.4F, 5.0F);
+		world.spawnParticles(ParticleTypes.FLASH, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 4, 0.4F, 1F, 0.4F, 5.0F);
+		world.spawnParticles(new DustParticleEffect(new Vector3f(0.2f, 0.2f, 0.2f), 4f), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.0F, 1F, 0.0F, 2.0F);
+	}
+
+	private void doCompletedControlEffects(@Nullable BlockPos console) {
+		Consumer<BlockPos> effects = SequenceHandler::completedControlEffects;
+
+		if (console == null) {
+			this.tardis.getDesktop().getConsoles().forEach(effects);
+			return;
+		}
+
+		effects.accept(console);
+	}
+
+	public static void completedControlEffects(BlockPos console) {
+		ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
+
+		FlightUtil.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 3f, 1f);
+		Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
+
+		world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
+		world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
 	}
 
 	public boolean isConsoleDisabled() {
@@ -162,20 +187,22 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 
 	@Override
 	public void tick(MinecraftServer server) {
+		if (this.getActiveSequence() == null)
+			return;
 
-		if (this.getActiveSequence() == null) return;
+		this.ticks++;
+		if (this.ticks >= this.getActiveSequence().timeToFail()) {
+			this.compareToSequences(null);
 
-		ticks++;
-		if (ticks >= this.getActiveSequence().timeToFail()) {
-			this.compareToSequences();
-			recent.clear();
-			ticks = 0;
+			this.recent.clear();
+			this.ticks = 0;
 		}
 	}
 
 	public boolean controlPartOfSequence(Control control) {
-		if (this.getActiveSequence() == null) return false;
+		if (this.getActiveSequence() == null)
+			return false;
+
 		return this.getActiveSequence().controlPartOfSequence(control);
 	}
-
 }
