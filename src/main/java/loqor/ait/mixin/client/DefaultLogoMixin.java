@@ -15,7 +15,8 @@ public class DefaultLogoMixin {
 
 	//having these two initialized like so doesn't entirely matter, it just makes stuff cleaner.
 	@Unique
-	private static final Identifier AIT_LOGO = new Identifier(AITMod.MOD_ID, "textures/gui/title/aitlogo.png");
+	private static final Identifier AIT_LOGO = new Identifier(AITMod.MOD_ID, "textures/gui/title/aitlogo1.0.5.png");
+	// private static final Identifier AIT_LOGO = new Identifier(AITMod.MOD_ID, "textures/gui/title/aitlogo.png");
 	@Unique
 	private static final Identifier AIT_EDITION = new Identifier(AITMod.MOD_ID, "textures/gui/title/edition.png");
 
