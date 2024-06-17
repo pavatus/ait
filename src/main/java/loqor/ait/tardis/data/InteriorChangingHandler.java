@@ -25,7 +25,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 	public static final String QUEUED_INTERIOR = "queued_interior";
 	public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
 	private static Random random;
-	private int ticks; // this shouldnt rly be stored in propertieshandler, will cause packet spam
+	private int ticks;
 
 	public InteriorChangingHandler() {
 		super(Id.INTERIOR);
@@ -91,6 +91,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 
 		boolean previouslyLocked = PropertiesHandler.getBool(properties, PropertiesHandler.PREVIOUSLY_LOCKED);
 		DoorData.lockTardis(previouslyLocked, tardis, null, false);
+		tardis.engine().hasEngineCore().set(false);
 
 		if (tardis.hasGrowthExterior()) {
 			TardisTravel travel = tardis.travel();
