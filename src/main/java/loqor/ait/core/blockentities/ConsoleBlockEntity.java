@@ -59,8 +59,10 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 	public void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
 
-		nbt.putString("type", type.toString());
-		nbt.putString("variant", variant.toString());
+		if(type != null)
+			nbt.putString("type", type.toString());
+		if (variant != null)
+			nbt.putString("variant", variant.toString());
 	}
 
 	@Override
@@ -141,7 +143,8 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 	public void markRemoved() {
 		this.killControls();
 
-		this.tardis().get().getDesktop()
+		if(this.tardis().isPresent())
+			this.tardis().get().getDesktop()
 				.getConsolePos().remove(this.pos);
 
 		super.markRemoved();

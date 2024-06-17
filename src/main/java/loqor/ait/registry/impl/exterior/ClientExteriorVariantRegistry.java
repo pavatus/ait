@@ -140,6 +140,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 	public static ClientExteriorVariantSchema DEFINITIVE;
 	public static ClientExteriorVariantSchema PTORED;
 	public static ClientExteriorVariantSchema MINT;
+	public static ClientExteriorVariantSchema HUDOLIN;
 	public static ClientExteriorVariantSchema CAPSULE_DEFAULT;
 	public static ClientExteriorVariantSchema CAPSULE_SOUL;
 	public static ClientExteriorVariantSchema CAPSULE_FIRE;
@@ -186,6 +187,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 		DEFINITIVE = register(new ClientClassicBoxDefinitiveVariant());
 		PTORED = register(new ClientClassicBoxPtoredVariant());
 		MINT = register(new ClientClassicBoxMintVariant());
+		HUDOLIN = register(new ClientClassicBoxHudolinVariant());
 
 		// Capsule
 		CAPSULE_DEFAULT = register(new ClientCapsuleDefaultVariant());

@@ -14,6 +14,7 @@ import loqor.ait.tardis.console.variant.hartnell.HartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.KeltHartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.MintHartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.WoodenHartnellVariant;
+import loqor.ait.tardis.console.variant.hudolin.HudolinVariant;
 import loqor.ait.tardis.console.variant.steam.SteamCherryVariant;
 import loqor.ait.tardis.console.variant.steam.SteamGildedVariant;
 import loqor.ait.tardis.console.variant.steam.SteamSteelVariant;
@@ -119,6 +120,7 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 	public static ConsoleVariantSchema STEAM_CHERRY;
 	public static ConsoleVariantSchema STEAM_STEEL;
 	public static ConsoleVariantSchema STEAM_GILDED;
+	public static ConsoleVariantSchema HUDOLIN;
 
 	@Override
 	protected void defaults() {
@@ -147,5 +149,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 		STEAM_CHERRY = registerStatic(new SteamCherryVariant());
 		STEAM_STEEL = registerStatic(new SteamSteelVariant());
 		STEAM_GILDED = registerStatic(new SteamGildedVariant());
+
+		// Hudolin variants (why am i adding this???)
+		HUDOLIN = registerStatic(new HudolinVariant());
 	}
 }
