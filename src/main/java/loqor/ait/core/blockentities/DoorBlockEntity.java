@@ -4,7 +4,7 @@ import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
@@ -148,8 +148,8 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 		if (this.tardis().isEmpty())
 			return;
 
-		this.tardis().get().getDesktop().setInteriorDoorPos(new AbsoluteBlockPos.Directed(
-				this.pos, TardisUtil.getTardisDimension(), RotationPropertyHelper.fromDirection(this.getFacing()))
+		this.tardis().get().getDesktop().setInteriorDoorPos(DirectedBlockPos.create(
+				this.pos, (byte) RotationPropertyHelper.fromDirection(this.getFacing()))
 		);
 	}
 }

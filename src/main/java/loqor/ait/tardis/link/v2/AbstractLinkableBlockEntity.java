@@ -1,5 +1,6 @@
 package loqor.ait.tardis.link.v2;
 
+import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import net.minecraft.block.BlockState;
@@ -42,9 +43,11 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
 
         NbtElement id = nbt.get("tardis");
 
-        if (id != null)
-            this.ref = new TardisRef(NbtHelper.toUuid(id), uuid -> TardisManager.with(
-                this.getWorld(), (o, manager) -> manager.demandTardis(o, uuid))
+        if (id == null)
+            return;
+
+        this.ref = new TardisRef(NbtHelper.toUuid(id), uuid -> TardisManager.with(
+                this.world, (o, manager) -> manager.demandTardis(o, uuid))
         );
 
         if (this.world == null)

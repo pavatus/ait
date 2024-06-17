@@ -173,6 +173,16 @@ public class AbsoluteBlockPos extends BlockPos {
 
 			return new Directed(pos, dir);
 		}
+
+		@Deprecated
+		public DirectedBlockPos toBlockPos() {
+			return DirectedBlockPos.create(this, (byte) this.rotation);
+		}
+
+		@Deprecated
+		public DirectedGlobalPos toGlobalPos() {
+			return DirectedGlobalPos.create(this.getDimension().get().getRegistryKey(), this, (byte) this.rotation);
+		}
 	}
 }
 

@@ -8,8 +8,6 @@ import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -44,7 +42,7 @@ public class RealWorldCommand {
 		TardisUtil.teleportOutside(tardis, source);
 		source.setInvisible(true);
 
-		TardisRealEntity.spawnFromTardisId(tardis.getExteriorPos().getWorld(), tardis.getUuid(), spawnBlockPos, source, tardis.getDoorPos());
+		TardisRealEntity.spawnFromTardisId(tardis.getExteriorPos().getWorld(), tardis.getUuid(), spawnBlockPos, source, tardis.getDesktop().doorPos().getPos());
 
 		Text textResponse = Text.translatableWithFallback("command.ait.realworld.response",
 				"Spawned a real world TARDIS at: ", spawnBlockPos

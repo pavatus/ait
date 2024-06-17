@@ -1,6 +1,7 @@
 package loqor.ait.tardis;
 
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
@@ -292,9 +293,9 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return false;
 	}
 
-	public AbsoluteBlockPos.Directed getDoorPos() {
-		return this.desktop.getInteriorDoorPos() != null ? this.desktop.getInteriorDoorPos() :
-				new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), 0);
+	@Deprecated(forRemoval = true)
+	public DirectedBlockPos getDoorPos() {
+		return this.desktop.doorPos();
 	}
 
 	public AbsoluteBlockPos.Directed getExteriorPos() {

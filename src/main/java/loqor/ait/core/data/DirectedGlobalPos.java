@@ -1,5 +1,6 @@
 package loqor.ait.core.data;
 
+import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.PacketByteBuf;
@@ -10,6 +11,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -97,7 +99,9 @@ public class DirectedGlobalPos {
         if (!(o instanceof DirectedGlobalPos globalPos))
             return false;
 
-        return Objects.equals(this.dimension, globalPos.dimension) && Objects.equals(this.pos, globalPos.pos);
+        return Objects.equals(this.dimension, globalPos.dimension)
+                && Objects.equals(this.pos, globalPos.pos)
+                && Objects.equals(this.rotation, globalPos.rotation);
     }
 
     public int hashCode() {
@@ -120,5 +124,39 @@ public class DirectedGlobalPos {
         byte rotation = buf.readByte();
 
         return DirectedGlobalPos.create(registryKey, blockPos, rotation);
+    }
+
+    public static Object serializer() {
+        return new Serializer();
+    }
+
+    private static class Serializer implements JsonDeserializer<DirectedGlobalPos>, JsonSerializer<DirectedGlobalPos> {
+
+        @Override
+        public DirectedGlobalPos deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject obj = json.getAsJsonObject();
+
+            RegistryKey<World> dimension = context.deserialize(obj.get("dimension"), RegistryKey.class);
+
+            int x = obj.get("x").getAsInt();
+            int y = obj.get("y").getAsInt();
+            int z = obj.get("z").getAsInt();
+            byte rotation = obj.get("rotation").getAsByte();
+
+            return DirectedGlobalPos.create(dimension, new BlockPos(x, y, z), rotation);
+        }
+
+        @Override
+        public JsonElement serialize(DirectedGlobalPos src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject result = new JsonObject();
+
+            result.addProperty("dimension", src.getDimension().getValue().toString());
+            result.addProperty("x", src.getPos().getX());
+            result.addProperty("y", src.getPos().getY());
+            result.addProperty("z", src.getPos().getZ());
+            result.addProperty("rotation", src.getRotation());
+
+            return result;
+        }
     }
 }

@@ -2,14 +2,16 @@ package loqor.ait.compat.immersive;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedBlockPos;
+import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.DoorData;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
-import loqor.ait.core.data.schema.door.DoorSchema;
-import loqor.ait.compat.DependencyChecker;
+import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 import qouteall.imm_ptl.core.api.PortalAPI;
@@ -75,7 +77,7 @@ public class PortalsHandler {
 	}
 
 	private static TardisPortal createExteriorPortal(Tardis tardis) {
-		AbsoluteBlockPos.Directed doorPos = tardis.getDoorPos();
+		DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
 		AbsoluteBlockPos.Directed exteriorPos = tardis.travel().getState() == TardisTravel.State.LANDED ? tardis.getExteriorPos() : FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage());
 		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
 		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
@@ -97,9 +99,9 @@ public class PortalsHandler {
 
 		portal.setOriginPos(new Vec3d(exteriorAdjust.getX() + 0.5, exteriorAdjust.getY() + 1, exteriorAdjust.getZ() + 0.5));
 
-		portal.setDestinationDimension(doorPos.getWorld().getRegistryKey());
+		portal.setDestinationDimension(TardisUtil.getTardisDimension().getRegistryKey());
 		portal.setDestination(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
-		//portal.setInteractable(false);
+
 		portal.renderingMergable = true;
 		portal.getWorld().spawnEntity(portal);
 
@@ -108,12 +110,12 @@ public class PortalsHandler {
 
 	// todo allow for multiple interior doors
 	private static TardisPortal createInteriorPortal(Tardis tardis) {
-		AbsoluteBlockPos.Directed doorPos = tardis.getDoorPos();
+		DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
 		AbsoluteBlockPos.Directed exteriorPos = tardis.travel().getState() == TardisTravel.State.LANDED ? tardis.getExteriorPos() : FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.getHandlers().getFlight().getDurationAsPercentage());
 		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
 		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
 
-		TardisPortal portal = new TardisPortal(doorPos.getWorld(), tardis);
+		TardisPortal portal = new TardisPortal(TardisUtil.getTardisDimension(), tardis);
 
 		portal.setOrientationAndSize(
 				new Vec3d(1, 0, 0), // axisW
@@ -128,15 +130,20 @@ public class PortalsHandler {
 		PortalAPI.setPortalOrientationQuaternion(portal, quat);
 		portal.setOtherSideOrientation(extQuat);
 
-
 		portal.setOriginPos(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
 		portal.setDestinationDimension(exteriorPos.getWorld().getRegistryKey());
 		portal.setDestination(new Vec3d(exteriorAdjust.getX() + 0.5, exteriorAdjust.getY() + 1, exteriorAdjust.getZ() + 0.5));
-		//portal.setInteractable(false);
 		portal.renderingMergable = true;
 		portal.getWorld().spawnEntity(portal);
 
 		return portal;
+	}
+
+	private static Vec3d adjustExteriorPos(ExteriorVariantSchema exterior, DirectedBlockPos directed) {
+		BlockPos pos = directed.getPos();
+		return exterior.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()),
+				RotationPropertyHelper.toDirection(directed.getRotation()).get()
+		);
 	}
 
 	private static Vec3d adjustExteriorPos(ExteriorVariantSchema exterior, AbsoluteBlockPos.Directed pos) {
@@ -145,5 +152,11 @@ public class PortalsHandler {
 
 	private static Vec3d adjustInteriorPos(DoorSchema door, AbsoluteBlockPos.Directed pos) {
 		return door.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), RotationPropertyHelper.toDirection(pos.getRotation()).get());
+	}
+	private static Vec3d adjustInteriorPos(DoorSchema door, DirectedBlockPos directed) {
+		BlockPos pos = directed.getPos();
+		return door.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()),
+				RotationPropertyHelper.toDirection(directed.getRotation()).get()
+		);
 	}
 }

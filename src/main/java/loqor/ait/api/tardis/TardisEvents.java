@@ -2,12 +2,14 @@ package loqor.ait.api.tardis;
 
 import loqor.ait.client.screens.interior.InteriorSettingsScreen;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.tardis.Tardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
 
 public final class TardisEvents {
 
@@ -193,7 +195,7 @@ public final class TardisEvents {
 	 */
 	@FunctionalInterface
 	public interface MoveDoor {
-		void onMove(Tardis tardis, AbsoluteBlockPos.Directed previous);
+		void onMove(Tardis tardis, DirectedBlockPos previous);
 	}
 
 	@FunctionalInterface
