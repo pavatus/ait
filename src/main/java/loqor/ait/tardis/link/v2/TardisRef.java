@@ -51,11 +51,16 @@ public class TardisRef implements Disposable {
     /**
      * @return the result of the function, {@literal null} otherwise.
      */
-    public <T> Optional<T> ifPresent(Function<Tardis, T> consumer) {
+    public <T> Optional<T> apply(Function<Tardis, T> consumer) {
         if (this.isPresent())
             return Optional.of(consumer.apply(this.cached));
 
         return Optional.empty();
+    }
+
+    public void ifPresent(Consumer<Tardis> consumer) {
+        if (this.isPresent())
+            consumer.accept(this.get());
     }
 
     @Override

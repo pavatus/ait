@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import static loqor.ait.tardis.TardisTravel.State.FLIGHT;
+import static loqor.ait.tardis.data.TravelHandler.State.FLIGHT;
 import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
 
 public class InteriorSettingsScreen extends ConsoleScreen {
@@ -92,7 +92,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
 		createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole"), (button -> sendCachePacket()));
-		createTextButton(Text.translatable("screen.ait.security.button"), (button -> toSecurityScreen()));
+		createTextButton(Text.translatable("screen.ait.security.button"), button -> toSecurityScreen());
 		createTextButton(Text.translatable("screen.ait.sonic.button").formatted(tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC) ? Formatting.WHITE : Formatting.GRAY),
 				(button -> {
 					if(tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) {
@@ -198,9 +198,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	public void toSecurityScreen() {
-		MinecraftClient.getInstance().setScreen(new TardisSecurityScreen(tardis().getUuid(), this.console, this));
+		MinecraftClient.getInstance().setScreen(new TardisSecurityScreen(this.tardis().getUuid(), this.console, this));
 	}
-
 
 	final int UV_BASE = 159;
 	final int UV_INCREMENT = 17;
@@ -233,17 +232,18 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		// big apply button
 		if (!this.buttons.get(9).isHovered()) context.drawTexture(TEXTURE, left + 168, top + 94, 0, 227, 57, 12);
 
-		if (tardis() == null) return;
+		if (this.tardis() == null)
+			return;
 
 		// battery
 		context.drawTexture(TEXTURE, left + 27, top + 133, 0, tardis().getFuel() > 250 ? 150 : 165, 99, 15);
 
 		// fuel markers @TODO come back and actually do the rest of it with the halves and the red parts too
-		for (int p = 0; p < Math.round((tardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 12); ++p) {
+		for (int p = 0; p < Math.round(this.tardis().getFuel() / FuelData.TARDIS_MAX_FUEL * 12); ++p) {
 			context.drawTexture(TEXTURE, left + 29 + (8 * p), top + 135, 99, 150, 7, 11);
 		}
 
-		int progress = tardis().flight().getDurationAsPercentage();
+		int progress = this.tardis().flight().getDurationAsPercentage();
 
 		for (int index = 0; index < 5; index++) {
 			int rangeStart = index * 20;

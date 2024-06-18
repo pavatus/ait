@@ -242,6 +242,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 	}
 
 	public void onBroken() {
-		this.tardis().ifPresent(tardis -> tardis.travel().setHandbrake(false));
+		this.tardis().apply(tardis -> tardis.travel().setHandbrake(false));
 	}
 }

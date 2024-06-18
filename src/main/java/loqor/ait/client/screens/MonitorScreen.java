@@ -3,30 +3,32 @@ package loqor.ait.client.screens;
 import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
-import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.client.renderers.AITRenderLayers;
+import loqor.ait.client.screens.interior.InteriorSettingsScreen;
 import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.exterior.category.BoothCategory;
 import loqor.ait.tardis.exterior.category.ClassicCategory;
-import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
-import loqor.ait.client.screens.interior.InteriorSettingsScreen;
-import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.control.impl.DimensionControl;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -39,8 +41,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static loqor.ait.tardis.TardisTravel.State.FLIGHT;
 import static loqor.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
+import static loqor.ait.tardis.data.TravelHandler.State.FLIGHT;
 
 public class MonitorScreen extends ConsoleScreen {
 	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/monitor_gui.png");
@@ -328,21 +330,30 @@ public class MonitorScreen extends ConsoleScreen {
 	protected void drawInformationText(DrawContext context) {
 		int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
 		int j = ((this.width - this.backgroundWidth) / 2);
-		if (getFromUUID(tardisId) == null) return;
-		TardisTravel travel = getFromUUID(tardisId).travel();
-        AbsoluteBlockPos.Directed abpd = travel.inFlight() ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.getDestination(), getFromUUID(tardisId).getHandlers().getFlight().getDurationAsPercentage()) : travel.getPosition();
-		AbsoluteBlockPos.Directed dabpd = travel.getDestination();
-        if (abpd.getDimension() == null) return;
-		String positionText = abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
-		String dimensionText = convertWorldValueToModified(abpd.getDimension().getValue());
+
+		if (getFromUUID(tardisId) == null)
+			return;
+
+		TravelHandler travel = getFromUUID(tardisId).travel();
+        DirectedGlobalPos abpd = travel.getState() == FLIGHT ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.destination().get(), getFromUUID(tardisId).flight().getDurationAsPercentage()) : travel.getPosition();
+		DirectedGlobalPos dabpd = travel.destination().get();
+
+        if (abpd.getDimension() == null)
+			return;
+
+		BlockPos abpdPos = abpd.getPos();
+
+		String positionText = abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
+		String dimensionText = convertWorldValueToModified(abpd.getDimension().getValue().toString());
 		String directionText = DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
-		String destinationText = dabpd.getX() + ", " + dabpd.getY() + ", " + dabpd.getZ();
-		String dDimensionText = convertWorldValueToModified(dabpd.getDimension().getValue());
+
+		BlockPos dabpdPos = dabpd.getPos();
+
+		String destinationText = dabpdPos.getX() + ", " + dabpdPos.getY() + ", " + dabpdPos.getZ();
+		String dDimensionText = convertWorldValueToModified(dabpd.getDimension().getValue().toString());
 		String dDirectionText = DirectionControl.rotationToDirection(dabpd.getRotation()).toUpperCase();
-		String fuelText = String.valueOf(Math.round((getFromUUID(tardisId).getFuel() / FuelData.TARDIS_MAX_FUEL) * 100));
-		String flightTimeText = (tardis().travel().getState() == TardisTravel.State.LANDED ? "0" : String.valueOf(tardis().flight().getDurationAsPercentage()));
+
 		// position
-		//context.drawText(this.textRenderer, Text.literal("Position"), (width / 2 - 64), (height / 2 - 46), 5636095, true);
 		context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 + 7), (height / 2 - 36), 0xFFFFFF, true);
 		context.drawText(this.textRenderer, Text.literal(dimensionText), (width / 2 + 7), (height / 2 - 26), 0xFFFFFF, true);
 		context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 + 14), (height / 2 - 16), 0xFFFFFF, true);
@@ -351,13 +362,6 @@ public class MonitorScreen extends ConsoleScreen {
 		context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 + 7), (height / 2 + 31), 0xFFFFFF, true);
 		context.drawText(this.textRenderer, Text.literal(dDimensionText), (width / 2 + 7), (height / 2 + 41), 0xFFFFFF, true);
 		context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 + 14), (height / 2 + 51), 0xFFFFFF, true);
-
-		// fuel
-		//context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.fuel"), (width / 2 - 102), (height / 2 + 28), 0xFFFFFF, true);
-		//context.drawText(this.textRenderer, Text.literal(fuelText + "%"), (width / 2 - 108), (height / 2 + 38), 0xFFFFFF, true);
-		// percentage of travel time to destination
-		//context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.traveltime"), (width / 2 + 34), (height / 2 + 28), 0xFFFFFF, true);
-		//context.drawText(this.textRenderer, Text.literal(flightTimeText + "%"), (width / 2 + 46), (height / 2 + 38), 0xFFFFFF, true);
 	}
 
 	@Override
@@ -377,6 +381,8 @@ public class MonitorScreen extends ConsoleScreen {
 		super.render(context, mouseX, mouseY, delta);
 	}
 
+	// TODO kill this with fire. Use Text#translatable.
+	@Deprecated(forRemoval = true)
 	public String convertCategoryNameToProper(String string) {
 		return switch (string) {
 			case "easter_head" -> "Moyai";

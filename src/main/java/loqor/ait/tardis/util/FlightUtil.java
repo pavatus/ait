@@ -6,7 +6,7 @@ import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.data.TravelHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -25,17 +25,18 @@ public class FlightUtil {
 	/**
 	 * Sets the destination, turns on autopilot and demats
 	 */
-	public static void travelTo(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-		TardisTravel travel = tardis.travel();
+	@Deprecated(forRemoval = true)
+	public static void travelTo(Tardis tardis, DirectedGlobalPos.Cached pos) {
+		TravelHandler travel = tardis.travel();
 
-		tardis.flight().handbrake().set(false);
-		tardis.flight().autoLand().set(true);
+		travel.handbrake().set(false);
+		travel.autoLand().set(true);
 
-		travel.setDestination(pos, true);
+		travel.destination().set(pos);
 
-		if (travel.getState() == TardisTravel.State.LANDED) {
-			travel.dematerialise(true);
-		} else if (travel.getState() == TardisTravel.State.FLIGHT) {
+		if (travel.getState() == TravelHandler.State.LANDED) {
+			travel.dematerialize(true);
+		} else if (travel.getState() == TravelHandler.State.FLIGHT) {
 			travel.materialise();
 		}
 	}
@@ -62,6 +63,14 @@ public class FlightUtil {
 		float per = percentage / 100f;
 		BlockPos diff = destination.subtract(source);
 		return new AbsoluteBlockPos.Directed(source.add(new BlockPos((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per))), destination.getDimension(), destination.getRotation());
+	}
+
+	public static DirectedGlobalPos getPositionFromPercentage(DirectedGlobalPos source, DirectedGlobalPos destination, int percentage) {
+		// https://stackoverflow.com/questions/33907276/calculate-point-between-two-coordinates-based-on-a-percentage
+
+		float per = percentage / 100f;
+		BlockPos diff = destination.getPos().subtract(source.getPos());
+		return destination.offset((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per));
 	}
 
 	public static DirectedGlobalPos.Cached getPositionFromPercentage(DirectedGlobalPos.Cached source, DirectedGlobalPos.Cached destination, int percentage) {

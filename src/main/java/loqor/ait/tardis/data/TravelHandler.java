@@ -9,11 +9,15 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisExterior;
+import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.impl.DirectionControl;
+import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
@@ -30,6 +34,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class TravelHandler extends KeyedTardisComponent implements TardisTickable {
@@ -82,7 +88,7 @@ public class TravelHandler extends KeyedTardisComponent implements TardisTickabl
         this.previousPosition.ifPresent(cached -> cached.init(server()), false);
     }
 
-    public void placeExterior() {
+    public ExteriorBlockEntity placeExterior() {
         DirectedGlobalPos.Cached globalPos = this.position.get();
         ServerWorld world = globalPos.getWorld();
         BlockPos pos = globalPos.getPos();
@@ -94,18 +100,24 @@ public class TravelHandler extends KeyedTardisComponent implements TardisTickabl
         world.setBlockState(pos, blockState);
         ExteriorBlockEntity exterior = new ExteriorBlockEntity(pos, blockState);
 
-        exterior.setTardis(this.tardis());
+        exterior.link(this.tardis);
         world.addBlockEntity(exterior);
 
         this.runAnimations(exterior);
+        return exterior;
+    }
+
+    private void runAnimationsAt(DirectedGlobalPos.Cached globalPos) {
+        if (globalPos.getWorld().getBlockEntity(globalPos.getPos()) instanceof ExteriorBlockEntity exterior)
+            this.runAnimations(exterior);
     }
 
     private void runAnimations(ExteriorBlockEntity exterior) {
         if (exterior.getAnimation() == null)
             return;
 
-        exterior.getAnimation().setupAnimation(this.state);
-        exterior.getAnimation().tellClientsToSetup(this.state);
+        exterior.getAnimation().setupAnimation(this.getState());
+        exterior.getAnimation().tellClientsToSetup(this.getState());
     }
 
     public void deleteExterior() {
@@ -117,6 +129,61 @@ public class TravelHandler extends KeyedTardisComponent implements TardisTickabl
 
         if (this.isServer())
             ForcedChunkUtil.stopForceLoading(world, pos);
+    }
+
+    public void dematerialize(boolean withRemat) {
+        if (TardisEvents.DEMAT.invoker().onDemat(this.tardis)) {
+            // demat will be cancelled
+
+            DirectedGlobalPos.Cached globalPos = this.position.get();
+            globalPos.getWorld().playSound(null, globalPos.getPos(),
+                    AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
+
+            if (TardisUtil.isInteriorNotEmpty(this.tardis))
+                FlightUtil.playSoundAtEveryConsole(this.tardis.getDesktop(),
+                        AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
+
+            FlightUtil.createDematerialiseDelay(this.tardis);
+            return;
+        }
+
+        if (!this.tardis.engine().hasPower())
+            return; // no flying for you if you have no powa :)
+
+        if (FlightUtil.isDematerialiseOnCooldown(this.tardis))
+            return; // cancelled
+
+        this.forceDematerialize(withRemat);
+    }
+
+    public void forceDematerialize(boolean withRemat) {
+        if (this.getState() != State.LANDED)
+            return;
+
+        if (this.autoLand.get()) {
+            // fulfill all the prerequisites
+            // DoorData.lockTardis(true, tardis(), null, false);
+            this.handbrake.set(false);
+
+            this.tardis.getDoor().closeDoors();
+            this.tardis.setRefueling(false);
+
+            if (this.speed.get() == 0)
+                this.increaseSpeed();
+        }
+
+        DirectedGlobalPos.Cached globalPos = this.position.get();
+
+        this.autoLand.set(withRemat);
+        ServerWorld world = globalPos.getWorld();
+
+        this.state.set(State.DEMAT);
+        SoundEvent sound = this.getState().effect().sound();
+
+        world.playSound(null, globalPos.getPos(), sound, SoundCategory.BLOCKS);
+        FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), sound, SoundCategory.BLOCKS, 10f, 1f);
+
+        this.runAnimationsAt(globalPos);
     }
 
     public void materialise() {
@@ -145,7 +212,7 @@ public class TravelHandler extends KeyedTardisComponent implements TardisTickabl
     }
 
     public void forceMaterialize() {
-        ServerTardis tardis = (ServerTardis) this.tardis();
+        Tardis tardis = this.tardis();
 
         if (this.getState() != TravelHandler.State.FLIGHT)
             return;
@@ -202,6 +269,46 @@ public class TravelHandler extends KeyedTardisComponent implements TardisTickabl
         }
     }
 
+    public void fly() {
+        this.crashing = false;
+        this.previousPosition.set(this.position);
+        this.state.set(State.FLIGHT);
+
+        this.deleteExterior();
+        if (PropertiesHandler.getBool(this.tardis().properties(), SecurityControl.SECURITY_KEY))
+            SecurityControl.runSecurityProtocols(this.tardis());
+    }
+
+    public void land() {
+        if (this.autoLand.get() && this.speed.get() > 0)
+            this.speed.set(0);
+
+        this.state.set(State.LANDED);
+
+        ServerWorld world = this.position.get().getWorld();
+        ExteriorBlockEntity exteriorBlockEntity;
+
+        // If there is already a matching exterior at this position
+        if (world.getBlockEntity(this.getPosition().getPos()) instanceof ExteriorBlockEntity exterior
+                && this.tardis == exterior.tardis().get()) {
+            exteriorBlockEntity = exterior;
+        } else {
+            exteriorBlockEntity = this.placeExterior();
+        }
+
+        this.land(exteriorBlockEntity);
+    }
+
+    public void land(ExteriorBlockEntity blockEntity) {
+        this.runAnimations(blockEntity);
+
+        if (this.isClient())
+            return;
+
+        DoorData.lockTardis(PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.tardis(), null, false);
+        TardisEvents.LANDED.invoker().onLanded(this.tardis);
+    }
+
     public void initPos(DirectedGlobalPos.Cached cached) {
         if (this.position.get() == null)
             this.position.set(cached);
@@ -211,6 +318,21 @@ public class TravelHandler extends KeyedTardisComponent implements TardisTickabl
 
         if (this.previousPosition.get() == null)
             this.previousPosition.set(cached);
+    }
+
+    public void increaseSpeed() {
+        // Stop speed from going above 1 if autopilot is enabled, and we're in flight
+        if (this.speed.get() > 0 && this.getState() == State.FLIGHT && this.autoLand.get())
+            return;
+
+        this.speed.set(MathHelper.clamp(this.speed.get() + 1, 0, this.maxSpeed.get()));
+    }
+
+    public void decreaseSpeed() {
+        if (this.getState() == State.LANDED && this.speed.get() == 1)
+            FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+
+        this.speed.set(MathHelper.clamp(this.speed.get() - 1, 0, this.maxSpeed.get()));
     }
 
     public IntValue speed() {

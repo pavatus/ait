@@ -1,9 +1,8 @@
 package loqor.ait.tardis.animation;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.AITMod;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.CloakData;
 import loqor.ait.tardis.data.TravelHandler;
@@ -18,31 +17,20 @@ import net.minecraft.util.math.BlockPos;
 import org.joml.Math;
 
 public abstract class ExteriorAnimation {
+
+	public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_setup_anim");
 	public static final double MAX_CLOAK_DISTANCE = 5d;
-	protected float alpha = 1;
+
 	protected ExteriorBlockEntity exterior;
 	protected int timeLeft, maxTime, startTime;
-	public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_setup_anim");
+	protected float alpha = 1;
 
 	public ExteriorAnimation(ExteriorBlockEntity exterior) {
 		this.exterior = exterior;
 	}
 
-	// fixme bug that sometimes happens where server doesnt have animation
-	protected void runAlphaChecks(TardisTravel.State state) {
-		if (this.exterior.getWorld().isClient() || this.exterior.tardis().isEmpty())
-			return;
-
-		if (alpha <= 0f && state == TardisTravel.State.DEMAT) {
-			exterior.tardis().get().travel().toFlight();
-		}
-		if (alpha >= 1f && state == TardisTravel.State.MAT) {
-			exterior.tardis().get().travel().forceLand(this.exterior);
-		}
-	}
-
 	public float getAlpha() {
-		return this.exterior.tardis().ifPresent(tardis -> {
+		return this.exterior.tardis().apply(tardis -> {
 			if (this.timeLeft < 0) {
 				this.setupAnimation(tardis.travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 				return 1f;
@@ -58,7 +46,11 @@ public abstract class ExteriorAnimation {
 	}
 
 	public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius) {
-		return radius >= distanceFromTardis(player, tardis);
+		return isNearTardis(player, tardis, radius, distanceFromTardis(player, tardis));
+	}
+
+	public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius, double distance) {
+		return radius >= distance;
 	}
 
 	public static double distanceFromTardis(PlayerEntity player, Tardis tardis) {
@@ -73,10 +65,6 @@ public abstract class ExteriorAnimation {
 
 	public void setAlpha(float alpha) {
 		this.alpha = Math.clamp(0.0F, 1.0F, alpha);
-	}
-
-	public boolean hasAnimationStarted() {
-		return this.timeLeft < this.startTime;
 	}
 
 	public void tellClientsToSetup(TravelHandler.State state) {
@@ -95,12 +83,12 @@ public abstract class ExteriorAnimation {
 	}
 
 	public void tellClientToSetup(TravelHandler.State state, ServerPlayerEntity player) {
-		if (exterior.getWorld().isClient() || exterior.tardis().isEmpty())
+		if (exterior.getWorld().isClient() || exterior.tardis().getId() == null)
 			return;
 
 		PacketByteBuf data = PacketByteBufs.create();
 		data.writeInt(state.ordinal());
-		data.writeUuid(exterior.tardis().get().getUuid());
+		data.writeUuid(exterior.tardis().getId());
 
 		ServerPlayNetworking.send(player, UPDATE, data);
 	}

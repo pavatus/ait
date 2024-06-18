@@ -8,6 +8,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
@@ -623,8 +624,8 @@ public class TardisTravel extends TardisComponent {
 	}
 
 	public void forceLand(@Nullable ExteriorBlockEntity blockEntity) {
-		if (tardis.flight().autoLand().get() && this.tardis.flight().speed().get() > 0) {
-			this.tardis.flight().speed().set(0);
+		if (tardis.travel().autoLand().get() && this.tardis.travel().speed().get() > 0) {
+			this.tardis.travel().speed().set(0);
 		}
 
 		this.setState(TardisTravel.State.LANDED);
@@ -646,7 +647,8 @@ public class TardisTravel extends TardisComponent {
 
 				ExteriorBlockEntity newEntity = new ExteriorBlockEntity(this.getPosition(), state);
 				world.addBlockEntity(newEntity);
-				newEntity.setTardis(this.tardis());
+				newEntity.link(this.tardis());
+
 				blockEntity = newEntity;
 			}
 
@@ -756,7 +758,7 @@ public class TardisTravel extends TardisComponent {
 				this.position, this.position.getBlockState()
 		);
 
-		exterior.setTardis(this.tardis());
+		exterior.link(this.tardis());
 		this.position.addBlockEntity(exterior);
 	}
 
