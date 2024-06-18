@@ -12,6 +12,7 @@ import net.minecraft.network.PacketByteBuf;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Value<T> implements Disposable {
@@ -58,14 +59,17 @@ public class Value<T> implements Disposable {
     public void set(T value, boolean sync) {
         this.value = value;
 
-        if (sync) {
-            if (!(this.holder.tardis() instanceof ServerTardis tardis)) {
-                AITMod.LOGGER.warn("Can't sync on a client world!", new IllegalAccessException());
-                return;
-            }
+        if (sync)
+            this.sync();
+    }
 
-            ServerTardisManager.getInstance().sendPropertyV2ToSubscribers(tardis, this);
+    protected void sync() {
+        if (!(this.holder.tardis() instanceof ServerTardis tardis)) {
+            AITMod.LOGGER.warn("Can't sync on a client world!", new IllegalAccessException());
+            return;
         }
+
+        ServerTardisManager.getInstance().sendPropertyV2ToSubscribers(tardis, this);
     }
 
     public void flatMap(Function<T, T> func) {
@@ -74,6 +78,20 @@ public class Value<T> implements Disposable {
 
     public void flatMap(Function<T, T> func, boolean sync) {
         this.set(func.apply(this.value), sync);
+    }
+
+    public void ifPresent(Consumer<T> consumer) {
+        this.ifPresent(consumer, true);
+    }
+
+    public void ifPresent(Consumer<T> consumer, boolean sync) {
+        if (this.value == null)
+            return;
+
+        consumer.accept(this.value);
+
+        if (sync)
+            this.sync();
     }
 
     public void read(PacketByteBuf buf, byte mode) {

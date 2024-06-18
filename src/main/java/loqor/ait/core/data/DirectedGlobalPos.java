@@ -2,9 +2,12 @@ package loqor.ait.core.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import loqor.ait.core.data.base.Exclude;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -120,5 +123,55 @@ public class DirectedGlobalPos {
         byte rotation = buf.readByte();
 
         return DirectedGlobalPos.create(registryKey, blockPos, rotation);
+    }
+
+    public static class Cached extends DirectedGlobalPos {
+
+        @Exclude private ServerWorld world;
+
+        private Cached(RegistryKey<World> key, BlockPos pos, byte rotation) {
+            super(key, pos, rotation);
+        }
+
+        private Cached(ServerWorld world, BlockPos pos, byte rotation) {
+            this(world.getRegistryKey(), pos, rotation);
+            this.world = world;
+        }
+
+        public static Cached create(ServerWorld world, BlockPos pos, byte rotation) {
+            return new Cached(world, pos, rotation);
+        }
+
+        private static Cached createSame(ServerWorld world, RegistryKey<World> dimension, BlockPos pos, byte rotation) {
+            if (world == null)
+                return new Cached(dimension, pos, rotation);
+
+            return Cached.create(world, pos, rotation);
+        }
+
+        private static Cached createNew(ServerWorld lastWorld, RegistryKey<World> newWorld, BlockPos pos, byte rotation) {
+            if (lastWorld == null)
+                return new Cached(newWorld, pos, rotation);
+
+            return Cached.create(lastWorld.getServer().getWorld(newWorld), pos, rotation);
+        }
+
+        public void init(MinecraftServer server) {
+            this.world = server.getWorld(this.getDimension());
+        }
+
+        public ServerWorld getWorld() {
+            return world;
+        }
+
+        @Override
+        public DirectedGlobalPos.Cached offset(int x, int y, int z) {
+            return Cached.createSame(this.world, this.getDimension(), this.getPos().add(x, y, z), this.getRotation());
+        }
+
+        @Override
+        public DirectedGlobalPos.Cached world(RegistryKey<World> dimension) {
+            return Cached.createNew(this.world, dimension, this.getPos(), this.getRotation());
+        }
     }
 }

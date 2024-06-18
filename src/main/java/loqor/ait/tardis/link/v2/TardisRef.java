@@ -3,6 +3,7 @@ package loqor.ait.tardis.link.v2;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.Disposable;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -50,11 +51,11 @@ public class TardisRef implements Disposable {
     /**
      * @return the result of the function, {@literal null} otherwise.
      */
-    public <T> T ifPresent(Function<Tardis, T> consumer) {
+    public <T> Optional<T> ifPresent(Function<Tardis, T> consumer) {
         if (this.isPresent())
-            return consumer.apply(this.cached);
+            return Optional.of(consumer.apply(this.cached));
 
-        return null;
+        return Optional.empty();
     }
 
     @Override

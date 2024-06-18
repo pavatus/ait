@@ -64,7 +64,7 @@ public class FlightUtil {
 		return new AbsoluteBlockPos.Directed(source.add(new BlockPos((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per))), destination.getDimension(), destination.getRotation());
 	}
 
-	public static DirectedGlobalPos getPositionFromPercentage(DirectedGlobalPos source, DirectedGlobalPos destination, int percentage) {
+	public static DirectedGlobalPos.Cached getPositionFromPercentage(DirectedGlobalPos.Cached source, DirectedGlobalPos.Cached destination, int percentage) {
 		// https://stackoverflow.com/questions/33907276/calculate-point-between-two-coordinates-based-on-a-percentage
 
 		float per = percentage / 100f;

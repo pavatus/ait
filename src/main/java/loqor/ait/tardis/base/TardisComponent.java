@@ -94,10 +94,10 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 	public enum Id implements IdLike {
 		// Base parts.
 		DESKTOP(TardisDesktop.class, null, ClientTardis::setDesktop),
-		TRAVEL(TardisTravel.class, null, ClientTardis::setTravel),
 		EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
 		HANDLERS(TardisHandlersManager.class, null),
 
+		TRAVEL(TravelHandler.class, TravelHandler::new),
 		DOOR(DoorData.class, DoorData::new),
 		SONIC(SonicHandler.class, SonicHandler::new),
 		PERMISSIONS(PermissionHandler.class, PermissionHandler::new),

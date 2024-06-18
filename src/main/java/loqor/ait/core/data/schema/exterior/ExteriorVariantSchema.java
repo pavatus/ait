@@ -11,6 +11,7 @@ import loqor.ait.core.data.base.Nameable;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import net.minecraft.block.BlockState;
@@ -73,7 +74,7 @@ public abstract class ExteriorVariantSchema implements Unlockable, Nameable {
 		return UnlockType.EXTERIOR;
 	}
 
-	public MatSound getSound(TardisTravel.State state) {
+	public MatSound getSound(TravelHandler.State state) {
 		return switch (state) {
 			case LANDED, CRASH -> AITSounds.LANDED_ANIM;
 			case FLIGHT -> AITSounds.FLIGHT_ANIM;

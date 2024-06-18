@@ -3,11 +3,13 @@ package loqor.ait.tardis.wrapper.server;
 import com.google.gson.InstanceCreator;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
+import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
@@ -18,9 +20,14 @@ import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisChunkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -32,8 +39,8 @@ public class ServerTardis extends Tardis {
 
 	@Exclude private boolean lock;
 
-	public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorVariantSchema variantType) {
-		super(uuid, new ServerTardisTravel(pos), new ServerTardisDesktop(schema), new ServerTardisExterior(variantType));
+	public ServerTardis(UUID uuid, TardisDesktopSchema schema, ExteriorVariantSchema variantType) {
+		super(uuid, new ServerTardisDesktop(schema), new ServerTardisExterior(variantType));
 	}
 
 	private ServerTardis() {
@@ -51,13 +58,6 @@ public class ServerTardis extends Tardis {
 
 	public void unlock(Unlockable unlockable) {
 		PropertiesHandler.setUnlocked(this, unlockable, true);
-	}
-
-	public void startTick(MinecraftServer server) {
-		if (this.isDirty()) {
-			this.sync();
-			this.markDirty();
-		}
 	}
 
 	public void tick(MinecraftServer server) {
@@ -105,16 +105,53 @@ public class ServerTardis extends Tardis {
 		if (PropertiesHandler.getBool(this.properties(), PropertiesHandler.IS_FALLING))
 			DoorData.lockTardis(true, this, null, true);
 
-		AbsoluteBlockPos.Directed pos = this.getExteriorPos();
+		if (!(this.travel().getPosition() instanceof DirectedGlobalPos.Cached cached))
+			return;
+
 		// If we're falling nearly out of the world, freak out.
 		if (PropertiesHandler.getBool(this.properties(), PropertiesHandler.IS_FALLING)
-				&& pos.getY() <= pos.getWorld().getBottomY() + 2) {
+				&& cached.getPos().getY() <= cached.getWorld().getBottomY() + 2) {
 			PropertiesHandler.set(this, PropertiesHandler.ANTIGRAVS_ENABLED, true);
 			PropertiesHandler.set(this, PropertiesHandler.IS_FALLING, false);
 		}
+	}
 
-		this.travel().tick(server);
-		this.getDesktop().tick(server);
+	protected void generateInteriorWithItem() {
+		TardisUtil.getEntitiesInInterior(this, 50)
+				.stream()
+				.filter(entity -> (entity instanceof ItemEntity) &&
+						(((ItemEntity) entity).getStack().getItem() == Items.NETHER_STAR ||
+								isChargedCrystal(((ItemEntity) entity).getStack())) &&
+						entity.isTouchingWater()).forEach(entity -> {
+					DirectedGlobalPos position = this.travel().getPosition();
+
+					if (position == null)
+						return;
+
+					this.setFuelCount(8000);
+					this.engine().enablePower();
+					entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
+					entity.getWorld().playSound(null, position.getPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
+
+					InteriorChangingHandler interior = this.handler(TardisComponent.Id.INTERIOR);
+					interior.queueInteriorChange(DesktopRegistry.getInstance().getRandom(this));
+
+					if (interior.isGenerating()) {
+						entity.discard();
+					}
+				});
+	}
+
+	private boolean isChargedCrystal(ItemStack stack) {
+		if (!(stack.getItem() instanceof ChargedZeitonCrystalItem))
+			return false;
+
+		NbtCompound nbt = stack.getOrCreateNbt();
+
+		if (!nbt.contains(ChargedZeitonCrystalItem.FUEL_KEY))
+			return false;
+
+		return nbt.getDouble(ChargedZeitonCrystalItem.FUEL_KEY) >= ChargedZeitonCrystalItem.MAX_FUEL;
 	}
 
 	public static Object creator() {

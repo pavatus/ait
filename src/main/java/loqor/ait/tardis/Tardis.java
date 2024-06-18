@@ -1,9 +1,6 @@
 package loqor.ait.tardis;
 
-import loqor.ait.core.data.AbsoluteBlockPos;
-import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
-import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
@@ -16,14 +13,6 @@ import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.util.Disposable;
-import loqor.ait.tardis.util.TardisUtil;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -34,7 +23,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	@Exclude private boolean aged = false;
 
 	private UUID uuid;
-	protected TardisTravel travel;
 	protected TardisDesktop desktop;
 	protected TardisExterior exterior;
 	protected TardisHandlersManager handlers;
@@ -42,9 +30,8 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	protected boolean dirty = false;
 	public int tardisHammerAnnoyance = 0; // todo move :(
 
-	protected Tardis(UUID uuid, TardisTravel travel, TardisDesktop desktop, TardisExterior exterior) {
+	protected Tardis(UUID uuid, TardisDesktop desktop, TardisExterior exterior) {
 		this.uuid = uuid;
-		this.travel = travel;
 		this.desktop = desktop;
 		this.exterior = exterior;
 		this.handlers = new TardisHandlersManager();
@@ -56,7 +43,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 	@Override
 	protected void onInit(TardisComponent.InitContext ctx) {
-		TardisComponent.init(travel, this, ctx);
 		TardisComponent.init(desktop, this, ctx);
 		TardisComponent.init(exterior, this, ctx);
 		TardisComponent.init(handlers, this, ctx);
@@ -68,9 +54,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 		this.desktop.dispose();
 		this.desktop = null;
-
-		this.travel.dispose();
-		this.travel = null;
 
 		this.exterior.dispose();
 		this.exterior = null;
@@ -112,8 +95,8 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return this.getDoor().locked();
 	}
 
-	public TardisTravel travel() {
-		return travel;
+	public TravelHandler travel() {
+		return this.handler(TardisComponent.Id.TRAVEL);
 	}
 
 	public LoyaltyHandler loyalty() {
@@ -210,7 +193,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	}
 
 	public boolean inFlight() {
-		return this.travel().getState() != TardisTravel.State.LANDED;
+		return this.travel().getState() != TravelHandler.State.LANDED;
 	}
 
 	public boolean isUnlocked(Unlockable unlockable) {
@@ -250,65 +233,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 	public void setSiegeBeingHeld(UUID b) {
 		this.<SiegeData>handler(TardisComponent.Id.SIEGE).setSiegeBeingHeld(b);
-	}
-
-	public AbsoluteBlockPos.Directed position() {
-		return this.travel().getPosition();
-	}
-
-	public AbsoluteBlockPos.Directed destination() {
-		return this.travel().getDestination();
-	}
-
-	protected void generateInteriorWithItem() {
-		TardisUtil.getEntitiesInInterior(this, 50)
-				.stream()
-				.filter(entity -> (entity instanceof ItemEntity) &&
-						(((ItemEntity) entity).getStack().getItem() == Items.NETHER_STAR ||
-								isChargedCrystal(((ItemEntity) entity).getStack())) &&
-						entity.isTouchingWater()).forEach(entity -> {
-					if (this.getExteriorPos() == null) return;
-					this.setFuelCount(8000);
-					this.engine().enablePower();
-					entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
-					entity.getWorld().playSound(null, this.getExteriorPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
-
-					InteriorChangingHandler interior = this.handler(TardisComponent.Id.INTERIOR);
-					interior.queueInteriorChange(DesktopRegistry.getInstance().getRandom(this));
-
-					if (interior.isGenerating()) {
-						entity.discard();
-					}
-				});
-	}
-
-	private boolean isChargedCrystal(ItemStack stack) {
-		if(stack.getItem() instanceof ChargedZeitonCrystalItem) {
-			NbtCompound nbt = stack.getOrCreateNbt();
-			if(nbt.contains(ChargedZeitonCrystalItem.FUEL_KEY)) {
-				return nbt.getDouble(ChargedZeitonCrystalItem.FUEL_KEY) >= ChargedZeitonCrystalItem.MAX_FUEL;
-			}
-		}
-		return false;
-	}
-
-	public AbsoluteBlockPos.Directed getDoorPos() {
-		return this.desktop.getInteriorDoorPos() != null ? this.desktop.getInteriorDoorPos() :
-				new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), 0);
-	}
-
-	public AbsoluteBlockPos.Directed getExteriorPos() {
-		return this.travel != null ? this.travel.getPosition() :
-				new AbsoluteBlockPos.Directed(0, 0, 0, new SerialDimension(World.OVERWORLD.getValue().toString()), 0);
-	}
-
-	public boolean isDirty() {
-		return dirty;
-	}
-
-	@Deprecated
-	public void markDirty() {
-		this.dirty = false;
 	}
 
 	public boolean isDisposed() {

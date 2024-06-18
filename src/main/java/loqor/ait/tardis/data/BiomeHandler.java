@@ -1,11 +1,12 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,19 +18,14 @@ public class BiomeHandler extends TardisComponent {
         super(Id.BIOME);
     }
 
-    /*@Override
-    public void tick(MinecraftServer server) {
-        super.tick(server);
-    }*/
-
-    public void setBiome(Tardis tardis) {
-        if(tardis.getExteriorPos() == null) return;
-        World world = tardis.getExteriorPos().getWorld();
-
-        if(world.isClient())
+    public void update() {
+        if (!(tardis.travel().getPosition() instanceof DirectedGlobalPos.Cached cached))
             return;
 
-        PropertiesHandler.set(tardis, BIOME_KEY, world.getBiome(tardis.position()).getKey().get().getValue().getPath());
+        BlockPos pos = cached.getPos();
+        World world = cached.getWorld();
+
+        PropertiesHandler.set(tardis, BIOME_KEY, world.getBiome(pos).getKey().get().getValue().getPath());
     }
 
     public String getBiomeKey() {
@@ -49,62 +45,56 @@ public class BiomeHandler extends TardisComponent {
         };
     }
 
+    // TODO: replace "replace" with "substring"
     public enum BiomeType implements StringIdentifiable {
         DEFAULT(),
         SNOWY() {
             @Override
             public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
+                return new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png", "_snowy.png"));
-                return specific;
             }
         },
         SCULK() {
             @Override
             public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
+                return new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png",  "_sculk.png"));
-                return specific;
             }
         },
         SANDY() {
             @Override
             public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
+                return new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png",  "_sand.png"));
-                return specific;
             }
         },
         RED_SANDY() {
             @Override
             public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
+                return new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png",  "_red_sand.png"));
-                return specific;
             }
         },
         MUDDY() {
             @Override
             public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
+                return new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png", "_mud.png"));
-                return specific;
             }
         },
         CHORUS() {
             @Override
             public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
+                return new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png",  "_chorus.png"));
-                return specific;
             }
         },
         CHERRY() {
             @Override
             public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
+                return new Identifier(AITMod.MOD_ID,
                         texture.getPath().replace(".png", "_cherry.png"));
-                return specific;
             }
         };
 
