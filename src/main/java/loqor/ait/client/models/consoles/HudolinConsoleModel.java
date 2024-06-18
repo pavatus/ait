@@ -1,6 +1,4 @@
-// Made with Blockbench 4.10.3
-// Exported for Minecraft version 1.17+ for Yarn
-// Paste this class into your mod and generate all required imports
+package loqor.ait.client.models.consoles;
 
 
 import loqor.ait.client.animation.console.hudolin.HudolinAnimations;
