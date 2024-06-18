@@ -131,7 +131,7 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 				JsonArray jsonConsoles = obj.getAsJsonArray("consoles");
 				consoles = LegacyUtil.flatConsoles(jsonConsoles, context);
 			} else {
-				consoles = context.deserialize(jsonConsolePos, HashSet.class);
+				consoles = context.<HashSet<BlockPos>>deserialize(jsonConsolePos, HashSet.class);
 			}
 
 			return new TardisDesktop(schema, doorPos, corners, consoles);
