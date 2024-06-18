@@ -1,5 +1,10 @@
-package loqor.ait.client.models.consoles;
+// Made with Blockbench 4.10.3
+// Exported for Minecraft version 1.17+ for Yarn
+// Paste this class into your mod and generate all required imports
 
+
+import loqor.ait.client.animation.console.hudolin.HudolinAnimations;
+import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
@@ -10,6 +15,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class HudolinConsoleModel extends ConsoleModel {
 	private final ModelPart console;
+
 	public HudolinConsoleModel(ModelPart root) {
 		this.console = root.getChild("console");
 	}
@@ -22,9 +28,9 @@ public class HudolinConsoleModel extends ConsoleModel {
 
 		ModelPartData rotor = base_console.addChild("rotor", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
 
-		ModelPartData rotor_bottom = rotor.addChild("rotor_bottom", ModelPartBuilder.create().uv(38, 67).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 12.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -19.5F, 0.0F));
+		ModelPartData rotor_bottom_spikes = rotor.addChild("rotor_bottom_spikes", ModelPartBuilder.create().uv(38, 67).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 12.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -19.5F, 0.0F));
 
-		ModelPartData bone176 = rotor_bottom.addChild("bone176", ModelPartBuilder.create().uv(39, 30).cuboid(-0.5F, -13.5F, 2.3484F, 1.0F, 9.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone176 = rotor_bottom_spikes.addChild("bone176", ModelPartBuilder.create().uv(39, 30).cuboid(-0.5F, -13.5F, 2.3484F, 1.0F, 9.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
 		ModelPartData bone204 = bone176.addChild("bone204", ModelPartBuilder.create(), ModelTransform.pivot(-0.5F, -1.5F, -1.0F));
 
@@ -36,33 +42,9 @@ public class HudolinConsoleModel extends ConsoleModel {
 
 		ModelPartData bone180 = bone179.addChild("bone180", ModelPartBuilder.create().uv(39, 30).cuboid(-0.5F, -13.5F, 2.3484F, 1.0F, 9.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-		ModelPartData rotor_bottom2 = rotor.addChild("rotor_bottom2", ModelPartBuilder.create().uv(28, 42).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 12.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -32.5F, 0.0F));
+		ModelPartData rotor_bottom_ring = rotor.addChild("rotor_bottom_ring", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -26.5F, 0.0F, 0.0F, -0.5236F, 0.0F));
 
-		ModelPartData bone161 = rotor_bottom2.addChild("bone161", ModelPartBuilder.create().uv(0, 30).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 9.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
-
-		ModelPartData bone162 = bone161.addChild("bone162", ModelPartBuilder.create().uv(28, 42).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 12.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
-
-		ModelPartData bone163 = bone162.addChild("bone163", ModelPartBuilder.create().uv(0, 30).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 9.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
-
-		ModelPartData bone164 = bone163.addChild("bone164", ModelPartBuilder.create().uv(28, 42).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 12.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
-
-		ModelPartData bone165 = bone164.addChild("bone165", ModelPartBuilder.create().uv(0, 30).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 9.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
-
-		ModelPartData rotor_bottom3 = rotor.addChild("rotor_bottom3", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -38.5F, 0.0F, 0.0F, -0.5236F, 0.0F));
-
-		ModelPartData bone166 = rotor_bottom3.addChild("bone166", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
-
-		ModelPartData bone167 = bone166.addChild("bone167", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
-
-		ModelPartData bone168 = bone167.addChild("bone168", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
-
-		ModelPartData bone169 = bone168.addChild("bone169", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
-
-		ModelPartData bone170 = bone169.addChild("bone170", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
-
-		ModelPartData rotor_bottom4 = rotor.addChild("rotor_bottom4", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -26.5F, 0.0F, 0.0F, -0.5236F, 0.0F));
-
-		ModelPartData bone171 = rotor_bottom4.addChild("bone171", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+		ModelPartData bone171 = rotor_bottom_ring.addChild("bone171", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
 		ModelPartData bone172 = bone171.addChild("bone172", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
@@ -71,6 +53,30 @@ public class HudolinConsoleModel extends ConsoleModel {
 		ModelPartData bone174 = bone173.addChild("bone174", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
 		ModelPartData bone175 = bone174.addChild("bone175", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+
+		ModelPartData rotor_top_spikes = rotor.addChild("rotor_top_spikes", ModelPartBuilder.create().uv(28, 42).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 12.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -32.5F, 0.0F, 0.0F, 1.0472F, 0.0F));
+
+		ModelPartData bone161 = rotor_top_spikes.addChild("bone161", ModelPartBuilder.create().uv(0, 30).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 9.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
+
+		ModelPartData bone162 = bone161.addChild("bone162", ModelPartBuilder.create().uv(28, 42).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 12.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
+
+		ModelPartData bone163 = bone162.addChild("bone163", ModelPartBuilder.create().uv(0, 30).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 9.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
+
+		ModelPartData bone164 = bone163.addChild("bone164", ModelPartBuilder.create().uv(28, 42).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 12.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
+
+		ModelPartData bone165 = bone164.addChild("bone165", ModelPartBuilder.create().uv(0, 30).cuboid(-0.5F, -16.5F, 2.3484F, 1.0F, 9.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
+
+		ModelPartData rotor_top_ring = rotor.addChild("rotor_top_ring", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -38.5F, 0.0F, 0.0F, -0.5236F, 0.0F));
+
+		ModelPartData bone166 = rotor_top_ring.addChild("bone166", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+
+		ModelPartData bone167 = bone166.addChild("bone167", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+
+		ModelPartData bone168 = bone167.addChild("bone168", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+
+		ModelPartData bone169 = bone168.addChild("bone169", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+
+		ModelPartData bone170 = bone169.addChild("bone170", ModelPartBuilder.create().uv(0, 74).cuboid(-1.5F, -4.5F, 2.7234F, 3.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
 		ModelPartData plinth = base_console.addChild("plinth", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
@@ -617,8 +623,7 @@ public class HudolinConsoleModel extends ConsoleModel {
 	@Override
 	public Animation getAnimationForState(TardisTravel.State state) {
 		return switch (state) {
-			//case LANDED -> SteamAnimations.CONSOLE_STEAM_IDLE;
-			//case FLIGHT, MAT, DEMAT, CRASH -> SteamAnimations.CONSOLE_STEAM_FLIGHT;
+			case FLIGHT, MAT, DEMAT, CRASH -> HudolinAnimations.HUDOLIN_FLIGHT;
 			default -> Animation.Builder.create(0).build();
 		};
 	}

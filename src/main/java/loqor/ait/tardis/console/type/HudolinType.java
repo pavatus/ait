@@ -28,9 +28,7 @@ public class HudolinType extends ConsoleTypeSchema {
 			new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.06249999f, 0.2f), new Vector3f(-0.2523437635973096f, 0.3999996166676283f, -0.8867187527939677f)),
 			new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.074999996f, 0.17500001f), new Vector3f(0.7890625102445483f, 0.4375001899898052f, 0.002343735657632351f)),
 			new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.2875f, 0.29999998f), new Vector3f(0.42343749571591616f, 0.4000013330951333f, 0.7378906384110451f)),
-
 			new ControlTypes(new SecurityControl(), EntityDimensions.changing(0.07499999f, 0.1375f), new Vector3f(0.778906268067658f, 0.4624997554346919f, 0.08945311885327101f)),
-
 			new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.3125f, 0.125f), new Vector3f(-0.38750000577419996f, 0.4375001899898052f, 0.6359375203028321f)),
 			new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.1125f, 0.15f), new Vector3f(0.6273437645286322f, 0.5025001531466842f, -0.005078110843896866f)),
 			new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.125f, 0.15f), new Vector3f(0.586718768812716f, 0.4375001899898052f, -0.5984374964609742f)),
