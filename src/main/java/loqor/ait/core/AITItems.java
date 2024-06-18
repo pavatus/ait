@@ -64,6 +64,8 @@ public class AITItems implements ItemRegistryContainer {
 
 	// Waypoint-related
 	public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
+
+	// Music discs
 	public static final Item DRIFTING_MUSIC_DISC = new MusicDiscItem(1, AITSounds.DRIFTING_MUSIC, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 169);
 	public static final Item MERCURY_MUSIC_DISC = new MusicDiscItem(11, AITSounds.MERCURY_MUSIC, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 216);
 

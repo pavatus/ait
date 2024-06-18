@@ -112,9 +112,10 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		this.drawBackground(context);
 		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.LEAVE_BEHIND) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
 		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
+		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
 
-		context.drawText(this.textRenderer, Text.literal("Date created:"), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 5))), 0xadcaf7, false);
-		context.drawText(this.textRenderer, Text.literal(this.tardis().<StatsData>handler(TardisComponent.Id.STATS).getCreationString()), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 6))), 0xadcaf7, false);
+		context.drawText(this.textRenderer, Text.literal("Date created:"), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 7))), 0xadcaf7, false);
+		context.drawText(this.textRenderer, Text.literal(this.tardis().<StatsData>handler(TardisComponent.Id.STATS).getCreationString()), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 8))), 0xadcaf7, false);
 		super.render(context, mouseX, mouseY, delta);
 	}
 

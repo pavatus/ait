@@ -222,16 +222,16 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		context.getMatrices().multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
 		context.drawTexture(BACKGROUND, x - 41, y - 41, 173, 173, 83, 83);
 		context.getMatrices().pop();
-		if (!this.buttons.get(4).isHovered()) context.drawTexture(BACKGROUND, left + 149, top + 142, 0, 166, 12, 12);
-		if (!this.buttons.get(5).isHovered()) context.drawTexture(BACKGROUND, left + 232, top + 142, 12, 166, 12, 12);
-		if (!this.buttons.get(6).isHovered()) context.drawTexture(BACKGROUND, left + 228, top + 111, 0, 178, 16, 16);
+		if (!this.buttons.get(5).isHovered()) context.drawTexture(BACKGROUND, left + 149, top + 142, 0, 166, 12, 12);
+		if (!this.buttons.get(6).isHovered()) context.drawTexture(BACKGROUND, left + 232, top + 142, 12, 166, 12, 12);
+		if (!this.buttons.get(7).isHovered()) context.drawTexture(BACKGROUND, left + 228, top + 111, 0, 178, 16, 16);
 
 		// big triangles
-		if (!this.buttons.get(7).isHovered()) context.drawTexture(TEXTURE, left + 149, top + 76, 0, 197, 15, 30);
-		if (!this.buttons.get(8).isHovered()) context.drawTexture(TEXTURE, left + 229, top + 76, 30, 197, 15, 30);
+		if (!this.buttons.get(8).isHovered()) context.drawTexture(TEXTURE, left + 149, top + 76, 0, 197, 15, 30);
+		if (!this.buttons.get(9).isHovered()) context.drawTexture(TEXTURE, left + 229, top + 76, 30, 197, 15, 30);
 
 		// big apply button
-		if (!this.buttons.get(9).isHovered()) context.drawTexture(TEXTURE, left + 168, top + 94, 0, 227, 57, 12);
+		if (!this.buttons.get(10).isHovered()) context.drawTexture(TEXTURE, left + 168, top + 94, 0, 227, 57, 12);
 
 		if (tardis() == null) return;
 
@@ -275,7 +275,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				this.selectedDesktop.name(),
 				(int) (left + (bgWidth * 0.77f)),
 				(int) (top + (bgHeight * 0.58f)),
-				0x7CEFF4
+				0xffffff
 		);
 
 		if (this.selectedDesktop == null) return;
@@ -342,7 +342,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				hum,
 				(int) (left + (bgWidth * 0.76f)) - this.textRenderer.getWidth(hum) / 2,
 				(int) (top + (bgHeight * 0.82f)),
-				0xadcaf7,
+				0xffffff,
 				true
 		);
 	}

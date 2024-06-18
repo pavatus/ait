@@ -246,33 +246,7 @@ public class AITMod implements ModInitializer {
 					if (tardis == null)
 						return;
 
-					PropertiesHandler.set(tardis.properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
-				});
-			});
-		});
-
-		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.SHIELDS, (server, player, handler, buf, responseSender) -> {
-			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
-				boolean shields = buf.readBoolean();
-
-				server.execute(() -> {
-					if (tardis == null)
-						return;
-
-					PropertiesHandler.set(tardis.properties(), ShieldData.IS_SHIELDED, shields);
-				});
-			});
-		});
-
-		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.VISUAL_SHIELDS, (server, player, handler, buf, responseSender) -> {
-			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
-				boolean shields = buf.readBoolean();
-
-				server.execute(() -> {
-					if (tardis == null)
-						return;
-
-					PropertiesHandler.set(tardis.properties(), ShieldData.IS_VISUALLY_SHIELDED, tardis.areShieldsActive() && shields);
+					PropertiesHandler.set(tardis, PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
 				});
 			});
 		});

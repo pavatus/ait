@@ -11,6 +11,6 @@ public class HudolinVariant extends ConsoleVariantSchema {
 	public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/hudolin");
 
 	public HudolinVariant() {
-		super(HudolinType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.COMPANION));
+		super(HudolinType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.OWNER));
 	}
 }

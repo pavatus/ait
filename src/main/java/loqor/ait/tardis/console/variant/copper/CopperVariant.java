@@ -10,6 +10,6 @@ public class CopperVariant extends ConsoleVariantSchema {
 	public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/copper");
 
 	public CopperVariant() {
-		super(CopperType.REFERENCE, REFERENCE,new Loyalty(Loyalty.Type.PILOT));
+		super(CopperType.REFERENCE, REFERENCE,new Loyalty(Loyalty.Type.OWNER));
 	}
 }
