@@ -3,6 +3,7 @@ package loqor.ait.core.blocks;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blockentities.DetectorBlockEntity;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.TardisCrashData;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -11,10 +12,12 @@ import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -24,104 +27,92 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Function;
+
+@SuppressWarnings("deprecation")
 public class DetectorBlock extends WallMountedBlock implements BlockEntityProvider {
-	public static final BooleanProperty POWERED;
-	public static final BooleanProperty INVERTED;
-	public static final IntProperty POWER;
-	protected static final VoxelShape NORTH_WALL_SHAPE;
-	protected static final VoxelShape SOUTH_WALL_SHAPE;
-	protected static final VoxelShape WEST_WALL_SHAPE;
-	protected static final VoxelShape EAST_WALL_SHAPE;
-	protected static final VoxelShape FLOOR_Z_AXIS_SHAPE;
-	protected static final VoxelShape FLOOR_X_AXIS_SHAPE;
-	protected static final VoxelShape CEILING_Z_AXIS_SHAPE;
-	protected static final VoxelShape CEILING_X_AXIS_SHAPE;
+
+	public static final BooleanProperty POWERED = Properties.POWERED;
+	public static final IntProperty POWER = Properties.POWER;
+
+	public static final EnumProperty<Type> TYPE = EnumProperty.of("type", Type.class);
+
+	protected static final VoxelShape NORTH_WALL_SHAPE = Block.createCuboidShape(5.0, 4.0, 10.0, 11.0, 12.0, 16.0);
+	protected static final VoxelShape SOUTH_WALL_SHAPE = Block.createCuboidShape(5.0, 4.0, 0.0, 11.0, 12.0, 6.0);
+	protected static final VoxelShape WEST_WALL_SHAPE = Block.createCuboidShape(10.0, 4.0, 5.0, 16.0, 12.0, 11.0);
+	protected static final VoxelShape EAST_WALL_SHAPE = Block.createCuboidShape(0.0, 4.0, 5.0, 6.0, 12.0, 11.0);
+	protected static final VoxelShape FLOOR_Z_AXIS_SHAPE = Block.createCuboidShape(5.0, 0.0, 4.0, 11.0, 6.0, 12.0);
+	protected static final VoxelShape FLOOR_X_AXIS_SHAPE = Block.createCuboidShape(4.0, 0.0, 5.0, 12.0, 6.0, 11.0);
+	protected static final VoxelShape CEILING_Z_AXIS_SHAPE = Block.createCuboidShape(5.0, 10.0, 4.0, 11.0, 16.0, 12.0);
+	protected static final VoxelShape CEILING_X_AXIS_SHAPE = Block.createCuboidShape(4.0, 10.0, 5.0, 12.0, 16.0, 11.0);
 
 	public DetectorBlock(AbstractBlock.Settings settings) {
-		super(settings);
-		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(INVERTED, false).with(POWER, 0).with(POWERED, false).with(FACE, WallMountLocation.WALL));
+		super(settings.emissiveLighting((state, world, pos) -> state.get(POWERED)).luminance(value -> value.get(POWERED) ? 9 : 3));
+		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWER, 0)
+				.with(POWERED, false).with(FACE, WallMountLocation.WALL).with(TYPE, Type.POWER));
 	}
 
+	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		switch (state.get(FACE)) {
-			case FLOOR:
-				switch (state.get(FACING).getAxis()) {
-					case X:
-						return FLOOR_X_AXIS_SHAPE;
-					case Z:
-					default:
-						return FLOOR_Z_AXIS_SHAPE;
-				}
-			case WALL:
-				switch (state.get(FACING)) {
-					case EAST:
-						return EAST_WALL_SHAPE;
-					case WEST:
-						return WEST_WALL_SHAPE;
-					case SOUTH:
-						return SOUTH_WALL_SHAPE;
-					case NORTH:
-					default:
-						return NORTH_WALL_SHAPE;
-				}
-			case CEILING:
-			default:
-				switch (state.get(FACING).getAxis()) {
-					case X:
-						return CEILING_X_AXIS_SHAPE;
-					case Z:
-					default:
-						return CEILING_Z_AXIS_SHAPE;
-				}
-		}
+        return switch (state.get(FACE)) {
+            case FLOOR -> state.get(FACING).getAxis() == Direction.Axis.X ? FLOOR_X_AXIS_SHAPE : FLOOR_Z_AXIS_SHAPE;
+            case WALL -> switch (state.get(FACING)) {
+                case EAST -> EAST_WALL_SHAPE;
+                case WEST -> WEST_WALL_SHAPE;
+                case SOUTH -> SOUTH_WALL_SHAPE;
+                default -> NORTH_WALL_SHAPE;
+            };
+            default -> state.get(FACING).getAxis() == Direction.Axis.X ? CEILING_X_AXIS_SHAPE : CEILING_Z_AXIS_SHAPE;
+        };
 	}
 
+	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if (player.canModifyBlocks()) {
-			if (world.isClient) {
-				return ActionResult.SUCCESS;
-			} else {
-				BlockState blockState = state.cycle(INVERTED);
-				world.setBlockState(pos, blockState, Block.NO_REDRAW);
-				world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Emitter.of(player, blockState));
-				return ActionResult.CONSUME;
-			}
-		} else {
+		if (!player.canModifyBlocks())
 			return super.onUse(state, world, pos, player, hand, hit);
-		}
+
+		if (world.isClient())
+			return ActionResult.SUCCESS;
+
+		state = state.cycle(TYPE);
+
+		world.setBlockState(pos, state, Block.NO_REDRAW);
+		world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Emitter.of(player, state));
+		return ActionResult.CONSUME;
 	}
 
+	@Override
 	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		if (!moved && !state.isOf(newState.getBlock())) {
-			if (state.get(POWERED)) {
-				this.updateNeighbors(state, world, pos);
-			}
+		if (moved || state.isOf(newState.getBlock()))
+			return;
 
-			super.onStateReplaced(state, world, pos, newState, moved);
-		}
+		if (state.get(POWERED))
+			this.updateNeighbors(state, world, pos);
+
+		super.onStateReplaced(state, world, pos, newState, false);
 	}
 
+	@Override
 	public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
 		return state.get(POWER);
 	}
 
+	@Override
 	public boolean emitsRedstonePower(BlockState state) {
 		return true;
 	}
 
-	private void updateNeighbors(BlockState state, World world, BlockPos pos) {
-		world.updateNeighborsAlways(pos, this);
-		world.updateNeighborsAlways(pos.offset(getDirection(state).getOpposite()), this);
-	}
-
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		builder.add(FACE, FACING, POWERED, INVERTED, POWER);
+		builder.add(FACE, FACING, POWERED, POWER, TYPE);
 	}
 
+	@Override
 	public boolean hasSidedTransparency(BlockState state) {
 		return true;
 	}
 
+	@Override
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
 	}
@@ -136,36 +127,64 @@ public class DetectorBlock extends WallMountedBlock implements BlockEntityProvid
 		return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
 	}
 
+	private void updateNeighbors(BlockState state, World world, BlockPos pos) {
+		world.updateNeighborsAlways(pos, this);
+		world.updateNeighborsAlways(pos.offset(DetectorBlock.getDirection(state).getOpposite()), this);
+	}
+
 	private static void updateState(BlockState state, World world, BlockPos pos, Tardis tardis) {
-		if (state.get(INVERTED)) {
-			world.setBlockState(pos, state.with(POWER, tardis.inFlight() ? 15 : 0).with(POWERED, true), Block.NOTIFY_ALL);
-		} else {
-			world.setBlockState(pos, state.with(POWER, tardis.engine().hasPower() ? 15 : 0).with(POWERED, true), Block.NOTIFY_ALL);
-		}
+		int power = state.get(TYPE).getPower(tardis);
+
+		world.setBlockState(pos, state.with(POWER, power)
+				.with(POWERED, power != 0), NOTIFY_ALL);
 	}
 
-	private static void tick(World world, BlockPos pos, BlockState state, DetectorBlockEntity blockEntity) {
-		if (world.isClient() || blockEntity.findTardis().isEmpty()) return;
-		updateState(state, world, pos, blockEntity.findTardis().get());
-	}
+	private static void tick(World world, BlockPos pos, BlockState state, DetectorBlockEntity detector) {
+		if (world.isClient() || detector.tardis().isEmpty())
+			return;
 
-	static {
-		POWERED = Properties.POWERED;
-		POWER = Properties.POWER;
-		INVERTED = Properties.INVERTED;
-		NORTH_WALL_SHAPE = Block.createCuboidShape(5.0, 4.0, 10.0, 11.0, 12.0, 16.0);
-		SOUTH_WALL_SHAPE = Block.createCuboidShape(5.0, 4.0, 0.0, 11.0, 12.0, 6.0);
-		WEST_WALL_SHAPE = Block.createCuboidShape(10.0, 4.0, 5.0, 16.0, 12.0, 11.0);
-		EAST_WALL_SHAPE = Block.createCuboidShape(0.0, 4.0, 5.0, 6.0, 12.0, 11.0);
-		FLOOR_Z_AXIS_SHAPE = Block.createCuboidShape(5.0, 0.0, 4.0, 11.0, 6.0, 12.0);
-		FLOOR_X_AXIS_SHAPE = Block.createCuboidShape(4.0, 0.0, 5.0, 12.0, 6.0, 11.0);
-		CEILING_Z_AXIS_SHAPE = Block.createCuboidShape(5.0, 10.0, 4.0, 11.0, 16.0, 12.0);
-		CEILING_X_AXIS_SHAPE = Block.createCuboidShape(4.0, 10.0, 5.0, 12.0, 16.0, 11.0);
+		updateState(state, world, pos, detector.tardis().get());
 	}
 
 	@Nullable
 	@Override
 	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
 		return new DetectorBlockEntity(pos, state);
+	}
+
+	public enum Type implements StringIdentifiable {
+		FLIGHT(tardis -> tardis.inFlight() ? 15 : 0),
+		POWER(tardis -> tardis.engine().hasPower() ? 15 : 0),
+		CRASHED(tardis -> {
+			TardisCrashData.State state = tardis.crash().getState();
+
+			if (state == TardisCrashData.State.NORMAL)
+				return 0;
+
+			return state == TardisCrashData.State.UNSTABLE ? 7 : 15;
+		}),
+		DOOR_LOCKED(tardis -> tardis.getDoor().locked() ? 15 : 0),
+		DOOR_OPEN(tardis -> tardis.getDoor().isOpen() ? 15 : 0),
+		SONIC(tardis -> tardis.sonic().hasConsoleSonic() ? 15 : 0),
+		ALARMS(tardis -> tardis.alarm().isEnabled() ? 15 : 0);
+
+		private static final Type[] values = Type.values();
+
+		private final String name;
+		private final Function<Tardis, Integer> func;
+
+		Type(Function<Tardis, Integer> func) {
+			this.name = this.toString().toLowerCase();
+			this.func = func;
+		}
+
+		public int getPower(Tardis tardis) {
+			return this.func.apply(tardis);
+		}
+
+		@Override
+		public String asString() {
+			return this.name;
+		}
 	}
 }

@@ -4,15 +4,18 @@ import com.google.gson.*;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.base.Nameable;
+import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.core.data.base.Nameable;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.core.data.schema.door.DoorSchema;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
@@ -40,6 +43,9 @@ public abstract class ExteriorVariantSchema implements Unlockable, Nameable {
 	private final Identifier category;
 	private final Identifier id;
 	private final Loyalty loyalty;
+
+	@Environment(EnvType.CLIENT)
+	private ClientExteriorVariantSchema cachedSchema;
 
 	protected ExteriorVariantSchema(String name, Identifier category, Identifier id, Loyalty loyalty) {
 		this.name = name;
@@ -88,6 +94,14 @@ public abstract class ExteriorVariantSchema implements Unlockable, Nameable {
 
 	public ExteriorCategorySchema category() {
 		return CategoryRegistry.getInstance().get(this.categoryId());
+	}
+
+	@Environment(EnvType.CLIENT)
+	public ClientExteriorVariantSchema getClient() {
+		if (this.cachedSchema == null)
+			this.cachedSchema = ClientExteriorVariantRegistry.withParent(this);
+
+		return cachedSchema;
 	}
 
 	/**

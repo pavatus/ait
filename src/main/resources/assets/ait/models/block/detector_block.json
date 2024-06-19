@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "ait:block/detector_power_off",
-		"particle": "ait:block/detector_power_off"
+		"0": "ait:block/detector_block",
+		"particle": "ait:block/detector_block"
 	},
 	"elements": [
 		{
@@ -54,7 +54,7 @@
 				"east": {"uv": [0, 4.75, 0.5, 4.75], "texture": "#0"},
 				"south": {"uv": [1.5, 4.75, 2, 4.75], "texture": "#0"},
 				"west": {"uv": [1, 4.75, 1.5, 4.75], "texture": "#0"},
-				"up": {"uv": [1, 4.75, 0.5, 4.25], "texture": "#0"},
+				"up": {"uv": [1, 4.75, 0.5, 4.25], "texture": "#0", "tintindex": 0},
 				"down": {"uv": [1.5, 4.25, 1, 4.75], "texture": "#0"}
 			}
 		},
@@ -67,7 +67,7 @@
 				"east": {"uv": [3, 5, 3.5, 5], "texture": "#0"},
 				"south": {"uv": [4.5, 5, 5, 5], "texture": "#0"},
 				"west": {"uv": [4, 5, 4.5, 5], "texture": "#0"},
-				"up": {"uv": [4, 5, 3.5, 4.5], "texture": "#0"},
+				"up": {"uv": [4, 5, 3.5, 4.5], "texture": "#0", "tintindex": 0},
 				"down": {"uv": [4.5, 4.5, 4, 5], "texture": "#0"}
 			}
 		},

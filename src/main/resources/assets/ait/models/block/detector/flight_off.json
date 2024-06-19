@@ -1,0 +1,7 @@
+{
+	"parent": "ait:block/detector_block",
+	"textures": {
+		"0": "ait:block/detector/flight_off",
+		"particle": "ait:block/detector/flight_off"
+	}
+}

@@ -31,8 +31,6 @@ import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
-import java.util.Optional;
-
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
 
 	private DoorModel model;
@@ -63,15 +61,10 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		if (tardis.siege().isActive())
 			return;
 
-		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardis.getExterior().getVariant());
+		ClientExteriorVariantSchema exteriorVariant = tardis.getExterior().getVariant().getClient();
 		ClientDoorSchema variant = ClientDoorRegistry.withParent(exteriorVariant.parent().door());
-		Class<? extends DoorModel> modelClass = variant.model().getClass();
 
-		if (model != null && !(model.getClass().isInstance(modelClass)))
-			model = null;
-
-		if (model == null)
-			this.model = variant.model();
+		this.model = variant.model();
 
 		if (model == null)
 			return;

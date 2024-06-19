@@ -1,13 +1,14 @@
 package loqor.ait.registry.impl.console.variant;
 
-import loqor.ait.core.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
-import loqor.ait.registry.datapack.DatapackRegistry;
-import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.data.datapack.DatapackConsole;
+import loqor.ait.core.data.schema.console.ClientConsoleVariantSchema;
+import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
+import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.tardis.console.variant.alnico.client.ClientAlnicoVariant;
 import loqor.ait.tardis.console.variant.alnico.client.ClientBlueAlnicoVariant;
+import loqor.ait.tardis.console.variant.copper.client.ClientCopperVariant;
 import loqor.ait.tardis.console.variant.coral.client.ClientBlueCoralVariant;
 import loqor.ait.tardis.console.variant.coral.client.ClientGreenCoralVariant;
 import loqor.ait.tardis.console.variant.coral.client.ClientWhiteCoralVariant;
@@ -136,6 +137,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 	public static ClientConsoleVariantSchema STEAM_STEEL;
 	public static ClientConsoleVariantSchema STEAM_GILDED;
 	public static ClientConsoleVariantSchema HUDOLIN;
+	public static ClientConsoleVariantSchema COPPER;
 
 	@Override
 	public void onClientInit() {
@@ -167,5 +169,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
 		// Hudolin variants
 		HUDOLIN = register(new ClientHudolinVariant());
+
+		// Copper variants
+		COPPER = register(new ClientCopperVariant());
 	}
 }
