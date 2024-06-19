@@ -39,11 +39,10 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -51,8 +50,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -261,7 +258,7 @@ public class AITModClient implements ClientModInitializer {
         });
     }
 
-    public void waypointPredicate() {
+    public static void waypointPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.WAYPOINT_CARTRIDGE, new Identifier("type"), (itemStack, clientWorld, livingEntity, integer) -> {
             if(itemStack.getItem() == AITItems.WAYPOINT_CARTRIDGE)
                 if(itemStack.getOrCreateNbt().contains(WaypointItem.POS_KEY))
@@ -269,9 +266,17 @@ public class AITModClient implements ClientModInitializer {
                 else return 0.5f;
             else return 0.5f;
         });
+
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
+            if (tintIndex != 0)
+                return -1;
+
+            WaypointItem waypoint = (WaypointItem) stack.getItem();
+            return waypoint.getColor(stack);
+        }, AITItems.WAYPOINT_CARTRIDGE);
     }
 
-    public void hammerPredicate() {
+    public static void hammerPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.HAMMER, new Identifier("toymakered"), (itemStack, clientWorld, livingEntity, integer) -> {
             if(itemStack.getItem() instanceof HammerItem) {
                 if(itemStack.getName().getString().equalsIgnoreCase("Toymaker Hammer"))
@@ -283,7 +288,7 @@ public class AITModClient implements ClientModInitializer {
         });
     }
 
-    public void blockEntityRendererRegister() {
+    public static void blockEntityRendererRegister() {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE, ConsoleGeneratorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, ExteriorRenderer::new);
@@ -299,13 +304,13 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.FABRICATOR_BLOCK_ENTITY_TYPE, FabricatorRenderer::new);
     }
 
-    public void entityRenderRegister() {
+    public static void entityRenderRegister() {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, TardisRealRenderer::new);
     }
 
-    public void setupBlockRendering() {
+    public static void setupBlockRendering() {
         BlockRenderLayerMap map = BlockRenderLayerMap.INSTANCE;
         map.putBlock(AITBlocks.ZEITON_BLOCK, RenderLayer.getCutout());
         map.putBlock(AITBlocks.BUDDING_ZEITON, RenderLayer.getCutout());

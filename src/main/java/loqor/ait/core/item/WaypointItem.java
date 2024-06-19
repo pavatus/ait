@@ -7,10 +7,12 @@ import loqor.ait.core.data.Waypoint;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -27,11 +29,16 @@ import java.util.List;
 
 import static loqor.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 
-public class WaypointItem extends Item {
+public class WaypointItem extends Item implements DyeableItem {
 	public static final String POS_KEY = "pos";
 
 	public WaypointItem(Settings settings) {
 		super(settings);
+	}
+
+	@Override
+	public ItemStack getDefaultStack() {
+		return super.getDefaultStack();
 	}
 
 	@Override
@@ -100,6 +107,16 @@ public class WaypointItem extends Item {
 		tooltip.add(Text.translatable("waypoint.dimension.tooltip").append(Text.literal(
 						" > " + convertWorldValueToModified(dimension)))
 				.formatted(Formatting.BLUE));
+	}
+
+	@Override
+	public int getColor(ItemStack stack) {
+		NbtCompound nbt = stack.getSubNbt(DISPLAY_KEY);
+
+		if (nbt != null && nbt.contains(COLOR_KEY, NbtElement.NUMBER_TYPE))
+			return nbt.getInt(COLOR_KEY);
+
+		return 16777215; // white
 	}
 
 	public static ItemStack create(Waypoint pos) {
