@@ -6,6 +6,7 @@ import loqor.ait.registry.Registry;
 import loqor.ait.tardis.base.TardisComponent;
 
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -62,6 +63,10 @@ public class TardisComponentRegistry implements Registry {
 
     public static TardisComponent.IdLike[] values() {
         return instance.LOOKUP;
+    }
+
+    public Collection<TardisComponent.IdLike> getValues() {
+        return REGISTRY.values();
     }
 
     public static TardisComponentRegistry getInstance() {

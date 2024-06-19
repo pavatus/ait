@@ -49,4 +49,8 @@ public abstract class KeyedTardisComponent extends TardisComponent {
 
         this.data.dispose();
     }
+
+    public PropertyMap getPropertyData() {
+        return data;
+    }
 }

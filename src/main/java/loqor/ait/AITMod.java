@@ -30,7 +30,6 @@ import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
-import loqor.ait.tardis.data.ShieldData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.FlightUtil;
@@ -139,6 +138,7 @@ public class AITMod implements ModInitializer {
 			PermissionCommand.register(dispatcher);
 			LoyaltyCommand.register(dispatcher);
 			UnlockCommand.register(dispatcher);
+			DataCommand.register(dispatcher);
 		}));
 
 		TardisEvents.LANDED.register((tardis -> {
@@ -233,7 +233,7 @@ public class AITMod implements ModInitializer {
 					if (tardis == null)
 						return;
 
-					PropertiesHandler.set(tardis.properties(), PropertiesHandler.LEAVE_BEHIND, behind);
+					PropertiesHandler.set(tardis, PropertiesHandler.LEAVE_BEHIND, behind);
 				});
 			});
 		});
