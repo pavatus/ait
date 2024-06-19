@@ -590,7 +590,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
-        provider.addTranslation("message.ait.environment_projector", "Now projecting: %s");
+        provider.addTranslation("message.ait.projector.skybox", "Now projecting: %s");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
         provider.addTranslation("message.ait.riftscanner.info3", "This is not a rift chunk");

@@ -2,7 +2,6 @@ package loqor.ait.client.models.consoles;
 
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.TardisTravel;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -25,17 +24,13 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
 		super(function);
 	}
 
-	public void animateBlockEntity(ConsoleBlockEntity console) {
+	public void animateBlockEntity(ConsoleBlockEntity console, TardisTravel.State state, boolean hasPower) {
 		// fyi, this is directly referencing camel animation code, its just specific according to the block entity that is being used
 		// to detect different states. - Loqor
 		this.getPart().traverse().forEach(ModelPart::resetTransform);
 
-		if (console.tardis().isEmpty())
-			return;
-
-		TardisTravel.State state = console.tardis().get().travel().getState();
-		if (console.tardis().get().engine().hasPower())
-			this.updateAnimation(console.ANIM_STATE, getAnimationForState(state), console.getAge());
+		if (hasPower)
+			this.updateAnimation(console.ANIM_STATE, this.getAnimationForState(state), console.getAge());
 	}
 
 	public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {

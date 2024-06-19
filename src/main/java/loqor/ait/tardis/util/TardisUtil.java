@@ -571,6 +571,12 @@ public class TardisUtil {
 		return result;
 	}
 
+	/**
+	 * @see TardisUtil#getPlayersInsideInterior(Tardis)
+	 * @param tardis
+	 * @return
+	 */
+	@Deprecated(forRemoval = true)
 	public static List<ServerPlayerEntity> getPlayersInInterior(Tardis tardis) {
 		Tardis found;
 		List<ServerPlayerEntity> list = new ArrayList<>();

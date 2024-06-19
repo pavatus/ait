@@ -1,10 +1,10 @@
 package loqor.ait.client.renderers.consoles;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.data.schema.console.ClientConsoleVariantSchema;
-import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.SonicHandler;
 import net.minecraft.client.MinecraftClient;
@@ -21,9 +21,7 @@ import net.minecraft.util.profiler.Profiler;
 
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
 
-	private ConsoleModel console;
-
-	public ConsoleRenderer(BlockEntityRendererFactory.Context ctx) { }
+    public ConsoleRenderer(BlockEntityRendererFactory.Context ctx) { }
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
@@ -48,33 +46,30 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 	}
 
 	private void renderConsole(Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		ClientConsoleVariantSchema variant = ClientConsoleVariantRegistry.withParent(entity.getVariant());
+		profiler.push("model");
 
-		if (variant == null)
-			return;
+		ClientConsoleVariantSchema variant = entity.getVariant().getClient();
+        ConsoleModel console = variant.model();
 
-		Class<? extends ConsoleModel> modelClass = variant.model().getClass();
-
-		if (console != null && console.getClass() != modelClass)
-			console = null;
-
-		if (console == null)
-			this.console = variant.model();
+		boolean hasPower = tardis.engine().hasPower();
 
 		matrices.push();
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-		console.animateBlockEntity(entity);
-		console.renderWithAnimations(entity, this.console.getPart(), matrices, vertexConsumers.getBuffer(
+		if (!AITMod.AIT_CONFIG.DISABLE_CONSOLE_ANIMATIONS()) {
+			profiler.swap("animate");
+			console.animateBlockEntity(entity, tardis.travel().getState(), hasPower);
+		}
+
+		profiler.swap("render");
+		console.renderWithAnimations(entity, console.getPart(), matrices, vertexConsumers.getBuffer(
 				RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1
 		);
 
-		profiler.push("emission"); // emission {
-		boolean hasPower = tardis.engine().hasPower();
-
+		profiler.swap("emission"); // emission {
 		ClientLightUtil.renderEmissivable(
 				hasPower, console::renderWithAnimations, variant.noEmission(), variant.emission(), entity,
-				this.console.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
+				console.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
 		);
 
 		matrices.pop();

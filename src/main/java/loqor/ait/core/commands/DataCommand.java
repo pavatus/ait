@@ -1,11 +1,13 @@
 package loqor.ait.core.commands;
 
+import com.google.gson.JsonElement;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import loqor.ait.AITMod;
+import loqor.ait.core.commands.argument.JsonElementArgumentType;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.base.KeyedTardisComponent;
@@ -14,8 +16,6 @@ import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.CommandSource;
-import net.minecraft.command.argument.NbtElementArgumentType;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
@@ -52,7 +52,7 @@ public class DataCommand {
                                         .then(argument("value", StringArgumentType.word())
                                                 .suggests(VALUE_SUGGESTION)
                                                 .then(literal("set")
-                                                        .then(argument("data", NbtElementArgumentType.nbtElement())
+                                                        .then(argument("data", JsonElementArgumentType.jsonElement())
                                                                 .executes(DataCommand::runSet)))
                                                 .then(literal("get")
                                                         .executes(DataCommand::runGet))
@@ -85,32 +85,27 @@ public class DataCommand {
     }
 
     private static <T> int runSet(CommandContext<ServerCommandSource> context) {
-        try {
-            ServerCommandSource source = context.getSource();
-            ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
+        ServerCommandSource source = context.getSource();
+        ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
-            String rawComponent = StringArgumentType.getString(context, "component");
-            String valueName = StringArgumentType.getString(context, "value");
+        String rawComponent = StringArgumentType.getString(context, "component");
+        String valueName = StringArgumentType.getString(context, "value");
 
-            NbtElement rawData = NbtElementArgumentType.getNbtElement(context, "data");
-            //JsonElement rawData = JsonElementArgumentType.getJsonElement(context, "data");
-            TardisComponent.IdLike id = TardisComponentRegistry.getInstance().get(rawComponent);
+        JsonElement data = JsonElementArgumentType.getJsonElement(context, "data");
+        TardisComponent.IdLike id = TardisComponentRegistry.getInstance().get(rawComponent);
 
-            if (!(tardis.handler(id) instanceof KeyedTardisComponent keyed)) {
-                source.sendMessage(Text.translatable("command.ait.data.fail", valueName, rawComponent));
-                return 0; // womp womp
-            }
-
-            Value<T> value = keyed.getPropertyData().getExact(valueName);
-            Class<T> classOfT = DataCommand.reflectClassType(value);
-
-            T obj = ServerTardisManager.getInstance().getFileGson().fromJson(rawData.toString(), classOfT);
-
-            value.set(obj);
-            source.sendMessage(Text.translatable("command.ait.data.set", valueName, obj.toString()));
-        } catch (Throwable t) {
-            t.printStackTrace();
+        if (!(tardis.handler(id) instanceof KeyedTardisComponent keyed)) {
+            source.sendMessage(Text.translatable("command.ait.data.fail", valueName, rawComponent));
+            return 0; // womp womp
         }
+
+        Value<T> value = keyed.getPropertyData().getExact(valueName);
+        Class<T> classOfT = DataCommand.reflectClassType(value);
+
+        T obj = ServerTardisManager.getInstance().getFileGson().fromJson(data.toString(), classOfT);
+
+        value.set(obj);
+        source.sendMessage(Text.translatable("command.ait.data.set", valueName, obj.toString()));
 
         return Command.SINGLE_SUCCESS;
     }

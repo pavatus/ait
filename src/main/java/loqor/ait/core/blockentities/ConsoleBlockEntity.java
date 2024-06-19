@@ -70,7 +70,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 	public void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
 
-		nbt.putString("type", this.getTypeSchea().id().toString());
+		nbt.putString("type", this.getTypeSchema().id().toString());
 		nbt.putString("variant", this.getVariant().id().toString());
 	}
 
@@ -89,7 +89,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		this.spawnControls();
 	}
 
-	public ConsoleTypeSchema getTypeSchea() {
+	public ConsoleTypeSchema getTypeSchema() {
 		if (type == null)
 			this.setType(ConsoleRegistry.HARTNELL);
 
@@ -108,7 +108,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
 	public ConsoleVariantSchema getVariant() {
 		if (variant == null)
-			this.setVariant(this.getTypeSchea().getDefaultVariant());
+			this.setVariant(this.getTypeSchema().getDefaultVariant());
 
 		return variant;
 	}
@@ -173,7 +173,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 			return;
 
 		this.killControls();
-		ConsoleTypeSchema consoleType = this.getTypeSchea();
+		ConsoleTypeSchema consoleType = this.getTypeSchema();
 		ControlTypes[] controls = consoleType.getControlTypes();
 
 		for (ControlTypes control : controls) {
