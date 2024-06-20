@@ -239,6 +239,12 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		return super.damage(source, source.getAttacker() instanceof PlayerEntity ? 0 : amount);
 	}
 
+	@Override
+	public void remove(RemovalReason reason) {
+		AITMod.LOGGER.info("Control entity discarded as {}", reason);
+		super.remove(reason);
+	}
+
 	public boolean run(PlayerEntity player, World world, boolean leftClick) {
 		if (world.getRandom().nextBetween(1, 10_000) == 72)
 			this.getWorld().playSound(null, this.getBlockPos(), AITSounds.EVEN_MORE_SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);

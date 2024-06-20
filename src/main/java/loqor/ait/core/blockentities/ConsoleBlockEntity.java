@@ -89,6 +89,12 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		this.spawnControls();
 	}
 
+	@Override
+	public void setWorld(World world) {
+		super.setWorld(world);
+		this.spawnControls();
+	}
+
 	public ConsoleTypeSchema getTypeSchema() {
 		if (type == null)
 			this.setType(ConsoleRegistry.HARTNELL);
