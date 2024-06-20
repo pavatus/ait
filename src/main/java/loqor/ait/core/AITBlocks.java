@@ -3,8 +3,8 @@ package loqor.ait.core;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
 import loqor.ait.AITMod;
-import loqor.ait.core.blocks.*;
 import loqor.ait.core.blocks.DoorBlock;
+import loqor.ait.core.blocks.*;
 import loqor.ait.core.blocks.control.ButtonControlBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -26,6 +26,7 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block CONSOLE = new ConsoleBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
             .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.IGNORE));
 
+    @NoBlockItem
     public static final Block ENGINE_BLOCK = new EngineBlock(FabricBlockSettings.create().requiresTool().instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
 
     public static final Block ENGINE_CORE_BLOCK = new EngineCoreBlock(AbstractBlock.Settings.create().mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT).strength(3.0F).luminance((state) -> 15).nonOpaque());
