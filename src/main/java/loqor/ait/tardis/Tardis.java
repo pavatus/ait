@@ -190,6 +190,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return this.handler(TardisComponent.Id.FUEL);
 	}
 
+	@Deprecated(forRemoval = true)
 	public PropertiesHolder properties() {
 		return this.handler(TardisComponent.Id.PROPERTIES);
 	}

@@ -33,9 +33,7 @@ import net.minecraft.world.World;
 
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
 
-	private DoorModel model;
-
-	public DoorRenderer(BlockEntityRendererFactory.Context ctx) { }
+    public DoorRenderer(BlockEntityRendererFactory.Context ctx) { }
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
@@ -64,7 +62,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		ClientExteriorVariantSchema exteriorVariant = tardis.getExterior().getVariant().getClient();
 		ClientDoorSchema variant = ClientDoorRegistry.withParent(exteriorVariant.parent().door());
 
-		this.model = variant.model();
+        DoorModel model = variant.model();
 
 		if (model == null)
 			return;
@@ -100,23 +98,26 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(k));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-		model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
+		model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
 
 		if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
-			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+			model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
 		}
 
         profiler.push("emission");
+
+		boolean alarms = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED);
+
         ClientLightUtil.renderEmissivable(
                 tardis.engine().hasPower(), model::renderWithAnimations, exteriorVariant.emission(), entity,
-                this.model.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
+                model.getPart(), matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1
         );
 
         profiler.swap("biome");
         if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
             Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
             if (biomeTexture != null && !texture.equals(biomeTexture)) {
-                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
+                model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
             }
         }
 

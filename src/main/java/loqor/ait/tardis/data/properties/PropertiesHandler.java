@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.UUID;
 
+@Deprecated(forRemoval = true)
 public class PropertiesHandler {
 	public static final String HUM_ENABLED = "hum_enabled";
 	public static final String ALARM_ENABLED = "alarm_enabled";
