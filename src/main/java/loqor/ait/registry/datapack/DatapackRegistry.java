@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
 /**
  * A registry which is compatible with datapack registering
@@ -31,9 +32,9 @@ public abstract class DatapackRegistry<T extends Identifiable> implements Regist
 		return schema;
 	}
 
-	protected static <T> T getRandom(List<T> elements, Random random, T fallback) {
+	protected static <T> T getRandom(List<T> elements, Random random, Supplier<T> fallback) {
 		if (elements.isEmpty())
-			return fallback;
+			return fallback.get();
 
 		int randomized = random.nextInt(
 				elements.size()
@@ -43,7 +44,7 @@ public abstract class DatapackRegistry<T extends Identifiable> implements Regist
 	}
 
 	public T getRandom(Random random) {
-		return DatapackRegistry.getRandom(this.toList(), random, this.fallback());
+		return DatapackRegistry.getRandom(this.toList(), random, this::fallback);
 	}
 
 	public T getRandom() {

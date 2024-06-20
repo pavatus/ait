@@ -25,6 +25,8 @@ import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 
+import static loqor.ait.core.util.LegacyUtil.Consoles;
+
 public class TardisDesktop extends TardisComponent implements TardisTickable {
 
 	public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
@@ -33,17 +35,17 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 	private DirectedBlockPos doorPos;
 
 	private final Corners corners;
-	private final Set<BlockPos> consolePos;
+	private final Consoles consolePos;
 
 	public TardisDesktop(TardisDesktopSchema schema) {
 		super(Id.DESKTOP);
 		this.schema = schema;
 
 		this.corners = TardisUtil.findInteriorSpot();
-		this.consolePos = new HashSet<>();
+		this.consolePos = new Consoles();
 	}
 
-	private TardisDesktop(TardisDesktopSchema schema, DirectedBlockPos doorPos, Corners corners, Set<BlockPos> consolePos) {
+	private TardisDesktop(TardisDesktopSchema schema, DirectedBlockPos doorPos, Corners corners, Consoles consolePos) {
 		super(Id.DESKTOP);
 
 		this.schema = schema;
@@ -123,7 +125,7 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 			TardisDesktopSchema schema = context.deserialize(obj.get("schema"), TardisDesktopSchema.class);
 			DirectedBlockPos doorPos = context.deserialize(obj.get("doorPos"), DirectedBlockPos.class);
 			Corners corners = context.deserialize(obj.get("corners"), Corners.class);
-			Set<BlockPos> consoles;
+			Consoles consoles;
 
 			JsonArray jsonConsolePos = obj.getAsJsonArray("consolePos");
 
@@ -131,7 +133,7 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 				JsonArray jsonConsoles = obj.getAsJsonArray("consoles");
 				consoles = LegacyUtil.flatConsoles(jsonConsoles, context);
 			} else {
-				consoles = context.<HashSet<BlockPos>>deserialize(jsonConsolePos, HashSet.class);
+				consoles = context.deserialize(jsonConsolePos, Consoles.class);
 			}
 
 			return new TardisDesktop(schema, doorPos, corners, consoles);

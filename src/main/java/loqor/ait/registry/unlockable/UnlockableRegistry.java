@@ -42,7 +42,7 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
     }
 
     public T getRandom(Tardis tardis, Random random) {
-        return DatapackRegistry.getRandom(this.toList().stream().filter(tardis::isUnlocked).toList(), random, this.fallback());
+        return DatapackRegistry.getRandom(this.toList().stream().filter(tardis::isUnlocked).toList(), random, this::fallback);
     }
 
     public T getRandom(Tardis tardis) {

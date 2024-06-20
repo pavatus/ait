@@ -14,7 +14,6 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Omega utility class for handling legacy stuff.
@@ -68,8 +67,8 @@ public class LegacyUtil {
         compound.putString(SonicItem.SONIC_TYPE, SonicRegistry.getInstance().toList().get(id).id().toString());
     }
 
-    public static Set<BlockPos> flatConsoles(JsonArray array, JsonDeserializationContext context) {
-        Set<BlockPos> pos = new HashSet<>();
+    public static Consoles flatConsoles(JsonArray array, JsonDeserializationContext context) {
+        Consoles pos = new Consoles();
 
         array.getAsJsonArray().forEach(element -> pos.add(
                 context.<Console>deserialize(element, Console.class).pos())
@@ -79,4 +78,6 @@ public class LegacyUtil {
     }
 
     private record Console(BlockPos pos) { }
+
+    public static class Consoles extends HashSet<BlockPos> { }
 }
