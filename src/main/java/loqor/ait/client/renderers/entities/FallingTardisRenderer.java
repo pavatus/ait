@@ -2,11 +2,11 @@ package loqor.ait.client.renderers.entities;
 
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
-import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.entities.FallingTardisEntity;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
@@ -32,22 +32,29 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 	public void render(FallingTardisEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
 		super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
 
-		if (entity.getTardis() == null) {
+		if (entity.getTardis() == null)
 			return;
-		}
 
 		TardisExterior tardisExterior = entity.getTardis().getExterior();
 		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardisExterior.getVariant());
 
-		if (exteriorVariant == null) return;
+		if (exteriorVariant == null)
+			return;
+
 		Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
 
 		if (model != null && !(model.getClass().isInstance(modelClass))) // fixme this is bad it seems to constantly create a new one anyway but i didnt realise.
 			model = null;
 
-		if (MinecraftClient.getInstance().player == null) return;
+		if (MinecraftClient.getInstance().player == null)
+			return;
 
-		if (getModel(entity) == null) return;
+		Identifier texture = exteriorVariant.texture();
+		Identifier emission = exteriorVariant.emission();
+		ExteriorModel model = exteriorVariant.model();
+
+		if (model == null)
+			return;
 
 		matrices.push();
 		int k = entity.getBlockState().get(ExteriorBlock.ROTATION);
@@ -55,20 +62,34 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? 180f + h : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-		if (entity.getTardis().siege().isActive()) {
+		boolean siege = entity.getTardis().siege().isActive();
+
+		if (siege) {
 			model = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
-			model.renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), light, 1, 1, 1, 1, 1);
-		} else {
-			getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, 1, 1, 1, 1, 1);
-			if (exteriorVariant.emission() != null)
-				getModel(entity).renderFalling(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, 1, 1, 1, 1, 1);
-			if(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-				Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
-				if (biomeTexture != null && !exteriorVariant.texture().equals(biomeTexture)) {
-					model.renderFalling(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, 1, 1, 1, 1, 1);
-				}
+			texture = SiegeModeModel.TEXTURE;
+		}
+
+		model.renderFalling(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, 1, 1, 1, 1, 1);
+
+		if (siege) {
+			matrices.pop();
+			return;
+		}
+
+		if (emission != null)
+			model.renderFalling(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(emission, true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, 1, 1, 1, 1, 1);
+
+		if(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null
+				&& !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+			Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
+
+			if (biomeTexture != null && !exteriorVariant.texture().equals(biomeTexture)) {
+				model.renderFalling(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(
+						AITRenderLayers.getEntityTranslucentCull(biomeTexture)
+				), light, 1, 1, 1, 1, 1);
 			}
 		}
+
 		matrices.pop();
 	}
 
