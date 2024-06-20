@@ -32,6 +32,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -99,6 +100,7 @@ public abstract class TardisManager<T extends Tardis, C> {
 				.registerTypeAdapter(Identifier.class, new IdentifierSerializer())
 				.registerTypeAdapter(GlobalPos.class, new GlobalPosSerializer())
 				.registerTypeAdapter(BlockPos.class, new BlockPosSerializer())
+				.registerTypeAdapter(RegistryKey.class, new RegistryKeySerializer())
 
 				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer())
 				.registerTypeAdapter(TardisComponent.IdLike.class, TardisComponentRegistry.idSerializer())

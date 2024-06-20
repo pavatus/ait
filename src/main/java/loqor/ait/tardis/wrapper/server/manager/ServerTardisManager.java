@@ -77,7 +77,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		);
 
 		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset
-		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), true));
+		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer()));
 
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
 			for (ServerTardis tardis : this.lookup.values()) {
@@ -237,7 +237,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		super.remove(uuid);
 	}
 
-	private void save(MinecraftServer server, boolean unlock) {
+	private void save(MinecraftServer server) {
 		// force all dematting to go flight and all matting to go land
 		for (Tardis tardis : this.lookup.values()) {
 			// stop forcing all chunks
@@ -257,10 +257,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 		this.fileManager.setLocked(true);
 		this.fileManager.saveTardis(server, this);
-		this.reset();
-
-		if (unlock)
-			this.fileManager.setLocked(false);
+        this.fileManager.setLocked(false);
 	}
 
 	public static ServerTardisManager getInstance() {
