@@ -15,7 +15,6 @@ import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
-import net.minecraft.block.AnvilBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -58,13 +57,14 @@ public class FallingTardisEntity extends Entity {
 	public int timeFalling;
 	private boolean destroyedOnLanding;
 	private boolean hurtEntities;
-	private int fallHurtMax;
-	private float fallHurtAmount;
 	private BlockState block;
 	@Nullable
 	public NbtCompound blockEntityData;
 	protected static final TrackedData<BlockPos> BLOCK_POS;
 	protected static final TrackedData<Optional<UUID>> TARDIS_ID;
+
+	private int fallHurtMax;
+	private float fallHurtAmount;
 
 	public FallingTardisEntity(EntityType<? extends Entity> entityType, World world) {
 		super(entityType, world);
@@ -132,6 +132,21 @@ public class FallingTardisEntity extends Entity {
 		return false;
 	}
 
+	@Override
+	public boolean damage(DamageSource source, float amount) {
+		return false;
+	}
+
+	@Override
+	public boolean isInvulnerable() {
+		return true;
+	}
+
+	@Override
+	public boolean isInvulnerableTo(DamageSource damageSource) {
+		return true;
+	}
+
 	public void setFallingBlockPos(BlockPos pos) {
 		this.dataTracker.set(BLOCK_POS, pos);
 	}
@@ -151,10 +166,6 @@ public class FallingTardisEntity extends Entity {
 	protected void initDataTracker() {
 		this.dataTracker.startTracking(BLOCK_POS, BlockPos.ORIGIN);
 		this.dataTracker.startTracking(TARDIS_ID, Optional.empty());
-	}
-
-	public boolean canHit() {
-		return !this.isRemoved();
 	}
 
 	private boolean wouldBeKilled() {
@@ -306,15 +317,6 @@ public class FallingTardisEntity extends Entity {
 
                 this.getWorld().getOtherEntities(this, this.getBoundingBox(), predicate)
 						.forEach((entity) -> entity.damage(damageSource2, f));
-
-                if (this.block.isIn(BlockTags.ANVIL) && f > 0.0F && this.random.nextFloat() < 0.05F + (float) i * 0.05F) {
-                    BlockState blockState = AnvilBlock.getLandingState(this.block);
-                    if (blockState == null) {
-                        this.destroyedOnLanding = true;
-                    } else {
-                        this.block = blockState;
-                    }
-                }
             }
         }
 
