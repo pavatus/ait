@@ -8,6 +8,7 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
+import loqor.ait.core.events.WorldSaveEvent;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
@@ -20,7 +21,6 @@ import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisChunkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -76,10 +76,8 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 				}
 		);
 
-		ServerLifecycleEvents.SERVER_STARTING.register(server -> this.fileManager.setLocked(false));
-		ServerLifecycleEvents.SERVER_STOPPING.register(this::onShutdown);
-
 		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset
+		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), true));
 
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
 			for (ServerTardis tardis : this.lookup.values()) {
@@ -239,7 +237,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		super.remove(uuid);
 	}
 
-	public void onShutdown(MinecraftServer server) {
+	private void save(MinecraftServer server, boolean unlock) {
 		// force all dematting to go flight and all matting to go land
 		for (Tardis tardis : this.lookup.values()) {
 			// stop forcing all chunks
@@ -260,6 +258,9 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		this.fileManager.setLocked(true);
 		this.fileManager.saveTardis(server, this);
 		this.reset();
+
+		if (unlock)
+			this.fileManager.setLocked(false);
 	}
 
 	public static ServerTardisManager getInstance() {
