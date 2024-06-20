@@ -60,9 +60,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		if (world.isClient())
 			return TypedActionResult.pass(stack);
 
-		return useSonic(world, user, pos, hand, stack)
-				? TypedActionResult.success(stack, false)
-				: TypedActionResult.fail(stack);
+		this.useSonic(world, user, pos, hand, stack);
+		return TypedActionResult.consume(stack);
 	}
 
 	@Override
@@ -75,8 +74,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		if (player == null)
 			return ActionResult.PASS;
 
-		return useSonic(world, player, pos, context.getHand(), stack)
-				? ActionResult.CONSUME : ActionResult.PASS;
+		this.useSonic(world, player, pos, context.getHand(), stack);
+		return ActionResult.CONSUME;
 	}
 
 	@Override
