@@ -243,38 +243,34 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		if (world.getRandom().nextBetween(1, 10_000) == 72)
 			this.getWorld().playSound(null, this.getBlockPos(), AITSounds.EVEN_MORE_SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
 
-		if (!world.isClient()) {
-			if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM)
-				this.remove(RemovalReason.DISCARDED);
+		if (world.isClient())
+			return false;
 
-			if (this.getTardis() == null)
-				return false;
+		if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM)
+			this.remove(RemovalReason.DISCARDED);
 
-			Tardis tardis = this.getTardis(world);
+		Tardis tardis = this.getTardis(world);
 
-			if (tardis == null) {
-				AITMod.LOGGER.warn("Discarding invalid control entity at {}; console pos: {}", this.getPos(), this.consoleBlockPos);
+		if (tardis == null) {
+			AITMod.LOGGER.warn("Discarding invalid control entity at {}; console pos: {}", this.getPos(), this.consoleBlockPos);
 
-				this.discard();
-				return false;
-			}
-
-			control.runAnimation(tardis, (ServerPlayerEntity) player, (ServerWorld) world);
-
-			if (!this.control.canRun(tardis, (ServerPlayerEntity) player))
-				return false;
-
-			if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
-				this.createDelay(this.control.getDelayLength());
-			}
-
-			if (this.consoleBlockPos != null)
-				this.getWorld().playSound(null, this.getBlockPos(), this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
-
-			return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, this.consoleBlockPos, leftClick); // i dont gotta check these cus i know its server
+			this.discard();
+			return false;
 		}
 
-		return false;
+		control.runAnimation(tardis, (ServerPlayerEntity) player, (ServerWorld) world);
+
+		if (!this.control.canRun(tardis, (ServerPlayerEntity) player))
+			return false;
+
+		if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
+			this.createDelay(this.control.getDelayLength());
+		}
+
+		if (this.consoleBlockPos != null)
+			this.getWorld().playSound(null, this.getBlockPos(), this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
+
+		return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, this.consoleBlockPos, leftClick); // i dont gotta check these cus i know its server
 	}
 
 	// clearly loqor has trust issues with running this so i do too so im overwriting it to do what he did fixme pls
