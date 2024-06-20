@@ -100,7 +100,8 @@ public abstract class TardisManager<T extends Tardis, C> {
 				.registerTypeAdapter(TardisComponent.IdLike.class, TardisComponentRegistry.idSerializer())
 				.registerTypeAdapter(DirectedGlobalPos.class, DirectedGlobalPos.serializer())
 				.registerTypeAdapter(GlobalPos.class, new GlobalPosSerializer())
-				.registerTypeAdapter(DirectedBlockPos.class, DirectedBlockPos.serializer());
+				.registerTypeAdapter(DirectedBlockPos.class, DirectedBlockPos.serializer())
+				.registerTypeAdapter(TardisDesktop.class, TardisDesktop.updater());
 	}
 
 	protected GsonBuilder getNetworkGson(GsonBuilder builder) {

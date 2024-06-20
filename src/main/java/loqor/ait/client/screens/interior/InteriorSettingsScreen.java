@@ -8,6 +8,7 @@ import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
 import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
 import loqor.ait.client.sounds.ClientSoundManager;
+import loqor.ait.compat.DependencyChecker;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.HumsRegistry;
 import loqor.ait.tardis.TardisDesktop;
@@ -222,18 +223,23 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		context.getMatrices().multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
 		context.drawTexture(BACKGROUND, x - 41, y - 41, 173, 173, 83, 83);
 		context.getMatrices().pop();
-		if (!this.buttons.get(5).isHovered()) context.drawTexture(BACKGROUND, left + 149, top + 142, 0, 166, 12, 12);
-		if (!this.buttons.get(6).isHovered()) context.drawTexture(BACKGROUND, left + 232, top + 142, 12, 166, 12, 12);
-		if (!this.buttons.get(7).isHovered()) context.drawTexture(BACKGROUND, left + 228, top + 111, 0, 178, 16, 16);
+
+		// FIXME @Loqor, this is dumb.
+		int startIndex = DependencyChecker.hasGravity() ? 5 : 4;
+
+		if (!this.buttons.get(startIndex).isHovered()) context.drawTexture(BACKGROUND, left + 149, top + 142, 0, 166, 12, 12);
+		if (!this.buttons.get(startIndex + 1).isHovered()) context.drawTexture(BACKGROUND, left + 232, top + 142, 12, 166, 12, 12);
+		if (!this.buttons.get(startIndex + 2).isHovered()) context.drawTexture(BACKGROUND, left + 228, top + 111, 0, 178, 16, 16);
 
 		// big triangles
-		if (!this.buttons.get(8).isHovered()) context.drawTexture(TEXTURE, left + 149, top + 76, 0, 197, 15, 30);
-		if (!this.buttons.get(9).isHovered()) context.drawTexture(TEXTURE, left + 229, top + 76, 30, 197, 15, 30);
+		if (!this.buttons.get(startIndex + 3).isHovered()) context.drawTexture(TEXTURE, left + 149, top + 76, 0, 197, 15, 30);
+		if (!this.buttons.get(startIndex + 4).isHovered()) context.drawTexture(TEXTURE, left + 229, top + 76, 30, 197, 15, 30);
 
 		// big apply button
-		if (!this.buttons.get(10).isHovered()) context.drawTexture(TEXTURE, left + 168, top + 94, 0, 227, 57, 12);
+		if (!this.buttons.get(startIndex + 5).isHovered()) context.drawTexture(TEXTURE, left + 168, top + 94, 0, 227, 57, 12);
 
-		if (tardis() == null) return;
+		if (tardis() == null)
+			return;
 
 		// battery
 		context.drawTexture(TEXTURE, left + 27, top + 133, 0, tardis().getFuel() > 250 ? 150 : 165, 99, 15);

@@ -9,7 +9,6 @@ import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.v2.Property;
@@ -174,8 +173,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
 		return super.createGsonBuilder(strategy)
 				.registerTypeAdapter(SerialDimension.class, SerialDimension.serializer())
-				.registerTypeAdapter(Tardis.class, ServerTardis.creator())
-				.registerTypeAdapter(TardisDesktop.class, TardisDesktop.updater());
+				.registerTypeAdapter(Tardis.class, ServerTardis.creator());
 	}
 
 	@Override
