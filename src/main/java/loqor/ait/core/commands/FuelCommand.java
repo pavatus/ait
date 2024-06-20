@@ -39,11 +39,6 @@ public class FuelCommand {
 		ServerCommandSource source = context.getSource();
 		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
-		if (tardis.getFuel() >= FuelData.TARDIS_MAX_FUEL) {
-			source.sendMessage(Text.translatableWithFallback("tardis.fuel.max", "TARDIS fuel is at max!"));
-			return 0;
-		}
-
 		double fuel = DoubleArgumentType.getDouble(context, "amount");
 		tardis.addFuel(fuel);
 
@@ -73,8 +68,13 @@ public class FuelCommand {
 		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
 		double fuel = DoubleArgumentType.getDouble(context, "amount");
-		tardis.setFuelCount(fuel);
 
+		if (fuel > FuelData.TARDIS_MAX_FUEL) {
+			source.sendMessage(Text.translatableWithFallback("tardis.fuel.max", "TARDIS fuel is at max!"));
+			return 0;
+		}
+
+		tardis.setFuelCount(fuel);
 		source.sendMessage(Text.translatableWithFallback("tardis.fuel.set",
 				"Set fuel for [%s] to: [%sau]", tardis.getUuid(), fuel)
 		);

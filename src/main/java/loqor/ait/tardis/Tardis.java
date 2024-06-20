@@ -158,8 +158,8 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 	// todo clean up all this
 	// fuel - because getHandlers() blah blah is annoying me
-	public double addFuel(double fuel) {
-		return this.<FuelData>handler(TardisComponent.Id.FUEL).addFuel(fuel);
+	public void addFuel(double fuel) {
+		this.<FuelData>handler(TardisComponent.Id.FUEL).addFuel(fuel);
 	}
 
 	public void removeFuel(double fuel) {
