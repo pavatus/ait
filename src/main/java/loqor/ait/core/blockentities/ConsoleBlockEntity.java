@@ -86,13 +86,13 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 				Identifier.tryParse(nbt.getString("variant"))
 		));
 
-		this.spawnControls();
+		this.markNeedsControl();
 	}
 
 	@Override
 	public void setWorld(World world) {
 		super.setWorld(world);
-		this.spawnControls();
+		this.markNeedsControl();
 	}
 
 	public ConsoleTypeSchema getTypeSchema() {

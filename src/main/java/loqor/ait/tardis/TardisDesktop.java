@@ -60,6 +60,17 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 		this.changeInterior(schema);
 	}
 
+	@Override
+	public void onLoaded() {
+		if (this.isClient())
+			return;
+
+		for (BlockPos pos : this.consolePos) {
+			if (TardisUtil.getTardisDimension().getBlockEntity(pos) instanceof ConsoleBlockEntity console)
+				console.markNeedsControl();
+		}
+	}
+
 	public TardisDesktopSchema getSchema() {
 		return schema;
 	}
