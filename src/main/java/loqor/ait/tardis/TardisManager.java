@@ -14,10 +14,7 @@ import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
-import loqor.ait.core.util.gson.GlobalPosSerializer;
-import loqor.ait.core.util.gson.IdentifierSerializer;
-import loqor.ait.core.util.gson.ItemStackSerializer;
-import loqor.ait.core.util.gson.NbtSerializer;
+import loqor.ait.core.util.gson.*;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.permissions.Permission;
@@ -37,6 +34,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -93,14 +91,17 @@ public abstract class TardisManager<T extends Tardis, C> {
 				.registerTypeAdapter(ConsoleVariantSchema.class, ConsoleVariantSchema.serializer())
 				.registerTypeAdapter(Corners.class, Corners.serializer())
 				.registerTypeAdapter(PermissionLike.class, Permission.serializer())
+				.registerTypeAdapter(DirectedGlobalPos.class, DirectedGlobalPos.serializer())
+				.registerTypeAdapter(DirectedBlockPos.class, DirectedBlockPos.serializer())
+
 				.registerTypeAdapter(NbtCompound.class, new NbtSerializer())
 				.registerTypeAdapter(ItemStack.class, new ItemStackSerializer())
 				.registerTypeAdapter(Identifier.class, new IdentifierSerializer())
+				.registerTypeAdapter(GlobalPos.class, new GlobalPosSerializer())
+				.registerTypeAdapter(BlockPos.class, new BlockPosSerializer())
+
 				.registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer())
 				.registerTypeAdapter(TardisComponent.IdLike.class, TardisComponentRegistry.idSerializer())
-				.registerTypeAdapter(DirectedGlobalPos.class, DirectedGlobalPos.serializer())
-				.registerTypeAdapter(GlobalPos.class, new GlobalPosSerializer())
-				.registerTypeAdapter(DirectedBlockPos.class, DirectedBlockPos.serializer())
 				.registerTypeAdapter(TardisDesktop.class, TardisDesktop.updater());
 	}
 

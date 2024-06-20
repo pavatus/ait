@@ -144,7 +144,7 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 			object.add("doorPos", context.serialize(src.doorPos, DirectedBlockPos.class));
 			object.add("corners", context.serialize(src.corners, Corners.class));
 
-			JsonArray arr = (JsonArray) context.serialize(src.consolePos, HashSet.class);
+			JsonArray arr = context.serialize(src.consolePos, HashSet.class).getAsJsonArray();
 			object.add("consolePos", arr);
 
 			return object;
