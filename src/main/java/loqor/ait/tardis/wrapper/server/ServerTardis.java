@@ -8,7 +8,6 @@ import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
-import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
@@ -47,10 +46,6 @@ public class ServerTardis extends Tardis {
 
 	public void setLocked(boolean lock) {
 		this.lock = lock;
-	}
-
-	public void unlock(Unlockable unlockable) {
-		PropertiesHandler.setUnlocked(this, unlockable, true);
 	}
 
 	public void startTick(MinecraftServer server) {

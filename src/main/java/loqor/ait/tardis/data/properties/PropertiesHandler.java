@@ -173,20 +173,9 @@ public class PropertiesHandler {
 		return (UUID) holder.getData().get(key);
 	}
 
+	@Deprecated(forRemoval = true)
 	public static void setUnlocked(Tardis tardis, Unlockable unlockable, boolean value) {
 		set(tardis, unlockable.id().getPath() + "_unlocked", value, true);
-	}
-
-	/**
-	 * @apiNote ONLY USE THIS IF YOU KNOW WHAT YOU'RE DOING
-	 */
-	@Deprecated
-	public static boolean isUnlocked(Tardis tardis, Identifier id) {
-		return getBool(tardis.properties(), id.getPath() + "_unlocked");
-	}
-
-	public static boolean isUnlocked(Tardis tardis, Unlockable unlockable) {
-		return isUnlocked(tardis, unlockable.id());
 	}
 
 	private static void unlockAllFreebies(HashMap<String, Object> map) {
