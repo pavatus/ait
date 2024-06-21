@@ -147,8 +147,8 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		if (!(blockEntity instanceof ExteriorBlockEntity exterior))
 			return normal;
 
-		Tardis tardis = exterior.tardis() != null
-				? exterior.tardis().get() : null;
+		Tardis tardis = /*exterior.tardis() != null
+				? */exterior.tardis().get()/* : null*/;
 
 		if (tardis == null)
 			return normal;

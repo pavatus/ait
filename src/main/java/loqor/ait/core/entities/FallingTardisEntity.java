@@ -18,7 +18,6 @@ import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -247,7 +246,7 @@ public class FallingTardisEntity extends Entity {
 		if (isCrashing)
 			tardis.setLockedTardis(false);
 
-		TardisUtil.getPlayersInInterior(tardis).forEach(player -> {
+		TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
 			SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_THUD;
 			float volume = isCrashing ? 1.0F : 3.0F;
 
@@ -273,35 +272,38 @@ public class FallingTardisEntity extends Entity {
 				this.block = this.block.with(Properties.WATERLOGGED, true);
 			}
 
-			if (this.getWorld().setBlockState(blockPos, this.block) && !this.getWorld().isClient()) {
-				((ServerWorld) this.getWorld()).getChunkManager().threadedAnvilChunkStorage.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, this.getWorld().getBlockState(blockPos)));
-				this.discard();
+			if (!(this.getWorld() instanceof ServerWorld world))
+				return;
 
-				if (block instanceof ExteriorBlock exterior) {
-					exterior.onLanding(this.getWorld(), blockPos, this.block, blockState, this);
+			world.setBlockState(blockPos, this.block);
+			world.getChunkManager().threadedAnvilChunkStorage.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, this.getWorld().getBlockState(blockPos)));
+			this.discard();
+
+			ExteriorBlockEntity exteriorBlockEntity = new ExteriorBlockEntity(
+					blockPos, this.block, tardis
+			);
+
+			if (block instanceof ExteriorBlock exterior) {
+				exterior.onLanding(this.getWorld(), blockPos, this.block, blockState, this);
+			}
+
+			if (this.blockEntityData != null) {
+				NbtCompound nbt = exteriorBlockEntity.createNbt();
+
+				for (String string : this.blockEntityData.getKeys()) {
+					nbt.put(string, this.blockEntityData.get(string).copy());
 				}
 
-				if (this.blockEntityData != null && this.block.hasBlockEntity()) {
-					BlockEntity blockEntity = this.getWorld().getBlockEntity(blockPos);
+				try {
+					exteriorBlockEntity.readNbt(nbt);
+				} catch (Exception e) {
+					AITMod.LOGGER.error("Failed to load block entity from falling tardis", e);
+				}
 
-					if (blockEntity == null)
-						return;
-
-                    NbtCompound nbt = blockEntity.createNbt();
-
-                    for (String string : this.blockEntityData.getKeys()) {
-                        nbt.put(string, this.blockEntityData.get(string).copy());
-                    }
-
-                    try {
-                        blockEntity.readNbt(nbt);
-                    } catch (Exception e) {
-                        AITMod.LOGGER.error("Failed to load block entity from falling tardis", e);
-                    }
-
-                    blockEntity.markDirty();
-                }
+				exteriorBlockEntity.markDirty();
 			}
+
+			this.getWorld().addBlockEntity(exteriorBlockEntity);
 		} else {
 			this.discard();
 		}
