@@ -102,7 +102,7 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     public static void clientInit() {
         TardisClientEvents.SETTINGS_SETUP.register(screen ->
                 screen.createDynamicTextButton(() -> Text.translatable("screen.ait.gravity",
-                        screen.tardis().<GravityHandler>handler(ID).direction.get().getName()
+                        capitalize(screen.tardis().<GravityHandler>handler(ID).direction.get().getName())
                 ), b -> {
                     GravityHandler gravity = screen.tardis().handler(ID);
                     Direction next = nextDirection(gravity.direction.get());
@@ -113,6 +113,10 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
                     DynamicPressableTextWidget dynamic = (DynamicPressableTextWidget) b;
                     dynamic.refresh();
                 }));
+    }
+
+    private static String capitalize(String str) {
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
     static IdLike ID = new AbstractId<>("GRAVITY", GravityHandler::new, GravityHandler.class);
