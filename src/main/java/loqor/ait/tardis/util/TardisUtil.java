@@ -26,7 +26,6 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.data.DoorData;
@@ -375,9 +374,7 @@ public class TardisUtil {
 
 	public static void teleportOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
-
-		DirectedBlockPos pos = (tardis.travel().getState() == TardisTravel.State.FLIGHT ? FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.flight().getDurationAsPercentage()) : tardis.position()).toBlockPos();
-		TardisUtil.teleportWithDoorOffset((ServerWorld) tardis.destination().getWorld(), entity, tardis.getExteriorPos().toBlockPos());
+		TardisUtil.teleportWithDoorOffset((ServerWorld) tardis.position().getWorld(), entity, tardis.getExteriorPos().toBlockPos());
 	}
 
 	public static void dropOutside(Tardis tardis, Entity entity) {
