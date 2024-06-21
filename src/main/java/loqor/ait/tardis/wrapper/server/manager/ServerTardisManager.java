@@ -79,8 +79,10 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset
 
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> this.fileManager.setLocked(false));
 		ServerLifecycleEvents.SERVER_STOPPED.register(this::saveAndReset);
-		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer()));
+
+		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), true));
 
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
 			for (ServerTardis tardis : this.lookup.values()) {
@@ -240,9 +242,11 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		super.remove(uuid);
 	}
 
-	private void save(MinecraftServer server) {
+	private void save(MinecraftServer server, boolean unlock) {
+		this.fileManager.setLocked(true);
+
 		// force all dematting to go flight and all matting to go land
-		for (Tardis tardis : this.lookup.values()) {
+		for (ServerTardis tardis : this.lookup.values()) {
 			// stop forcing all chunks
 			TardisChunkUtil.stopForceExteriorChunk(tardis);
 			TardisTravel.State state = tardis.travel().getState();
@@ -256,15 +260,16 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 			tardis.getDoor().closeDoors();
 			if (DependencyChecker.hasPortals())
 				PortalsHandler.removePortals(tardis);
+
+			this.fileManager.saveTardis(server, this, tardis);
 		}
 
-		this.fileManager.setLocked(true);
-		this.fileManager.saveTardis(server, this);
-        this.fileManager.setLocked(false);
+		if (unlock)
+        	this.fileManager.setLocked(false);
 	}
 
 	private void saveAndReset(MinecraftServer server) {
-		this.save(server);
+		this.save(server, false);
 		this.reset();
 	}
 
