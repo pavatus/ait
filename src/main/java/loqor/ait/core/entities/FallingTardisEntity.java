@@ -19,7 +19,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -225,8 +224,8 @@ public class FallingTardisEntity extends Entity {
 							10, true, World.ExplosionSourceType.MOB
 					);
 				}
+
 				tardis.getDoor().setLocked(crashing);
-				MinecraftClient.getInstance().player.sendMessage(Text.literal("stopping falling cuz on ground"));
 				this.stopFalling(false);
 			}
 		}
@@ -274,12 +273,12 @@ public class FallingTardisEntity extends Entity {
 				this.block = this.block.with(Properties.WATERLOGGED, true);
 			}
 
-			if (this.getWorld().setBlockState(blockPos, this.block, 3) && !this.getWorld().isClient()) {
+			if (this.getWorld().setBlockState(blockPos, this.block) && !this.getWorld().isClient()) {
 				((ServerWorld) this.getWorld()).getChunkManager().threadedAnvilChunkStorage.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, this.getWorld().getBlockState(blockPos)));
 				this.discard();
 
-				if (block instanceof ExteriorBlock) {
-					((ExteriorBlock) block).onLanding(this.getWorld(), blockPos, this.block, blockState, this);
+				if (block instanceof ExteriorBlock exterior) {
+					exterior.onLanding(this.getWorld(), blockPos, this.block, blockState, this);
 				}
 
 				if (this.blockEntityData != null && this.block.hasBlockEntity()) {

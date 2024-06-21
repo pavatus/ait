@@ -1,6 +1,5 @@
 package loqor.ait.tardis.link.v2;
 
-import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import net.minecraft.block.BlockState;
