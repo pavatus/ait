@@ -168,9 +168,10 @@ public class FallingTardisEntity extends Entity {
 		this.dataTracker.startTracking(TARDIS_ID, Optional.empty());
 	}
 
-	private boolean wouldBeKilled() {
-		return this.getBlockPos().down(2).getY() <= this.getWorld().getBottomY()
-				|| (this.getBlockPos().up(2).getY() >= this.getWorld().getTopY() && this.getVelocity().y > 0.0);
+	@Override
+	protected void tickInVoid() {
+		super.tickInVoid();
+		this.stopFalling(true);
 	}
 
 	public void tick() {
@@ -181,11 +182,6 @@ public class FallingTardisEntity extends Entity {
 
 			if (!this.hasNoGravity())
 				this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-
-			if (this.wouldBeKilled()) {
-				this.stopFalling(true);
-				return;
-			}
 
 			this.move(MovementType.SELF, this.getVelocity());
 
