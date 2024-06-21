@@ -51,6 +51,11 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
 	}
 
+	public ExteriorBlockEntity(BlockPos pos, BlockState state, Tardis tardis) {
+		this(pos, state);
+		this.link(tardis);
+	}
+
 	public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
 		if (this.tardis().isEmpty() || player == null)
 			return;

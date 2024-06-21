@@ -174,8 +174,6 @@ public class FallingTardisEntity extends Entity {
 	@Override
 	protected void tickInVoid() {
 		super.tickInVoid();
-
-		MinecraftClient.getInstance().player.sendMessage(Text.literal("stopping falling cuz void"));
 		this.stopFalling(true);
 	}
 
@@ -207,7 +205,6 @@ public class FallingTardisEntity extends Entity {
 			);
 
 			if (PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
-				MinecraftClient.getInstance().player.sendMessage(Text.literal("stopping falling cuz antigravs"));
 				this.stopFalling();
 				return;
 			}
