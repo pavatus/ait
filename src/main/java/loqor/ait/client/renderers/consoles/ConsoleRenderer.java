@@ -66,11 +66,14 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 				RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1
 		);
 
-		profiler.swap("emission"); // emission {
-		ClientLightUtil.renderEmissivable(
-				hasPower, console::renderWithAnimations, variant.noEmission(), variant.emission(), entity,
-				console.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
-		);
+		if (hasPower) {
+			profiler.swap("emission"); // emission {
+
+			ClientLightUtil.renderEmissive(
+					console::renderWithAnimations, variant.emission(), entity, console.getPart(),
+					matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
+			);
+		}
 
 		matrices.pop();
 		profiler.swap("sonic"); // } emission / sonic {
