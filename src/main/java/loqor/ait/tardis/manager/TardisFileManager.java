@@ -77,6 +77,10 @@ public class TardisFileManager<T extends Tardis> {
         this.locked = locked;
     }
 
+    public boolean isLocked() {
+        return locked;
+    }
+
     @FunctionalInterface
     public interface TardisLoader<T> {
         T apply(Gson gson, String name);

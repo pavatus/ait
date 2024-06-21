@@ -100,14 +100,6 @@ public class ServerTardis extends Tardis {
 		if (PropertiesHandler.getBool(this.properties(), PropertiesHandler.IS_FALLING))
 			DoorData.lockTardis(true, this, null, true);
 
-		AbsoluteBlockPos.Directed pos = this.getExteriorPos();
-		// If we're falling nearly out of the world, freak out.
-		if (PropertiesHandler.getBool(this.properties(), PropertiesHandler.IS_FALLING)
-				&& pos.getY() <= pos.getWorld().getBottomY() + 2) {
-			PropertiesHandler.set(this, PropertiesHandler.ANTIGRAVS_ENABLED, true);
-			PropertiesHandler.set(this, PropertiesHandler.IS_FALLING, false);
-		}
-
 		this.travel().tick(server);
 		this.getDesktop().tick(server);
 	}

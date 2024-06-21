@@ -82,7 +82,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> this.fileManager.setLocked(false));
 		ServerLifecycleEvents.SERVER_STOPPED.register(this::saveAndReset);
 
-		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), true));
+		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), false));
 
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
 			for (ServerTardis tardis : this.lookup.values()) {
@@ -195,12 +195,18 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	}
 
 	public void sendToSubscribers(Tardis tardis) {
+		if (this.fileManager.isLocked())
+			return;
+
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
 			this.sendTardis(player, tardis);
 		}
 	}
 
 	public void sendToSubscribers(TardisComponent component) {
+		if (this.fileManager.isLocked())
+			return;
+
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(component.tardis())) {
 			this.updateTardis(player, (ServerTardis) component.tardis(), component);
 		}
@@ -216,12 +222,18 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	 * @param value  The new value to be synced to client
 	 */
 	public void sendPropertyToSubscribers(ServerTardis tardis, TardisComponent component, String key, String type, String value) {
+		if (this.fileManager.isLocked())
+			return;
+
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
 			this.updateTardisProperty(player, tardis, component, key, type, value);
 		}
 	}
 
 	public void sendPropertyV2ToSubscribers(ServerTardis tardis, Value<?> property) {
+		if (this.fileManager.isLocked())
+			return;
+
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
 			this.updateTardisPropertyV2(player, tardis, property);
 		}
@@ -242,8 +254,9 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		super.remove(uuid);
 	}
 
-	private void save(MinecraftServer server, boolean unlock) {
-		this.fileManager.setLocked(true);
+	private void save(MinecraftServer server, boolean lock) {
+		if (lock)
+			this.fileManager.setLocked(true);
 
 		// force all dematting to go flight and all matting to go land
 		for (ServerTardis tardis : this.lookup.values()) {
@@ -263,13 +276,10 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 			this.fileManager.saveTardis(server, this, tardis);
 		}
-
-		if (unlock)
-        	this.fileManager.setLocked(false);
 	}
 
 	private void saveAndReset(MinecraftServer server) {
-		this.save(server, false);
+		this.save(server, true);
 		this.reset();
 	}
 

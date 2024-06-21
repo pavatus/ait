@@ -162,7 +162,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 
 		Tardis tardis = optional.get();
-		boolean previouslyLocked = tardis.getDoor().lastLocked();
+		boolean previouslyLocked = tardis.getDoor().previouslyLocked();
 
 		if (!previouslyLocked && tardis.travel().getState() == MAT && this.getAlpha() >= 0.9f)
 			TardisUtil.teleportInside(tardis, entity);
@@ -239,7 +239,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
 		if (animState != doorState) {
 			DOOR_STATE.start(animationTimer);
-			door.setTempExteriorState(doorState);
+			door.tempExteriorState = doorState;
 		}
 	}
 

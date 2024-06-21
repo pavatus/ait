@@ -398,7 +398,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		}
 
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
-		DoorData.lockTardis(PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED), tardis, null, false);
+		DoorData.lockTardis(tardis.getDoor().previouslyLocked(), tardis, null, false);
 	}
 
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {

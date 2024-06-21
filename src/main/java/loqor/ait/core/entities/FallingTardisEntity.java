@@ -12,7 +12,7 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.control.impl.DirectionControl;
+import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
@@ -30,7 +30,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.RegistryKeys;
@@ -171,8 +170,8 @@ public class FallingTardisEntity extends Entity {
 
 	@Override
 	protected void tickInVoid() {
-		super.tickInVoid();
 		this.stopFalling(true);
+		super.tickInVoid();
 	}
 
 	public void tick() {
@@ -181,7 +180,7 @@ public class FallingTardisEntity extends Entity {
 			return;
 		}
 
-		if (this.getY() < (double)(this.getWorld().getBottomY() - 64)) {
+		if (this.getY() <= (double)(this.getWorld().getBottomY() - 64)) {
 			this.tickInVoid();
 		}
 
@@ -207,13 +206,14 @@ public class FallingTardisEntity extends Entity {
 				return;
 			}
 
-			tardis.travel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(),
-					DirectionControl.getGeneralizedRotation(this.getTardis().travel().getPosition().getRotation())));
-
 			BlockPos blockPos = this.getBlockPos();
 
 			if (blockPos == null)
 				return;
+
+			tardis.travel().setPosition(new AbsoluteBlockPos.Directed(
+					blockPos, this.getWorld(), tardis.travel().getPosition().getRotation()
+			));
 
 			if (this.isOnGround()) {
 				boolean crashing = tardis.travel().isCrashing();
@@ -272,38 +272,17 @@ public class FallingTardisEntity extends Entity {
 				this.block = this.block.with(Properties.WATERLOGGED, true);
 			}
 
-			if (!(this.getWorld() instanceof ServerWorld world))
-				return;
-
-			world.setBlockState(blockPos, this.block);
-			world.getChunkManager().threadedAnvilChunkStorage.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, this.getWorld().getBlockState(blockPos)));
 			this.discard();
 
-			ExteriorBlockEntity exteriorBlockEntity = new ExteriorBlockEntity(
-					blockPos, this.block, tardis
-			);
+			if (this.getWorld().isClient())
+				return;
 
-			if (block instanceof ExteriorBlock exterior) {
+			TardisTravel travel = tardis.travel();
+
+			travel.placeExterior();
+
+			if (block instanceof ExteriorBlock exterior)
 				exterior.onLanding(this.getWorld(), blockPos, this.block, blockState, this);
-			}
-
-			if (this.blockEntityData != null) {
-				NbtCompound nbt = exteriorBlockEntity.createNbt();
-
-				for (String string : this.blockEntityData.getKeys()) {
-					nbt.put(string, this.blockEntityData.get(string).copy());
-				}
-
-				try {
-					exteriorBlockEntity.readNbt(nbt);
-				} catch (Exception e) {
-					AITMod.LOGGER.error("Failed to load block entity from falling tardis", e);
-				}
-
-				exteriorBlockEntity.markDirty();
-			}
-
-			this.getWorld().addBlockEntity(exteriorBlockEntity);
 		} else {
 			this.discard();
 		}
