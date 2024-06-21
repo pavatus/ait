@@ -241,7 +241,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
 	@Override
 	public void remove(RemovalReason reason) {
-		AITMod.LOGGER.info("Control entity discarded as {}", reason);
+		AITMod.LOGGER.debug("Control entity discarded as {}", reason);
 		super.remove(reason);
 	}
 

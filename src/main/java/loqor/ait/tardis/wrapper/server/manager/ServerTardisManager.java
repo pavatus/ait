@@ -261,18 +261,21 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		// force all dematting to go flight and all matting to go land
 		for (ServerTardis tardis : this.lookup.values()) {
 			// stop forcing all chunks
-			TardisChunkUtil.stopForceExteriorChunk(tardis);
-			TardisTravel.State state = tardis.travel().getState();
+			if (lock) {
+				TardisChunkUtil.stopForceExteriorChunk(tardis);
+				TardisTravel.State state = tardis.travel().getState();
 
-			if (state == TardisTravel.State.DEMAT) {
-				tardis.travel().toFlight();
-			} else if (state == TardisTravel.State.MAT) {
-				tardis.travel().forceLand();
+				if (state == TardisTravel.State.DEMAT) {
+					tardis.travel().toFlight();
+				} else if (state == TardisTravel.State.MAT) {
+					tardis.travel().forceLand();
+				}
+
+				tardis.getDoor().closeDoors();
+
+				if (DependencyChecker.hasPortals())
+					PortalsHandler.removePortals(tardis);
 			}
-
-			tardis.getDoor().closeDoors();
-			if (DependencyChecker.hasPortals())
-				PortalsHandler.removePortals(tardis);
 
 			this.fileManager.saveTardis(server, this, tardis);
 		}

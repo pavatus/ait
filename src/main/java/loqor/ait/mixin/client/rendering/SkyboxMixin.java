@@ -14,8 +14,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.RegistryKey;
@@ -50,11 +48,11 @@ public abstract class SkyboxMixin {
 
 	@Shadow public abstract void render(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f projectionMatrix);
 
-	@Unique private WorldRenderContext context;
+	@Unique private static WorldRenderContext context;
 
-	@Inject(method = "<init>", at = @At("TAIL"))
-	public void init(MinecraftClient client, EntityRenderDispatcher entityRenderDispatcher, BlockEntityRenderDispatcher blockEntityRenderDispatcher, BufferBuilderStorage bufferBuilders, CallbackInfo ci) {
-		WorldRenderEvents.AFTER_SETUP.register(context -> this.context = context);
+	@Inject(method = "<clinit>", at = @At("TAIL"))
+	private static void init(CallbackInfo ci) {
+		WorldRenderEvents.AFTER_SETUP.register(ctx -> context = ctx);
 	}
 
 	@Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At("HEAD"), cancellable = true)
@@ -75,7 +73,7 @@ public abstract class SkyboxMixin {
 
 	@Unique
 	private void renderSkyDynamically(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, Runnable fogCallback, CallbackInfo ci) {
-		if (!AITMod.AIT_CONFIG.ENVIRONMENT_PROJECTOR()) {
+		if (!AITMod.AIT_CONFIG.ENVIRONMENT_PROJECTOR() || context == null) {
 			SkyboxUtil.renderTardisSky(matrices);
 			ci.cancel();
 
@@ -111,7 +109,7 @@ public abstract class SkyboxMixin {
 		DimensionRenderingRegistry.SkyRenderer renderer = DimensionRenderingRegistry.getSkyRenderer(skyboxWorld);
 
 		if (renderer != null) {
-			renderer.render(this.context);
+			renderer.render(context);
 			ci.cancel();
         }
 	}

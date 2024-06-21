@@ -1,7 +1,5 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.blockentities.MonitorBlockEntity;
-import loqor.ait.core.blockentities.PlaqueBlockEntity;
 import loqor.ait.core.blockentities.WallMonitorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import net.minecraft.block.Block;
@@ -51,7 +49,6 @@ public class WallMonitorBlock extends HorizontalDirectionalBlock implements Bloc
 
         return ActionResult.SUCCESS;
     }
-
 
     @Override
     public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {

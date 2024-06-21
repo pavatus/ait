@@ -17,7 +17,6 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.v2.TardisRef;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -156,7 +155,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		if (emission != null) {
 			profiler.push("emission");
-			boolean alarms = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED);
+			boolean alarms = tardis.alarm().isEnabled();
 
 			ClientLightUtil.renderEmissivable(
 					tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),
@@ -172,9 +171,10 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			profiler.push("shields");
 			float alpha;
 
-			float delta = ((tickDelta + MinecraftClient.getInstance().player.age) * 0.03f);
-
-			VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEnergySwirl(this.getEnergySwirlTexture(), delta % 1.0F, (delta * 0.1F) % 1.0F));
+			float delta = (tickDelta + MinecraftClient.getInstance().player.age) * 0.03f;
+			VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEnergySwirl(
+					this.getEnergySwirlTexture(), delta % 1.0F, (delta * 0.1F) % 1.0F)
+			);
 
 			if (isNearTardis(MinecraftClient.getInstance().player, tardis, 15)) {
 				alpha = 1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, tardis) / 15);
@@ -188,7 +188,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			matrices.push();
 			matrices.translate(0.5F, 0.0F, 0.5F);
 
-			shieldsModel.render(matrices, vertexConsumer, light, overlay, 0f, 0.25f, 0.5f, Math.min(entity.getAlpha(), alpha));
+			shieldsModel.render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, overlay,
+					0f, 0.25f, 0.5f, Math.min(entity.getAlpha(), alpha)
+			);
 
 			matrices.pop();
 			profiler.pop();

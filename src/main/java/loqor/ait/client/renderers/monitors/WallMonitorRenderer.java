@@ -4,12 +4,12 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.decoration.PlaqueModel;
 import loqor.ait.core.blockentities.WallMonitorBlockEntity;
 import loqor.ait.core.blocks.PlaqueBlock;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -42,19 +42,20 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         Direction k = blockState.get(PlaqueBlock.FACING);
 
         matrices.push();
-
         matrices.translate(0.5f, 1.5f, 0.5f);
-
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(k.asRotation()));
-
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
         this.plaqueModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(PLAQUE_TEXTURE)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
-
         matrices.pop();
 
-        if(entity.findTardis().isEmpty()) return;
-        Tardis tardis = entity.findTardis().get();
+        if (entity.tardis().isEmpty())
+            return;
+
+        Tardis tardis = entity.tardis().get();
+
+        if (!tardis.engine().hasPower())
+            return;
 
         matrices.push();
         matrices.translate(0.5, 0.75, 0.5);

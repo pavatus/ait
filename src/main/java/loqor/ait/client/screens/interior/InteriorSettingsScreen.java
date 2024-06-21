@@ -79,6 +79,9 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private void sendCachePacket() {
+		if (this.console == null)
+			return;
+
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeUuid(this.tardis().getUuid());
 		buf.writeBlockPos(this.console);
@@ -92,7 +95,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		this.buttons.clear();
 
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
-		createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole"), (button -> sendCachePacket()));
+		createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole").formatted(this.console != null ? Formatting.WHITE : Formatting.GRAY), button -> sendCachePacket());
 		createTextButton(Text.translatable("screen.ait.security.button"), (button -> toSecurityScreen()));
 		createTextButton(Text.translatable("screen.ait.sonic.button").formatted(tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC) ? Formatting.WHITE : Formatting.GRAY),
 				(button -> {

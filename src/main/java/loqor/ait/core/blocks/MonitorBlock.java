@@ -63,6 +63,7 @@ public class MonitorBlock extends BlockWithEntity implements BlockEntityProvider
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
+
 		if (blockEntity instanceof MonitorBlockEntity monitorBlockEntity)
 			monitorBlockEntity.useOn(world, player.isSneaking(), player);
 
