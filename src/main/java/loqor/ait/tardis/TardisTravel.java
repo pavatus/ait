@@ -437,6 +437,8 @@ public class TardisTravel extends TardisComponent {
 
 		// Create and add the exterior block entity at the destination
 		ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(this.getDestination(), state);
+
+		blockEntity.link(this.tardis);
 		destWorld.addBlockEntity(blockEntity);
 
 		// Set the position of the Tardis to the destination
