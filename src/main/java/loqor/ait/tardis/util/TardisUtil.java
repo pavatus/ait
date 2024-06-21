@@ -578,19 +578,17 @@ public class TardisUtil {
 	 */
 	@Deprecated(forRemoval = true)
 	public static List<ServerPlayerEntity> getPlayersInInterior(Tardis tardis) {
-		Tardis found;
 		List<ServerPlayerEntity> list = new ArrayList<>();
+		Tardis found;
 
-		for (ServerPlayerEntity player : TardisUtil.getPlayerManager().getPlayerList()) {
-			if (player.getServerWorld() != TARDIS_DIMENSION)
-				continue;
-
+		for (ServerPlayerEntity player : TardisUtil.TARDIS_DIMENSION.getPlayers()) {
 			found = findTardisByInterior(player.getBlockPos(), true);
 
 			if (found == null)
 				continue;
 
-			if (found.getUuid().equals(tardis.getUuid())) list.add(player);
+			if (found == tardis)
+				list.add(player);
 		}
 
 		return list;
