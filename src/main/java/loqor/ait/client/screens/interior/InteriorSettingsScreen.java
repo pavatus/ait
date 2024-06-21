@@ -6,7 +6,6 @@ import loqor.ait.api.tardis.TardisClientEvents;
 import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
-import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.registry.impl.DesktopRegistry;
@@ -18,9 +17,12 @@ import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.sound.HumSound;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -35,11 +37,12 @@ import net.minecraft.util.math.RotationAxis;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 import static loqor.ait.tardis.TardisTravel.State.FLIGHT;
 import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
 
+@Environment(EnvType.CLIENT)
 public class InteriorSettingsScreen extends ConsoleScreen {
 	private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/interior_settings.png");
 	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/monitor_gui.png");
@@ -49,7 +52,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	int bgWidth = 256;
 	int left, top;
 	private int tickForSpin = 0;
-	int choicesCount = 0;
+	public int choicesCount = 0;
 	private HumSound hum;
 	private final Screen parent;
 	private TardisDesktopSchema selectedDesktop;
@@ -90,6 +93,10 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		this.close();
 	}
 
+	private void createCompatButtons() {
+
+	}
+
 	private void createButtons() {
 		choicesCount = 0;
 		this.buttons.clear();
@@ -104,6 +111,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 					}
 				}));
 
+		this.createCompatButtons();
 		TardisClientEvents.SETTINGS_SETUP.invoker().onSetup(this);
 
 		this.addButton(
@@ -166,7 +174,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		MinecraftClient.getInstance().setScreen(new SonicSettingsScreen(tardis().getUuid(), this.console, this));
 	}
 
-	private <T extends ClickableWidget> void addButton(T button) {
+	public <T extends ClickableWidget> void addButton(T button) {
 		this.addDrawableChild(button);
 		button.active = true; // this whole method is unnecessary bc it defaults to true ( ?? )
 		this.buttons.add((ButtonWidget) button);
@@ -174,10 +182,25 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 
 	// this might be useful, so remember this exists and use it later on ( although its giving NTM vibes.. )
 	public PressableTextWidget createTextButton(Text text, ButtonWidget.PressAction onPress) {
-		PressableTextWidget result = new PressableTextWidget(
+		return this.createAnyButton(text, PressableTextWidget::new, onPress);
+	}
+
+	public <T extends ButtonWidget> T initAnyButton(Text text, ButtonCreator<T> creator, ButtonWidget.PressAction onPress) {
+		return creator.create(
 				(int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
 				this.textRenderer.getWidth(text), 10, text, onPress, this.textRenderer
 		);
+	}
+
+	public <T extends ButtonWidget> T initAnyDynamicButton(Function<T, Text> text, DynamicButtonCreator<T> creator, ButtonWidget.PressAction onPress) {
+		return creator.create(
+				(int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
+				this.textRenderer.getWidth(Text.empty()), 10, text, onPress, this.textRenderer
+		);
+	}
+
+	public <T extends ButtonWidget> T createAnyButton(Text text, ButtonCreator<T> creator, ButtonWidget.PressAction onPress) {
+		T result = this.initAnyButton(text, creator, onPress);
 
 		this.addButton(result);
 		choicesCount++;
@@ -185,11 +208,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		return result;
 	}
 
-	public DynamicPressableTextWidget createDynamicTextButton(Supplier<Text> text, ButtonWidget.PressAction onPress) {
-		DynamicPressableTextWidget result = new DynamicPressableTextWidget(
-				(int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
-				this.textRenderer.getWidth(text.get()), 10, text, onPress, this.textRenderer
-		);
+	public <T extends ButtonWidget> T createAnyDynamicButton(Function<T, Text> text, DynamicButtonCreator<T> creator, ButtonWidget.PressAction onPress) {
+		T result = this.initAnyDynamicButton(text, creator, onPress);
 
 		this.addButton(result);
 		choicesCount++;
@@ -403,5 +423,15 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 
 	private boolean isCurrentUnlocked() {
 		return this.tardis().isUnlocked(this.selectedDesktop);
+	}
+
+	@FunctionalInterface
+	public interface ButtonCreator<T extends ButtonWidget> {
+		T create(int x, int y, int width, int height, Text text, ButtonWidget.PressAction onPress, TextRenderer textRenderer);
+	}
+
+	@FunctionalInterface
+	public interface DynamicButtonCreator<T extends ButtonWidget> {
+		T create(int x, int y, int width, int height, Function<T, Text> text, ButtonWidget.PressAction onPress, TextRenderer textRenderer);
 	}
 }

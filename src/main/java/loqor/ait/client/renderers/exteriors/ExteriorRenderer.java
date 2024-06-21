@@ -165,13 +165,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-180f));
 		}
 
-		model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, 1);
-
-		// @TODO uhhh, should we make it so the biome textures are the overgrowth per biome, or should they be separate? - Loqor
-		if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
-			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
-		}
-
 		profiler.push("biome");
 
 		if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
@@ -183,13 +176,20 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		profiler.pop();
 
+		model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, entity.getAlpha());
+
+		// @TODO uhhh, should we make it so the biome textures are the overgrowth per biome, or should they be separate? - Loqor
+		if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
+			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+		}
+
 		if (emission != null) {
 			profiler.push("emission");
 			boolean alarms = tardis.alarm().isEnabled();
 
 			ClientLightUtil.renderEmissivable(
 					tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),
-					matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1
+					matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, entity.getAlpha()
 			);
 
 			profiler.pop();

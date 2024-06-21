@@ -31,25 +31,9 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 		super(function);
 	}
 
-	private static float getAnimationLengthInTicks(Animation anim) {
-		return anim.lengthInSeconds() * 20;
-	}
-
-	private void checkAnimationTimer(ExteriorBlockEntity exterior) {
-		DoorData.DoorStateEnum state = exterior.tardis().get().getDoor().getDoorState();
-		Animation anim = getAnimationForDoorState(state);
-
-		int max = (int) getAnimationLengthInTicks(anim);
-		if (exterior.animationTimer > max) {
-			exterior.animationTimer = max;
-		}
-	}
-
-	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
 		if (exterior.tardis().isEmpty())
 			return;
-
-		float alpha = exterior.getAlpha();
 
 		if (exterior.tardis().get().getHandlers().getCloak().isEnabled()) {
 			if (!(exterior.tardis().get().getHandlers().getLoyalties().get(MinecraftClient.getInstance().player).level() < Loyalty.Type.COMPANION.level)) {
