@@ -180,7 +180,7 @@ public class FallingTardisEntity extends Entity {
 			return;
 		}
 
-		if (this.getY() <= (double) this.getWorld().getBottomY() + 1) {
+		if (this.getY() <= (double) this.getWorld().getBottomY() + 20) {
 			this.tickInVoid();
 		}
 
