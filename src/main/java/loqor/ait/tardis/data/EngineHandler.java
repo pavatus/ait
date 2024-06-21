@@ -77,6 +77,10 @@ public class EngineHandler extends KeyedTardisComponent {
         TardisEvents.LOSE_POWER.invoker().onLosePower(this.tardis);
 
         this.power.set(false);
+
+        if (this.tardis.travel().inFlight())
+            return;
+
         AbsoluteBlockPos pos = this.tardis.travel().getPosition();
         World world = pos.getWorld();
 

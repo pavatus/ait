@@ -77,7 +77,6 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		}
 
 		if (DependencyChecker.hasPortals() && tardis.travel().getState() == TardisTravel.State.LANDED
-				&& !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
 				&& tardis.getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED
 		) {
 			BlockPos pos = tardis.travel().getPosition();
