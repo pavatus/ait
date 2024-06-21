@@ -3,6 +3,7 @@ package loqor.ait.tardis.data;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.util.DeltaTimeManager;
@@ -10,9 +11,9 @@ import loqor.ait.core.util.TimeUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
+import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
-import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.sound.SoundCategory;
@@ -74,16 +75,20 @@ public class EngineHandler extends KeyedTardisComponent {
             return;
 
         DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1, 360)));
+        TardisEvents.LOSE_POWER.invoker().onLosePower(this.tardis);
 
         this.power.set(false);
-
         AbsoluteBlockPos pos = this.tardis.travel().getPosition();
         World world = pos.getWorld();
 
-        if (world != null)
-            world.setBlockState(pos, pos.getBlockEntity().getCachedState().with(ExteriorBlock.LEVEL_9, 0));
+        if (world == null)
+            return;
 
-        TardisEvents.LOSE_POWER.invoker().onLosePower(this.tardis);
+        // FIXME
+        if (!(pos.getBlockEntity() instanceof ExteriorBlockEntity))
+            return;
+
+        world.setBlockState(pos, world.getBlockState(pos).with(ExteriorBlock.LEVEL_9, 0));
     }
 
     public void enablePower() {

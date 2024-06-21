@@ -53,6 +53,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+// FIXME doesnt update position in travel properly
 public class FallingTardisEntity extends Entity {
 	public int timeFalling;
 	private boolean destroyedOnLanding;
