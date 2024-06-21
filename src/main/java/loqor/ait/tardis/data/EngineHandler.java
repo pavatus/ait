@@ -3,7 +3,6 @@ package loqor.ait.tardis.data;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.util.DeltaTimeManager;
@@ -82,10 +81,6 @@ public class EngineHandler extends KeyedTardisComponent {
         World world = pos.getWorld();
 
         if (world == null)
-            return;
-
-        // FIXME
-        if (!(pos.getBlockEntity() instanceof ExteriorBlockEntity))
             return;
 
         world.setBlockState(pos, world.getBlockState(pos).with(ExteriorBlock.LEVEL_9, 0));

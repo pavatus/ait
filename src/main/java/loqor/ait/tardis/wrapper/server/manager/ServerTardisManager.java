@@ -21,6 +21,7 @@ import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisChunkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -77,6 +78,8 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		);
 
 		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset
+
+		ServerLifecycleEvents.SERVER_STOPPED.register(this::saveAndReset);
 		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer()));
 
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
@@ -258,6 +261,11 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		this.fileManager.setLocked(true);
 		this.fileManager.saveTardis(server, this);
         this.fileManager.setLocked(false);
+	}
+
+	private void saveAndReset(MinecraftServer server) {
+		this.save(server);
+		this.reset();
 	}
 
 	public static ServerTardisManager getInstance() {
