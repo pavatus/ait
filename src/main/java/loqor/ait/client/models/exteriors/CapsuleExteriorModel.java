@@ -68,20 +68,19 @@ public class CapsuleExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (exterior.findTardis().isEmpty()) return;
+		if (exterior.tardis().isEmpty())
+			return;
+
 		matrices.push();
 		matrices.translate(0, -1.5f, 0);
 
-        /*this.body.getChild("doors").getChild("left_door").yaw = exterior.getLeftDoor();
-        this.body.getChild("doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
-		if (exterior.findTardis().get() == null) return;
-		DoorData handler = exterior.findTardis().get().getDoor();
+		if (exterior.tardis().get() == null)
+			return;
+
+		DoorData handler = exterior.tardis().get().getDoor();
 
 		this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
 		this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;
-
-		// if (DependencyChecker.hasPortals())
-		//     this.getPart().getChild("doors").visible = exterior.tardis().getDoor().getDoorState() == DoorData.DoorStateEnum.CLOSED;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
@@ -99,11 +98,7 @@ public class CapsuleExteriorModel extends ExteriorModel {
 		this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
 		this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;
 
-		// if (DependencyChecker.hasPortals())
-		//     this.getPart().getChild("doors").visible = exterior.tardis().getDoor().getDoorState() == DoorData.DoorStateEnum.CLOSED;
-
 		super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-
 		matrices.pop();
 	}
 

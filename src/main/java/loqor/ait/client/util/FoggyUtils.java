@@ -1,11 +1,12 @@
 package loqor.ait.client.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import loqor.ait.core.AITItems;
+import loqor.ait.core.util.AITModTags;
 import loqor.ait.tardis.Tardis;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.FogShape;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 public class FoggyUtils {
@@ -33,8 +34,11 @@ public class FoggyUtils {
 			RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));
 			RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 11, 32));
 			RenderSystem.setShaderFogShape(FogShape.SPHERE);
-			RenderSystem.setShaderFogColor(0.2f, 0.2f, 0.2f, MinecraftClient.getInstance().player
-					.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.RESPIRATOR ? 0.015f: 0.35f);
+
+			ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.HEAD);
+
+			RenderSystem.setShaderFogColor(0.2f, 0.2f, 0.2f,
+					stack.isIn(AITModTags.Items.FULL_RESPIRATORS) ? 0.015f: 0.35f);
 		}
 		if (ClientTardisUtil.isPlayerInATardis() &&
 				!tardis.crash().isToxic() &&

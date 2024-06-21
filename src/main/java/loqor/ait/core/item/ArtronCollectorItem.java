@@ -74,10 +74,10 @@ public class ArtronCollectorItem extends Item {
 
 		if (player.isSneaking()) {
 			if (world.getBlockEntity(clickedPos) instanceof ExteriorBlockEntity exterior) {
-				if (exterior.findTardis().isEmpty())
+				if (exterior.tardis().isEmpty())
 					return ActionResult.FAIL;
 
-				double residual = exterior.findTardis().get().addFuel(nbt.getDouble(AU_LEVEL));
+				double residual = exterior.tardis().get().addFuel(nbt.getDouble(AU_LEVEL));
 				nbt.putDouble(AU_LEVEL, residual);
 				return ActionResult.CONSUME;
 			} else if (world.getBlockEntity(clickedPos) instanceof ConsoleBlockEntity console) {

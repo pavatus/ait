@@ -17,8 +17,8 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.link.v2.TardisRef;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -32,8 +32,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.profiler.Profiler;
-
-import java.util.Optional;
 
 import static loqor.ait.tardis.animation.ExteriorAnimation.distanceFromTardis;
 import static loqor.ait.tardis.animation.ExteriorAnimation.isNearTardis;
@@ -52,7 +50,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		profiler.push("exterior");
 
 		profiler.push("find_tardis");
-		Optional<Tardis> optionalTardis = entity.findTardis();
+		TardisRef optionalTardis = entity.tardis();
 
 		if (optionalTardis.isEmpty())
 			return;

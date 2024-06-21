@@ -1,8 +1,8 @@
 package loqor.ait.tardis.animation;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.AITMod;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.CloakData;
@@ -29,28 +29,27 @@ public abstract class ExteriorAnimation {
 
 	// fixme bug that sometimes happens where server doesnt have animation
 	protected void runAlphaChecks(TardisTravel.State state) {
-		if (this.exterior.getWorld().isClient() || this.exterior.findTardis().isEmpty())
+		if (this.exterior.getWorld().isClient() || this.exterior.tardis().isEmpty())
 			return;
 
-		if (alpha <= 0f && state == TardisTravel.State.DEMAT) {
-			exterior.findTardis().get().travel().toFlight();
-		}
-		if (alpha >= 1f && state == TardisTravel.State.MAT) {
-			exterior.findTardis().get().travel().forceLand(this.exterior);
-		}
+		if (alpha <= 0f && state == TardisTravel.State.DEMAT)
+			exterior.tardis().get().travel().toFlight();
+
+		if (alpha >= 1f && state == TardisTravel.State.MAT)
+			exterior.tardis().get().travel().forceLand(this.exterior);
 	}
 
 	public float getAlpha() {
-
-		if (this.exterior.findTardis().isEmpty()) return 1f;
+		if (this.exterior.tardis().isEmpty())
+			return 1f;
 
 		if (this.timeLeft < 0) {
-			this.setupAnimation(exterior.findTardis().get().travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+			this.setupAnimation(exterior.tardis().get().travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 			return 1f;
 		}
-		if (this.exterior.findTardis().get().travel().getState() == TardisTravel.State.LANDED && this.exterior.findTardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled()) {
+
+		if (this.exterior.tardis().get().travel().getState() == TardisTravel.State.LANDED && this.exterior.tardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled())
 			return 0.105f;
-		}
 
 		return Math.clamp(0.0F, 1.0F, this.alpha);
 	}
@@ -66,8 +65,7 @@ public abstract class ExteriorAnimation {
 	public static double distanceFromTardis(PlayerEntity player, Tardis tardis) {
 		BlockPos pPos = player.getBlockPos();
 		BlockPos tPos = tardis.position();
-		double distance = Math.sqrt(tPos.getSquaredDistance(pPos));
-		return distance;
+        return Math.sqrt(tPos.getSquaredDistance(pPos));
 	}
 
 	public abstract void tick();
@@ -83,21 +81,27 @@ public abstract class ExteriorAnimation {
 	}
 
 	public void tellClientsToSetup(TardisTravel.State state) {
-		if (exterior.getWorld() == null) return; // happens when tardis spawns above world limit, so thats nice
-		if (exterior.getWorld().isClient()) return;
-		if (exterior.findTardis().isEmpty()) return;
+		if (exterior.getWorld() == null)
+			return; // happens when tardis spawns above world limit, so thats nice
 
-		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(exterior.findTardis().get())) {
+		if (exterior.getWorld().isClient())
+			return;
+
+		if (exterior.tardis().isEmpty())
+			return;
+
+		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(exterior.tardis().get())) {
 			tellClientToSetup(state, player);
 		}
 	}
 
 	public void tellClientToSetup(TardisTravel.State state, ServerPlayerEntity player) {
-		if (exterior.getWorld().isClient() && exterior.findTardis().isEmpty()) return;
+		if (exterior.getWorld().isClient() || exterior.tardis().isEmpty())
+			return;
 
 		PacketByteBuf data = PacketByteBufs.create();
 		data.writeInt(state.ordinal());
-		data.writeUuid(exterior.findTardis().get().getUuid());
+		data.writeUuid(exterior.tardis().get().getUuid());
 
 		ServerPlayNetworking.send(player, UPDATE, data);
 	}

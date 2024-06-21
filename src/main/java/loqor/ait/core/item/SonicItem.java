@@ -418,8 +418,10 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 					return;
 
 				if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exteriorBlockEntity) {
-					if (exteriorBlockEntity.findTardis().isEmpty()) return;
-					int repairTicksLeft = exteriorBlockEntity.findTardis().get().crash().getRepairTicks();
+					if (exteriorBlockEntity.tardis().isEmpty())
+						return;
+
+					int repairTicksLeft = exteriorBlockEntity.tardis().get().crash().getRepairTicks();
 					int repairMins = repairTicksLeft / 20 / 60;
 
 					if (repairTicksLeft == 0) {

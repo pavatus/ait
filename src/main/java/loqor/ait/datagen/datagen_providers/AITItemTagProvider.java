@@ -22,12 +22,21 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
 		// Items
 		getOrCreateTagBuilder(AITModTags.Items.SONIC_ITEM)
 				.add(AITItems.SONIC_SCREWDRIVER);
+
 		getOrCreateTagBuilder(ItemTags.CREEPER_DROP_MUSIC_DISCS)
 				.add(AITItems.DRIFTING_MUSIC_DISC)
 				.add(AITItems.MERCURY_MUSIC_DISC);
+
 		getOrCreateTagBuilder(AITModTags.Items.CLUSTER_MAX_HARVESTABLES)
 				.add(AITItems.ZEITON_SHARD);
+
 		getOrCreateTagBuilder(AITModTags.Items.NO_BOP)
 				.add(AITItems.SONIC_SCREWDRIVER);
+
+		getOrCreateTagBuilder(AITModTags.Items.FULL_RESPIRATORS)
+				.add(AITItems.RESPIRATOR);
+
+		getOrCreateTagBuilder(AITModTags.Items.HALF_RESPIRATORS)
+				.add(AITItems.FACELESS_RESPIRATOR);
 	}
 }

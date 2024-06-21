@@ -358,9 +358,10 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (exterior.findTardis().isEmpty()) return;
+		if (exterior.tardis().isEmpty())
+			return;
 
-		ClientTardis tardis = (ClientTardis) exterior.findTardis().get();
+		ClientTardis tardis = (ClientTardis) exterior.tardis().get();
 
 		TardisTravel travel = tardis.travel();
 		TardisTravel.State state = travel.getState();
@@ -368,21 +369,6 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
 		root = (tardis.getHandlers().getInteriorChanger().isGenerating() || (state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT)) ? coral.getChild("six") : coral.getChild("seven");
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-		/*
-		matrices.push();
-		// matrices.translate(0, -1.5, 0);
-
-		if (exterior.findTardis().isEmpty()) return;
-
-		if (exterior.findTardis().get().getHandlers().getInteriorChanger().isGenerating()) {
-			coral.getChild("six").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
-		} else {
-			coral.getChild("seven").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
-		}
-
-		// super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-
-		matrices.pop();*/
 	}
 
 

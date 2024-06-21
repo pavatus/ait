@@ -19,6 +19,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -108,10 +109,11 @@ public class FallingTardisEntity extends Entity {
 		FallingTardisEntity fallingBlockEntity = new FallingTardisEntity(world, (double) pos.getX() + 0.5, pos.getY(), (double) pos.getZ() + 0.5, state.contains(Properties.WATERLOGGED) ? state.with(Properties.WATERLOGGED, false) : state);
 
 		if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
-			if (exterior.findTardis().isEmpty()) return null;
-			fallingBlockEntity.setTardisId(exterior.findTardis().get().getUuid());
+			if (exterior.tardis().isEmpty())
+				return null;
+			fallingBlockEntity.setTardisId(exterior.tardis().get().getUuid());
 
-			PropertiesHandler.set(exterior.findTardis().get(), PropertiesHandler.IS_FALLING, true);
+			PropertiesHandler.set(exterior.tardis().get(), PropertiesHandler.IS_FALLING, true);
 		}
 
 		world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
@@ -172,58 +174,67 @@ public class FallingTardisEntity extends Entity {
 	@Override
 	protected void tickInVoid() {
 		super.tickInVoid();
+
+		MinecraftClient.getInstance().player.sendMessage(Text.literal("stopping falling cuz void"));
 		this.stopFalling(true);
 	}
 
 	public void tick() {
 		if (this.block.isAir()) {
 			this.discard();
-		} else {
-            this.timeFalling++;
+			return;
+		}
 
-			if (!this.hasNoGravity())
-				this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
+		if (this.getY() < (double)(this.getWorld().getBottomY() - 64)) {
+			this.tickInVoid();
+		}
 
-			this.move(MovementType.SELF, this.getVelocity());
+		this.timeFalling++;
 
-			Tardis tardis = this.getTardis();
+		if (!this.hasNoGravity())
+			this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
 
-			if (tardis == null)
+		this.move(MovementType.SELF, this.getVelocity());
+
+		Tardis tardis = this.getTardis();
+
+		if (tardis == null)
+			return;
+
+		if (!this.getWorld().isClient()) {
+			this.getTardis().getDesktop().getConsolePos().forEach(console -> this.getWorld().playSound(
+					null, console, SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F)
+			);
+
+			if (PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
+				MinecraftClient.getInstance().player.sendMessage(Text.literal("stopping falling cuz antigravs"));
+				this.stopFalling();
 				return;
-
-			if (!this.getWorld().isClient()) {
-				this.getTardis().getDesktop().getConsolePos().forEach(console -> this.getWorld().playSound(
-						null, console, SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F)
-				);
-
-				if (PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
-					this.stopFalling();
-					return;
-				}
-
-				tardis.travel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(),
-						DirectionControl.getGeneralizedRotation(this.getTardis().travel().getPosition().getRotation())));
-
-				BlockPos blockPos = this.getBlockPos();
-
-				if (blockPos == null)
-					return;
-
-                if (this.isOnGround()) {
-					boolean crashing = tardis.travel().isCrashing();
-
-					if (crashing) {
-						this.getWorld().createExplosion(this, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-								10, true, World.ExplosionSourceType.MOB
-						);
-					}
-					tardis.getDoor().setLocked(crashing);
-					this.stopFalling(false);
-				}
 			}
 
-			this.setVelocity(this.getVelocity().multiply(tardis.travel().isCrashing() ? 1.5f : 0.98f));
+			tardis.travel().setPosition(new AbsoluteBlockPos.Directed(BlockPos.ofFloored(this.getPos()), this.getWorld(),
+					DirectionControl.getGeneralizedRotation(this.getTardis().travel().getPosition().getRotation())));
+
+			BlockPos blockPos = this.getBlockPos();
+
+			if (blockPos == null)
+				return;
+
+			if (this.isOnGround()) {
+				boolean crashing = tardis.travel().isCrashing();
+
+				if (crashing) {
+					this.getWorld().createExplosion(this, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
+							10, true, World.ExplosionSourceType.MOB
+					);
+				}
+				tardis.getDoor().setLocked(crashing);
+				MinecraftClient.getInstance().player.sendMessage(Text.literal("stopping falling cuz on ground"));
+				this.stopFalling(false);
+			}
 		}
+
+		this.setVelocity(this.getVelocity().multiply(tardis.travel().isCrashing() ? 1.5f : 0.98f));
 	}
 
 	public void stopFalling() {

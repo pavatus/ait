@@ -636,8 +636,8 @@ public class TardisTravel extends TardisComponent {
 
 			// If there is already a matching exterior at this position
 			if (found instanceof ExteriorBlockEntity exterior
-					&& exterior.findTardis().isPresent()
-					&& Objects.equals(exterior.findTardis().get(), this.tardis())) {
+					&& exterior.tardis().isPresent()
+					&& Objects.equals(exterior.tardis().get(), this.tardis())) {
 				blockEntity = exterior;
 			} else {
 				ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
@@ -646,7 +646,7 @@ public class TardisTravel extends TardisComponent {
 
 				ExteriorBlockEntity newEntity = new ExteriorBlockEntity(this.getPosition(), state);
 				world.addBlockEntity(newEntity);
-				newEntity.setTardis(this.tardis());
+				newEntity.link(this.tardis());
 				blockEntity = newEntity;
 			}
 
@@ -756,7 +756,7 @@ public class TardisTravel extends TardisComponent {
 				this.position, this.position.getBlockState()
 		);
 
-		exterior.setTardis(this.tardis());
+		exterior.link(this.tardis());
 		this.position.addBlockEntity(exterior);
 	}
 

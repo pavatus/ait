@@ -1,7 +1,7 @@
 package loqor.ait.tardis.animation;
 
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.AITMod;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.TardisTravel;
 
@@ -16,14 +16,13 @@ public class PulsatingAnimation extends ExteriorAnimation {
 
 	@Override
 	public void tick() {
-		if (exterior.findTardis().isEmpty())
+		if (exterior.tardis().isEmpty())
 			return;
 
-		TardisTravel.State state = exterior.findTardis().get().travel().getState();
-
+		TardisTravel.State state = exterior.tardis().get().travel().getState();
 
 		if (this.timeLeft < 0)
-			this.setupAnimation(exterior.findTardis().get().travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+			this.setupAnimation(state); // fixme is a jank fix for the timeLeft going negative on client
 
 		if (state == TardisTravel.State.DEMAT) {
 			this.setAlpha(1f - getPulseAlpha());
@@ -53,14 +52,13 @@ public class PulsatingAnimation extends ExteriorAnimation {
 
 	@Override
 	public void setupAnimation(TardisTravel.State state) {
-		if (exterior.findTardis().isEmpty() || exterior.findTardis().get().getExterior().getCategory() == null) {
+		if (exterior.tardis().isEmpty() || exterior.tardis().get().getExterior().getCategory() == null) {
 			AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
 			alpha = 0f; // just make me vanish.
 			return;
 		}
 
-		MatSound sound = exterior.findTardis().get().getExterior().getVariant().getSound(state);
-
+		MatSound sound = exterior.tardis().get().getExterior().getVariant().getSound(state);
 		this.tellClientsToSetup(state);
 
 		timeLeft = sound.timeLeft();

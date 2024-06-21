@@ -27,7 +27,7 @@ public final class TeleportInteriorCommand {
 						.then(literal("interior")
 						.then(argument("tardis", TardisArgumentType.tardis())
 							.executes(TeleportInteriorCommand::runCommand)
-						.then(argument("players", EntityArgumentType.players())
+						.then(argument("entities", EntityArgumentType.players())
 								.executes(TeleportInteriorCommand::runCommandWithPlayers)))))
 		);
 	}
@@ -41,8 +41,8 @@ public final class TeleportInteriorCommand {
 
 	private static int runCommandWithPlayers(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 		Entity source = context.getSource().getEntity();
-		Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
 		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
+		Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
 
 		return teleportToInterior(tardis, source, entities);
 	}
