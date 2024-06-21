@@ -209,11 +209,7 @@ public class FallingTardisEntity extends Entity {
 				if (blockPos == null)
 					return;
 
-                if (!this.isOnGround()) {
-					if((blockPos.getY() <= this.getWorld().getBottomY() || blockPos.getY() > this.getWorld().getTopY())) {
-						this.stopFalling();
-					}
-				} else {
+                if (this.isOnGround()) {
 					boolean crashing = tardis.travel().isCrashing();
 
 					if (crashing) {
