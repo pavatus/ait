@@ -1,11 +1,11 @@
 package loqor.ait.tardis.data;
 
+import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
-
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
@@ -32,18 +32,34 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 
 	public void enable() {
 		PropertiesHandler.set(this.tardis(), IS_SHIELDED, true);
+		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, true, this.areVisualShieldsActive());
 	}
 
 	public void disable() {
 		PropertiesHandler.set(this.tardis(), IS_SHIELDED, false);
+		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, false, this.areVisualShieldsActive());
+	}
+
+	public void toggle() {
+		if (this.areShieldsActive())
+			this.disable();
+		else this.enable();
 	}
 
 	public void enableVisuals() {
 		PropertiesHandler.set(this.tardis(), IS_VISUALLY_SHIELDED, true);
+		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, this.areShieldsActive(), true);
 	}
 
 	public void disableVisuals() {
 		PropertiesHandler.set(this.tardis(), IS_VISUALLY_SHIELDED, false);
+		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, this.areShieldsActive(), false);
+	}
+
+	public void toggleVisuals() {
+		if (this.areVisualShieldsActive())
+			this.disableVisuals();
+		else this.enableVisuals();
 	}
 
 	public void disableAll() {

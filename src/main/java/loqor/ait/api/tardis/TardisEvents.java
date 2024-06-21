@@ -1,15 +1,10 @@
 package loqor.ait.api.tardis;
 
-import loqor.ait.client.screens.interior.InteriorSettingsScreen;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.tardis.Tardis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
 
 public final class TardisEvents {
 
@@ -90,6 +85,12 @@ public final class TardisEvents {
 	public static final Event<LeaveTardis> LEAVE_TARDIS = EventFactory.createArrayBacked(LeaveTardis.class, callbacks -> (tardis, entity) -> {
 		for (LeaveTardis callback : callbacks) {
 			callback.onLeave(tardis, entity);
+		}
+	});
+
+	public static final Event<Shields> TOGGLE_SHIELDS = EventFactory.createArrayBacked(Shields.class, callbacks -> (tardis, active, visual) -> {
+		for (Shields callback : callbacks) {
+			callback.onShields(tardis, active, visual);
 		}
 	});
 
@@ -206,5 +207,10 @@ public final class TardisEvents {
 	@FunctionalInterface
 	public interface LeaveTardis {
 		void onLeave(Tardis tardis, Entity entity);
+	}
+
+	@FunctionalInterface
+	public interface Shields {
+		void onShields(Tardis tardis, boolean active, boolean visual);
 	}
 }
