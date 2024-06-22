@@ -8,9 +8,7 @@ import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -78,14 +76,9 @@ public class TardisItemBuilder extends Item {
 
 		ExteriorCategorySchema category = CategoryRegistry.getInstance().get(this.exterior);
 
-		ServerTardisManager.getInstance().create(
-				new TardisBuilder()
-						.at(pos).desktop(DesktopRegistry.getInstance().get(this.desktop))
-						.exterior(ExteriorVariantRegistry.getInstance().pickRandomWithParent(category))
-						.<StatsData>with(TardisComponent.Id.STATS, stats -> {
-							stats.setPlayerCreatorName(player.getName().getString());
-							stats.markPlayerCreatorName();
-						})
+		ServerTardisManager.getInstance().create(new TardisBuilder()
+				.at(pos).desktop(DesktopRegistry.getInstance().get(this.desktop)).owner(player)
+				.exterior(ExteriorVariantRegistry.getInstance().pickRandomWithParent(category))
 		);
 
 		context.getStack().decrement(1);
