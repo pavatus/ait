@@ -32,9 +32,6 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.profiler.Profiler;
 
-import static loqor.ait.tardis.animation.ExteriorAnimation.distanceFromTardis;
-import static loqor.ait.tardis.animation.ExteriorAnimation.isNearTardis;
-
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 
 	private ExteriorModel model;
@@ -103,29 +100,21 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		int k = blockState.get(ExteriorBlock.ROTATION);
 		float h = RotationPropertyHelper.toDegrees(k);
 
+		final float alpha = entity.getAlpha();
+
 		if (tardis.areVisualShieldsActive()) {
 			profiler.push("shields");
-			float alpha;
 
 			float delta = (tickDelta + MinecraftClient.getInstance().player.age) * 0.03f;
 			VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEnergySwirl(
 					this.getEnergySwirlTexture(), delta % 1.0F, (delta * 0.1F) % 1.0F)
 			);
 
-			if (isNearTardis(MinecraftClient.getInstance().player, tardis, 15)) {
-				alpha = 1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, tardis) / 15);
-
-				if (entity.getAlpha() != 0.105f)
-					alpha = alpha * entity.getAlpha();
-			} else {
-				alpha = 0f;
-			}
-
 			matrices.push();
 			matrices.translate(0.5F, 0.0F, 0.5F);
 
 			shieldsModel.render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, overlay,
-					0f, 0.25f, 0.5f, Math.min(entity.getAlpha(), alpha)
+					0f, 0.25f, 0.5f, alpha
 			);
 
 			matrices.pop();
@@ -165,22 +154,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-180f));
 		}
 
-		profiler.push("biome");
-
-		if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-			Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
-			if (biomeTexture != null && !texture.equals(biomeTexture)) {
-				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, entity.getAlpha());
-			}
-		}
-
-		profiler.pop();
-
-		model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1, entity.getAlpha());
+		model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(
+				AITRenderLayers.getEntityTranslucentCull(texture)
+		), light, overlay, 1, 1, 1, alpha);
 
 		// @TODO uhhh, should we make it so the biome textures are the overgrowth per biome, or should they be separate? - Loqor
 		if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
-			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, entity.getAlpha());
+			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, alpha);
 		}
 
 		if (emission != null) {
@@ -189,12 +169,22 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 			ClientLightUtil.renderEmissivable(
 					tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),
-					matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, entity.getAlpha()
+					matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, alpha
 			);
 
 			profiler.pop();
 		}
 
+		profiler.push("biome");
+
+		if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+			Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
+			if (biomeTexture != null && !texture.equals(biomeTexture)) {
+				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)), light, overlay, 1, 1, 1, alpha);
+			}
+		}
+
+		profiler.pop();
 		matrices.pop();
 
 		if (!tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {

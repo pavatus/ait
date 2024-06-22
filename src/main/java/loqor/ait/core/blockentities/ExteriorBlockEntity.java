@@ -195,11 +195,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 		}
 
-		if (blockState.getBlock() instanceof ExteriorBlock) {
-			// For checking falling
-			((ExteriorBlock) blockState.getBlock()).tryFall(blockState, (ServerWorld) world, pos);
-		}
-
 		// ensures we don't exist during flight
 		if (state == FLIGHT)
 			world.removeBlock(this.getPos(), false);
@@ -208,7 +203,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 	public void verifyAnimation() {
 		TardisRef optional = this.tardis();
 
-		if (this.animation != null || optional.isEmpty())
+		if (this.animation != null || optional == null || optional.isEmpty())
 			return;
 
 		Tardis tardis = optional.get();
@@ -249,10 +244,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 	}
 
 	public float getAlpha() {
-		if (this.getAnimation() == null) {
-			return 1f;
-		}
-
 		return this.getAnimation().getAlpha();
 	}
 

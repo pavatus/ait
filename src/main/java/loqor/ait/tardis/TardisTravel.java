@@ -670,7 +670,8 @@ public class TardisTravel extends TardisComponent {
 		ServerWorld level = (ServerWorld) this.getPosition().getWorld();
 		BlockEntity entity = level.getBlockEntity(this.getPosition());
 		if (entity instanceof ExteriorBlockEntity exterior) {
-			if (exterior.getAnimation() == null) return;
+			if (exterior.getAnimation() == null)
+				return;
 
 			exterior.getAnimation().setupAnimation(this.state);
 			exterior.getAnimation().tellClientsToSetup(this.state);
@@ -747,7 +748,9 @@ public class TardisTravel extends TardisComponent {
 	}
 
 	public void placeExterior() {
-		this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(ExteriorBlock.ROTATION, DirectionControl.getGeneralizedRotation(this.position.getRotation())).with(ExteriorBlock.LEVEL_9, 0));
+		this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState()
+				.with(ExteriorBlock.ROTATION, DirectionControl.getGeneralizedRotation(this.position.getRotation()))
+				.with(ExteriorBlock.LEVEL_9, 0));
 
 		this.position.addBlockEntity(new ExteriorBlockEntity(
 				this.position, this.position.getBlockState(), this.tardis

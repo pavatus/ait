@@ -7,12 +7,12 @@ import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
+import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -89,7 +89,6 @@ public class TardisItemBuilder extends Item {
 		);
 
 		context.getStack().decrement(1);
-
 		return ActionResult.SUCCESS;
 	}
 }

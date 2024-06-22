@@ -48,14 +48,11 @@ public abstract class ExteriorAnimation {
 			return 1f;
 		}
 
-		if (this.exterior.tardis().get().travel().getState() == TardisTravel.State.LANDED && this.exterior.tardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled())
+		if (this.exterior.tardis().get().travel().getState() == TardisTravel.State.LANDED
+				&& this.exterior.tardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled())
 			return 0.105f;
 
 		return Math.clamp(0.0F, 1.0F, this.alpha);
-	}
-
-	private boolean isServer() {
-		return !this.exterior.getWorld().isClient();
 	}
 
 	public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius) {

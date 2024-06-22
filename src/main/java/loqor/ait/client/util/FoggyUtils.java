@@ -18,9 +18,10 @@ public class FoggyUtils {
 			RenderSystem.setShaderFogColor(0.5f, 0, 0, 0.5f);
 			MinecraftClient.getInstance().gameRenderer.getCamera().getSubmersionType();
 		}
+
 		Tardis tardis = ClientTardisUtil.getCurrentTardis();
 		
-		if (tardis == null)
+		if (tardis == null || tardis.isAged())
 			return;
 		
 		if (ClientTardisUtil.isPlayerInATardis() && !tardis.isGrowth() && ClientTardisUtil.getPowerDelta() != ClientTardisUtil.MAX_POWER_DELTA_TICKS) {

@@ -333,6 +333,14 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		}
 	}
 
+	@Override
+	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+		super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
+
+		if (world instanceof ServerWorld serverWorld)
+			this.tryFall(state, serverWorld, pos);
+	}
+
 	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		// this is called when the block is first placed, but we have a demat anim so nothing occurs.
 		tryFall(state, world, pos);

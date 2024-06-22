@@ -3,6 +3,7 @@ package loqor.ait.client.models.exteriors;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.entities.TardisRealEntity;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import net.minecraft.client.MinecraftClient;
@@ -13,6 +14,7 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
@@ -21,7 +23,6 @@ import static loqor.ait.tardis.animation.ExteriorAnimation.*;
 
 @SuppressWarnings("rawtypes")
 public abstract class ExteriorModel extends SinglePartEntityModel {
-	public static int MAX_TICK_COUNT = 2 * 20;
 
 	public ExteriorModel() {
 		this(RenderLayer::getEntityCutoutNoCull);
@@ -35,22 +36,30 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 		if (exterior.tardis().isEmpty())
 			return;
 
-		if (exterior.tardis().get().getHandlers().getCloak().isEnabled()) {
-			if (!(exterior.tardis().get().getHandlers().getLoyalties().get(MinecraftClient.getInstance().player).level() < Loyalty.Type.COMPANION.level)) {
-				alpha = 0f;
-				root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+		Tardis tardis = exterior.tardis().get();
+		float newAlpha = alpha;
+
+		if (tardis.getHandlers().getCloak().isEnabled()) {
+			PlayerEntity player = MinecraftClient.getInstance().player;
+
+			if (!(tardis.loyalty().get(player).isOf(Loyalty.Type.COMPANION))) {
+				newAlpha = 0f;
+
+				root.render(matrices, vertices, light, overlay, red, green, blue, newAlpha);
 				return;
 			}
-			if (isNearTardis(MinecraftClient.getInstance().player, exterior.tardis().get(), MAX_CLOAK_DISTANCE)) {
-				alpha = 1f - (float) (distanceFromTardis(MinecraftClient.getInstance().player, exterior.tardis().get()) / MAX_CLOAK_DISTANCE);
-				if (exterior.getAlpha() != 0.105f)
-					alpha = alpha * exterior.getAlpha();
+
+			if (isNearTardis(MinecraftClient.getInstance().player, tardis, MAX_CLOAK_DISTANCE)) {
+				newAlpha = 1f - (float) (distanceFromTardis(player, tardis) / MAX_CLOAK_DISTANCE);
+
+				if (alpha != 0.105f)
+					newAlpha = newAlpha * alpha;
 			} else {
-				alpha = 0f;
+				newAlpha = 0f;
 			}
 		}
 
-		root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+		root.render(matrices, vertices, light, overlay, red, green, blue, newAlpha);
 	}
 
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
