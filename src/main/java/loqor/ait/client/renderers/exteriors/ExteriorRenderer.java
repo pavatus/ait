@@ -68,8 +68,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 			matrices.pop();
 			profiler.pop();
-
-			profiler.pop();
 			return;
 		}
 

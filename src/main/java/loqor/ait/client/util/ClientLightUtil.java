@@ -38,7 +38,7 @@ public class ClientLightUtil {
 		if (emissive == null)
 			return;
 
-		RenderLayer layer = DependencyChecker.hasIris() ? AITRenderLayers.getEntityCutoutNoCullZOffset(emissive)
+		RenderLayer layer = DependencyChecker.hasIris() ? AITRenderLayers.tardisEmissiveCullZOffset(emissive, true)
 				: AITRenderLayers.getBeaconBeam(emissive, true);
 
 		light = DependencyChecker.hasIris() ? LightmapTextureManager.MAX_LIGHT_COORDINATE : light;
@@ -52,7 +52,7 @@ public class ClientLightUtil {
 		if (texture == null)
 			return;
 
-		ClientLightUtil.render(renderable, entity, root, matrices, RenderLayer.getEntityCutoutNoCullZOffset(texture), vertices, light, overlay, red, green, blue, alpha);
+		ClientLightUtil.render(renderable, entity, root, matrices, AITRenderLayers.tardisEmissiveCullZOffset(texture, true), vertices, light, overlay, red, green, blue, alpha);
 	}
 
 	public static <T> void render(
