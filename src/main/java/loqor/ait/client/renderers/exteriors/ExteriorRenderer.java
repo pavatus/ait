@@ -48,7 +48,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		profiler.push("find_tardis");
 		TardisRef optionalTardis = entity.tardis();
 
-		if (optionalTardis.isEmpty())
+		if (optionalTardis == null || optionalTardis.isEmpty())
 			return;
 
 		Tardis tardis = optionalTardis.get();
