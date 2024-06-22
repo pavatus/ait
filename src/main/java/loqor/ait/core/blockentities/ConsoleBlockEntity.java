@@ -1,6 +1,5 @@
 package loqor.ait.core.blockentities;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
@@ -199,7 +198,6 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 	}
 
 	public void markNeedsControl() {
-		AITMod.LOGGER.info("Marked needs control at ", new Throwable());
 		this.needsControls = true;
 	}
 
