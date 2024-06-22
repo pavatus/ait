@@ -35,7 +35,6 @@ public class InteriorSelectScreen extends TardisScreen {
 	public InteriorSelectScreen(UUID tardis, Screen parent) {
 		super(Text.translatable("screen.ait.interor_select.title"), tardis);
 		this.parent = parent;
-		updateTardis();
 	}
 
 	@Override

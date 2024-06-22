@@ -62,7 +62,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		super(Text.translatable("screen.ait.interiorsettings.title"), tardis, console);
 
 		this.parent = parent;
-		this.updateTardis();
 	}
 
 	@Override

@@ -42,7 +42,6 @@ public class SonicSettingsScreen extends ConsoleScreen {
         this.parent = parent;
 
         sendSonicChangePacket();
-        updateTardis();
     }
 
     @Override

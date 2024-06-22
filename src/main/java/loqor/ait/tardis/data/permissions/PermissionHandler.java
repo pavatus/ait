@@ -24,12 +24,12 @@ public class PermissionHandler extends KeyedTardisComponent {
 
     private static final Property<Loyalty.Type> P19_LOYALTY = Property.forEnum("p19_loyalty", Loyalty.Type.class, Loyalty.Type.COMPANION);
 
-    private final Map<UUID, PermissionMap> data;
+    private final Map<UUID, PermissionMap> permissions;
     private final Value<Loyalty.Type> p19Loyalty = P19_LOYALTY.create(this);
 
     public PermissionHandler(Map<UUID, PermissionMap> map) {
         super(Id.PERMISSIONS);
-        this.data = map;
+        this.permissions = map;
     }
 
     public PermissionHandler() {
@@ -38,6 +38,7 @@ public class PermissionHandler extends KeyedTardisComponent {
 
     static {
         // TODO: make properties have a built-in util to C->S
+        // YES PLEASE :)))
         ServerPlayNetworking.registerGlobalReceiver(P19_LOYALTY_SYNC, (server, player, handler, buf, responseSender) -> {
             ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
                 if (tardis == null)
@@ -81,13 +82,13 @@ public class PermissionHandler extends KeyedTardisComponent {
     }
 
     private PermissionMap getPermissionMap(ServerPlayerEntity player) {
-        PermissionMap result = data.get(player.getUuid());
+        PermissionMap result = permissions.get(player.getUuid());
 
         if (result != null)
             return result;
 
         result = new PermissionMap();
-        data.put(player.getUuid(), result);
+        permissions.put(player.getUuid(), result);
         return result;
     }
 }

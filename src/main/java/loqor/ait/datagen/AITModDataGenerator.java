@@ -626,6 +626,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         provider.addTranslation("screen.ait.security.leave_behind", "> Leave Behind");
         provider.addTranslation("screen.ait.security.hostile_alarms", "> Hostile Alarms");
+        provider.addTranslation("screen.ait.security.minimum_loyalty", "> Isomorphic LVL");
         provider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
 
