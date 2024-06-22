@@ -1,5 +1,6 @@
 package loqor.ait.core.blockentities;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
@@ -64,6 +65,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 			return;
 
 		tardis.getDesktop().getConsolePos().add(this.pos);
+		this.markNeedsControl();
 	}
 
 	@Override
@@ -85,6 +87,12 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		this.setVariant(ConsoleVariantRegistry.getInstance().get(
 				Identifier.tryParse(nbt.getString("variant"))
 		));
+	}
+
+	@Override
+	public NbtCompound toInitialChunkDataNbt() {
+		this.markNeedsControl();
+		return super.toInitialChunkDataNbt();
 	}
 
 	public ConsoleTypeSchema getTypeSchema() {
@@ -158,13 +166,6 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 	public void killControls() {
 		controlEntities.forEach(Entity::discard);
 		controlEntities.clear();
-		this.sync();
-	}
-
-	@Override
-	public NbtCompound toInitialChunkDataNbt() {
-		markNeedsControl();
-		return super.toInitialChunkDataNbt();
 	}
 
 	public void spawnControls() {
@@ -195,10 +196,10 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		}
 
 		this.needsControls = false;
-		this.onLinked();
 	}
 
 	public void markNeedsControl() {
+		AITMod.LOGGER.info("Marked needs control at ", new Throwable());
 		this.needsControls = true;
 	}
 
