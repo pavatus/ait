@@ -2,6 +2,7 @@ package loqor.ait.tardis.desktops;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
+import loqor.ait.AITMod;
 import loqor.ait.mixin.server.structure.StructureTemplateAccessor;
 import loqor.ait.mixin.server.structure.StructureTemplateInvoker;
 import loqor.ait.tardis.Tardis;
@@ -95,13 +96,20 @@ public class TardisStructureTemplate {
             nbts.add(Pair.of(blockPos, structureBlockInfo.nbt()));
 
             if (structureBlockInfo.nbt() != null && (blockEntity = world.getBlockEntity(blockPos)) != null) {
+                NbtCompound toLoad = structureBlockInfo.nbt();
+
                 if (blockEntity instanceof LootableContainerBlockEntity)
-                    structureBlockInfo.nbt().putLong("LootTableSeed", random.nextLong());
+                    toLoad.putLong("LootTableSeed", random.nextLong());
 
-                if (blockEntity instanceof InteriorLinkableBlockEntity linkable)
+                if (blockEntity instanceof InteriorLinkableBlockEntity linkable) {
+                    AITMod.LOGGER.warn("Linked {} to {}", linkable, tardis);
+
+                    // It's faster to remove the tardis from the nbt than make it do id -> string -> map -> string -> id
+                    toLoad.remove("tardis");
                     linkable.link(tardis);
+                }
 
-                blockEntity.readNbt(structureBlockInfo.nbt());
+                blockEntity.readNbt(toLoad);
             }
 
             if (fluidState == null)

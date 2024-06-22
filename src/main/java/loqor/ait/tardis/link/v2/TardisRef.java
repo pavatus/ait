@@ -1,5 +1,6 @@
 package loqor.ait.tardis.link.v2;
 
+import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.Disposable;
 
@@ -17,6 +18,8 @@ public class TardisRef implements Disposable {
     public TardisRef(UUID id, LoadFunc load) {
         this.id = id;
         this.load = load;
+
+        AITMod.LOGGER.debug("Created new ref1 for " + id, new Throwable());
     }
 
     public TardisRef(Tardis tardis, LoadFunc load) {
@@ -25,6 +28,7 @@ public class TardisRef implements Disposable {
 
         this.load = load;
         this.cached = tardis;
+        AITMod.LOGGER.debug("Created new ref2 for " + id, new Throwable());
     }
 
     public Tardis get() {

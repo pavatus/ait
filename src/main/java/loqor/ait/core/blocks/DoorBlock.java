@@ -1,8 +1,8 @@
 package loqor.ait.core.blocks;
 
+import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.AITBlockEntityTypes;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -98,7 +98,10 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 		if (world.isClient())
 			return;
 
-		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door && door.tardis().get().siege().isActive())
+		if (!(world.getBlockEntity(pos) instanceof DoorBlockEntity door))
+			return;
+
+		if (door.tardis().get().siege().isActive())
 			return;
 
 		Vec3d expansionBehind = new Vec3d(entity.prevX, entity.prevY, entity.prevZ).subtract(entity.getPos());
@@ -115,11 +118,8 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 		Box biggerEntityBox = entityBox.expand(insideBlockExpanded);
 		Box biggerDoorShape = doorShape.expand(insideBlockExpanded);
 
-		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (biggerEntityBox.intersects(biggerDoorShape)) {
-			if (blockEntity instanceof DoorBlockEntity door)
-				door.onEntityCollision(entity);
-		}
+		if (biggerEntityBox.intersects(biggerDoorShape))
+			door.onEntityCollision(entity);
 	}
 
 	@Nullable

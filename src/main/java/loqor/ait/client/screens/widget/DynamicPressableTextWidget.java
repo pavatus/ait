@@ -42,19 +42,9 @@ public class DynamicPressableTextWidget extends ButtonWidget {
 
         this.leftClick = button == 0;
 
-        if (leftClick) {
-            this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-            this.onClick(mouseX, mouseY);
-            return true;
-        }
-
-        if (this.isValidClickButton(button)) {
-            this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-            this.onClick(mouseX, mouseY);
-            return true;
-        }
-
-        return false;
+        this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+        this.onClick(mouseX, mouseY);
+        return true;
     }
 
     @Override

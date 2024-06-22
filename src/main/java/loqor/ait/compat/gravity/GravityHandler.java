@@ -7,6 +7,7 @@ import loqor.ait.api.tardis.TardisClientEvents;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.screens.interior.InteriorSettingsScreen;
 import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.Tardis;
@@ -35,6 +36,7 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     private static final Property<Direction> DIRECTION = new Property<>(Property.Type.DIRECTION, "direction", Direction.DOWN);
 
     private final Value<Direction> direction = DIRECTION.create(this);
+    @Exclude private Direction tempDirection = Direction.DOWN;
 
     public GravityHandler() {
         super(ID);
@@ -43,6 +45,7 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     @Override
     public void onLoaded() {
         direction.of(this, DIRECTION);
+        this.tempDirection = Direction.DOWN;
     }
 
     @Override
@@ -113,11 +116,14 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     }
 
     private static Text buttonText(InteriorSettingsScreen screen, DynamicPressableTextWidget button) {
-        Formatting formatting = button.isLeftClick() ? Formatting.WHITE : Formatting.YELLOW;
+        GravityHandler gravity = screen.tardis().handler(ID);
+        boolean isChanged = !button.isLeftClick() || gravity.tempDirection != gravity.direction.get();
 
-        return Text.translatable("screen.ait.gravity", capitalize(
-                screen.tardis().<GravityHandler>handler(ID).direction.get().getName())
-        ).formatted(formatting);
+        Direction direction = isChanged ? gravity.tempDirection : gravity.direction.get();
+        Formatting formatting = isChanged ? Formatting.WHITE : Formatting.YELLOW;
+
+        return Text.translatable("screen.ait.gravity",
+                capitalize(direction.getName())).formatted(formatting);
     }
 
     private static void onButton(InteriorSettingsScreen screen, DynamicPressableTextWidget button) {
@@ -125,13 +131,14 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
         GravityHandler gravity = tardis.handler(GravityHandler.ID);
 
         if (button.isLeftClick()) {
+            gravity.direction.set(gravity.tempDirection, false);
             button.refresh();
-            syncToServer(tardis, gravity.direction.get());
+
+            syncToServer(tardis, gravity.tempDirection);
             return;
         }
 
-        Direction next = nextDirection(gravity.direction.get());
-        gravity.direction.set(next, false);
+        gravity.tempDirection = nextDirection(gravity.tempDirection);
         button.refresh();
     }
 

@@ -14,6 +14,7 @@ import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
@@ -432,6 +433,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 					player.sendMessage(Text.literal("You have " + repairMins + (repairMins == 1 ? " minute" : " minutes") + " of repair left.").formatted(Formatting.GOLD), true);
 					return;
 				}
+
 				if (world == TardisUtil.getTardisDimension()) {
 					world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 					player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
@@ -448,7 +450,12 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 					return;
 				}
 
-				FlightUtil.travelTo(tardis, target);
+				if (tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT)) {
+					FlightUtil.travelTo(tardis, target);
+				} else  {
+					tardis.travel().setPosition(target);
+				}
+
 				player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);
 			}
 		};
