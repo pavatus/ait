@@ -3,6 +3,8 @@ package loqor.ait.client.screens;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.StatsData;
+import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -58,6 +60,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
 		createTextButton(Text.translatable("screen.ait.security.leave_behind"), (button -> toggleLeaveBehind()));
 		createTextButton(Text.translatable("screen.ait.security.hostile_alarms"), (button -> toggleHostileAlarms()));
+		createTextButton(Text.translatable("screen.ait.security.minimum_loyalty"), (button -> changeMinimumLoyalty()));
 	}
 
 	private void toggleLeaveBehind() {
@@ -68,6 +71,11 @@ public class TardisSecurityScreen extends ConsoleScreen {
 
 		ClientPlayNetworking.send(PropertiesHandler.LEAVEBEHIND, buf);
 		updateTardis();
+	}
+
+	private void changeMinimumLoyalty() {
+		// @TODO THEO ITS HERE I DONT NEED A GODDAMN NULL VALUE FOR ANYTHING :PRAY:
+
 	}
 
 	private void toggleHostileAlarms() {
@@ -86,7 +94,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		this.buttons.add((ButtonWidget) button);
 	}
 
-	// this might be useful, so remember this exists and use it later on ( although its giving NTM vibes.. )
+	// this might be useful, so remember this exists and use it later on
 	private void createTextButton(Text text, ButtonWidget.PressAction onPress) {
 		this.addButton(
 				new PressableTextWidget(
@@ -112,7 +120,8 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		this.drawBackground(context);
 		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.LEAVE_BEHIND) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
 		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
-		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
+		// TODO: FIX THIS
+		context.drawText(this.textRenderer, Text.literal(": " + "THEO CHANGE THIS", (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
 
 		context.drawText(this.textRenderer, Text.literal("Date created:"), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 7))), 0xadcaf7, false);
 		context.drawText(this.textRenderer, Text.literal(this.tardis().<StatsData>handler(TardisComponent.Id.STATS).getCreationString()), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 8))), 0xadcaf7, false);
