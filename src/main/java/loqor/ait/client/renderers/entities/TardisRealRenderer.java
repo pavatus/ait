@@ -2,11 +2,11 @@ package loqor.ait.client.renderers.entities;
 
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.machines.ShieldsModel;
-import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.entities.TardisRealEntity;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
@@ -82,17 +82,17 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 
 		if (getModel(entity) == null) return;
-		getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), entity.getWorld().getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light, 1, 1, 1, 1, 1);
+		getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), entity.getWorld().getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
 		if (exteriorVariantSchema.emission() != null && entity.getTardis().engine().hasPower()) {
 			boolean alarms = PropertiesHandler.getBool(entity.getTardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
-			getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, 1, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
+			getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(getEmission(entity), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
 		}
 
 		if(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariantSchema.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
 			Identifier biomeTexture = exteriorVariantSchema.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
 			if (biomeTexture != null && !this.getTexture(entity).equals(biomeTexture)) {
-				model.renderRealWorld(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, 1, 1, 1, 1, 1);
+				model.renderRealWorld(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 			}
 		}
 
