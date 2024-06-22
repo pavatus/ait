@@ -451,8 +451,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 				if (tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT)) {
 					FlightUtil.travelTo(tardis, target);
-				} else  {
-					tardis.travel().setDestination(target);
 				}
 
 				player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);
