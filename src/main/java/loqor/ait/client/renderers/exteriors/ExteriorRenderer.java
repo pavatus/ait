@@ -170,7 +170,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
 			Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
 			if (biomeTexture != null && !texture.equals(biomeTexture)) {
-				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
+				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, entity.getAlpha());
 			}
 		}
 
@@ -180,7 +180,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		// @TODO uhhh, should we make it so the biome textures are the overgrowth per biome, or should they be separate? - Loqor
 		if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
-			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, entity.getAlpha());
 		}
 
 		if (emission != null) {
