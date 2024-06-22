@@ -1,25 +1,18 @@
 package loqor.ait.core.item;
 
 import loqor.ait.core.AITItems;
-import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.Waypoint;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -39,43 +32,6 @@ public class WaypointItem extends Item implements DyeableItem {
 	@Override
 	public ItemStack getDefaultStack() {
 		return super.getDefaultStack();
-	}
-
-	@Override
-	public ActionResult useOnBlock(ItemUsageContext context) {
-		World world = context.getWorld();
-		BlockPos pos = context.getBlockPos();
-		PlayerEntity player = context.getPlayer();
-		ItemStack itemStack = context.getStack();
-		Hand hand = context.getHand();
-
-		if (player == null)
-			return ActionResult.FAIL;
-
-		if (world.isClient())
-			return ActionResult.SUCCESS;
-
-		if (!player.isSneaking())
-			return ActionResult.FAIL;
-
-		if (hand != Hand.MAIN_HAND)
-			return ActionResult.FAIL;
-
-		if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity console))
-			return ActionResult.FAIL;
-
-		if (console.tardis().isEmpty() || console.tardis().get().travel().getPosition() == null)
-			return ActionResult.PASS;
-
-		if (getPos(itemStack) == null)
-			setPos(itemStack, console.tardis().get().travel().getPosition());
-
-		console.tardis().get().waypoint().markHasCartridge();
-		console.tardis().get().waypoint().set(Waypoint.fromDirected(getPos(itemStack)).setName(itemStack.getName().getString()), true);
-		player.setStackInHand(hand, ItemStack.EMPTY);
-
-		world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
-		return ActionResult.SUCCESS;
 	}
 
 	@Override

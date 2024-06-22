@@ -2,6 +2,7 @@ package loqor.ait.core.blocks;
 
 import loqor.ait.api.ICantBreak;
 import loqor.ait.compat.DependencyChecker;
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
@@ -29,6 +30,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
@@ -337,7 +339,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	}
 
 	public void tryFall(BlockState state, ServerWorld world, BlockPos pos) {
-		if (!canFallThrough(world.getBlockState(pos.down())))
+		if (!canFallThrough(world, pos.down()))
 			return;
 
 		Tardis tardis = this.findTardis(world, pos);
@@ -356,11 +358,20 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))
 			return;
 
-		FallingTardisEntity falling = FallingTardisEntity.spawnFromBlock(world, pos, state);
+        FallingTardisEntity.spawnFromBlock(world, pos, state);
 
-		if (state.get(WATERLOGGED)) {
+        if (state.get(WATERLOGGED)) {
 			state.with(WATERLOGGED, false);
 		}
+	}
+
+	private static boolean canFallThrough(World world, BlockPos pos) {
+		BlockState state = world.getBlockState(pos);
+
+		if (world.getBlockState(pos.down()).getBlock() == AITBlocks.EXTERIOR_BLOCK)
+			return false;
+
+		return state.isAir() || state.isIn(BlockTags.FIRE) || state.isLiquid() || state.isReplaceable();
 	}
 
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
@@ -391,9 +402,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).setBiome(tardis);
 
-		for (BlockPos console : tardis.getDesktop().getConsolePos()) {
-			FlightUtil.playSoundAtConsole(console, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
-		}
+		FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
 		DoorData.lockTardis(tardis.getDoor().previouslyLocked(), tardis, null, false);

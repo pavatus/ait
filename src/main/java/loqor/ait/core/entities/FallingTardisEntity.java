@@ -2,10 +2,7 @@ package loqor.ait.core.entities;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientShakeUtil;
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDamageTypes;
-import loqor.ait.core.AITEntityTypes;
-import loqor.ait.core.AITSounds;
+import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
@@ -17,6 +14,7 @@ import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -179,18 +177,17 @@ public class FallingTardisEntity extends Entity {
 			this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
 
 		this.move(MovementType.SELF, this.getVelocity());
-
 		Tardis tardis = this.getTardis();
 
 		if (tardis == null)
 			return;
 
 		if (!this.getWorld().isClient()) {
-			this.getTardis().getDesktop().getConsolePos().forEach(console -> this.getWorld().playSound(
+			tardis.getDesktop().getConsolePos().forEach(console -> this.getWorld().playSound(
 					null, console, SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F)
 			);
 
-			if (PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
+			if (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
 				this.stopFalling(true);
 				return;
 			}
@@ -206,21 +203,19 @@ public class FallingTardisEntity extends Entity {
 
 			if (this.isOnGround()) {
                 this.stopFalling(false);
+				return;
 			}
 		}
 
 		this.setVelocity(this.getVelocity().multiply(tardis.travel().isCrashing() ? 1.5f : 0.98f));
 
-		if (this.getY() <= (double) this.getWorld().getBottomY())
+		if (this.getY() <= (double) this.getWorld().getBottomY() + 2)
 			this.tickInVoid();
 	}
 
 	public void stopFalling(boolean antigravs) {
 		if (antigravs)
 			PropertiesHandler.set(this.getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
-
-		if (this.getWorld().isClient())
-			return;
 
 		Tardis tardis = this.getTardis();
 		TardisTravel travel = tardis.travel();
@@ -230,14 +225,17 @@ public class FallingTardisEntity extends Entity {
 
 		boolean isCrashing = travel.isCrashing();
 
+		if (MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
+			ClientShakeUtil.shake(isCrashing ? 3.0f : 0.5f);
+
+		if (this.getWorld().isClient())
+			return;
+
 		TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
 			SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_THUD;
 			float volume = isCrashing ? 1.0F : 3.0F;
 
 			player.playSound(sound, volume, 1.0f);
-
-			if (this.getWorld().isClient())
-				ClientShakeUtil.shake(isCrashing ? 3.0f : 0.5f);
 		});
 
 		if (ForcedChunkUtil.isChunkForced((ServerWorld) this.getWorld(), blockPos))
@@ -251,12 +249,8 @@ public class FallingTardisEntity extends Entity {
 			travel.setCrashing(false);
 		}
 
-		if (this.block.contains(Properties.WATERLOGGED) && this.getWorld().getFluidState(blockPos).getFluid() == Fluids.WATER) {
+		if (this.block.contains(Properties.WATERLOGGED) && this.getWorld().getFluidState(blockPos).getFluid() == Fluids.WATER)
 			this.block = this.block.with(Properties.WATERLOGGED, true);
-		}
-
-		if (this.getWorld().isClient())
-			return;
 
 		if (block instanceof ExteriorBlock exterior)
 			exterior.onLanding(tardis, this.getWorld(), blockPos);

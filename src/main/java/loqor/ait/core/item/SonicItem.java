@@ -92,18 +92,16 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		setPreviousMode(stack);
 		setMode(stack, Mode.INACTIVE);
 
-		return super.finishUsing(stack, world, user);
+		return stack;
 	}
 
 	@Override
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-		super.usageTick(world, user, stack, remainingUseTicks);
-
-		if (!(user instanceof PlayerEntity player)) {
+		if (!(user instanceof PlayerEntity player))
 			return;
-		}
 
-		if (remainingUseTicks % SONIC_SFX_LENGTH != 0) return;
+		if (remainingUseTicks % SONIC_SFX_LENGTH != 0)
+			return;
 
 		playSonicSounds(player);
 	}
@@ -113,32 +111,34 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		return 72000; // prolly big enough
 	}
 
-	private boolean useSonic(World world, PlayerEntity user, BlockPos pos, Hand hand, ItemStack stack) {
+	private void useSonic(World world, PlayerEntity user, BlockPos pos, Hand hand, ItemStack stack) {
 		Mode mode = findMode(stack);
 
 		if (world.isClient())
-			return true;
+			return;
 
 		Tardis tardis = getTardis(world, stack);
 
 		if (this.isOutOfFuel(stack))
-			return false;
+			return;
 
 		if (user.isSneaking()) {
 			world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
 			cycleMode(stack);
-			return true;
+			return;
 		}
 
-		if(world.getBlockState(pos).getBlock() == AITBlocks.ZEITON_CLUSTER) {
+		if (world.getBlockState(pos).getBlock() == AITBlocks.ZEITON_CLUSTER) {
 			this.addFuel(200, stack);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-			return true;
+			return;
 		}
 
 		if (mode == Mode.INACTIVE) {
 			Mode prev = findPreviousMode(stack);
-			if (prev == Mode.INACTIVE) return false;
+
+			if (prev == Mode.INACTIVE)
+				return;
 
 			setMode(stack, prev);
 			mode = findMode(stack);
@@ -148,7 +148,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		this.removeFuel(stack);
 
 		mode.run(tardis, world, pos, user, stack);
-		return true;
 	}
 
 	@Override

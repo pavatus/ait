@@ -12,6 +12,7 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -29,8 +30,6 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 
 	@Override
 	public void render(FallingTardisEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-		super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
-
 		if (entity.getTardis() == null)
 			return;
 
@@ -64,7 +63,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 			texture = SiegeModeModel.TEXTURE;
 		}
 
-		model.renderFalling(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, 1, 1, 1, 1, 1);
+		model.renderFalling(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
 		if (siege) {
 			matrices.pop();
