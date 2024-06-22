@@ -100,5 +100,15 @@ public record Loyalty(int level, Type type) {
         public static int normalize(int level) {
             return Math.min(Math.max(level, Type.REJECT.level), Type.OWNER.level);
         }
+
+        public Type next() {
+            return switch (this) {
+                case REJECT -> NEUTRAL;
+                case NEUTRAL -> COMPANION;
+                case COMPANION -> PILOT;
+                case PILOT -> OWNER;
+                case OWNER -> REJECT;
+            };
+        }
     }
 }
