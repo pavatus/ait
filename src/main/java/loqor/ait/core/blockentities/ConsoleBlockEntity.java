@@ -72,6 +72,8 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
 		nbt.putString("type", this.getTypeSchema().id().toString());
 		nbt.putString("variant", this.getVariant().id().toString());
+
+		this.markNeedsControl();
 	}
 
 	@Override
