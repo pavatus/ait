@@ -178,7 +178,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 	public void tick(World world, BlockPos pos, BlockState blockState, ExteriorBlockEntity blockEntity) {
 		TardisRef optional = this.tardis();
 
-		if (optional.isEmpty())
+		if (optional == null || optional.isEmpty())
 			return;
 
 		Tardis tardis = optional.get();
