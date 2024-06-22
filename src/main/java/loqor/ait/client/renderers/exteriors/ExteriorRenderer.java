@@ -149,7 +149,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		String name = tardis.stats().getName();
 		if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
-			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-180f));
+			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
+			matrices.translate(0, 1.25f, -0.7f);
 		}
 
 		model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(
