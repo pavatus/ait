@@ -18,6 +18,8 @@ import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -77,7 +79,6 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 
 	@Override
 	public void tick(MinecraftServer server) {
-
 		if (this.areShieldsActive() && !this.tardis().engine().hasPower())
 			this.disableAll();
 
@@ -90,7 +91,9 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 		Tardis tardis = this.tardis();
 
 		tardis.removeFuel(2 * (tardis.tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick
+
 		World world = tardis.getExteriorPos().getWorld();
+
 		world.getOtherEntities(null,
 						new Box(tardis.getExteriorPos()).expand(8f),
 						EntityPredicates.EXCEPT_SPECTATOR)
@@ -107,14 +110,19 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 					if(this.areVisualShieldsActive()) {
 						if (entity.squaredDistanceTo(tardis.getExteriorPos().toCenterPos()) <= 8f) {
 							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(tardis.getExteriorPos().toCenterPos()).normalize().multiply(0.1f);
-							if(entity instanceof ProjectileEntity projectile) {
-								if(projectile instanceof TridentEntity) {
+							if (entity instanceof ProjectileEntity projectile) {
+								if (projectile instanceof TridentEntity) {
 									projectile.getVelocity().add(motion.multiply(2f));
+
+									world.playSoundFromEntity(null, projectile, SoundEvents.ITEM_TRIDENT_HIT, SoundCategory.BLOCKS, 1f, 1f);
 									return;
 								}
+
+								world.playSoundFromEntity(null, projectile, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.5f, 1f);
 								projectile.discard();
 								return;
 							}
+
 							entity.setVelocity(entity.getVelocity().add(motion.multiply(2f)));
 							entity.velocityDirty = true;
 							entity.velocityModified = true;
