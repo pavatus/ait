@@ -10,6 +10,7 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.InteriorChangingHandler;
@@ -32,7 +33,7 @@ public class ServerTardis extends Tardis {
 	@Exclude private boolean lock;
 
 	public ServerTardis(UUID uuid, AbsoluteBlockPos.Directed pos, TardisDesktopSchema schema, ExteriorVariantSchema variantType) {
-		super(uuid, new ServerTardisTravel(pos), new ServerTardisDesktop(schema), new ServerTardisExterior(variantType));
+		super(uuid, new ServerTardisTravel(pos), new ServerTardisDesktop(schema), new TardisExterior(variantType));
 	}
 
 	private ServerTardis() {
