@@ -72,8 +72,6 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
 		nbt.putString("type", this.getTypeSchema().id().toString());
 		nbt.putString("variant", this.getVariant().id().toString());
-
-		this.markNeedsControl();
 	}
 
 	@Override
@@ -87,14 +85,6 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		this.setVariant(ConsoleVariantRegistry.getInstance().get(
 				Identifier.tryParse(nbt.getString("variant"))
 		));
-
-		this.markNeedsControl();
-	}
-
-	@Override
-	public void setWorld(World world) {
-		super.setWorld(world);
-		this.markNeedsControl();
 	}
 
 	public ConsoleTypeSchema getTypeSchema() {
@@ -169,6 +159,12 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		controlEntities.forEach(Entity::discard);
 		controlEntities.clear();
 		this.sync();
+	}
+
+	@Override
+	public NbtCompound toInitialChunkDataNbt() {
+		markNeedsControl();
+		return super.toInitialChunkDataNbt();
 	}
 
 	public void spawnControls() {

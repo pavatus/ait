@@ -102,6 +102,7 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
 
 		world.setBlockState(this.pos, AITBlocks.CONSOLE.getDefaultState());
 		world.addBlockEntity(consoleBlockEntity);
+		consoleBlockEntity.markNeedsControl();
 
 		world.playSound(null, this.pos, SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 0.5f, 1.0f);
 	}
