@@ -40,7 +40,7 @@ public record Loyalty(int level, Type type) {
     }
 
     public boolean isOf(Type type) {
-        return this.level >= type().level;
+        return this.level >= type.level;
     }
 
     @Override
