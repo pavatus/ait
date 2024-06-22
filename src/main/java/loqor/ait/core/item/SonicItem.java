@@ -444,13 +444,14 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 				TardisTravel travel = tardis.travel();
 				AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 
-				if (!ExteriorAnimation.isNearTardis(player, tardis, 256)) {
-					travel.setDestination(target, true);
-					return;
-				}
+				boolean isPilot = tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT);
+				boolean isNearTardis = ExteriorAnimation.isNearTardis(player, tardis, 256);
 
-				if (tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT)) {
-					FlightUtil.travelTo(tardis, target);
+				if (!isNearTardis || isPilot) {
+					travel.setDestination(target, true);
+					if (isPilot) {
+						FlightUtil.travelTo(tardis, target);
+					}
 				}
 
 				player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);

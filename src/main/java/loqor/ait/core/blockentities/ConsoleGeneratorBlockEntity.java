@@ -73,8 +73,9 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
 
 		if (sneaking) {
 			this.changeConsole(nextVariant(this.getConsoleVariant()));
-		} else
+		} else {
 			this.changeConsole(nextConsole(this.getConsoleSchema()));
+		}
 	}
 
 	@Override
