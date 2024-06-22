@@ -549,6 +549,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
         provider.addTranslation(AITBlocks.CONSOLE_GENERATOR, "Console Generator");
+        provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Engine Core");
 
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
 

@@ -147,8 +147,8 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		if (!(blockEntity instanceof ExteriorBlockEntity exterior))
 			return normal;
 
-		Tardis tardis = /*exterior.tardis() != null
-				? */exterior.tardis().get()/* : null*/;
+		Tardis tardis = exterior.tardis() != null
+				? exterior.tardis().get() : null;
 
 		if (tardis == null)
 			return normal;
@@ -382,9 +382,7 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		return null;
 	}
 
-	public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingTardisEntity falling) {
-		Tardis tardis = falling.getTardis();
-
+	public void onLanding(Tardis tardis, World world, BlockPos pos) {
 		if (tardis == null)
 			return;
 

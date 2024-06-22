@@ -17,7 +17,6 @@ import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -33,7 +32,6 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -51,28 +49,29 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-// FIXME doesnt update position in travel properly
 public class FallingTardisEntity extends Entity {
+
+	private static final TrackedData<BlockPos> BLOCK_POS = DataTracker.registerData(FallingTardisEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
+	private static final TrackedData<Optional<UUID>> TARDIS_ID = DataTracker.registerData(FallingTardisEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+
+	private static final int HURT_MAX = 100;
+	private static final float HURT_AMOUNT = 40f;
+
 	public int timeFalling;
-	private boolean destroyedOnLanding;
-	private boolean hurtEntities;
 	private BlockState block;
+
 	@Nullable
 	public NbtCompound blockEntityData;
-	protected static final TrackedData<BlockPos> BLOCK_POS;
-	protected static final TrackedData<Optional<UUID>> TARDIS_ID;
-
-	private int fallHurtMax;
-	private float fallHurtAmount;
 
 	public FallingTardisEntity(EntityType<? extends Entity> entityType, World world) {
 		super(entityType, world);
-		this.fallHurtMax = 40;
+
 		this.block = AITBlocks.EXTERIOR_BLOCK.getDefaultState();
 	}
 
 	private FallingTardisEntity(World world, double x, double y, double z, BlockState block) {
 		this(AITEntityTypes.FALLING_TARDIS_TYPE, world);
+
 		this.intersectionChecked = true;
 		this.setPosition(x, y, z);
 		this.setVelocity(Vec3d.ZERO);
@@ -115,7 +114,6 @@ public class FallingTardisEntity extends Entity {
 
 		world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
 		world.spawnEntity(fallingBlockEntity);
-		fallingBlockEntity.setHurtEntities(100.0F, 100);
 		return fallingBlockEntity;
 	}
 
@@ -175,15 +173,6 @@ public class FallingTardisEntity extends Entity {
 	}
 
 	public void tick() {
-		if (this.block.isAir()) {
-			this.discard();
-			return;
-		}
-
-		if (this.getY() <= (double) this.getWorld().getBottomY() + 20) {
-			this.tickInVoid();
-		}
-
 		this.timeFalling++;
 
 		if (!this.hasNoGravity())
@@ -202,7 +191,7 @@ public class FallingTardisEntity extends Entity {
 			);
 
 			if (PropertiesHandler.getBool(getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED)) {
-				this.stopFalling();
+				this.stopFalling(true);
 				return;
 			}
 
@@ -216,35 +205,30 @@ public class FallingTardisEntity extends Entity {
 			));
 
 			if (this.isOnGround()) {
-				boolean crashing = tardis.travel().isCrashing();
-
-				if (crashing) {
-					this.getWorld().createExplosion(this, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-							10, true, World.ExplosionSourceType.MOB
-					);
-				}
-
-				tardis.getDoor().setLocked(crashing);
-				this.stopFalling(false);
+                this.stopFalling(false);
 			}
 		}
 
 		this.setVelocity(this.getVelocity().multiply(tardis.travel().isCrashing() ? 1.5f : 0.98f));
-	}
 
-	public void stopFalling() {
-		this.stopFalling(true);
+		if (this.getY() <= (double) this.getWorld().getBottomY())
+			this.tickInVoid();
 	}
 
 	public void stopFalling(boolean antigravs) {
 		if (antigravs)
 			PropertiesHandler.set(this.getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
 
-		Tardis tardis = this.getTardis();
-		boolean isCrashing = tardis.travel().isCrashing();
+		if (this.getWorld().isClient())
+			return;
 
-		if (isCrashing)
-			tardis.setLockedTardis(false);
+		Tardis tardis = this.getTardis();
+		TardisTravel travel = tardis.travel();
+
+		Block block = this.block.getBlock();
+		BlockPos blockPos = this.getBlockPos();
+
+		boolean isCrashing = travel.isCrashing();
 
 		TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
 			SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_THUD;
@@ -256,50 +240,42 @@ public class FallingTardisEntity extends Entity {
 				ClientShakeUtil.shake(isCrashing ? 3.0f : 0.5f);
 		});
 
-		if (!this.getWorld().isClient() && ForcedChunkUtil.isChunkForced((ServerWorld) this.getWorld(), this.getBlockPos()))
-			ForcedChunkUtil.stopForceLoading((ServerWorld) this.getWorld(), this.getBlockPos());
+		if (ForcedChunkUtil.isChunkForced((ServerWorld) this.getWorld(), blockPos))
+			ForcedChunkUtil.stopForceLoading((ServerWorld) this.getWorld(), blockPos);
 
-		tardis.travel().setCrashing(false);
+		if (isCrashing) {
+			this.getWorld().createExplosion(this, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
+					10, true, World.ExplosionSourceType.MOB
+			);
 
-		Block block = this.block.getBlock();
-		BlockPos blockPos = this.getBlockPos();
-
-        BlockState blockState = this.getWorld().getBlockState(blockPos);
-		this.setVelocity(this.getVelocity().multiply(0.7, -0.5, 0.7));
-
-		if (!blockState.isOf(Blocks.MOVING_PISTON) && !this.destroyedOnLanding) {
-			if (this.block.contains(Properties.WATERLOGGED) && this.getWorld().getFluidState(blockPos).getFluid() == Fluids.WATER) {
-				this.block = this.block.with(Properties.WATERLOGGED, true);
-			}
-
-			this.discard();
-
-			if (this.getWorld().isClient())
-				return;
-
-			TardisTravel travel = tardis.travel();
-
-			travel.placeExterior();
-
-			if (block instanceof ExteriorBlock exterior)
-				exterior.onLanding(this.getWorld(), blockPos, this.block, blockState, this);
-		} else {
-			this.discard();
+			travel.setCrashing(false);
 		}
+
+		if (this.block.contains(Properties.WATERLOGGED) && this.getWorld().getFluidState(blockPos).getFluid() == Fluids.WATER) {
+			this.block = this.block.with(Properties.WATERLOGGED, true);
+		}
+
+		if (this.getWorld().isClient())
+			return;
+
+		if (block instanceof ExteriorBlock exterior)
+			exterior.onLanding(tardis, this.getWorld(), blockPos);
+
+		travel.placeExterior();
+		this.discard();
 	}
 
 	public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
-        if (this.hurtEntities) {
-            int i = MathHelper.ceil(fallDistance - 1.0F);
-            if (i >= 0) {
-                Predicate<Entity> predicate = EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(EntityPredicates.VALID_LIVING_ENTITY);
-                DamageSource damageSource2 = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
-                float f = (float) Math.min(MathHelper.floor((float) i * this.fallHurtAmount), this.fallHurtMax);
+		int i = MathHelper.ceil(fallDistance - 1.0F);
 
-                this.getWorld().getOtherEntities(this, this.getBoundingBox(), predicate)
-						.forEach((entity) -> entity.damage(damageSource2, f));
-            }
-        }
+		if (i >= 0) {
+			Predicate<Entity> predicate = EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(EntityPredicates.VALID_LIVING_ENTITY);
+			DamageSource damageSource2 = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
+			float f = (float) Math.min(MathHelper.floor((float) i * HURT_AMOUNT), HURT_MAX);
+
+			this.getWorld().getOtherEntities(this, this.getBoundingBox(), predicate)
+					.forEach((entity) -> entity.damage(damageSource2, f));
+		}
 
         return false;
     }
@@ -307,42 +283,20 @@ public class FallingTardisEntity extends Entity {
 	protected void writeCustomDataToNbt(NbtCompound nbt) {
 		nbt.put("BlockState", NbtHelper.fromBlockState(this.block));
 		nbt.putInt("Time", this.timeFalling);
-		nbt.putBoolean("HurtEntities", this.hurtEntities);
-		nbt.putFloat("FallHurtAmount", this.fallHurtAmount);
-		nbt.putInt("FallHurtMax", this.fallHurtMax);
-		if (this.blockEntityData != null) {
-			nbt.put("TileEntityData", this.blockEntityData);
-		}
 
-		nbt.putBoolean("CancelDrop", this.destroyedOnLanding);
+		if (this.blockEntityData != null)
+			nbt.put("TileEntityData", this.blockEntityData);
 	}
 
 	protected void readCustomDataFromNbt(NbtCompound nbt) {
 		this.block = NbtHelper.toBlockState(this.getWorld().createCommandRegistryWrapper(RegistryKeys.BLOCK), nbt.getCompound("BlockState"));
 		this.timeFalling = nbt.getInt("Time");
-		if (nbt.contains("HurtEntities", 99)) {
-			this.hurtEntities = nbt.getBoolean("HurtEntities");
-			this.fallHurtAmount = nbt.getFloat("FallHurtAmount");
-			this.fallHurtMax = nbt.getInt("FallHurtMax");
-		} else if (this.block.isIn(BlockTags.ANVIL)) {
-			this.hurtEntities = true;
-		}
 
-		if (nbt.contains("TileEntityData", 10)) {
+		if (nbt.contains("TileEntityData", 10))
 			this.blockEntityData = nbt.getCompound("TileEntityData");
-		}
 
-		this.destroyedOnLanding = nbt.getBoolean("CancelDrop");
-
-		if (this.block.isAir()) {
+		if (this.block.isAir())
 			this.block = AITBlocks.EXTERIOR_BLOCK.getDefaultState();
-		}
-	}
-
-	public void setHurtEntities(float fallHurtAmount, int fallHurtMax) {
-		this.hurtEntities = true;
-		this.fallHurtAmount = fallHurtAmount;
-		this.fallHurtMax = fallHurtMax;
 	}
 
 	public boolean doesRenderOnFire() {
@@ -372,17 +326,15 @@ public class FallingTardisEntity extends Entity {
 
 	public void onSpawnPacket(EntitySpawnS2CPacket packet) {
 		super.onSpawnPacket(packet);
+
 		this.block = Block.getStateFromRawId(packet.getEntityData());
 		this.intersectionChecked = true;
+
 		double d = packet.getX();
 		double e = packet.getY();
 		double f = packet.getZ();
+
 		this.setPosition(d, e, f);
 		this.setFallingBlockPos(this.getBlockPos());
-	}
-
-	static {
-		BLOCK_POS = DataTracker.registerData(FallingTardisEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
-		TARDIS_ID = DataTracker.registerData(FallingTardisEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 	}
 }

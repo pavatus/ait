@@ -53,6 +53,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 		matrices.push();
 		int k = entity.getBlockState().get(ExteriorBlock.ROTATION);
 		float h = RotationPropertyHelper.toDegrees(k);
+
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? 180f + h : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 

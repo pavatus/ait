@@ -60,7 +60,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		if (!this.canQueue())
 			return;
 
-		if (tardis.fuel().getCurrentFuel() < 5000 && !(tardis.isGrowth() && tardis.hasGrowthDesktop())) {
+		if (tardis.fuel().getCurrentFuel() < 5000) {
 			for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
 				player.sendMessage(Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED), true);
 				return;

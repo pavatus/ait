@@ -7,6 +7,7 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
+import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
@@ -73,43 +74,49 @@ public class EngineHandler extends KeyedTardisComponent {
         if (!this.power.get())
             return;
 
-        DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1, 360)));
-        TardisEvents.LOSE_POWER.invoker().onLosePower(this.tardis);
+        DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay",
+                (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1, 360))
+        );
 
         this.power.set(false);
+        this.updateExteriorState();
 
-        if (this.tardis.travel().inFlight())
-            return;
-
-        AbsoluteBlockPos pos = this.tardis.travel().getPosition();
-        World world = pos.getWorld();
-
-        if (world == null)
-            return;
-
-        world.setBlockState(pos, world.getBlockState(pos).with(ExteriorBlock.LEVEL_9, 0));
+        TardisEvents.LOSE_POWER.invoker().onLosePower(this.tardis);
     }
 
     public void enablePower() {
+        if (this.power.get())
+            return;
+
         if (this.tardis.getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL))
             return; // cant enable power if not enough fuel
 
         if (this.tardis.siege().isActive())
             this.tardis.siege().setActive(false);
 
-        if (this.power.get())
-            return;
-
         if (!this.hasEngineCore.get())
             return;
 
-        AbsoluteBlockPos pos = this.tardis.travel().getPosition();
+        this.power.set(true);
+        this.updateExteriorState();
+
+        TardisEvents.REGAIN_POWER.invoker().onRegainPower(this.tardis);
+    }
+
+    private void updateExteriorState() {
+        TardisTravel travel = this.tardis.travel();
+
+        if (travel.inFlight())
+            return;
+
+        AbsoluteBlockPos pos = travel.getPosition();
         World world = pos.getWorld();
 
-        if (world != null)
-            world.setBlockState(pos, pos.getBlockEntity().getCachedState().with(ExteriorBlock.LEVEL_9, 9));
+        if (world == null)
+            return;
 
-        this.power.set(true);
-        TardisEvents.REGAIN_POWER.invoker().onRegainPower(this.tardis);
+        world.setBlockState(pos, pos.getBlockEntity().getCachedState()
+                .with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0)
+        );
     }
 }

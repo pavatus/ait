@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.EngineHandler;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -118,6 +119,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
         List<BlockPos> list = blockEntity.activatingBlocks;
         if (l % 40L == 0L) {
             boolean bl = updateActivatingBlocks(world, pos, list);
+
             if (bl != blockEntity.active) {
                 SoundEvent soundEvent = bl ? SoundEvents.BLOCK_CONDUIT_ACTIVATE : SoundEvents.BLOCK_CONDUIT_DEACTIVATE;
                 world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -130,7 +132,6 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
 
             if (bl) {
                 givePlayersEffects(world, pos, list);
-                //attackHostileEntity(world, pos, state, list, blockEntity);
             }
         }
 
@@ -153,12 +154,9 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     private static boolean updateActivatingBlocks(World world, BlockPos pos, List<BlockPos> activatingBlocks) {
         activatingBlocks.clear();
 
-        int i;
-        int j;
-        int k;
-        for(i = -1; i <= 1; ++i) {
-            for(j = -1; j <= 1; ++j) {
-                for(k = -1; k <= 1; ++k) {
+        for (int i = -1; i <= 1; ++i) {
+            for (int j = -1; j <= 1; ++j) {
+                for (int k = -1; k <= 1; ++k) {
                     BlockPos blockPos = pos.add(i, j, k);
                     if (!world.isWater(blockPos)) {
                         return false;
@@ -167,27 +165,6 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
             }
         }
 
-        /*for(i = -2; i <= 2; ++i) {
-            for(j = -2; j <= 2; ++j) {
-                for(k = -2; k <= 2; ++k) {
-                    int l = Math.abs(i);
-                    int m = Math.abs(j);
-                    int n = Math.abs(k);
-                    if ((i == 0 && (m == 2 || n == 2) || j == 0 && (l == 2 || n == 2) || k == 0 && (l == 2 || m == 2))) {
-                        BlockPos blockPos2 = pos.add(i, j, k);
-                        BlockState blockState = world.getBlockState(blockPos2);
-
-                        for (Block block : ACTIVATING_BLOCKS) {
-                            if (blockState.isOf(block)) {
-                                activatingBlocks.add(blockPos2);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return activatingBlocks.size() >= 16;*/
         return true;
     }
 
@@ -281,12 +258,22 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
     }
 
     public void onBreak(WorldAccess world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if(world.isClient()) return;
+        if (world.isClient())
+            return;
+
+        if (!this.active)
+            return;
+
         Optional<Tardis> tardis = this.findTardis();
-        if (tardis.isEmpty()) return;
-        System.out.println("what");
-        tardis.get().engine().disablePower();
-        tardis.get().engine().hasEngineCore().set(false);
+
+        if (tardis.isEmpty())
+            return;
+
+        EngineHandler engine = tardis.get().engine();
+        engine.hasEngineCore().set(false);
+
+        if (engine.hasPower())
+            engine.disablePower();
     }
 
     public enum VortexEyeState {

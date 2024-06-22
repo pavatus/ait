@@ -120,7 +120,7 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
         boolean isChanged = !button.isLeftClick() || gravity.tempDirection != gravity.direction.get();
 
         Direction direction = isChanged ? gravity.tempDirection : gravity.direction.get();
-        Formatting formatting = isChanged ? Formatting.WHITE : Formatting.YELLOW;
+        Formatting formatting = isChanged ? Formatting.YELLOW : Formatting.WHITE;
 
         return Text.translatable("screen.ait.gravity",
                 capitalize(direction.getName())).formatted(formatting);
