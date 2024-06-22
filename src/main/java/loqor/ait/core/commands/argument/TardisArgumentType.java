@@ -7,8 +7,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -54,7 +56,10 @@ public class TardisArgumentType implements ArgumentType<TardisArgumentType.Serve
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return CommandSource.suggestMatching(ServerTardisManager.getInstance().ids().stream().map(UUID::toString), builder);
+        boolean isClient = context.getSource() instanceof ClientPlayerEntity;
+        TardisManager<?, ?> manager = TardisManager.getInstance(!isClient);
+
+        return CommandSource.suggestMatching(manager.ids().stream().map(UUID::toString), builder);
     }
 
     @Override
