@@ -207,7 +207,7 @@ public class FallingTardisEntity extends Entity {
 			}
 		}
 
-		this.setVelocity(this.getVelocity().multiply(tardis.travel().isCrashing() ? 1.5f : 0.98f));
+		this.setVelocity(this.getVelocity().multiply(tardis.travel().isCrashing() ? 1.05f : 0.98f));
 
 		if (this.getY() <= (double) this.getWorld().getBottomY() + 2)
 			this.tickInVoid();
