@@ -42,7 +42,7 @@ jobs:
     - name: Publish artifacts
       uses: DrTheodor/discord-webhook-upload-action@v1.1
       with:
-        url: ${{ secrets.WEBHOOK_URL }}
+        url: ${{ secrets.DEV_BUILDS }}
         file: 'build/libs/*'
         username: george washington
         avatar: 'https://i.imgur.com/uiFqrQh.png'
