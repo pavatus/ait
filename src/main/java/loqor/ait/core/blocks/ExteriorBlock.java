@@ -60,13 +60,13 @@ import java.util.Optional;
 import java.util.function.ToIntFunction;
 
 @SuppressWarnings("deprecation")
-public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, ICantBreak, Waterloggable {
+public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBreak, Waterloggable {
 
 	public static final int MAX_ROTATION_INDEX = RotationPropertyHelper.getMax();
 	private static final int MAX_ROTATIONS = MAX_ROTATION_INDEX + 1;
 	public static final IntProperty ROTATION = Properties.ROTATION;
 	public static final IntProperty LEVEL_9 = Properties.LEVEL_15;
-	public static final BooleanProperty WATERLOGGED;
+	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 	public static final ToIntFunction<BlockState> STATE_TO_LUMINANCE = state -> state.get(LEVEL_9);
 	public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16, 1, 16);
 	public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
@@ -334,16 +334,14 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	}
 
 	@Override
-	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-		super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
-
-		if (world instanceof ServerWorld serverWorld)
-			this.tryFall(state, serverWorld, pos);
-	}
-
 	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		// this is called when the block is first placed, but we have a demat anim so nothing occurs.
-		tryFall(state, world, pos);
+		this.tryFall(state, world, pos);
+	}
+
+	@Override
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+		world.scheduleBlockTick(pos, this, 2);
 	}
 
 	public void tryFall(BlockState state, ServerWorld world, BlockPos pos) {
@@ -379,14 +377,18 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		if (world.getBlockState(pos.down()).getBlock() == AITBlocks.EXTERIOR_BLOCK)
 			return false;
 
+		return canFallThrough(state);
+	}
+
+	private static boolean canFallThrough(BlockState state) {
 		return state.isAir() || state.isIn(BlockTags.FIRE) || state.isLiquid() || state.isReplaceable();
 	}
 
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-		if (state.get(WATERLOGGED)) {
+		if (state.get(WATERLOGGED))
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-		}
 
+		world.scheduleBlockTick(pos, this, 2);
 		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
 
@@ -425,11 +427,6 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 		}
 	}
 
-	@Override
-	public void onTryBreak(World world, BlockPos pos, BlockState state) {
-
-	}
-
 	public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
 		VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
 
@@ -451,9 +448,5 @@ public class ExteriorBlock extends FallingBlock implements BlockEntityProvider, 
 	@Override
 	public BlockState mirror(BlockState state, BlockMirror mirror) {
 		return state.with(ROTATION, mirror.mirror(state.get(ROTATION), MAX_ROTATIONS));
-	}
-
-	static {
-		WATERLOGGED = Properties.WATERLOGGED;
 	}
 }
