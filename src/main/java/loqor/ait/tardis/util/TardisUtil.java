@@ -448,8 +448,9 @@ public class TardisUtil {
 	}
 
 	public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
-		return TardisManager.getInstance(isServer).find(tardis -> TardisUtil.inBox(
+		 Tardis result = TardisManager.getInstance(isServer).find(tardis -> TardisUtil.inBox(
 				tardis.getDesktop().getCorners(), pos));
+		 return result == null || result.isDisposed() ? null : result;
 	}
 
 	public static Tardis findTardisByPosition(AbsoluteBlockPos pos, TardisManager<?, ?> manager) {
