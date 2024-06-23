@@ -111,6 +111,7 @@ public class KeyItem extends LinkableItem {
 			return;
 
 		Tardis tardis = KeyItem.getTardis(entity.getWorld(), entity.getStack());
+		if (tardis == null) return;
 		tardis.loyalty().subLevel(player, 5);
 
 		FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.CLOISTER);
