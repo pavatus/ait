@@ -7,18 +7,18 @@ import net.minecraft.util.Identifier;
 
 public abstract class BasicSchema implements Identifiable, Nameable {
 
-    private final Text text;
-
-    public BasicSchema() {
-        Identifier id = this.id();
-        String[] parts = id.getPath().split("/");
-
-        this.text = Text.translatable(parts[0] + "." + id.getNamespace()
-                + "." + join('.', 1, parts));
-    }
+    private Text text;
 
     @Override
     public Text text() {
+        if (this.text == null) {
+            Identifier id = this.id();
+            String[] parts = id.getPath().split("/");
+
+            this.text = Text.translatable(parts[0] + "." + id.getNamespace()
+                    + "." + join('.', 1, parts));
+        }
+
         return text;
     }
 

@@ -38,6 +38,8 @@ public abstract class ConsoleVariantSchema extends BasicSchema implements Unlock
 	private ClientConsoleVariantSchema cachedSchema;
 
 	protected ConsoleVariantSchema(Identifier parent, Identifier id, Loyalty loyalty) {
+		super();
+
 		this.parent = parent;
 		this.id = id;
 		this.loyalty = loyalty;
