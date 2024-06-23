@@ -45,24 +45,24 @@ public class ClientLightUtil {
 		ClientLightUtil.render(renderable, entity, root, matrices, layer, vertices, light, overlay, red, green, blue, alpha);
 	}
 
-	public static <T> void render(
+	private static <T> void render(
 			Renderable<T> renderable, @Nullable Identifier texture, T entity, ModelPart root, MatrixStack matrices,
 			VertexConsumerProvider vertices, int light, int overlay, float red, float green, float blue, float alpha
 	) {
 		if (texture == null)
 			return;
 
-		ClientLightUtil.render(renderable, entity, root, matrices, AITRenderLayers.tardisEmissiveCullZOffset(texture, true), vertices, light, overlay, red, green, blue, alpha);
+		ClientLightUtil.render(renderable, entity, root, matrices, AITRenderLayers.getEntityTranslucentCull(texture), vertices, light, overlay, red, green, blue, alpha);
 	}
 
-	public static <T> void render(
+	private static <T> void render(
 			Renderable<T> renderable, T entity, ModelPart root, MatrixStack matrices, RenderLayer layer,
 			VertexConsumerProvider vertices, int light, int overlay, float red, float green, float blue, float alpha
 	) {
 		ClientLightUtil.render(renderable, entity, root, matrices, vertices.getBuffer(layer), light, overlay, red, green, blue, alpha);
 	}
 
-	public static <T> void render(
+	private static <T> void render(
 			Renderable<T> renderable, T entity, ModelPart root, MatrixStack matrices,
 			VertexConsumer consumer, int light, int overlay, float red, float green, float blue, float alpha
 	) {

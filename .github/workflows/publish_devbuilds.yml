@@ -40,7 +40,7 @@ jobs:
       run: ./gradlew build
 
     - name: Publish artifacts
-      uses: DrTheodor/discord-webhook-upload-action@v1.1
+      uses: DrTheodor/discord-webhook-upload-action@97424b1c8e1eb579c2484f7bcbd5bc0536c9a9b1
       with:
         url: ${{ secrets.DEV_BUILDS }}
         file: 'build/libs/*'
