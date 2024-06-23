@@ -824,16 +824,16 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		ModelPart throttle = alnico.getChild("section1").getChild("controls").getChild("fliplever1").getChild("bone5");
-		throttle.pitch = throttle.pitch + ((tardis.flight().speed().get() / (float) tardis.flight().maxSpeed().get()) * 1.5f);
+		throttle.pitch = throttle.pitch + ((tardis.travel().speed().get() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
 
 		ModelPart handbrake = alnico.getChild("section1").getChild("controls").getChild("biglever").getChild("bone");
-		handbrake.pitch = !tardis.flight().handbrake().get() ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;
+		handbrake.pitch = !tardis.travel().handbrake().get() ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;
 
 		ModelPart power = alnico.getChild("section4").getChild("controls4").getChild("biglever2").getChild("bone12");
 		power.pitch = !tardis.engine().hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
 
 		ModelPart autoPilot = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch1");
-		autoPilot.pitch = tardis.flight().autoLand().get() ? autoPilot.pitch + 0.5f : autoPilot.pitch;
+		autoPilot.pitch = tardis.travel().autoLand().get() ? autoPilot.pitch + 0.5f : autoPilot.pitch;
 
 		ModelPart security = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch4");
 		security.pitch = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? security.pitch + 0.5f : security.pitch;

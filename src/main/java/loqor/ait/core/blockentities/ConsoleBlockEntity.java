@@ -12,11 +12,12 @@ import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
+import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.BlockState;
@@ -34,10 +35,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
-	private static final Random RANDOM = new Random();
 
 	public final List<ConsoleControlEntity> controlEntities = new ArrayList<>();
 	public final AnimationState ANIM_STATE = new AnimationState();
@@ -220,8 +223,9 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 			return;
 
 		SequenceHandler handler = this.tardis().get().sequence();
+		TravelHandlerBase.State travelState = this.tardis().get().travel().getState();
 
-		if(this.tardis().get().travel().inFlight() || this.tardis().get().travel().getState() == TardisTravel.State.MAT) {
+		if (travelState == TravelHandlerBase.State.FLIGHT || travelState == TravelHandlerBase.State.MAT) {
 			if (handler.hasActiveSequence() && handler.getActiveSequence() != null) {
 				List<Control> sequence = handler.getActiveSequence().getControls();
 
@@ -243,7 +247,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		}
 
 		ServerTardis tardis = (ServerTardis) this.tardis().get();
-		boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.getExteriorPos());
+		boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.travel().position().getPos());
 
 		if (tardis.travel().isCrashing()) {
 			serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
@@ -269,8 +273,8 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		if (tardis.crash().isToxic()) {
 			serverWorld.spawnParticles(new DustColorTransitionParticleEffect(
 					new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 1
-			), pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, 1, RANDOM.nextBoolean()
-					? 0.5f : -0.5f, 3f, RANDOM.nextBoolean() ? 0.5f : -0.5f, 0.025f
+			), pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, 1, TardisUtil.random().nextBoolean()
+					? 0.5f : -0.5f, 3f, TardisUtil.random().nextBoolean() ? 0.5f : -0.5f, 0.025f
 			);
 		}
 

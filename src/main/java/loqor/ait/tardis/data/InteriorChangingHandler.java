@@ -5,7 +5,6 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
@@ -16,14 +15,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
-import java.util.Random;
-
 public class InteriorChangingHandler extends TardisComponent implements TardisTickable {
     public static final String IS_REGENERATING = "is_regenerating";
 	public static final String QUEUED_INTERIOR = "queued_interior";
 	public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
-	private static Random random;
-	private int ticks;
+    private int ticks;
 
 	public InteriorChangingHandler() {
 		super(Id.INTERIOR);
@@ -94,12 +90,12 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		tardis.engine().hasEngineCore().set(false);
 
 		if (tardis.hasGrowthExterior()) {
-			TardisTravel travel = tardis.travel();
+			TravelHandler travel = tardis.travel();
 
-			tardis.flight().handbrake().set(false);
-			tardis.flight().autoLand().set(true);
+			travel.handbrake().set(false);
+			travel.autoLand().set(true);
 
-			travel.dematerialise(true, true);
+			travel.forceDematerialize(true);
 		}
 	}
 
@@ -113,27 +109,19 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		return TardisUtil.getPlayersInsideInterior(this.tardis()).isEmpty();
 	}
 
-	public static Random random() {
-		if (random == null)
-			random = new Random();
-
-		return random;
-	}
-
 	private boolean clearedOldInterior = false;
 
 	@Override
 	public void tick(MinecraftServer server) {
-
 		if (!isGenerating())
 			return;
 
 		if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + this.tardis().getUuid().toString()))
 			return;
 
-		TardisTravel travel = this.tardis().travel();
+		TravelHandler travel = this.tardis().travel();
 
-		if (travel.getState() == TardisTravel.State.FLIGHT)
+		if (travel.getState() == TravelHandler.State.FLIGHT)
 			travel.crash();
 
 		if (this.isGenerating()) {

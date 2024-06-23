@@ -5,10 +5,11 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.data.DirectedBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
@@ -50,16 +51,18 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 			return;
 
 		Tardis tardis = door.tardis().get();
+		DirectedGlobalPos.Cached globalExteriorPos = tardis.travel().position();
 
-		if (!world.isClient() && tardis.getExteriorPos() == null)
+		if (!world.isClient())
 			return;
 
-		World exteriorWorld = tardis.getExteriorPos().getWorld();
+		BlockPos exteriorPos = globalExteriorPos.getPos();
+		World exteriorWorld = globalExteriorPos.getWorld();
 
-		if (exteriorWorld == null)
+		if (exteriorWorld == null || exteriorPos == null)
 			return;
 
-		BlockState exteriorBlockState = exteriorWorld.getBlockState(tardis.getExteriorPos());
+		BlockState exteriorBlockState = exteriorWorld.getBlockState(exteriorPos);
 
 		if (exteriorBlockState.getBlock() instanceof ExteriorBlock && !tardis.areShieldsActive()) {
 			world.setBlockState(pos, blockState.with(Properties.WATERLOGGED,
@@ -131,13 +134,14 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 		if (DependencyChecker.hasPortals() && tardis.getExterior().getVariant().hasPortals())
 			return;
 
-		TardisTravel travel = tardis.travel();
-		if (travel.getState() == TardisTravel.State.FLIGHT) {
+		TravelHandler travel = tardis.travel();
+
+		if (travel.getState() == TravelHandler.State.FLIGHT) {
 			TardisUtil.dropOutside(tardis, entity); // SHOULD properly drop someone out at the correct position instead of the not correct position :)
 			return;
 		}
 
-		if (travel.getState() != TardisTravel.State.LANDED)
+		if (travel.getState() != TravelHandler.State.LANDED)
 			return;
 
 		TardisUtil.teleportOutside(tardis, entity);

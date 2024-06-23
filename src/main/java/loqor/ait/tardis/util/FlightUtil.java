@@ -13,6 +13,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
+@Deprecated(forRemoval = true)
 public class FlightUtil {
 
 	private static final int BASE_FLIGHT_TICKS = 5 * 20; //  seconds minimum

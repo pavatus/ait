@@ -151,11 +151,16 @@ public class DirectedGlobalPos {
             return Cached.create(world, pos, rotation);
         }
 
-        private static Cached createNew(ServerWorld lastWorld, RegistryKey<World> newWorld, BlockPos pos, byte rotation) {
+        private static Cached createNew(ServerWorld lastWorld, RegistryKey<World> newWorldKey, BlockPos pos, byte rotation) {
             if (lastWorld == null)
-                return new Cached(newWorld, pos, rotation);
+                return new Cached(newWorldKey, pos, rotation);
 
-            return Cached.create(lastWorld.getServer().getWorld(newWorld), pos, rotation);
+            ServerWorld newWorld = lastWorld;
+
+            if (lastWorld.getRegistryKey() != newWorldKey)
+                newWorld = lastWorld.getServer().getWorld(newWorldKey);
+
+            return Cached.create(newWorld, pos, rotation);
         }
 
         public void init(MinecraftServer server) {
@@ -175,6 +180,10 @@ public class DirectedGlobalPos {
         @Override
         public DirectedGlobalPos.Cached world(RegistryKey<World> dimension) {
             return Cached.createNew(this.world, dimension, this.getPos(), this.getRotation());
+        }
+
+        public DirectedGlobalPos.Cached world(ServerWorld world) {
+            return Cached.create(world, this.getPos(), this.getRotation());
         }
 
         @Override

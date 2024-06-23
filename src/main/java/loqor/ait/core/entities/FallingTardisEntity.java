@@ -5,11 +5,10 @@ import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
@@ -197,9 +196,8 @@ public class FallingTardisEntity extends Entity {
 			if (blockPos == null)
 				return;
 
-			tardis.travel().setPosition(new AbsoluteBlockPos.Directed(
-					blockPos, this.getWorld(), tardis.travel().getPosition().getRotation()
-			));
+			tardis.travel().position(cached -> cached.pos(blockPos)
+					.world(this.getWorld().getRegistryKey()));
 
 			if (this.isOnGround()) {
                 this.stopFalling(false);
@@ -218,7 +216,7 @@ public class FallingTardisEntity extends Entity {
 			PropertiesHandler.set(this.getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
 
 		Tardis tardis = this.getTardis();
-		TardisTravel travel = tardis.travel();
+		TravelHandler travel = tardis.travel();
 
 		Block block = this.block.getBlock();
 		BlockPos blockPos = this.getBlockPos();

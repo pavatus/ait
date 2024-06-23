@@ -21,7 +21,7 @@ public class WaypointHandler extends TardisComponent {
 	}
 
 	public boolean hasCartridge() {
-		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), HAS_CARTRIDGE);
+		return PropertiesHandler.getBool(this.tardis().properties(), HAS_CARTRIDGE);
 	}
 
 	public void markHasCartridge() {
@@ -35,17 +35,15 @@ public class WaypointHandler extends TardisComponent {
 	/**
 	 * Sets the new waypoint
 	 *
-	 * @param var
 	 * @return The optional of the previous waypoiint
 	 */
-	public Optional<Waypoint> set(Waypoint var, boolean spawnItem) {
+	public Optional<Waypoint> set(Waypoint var, BlockPos console, boolean spawnItem) {
 		Optional<Waypoint> prev = Optional.ofNullable(this.current);
 
 		this.current = var;
 
-		if (spawnItem && prev.isPresent()) {
-			this.spawnItem(prev.get());
-		}
+		if (spawnItem && prev.isPresent())
+			this.spawnItem(console, prev.get());
 
 		return prev;
 	}
@@ -58,23 +56,23 @@ public class WaypointHandler extends TardisComponent {
 		return this.current != null;
 	}
 
-	public void clear(boolean spawnItem) {
-		this.set(null, spawnItem);
+	public void clear(BlockPos console, boolean spawnItem) {
+		this.set(null, console, spawnItem);
 	}
 
 	public void gotoWaypoint() {
 		if (!this.hasWaypoint())
 			return; // todo move this check to the DEMAT event so the fail to takeoff happens
 
-		this.tardis().flight().autoLand().set(true);
-		FlightUtil.travelTo(tardis(), this.get());
+		this.tardis().travel().autoLand().set(true);
+		FlightUtil.travelTo(tardis(), this.get().getPos());
 	}
 
 	public void setDestination() {
 		if (!this.hasWaypoint())
 			return;
 
-		this.tardis().travel().setDestination(this.get(), true);
+		this.tardis().travel().destination(this.get().getPos());
 	}
 
 	public void spawnItem(BlockPos console) {
@@ -82,7 +80,7 @@ public class WaypointHandler extends TardisComponent {
 			return;
 
 		this.spawnItem(console, this.get());
-		this.clear(false);
+		this.clear(console, false);
 	}
 
 	public void spawnItem(BlockPos console, Waypoint waypoint) {

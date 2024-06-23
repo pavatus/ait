@@ -1,31 +1,12 @@
 package loqor.ait.core.data;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-
 // todo for now this is identical to abpd but will eventually hold more
-public class Waypoint extends AbsoluteBlockPos.Directed {
+public class Waypoint {
 	private String name;
+	private final DirectedGlobalPos.Cached pos;
 
-	public Waypoint(int x, int y, int z, SerialDimension dimension, int rotation) {
-		super(x, y, z, dimension, rotation);
-	}
-
-	public Waypoint(BlockPos pos, SerialDimension dimension, int direction) {
-		super(pos, dimension, direction);
-	}
-
-	public Waypoint(AbsoluteBlockPos pos, int rotation) {
-		super(pos, rotation);
-	}
-
-	public Waypoint(int x, int y, int z, World world, int rotation) {
-		super(x, y, z, world, rotation);
-	}
-
-	public Waypoint(BlockPos pos, World world, int rotation) {
-		super(pos, world, rotation);
+	public Waypoint(DirectedGlobalPos.Cached pos) {
+		this.pos = pos;
 	}
 
 	public Waypoint setName(String name) {
@@ -41,7 +22,11 @@ public class Waypoint extends AbsoluteBlockPos.Directed {
 		return this.name != null;
 	}
 
-	public static Waypoint fromDirected(AbsoluteBlockPos.Directed pos) {
-		return new Waypoint(pos, pos.getRotation());
+	public DirectedGlobalPos.Cached getPos() {
+		return pos;
+	}
+
+	public static Waypoint fromDirected(DirectedGlobalPos.Cached pos) {
+		return new Waypoint(pos);
 	}
 }

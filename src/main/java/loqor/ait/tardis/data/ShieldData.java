@@ -1,11 +1,13 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -80,14 +82,18 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 		if (!this.areShieldsActive())
 			return;
 
-		if (this.tardis().getExteriorPos() == null)
+		if (this.tardis().travel().getState() == TravelHandlerBase.State.FLIGHT)
 			return;
 
 		Tardis tardis = this.tardis();
 		tardis.removeFuel(2 * (tardis.tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick
 
-		World world = tardis.getExteriorPos().getWorld();
-		world.getOtherEntities(null, new Box(tardis.getExteriorPos()).expand(8f))
+		DirectedGlobalPos.Cached globalExteriorPos = tardis.travel().position();
+
+		World world = globalExteriorPos.getWorld();
+		BlockPos exteriorPos = globalExteriorPos.getPos();
+
+		world.getOtherEntities(null, new Box(exteriorPos).expand(8f))
 				.stream().filter(entity -> entity.isPushable() || entity instanceof ProjectileEntity)
 				.filter(entity -> !(entity instanceof ServerPlayerEntity player
 						&& tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))) // Exclude players with loyalty
@@ -96,8 +102,10 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 						player.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
 
 					if (this.areVisualShieldsActive()) {
-						if (entity.squaredDistanceTo(tardis.getExteriorPos().toCenterPos()) <= 8f) {
-							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(tardis.getExteriorPos().toCenterPos()).normalize().multiply(0.1f);
+						Vec3d centerExteriorPos = exteriorPos.toCenterPos();
+
+						if (entity.squaredDistanceTo(centerExteriorPos) <= 8f) {
+							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(centerExteriorPos).normalize().multiply(0.1f);
 
 							if (entity instanceof ProjectileEntity projectile) {
 								BlockPos pos = projectile.getBlockPos();

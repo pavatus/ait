@@ -27,9 +27,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+@SuppressWarnings("removal")
 public class TravelHandler extends TravelHandlerBase implements TardisTickable {
-
-    private boolean crashing;
 
     public ExteriorBlockEntity placeExterior() {
         DirectedGlobalPos.Cached globalPos = this.position.get();
@@ -213,7 +212,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
     }
 
     public void finishDemat() {
-        this.crashing = false;
+        this.crashing.set(false);
         this.previousPosition.set(this.position);
         this.state.set(State.FLIGHT);
 
@@ -279,7 +278,46 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         this.speed.set(MathHelper.clamp(this.speed.get() - 1, 0, this.maxSpeed.get()));
     }
 
-    public boolean isCrashing() {
-        return crashing;
+    @Override
+    protected boolean checkDestination(int limit, boolean fullCheck) {
+        if (this.isClient())
+            return true;
+
+        DirectedGlobalPos.Cached destination = this.destination();
+        ServerWorld world = destination.getWorld();
+        BlockPos pos = destination.getPos();
+
+        destination = destination.pos(pos.getX(), MathHelper.clamp(
+                pos.getY(), world.getBottomY(), world.getTopY() - 1
+        ), pos.getZ());
+
+        BlockState current;
+        BlockState top;
+        BlockState ground;
+
+        if (fullCheck) {
+            BlockPos temp = destination.getPos();
+
+            for (int i = 0; i < limit; i++) {
+                current = world.getBlockState(temp);
+                top = world.getBlockState(temp.up());
+                ground = world.getBlockState(temp.down());
+
+                if (isReplaceable(current, top) && !isReplaceable(ground)) { // check two blocks cus tardis is two blocks tall yk and check for ground
+                    this.destination.set(destination.world(world).pos(temp));
+                    return true;
+                }
+
+                temp = temp.down();
+            }
+        }
+
+        BlockPos temp2 = this.destination().getPos();
+
+        current = world.getBlockState(temp2);
+        top = world.getBlockState(temp2.up());
+
+        this.destination.set(destination);
+        return isReplaceable(current, top);
     }
 }
