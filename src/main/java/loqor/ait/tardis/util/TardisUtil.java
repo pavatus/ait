@@ -479,11 +479,13 @@ public class TardisUtil {
 			if (TardisUtil.inBox(corners, player.getBlockPos()))
 				return player;
 		}
+
 		return null;
 	}
 
 	public static List<PlayerEntity> getPlayersInsideInterior(Tardis tardis) {
 		List<PlayerEntity> list = new ArrayList<>();
+
 		for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
 			if (TardisUtil.inBox(tardis.getDesktop().getCorners(), player.getBlockPos()))
 				list.add(player);

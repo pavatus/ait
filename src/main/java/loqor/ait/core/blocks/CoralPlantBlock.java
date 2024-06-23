@@ -38,7 +38,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
 	private final VoxelShape DEFAULT = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 16.0);
 
-	public static final IntProperty AGE = Properties.AGE_7;;
+	public static final IntProperty AGE = Properties.AGE_7;
 
 	public CoralPlantBlock(Settings settings) {
 		super(settings);
@@ -81,15 +81,16 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 			}
 		}
 
-		if (this.getAge(state) >= this.getMaxAge()) {
-			if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
-				if(world.getBlockEntity(pos) instanceof CoralBlockEntity coral) {
-					createTardis(world, pos, coral.creator);
-				}
-			} else {
-				createConsole(world, pos);
-			}
+		if (!this.isMature(state))
+			return;
+
+		if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
+			this.createConsole(world, pos);
+			return;
 		}
+
+		if (world.getBlockEntity(pos) instanceof CoralBlockEntity coral)
+			this.createTardis(world, pos, coral.creator);
 	}
 
 	private void createConsole(ServerWorld world, BlockPos pos) {
@@ -114,10 +115,8 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 			return;
 
 		if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) ||
-				(!RiftChunkManager.isRiftChunk(pos) &&
-						!(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
-			// GET IT OUTTA HERE!!!
-			world.breakBlock(pos, placer.isPlayer() ? !player.isCreative() : true);
+				(!RiftChunkManager.isRiftChunk(pos) && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
+			world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
 			return;
 		}
 

@@ -1,15 +1,15 @@
 package loqor.ait.core.entities;
 
-import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.link.LinkableLivingEntity;
 import loqor.ait.core.AITDamageTypes;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.link.LinkableLivingEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
@@ -67,6 +67,11 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 		this.setPosition(x, y, z);
 		this.setVelocity(Vec3d.ZERO);
+	}
+
+	@Override
+	public boolean isPushable() {
+		return false;
 	}
 
 	public static void spawnFromTardisId(World world, UUID tardisId, BlockPos spawnPos, PlayerEntity player, BlockPos pos) {

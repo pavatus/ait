@@ -9,7 +9,6 @@ import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -83,15 +82,15 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 
 	private void onCompletion() {
 		Tardis tardis = this.tardis();
-		PropertiesHolder properties = tardis.properties();
 
-		setGenerating(false);
+        this.setGenerating(false);
 		clearedOldInterior = false;
 
 		tardis.alarm().disable();
 
-		boolean previouslyLocked = PropertiesHandler.getBool(properties, PropertiesHandler.PREVIOUSLY_LOCKED);
+		boolean previouslyLocked = tardis.getDoor().previouslyLocked();
 		DoorData.lockTardis(previouslyLocked, tardis, null, false);
+
 		tardis.engine().hasEngineCore().set(false);
 
 		if (tardis.hasGrowthExterior()) {

@@ -460,7 +460,7 @@ public class TardisTravel extends TardisComponent {
 		if (this.getState() != State.LANDED)
 			return;
 
-		if (!this.tardis.engine().hasPower())
+		if (!ignoreChecks && !this.tardis.engine().hasPower())
 			return; // no flying for you if you have no powa :)
 
 		if (this.getPosition().getWorld().isClient())

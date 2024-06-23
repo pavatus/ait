@@ -1,21 +1,16 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.core.entities.BaseControlEntity;
-import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -79,6 +74,9 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 
 	@Override
 	public void tick(MinecraftServer server) {
+		if (server.getTicks() % 2 == 0)
+			return;
+
 		if (this.areShieldsActive() && !this.tardis().engine().hasPower())
 			this.disableAll();
 
@@ -89,27 +87,21 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 			return;
 
 		Tardis tardis = this.tardis();
-
 		tardis.removeFuel(2 * (tardis.tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick
 
 		World world = tardis.getExteriorPos().getWorld();
-
-		world.getOtherEntities(null,
-						new Box(tardis.getExteriorPos()).expand(8f),
-						EntityPredicates.EXCEPT_SPECTATOR)
-				.stream()
-				.filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
-				.filter(entity -> !(entity instanceof TardisRealEntity)) // Exclude real world flight TARDIS (I'm too lazy to fix this for now bcs RWF isn't releasable)
-				.filter(entity -> !(entity instanceof ServerPlayerEntity player && player.isSpectator())) // Exclude players in spectator
-				.filter(entity -> !(entity instanceof FallingTardisEntity falling && falling.getTardis() == tardis))
-				.filter(entity -> !(entity instanceof PlayerEntity player && ((LoyaltyHandler) tardis.getHandlers().get(Id.LOYALTY)).get(player).level() >= Loyalty.Type.PILOT.level))
+		world.getOtherEntities(null, new Box(tardis.getExteriorPos()).expand(8f))
+				.stream().filter(Entity::isPushable)
+				.filter(entity -> !(entity instanceof ServerPlayerEntity player
+						&& tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))) // Exclude players in spectator
 				.forEach(entity -> {
-					if(entity instanceof ServerPlayerEntity && entity.isSubmergedInWater()) {
-						((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
-					}
-					if(this.areVisualShieldsActive()) {
+					if (entity instanceof ServerPlayerEntity player && entity.isSubmergedInWater())
+						player.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
+
+					if (this.areVisualShieldsActive()) {
 						if (entity.squaredDistanceTo(tardis.getExteriorPos().toCenterPos()) <= 8f) {
 							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(tardis.getExteriorPos().toCenterPos()).normalize().multiply(0.1f);
+
 							if (entity instanceof ProjectileEntity projectile) {
 								if (projectile instanceof TridentEntity) {
 									projectile.getVelocity().add(motion.multiply(2f));
@@ -118,7 +110,7 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 									return;
 								}
 
-								world.playSoundFromEntity(null, projectile, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.5f, 1f);
+								world.playSoundFromEntity(null, projectile, SoundEvents.ENTITY_GENERIC_BURN, SoundCategory.BLOCKS, 0.5f, 1f);
 								projectile.discard();
 								return;
 							}

@@ -123,7 +123,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 	}
 
 	public void useOn(World world, boolean sneaking, PlayerEntity player) {
-		if (!world.isClient())
+		if (world.isClient())
 			return;
 
 		if (this.tardis().isEmpty())

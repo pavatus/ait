@@ -38,9 +38,11 @@ jobs:
 
     - name: Build
       run: ./gradlew build
+      #env:
+      #  BETA: 1 # exclude assets if it's a beta dev build
 
     - name: Publish artifacts
-      uses: DrTheodor/discord-webhook-upload-action@97424b1c8e1eb579c2484f7bcbd5bc0536c9a9b1
+      uses: DrTheodor/discord-webhook-upload-action@22291b7e6ec1498cfe4b5a3c9c0efc96cb81a1e3
       with:
         url: ${{ secrets.DEV_BUILDS }}
         file: 'build/libs/*'
@@ -48,7 +50,7 @@ jobs:
         avatar: 'https://i.imgur.com/uiFqrQh.png'
         commit: '> :sparkles: [%MESSAGE%](<%LINK%>) by [%AUTHOR%](<%AUTHOR_LINK%>)'
         message: |
-          <:new1:1253371736510959636><:new2:1253371805734015006> New dev build `${{ github.run_number }}`:
+          <:new1:1253371736510959636><:new2:1253371805734015006> New `Adventures in Time` dev build `#${{ github.run_number }}`:
           %COMMITS%
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
