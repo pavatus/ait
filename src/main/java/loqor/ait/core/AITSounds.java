@@ -49,8 +49,13 @@ public class AITSounds implements AutoRegistryContainer<SoundEvent> {
 	public static final SoundEvent TOYOTA_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/toyota_hum"));
 	public static final SoundEvent CORAL_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/coral_hum"));
 	public static final SoundEvent EIGHT_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/eight_hum"));
+	public static final SoundEvent COPPER_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/copper_hum"));
+	public static final SoundEvent EXILE_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/exile_hum"));
+	public static final SoundEvent PRIME_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/prime_hum"));
+	public static final SoundEvent TOKAMAK_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/tokamak_hum"));
 
 	public static final SoundEvent CLOISTER = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/cloister"));
+	public static final SoundEvent GROAN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/groan"));
 
 	// Creaks
 	public static final SoundEvent CREAK_ONE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_one"));

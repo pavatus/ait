@@ -137,6 +137,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 	public static ExteriorVariantSchema PTORED;
 	public static ExteriorVariantSchema MINT;
 	public static ExteriorVariantSchema HUDOLIN;
+	public static ExteriorVariantSchema SHALKA;
 	public static ExteriorVariantSchema CAPSULE_DEFAULT;
 	public static ExteriorVariantSchema CAPSULE_SOUL;
 	public static ExteriorVariantSchema CAPSULE_FIRE;
@@ -184,6 +185,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 		PTORED = register(new ClassicBoxPtoredVariant());
 		MINT = register(new ClassicBoxMintVariant());
 		HUDOLIN = register(new ClassicBoxHudolinVariant());
+		SHALKA = register(new ClassicBoxShalkaVariant());
 
 		// Capsule
 		CAPSULE_DEFAULT = register(new CapsuleDefaultVariant());
