@@ -14,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -73,9 +74,6 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 
 	@Override
 	public void tick(MinecraftServer server) {
-		if (server.getTicks() % 2 == 0)
-			return;
-
 		if (this.areShieldsActive() && !this.tardis().engine().hasPower())
 			this.disableAll();
 
@@ -92,7 +90,7 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 		world.getOtherEntities(null, new Box(tardis.getExteriorPos()).expand(8f))
 				.stream().filter(entity -> entity.isPushable() || entity instanceof ProjectileEntity)
 				.filter(entity -> !(entity instanceof ServerPlayerEntity player
-						&& tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))) // Exclude players in spectator
+						&& tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))) // Exclude players with loyalty
 				.forEach(entity -> {
 					if (entity instanceof ServerPlayerEntity player && entity.isSubmergedInWater())
 						player.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
@@ -102,19 +100,23 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(tardis.getExteriorPos().toCenterPos()).normalize().multiply(0.1f);
 
 							if (entity instanceof ProjectileEntity projectile) {
+								BlockPos pos = projectile.getBlockPos();
+
 								if (projectile instanceof TridentEntity) {
 									projectile.getVelocity().add(motion.multiply(2f));
 
-									world.playSoundFromEntity(null, projectile, SoundEvents.ITEM_TRIDENT_HIT, SoundCategory.BLOCKS, 1f, 1f);
+									world.playSound(null, pos, SoundEvents.ITEM_TRIDENT_HIT, SoundCategory.BLOCKS, 1f, 1f);
 									return;
 								}
 
-								world.playSoundFromEntity(null, projectile, SoundEvents.ENTITY_GENERIC_BURN, SoundCategory.BLOCKS, 0.5f, 1f);
+								world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_BURN, SoundCategory.BLOCKS, 1f, 1f);
+
 								projectile.discard();
 								return;
 							}
 
 							entity.setVelocity(entity.getVelocity().add(motion.multiply(2f)));
+
 							entity.velocityDirty = true;
 							entity.velocityModified = true;
 						}
