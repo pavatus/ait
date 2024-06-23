@@ -26,7 +26,7 @@ public class RefuelerControl extends Control {
 			return false;
 		}
 
-		if (tardis.flight().handbrake().get()) {
+		if (tardis.travel().handbrake().get()) {
 			tardis.setRefueling(!tardis.isRefueling());
 
 			if (tardis.isRefueling())

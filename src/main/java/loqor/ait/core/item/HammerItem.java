@@ -61,7 +61,7 @@ public class HammerItem extends SwordItem {
 			FlightData flightData = tardis.flight();
 			int targetTicks = flightData.getTargetTicks();
 			int current_flight_ticks = flightData.getFlightTicks();
-			int added_flight_ticks = 500 * tardis.flight().speed().get();
+			int added_flight_ticks = 500 * tardis.travel().speed().get();
 			double current_fuel = tardis.fuel().getCurrentFuel();
 			double max_fuel = tardis.fuel().getMaxFuel();
 
@@ -70,7 +70,7 @@ public class HammerItem extends SwordItem {
 
 			double estimated_fuel_cost_for_hit = added_flight_ticks / 5.0;
 			if (tardis.tardisHammerAnnoyance > 0)
-				estimated_fuel_cost_for_hit += (150 * tardis.flight().speed().get() * tardis.tardisHammerAnnoyance) / 7.0;
+				estimated_fuel_cost_for_hit += (150 * tardis.travel().speed().get() * tardis.tardisHammerAnnoyance) / 7.0;
 
 			if (!world.isClient() && current_fuel + estimated_fuel_cost_for_hit > max_fuel) {
 				tardis.travel().crash();

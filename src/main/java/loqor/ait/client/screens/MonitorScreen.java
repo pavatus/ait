@@ -259,7 +259,7 @@ public class MonitorScreen extends ConsoleScreen {
 				uvOffset = UV_BASE;
 			}
 
-			context.drawTexture(TEXTURE, i + 101 + (index * 18), j + 78, tardis().travel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
+			context.drawTexture(TEXTURE, i + 101 + (index * 18), j + 78, tardis().travel().getState() == TravelHandler.State.FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
 		}
 	}
 
@@ -335,8 +335,8 @@ public class MonitorScreen extends ConsoleScreen {
 			return;
 
 		TravelHandler travel = getFromUUID(tardisId).travel();
-        DirectedGlobalPos abpd = travel.getState() == FLIGHT ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.destination().get(), getFromUUID(tardisId).flight().getDurationAsPercentage()) : travel.getPosition();
-		DirectedGlobalPos dabpd = travel.destination().get();
+        DirectedGlobalPos abpd = travel.getState() == TravelHandler.State.FLIGHT ? FlightUtil.getPositionFromPercentage(travel.position(), travel.destination(), getFromUUID(tardisId).flight().getDurationAsPercentage()) : travel.position();
+		DirectedGlobalPos dabpd = travel.destination();
 
         if (abpd.getDimension() == null)
 			return;

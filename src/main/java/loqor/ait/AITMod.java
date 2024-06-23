@@ -143,14 +143,14 @@ public class AITMod implements ModInitializer {
 
 		TardisEvents.LANDED.register((tardis -> {
 			// stuff for resetting the ExteriorAnimation
-			if (tardis.travel().getPosition().getWorld().getBlockEntity(tardis.getExteriorPos()) instanceof ExteriorBlockEntity entity) {
+			if (tardis.travel().position().getWorld().getBlockEntity(tardis.travel().position().getPos()) instanceof ExteriorBlockEntity entity) {
 				entity.getAnimation().setupAnimation(tardis.travel().getState());
 			}
 		}));
 
 		TardisEvents.DEMAT.register((tardis -> {
 			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()
-					|| tardis.flight().handbrake().get() || PropertiesHandler.getBool(
+					|| tardis.travel().handbrake().get() || PropertiesHandler.getBool(
 							tardis.properties(), PropertiesHandler.IS_FALLING
 			) || tardis.isRefueling())
 				return true; // cancelled
@@ -170,8 +170,8 @@ public class AITMod implements ModInitializer {
 			boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
 
 			// Check if the destination is already occupied
-			boolean isDestinationOccupied = !tardis.travel().getDestination().equals(tardis.getExteriorPos())
-					&& !tardis.travel().checkDestination();
+			boolean isDestinationOccupied = !tardis.travel().destination().getPos().equals(tardis.travel().position().getPos())
+					&& !tardis.travel().checkDestination(10, true);
 
 			return isCooldown || isDestinationOccupied;
 		}));

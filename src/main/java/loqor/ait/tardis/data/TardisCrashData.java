@@ -3,6 +3,7 @@ package loqor.ait.tardis.data;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.AITModTags;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
@@ -65,12 +66,12 @@ public class TardisCrashData extends TardisComponent implements TardisTickable {
 			setState(State.UNSTABLE);
 			alarms.disable();
 		}
-		AbsoluteBlockPos.Directed exteriorPosition = tardis.getExteriorPos();
-		ServerWorld exteriorWorld = (ServerWorld) exteriorPosition.getWorld();
+		DirectedGlobalPos.Cached exteriorPosition = tardis.travel().position();
+		ServerWorld exteriorWorld = exteriorPosition.getWorld();
 		if (tardis.getDoor().isOpen() && this.getState() != State.NORMAL) {
 			exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-					exteriorPosition.toCenterPos().x, exteriorPosition.getY() + 2f,
-					exteriorPosition.toCenterPos().z,
+					exteriorPosition.getPos().toCenterPos().x, exteriorPosition.getPos().getY() + 2f,
+					exteriorPosition.getPos().toCenterPos().z,
 					1,
 					0.05D, 0.05D, 0.05D, 0.01D
 			);
@@ -79,8 +80,8 @@ public class TardisCrashData extends TardisComponent implements TardisTickable {
 		if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
 		exteriorWorld.spawnParticles(new DustColorTransitionParticleEffect(
 						new Vector3f(0.75f, 0.85f, 0.75f), new Vector3f(0.15f, 0.25f, 0.15f), 3),
-				exteriorPosition.toCenterPos().x, exteriorPosition.getY() + 0.1f,
-				exteriorPosition.toCenterPos().z,
+				exteriorPosition.getPos().toCenterPos().x, exteriorPosition.getPos().getY() + 0.1f,
+				exteriorPosition.getPos().toCenterPos().z,
 				1,
 				0.05D, 0.75D, 0.05D, 0.01D
 		);

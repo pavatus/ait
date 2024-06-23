@@ -17,7 +17,7 @@ public class MarkWaypointControl extends Control {
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
 		WaypointHandler handler = tardis.waypoint();
 
-		handler.set(Waypoint.fromDirected(tardis.travel().getPosition()), false);
+		handler.set(Waypoint.fromDirected(tardis.travel().position()), false);
 		handler.spawnItem(console);
 
 		return true;

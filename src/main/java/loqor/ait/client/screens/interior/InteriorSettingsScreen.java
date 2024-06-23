@@ -16,6 +16,7 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.sound.HumSound;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,7 +41,6 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
-import static loqor.ait.tardis.data.TravelHandler.State.FLIGHT;
 
 @Environment(EnvType.CLIENT)
 public class InteriorSettingsScreen extends ConsoleScreen {
@@ -286,7 +286,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				uvOffset = UV_BASE;
 			}
 
-			context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114, tardis().travel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
+			context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114, tardis().travel().getState() == TravelHandler.State.FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
 		}
 
 		this.renderHums(context);

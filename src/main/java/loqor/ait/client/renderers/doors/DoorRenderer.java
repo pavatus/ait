@@ -79,8 +79,8 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		if (DependencyChecker.hasPortals() && tardis.travel().getState() == TardisTravel.State.LANDED
 				&& tardis.getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED
 		) {
-			BlockPos pos = tardis.travel().getPosition();
-			World world = tardis.travel().getPosition().getWorld();
+			BlockPos pos = tardis.travel().position();
+			World world = tardis.travel().position().getWorld();
 
 			if (world != null) {
 				int lightConst = 524296;

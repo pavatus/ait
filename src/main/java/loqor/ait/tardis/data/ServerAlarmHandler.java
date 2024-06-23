@@ -47,7 +47,7 @@ public class ServerAlarmHandler extends TardisComponent implements TardisTickabl
 
 	@Override
 	public void tick(MinecraftServer server) {
-		if(tardis.getExteriorPos().getWorld().isClient()) return;
+		if(tardis.travel().position().getWorld().isClient()) return;
 
 		// @TODO make a new control that makes it (by default) detect hostile entities in the interior plus a check when it's been cleared of all hostile entities - Loqor
 		if (!isEnabled() && PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE)) {
@@ -61,13 +61,13 @@ public class ServerAlarmHandler extends TardisComponent implements TardisTickabl
 		}
 
 		if (!tardis.getHandlers().getAlarms().isEnabled()) return;
-		if (tardis.travel().getState() == TardisTravel.State.FLIGHT) return;
+		if (tardis.travel().getState() == TravelHandler.State.FLIGHT) return;
 
 		soundCounter++;
 
 		if (soundCounter >= CLOISTER_LENGTH_TICKS) {
 			soundCounter = 0;
-			tardis.getExteriorPos().getWorld().playSound(null, tardis.getExteriorPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
+			tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
 		}
 	}
 }

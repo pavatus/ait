@@ -9,25 +9,25 @@ import net.minecraft.server.world.ServerWorld;
 
 public class TardisChunkUtil {
 	public static void forceLoadExteriorChunk(Tardis tardis) {
-		if (!(tardis.travel().getPosition().getWorld() instanceof ServerWorld)) return;
+		if (!(tardis.travel().position().getWorld() instanceof ServerWorld)) return;
 
-		ForcedChunkUtil.keepChunkLoaded((ServerWorld) tardis.travel().getPosition().getWorld(), tardis.travel().getPosition());
+		ForcedChunkUtil.keepChunkLoaded((ServerWorld) tardis.travel().position().getWorld(), tardis.travel().position());
 	}
 
 	public static void stopForceExteriorChunk(Tardis tardis) {
-		if (!(tardis.travel().getPosition().getWorld() instanceof ServerWorld)) return;
+		if (!(tardis.travel().position().getWorld() instanceof ServerWorld)) return;
 
-		ForcedChunkUtil.stopForceLoading((ServerWorld) tardis.travel().getPosition().getWorld(), tardis.travel().getPosition());
+		ForcedChunkUtil.stopForceLoading((ServerWorld) tardis.travel().position().getWorld(), tardis.travel().position());
 	}
 
 	public static boolean isExteriorChunkForced(Tardis tardis) {
-		if (!(tardis.travel().getPosition().getWorld() instanceof ServerWorld)) return false;
+		if (!(tardis.travel().position().getWorld() instanceof ServerWorld)) return false;
 
-		return ForcedChunkUtil.isChunkForced((ServerWorld) tardis.travel().getPosition().getWorld(), tardis.travel().getPosition());
+		return ForcedChunkUtil.isChunkForced((ServerWorld) tardis.travel().position().getWorld(), tardis.travel().position());
 	}
 
 	public static boolean shouldExteriorChunkBeForced(Tardis tardis) {
-		if (!(tardis.travel().getPosition().getWorld() instanceof ServerWorld)) return false;
+		if (!(tardis.travel().position().getWorld() instanceof ServerWorld)) return false;
 		if (DependencyChecker.hasPortals()) {
 			return (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.IS_FALLING))
 					|| (tardis.travel().getState() == TardisTravel.State.DEMAT)

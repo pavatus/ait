@@ -71,7 +71,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			return;
 		}
 
-		AbsoluteBlockPos.Directed exteriorPos = tardis.getExteriorPos();
+		AbsoluteBlockPos.Directed exteriorPos = tardis.travel().position().getPos();
 
 		if (exteriorPos == null) {
 			profiler.pop();

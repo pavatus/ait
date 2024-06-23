@@ -30,7 +30,7 @@ public class LoadWaypointControl extends Control {
 			return false;
 
 		if (WaypointItem.getPos(itemStack) == null)
-			WaypointItem.setPos(itemStack, tardis.travel().getPosition());
+			WaypointItem.setPos(itemStack, tardis.travel().position());
 
 		tardis.waypoint().markHasCartridge();
 		tardis.waypoint().set(Waypoint.fromDirected(WaypointItem.getPos(itemStack)).setName(itemStack.getName().getString()), true);

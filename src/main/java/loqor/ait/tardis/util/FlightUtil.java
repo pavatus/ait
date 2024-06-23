@@ -50,8 +50,8 @@ public class FlightUtil {
 		return (int) (seconds * 20);
 	}
 
-	public static int getFlightDuration(AbsoluteBlockPos.Directed source, AbsoluteBlockPos.Directed destination) {
-		float distance = MathHelper.sqrt((float) source.getSquaredDistance(destination));
+	public static int getFlightDuration(DirectedGlobalPos.Cached source, DirectedGlobalPos.Cached destination) {
+		float distance = MathHelper.sqrt((float) source.getPos().getSquaredDistance(destination.getPos()));
 		boolean hasDirChanged = !(source.getRotation() == destination.getRotation());
 		boolean hasDimChanged = !(source.getDimension().equals(destination.getDimension()));
 

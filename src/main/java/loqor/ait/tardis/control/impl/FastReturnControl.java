@@ -27,7 +27,7 @@ public class FastReturnControl extends Control {
 		boolean same = travel.getDestination() == travel.getLastPosition();
 
 		if (travel.getLastPosition() != null) {
-			travel.setDestination(same ? travel.getPosition() : travel.getLastPosition(), tardis.flight().autoLand().get());
+			travel.setDestination(same ? travel.getPosition() : travel.getLastPosition(), tardis.travel().autoLand().get());
 			messagePlayer(player, same);
 		} else {
 			Text text = Text.translatable("tardis.message.control.fast_return.destination_nonexistent");

@@ -57,7 +57,7 @@ public class TardisExterior extends TardisComponent {
 	}
 
 	public Optional<ExteriorBlockEntity> findExteriorBlock() {
-		BlockEntity found = tardis.getExteriorPos().getWorld().getBlockEntity(tardis.getExteriorPos());
+		BlockEntity found = tardis.travel().position().getWorld().getBlockEntity(tardis.travel().position().getPos());
 
 		if (!(found instanceof ExteriorBlockEntity))
 			return Optional.empty();

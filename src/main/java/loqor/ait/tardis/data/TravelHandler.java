@@ -5,6 +5,7 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
@@ -278,8 +279,12 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         this.speed.set(MathHelper.clamp(this.speed.get() - 1, 0, this.maxSpeed.get()));
     }
 
+    public boolean inFlight() {
+        return tardis.inFlight();
+    }
+
     @Override
-    protected boolean checkDestination(int limit, boolean fullCheck) {
+    public boolean checkDestination(int limit, boolean fullCheck) {
         if (this.isClient())
             return true;
 
@@ -319,5 +324,16 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
         this.destination.set(destination);
         return isReplaceable(current, top);
+    }
+
+    public void crash() {
+        // @TODO theo please do crash code here
+    }
+
+    public void toFlight() {
+        // @TODO theo please do toFlight code here
+    }
+
+    public void setStateAndLand(DirectedGlobalPos.Cached cached) {
     }
 }

@@ -36,8 +36,6 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
-import static loqor.ait.tardis.data.TravelHandler.State.*;
-
 public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements BlockEntityTicker<ExteriorBlockEntity> {
 	public int animationTimer = 0;
 	public final AnimationState DOOR_STATE = new AnimationState();
@@ -129,8 +127,8 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 		}
 
-		if ((tardis.travel().getState() == LANDED
-				|| tardis.travel().getState() == CRASH)) {
+		if ((tardis.travel().getState() == TravelHandler.State.LANDED
+				|| tardis.travel().getState() == TravelHandler.State.CRASH)) {
 			DoorData.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
 		}
 	}
@@ -166,7 +164,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		TravelHandler travel = tardis.travel();
 		TravelHandler.State state = travel.getState();
 
-		if (state != LANDED)
+		if (state != TravelHandler.State.LANDED)
 			this.getAnimation().tick();
 
 		if (world.isClient()) {
@@ -176,7 +174,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		}
 
 		// ensures we don't exist during flight
-		if (state == FLIGHT)
+		if (state == TravelHandler.State.FLIGHT)
 			world.removeBlock(this.getPos(), false);
 	}
 
@@ -230,7 +228,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 	private void exteriorLightBlockState(Tardis tardis) {
 		TravelHandler.State state = tardis.travel().getState();
 
-		if (state == DEMAT || state == MAT) {
+		if (state == TravelHandler.State.DEMAT || state == TravelHandler.State.MAT) {
 			int light = (int) Math.max(1, Math.min(this.getAlpha() * 9.0f, 9));
 			this.getWorld().setBlockState(pos, this.getCachedState().with(ExteriorBlock.LEVEL_9, light));
 		}

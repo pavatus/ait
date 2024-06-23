@@ -17,7 +17,7 @@ public class ClientShakeUtil {
 				&& tardis.travel() != null
 				&& tardis.travel().getState() != TardisTravel.State.LANDED
 				&& ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE
-				&& !tardis.flight().autoLand().get();
+				&& !tardis.travel().autoLand().get();
 	}
 
 	/**

@@ -64,7 +64,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 					ServerTardis found = null;
 					for (ServerTardis tardis : this.lookup.values()) {
-						if (!tardis.travel().getPosition().equals(pos))
+						if (!tardis.travel().position().equals(pos))
 							continue;
 
 						found = tardis;

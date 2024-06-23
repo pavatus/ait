@@ -37,12 +37,12 @@ public class RealWorldCommand {
 		if (tardis.travel().getState() != TardisTravel.State.LANDED)
 			return 0;
 
-		BlockPos spawnBlockPos = tardis.getExteriorPos();
+		BlockPos spawnBlockPos = tardis.travel().position().getPos();
 
 		TardisUtil.teleportOutside(tardis, source);
 		source.setInvisible(true);
 
-		TardisRealEntity.spawnFromTardisId(tardis.getExteriorPos().getWorld(), tardis.getUuid(), spawnBlockPos, source, tardis.getDesktop().doorPos().getPos());
+		TardisRealEntity.spawnFromTardisId(tardis.travel().position().getPos().getWorld(), tardis.getUuid(), spawnBlockPos, source, tardis.getDesktop().doorPos().getPos());
 
 		Text textResponse = Text.translatableWithFallback("command.ait.realworld.response",
 				"Spawned a real world TARDIS at: ", spawnBlockPos

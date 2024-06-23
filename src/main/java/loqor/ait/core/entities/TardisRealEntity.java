@@ -4,10 +4,12 @@ import loqor.ait.core.AITDamageTypes;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DirectionControl;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableLivingEntity;
 import loqor.ait.tardis.util.TardisUtil;
@@ -84,7 +86,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 		world.spawnEntity(tardisRealEntity);
 
-		tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(DirectionControl.getGeneralizedRotation(tardis.getExteriorPos().getRotation())), 0);
+		tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(DirectionControl.getGeneralizedRotation(tardis.travel().position().getPos().getRotation())), 0);
 		player.getAbilities().flying = true;
 		player.getAbilities().allowFlying = true;
 		player.getAbilities().setFlySpeed(player.getAbilities().getFlySpeed() * 1.5F);
@@ -132,10 +134,10 @@ public class TardisRealEntity extends LinkableLivingEntity {
 						shouldTriggerLandSound = true;
 					}
 					if (user.isSneaking()) {
-						getTardis().travel().setStateAndLand(new AbsoluteBlockPos.Directed(this.getBlockPos(), this.getWorld(), DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(user.getBodyYaw()))));
-						if (getTardis().travel().getState() == TardisTravel.State.LANDED)
+						getTardis().travel().setStateAndLand(new DirectedGlobalPos.Cached(this.getWorld().getRegistryKey(), this.getBlockPos(), (byte) DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(user.getBodyYaw()))));
+						if (getTardis().travel().getState() == TravelHandler.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
-						getTardis().flight().autoLand().set(false);
+						getTardis().travel().autoLand().set(false);
 						user.dismountVehicle();
 					}
 				} else {
@@ -159,7 +161,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					TardisUtil.teleportToInteriorPosition(this.getTardis(), user, this.getPlayerBlockPos().get());
 				}
 				this.dataTracker.set(PLAYER_UUID, Optional.empty());
-				this.getTardis().travel().setState(TardisTravel.State.LANDED);
+				this.getTardis().travel().setState(TravelHandler.State.LANDED);
 				this.discard();
 			}
 		}

@@ -3,6 +3,7 @@ package loqor.ait.tardis.data;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.KeyedTardisComponent;
@@ -39,21 +40,21 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 			flight.setFlightTicks(0);
 			flight.setTargetTicks(0);
 
-			AbsoluteBlockPos.Directed pos = tardis.getExteriorPos();
+			DirectedGlobalPos.Cached pos = tardis.travel().position();
 			World world = pos.getWorld();
 
 			if(world != null) {
-				world.setBlockState(pos, pos.getBlockState().with(ExteriorBlock.LEVEL_9, 9), 3);
+				world.setBlockState(pos.getPos(), world.getBlockState(pos.getPos()).with(ExteriorBlock.LEVEL_9, 9), 3);
 			}
 		});
 
 		TardisEvents.DEMAT.register(tardis -> {
 			FlightData flight = tardis.flight();
-			TardisTravel travel = tardis.travel();
+			TravelHandler travel = tardis.travel();
 
 			flight.setFlightTicks(0);
 			flight.setTargetTicks(FlightUtil.getFlightDuration(
-					travel.getPosition(), travel.getDestination())
+					travel.position(), travel.destination())
 			);
 
 			return false;
@@ -103,7 +104,7 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	public int getDurationAsPercentage() {
 
 		if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0) {
-			if (this.tardis().travel().getState() == TardisTravel.State.DEMAT)
+			if (this.tardis().travel().getState() == TravelHandler.State.DEMAT)
 				return 0;
 
 			return 100;
@@ -113,7 +114,7 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	}
 
 	public void recalculate() {
-		this.setTargetTicks(FlightUtil.getFlightDuration(tardis().position(), tardis().destination()));
+		this.setTargetTicks(FlightUtil.getFlightDuration(tardis().travel().position(), tardis().travel().destination()));
 		this.setFlightTicks(this.isInFlight() ? MathHelper.clamp(this.getFlightTicks(), 0, this.getTargetTicks()) : 0);
 	}
 
@@ -179,9 +180,9 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 
 		if (!travel.autoLand().get()
 				&& this.getDurationAsPercentage() < 100
-				&& travel.getState() == TravelHandler.State.FLIGHT && tardis.position() != tardis.destination() && !sequences.hasActiveSequence()) {
-			if (FlightUtil.getFlightDuration(tardis.position(),
-					tardis.destination()) > FlightUtil.convertSecondsToTicks(5)
+				&& travel.getState() == TravelHandler.State.FLIGHT && tardis.travel().position() != tardis.travel().destination() && !sequences.hasActiveSequence()) {
+			if (FlightUtil.getFlightDuration(tardis.travel().position(),
+					tardis.travel().destination()) > FlightUtil.convertSecondsToTicks(5)
 					&& random.nextBetween(0, 460 / (travel.speed().get() == 0 ? 1 : travel.speed().get())) == 7) {
 				sequences.triggerRandomSequence(true);
 			}

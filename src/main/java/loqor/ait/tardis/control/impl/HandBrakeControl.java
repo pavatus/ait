@@ -27,18 +27,18 @@ public class HandBrakeControl extends Control {
 		if (tardis.isInDanger())
 			return false;
 
-		tardis.flight().handbrake().flatMap(handbrake -> !handbrake);
+		tardis.travel().handbrake().flatMap(handbrake -> !handbrake);
 
 		if (tardis.isRefueling())
 			tardis.setRefueling(false);
 
-		boolean handbrake = tardis.flight().handbrake().get();
+		boolean handbrake = tardis.travel().handbrake().get();
 
 		this.soundEvent = handbrake ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
 		TardisTravel travel = tardis.travel();
 
 		if (handbrake && travel.getState() == TardisTravel.State.FLIGHT) {
-			if (tardis.flight().autoLand().get()) {
+			if (tardis.travel().autoLand().get()) {
 				travel.setPositionToProgress();
 				travel.forceLand();
 				travel.playThudSound();

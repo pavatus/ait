@@ -29,11 +29,6 @@ public class ClientTardis extends Tardis {
 		this.desktop = desktop;
 	}
 
-	public void setTravel(TardisTravel travel) {
-		travel.setTardis(this);
-		this.travel = travel;
-	}
-
 	public void setExterior(TardisExterior exterior) {
 		exterior.setTardis(this);
 		this.exterior = exterior;

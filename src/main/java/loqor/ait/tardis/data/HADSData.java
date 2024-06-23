@@ -38,15 +38,15 @@ public class HADSData extends TardisComponent implements TardisTickable {
 	@Override
 	public void tick(MinecraftServer server) {
 		if (isHADSActive())
-			tickingForDanger(tardis.getExteriorPos().getWorld());
+			tickingForDanger(tardis.travel().position().getPos().getWorld());
 	}
 
 
 	// @TODO Fix hads idk why its broken. duzo did something to the demat idk what happened lol
 	public void tickingForDanger(World world) {
-		if (tardis.getExteriorPos() == null) return;
+		if (tardis.travel().position().getPos() == null) return;
 		List<Entity> listOfEntities = world.getOtherEntities(null,
-				new Box(tardis.getExteriorPos()).expand(3f),
+				new Box(tardis.travel().position().getPos()).expand(3f),
 				EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
 		/*if(isHADSActive()) {*/
 		for (Entity entity : listOfEntities) {

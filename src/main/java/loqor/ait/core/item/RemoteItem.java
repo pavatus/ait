@@ -61,7 +61,7 @@ public class RemoteItem extends LinkableItem {
                 player.sendMessage(Text.translatable("message.ait.remoteitem.warning2"));
 
             // Check if the Tardis is already present at this location before moving it there
-            AbsoluteBlockPos.Directed currentPosition = tardis.travel().getPosition();
+            AbsoluteBlockPos.Directed currentPosition = tardis.travel().position();
 
             if (!currentPosition.equals(pos)) {
                 if (world != TardisUtil.getTardisDimension()) {
@@ -72,7 +72,7 @@ public class RemoteItem extends LinkableItem {
                     if (world.getBlockState(pos).isReplaceable())
 						temp = pos;
 
-                    tardis.flight().speed().set(tardis.flight().maxSpeed());
+                    tardis.travel().speed().set(tardis.flight().maxSpeed());
                     FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw()))));
                 } else {
                     world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);

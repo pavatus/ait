@@ -126,7 +126,7 @@ public class KeyItem extends LinkableItem {
 
 		KeyItem keyType = (KeyItem) stack.getItem().asItem();
 
-		if (tardis.flight().handbrake().get())
+		if (tardis.travel().handbrake().get())
 			return;
 
 		if (!keyType.hasProtocol(Protocols.HAIL))

@@ -4,10 +4,9 @@ import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
@@ -104,18 +103,18 @@ public class EngineHandler extends KeyedTardisComponent {
     }
 
     private void updateExteriorState() {
-        TardisTravel travel = this.tardis.travel();
+        TravelHandler travel = this.tardis.travel();
 
         if (travel.inFlight())
             return;
 
-        AbsoluteBlockPos pos = travel.getPosition();
+        DirectedGlobalPos.Cached pos = travel.position();
         World world = pos.getWorld();
 
         if (world == null)
             return;
 
-        world.setBlockState(pos, pos.getBlockEntity().getCachedState()
+        world.setBlockState(pos.getPos(), world.getBlockEntity(pos.getPos()).getCachedState()
                 .with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0)
         );
     }

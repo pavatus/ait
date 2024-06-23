@@ -79,7 +79,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		this.textRenderer.drawWithOutline(Text.of(positionDimensionText).asOrderedText(), 0, 16, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(positionDirectionText).asOrderedText(), 0, 24, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
-		AbsoluteBlockPos.Directed abpd = tardis.travel().getDestination();
+		AbsoluteBlockPos.Directed abpd = tardis.travel().destination();
 
 		String destinationPosText = " " + abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
 		String destinationDimensionText = " " + DimensionControl.convertWorldValueToModified(abpd.getDimension().getValue());

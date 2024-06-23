@@ -175,7 +175,7 @@ public class SiegeTardisItem extends Item {
 	}
 
 	public static void pickupTardis(Tardis tardis, ServerPlayerEntity player) {
-		if (tardis.flight().handbrake().get())
+		if (tardis.travel().handbrake().get())
 			return;
 
 		tardis.travel().deleteExterior();

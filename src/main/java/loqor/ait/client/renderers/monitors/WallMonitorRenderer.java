@@ -67,7 +67,7 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
 
         TardisTravel travel = tardis.travel();
         AbsoluteBlockPos.Directed abpp = travel.inFlight() ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.getDestination(), tardis.getHandlers().getFlight().getDurationAsPercentage()) : travel.getPosition();
-        AbsoluteBlockPos.Directed abpd = tardis.travel().getDestination();
+        AbsoluteBlockPos.Directed abpd = tardis.travel().destination();
 
         String positionPosText = abpp.getX() + ", " + abpp.getY() + ", " + abpp.getZ();
         String positionDimensionText = DimensionControl.convertWorldValueToModified(abpp.getDimension().getValue());

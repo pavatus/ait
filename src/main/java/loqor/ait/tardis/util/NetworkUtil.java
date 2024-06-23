@@ -43,7 +43,7 @@ public class NetworkUtil {
 	}
 
 	public static Collection<ServerPlayerEntity> getPlayersNearExterior(Tardis tardis) {
-		return getTracking(tardis.getExteriorPos());
+		return getTracking(tardis.travel().position().getPos());
 	}
 
 	/**

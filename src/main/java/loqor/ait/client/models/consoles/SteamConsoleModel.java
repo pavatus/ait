@@ -947,7 +947,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		doorLock.roll = doorLock.roll - (tardis.getDoor().locked() ? 1.5708f : 0);
 
 		ModelPart autopilot = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone48");
-		autopilot.roll = autopilot.roll - (tardis.flight().autoLand().get() ? 1.5708f : 0);
+		autopilot.roll = autopilot.roll - (tardis.travel().autoLand().get() ? 1.5708f : 0);
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();

@@ -310,7 +310,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		Tardis tardis = LinkableItem.getTardis(world, stack);
 
 		if (tardis != null)
-			position = tardis.travel() == null || tardis.getExteriorPos() == null ? "In Flight..." : tardis.getExteriorPos().toShortString();
+			position = tardis.travel() == null || tardis.travel().position().getPos() == null ? "In Flight..." : tardis.travel().position().getPos().toShortString();
 
 		tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
 
