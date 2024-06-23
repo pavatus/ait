@@ -32,50 +32,35 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 		super(function);
 	}
 
-	private static float getAnimationLengthInTicks(Animation anim) {
-		return anim.lengthInSeconds() * 20;
-	}
-
-	private void checkAnimationTimer(ExteriorBlockEntity exterior) {
-		DoorData.DoorStateEnum state = exterior.tardis().get().getDoor().getDoorState();
-		Animation anim = getAnimationForDoorState(state);
-
-		int max = (int) getAnimationLengthInTicks(anim);
-
-		if (exterior.animationTimer > max) {
-			exterior.animationTimer = max;
-		}
-	}
-
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
-		if (exterior.tardis().isEmpty())
+		Tardis tardis = exterior.tardis().get();
+
+		if (tardis == null)
 			return;
 
-		PlayerEntity player = MinecraftClient.getInstance().player;
-		Tardis tardis = exterior.tardis().get();
-		alpha = ExteriorModel.getAlpha(exterior, tardis, player);
+		float newAlpha = alpha;
 
-		root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
-	}
+		if (tardis.getHandlers().getCloak().isEnabled()) {
+			PlayerEntity player = MinecraftClient.getInstance().player;
 
-	protected static float getAlpha(ExteriorBlockEntity exterior, Tardis tardis, PlayerEntity player) {
-		if (!tardis.getHandlers().getCloak().isEnabled())
-			return exterior.getAlpha();
+			if (!(tardis.loyalty().get(player).isOf(Loyalty.Type.COMPANION))) {
+				newAlpha = 0f;
 
-		if (!tardis.loyalty().get(player).isOf(Loyalty.Type.COMPANION))
-			return 0f;
+				root.render(matrices, vertices, light, overlay, red, green, blue, newAlpha);
+				return;
+			}
 
-		double distance = distanceFromTardis(player, tardis);
+			if (isNearTardis(MinecraftClient.getInstance().player, tardis, MAX_CLOAK_DISTANCE)) {
+				newAlpha = 1f - (float) (distanceFromTardis(player, tardis) / MAX_CLOAK_DISTANCE);
 
-		if (!isNearTardis(player, tardis, MAX_CLOAK_DISTANCE, distance))
-			return 0f;
+				if (alpha != 0.105f)
+					newAlpha = newAlpha * alpha;
+			} else {
+				newAlpha = 0f;
+			}
+		}
 
-		float alpha = 1f - (float) (distance / MAX_CLOAK_DISTANCE);
-
-		if (exterior.getAlpha() == 0.105f)
-			return alpha;
-
-		return alpha * exterior.getAlpha();
+		root.render(matrices, vertices, light, overlay, red, green, blue, newAlpha);
 	}
 
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
@@ -83,13 +68,16 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 	}
 
 	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		if (realEntity.getTardis() == null) return;
+		if (realEntity.getTardis() == null)
+			return;
 
 		root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 	}
 
 	@Override
-	public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) { }
+	public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
+	}
 
 	public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);
 }

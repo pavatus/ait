@@ -8,11 +8,11 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.Corners;
+import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SonicItem;
@@ -26,7 +26,6 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.data.DoorData;
@@ -185,8 +184,9 @@ public class TardisUtil {
 							return;
 						}
 
-						BlockPos pos = player.getWorld().getRegistryKey() ==
-								TardisUtil.getTardisDimension().getRegistryKey() ? tardis.getDoorPos() : tardis.getExteriorPos();
+						BlockPos pos = player.getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()
+								? tardis.getDesktop().doorPos().getPos() : tardis.getExteriorPos();
+
 						if ((player.squaredDistanceTo(tardis.getExteriorPos().getX(), tardis.getExteriorPos().getY(), tardis.getExteriorPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
 							if (!player.isSneaking()) {
 								// annoying bad code
@@ -287,7 +287,7 @@ public class TardisUtil {
 	}
 
 	public static DoorBlockEntity getDoor(Tardis tardis) {
-		if (!(TardisUtil.getTardisDimension().getBlockEntity(tardis.getDesktop().getInteriorDoorPos()) instanceof DoorBlockEntity door))
+		if (!(TardisUtil.getTardisDimension().getBlockEntity(tardis.getDesktop().doorPos().getPos()) instanceof DoorBlockEntity door))
 			return null;
 
 		return door;
@@ -343,13 +343,14 @@ public class TardisUtil {
 	}
 
 	public static Vec3d offsetInteriorDoorPosition(TardisDesktop desktop) {
-		return TardisUtil.offsetInteriorDoorPos(desktop.getInteriorDoorPos());
+		return TardisUtil.offsetInteriorDoorPos(desktop.doorPos());
 	}
 
-	public static Vec3d offsetDoorPosition(AbsoluteBlockPos.Directed pos) {
-		return switch (pos.getRotation()) {
-			default ->
-					new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() - 0.5f);
+	public static Vec3d offsetDoorPosition(DirectedBlockPos directed) {
+		BlockPos pos = directed.getPos();
+
+		return switch (directed.getRotation()) {
+			default -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() - 0.5f);
 			case 1, 2, 3 -> new Vec3d(pos.getX() + 1.1f, pos.getY(), pos.getZ() - 0.5f);
 			case 4 -> new Vec3d(pos.getX() + 1.5f, pos.getY(), pos.getZ() + 0.5f);
 			case 5, 6, 7 -> new Vec3d(pos.getX() + 1.5f, pos.getY(), pos.getZ() + 1.1f);
@@ -360,9 +361,10 @@ public class TardisUtil {
 		};
 	}
 
-	public static Vec3d offsetInteriorDoorPos(AbsoluteBlockPos.Directed pos) {
-		boolean bl = pos.getWorld().getBlockEntity(pos) instanceof DoorBlockEntity;
-		return switch (pos.getRotation()) {
+	public static Vec3d offsetInteriorDoorPos(DirectedBlockPos directed) {
+		BlockPos pos = directed.getPos();
+
+		return switch (directed.getRotation()) {
 			default -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.6f);
 			case 4 -> new Vec3d(pos.getX() + 0.4f, pos.getY(), pos.getZ() + 0.5f);
 			case 8 -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.4f);
@@ -372,21 +374,19 @@ public class TardisUtil {
 
 	public static void teleportOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
-
-		AbsoluteBlockPos.Directed pos = tardis.travel().getState() == TardisTravel.State.FLIGHT ? FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.flight().getDurationAsPercentage()) : tardis.position();
-		TardisUtil.teleportWithDoorOffset(entity, tardis.getExteriorPos());
+		TardisUtil.teleportWithDoorOffset((ServerWorld) tardis.position().getWorld(), entity, tardis.getExteriorPos().toBlockPos());
 	}
 
 	public static void dropOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
 
-		AbsoluteBlockPos.Directed percentageOfDestination = FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.flight().getDurationAsPercentage());
-		TardisUtil.teleportWithDoorOffset(entity, percentageOfDestination);
+		DirectedBlockPos percentageOfDestination = FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.flight().getDurationAsPercentage()).toBlockPos();
+		TardisUtil.teleportWithDoorOffset((ServerWorld) tardis.destination().getWorld(), entity, percentageOfDestination);
 	}
 
 	public static void teleportInside(Tardis tardis, Entity entity) {
 		TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
-		TardisUtil.teleportWithDoorOffset(entity, tardis.getDoorPos());
+		TardisUtil.teleportWithDoorOffset(TARDIS_DIMENSION, entity, tardis.getDesktop().doorPos());
 	}
 
 	public static void teleportToInteriorPosition(Tardis tardis, Entity entity, BlockPos pos) {
@@ -398,48 +398,59 @@ public class TardisUtil {
 		}
 	}
 
-	private static void teleportWithDoorOffset(Entity entity, AbsoluteBlockPos.Directed pos) {
-		boolean isDoor = pos.getWorld().getBlockEntity(pos) instanceof DoorBlockEntity;
+	private static void teleportWithDoorOffset(ServerWorld world, Entity entity, DirectedBlockPos directed) {
+		BlockPos pos = directed.getPos();
 
-		Vec3d vec = isDoor ? TardisUtil.offsetInteriorDoorPos(pos) : new Vec3d(
-				TardisUtil.offsetDoorPosition(pos).getX(),
-				TardisUtil.offsetDoorPosition(pos).getY() + 0.125f,
-				TardisUtil.offsetDoorPosition(pos).getZ()
-		);
+		boolean isDoor = world.getBlockEntity(pos) instanceof DoorBlockEntity;
 
-		if (pos.getWorld() instanceof ServerWorld world) {
-			world.getServer().execute(() -> {
-				if (DependencyChecker.hasPortals()) {
-					PortalAPI.teleportEntity(entity, world, vec);
+		Vec3d vec = isDoor ? TardisUtil.offsetInteriorDoorPos(directed)
+				: TardisUtil.offsetDoorPosition(directed).add(0, 0.125, 0);
+
+		world.getServer().execute(() -> {
+			if (DependencyChecker.hasPortals()) {
+				PortalAPI.teleportEntity(entity, world, vec);
+			} else {
+				if (entity instanceof ServerPlayerEntity player) {
+					WorldOps.teleportToWorld(player, world, vec, RotationPropertyHelper.toDegrees(directed.getRotation())
+							+ (isDoor ? 0 : 180f), player.getPitch()
+					);
+
+					player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 				} else {
-					if (entity instanceof ServerPlayerEntity player) {
-						WorldOps.teleportToWorld(player, world, vec, RotationPropertyHelper.toDegrees(pos.getRotation()) + (isDoor ? 0 : 180f), player.getPitch());
-						player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
-					} else {
-						if (entity instanceof EnderDragonEntity
-								|| entity instanceof WitherEntity
-								|| entity instanceof WardenEntity)
-							return;
+					if (entity instanceof EnderDragonEntity
+							|| entity instanceof WitherEntity
+							|| entity instanceof WardenEntity)
+						return;
 
-						if (entity.getWorld().getRegistryKey() == pos.getWorld().getRegistryKey()) {
-							entity.refreshPositionAndAngles(offset(vec, pos, 0.5f).x, vec.y, offset(vec, pos, 0.5f).z, RotationPropertyHelper.toDegrees(pos.getRotation()) + (isDoor ? 0 : 180f), entity.getPitch());
-						} else {
-							entity.teleport(world, offset(vec, pos, 0.5f).x, vec.y, offset(vec, pos, 0.5f).z, Set.of(), RotationPropertyHelper.toDegrees(pos.getRotation()) + (isDoor ? 0 : 180f), entity.getPitch());
-						}
+					if (entity.getWorld().getRegistryKey() == world.getRegistryKey()) {
+						entity.refreshPositionAndAngles(
+								offset(vec, directed, 0.5f).x, vec.y, offset(vec, directed, 0.5f).z,
+								RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f), entity.getPitch()
+						);
+					} else {
+						entity.teleport(world,
+								offset(vec, directed, 0.5f).x, vec.y, offset(vec, directed, 0.5f).z, Set.of(),
+								RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f), entity.getPitch()
+						);
 					}
 				}
-			});
-		}
+			}
+		});
 	}
 
-	public static Vec3d offset(Vec3d vec, AbsoluteBlockPos.Directed direction, double value) {
-		Vec3i vec3i = direction.getVector(direction.getRotation());
-		return new Vec3d(vec.x + value * (double)vec3i.getX(), vec.y + value * (double)vec3i.getY(), vec.z + value * (double)vec3i.getZ());
+	public static Vec3d offset(Vec3d vec, DirectedBlockPos direction, double value) {
+		Vec3i vec3i = direction.getVector();
+
+		return new Vec3d(vec.x + value * (double) vec3i.getX(),
+				vec.y + value * (double)vec3i.getY(),
+				vec.z + value * (double)vec3i.getZ()
+		);
 	}
 
 	public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
-		return TardisManager.getInstance(isServer).find(tardis -> TardisUtil.inBox(
+		 Tardis result = TardisManager.getInstance(isServer).find(tardis -> TardisUtil.inBox(
 				tardis.getDesktop().getCorners(), pos));
+		 return result == null || result.isDisposed() ? null : result;
 	}
 
 	public static Tardis findTardisByPosition(AbsoluteBlockPos pos, TardisManager<?, ?> manager) {
@@ -468,11 +479,13 @@ public class TardisUtil {
 			if (TardisUtil.inBox(corners, player.getBlockPos()))
 				return player;
 		}
+
 		return null;
 	}
 
 	public static List<PlayerEntity> getPlayersInsideInterior(Tardis tardis) {
 		List<PlayerEntity> list = new ArrayList<>();
+
 		for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
 			if (TardisUtil.inBox(tardis.getDesktop().getCorners(), player.getBlockPos()))
 				list.add(player);
@@ -558,31 +571,43 @@ public class TardisUtil {
 		return result;
 	}
 
+	/**
+	 * @see TardisUtil#getPlayersInsideInterior(Tardis)
+	 * @param tardis
+	 * @return
+	 */
+	@Deprecated(forRemoval = true)
 	public static List<ServerPlayerEntity> getPlayersInInterior(Tardis tardis) {
-		Tardis found;
 		List<ServerPlayerEntity> list = new ArrayList<>();
+		Tardis found;
 
-		for (ServerPlayerEntity player : TardisUtil.getPlayerManager().getPlayerList()) {
-			if (player.getServerWorld() != TARDIS_DIMENSION)
-				continue;
-
+		for (ServerPlayerEntity player : TardisUtil.TARDIS_DIMENSION.getPlayers()) {
 			found = findTardisByInterior(player.getBlockPos(), true);
 
 			if (found == null)
 				continue;
 
-			if (found.getUuid().equals(tardis.getUuid())) list.add(player);
+			if (found == tardis)
+				list.add(player);
 		}
 
 		return list;
 	}
 
 	public static List<LivingEntity> getLivingEntitiesInInterior(Tardis tardis, int area) {
-		return getTardisDimension().getEntitiesByClass(LivingEntity.class, new Box(tardis.getDoorPos().north(area).east(area).up(area), tardis.getDoorPos().south(area).west(area).down(area)), (e) -> true);
+		BlockPos pos = tardis.getDesktop().doorPos().getPos();
+
+		return getTardisDimension().getEntitiesByClass(LivingEntity.class, new Box(
+				pos.north(area).east(area).up(area), pos.south(area).west(area).down(area)
+		), (e) -> true);
 	}
 
 	public static List<Entity> getEntitiesInInterior(Tardis tardis, int area) {
-		return getTardisDimension().getEntitiesByClass(Entity.class, new Box(tardis.getDoorPos().north(area).east(area).up(area), tardis.getDoorPos().south(area).west(area).down(area)), (e) -> true);
+		BlockPos pos = tardis.getDesktop().doorPos().getPos();
+
+		return getTardisDimension().getEntitiesByClass(Entity.class, new Box(
+				pos.north(area).east(area).up(area), pos.south(area).west(area).down(area)
+		), (e) -> true);
 	}
 
 	public static List<LivingEntity> getLivingEntitiesInInterior(Tardis tardis) {

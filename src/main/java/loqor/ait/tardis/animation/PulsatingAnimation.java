@@ -34,7 +34,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
 			this.timeLeft--;
 
 			if (this.alpha <= 0f)
-				travel.fly();
+				travel.finishDemat();
 
 			return;
 		}
@@ -47,7 +47,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
 			else this.alpha = 0f;
 
 			if (alpha >= 1f)
-				tardis.travel().land(this.exterior);
+				tardis.travel().finishLanding(this.exterior);
 
 			return;
 		}
@@ -65,9 +65,9 @@ public class PulsatingAnimation extends ExteriorAnimation {
 
 	@Override
 	public void setupAnimation(TravelHandler.State state) {
-		if (exterior.tardis().isEmpty() || exterior.tardis().get().getExterior().getCategory() == null) {
+		if (exterior.tardis().isEmpty()) {
 			AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
-			alpha = 0f; // just make me vanish.
+			this.alpha = 0f; // just make me vanish.
 			return;
 		}
 
@@ -75,7 +75,6 @@ public class PulsatingAnimation extends ExteriorAnimation {
 
 		if (tardis.getExterior().getCategory() == null) {
 			AITMod.LOGGER.error("Exterior category {} was null!", exterior);
-
 			this.alpha = 0f; // just make me vanish.
 			return;
 		}

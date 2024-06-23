@@ -32,10 +32,8 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
 
-        if (this.ref == null)
-            return;
-
-        nbt.putUuid("tardis", this.ref.getId());
+        if (this.ref != null && this.ref.getId() != null)
+            nbt.putUuid("tardis", this.ref.getId());
     }
 
     @Override

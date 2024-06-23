@@ -6,9 +6,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
+@Environment(EnvType.CLIENT)
 public class TardisClientEvents {
 
-    @Environment(EnvType.CLIENT)
     public static final Event<SettingsSetup> SETTINGS_SETUP = EventFactory.createArrayBacked(SettingsSetup.class, callbacks -> screen -> {
         for (SettingsSetup callback : callbacks) {
             callback.onSetup(screen);
@@ -16,9 +16,7 @@ public class TardisClientEvents {
     });
 
     @FunctionalInterface
-    @Environment(EnvType.CLIENT)
     public interface SettingsSetup {
         void onSetup(InteriorSettingsScreen screen);
     }
-
 }

@@ -1,10 +1,11 @@
 package loqor.ait.registry.impl.console.variant;
 
 import loqor.ait.AITMod;
-import loqor.ait.registry.unlockable.UnlockableRegistry;
+import loqor.ait.core.data.datapack.DatapackConsole;
+import loqor.ait.core.data.datapack.DatapackExterior;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
-import loqor.ait.core.data.datapack.DatapackConsole;
+import loqor.ait.registry.unlockable.UnlockableRegistry;
 import loqor.ait.tardis.console.variant.alnico.AlnicoVariant;
 import loqor.ait.tardis.console.variant.alnico.BlueAlnicoVariant;
 import loqor.ait.tardis.console.variant.coral.BlueCoralVariant;
@@ -14,6 +15,7 @@ import loqor.ait.tardis.console.variant.hartnell.HartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.KeltHartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.MintHartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.WoodenHartnellVariant;
+import loqor.ait.tardis.console.variant.hudolin.HudolinVariant;
 import loqor.ait.tardis.console.variant.steam.SteamCherryVariant;
 import loqor.ait.tardis.console.variant.steam.SteamGildedVariant;
 import loqor.ait.tardis.console.variant.steam.SteamSteelVariant;
@@ -21,7 +23,6 @@ import loqor.ait.tardis.console.variant.steam.SteamVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaBlueVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaLegacyVariant;
 import loqor.ait.tardis.console.variant.toyota.ToyotaVariant;
-import loqor.ait.core.data.datapack.DatapackExterior;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
@@ -119,6 +120,9 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 	public static ConsoleVariantSchema STEAM_CHERRY;
 	public static ConsoleVariantSchema STEAM_STEEL;
 	public static ConsoleVariantSchema STEAM_GILDED;
+	public static ConsoleVariantSchema HUDOLIN;
+	public static ConsoleVariantSchema COPPER;
+	public static ConsoleVariantSchema BOREALIS;
 
 	@Override
 	protected void defaults() {
@@ -147,5 +151,14 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 		STEAM_CHERRY = registerStatic(new SteamCherryVariant());
 		STEAM_STEEL = registerStatic(new SteamSteelVariant());
 		STEAM_GILDED = registerStatic(new SteamGildedVariant());
+
+		// Hudolin variants (why am i adding this???)
+		HUDOLIN = registerStatic(new HudolinVariant());
+
+		// Copper variants
+		// COPPER = registerStatic(new CopperVariant());
+
+		// Borealis variants
+		// BOREALIS = registerStatic(new BorealisVariant());
 	}
 }

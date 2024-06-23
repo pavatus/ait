@@ -3,8 +3,8 @@ package loqor.ait.client.screens;
 import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.data.schema.SonicSchema;
+import loqor.ait.core.item.SonicItem;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.data.SonicHandler;
 import net.minecraft.client.MinecraftClient;
@@ -42,7 +42,6 @@ public class SonicSettingsScreen extends ConsoleScreen {
         this.parent = parent;
 
         sendSonicChangePacket();
-        updateTardis();
     }
 
     @Override

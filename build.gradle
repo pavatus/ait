@@ -3,7 +3,9 @@ plugins {
     id "maven-publish"
 }
 
-version = project.mod_version
+apply from: 'versioning.gradle'
+
+version = getCurrentVersion()
 group = project.maven_group
 
 base {
@@ -144,6 +146,11 @@ java {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
+    }
+
+    // exclude assets if it's a beta dev build
+    if (System.hasProperty("BETA")) {
+        processResources.exclude("assets")
     }
 }
 

@@ -14,6 +14,7 @@ import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
@@ -60,9 +61,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		if (world.isClient())
 			return TypedActionResult.pass(stack);
 
-		return useSonic(world, user, pos, hand, stack)
-				? TypedActionResult.success(stack, false)
-				: TypedActionResult.fail(stack);
+		this.useSonic(world, user, pos, hand, stack);
+		return TypedActionResult.consume(stack);
 	}
 
 	@Override
@@ -75,8 +75,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		if (player == null)
 			return ActionResult.PASS;
 
-		return useSonic(world, player, pos, context.getHand(), stack)
-				? ActionResult.CONSUME : ActionResult.PASS;
+		this.useSonic(world, player, pos, context.getHand(), stack);
+		return ActionResult.CONSUME;
 	}
 
 	@Override
@@ -92,18 +92,16 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		setPreviousMode(stack);
 		setMode(stack, Mode.INACTIVE);
 
-		return super.finishUsing(stack, world, user);
+		return stack;
 	}
 
 	@Override
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-		super.usageTick(world, user, stack, remainingUseTicks);
-
-		if (!(user instanceof PlayerEntity player)) {
+		if (!(user instanceof PlayerEntity player))
 			return;
-		}
 
-		if (remainingUseTicks % SONIC_SFX_LENGTH != 0) return;
+		if (remainingUseTicks % SONIC_SFX_LENGTH != 0)
+			return;
 
 		playSonicSounds(player);
 	}
@@ -113,32 +111,34 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		return 72000; // prolly big enough
 	}
 
-	private boolean useSonic(World world, PlayerEntity user, BlockPos pos, Hand hand, ItemStack stack) {
+	private void useSonic(World world, PlayerEntity user, BlockPos pos, Hand hand, ItemStack stack) {
 		Mode mode = findMode(stack);
 
 		if (world.isClient())
-			return true;
+			return;
 
 		Tardis tardis = getTardis(world, stack);
 
 		if (this.isOutOfFuel(stack))
-			return false;
+			return;
 
 		if (user.isSneaking()) {
 			world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
 			cycleMode(stack);
-			return true;
+			return;
 		}
 
-		if(world.getBlockState(pos).getBlock() == AITBlocks.ZEITON_CLUSTER) {
+		if (world.getBlockState(pos).getBlock() == AITBlocks.ZEITON_CLUSTER) {
 			this.addFuel(200, stack);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-			return true;
+			return;
 		}
 
 		if (mode == Mode.INACTIVE) {
 			Mode prev = findPreviousMode(stack);
-			if (prev == Mode.INACTIVE) return false;
+
+			if (prev == Mode.INACTIVE)
+				return;
 
 			setMode(stack, prev);
 			mode = findMode(stack);
@@ -148,7 +148,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		this.removeFuel(stack);
 
 		mode.run(tardis, world, pos, user, stack);
-		return true;
 	}
 
 	@Override
@@ -419,8 +418,10 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 					return;
 
 				if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exteriorBlockEntity) {
-					if (exteriorBlockEntity.findTardis().isEmpty()) return;
-					int repairTicksLeft = exteriorBlockEntity.findTardis().get().crash().getRepairTicks();
+					if (exteriorBlockEntity.tardis().isEmpty())
+						return;
+
+					int repairTicksLeft = exteriorBlockEntity.tardis().get().crash().getRepairTicks();
 					int repairMins = repairTicksLeft / 20 / 60;
 
 					if (repairTicksLeft == 0) {
@@ -431,6 +432,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 					player.sendMessage(Text.literal("You have " + repairMins + (repairMins == 1 ? " minute" : " minutes") + " of repair left.").formatted(Formatting.GOLD), true);
 					return;
 				}
+
 				if (world == TardisUtil.getTardisDimension()) {
 					world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 					player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
@@ -442,12 +444,16 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 				TardisTravel travel = tardis.travel();
 				AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 
-				if (!ExteriorAnimation.isNearTardis(player, tardis, 256)) {
+				boolean isPilot = tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT);
+				boolean isNearTardis = ExteriorAnimation.isNearTardis(player, tardis, 256);
+
+				if (!isNearTardis || isPilot) {
 					travel.setDestination(target, true);
-					return;
+					if (isPilot) {
+						FlightUtil.travelTo(tardis, target);
+					}
 				}
 
-				FlightUtil.travelTo(tardis, target);
 				player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);
 			}
 		};

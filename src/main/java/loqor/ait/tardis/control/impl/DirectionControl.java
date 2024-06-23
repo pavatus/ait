@@ -1,10 +1,10 @@
 package loqor.ait.tardis.control.impl;
 
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -17,7 +17,7 @@ public class DirectionControl extends Control {
 	}
 
 	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
 		TardisTravel travel = tardis.travel();
 		AbsoluteBlockPos.Directed dest = travel.getDestination();
 
@@ -26,7 +26,13 @@ public class DirectionControl extends Control {
 			return false;
 		}
 
-		travel.setDestination(new AbsoluteBlockPos.Directed(dest, wrap(getNextGeneralizedRotation(dest.getRotation()), ExteriorBlock.MAX_ROTATION_INDEX)), false);
+		int rotation = dest.getRotation();
+		rotation = leftClick ? getPreviousGeneralizedRotation(rotation)
+				: getNextGeneralizedRotation(rotation);
+
+		rotation = wrap(rotation, ExteriorBlock.MAX_ROTATION_INDEX);
+
+		travel.setDestination(new AbsoluteBlockPos.Directed(dest, rotation), false);
 		messagePlayer(player, getNextGeneralizedRotation(dest.getRotation()));
 		return true;
 	}
@@ -55,6 +61,10 @@ public class DirectionControl extends Control {
 
 	public static int getNextGeneralizedRotation(int rotation) {
 		return (rotation + 2) % 16;
+	}
+
+	public static int getPreviousGeneralizedRotation(int rotation) {
+		return (rotation - 2) % 16;
 	}
 
 	public static int getGeneralizedRotation(int rotation) {

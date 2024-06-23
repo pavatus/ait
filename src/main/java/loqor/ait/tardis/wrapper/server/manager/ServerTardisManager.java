@@ -8,6 +8,7 @@ import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
+import loqor.ait.core.events.WorldSaveEvent;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
@@ -76,10 +77,12 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 				}
 		);
 
-		ServerLifecycleEvents.SERVER_STARTING.register(server -> this.fileManager.setLocked(false));
-		ServerLifecycleEvents.SERVER_STOPPING.register(this::onShutdown);
-
 		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset
+
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> this.fileManager.setLocked(false));
+		ServerLifecycleEvents.SERVER_STOPPED.register(this::saveAndReset);
+
+		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), false));
 
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
 			for (ServerTardis tardis : this.lookup.values()) {
@@ -192,12 +195,18 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	}
 
 	public void sendToSubscribers(Tardis tardis) {
+		if (this.fileManager.isLocked())
+			return;
+
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
 			this.sendTardis(player, tardis);
 		}
 	}
 
 	public void sendToSubscribers(TardisComponent component) {
+		if (this.fileManager.isLocked())
+			return;
+
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(component.tardis())) {
 			this.updateTardis(player, (ServerTardis) component.tardis(), component);
 		}
@@ -213,12 +222,18 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	 * @param value  The new value to be synced to client
 	 */
 	public void sendPropertyToSubscribers(ServerTardis tardis, TardisComponent component, String key, String type, String value) {
+		if (this.fileManager.isLocked())
+			return;
+
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
 			this.updateTardisProperty(player, tardis, component, key, type, value);
 		}
 	}
 
 	public void sendPropertyV2ToSubscribers(ServerTardis tardis, Value<?> property) {
+		if (this.fileManager.isLocked())
+			return;
+
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
 			this.updateTardisPropertyV2(player, tardis, property);
 		}
@@ -239,26 +254,35 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		super.remove(uuid);
 	}
 
-	public void onShutdown(MinecraftServer server) {
-		// force all dematting to go flight and all matting to go land
-		for (Tardis tardis : this.lookup.values()) {
-			// stop forcing all chunks
-			TardisChunkUtil.stopForceExteriorChunk(tardis);
-			TardisTravel.State state = tardis.travel().getState();
+	private void save(MinecraftServer server, boolean lock) {
+		if (lock)
+			this.fileManager.setLocked(true);
 
-			if (state == TardisTravel.State.DEMAT) {
-				tardis.travel().toFlight();
-			} else if (state == TardisTravel.State.MAT) {
-				tardis.travel().forceLand();
+		// force all dematting to go flight and all matting to go land
+		for (ServerTardis tardis : this.lookup.values()) {
+			// stop forcing all chunks
+			if (lock) {
+				TardisChunkUtil.stopForceExteriorChunk(tardis);
+				TardisTravel.State state = tardis.travel().getState();
+
+				if (state == TardisTravel.State.DEMAT) {
+					tardis.travel().toFlight();
+				} else if (state == TardisTravel.State.MAT) {
+					tardis.travel().forceLand();
+				}
+
+				tardis.getDoor().closeDoors();
+
+				if (DependencyChecker.hasPortals())
+					PortalsHandler.removePortals(tardis);
 			}
 
-			tardis.getDoor().closeDoors();
-			if (DependencyChecker.hasPortals())
-				PortalsHandler.removePortals(tardis);
+			this.fileManager.saveTardis(server, this, tardis);
 		}
+	}
 
-		this.fileManager.setLocked(true);
-		this.fileManager.saveTardis(server, this);
+	private void saveAndReset(MinecraftServer server) {
+		this.save(server, true);
 		this.reset();
 	}
 

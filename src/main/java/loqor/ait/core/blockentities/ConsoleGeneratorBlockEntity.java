@@ -4,12 +4,12 @@ import io.wispforest.owo.ops.WorldOps;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
-import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -73,8 +73,9 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
 
 		if (sneaking) {
 			this.changeConsole(nextVariant(this.getConsoleVariant()));
-		} else
+		} else {
 			this.changeConsole(nextConsole(this.getConsoleSchema()));
+		}
 	}
 
 	@Override
@@ -100,6 +101,7 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
 			return;
 		}
 
+		// ConsoleBlockEntity marks for controls when it gets linked
 		world.setBlockState(this.pos, AITBlocks.CONSOLE.getDefaultState());
 		world.addBlockEntity(consoleBlockEntity);
 

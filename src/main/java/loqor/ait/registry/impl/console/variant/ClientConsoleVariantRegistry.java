@@ -1,13 +1,14 @@
 package loqor.ait.registry.impl.console.variant;
 
-import loqor.ait.core.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
-import loqor.ait.registry.datapack.DatapackRegistry;
-import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.data.datapack.DatapackConsole;
+import loqor.ait.core.data.schema.console.ClientConsoleVariantSchema;
+import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
+import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.tardis.console.variant.alnico.client.ClientAlnicoVariant;
 import loqor.ait.tardis.console.variant.alnico.client.ClientBlueAlnicoVariant;
+import loqor.ait.tardis.console.variant.copper.client.ClientCopperVariant;
 import loqor.ait.tardis.console.variant.coral.client.ClientBlueCoralVariant;
 import loqor.ait.tardis.console.variant.coral.client.ClientGreenCoralVariant;
 import loqor.ait.tardis.console.variant.coral.client.ClientWhiteCoralVariant;
@@ -15,6 +16,7 @@ import loqor.ait.tardis.console.variant.hartnell.client.ClientHartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.client.ClientKeltHartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.client.ClientMintHartnellVariant;
 import loqor.ait.tardis.console.variant.hartnell.client.ClientWoodenHartnellVariant;
+import loqor.ait.tardis.console.variant.hudolin.client.ClientHudolinVariant;
 import loqor.ait.tardis.console.variant.steam.client.ClientSteamCherryVariant;
 import loqor.ait.tardis.console.variant.steam.client.ClientSteamGildedVariant;
 import loqor.ait.tardis.console.variant.steam.client.ClientSteamSteelVariant;
@@ -134,6 +136,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 	public static ClientConsoleVariantSchema STEAM_CHERRY;
 	public static ClientConsoleVariantSchema STEAM_STEEL;
 	public static ClientConsoleVariantSchema STEAM_GILDED;
+	public static ClientConsoleVariantSchema HUDOLIN;
+	public static ClientConsoleVariantSchema COPPER;
 
 	@Override
 	public void onClientInit() {
@@ -162,5 +166,11 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 		STEAM_CHERRY = register(new ClientSteamCherryVariant());
 		STEAM_STEEL = register(new ClientSteamSteelVariant());
 		STEAM_GILDED = register(new ClientSteamGildedVariant());
+
+		// Hudolin variants
+		HUDOLIN = register(new ClientHudolinVariant());
+
+		// Copper variants
+		COPPER = register(new ClientCopperVariant());
 	}
 }

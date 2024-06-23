@@ -64,15 +64,14 @@ public class RenegadeExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (exterior.findTardis().isEmpty()) return;
+		if (exterior.tardis().isEmpty())
+			return;
+
 		matrices.push();
-
 		matrices.translate(0, -1.5f, 0);
-
-		renegade.getChild("door").yaw = exterior.findTardis().get().getHandlers().getDoor().isOpen() ? 1.75f : 0f;
+		renegade.getChild("door").yaw = exterior.tardis().get().getDoor().isOpen() ? 1.75f : 0f;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-
 		matrices.pop();
 	}
 

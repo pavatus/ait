@@ -10,9 +10,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import java.util.HashSet;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class Property<T> {
 
@@ -70,6 +70,22 @@ public class Property<T> {
 
         public static final Type<RegistryKey<World>> WORLD_KEY = new Type<>(PacketByteBuf::writeRegistryKey, buf -> buf.readRegistryKey(RegistryKeys.WORLD));
         public static final Type<Direction> DIRECTION = new Type<>(PacketByteBuf::writeEnumConstant, buf -> buf.readEnumConstant(Direction.class));
+
+        public static final Type<HashSet<String>> STR_SET = new Type<>((buf, strings) -> {
+            buf.writeVarInt(strings.size());
+
+            for (String str : strings)
+                buf.writeString(str);
+        }, buf -> {
+            HashSet<String> result = new HashSet<>();
+            int size = buf.readVarInt();
+
+            for (int i = 0; i < size; i++) {
+                result.add(buf.readString());
+            }
+
+            return result;
+        });
 
         private final BiConsumer<PacketByteBuf, T> encoder;
         private final Function<PacketByteBuf, T> decoder;

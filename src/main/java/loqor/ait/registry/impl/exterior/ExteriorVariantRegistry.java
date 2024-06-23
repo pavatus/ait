@@ -1,11 +1,11 @@
 package loqor.ait.registry.impl.exterior;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.data.datapack.DatapackExterior;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
-import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
-import loqor.ait.core.data.datapack.DatapackExterior;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.tardis.exterior.variant.bookshelf.BookshelfDefaultVariant;
 import loqor.ait.tardis.exterior.variant.booth.*;
 import loqor.ait.tardis.exterior.variant.box.*;
@@ -114,7 +114,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 	}
 
 	public ExteriorVariantSchema pickRandomWithParent(ExteriorCategorySchema parent, Random random) {
-		return DatapackRegistry.getRandom(ExteriorVariantRegistry.withParent(parent), random, this.fallback());
+		return DatapackRegistry.getRandom(ExteriorVariantRegistry.withParent(parent), random, this::fallback);
 	}
 
 	public ExteriorVariantSchema pickRandomWithParent(ExteriorCategorySchema parent) {
@@ -136,6 +136,8 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 	public static ExteriorVariantSchema DEFINITIVE;
 	public static ExteriorVariantSchema PTORED;
 	public static ExteriorVariantSchema MINT;
+	public static ExteriorVariantSchema HUDOLIN;
+	public static ExteriorVariantSchema SHALKA;
 	public static ExteriorVariantSchema CAPSULE_DEFAULT;
 	public static ExteriorVariantSchema CAPSULE_SOUL;
 	public static ExteriorVariantSchema CAPSULE_FIRE;
@@ -182,6 +184,8 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 		DEFINITIVE = register(new ClassicBoxDefinitiveVariant());
 		PTORED = register(new ClassicBoxPtoredVariant());
 		MINT = register(new ClassicBoxMintVariant());
+		HUDOLIN = register(new ClassicBoxHudolinVariant());
+		SHALKA = register(new ClassicBoxShalkaVariant());
 
 		// Capsule
 		CAPSULE_DEFAULT = register(new CapsuleDefaultVariant());

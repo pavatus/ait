@@ -1,20 +1,20 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.core.AITItems;
-import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.core.util.TimeUtil;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.core.util.TimeUtil;
 import loqor.ait.tardis.base.TardisComponent;
-
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
@@ -87,7 +87,11 @@ public class TardisCrashData extends TardisComponent implements TardisTickable {
 		if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
 		if (!TardisUtil.isInteriorNotEmpty(tardis)) return;
 		for (ServerPlayerEntity serverPlayerEntity : TardisUtil.getPlayersInInterior(tardis)) {
-			if (serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.RESPIRATOR || serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.FACELESS_RESPIRATOR) continue;
+			ItemStack stack = serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD);
+
+			if (stack.isIn(AITModTags.Items.FULL_RESPIRATORS) || stack.isIn(AITModTags.Items.HALF_RESPIRATORS))
+				continue;
+
 			serverPlayerEntity.playSound(AITSounds.CLOISTER, 1f, 1f);
 			serverPlayerEntity.damage(exteriorWorld.getDamageSources().magic(), 3f);
 			serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 100, 3, true, false, false));

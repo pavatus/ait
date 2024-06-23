@@ -51,7 +51,7 @@ public class UnlockCommand {
 
         if (wildcard.isPresent()) {
             T t = wildcard.get();
-            tardis.unlock(t);
+            tardis.stats().unlock(t);
 
             source.sendMessage(Text.translatableWithFallback("command.ait.unlock.some",
                     "Granted [%s] %s %s", tardis.getUuid(), t.name(), type)

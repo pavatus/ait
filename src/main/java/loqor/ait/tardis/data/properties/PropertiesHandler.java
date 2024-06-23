@@ -2,7 +2,6 @@ package loqor.ait.tardis.data.properties;
 
 import com.google.gson.internal.LinkedTreeMap;
 import loqor.ait.AITMod;
-import loqor.ait.core.blockentities.EngineCoreBlockEntity;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
@@ -20,6 +19,7 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.UUID;
 
+@Deprecated(forRemoval = true)
 public class PropertiesHandler {
 	public static final String HUM_ENABLED = "hum_enabled";
 	public static final String ALARM_ENABLED = "alarm_enabled";
@@ -41,8 +41,6 @@ public class PropertiesHandler {
 	public static final String HOSTILE_PRESENCE_TOGGLE = "hostile_presence_toggle";
 	public static final Identifier LEAVEBEHIND = new Identifier(AITMod.MOD_ID, "leavebehind");
 	public static final Identifier HOSTILEALARMS = new Identifier(AITMod.MOD_ID, "hostilealarms");
-	public static final Identifier SHIELDS = new Identifier(AITMod.MOD_ID, "shields");
-	public static final Identifier VISUAL_SHIELDS = new Identifier(AITMod.MOD_ID, "visual_shields");
 
 	// Should these methods be in the holder instead?
 
@@ -175,20 +173,9 @@ public class PropertiesHandler {
 		return (UUID) holder.getData().get(key);
 	}
 
+	@Deprecated(forRemoval = true)
 	public static void setUnlocked(Tardis tardis, Unlockable unlockable, boolean value) {
 		set(tardis, unlockable.id().getPath() + "_unlocked", value, true);
-	}
-
-	/**
-	 * @apiNote ONLY USE THIS IF YOU KNOW WHAT YOU'RE DOING
-	 */
-	@Deprecated
-	public static boolean isUnlocked(Tardis tardis, Identifier id) {
-		return getBool(tardis.properties(), id.getPath() + "_unlocked");
-	}
-
-	public static boolean isUnlocked(Tardis tardis, Unlockable unlockable) {
-		return isUnlocked(tardis, unlockable.id());
 	}
 
 	private static void unlockAllFreebies(HashMap<String, Object> map) {

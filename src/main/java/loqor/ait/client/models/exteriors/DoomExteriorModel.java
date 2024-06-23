@@ -30,7 +30,9 @@ public class DoomExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (exterior.findTardis().isEmpty()) return;
+		if (exterior.tardis().isEmpty())
+			return;
+
 		matrices.push();
 		matrices.translate(0, -1.05f, 0);
 		matrices.scale(0.7f, 0.7f, 0.7f);

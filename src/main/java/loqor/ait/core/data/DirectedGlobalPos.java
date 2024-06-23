@@ -1,5 +1,6 @@
 package loqor.ait.core.data;
 
+import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import loqor.ait.core.data.base.Exclude;
@@ -13,6 +14,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -157,7 +159,8 @@ public class DirectedGlobalPos {
         }
 
         public void init(MinecraftServer server) {
-            this.world = server.getWorld(this.getDimension());
+            if (this.world != null)
+                this.world = server.getWorld(this.getDimension());
         }
 
         public ServerWorld getWorld() {
@@ -172,6 +175,50 @@ public class DirectedGlobalPos {
         @Override
         public DirectedGlobalPos.Cached world(RegistryKey<World> dimension) {
             return Cached.createNew(this.world, dimension, this.getPos(), this.getRotation());
+        }
+
+        @Override
+        public DirectedGlobalPos.Cached pos(BlockPos pos) {
+            return Cached.createSame(this.world, this.getDimension(), pos, this.getRotation());
+        }
+
+        @Override
+        public DirectedGlobalPos.Cached pos(int x, int y, int z) {
+            return pos(new BlockPos(x, y, z));
+        }
+    }
+
+    public static Object serializer() {
+        return new Serializer();
+    }
+
+    private static class Serializer implements JsonDeserializer<DirectedGlobalPos>, JsonSerializer<DirectedGlobalPos> {
+
+        @Override
+        public DirectedGlobalPos deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject obj = json.getAsJsonObject();
+
+            RegistryKey<World> dimension = context.deserialize(obj.get("dimension"), RegistryKey.class);
+
+            int x = obj.get("x").getAsInt();
+            int y = obj.get("y").getAsInt();
+            int z = obj.get("z").getAsInt();
+            byte rotation = obj.get("rotation").getAsByte();
+
+            return DirectedGlobalPos.create(dimension, new BlockPos(x, y, z), rotation);
+        }
+
+        @Override
+        public JsonElement serialize(DirectedGlobalPos src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject result = new JsonObject();
+
+            result.addProperty("dimension", src.getDimension().getValue().toString());
+            result.addProperty("x", src.getPos().getX());
+            result.addProperty("y", src.getPos().getY());
+            result.addProperty("z", src.getPos().getZ());
+            result.addProperty("rotation", src.getRotation());
+
+            return result;
         }
     }
 }

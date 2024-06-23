@@ -6,19 +6,27 @@ public interface ArtronHolder {
 	void setCurrentFuel(double var);
 
 	default double addFuel(double var) {
-		double currentFuel = this.getCurrentFuel();
-		this.setCurrentFuel(this.getCurrentFuel() <= this.getMaxFuel() ? this.getCurrentFuel() + var : this.getMaxFuel());
-		if (this.getCurrentFuel() == this.getMaxFuel())
-			return var - (this.getMaxFuel() - currentFuel);
+		double previousFuel = this.getCurrentFuel();
+        double toAdd = var + previousFuel;
+
+		if (toAdd >= this.getMaxFuel()) {
+			this.setCurrentFuel(this.getMaxFuel());
+			return toAdd - this.getMaxFuel();
+		}
+
+		this.setCurrentFuel(toAdd);
 		return 0;
 	}
 
 	default void removeFuel(double var) {
-		if (this.getCurrentFuel() - var < 0) {
+		double toRemove = this.getCurrentFuel() - var;
+
+		if (toRemove < 0) {
 			this.setCurrentFuel(0);
 			return;
 		}
-		this.setCurrentFuel(this.getCurrentFuel() - var);
+
+		this.setCurrentFuel(toRemove);
 	}
 
 	double getMaxFuel();

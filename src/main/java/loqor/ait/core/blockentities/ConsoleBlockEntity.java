@@ -11,11 +11,13 @@ import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -41,8 +43,9 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 	public final AnimationState ANIM_STATE = new AnimationState();
 
 	private boolean needsControls = true;
-	private Identifier type;
-	private Identifier variant;
+
+	private ConsoleTypeSchema type;
+	private ConsoleVariantSchema variant;
 
 	public int age;
 
@@ -52,65 +55,75 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
 	@Override
 	public void onLinked() {
-		this.tardis().apply(tardis -> tardis.getDesktop().getConsolePos().add(this.pos));
+		if (this.tardis().isEmpty())
+			return;
+
+		Tardis tardis = this.tardis().get();
+
+		if (tardis instanceof ClientTardis)
+			return;
+
+		tardis.getDesktop().getConsolePos().add(this.pos);
+		this.markNeedsControl();
 	}
 
 	@Override
 	public void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
 
-		nbt.putString("type", type.toString());
-		nbt.putString("variant", variant.toString());
+		nbt.putString("type", this.getTypeSchema().id().toString());
+		nbt.putString("variant", this.getVariant().id().toString());
 	}
 
 	@Override
 	public void readNbt(NbtCompound nbt) {
 		super.readNbt(nbt);
 
-		this.setType(Identifier.tryParse(nbt.getString("type")));
-		this.setVariant(Identifier.tryParse(nbt.getString("variant")));
-
-		this.spawnControls();
+		this.setType(ConsoleRegistry.REGISTRY.get(
+				Identifier.tryParse(nbt.getString("type"))
+		));
+		
+		this.setVariant(ConsoleVariantRegistry.getInstance().get(
+				Identifier.tryParse(nbt.getString("variant"))
+		));
 	}
 
-	public ConsoleTypeSchema getConsoleSchema() {
+	@Override
+	public NbtCompound toInitialChunkDataNbt() {
+		this.markNeedsControl();
+		return super.toInitialChunkDataNbt();
+	}
+
+	public ConsoleTypeSchema getTypeSchema() {
 		if (type == null)
 			this.setType(ConsoleRegistry.HARTNELL);
 
-		return ConsoleRegistry.REGISTRY.get(type);
+		return type;
+	}
+
+	public void setType(ConsoleTypeSchema schema) {
+		this.type = schema;
+		this.markDirty();
+	}
+
+	public void setVariant(ConsoleVariantSchema schema) {
+		this.variant = schema;
+		this.markDirty();
+	}
+
+	public ConsoleVariantSchema getVariant() {
+		if (variant == null)
+			this.setVariant(this.getTypeSchema().getDefaultVariant());
+
+		return variant;
 	}
 
 	public int getAge() {
 		return age;
 	}
 
-	public void setType(Identifier var) {
-		this.type = var;
-		this.markDirty();
-	}
-
-	public void setType(ConsoleTypeSchema schema) {
-		this.setType(schema.id());
-	}
-
-	public void setVariant(Identifier var) {
-		this.variant = var;
-		this.markDirty();
-	}
-
-	public void setVariant(ConsoleVariantSchema schema) {
-		this.setVariant(schema.id());
-	}
-
-	public ConsoleVariantSchema getVariant() {
-		if (variant == null)
-			this.setVariant(this.getConsoleSchema().getDefaultVariant());
-
-		return ConsoleVariantRegistry.getInstance().get(variant);
-	}
-
 	public void useOn(World world, boolean sneaking, PlayerEntity player) {
-		if (!world.isClient())
+		if (world.isClient())
 			return;
 
 		if (this.tardis().isEmpty())
@@ -140,21 +153,18 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 	@Override
 	public void markRemoved() {
 		this.killControls();
-
-		this.tardis().get().getDesktop()
-				.getConsolePos().remove(this.pos);
-
 		super.markRemoved();
 	}
 
 	public void onBroken() {
 		this.killControls();
+		this.tardis().get().getDesktop()
+				.getConsolePos().remove(this.pos);
 	}
 
 	public void killControls() {
 		controlEntities.forEach(Entity::discard);
 		controlEntities.clear();
-		this.sync();
 	}
 
 	public void spawnControls() {
@@ -167,7 +177,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 			return;
 
 		this.killControls();
-		ConsoleTypeSchema consoleType = getConsoleSchema();
+		ConsoleTypeSchema consoleType = this.getTypeSchema();
 		ControlTypes[] controls = consoleType.getControlTypes();
 
 		for (ControlTypes control : controls) {
@@ -198,7 +208,6 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
 		if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
 			this.markRemoved();
-
 
 		if (!(world instanceof ServerWorld serverWorld)) {
 			this.age++;

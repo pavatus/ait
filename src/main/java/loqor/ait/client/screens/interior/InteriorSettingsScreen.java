@@ -6,8 +6,8 @@ import loqor.ait.api.tardis.TardisClientEvents;
 import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
-import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
 import loqor.ait.client.sounds.ClientSoundManager;
+import loqor.ait.compat.DependencyChecker;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.HumsRegistry;
 import loqor.ait.tardis.TardisDesktop;
@@ -17,9 +17,12 @@ import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.sound.HumSound;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -34,11 +37,12 @@ import net.minecraft.util.math.RotationAxis;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
-import static loqor.ait.tardis.data.TravelHandler.State.FLIGHT;
 import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
+import static loqor.ait.tardis.data.TravelHandler.State.FLIGHT;
 
+@Environment(EnvType.CLIENT)
 public class InteriorSettingsScreen extends ConsoleScreen {
 	private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/interior_settings.png");
 	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/monitor_gui.png");
@@ -48,7 +52,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	int bgWidth = 256;
 	int left, top;
 	private int tickForSpin = 0;
-	int choicesCount = 0;
+	public int choicesCount = 0;
 	private HumSound hum;
 	private final Screen parent;
 	private TardisDesktopSchema selectedDesktop;
@@ -58,7 +62,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		super(Text.translatable("screen.ait.interiorsettings.title"), tardis, console);
 
 		this.parent = parent;
-		this.updateTardis();
 	}
 
 	@Override
@@ -78,6 +81,9 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private void sendCachePacket() {
+		if (this.console == null)
+			return;
+
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeUuid(this.tardis().getUuid());
 		buf.writeBlockPos(this.console);
@@ -86,13 +92,17 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		this.close();
 	}
 
+	private void createCompatButtons() {
+
+	}
+
 	private void createButtons() {
 		choicesCount = 0;
 		this.buttons.clear();
 
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
-		createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole"), (button -> sendCachePacket()));
-		createTextButton(Text.translatable("screen.ait.security.button"), button -> toSecurityScreen());
+		createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole").formatted(this.console != null ? Formatting.WHITE : Formatting.GRAY), button -> sendCachePacket());
+		createTextButton(Text.translatable("screen.ait.security.button"), (button -> toSecurityScreen()));
 		createTextButton(Text.translatable("screen.ait.sonic.button").formatted(tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC) ? Formatting.WHITE : Formatting.GRAY),
 				(button -> {
 					if(tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) {
@@ -100,6 +110,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 					}
 				}));
 
+		this.createCompatButtons();
 		TardisClientEvents.SETTINGS_SETUP.invoker().onSetup(this);
 
 		this.addButton(
@@ -162,7 +173,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		MinecraftClient.getInstance().setScreen(new SonicSettingsScreen(tardis().getUuid(), this.console, this));
 	}
 
-	private <T extends ClickableWidget> void addButton(T button) {
+	public <T extends ClickableWidget> void addButton(T button) {
 		this.addDrawableChild(button);
 		button.active = true; // this whole method is unnecessary bc it defaults to true ( ?? )
 		this.buttons.add((ButtonWidget) button);
@@ -170,10 +181,25 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 
 	// this might be useful, so remember this exists and use it later on ( although its giving NTM vibes.. )
 	public PressableTextWidget createTextButton(Text text, ButtonWidget.PressAction onPress) {
-		PressableTextWidget result = new PressableTextWidget(
+		return this.createAnyButton(text, PressableTextWidget::new, onPress);
+	}
+
+	public <T extends ButtonWidget> T initAnyButton(Text text, ButtonCreator<T> creator, ButtonWidget.PressAction onPress) {
+		return creator.create(
 				(int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
 				this.textRenderer.getWidth(text), 10, text, onPress, this.textRenderer
 		);
+	}
+
+	public <T extends ButtonWidget> T initAnyDynamicButton(Function<T, Text> text, DynamicButtonCreator<T> creator, ButtonWidget.PressAction onPress) {
+		return creator.create(
+				(int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
+				this.textRenderer.getWidth(Text.empty()), 10, text, onPress, this.textRenderer
+		);
+	}
+
+	public <T extends ButtonWidget> T createAnyButton(Text text, ButtonCreator<T> creator, ButtonWidget.PressAction onPress) {
+		T result = this.initAnyButton(text, creator, onPress);
 
 		this.addButton(result);
 		choicesCount++;
@@ -181,11 +207,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		return result;
 	}
 
-	public DynamicPressableTextWidget createDynamicTextButton(Supplier<Text> text, ButtonWidget.PressAction onPress) {
-		DynamicPressableTextWidget result = new DynamicPressableTextWidget(
-				(int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))),
-				this.textRenderer.getWidth(text.get()), 10, text, onPress, this.textRenderer
-		);
+	public <T extends ButtonWidget> T createAnyDynamicButton(Function<T, Text> text, DynamicButtonCreator<T> creator, ButtonWidget.PressAction onPress) {
+		T result = this.initAnyDynamicButton(text, creator, onPress);
 
 		this.addButton(result);
 		choicesCount++;
@@ -198,8 +221,9 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	public void toSecurityScreen() {
-		MinecraftClient.getInstance().setScreen(new TardisSecurityScreen(this.tardis().getUuid(), this.console, this));
+		MinecraftClient.getInstance().setScreen(new TardisSecurityScreen(tardis().getUuid(), this.console, this));
 	}
+
 
 	final int UV_BASE = 159;
 	final int UV_INCREMENT = 17;
@@ -221,29 +245,33 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		context.getMatrices().multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
 		context.drawTexture(BACKGROUND, x - 41, y - 41, 173, 173, 83, 83);
 		context.getMatrices().pop();
-		if (!this.buttons.get(4).isHovered()) context.drawTexture(BACKGROUND, left + 149, top + 142, 0, 166, 12, 12);
-		if (!this.buttons.get(5).isHovered()) context.drawTexture(BACKGROUND, left + 232, top + 142, 12, 166, 12, 12);
-		if (!this.buttons.get(6).isHovered()) context.drawTexture(BACKGROUND, left + 228, top + 111, 0, 178, 16, 16);
+
+		// FIXME @Loqor, this is dumb.
+		int startIndex = DependencyChecker.hasGravity() ? 5 : 4;
+
+		if (!this.buttons.get(startIndex).isHovered()) context.drawTexture(BACKGROUND, left + 149, top + 142, 0, 166, 12, 12);
+		if (!this.buttons.get(startIndex + 1).isHovered()) context.drawTexture(BACKGROUND, left + 232, top + 142, 12, 166, 12, 12);
+		if (!this.buttons.get(startIndex + 2).isHovered()) context.drawTexture(BACKGROUND, left + 228, top + 111, 0, 178, 16, 16);
 
 		// big triangles
-		if (!this.buttons.get(7).isHovered()) context.drawTexture(TEXTURE, left + 149, top + 76, 0, 197, 15, 30);
-		if (!this.buttons.get(8).isHovered()) context.drawTexture(TEXTURE, left + 229, top + 76, 30, 197, 15, 30);
+		if (!this.buttons.get(startIndex + 3).isHovered()) context.drawTexture(TEXTURE, left + 149, top + 76, 0, 197, 15, 30);
+		if (!this.buttons.get(startIndex + 4).isHovered()) context.drawTexture(TEXTURE, left + 229, top + 76, 30, 197, 15, 30);
 
 		// big apply button
-		if (!this.buttons.get(9).isHovered()) context.drawTexture(TEXTURE, left + 168, top + 94, 0, 227, 57, 12);
+		if (!this.buttons.get(startIndex + 5).isHovered()) context.drawTexture(TEXTURE, left + 168, top + 94, 0, 227, 57, 12);
 
-		if (this.tardis() == null)
+		if (tardis() == null)
 			return;
 
 		// battery
 		context.drawTexture(TEXTURE, left + 27, top + 133, 0, tardis().getFuel() > 250 ? 150 : 165, 99, 15);
 
 		// fuel markers @TODO come back and actually do the rest of it with the halves and the red parts too
-		for (int p = 0; p < Math.round(this.tardis().getFuel() / FuelData.TARDIS_MAX_FUEL * 12); ++p) {
+		for (int p = 0; p < Math.round((tardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 12); ++p) {
 			context.drawTexture(TEXTURE, left + 29 + (8 * p), top + 135, 99, 150, 7, 11);
 		}
 
-		int progress = this.tardis().flight().getDurationAsPercentage();
+		int progress = tardis().flight().getDurationAsPercentage();
 
 		for (int index = 0; index < 5; index++) {
 			int rangeStart = index * 20;
@@ -275,7 +303,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				this.selectedDesktop.name(),
 				(int) (left + (bgWidth * 0.77f)),
 				(int) (top + (bgHeight * 0.58f)),
-				0x7CEFF4
+				0xffffff
 		);
 
 		if (this.selectedDesktop == null) return;
@@ -342,7 +370,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				hum,
 				(int) (left + (bgWidth * 0.76f)) - this.textRenderer.getWidth(hum) / 2,
 				(int) (top + (bgHeight * 0.82f)),
-				0xadcaf7,
+				0xffffff,
 				true
 		);
 	}
@@ -394,5 +422,15 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 
 	private boolean isCurrentUnlocked() {
 		return this.tardis().isUnlocked(this.selectedDesktop);
+	}
+
+	@FunctionalInterface
+	public interface ButtonCreator<T extends ButtonWidget> {
+		T create(int x, int y, int width, int height, Text text, ButtonWidget.PressAction onPress, TextRenderer textRenderer);
+	}
+
+	@FunctionalInterface
+	public interface DynamicButtonCreator<T extends ButtonWidget> {
+		T create(int x, int y, int width, int height, Function<T, Text> text, ButtonWidget.PressAction onPress, TextRenderer textRenderer);
 	}
 }

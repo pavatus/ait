@@ -80,7 +80,9 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 		if (consumer != null)
 			this.subscribers.put(uuid, consumer);
 
-		ClientPlayNetworking.send(ASK, data);
+		MinecraftClient.getInstance().executeTask(() -> {
+			ClientPlayNetworking.send(ASK, data);
+		});
 	}
 
 	public void loadTardis(UUID uuid, @Nullable Consumer<ClientTardis> consumer) {

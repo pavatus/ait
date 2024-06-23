@@ -2,9 +2,9 @@ package loqor.ait.core.blocks;
 
 import loqor.ait.core.blockentities.EnvironmentProjectorBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -72,6 +72,16 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
             return projector.onUse(state, world, pos, player, hand, hit);
 
         return ActionResult.PASS;
+    }
+
+    @Override
+    public boolean hasSidedTransparency(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     public static void toggle(Tardis tardis, @Nullable PlayerEntity player, World world, BlockPos pos, BlockState state, boolean active) {

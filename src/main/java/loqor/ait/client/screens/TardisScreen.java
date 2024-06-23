@@ -1,6 +1,6 @@
 package loqor.ait.client.screens;
 
-import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -15,15 +15,11 @@ public abstract class TardisScreen extends Screen {
 		this.tardisId = tardis;
 	}
 
-	public Tardis tardis() {
+	public ClientTardis tardis() {
 		return this.getFromUUID(this.tardisId);
 	}
 
-	protected Tardis getFromUUID(UUID tardisid) {
+	protected ClientTardis getFromUUID(UUID tardisid) {
 		return ClientTardisManager.getInstance().demandTardis(tardisid);
-	}
-
-	protected Tardis updateTardis() {
-		return tardis();
 	}
 }

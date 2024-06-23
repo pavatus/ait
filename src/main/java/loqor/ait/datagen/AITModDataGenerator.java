@@ -421,6 +421,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addSound("tardis/hums/toyota_hum", AITSounds.TOYOTA_HUM);
             provider.addSound("tardis/hums/coral_hum", AITSounds.CORAL_HUM);
             provider.addSound("tardis/hums/eight_hum", AITSounds.EIGHT_HUM);
+            provider.addSound("tardis/hums/copper_hum", AITSounds.COPPER_HUM);
+            provider.addSound("tardis/hums/exile_hum", AITSounds.EXILE_HUM);
+            provider.addSound("tardis/hums/prime_hum", AITSounds.PRIME_HUM);
+            provider.addSound("tardis/hums/tokamak_hum", AITSounds.TOKAMAK_HUM);
 
             // Creaks
             provider.addSound("tardis/creaks/creak_one", AITSounds.CREAK_ONE);
@@ -442,6 +446,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
             // Other
             provider.addSound("tardis/cloister", AITSounds.CLOISTER);
+            provider.addSound("tardis/groan", AITSounds.GROAN);
 
             return provider;
         })));
@@ -549,6 +554,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
         provider.addTranslation(AITBlocks.CONSOLE_GENERATOR, "Console Generator");
+        provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Engine Core");
 
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
 
@@ -590,7 +596,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
-        provider.addTranslation("message.ait.environment_projector", "Now projecting: %s");
+        provider.addTranslation("message.ait.projector.skybox", "Now projecting: %s");
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
         provider.addTranslation("message.ait.riftscanner.info3", "This is not a rift chunk");
@@ -625,13 +631,19 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         provider.addTranslation("screen.ait.security.leave_behind", "> Leave Behind");
         provider.addTranslation("screen.ait.security.hostile_alarms", "> Hostile Alarms");
+        provider.addTranslation("screen.ait.security.minimum_loyalty", "> Isomorphic LVL");
         provider.addTranslation("tardis.message.interiorchange.not_enough_fuel", "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning", "Interior reconfiguration started! Please leave the interior.");
+
         provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
         provider.addTranslation("command.ait.riftchunk.cannotsetlevel", "This chunk is not a rift chunk, so you can't set the artron levels of it");
         provider.addTranslation("command.ait.riftchunk.setlevel", "Set artron levels in rift chunk to: %s");
         provider.addTranslation("command.ait.riftchunk.cannotgetlevel", "This chunk is not a rift chunk, so you can't get the artron levels of it");
         provider.addTranslation("command.ait.riftchunk.getlevel", "AU in rift chunk: %s");
+        provider.addTranslation("command.ait.data.get", "Value %s is set to '%s'");
+        provider.addTranslation("command.ait.data.set", "Set value %s to '%s'");
+        provider.addTranslation("command.ait.data.fail", "Can't get value of a property named %s, because component %s is not keyed!");
+
         provider.addTranslation("riftchunk.ait.tracking", "Rift Tracking");
         provider.addTranslation("riftchunk.ait.cooldown", "Rift tracking is on cooldown");
         provider.addTranslation("waypoint.position.tooltip", "Position");

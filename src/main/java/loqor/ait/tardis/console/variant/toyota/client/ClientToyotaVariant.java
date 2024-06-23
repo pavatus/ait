@@ -11,7 +11,6 @@ import org.joml.Vector3f;
 public class ClientToyotaVariant extends ClientConsoleVariantSchema {
 	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/toyota_default.png"));
 	public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/toyota_orange_emission.png"));
-	public static final Identifier NO_EMISSION = new Identifier(AITMod.MOD_ID, ("textures/blockentities/consoles/toyota_orange_disabled.png"));
 
 	public ClientToyotaVariant() {
 		super(ToyotaVariant.REFERENCE, ToyotaVariant.REFERENCE);
@@ -25,11 +24,6 @@ public class ClientToyotaVariant extends ClientConsoleVariantSchema {
 	@Override
 	public Identifier emission() {
 		return EMISSION;
-	}
-
-	@Override
-	public Identifier noEmission() {
-		return NO_EMISSION;
 	}
 
 	@Override

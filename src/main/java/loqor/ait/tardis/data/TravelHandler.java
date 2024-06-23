@@ -6,87 +6,30 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisExterior;
-import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.properties.v2.Property;
-import loqor.ait.tardis.data.properties.v2.Value;
-import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
-import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
-import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
-import loqor.ait.tardis.data.properties.v2.integer.IntValue;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.BlockState;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class TravelHandler extends KeyedTardisComponent implements TardisTickable {
-
-    private static final Property<State> STATE = Property.forEnum("state", State.class, State.LANDED);
-
-    private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(Property.Type.DIRECTED_GLOBAL_POS, "position", Property.warnCompat("previous_position", null));
-    private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.DIRECTED_GLOBAL_POS, "destination", Property.warnCompat("previous_position", null));
-    private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.DIRECTED_GLOBAL_POS, "previous_position", Property.warnCompat("previous_position", null));
-
-    private static final BoolProperty HANDBRAKE = new BoolProperty("handbrake", Property.warnCompat("handbrake", true));
-    private static final BoolProperty AUTO_LAND = new BoolProperty("auto_land", Property.warnCompat("auto_land", false));
-
-    private static final IntProperty SPEED = new IntProperty("speed", Property.warnCompat("speed", 0));
-    private static final IntProperty MAX_SPEED = new IntProperty("max_speed", Property.warnCompat("max_speed", 7));
-
-    private final Value<State> state = STATE.create(this);
-    private final Value<DirectedGlobalPos.Cached> position = POSITION.create(this);
-    private final Value<DirectedGlobalPos.Cached> destination = DESTINATION.create(this);
-    private final Value<DirectedGlobalPos.Cached> previousPosition = PREVIOUS_POSITION.create(this);
-
-    private final BoolValue handbrake = HANDBRAKE.create(this);
-    private final BoolValue autoLand = AUTO_LAND.create(this);
-
-    private final IntValue speed = SPEED.create(this);
-    private final IntValue maxSpeed = MAX_SPEED.create(this);
+public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
     private boolean crashing;
-
-    public TravelHandler() {
-        super(Id.TRAVEL);
-    }
-
-    @Override
-    public void onLoaded() {
-        state.of(this, STATE);
-
-        position.of(this, POSITION);
-        destination.of(this, DESTINATION);
-        previousPosition.of(this, PREVIOUS_POSITION);
-
-        speed.of(this, SPEED);
-        maxSpeed.of(this, MAX_SPEED);
-
-        handbrake.of(this, HANDBRAKE);
-        autoLand.of(this, AUTO_LAND);
-
-        this.position.ifPresent(cached -> cached.init(server()), false);
-        this.destination.ifPresent(cached -> cached.init(server()), false);
-        this.previousPosition.ifPresent(cached -> cached.init(server()), false);
-    }
 
     public ExteriorBlockEntity placeExterior() {
         DirectedGlobalPos.Cached globalPos = this.position.get();
@@ -218,7 +161,7 @@ public class TravelHandler extends KeyedTardisComponent implements TardisTickabl
             return;
 
         DirectedGlobalPos.Cached destination = FlightUtil.getPositionFromPercentage(
-                this.position.get(), this.destination().get(), tardis.flight().getDurationAsPercentage()
+                this.position.get(), this.destination(), tardis.flight().getDurationAsPercentage()
         );
 
         this.destination.set(destination, true);
@@ -269,17 +212,18 @@ public class TravelHandler extends KeyedTardisComponent implements TardisTickabl
         }
     }
 
-    public void fly() {
+    public void finishDemat() {
         this.crashing = false;
         this.previousPosition.set(this.position);
         this.state.set(State.FLIGHT);
 
         this.deleteExterior();
+
         if (PropertiesHandler.getBool(this.tardis().properties(), SecurityControl.SECURITY_KEY))
             SecurityControl.runSecurityProtocols(this.tardis());
     }
 
-    public void land() {
+    public void finishLanding() {
         if (this.autoLand.get() && this.speed.get() > 0)
             this.speed.set(0);
 
@@ -289,17 +233,17 @@ public class TravelHandler extends KeyedTardisComponent implements TardisTickabl
         ExteriorBlockEntity exteriorBlockEntity;
 
         // If there is already a matching exterior at this position
-        if (world.getBlockEntity(this.getPosition().getPos()) instanceof ExteriorBlockEntity exterior
+        if (world.getBlockEntity(this.position().getPos()) instanceof ExteriorBlockEntity exterior
                 && this.tardis == exterior.tardis().get()) {
             exteriorBlockEntity = exterior;
         } else {
             exteriorBlockEntity = this.placeExterior();
         }
 
-        this.land(exteriorBlockEntity);
+        this.finishLanding(exteriorBlockEntity);
     }
 
-    public void land(ExteriorBlockEntity blockEntity) {
+    public void finishLanding(ExteriorBlockEntity blockEntity) {
         this.runAnimations(blockEntity);
 
         if (this.isClient())
@@ -335,61 +279,7 @@ public class TravelHandler extends KeyedTardisComponent implements TardisTickabl
         this.speed.set(MathHelper.clamp(this.speed.get() - 1, 0, this.maxSpeed.get()));
     }
 
-    public IntValue speed() {
-        return speed;
-    }
-
-    public IntValue maxSpeed() {
-        return maxSpeed;
-    }
-
-    public BoolValue handbrake() {
-        return handbrake;
-    }
-
-    public BoolValue autoLand() {
-        return autoLand;
-    }
-
-    public State getState() {
-        return state.get();
-    }
-
-    public DirectedGlobalPos getPosition() {
-        return position.get();
-    }
-
-    public Value<DirectedGlobalPos.Cached> destination() {
-        return destination;
-    }
-
-    public DirectedGlobalPos getPreviousPosition() {
-        return previousPosition.get();
-    }
-
     public boolean isCrashing() {
         return crashing;
-    }
-
-    private static MinecraftServer server() {
-        return TardisUtil.getOverworld().getServer();
-    }
-
-    public enum State {
-        LANDED(AITSounds.LANDED_ANIM),
-        DEMAT(AITSounds.DEMAT_ANIM),
-        FLIGHT(AITSounds.FLIGHT_ANIM),
-        MAT(AITSounds.MAT_ANIM),
-        CRASH(AITSounds.LANDED_ANIM);
-
-        private final MatSound sound;
-
-        State(MatSound sound) {
-            this.sound = sound;
-        }
-
-        public MatSound effect() {
-            return this.sound;
-        }
     }
 }

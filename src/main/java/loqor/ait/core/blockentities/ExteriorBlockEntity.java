@@ -13,7 +13,6 @@ import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.TravelHandler;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.v2.AbstractLinkableBlockEntity;
 import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.util.TardisUtil;
@@ -46,6 +45,11 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
 	public ExteriorBlockEntity(BlockPos pos, BlockState state) {
 		super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
+	}
+
+	public ExteriorBlockEntity(BlockPos pos, BlockState state, Tardis tardis) {
+		this(pos, state);
+		this.link(tardis);
 	}
 
 	public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
@@ -138,7 +142,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 
 		Tardis tardis = ref.get();
-		boolean previouslyLocked = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED);
+		boolean previouslyLocked = tardis.getDoor().previouslyLocked();
 
 		if (!previouslyLocked && tardis.travel().getState() == TravelHandler.State.MAT && this.getAlpha() >= 0.9f)
 			TardisUtil.teleportInside(tardis, entity);
@@ -154,7 +158,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 	public void tick(World world, BlockPos pos, BlockState blockState, ExteriorBlockEntity blockEntity) {
 		TardisRef ref = this.tardis();
 
-		if (ref.isEmpty())
+		if (ref == null || ref.isEmpty())
 			return;
 
 		Tardis tardis = ref.get();
@@ -162,18 +166,13 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		TravelHandler travel = tardis.travel();
 		TravelHandler.State state = travel.getState();
 
-		if (this.animation != null && state != LANDED)
+		if (state != LANDED)
 			this.getAnimation().tick();
 
 		if (world.isClient()) {
 			this.checkAnimations();
 			this.exteriorLightBlockState(tardis);
 			return;
-		}
-
-		if (blockState.getBlock() instanceof ExteriorBlock) {
-			// For checking falling
-			((ExteriorBlock) blockState.getBlock()).tryFall(blockState, (ServerWorld) world, pos);
 		}
 
 		// ensures we don't exist during flight
@@ -213,7 +212,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		if (animState == null)
 			return;
 
-		if (!animState.equals(doorState)) {
+		if (animState != doorState) {
 			DOOR_STATE.start(animationTimer);
 			door.tempExteriorState = doorState;
 		}
@@ -225,10 +224,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 	}
 
 	public float getAlpha() {
-		if (this.getAnimation() == null) {
-			return 1f;
-		}
-
 		return this.getAnimation().getAlpha();
 	}
 
@@ -239,9 +234,5 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			int light = (int) Math.max(1, Math.min(this.getAlpha() * 9.0f, 9));
 			this.getWorld().setBlockState(pos, this.getCachedState().with(ExteriorBlock.LEVEL_9, light));
 		}
-	}
-
-	public void onBroken() {
-		this.tardis().apply(tardis -> tardis.travel().setHandbrake(false));
 	}
 }

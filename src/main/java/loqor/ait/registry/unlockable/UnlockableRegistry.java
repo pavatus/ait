@@ -6,7 +6,6 @@ import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
@@ -42,7 +41,7 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
     }
 
     public T getRandom(Tardis tardis, Random random) {
-        return DatapackRegistry.getRandom(this.toList().stream().filter(tardis::isUnlocked).toList(), random, this.fallback());
+        return DatapackRegistry.getRandom(this.toList().stream().filter(tardis::isUnlocked).toList(), random, this::fallback);
     }
 
     public T getRandom(Tardis tardis) {
@@ -50,14 +49,11 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
     }
 
     public void tryUnlock(Tardis tardis, Loyalty loyalty, Consumer<T> consumer) {
-        if (!(tardis instanceof ServerTardis serverTardis))
-            return;
-
         for (T schema : REGISTRY.values()) {
             if (schema.getRequirement() == Loyalty.MIN)
                 continue;
 
-            if (serverTardis.isUnlocked(schema))
+            if (tardis.isUnlocked(schema))
                 continue;
 
             if (loyalty.smallerThan(schema.getRequirement()))
@@ -66,7 +62,7 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
             AITMod.LOGGER.debug("Unlocked " + schema.unlockType() + " "
                     + schema.id() + " for tardis [" + tardis.getUuid() + "]");
 
-            serverTardis.unlock(schema);
+            tardis.stats().unlock(schema);
 
             if (consumer != null)
                 consumer.accept(schema);
@@ -74,11 +70,8 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
     }
 
     public void unlockAll(Tardis tardis) {
-        if (!(tardis instanceof ServerTardis serverTardis))
-            return;
-
         for (T schema : REGISTRY.values()) {
-            serverTardis.unlock(schema);
+            tardis.stats().unlock(schema);
         }
 
         AITMod.LOGGER.debug("Unlocked everything from {} registry for tardis [{}]", this.getClass(), tardis.getUuid());

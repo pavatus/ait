@@ -10,9 +10,9 @@ import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.InteriorChangingHandler;
@@ -40,7 +40,7 @@ public class ServerTardis extends Tardis {
 	@Exclude private boolean lock;
 
 	public ServerTardis(UUID uuid, TardisDesktopSchema schema, ExteriorVariantSchema variantType) {
-		super(uuid, new ServerTardisDesktop(schema), new ServerTardisExterior(variantType));
+		super(uuid, new ServerTardisDesktop(schema), new TardisExterior(variantType));
 	}
 
 	private ServerTardis() {
@@ -54,10 +54,6 @@ public class ServerTardis extends Tardis {
 
 	public void setLocked(boolean lock) {
 		this.lock = lock;
-	}
-
-	public void unlock(Unlockable unlockable) {
-		PropertiesHandler.setUnlocked(this, unlockable, true);
 	}
 
 	public void tick(MinecraftServer server) {
@@ -104,16 +100,6 @@ public class ServerTardis extends Tardis {
 
 		if (PropertiesHandler.getBool(this.properties(), PropertiesHandler.IS_FALLING))
 			DoorData.lockTardis(true, this, null, true);
-
-		if (!(this.travel().getPosition() instanceof DirectedGlobalPos.Cached cached))
-			return;
-
-		// If we're falling nearly out of the world, freak out.
-		if (PropertiesHandler.getBool(this.properties(), PropertiesHandler.IS_FALLING)
-				&& cached.getPos().getY() <= cached.getWorld().getBottomY() + 2) {
-			PropertiesHandler.set(this, PropertiesHandler.ANTIGRAVS_ENABLED, true);
-			PropertiesHandler.set(this, PropertiesHandler.IS_FALLING, false);
-		}
 	}
 
 	protected void generateInteriorWithItem() {

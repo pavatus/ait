@@ -31,13 +31,9 @@ import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
-import java.util.Optional;
-
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
 
-	private DoorModel model;
-
-	public DoorRenderer(BlockEntityRendererFactory.Context ctx) { }
+    public DoorRenderer(BlockEntityRendererFactory.Context ctx) { }
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
@@ -63,15 +59,10 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		if (tardis.siege().isActive())
 			return;
 
-		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardis.getExterior().getVariant());
+		ClientExteriorVariantSchema exteriorVariant = tardis.getExterior().getVariant().getClient();
 		ClientDoorSchema variant = ClientDoorRegistry.withParent(exteriorVariant.parent().door());
-		Class<? extends DoorModel> modelClass = variant.model().getClass();
 
-		if (model != null && !(model.getClass().isInstance(modelClass)))
-			model = null;
-
-		if (model == null)
-			this.model = variant.model();
+        DoorModel model = variant.model();
 
 		if (model == null)
 			return;
@@ -86,7 +77,6 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		}
 
 		if (DependencyChecker.hasPortals() && tardis.travel().getState() == TardisTravel.State.LANDED
-				&& !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
 				&& tardis.getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED
 		) {
 			BlockPos pos = tardis.travel().getPosition();
@@ -107,24 +97,28 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(k));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-		model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
+		model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
 
 		if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
-			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+			model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
 		}
 
         profiler.push("emission");
+
+		boolean alarms = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED);
+
         ClientLightUtil.renderEmissivable(
                 tardis.engine().hasPower(), model::renderWithAnimations, exteriorVariant.emission(), entity,
-                this.model.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
+                model.getPart(), matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1
         );
 
         profiler.swap("biome");
-        if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-            Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
-            if (biomeTexture != null && !texture.equals(biomeTexture)) {
-                model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, overlay, 1, 1, 1, 1);
-            }
+        if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+            BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
+			Identifier biomeTexture = exteriorVariant.getBiomeTexture(biome.getBiomeKey());
+
+			if (biomeTexture != null && !texture.equals(biomeTexture))
+                model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)), light, overlay, 1, 1, 1, 1);
         }
 
         matrices.pop();

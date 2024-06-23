@@ -1,6 +1,8 @@
 package loqor.ait.registry.impl;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.tardis.control.impl.*;
 import loqor.ait.tardis.control.impl.pos.IncrementControl;
 import loqor.ait.tardis.control.impl.pos.XControl;
@@ -9,7 +11,6 @@ import loqor.ait.tardis.control.impl.pos.ZControl;
 import loqor.ait.tardis.control.impl.waypoint.SetWaypointControl;
 import loqor.ait.tardis.control.sequences.Sequence;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.entity.EntityType;
@@ -25,6 +26,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -172,26 +175,44 @@ public class SequenceRegistry {
 
 		CLOAK_TO_AVOID_VORTEX_TRAPPED_MOBS = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "cloak_to_avoid_vortex_trapped_mobs"), (finishedTardis -> {
 					finishedTardis.flight().decreaseFlightTime(180);
-					if (finishedTardis.getDoorPos() == null) return;
-					if (finishedTardis.getDoor().isOpen() || TardisUtil.getTardisDimension().isClient()) return;
+					DirectedBlockPos directedDoorPos = finishedTardis.getDesktop().doorPos();
+
+					if (directedDoorPos == null)
+						return;
+
+					BlockPos doorPos = directedDoorPos.getPos();
+
+					if (finishedTardis.getDoor().isOpen() || TardisUtil.getTardisDimension().isClient())
+						return;
+
 					ItemEntity rewardForCloaking = new ItemEntity(EntityType.ITEM, TardisUtil.getTardisDimension());
-					rewardForCloaking.setPosition(finishedTardis.getDoorPos().getX() + 0.5f,
-							finishedTardis.getDoorPos().getY() + 0.5f, finishedTardis.getDoorPos().getZ() + 0.5f);
+					rewardForCloaking.setPosition(doorPos.toCenterPos());
+
 					rewardForCloaking.setStack(random.nextBoolean() ? Items.GOLD_NUGGET.getDefaultStack() : Items.POPPY.getDefaultStack());
 					TardisUtil.getTardisDimension().spawnEntity(rewardForCloaking);
 				}), (missedTardis -> {
+					DirectedBlockPos directedDoorPos = missedTardis.getDesktop().doorPos();
+
+					if (directedDoorPos == null)
+						return;
+
+					BlockPos doorPos = directedDoorPos.getPos();
 					missedTardis.flight().increaseFlightTime(120);
-					if (missedTardis.getDoorPos() == null) return;
-					if (missedTardis.getDoor().isOpen() || TardisUtil.getTardisDimension().isClient()) return;
+
+					if (missedTardis.getDoor().isOpen() || TardisUtil.getTardisDimension().isClient())
+						return;
+
+					Vec3d centered = doorPos.toCenterPos();
+
 					ZombieEntity zombieEntity = new ZombieEntity(EntityType.ZOMBIE, TardisUtil.getTardisDimension());
-					zombieEntity.setPosition(missedTardis.getDoorPos().getX() + 0.5f,
-							missedTardis.getDoorPos().getY() + 0.5f, missedTardis.getDoorPos().getZ() + 0.5f);
+					zombieEntity.setPosition(centered);
+
 					DrownedEntity drownedEntity = new DrownedEntity(EntityType.DROWNED, TardisUtil.getTardisDimension());
-					drownedEntity.setPosition(missedTardis.getDoorPos().getX() + 0.5f,
-							missedTardis.getDoorPos().getY() + 0.5f, missedTardis.getDoorPos().getZ() + 0.5f);
+					drownedEntity.setPosition(centered);
+
 					PhantomEntity phantomEntity = new PhantomEntity(EntityType.PHANTOM, TardisUtil.getTardisDimension());
-					phantomEntity.setPosition(missedTardis.getDoorPos().getX() + 0.5f,
-							missedTardis.getDoorPos().getY() + 0.5f, missedTardis.getDoorPos().getZ() + 0.5f);
+					phantomEntity.setPosition(centered);
+
 					TardisUtil.getTardisDimension().spawnEntity(random.nextBoolean() ? random.nextBoolean() ? drownedEntity : zombieEntity : phantomEntity);
 				}), 80L, Text.literal("Immediate cloaking necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new CloakControl(), new RandomiserControl()));

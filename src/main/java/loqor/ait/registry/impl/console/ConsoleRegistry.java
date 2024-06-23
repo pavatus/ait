@@ -23,13 +23,15 @@ public class ConsoleRegistry {
 	public static ConsoleTypeSchema TOYOTA;
 	public static ConsoleTypeSchema ALNICO;
 	public static ConsoleTypeSchema STEAM;
+	public static ConsoleTypeSchema HUDOLIN;
 
 	public static void init() {
 		HARTNELL = register(new HartnellType());
 		CORAL = register(new CoralType());
-		//COPPER = register(new CopperConsole());
+		//COPPER = register(new CopperType());
 		TOYOTA = register(new ToyotaType());
 		ALNICO = register(new AlnicoType());
 		STEAM = register(new SteamType());
+		HUDOLIN = register(new HudolinType());
 	}
 }

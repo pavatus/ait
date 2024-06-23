@@ -1,0 +1,6 @@
+ext.getCurrentVersion = {
+    var patch = System.getenv("GITHUB_RUN_NUMBER")
+
+    return project.mod_version + (patch != null ? ("." + System.getenv("GITHUB_RUN_NUMBER")) : "")\
+        + "-" + project.minecraft_version + "-" + project.mod_version_qualifier
+}

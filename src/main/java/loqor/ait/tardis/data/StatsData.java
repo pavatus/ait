@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
@@ -21,10 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 // is StatsData a good name for this class?
 public class StatsData extends KeyedTardisComponent {
@@ -37,8 +35,10 @@ public class StatsData extends KeyedTardisComponent {
 	private static final String DATE_KEY = "date";
 
     private static final Property<RegistryKey<World>> SKYBOX = new Property<>(Property.Type.WORLD_KEY, "skybox", AITDimensions.TARDIS_DIM_WORLD);
+	private static final Property<HashSet<String>> UNLOCKS = new Property<>(Property.Type.STR_SET, "unlocks", new HashSet<>());
 
 	private final Value<RegistryKey<World>> skybox = SKYBOX.create(this);
+	private final Value<HashSet<String>> unlocks = UNLOCKS.create(this);
 
 	public StatsData() {
 		super(Id.STATS);
@@ -53,6 +53,19 @@ public class StatsData extends KeyedTardisComponent {
 	@Override
 	public void onLoaded() {
 		skybox.of(this, SKYBOX);
+		unlocks.of(this, UNLOCKS);
+	}
+
+	public boolean isUnlocked(Unlockable unlockable) {
+		return this.unlocks.get().contains(unlockable.id().toString());
+	}
+
+	public void unlock(Unlockable unlockable) {
+		// TODO implement native v2 collection properties to avoid this
+		this.unlocks.flatMap(strings -> {
+			strings.add(unlockable.id().toString());
+			return strings;
+		});
 	}
 
 	public Value<RegistryKey<World>> skybox() {

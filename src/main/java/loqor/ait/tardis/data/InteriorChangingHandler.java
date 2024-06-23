@@ -4,14 +4,12 @@ import loqor.ait.AITMod;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-
-import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.properties.PropertiesHolder;
-import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.TardisTickable;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
@@ -25,7 +23,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 	public static final String QUEUED_INTERIOR = "queued_interior";
 	public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
 	private static Random random;
-	private int ticks; // this shouldnt rly be stored in propertieshandler, will cause packet spam
+	private int ticks;
 
 	public InteriorChangingHandler() {
 		super(Id.INTERIOR);
@@ -58,15 +56,17 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 	public void queueInteriorChange(TardisDesktopSchema schema) {
 		Tardis tardis = this.tardis();
 
-		if (!tardis.isGrowth() && !tardis.engine().hasPower() && !tardis.crash().isToxic())
+		if (!this.canQueue())
 			return;
 
-		if (tardis.fuel().getCurrentFuel() < 5000 && !(tardis.isGrowth() && tardis.hasGrowthDesktop())) {
-			for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+		if (tardis.fuel().getCurrentFuel() < 5000) {
+			for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
 				player.sendMessage(Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED), true);
 				return;
 			}
 		}
+
+		AITMod.LOGGER.info("Queueing interior change for {} to {}", this.tardis, schema);
 
 		setQueuedInterior(schema);
 		setTicks(0);
@@ -76,21 +76,22 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 
 		tardis.getDesktop().getConsolePos().clear();
 
-		if (!(tardis.hasGrowthDesktop()))
+		if (!tardis.hasGrowthDesktop())
 			tardis.removeFuel(5000 * (tardis.tardisHammerAnnoyance + 1));
 	}
 
 	private void onCompletion() {
 		Tardis tardis = this.tardis();
-		PropertiesHolder properties = tardis.properties();
 
-		setGenerating(false);
+        this.setGenerating(false);
 		clearedOldInterior = false;
 
 		tardis.alarm().disable();
 
-		boolean previouslyLocked = PropertiesHandler.getBool(properties, PropertiesHandler.PREVIOUSLY_LOCKED);
+		boolean previouslyLocked = tardis.getDoor().previouslyLocked();
 		DoorData.lockTardis(previouslyLocked, tardis, null, false);
+
+		tardis.engine().hasEngineCore().set(false);
 
 		if (tardis.hasGrowthExterior()) {
 			TardisTravel travel = tardis.travel();
@@ -103,13 +104,13 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 	}
 
 	private void warnPlayers() {
-		for (PlayerEntity player : TardisUtil.getPlayersInInterior(this.tardis())) {
+		for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis())) {
 			player.sendMessage(Text.translatable("tardis.message.interiorchange.warning").formatted(Formatting.RED), true);
 		}
 	}
 
 	private boolean isInteriorEmpty() {
-		return TardisUtil.getPlayersInInterior(this.tardis()).isEmpty();
+		return TardisUtil.getPlayersInsideInterior(this.tardis()).isEmpty();
 	}
 
 	public static Random random() {
@@ -135,13 +136,13 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		if (travel.getState() == TardisTravel.State.FLIGHT)
 			travel.crash();
 
-		if (isGenerating()) {
+		if (this.isGenerating()) {
 			if (!this.tardis().alarm().isEnabled())
 				this.tardis().alarm().enable();
 		}
 
-		if (!this.tardis().engine().hasPower()) {
-			setGenerating(false);
+		if (!this.canQueue()) {
+			this.setGenerating(false);
 			this.tardis().alarm().disable();
 			return;
 		}
@@ -164,5 +165,9 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 			this.tardis().getDesktop().changeInterior(getQueuedInterior());
 			onCompletion();
 		}
+	}
+
+	private boolean canQueue() {
+		return tardis.isGrowth() || tardis.engine().hasPower() || tardis.crash().isToxic();
 	}
 }

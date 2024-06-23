@@ -3,6 +3,7 @@ package loqor.ait.tardis.animation;
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.CloakData;
 import loqor.ait.tardis.data.TravelHandler;
@@ -30,33 +31,41 @@ public abstract class ExteriorAnimation {
 	}
 
 	public float getAlpha() {
-		return this.exterior.tardis().apply(tardis -> {
-			if (this.timeLeft < 0) {
-				this.setupAnimation(tardis.travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
-				return 1f;
-			}
+		if (this.exterior.tardis().isEmpty())
+			return 1f;
 
-			if (tardis.travel().getState() == TravelHandler.State.LANDED
-					&& tardis.<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled()) {
-				return 0.105f;
-			}
+		if (this.timeLeft < 0) {
+			this.setupAnimation(exterior.tardis().get().travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+			return 1f;
+		}
 
-			return Math.clamp(0.0F, 1.0F, this.alpha);
-		}).orElse(1f);
+		if (this.exterior.tardis().get().travel().getState() == TravelHandler.State.LANDED
+				&& this.exterior.tardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled())
+			return 0.105f;
+
+		return Math.clamp(0.0F, 1.0F, this.alpha);
+	}
+
+	// fixme bug that sometimes happens where server doesnt have animation
+	protected void runAlphaChecks(TardisTravel.State state) {
+		if (this.exterior.getWorld().isClient() || this.exterior.tardis().isEmpty())
+			return;
+
+		if (alpha <= 0f && state == TardisTravel.State.DEMAT)
+			exterior.tardis().get().travel().finishDemat();
+
+		if (alpha >= 1f && state == TardisTravel.State.MAT)
+			exterior.tardis().get().travel().finishLanding(this.exterior);
 	}
 
 	public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius) {
-		return isNearTardis(player, tardis, radius, distanceFromTardis(player, tardis));
-	}
-
-	public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius, double distance) {
-		return radius >= distance;
+		return radius >= distanceFromTardis(player, tardis);
 	}
 
 	public static double distanceFromTardis(PlayerEntity player, Tardis tardis) {
 		BlockPos pPos = player.getBlockPos();
-		BlockPos tPos = tardis.travel().getPosition().getPos();
-        return Math.sqrt(tPos.getSquaredDistance(pPos));
+		BlockPos tPos = tardis.travel().position().getPos();
+		return Math.sqrt(tPos.getSquaredDistance(pPos));
 	}
 
 	public abstract void tick();
@@ -83,7 +92,7 @@ public abstract class ExteriorAnimation {
 	}
 
 	public void tellClientToSetup(TravelHandler.State state, ServerPlayerEntity player) {
-		if (exterior.getWorld().isClient() || exterior.tardis().getId() == null)
+		if (exterior.getWorld().isClient() || exterior.tardis().isEmpty())
 			return;
 
 		PacketByteBuf data = PacketByteBufs.create();

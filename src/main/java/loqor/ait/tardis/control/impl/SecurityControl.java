@@ -4,6 +4,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.item.ItemStack;
@@ -62,10 +63,11 @@ public class SecurityControl extends Control {
 		}
 	}
 
-
 	public static boolean hasMatchingKey(ServerPlayerEntity player, Tardis tardis) {
 		if (player.hasPermissionLevel(2))
 			return true;
+
+		boolean companion = tardis.loyalty().get(player).isOf(Loyalty.Type.COMPANION);
 
 		if (!KeyItem.isKeyInInventory(player))
 			return false;
@@ -75,12 +77,10 @@ public class SecurityControl extends Control {
 		for (ItemStack stack : keys) {
 			Tardis found = KeyItem.getTardis(player.getWorld(), stack);
 
-			if (found == null)
-				continue;
-
 			if (found == tardis)
-				return true;
+				return companion;
 		}
+
 		return false;
 	}
 

@@ -45,15 +45,16 @@ public class GeometricExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (exterior.findTardis().isEmpty()) return;
+		if (exterior.tardis().isEmpty())
+			return;
+
 		matrices.push();
 		matrices.scale(1F, 1F, 1F);
 		matrices.translate(0, -1.5f, 0);
 
-		DoorData door = exterior.findTardis().get().getDoor();
+		DoorData door = exterior.tardis().get().getDoor();
 
 		this.geometric.getChild("door").pivotZ += door.isOpen() ? -16f : 0f;
-
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
 		matrices.pop();

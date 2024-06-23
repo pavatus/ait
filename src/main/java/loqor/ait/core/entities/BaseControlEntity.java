@@ -55,6 +55,11 @@ public abstract class BaseControlEntity extends MobEntity {
 	}
 
 	@Override
+	public boolean isInvulnerable() {
+		return true;
+	}
+
+	@Override
 	public Arm getMainArm() {
 		return Arm.LEFT;
 	}

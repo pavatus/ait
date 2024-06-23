@@ -8,7 +8,6 @@ import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
-
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -17,7 +16,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import java.util.HashMap;
@@ -55,15 +53,22 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
 
     @Override
     public void tick(ServerWorld world) {
-        if(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
-            Tardis tardis = this.tardis();
+        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+            return;
 
-            List<ServerPlayerEntity> list = TardisUtil.getPlayersInInterior(tardis);
-            for(ServerPlayerEntity player : list) {
-                this.addLevel(player, (this.get(player).level() >= Loyalty.Type.NEUTRAL.level &&
-                        this.get(player).level() < Loyalty.Type.COMPANION.level &&
-                        AITMod.RANDOM.nextInt(0, 40) == 14) ? 1 : 0);
-            }
+        if (world.getServer().getTicks() % 20 != 0)
+            return;
+
+        Tardis tardis = this.tardis();
+        List<PlayerEntity> list = TardisUtil.getPlayersInsideInterior(tardis);
+
+        for(PlayerEntity player : list) {
+            if (!(player instanceof ServerPlayerEntity serverPlayer))
+                return;
+
+            this.addLevel(serverPlayer, (this.get(player).level() >= Loyalty.Type.NEUTRAL.level &&
+                    this.get(player).level() < Loyalty.Type.COMPANION.level &&
+                    AITMod.RANDOM.nextInt(0, 20) == 14) ? 1 : 0);
         }
     }
 
@@ -78,16 +83,16 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     public void unlock(ServerPlayerEntity player, Loyalty loyalty) {
         ServerTardis tardis = (ServerTardis) this.tardis();
 
+        player.getServerWorld().playSound(null, player.getBlockPos(),
+                SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 0.2F, 1.0F);
+
         ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
         DesktopRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
         ExteriorVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
     }
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {
-        player.getServerWorld().playSound(null, player.getBlockPos(),
-                SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 0.2F, 1.0F);
-
-        player.sendMessage(Text.literal(nameable.name() + " unlocked!")
+        player.sendMessage(nameable.text().copy().append(" unlocked!")
                 .formatted(Formatting.BOLD, Formatting.ITALIC, Formatting.GOLD), false);
     }
 

@@ -10,7 +10,6 @@ import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.util.Disposable;
 
@@ -27,7 +26,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	protected TardisExterior exterior;
 	protected TardisHandlersManager handlers;
 
-	protected boolean dirty = false;
 	public int tardisHammerAnnoyance = 0; // todo move :(
 
 	protected Tardis(UUID uuid, TardisDesktop desktop, TardisExterior exterior) {
@@ -198,7 +196,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 	public boolean isUnlocked(Unlockable unlockable) {
 		return unlockable.getRequirement() == Loyalty.MIN
-				|| PropertiesHandler.isUnlocked(this, unlockable);
+				|| this.stats().isUnlocked(unlockable);
 	}
 
 	// for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta

@@ -35,6 +35,7 @@ public class CreakRegistry {
 	public static CreakSound SIX;
 	public static CreakSound SEVEN;
 	public static CreakSound CAVE;
+	public static CreakSound GROAN;
 	public static CreakSound WHISPER;
 
 	public static void init() {
@@ -45,6 +46,7 @@ public class CreakRegistry {
 		FIVE = register(CreakSound.create(AITMod.MOD_ID, "five", AITSounds.CREAK_FIVE));
 		SIX = register(CreakSound.create(AITMod.MOD_ID, "six", AITSounds.CREAK_SIX));
 		SEVEN = register(CreakSound.create(AITMod.MOD_ID, "seven", AITSounds.CREAK_SEVEN));
+		GROAN = register(CreakSound.create(AITMod.MOD_ID, "groan", AITSounds.GROAN));
 
 		CAVE = register(CreakSound.create(AITMod.MOD_ID, "cave", SoundEvents.AMBIENT_CAVE.value()));
 		WHISPER = register(CreakSound.create(AITMod.MOD_ID, "whisper", AITSounds.WHISPER));

@@ -2,12 +2,14 @@ package loqor.ait.core.data.schema.console;
 
 import com.google.gson.*;
 import loqor.ait.AITMod;
+import loqor.ait.core.data.BasicSchema;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import loqor.ait.core.data.base.Nameable;
 import loqor.ait.registry.unlockable.Unlockable;
-import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.data.loyalty.Loyalty;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
@@ -26,12 +28,18 @@ import java.lang.reflect.Type;
  * @author duzo
  * @see ConsoleVariantRegistry#REGISTRY
  */
-public abstract class ConsoleVariantSchema implements Unlockable, Nameable {
+public abstract class ConsoleVariantSchema extends BasicSchema implements Unlockable {
+
 	private final Identifier parent;
 	private final Identifier id;
 	private final Loyalty loyalty;
 
+	@Environment(EnvType.CLIENT)
+	private ClientConsoleVariantSchema cachedSchema;
+
 	protected ConsoleVariantSchema(Identifier parent, Identifier id, Loyalty loyalty) {
+		super();
+
 		this.parent = parent;
 		this.id = id;
 		this.loyalty = loyalty;
@@ -39,11 +47,6 @@ public abstract class ConsoleVariantSchema implements Unlockable, Nameable {
 
 	protected ConsoleVariantSchema(Identifier parent, Identifier id) {
 		this(parent, id, Loyalty.MIN);
-	}
-
-	@Override
-	public String name() {
-		return DimensionControl.convertWorldValueToModified(id().getPath());
 	}
 
 	@Override
@@ -67,6 +70,14 @@ public abstract class ConsoleVariantSchema implements Unlockable, Nameable {
 
 	public ConsoleTypeSchema parent() {
 		return ConsoleRegistry.REGISTRY.get(this.parentId());
+	}
+
+	@Environment(EnvType.CLIENT)
+	public ClientConsoleVariantSchema getClient() {
+		if (this.cachedSchema == null)
+			this.cachedSchema = ClientConsoleVariantRegistry.withParent(this);
+
+		return cachedSchema;
 	}
 
 	@Override

@@ -2,8 +2,10 @@ package loqor.ait.client.screens;
 
 import loqor.ait.AITMod;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.StatsData;
+import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -18,13 +20,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class TardisSecurityScreen extends ConsoleScreen {
 	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/security_menu.png");
-	private final List<ButtonWidget> buttons = new ArrayList<>();
 	int bgHeight = 117;
 	int bgWidth = 191;
 	int left, top;
@@ -34,7 +33,6 @@ public class TardisSecurityScreen extends ConsoleScreen {
 	public TardisSecurityScreen(UUID tardis, BlockPos console, Screen parent) {
 		super(Text.translatable("screen.ait.security.title"), tardis, console);
 		this.parent = parent;
-		this.updateTardis();
 	}
 
 	@Override
@@ -53,11 +51,11 @@ public class TardisSecurityScreen extends ConsoleScreen {
 
 	private void createButtons() {
 		choicesCount = 0;
-		this.buttons.clear();
 
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
 		createTextButton(Text.translatable("screen.ait.security.leave_behind"), (button -> toggleLeaveBehind()));
 		createTextButton(Text.translatable("screen.ait.security.hostile_alarms"), (button -> toggleHostileAlarms()));
+		createTextButton(Text.translatable("screen.ait.security.minimum_loyalty"), (button -> changeMinimumLoyalty()));
 	}
 
 	private void toggleLeaveBehind() {
@@ -67,7 +65,15 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		buf.writeBoolean(!PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.LEAVE_BEHIND));
 
 		ClientPlayNetworking.send(PropertiesHandler.LEAVEBEHIND, buf);
-		updateTardis();
+	}
+
+	private void changeMinimumLoyalty() {
+		ClientTardis tardis = this.tardis();
+		PermissionHandler.p19Loyalty(tardis, getMinimumLoyalty(tardis).next());
+	}
+
+	private static Loyalty.Type getMinimumLoyalty(ClientTardis tardis) {
+		return tardis.<PermissionHandler>handler(TardisComponent.Id.PERMISSIONS).p19Loyalty().get();
 	}
 
 	private void toggleHostileAlarms() {
@@ -77,16 +83,14 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		buf.writeBoolean(!PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE));
 
 		ClientPlayNetworking.send(PropertiesHandler.HOSTILEALARMS, buf);
-		updateTardis();
 	}
 
 	private <T extends ClickableWidget> void addButton(T button) {
 		this.addDrawableChild(button);
 		button.active = true; // this whole method is unnecessary bc it defaults to true ( ?? )
-		this.buttons.add((ButtonWidget) button);
 	}
 
-	// this might be useful, so remember this exists and use it later on ( although its giving NTM vibes.. )
+	// this might be useful, so remember this exists and use it later on
 	private void createTextButton(Text text, ButtonWidget.PressAction onPress) {
 		this.addButton(
 				new PressableTextWidget(
@@ -110,11 +114,16 @@ public class TardisSecurityScreen extends ConsoleScreen {
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
 		this.drawBackground(context);
-		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.LEAVE_BEHIND) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
-		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
 
-		context.drawText(this.textRenderer, Text.literal("Date created:"), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 5))), 0xadcaf7, false);
-		context.drawText(this.textRenderer, Text.literal(this.tardis().<StatsData>handler(TardisComponent.Id.STATS).getCreationString()), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 6))), 0xadcaf7, false);
+		ClientTardis tardis = this.tardis();
+
+		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.LEAVE_BEHIND) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
+		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
+
+		context.drawText(this.textRenderer, Text.literal(": " + getMinimumLoyalty(tardis)), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 4))), Color.ORANGE.getRGB(), false);
+
+		context.drawText(this.textRenderer, Text.literal("Date created:"), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 7))), 0xadcaf7, false);
+		context.drawText(this.textRenderer, Text.literal(tardis.stats().getCreationString()), (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 8))), 0xadcaf7, false);
 		super.render(context, mouseX, mouseY, delta);
 	}
 

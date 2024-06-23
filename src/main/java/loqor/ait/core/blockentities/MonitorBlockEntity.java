@@ -27,6 +27,10 @@ public class MonitorBlockEntity extends InteriorLinkableBlockEntity {
 			return;
 
 		Tardis tardis = this.tardis().get();
+
+		if (!tardis.engine().hasPower())
+			return;
+
 		boolean security = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY);
 
 		if (security && !SecurityControl.hasMatchingKey(serverPlayer, tardis))

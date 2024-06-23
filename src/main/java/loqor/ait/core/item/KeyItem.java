@@ -1,12 +1,16 @@
 package loqor.ait.core.item;
 
-import loqor.ait.tardis.link.LinkableItem;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.link.LinkableItem;
+import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,6 +19,7 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -98,6 +103,20 @@ public class KeyItem extends LinkableItem {
 		KeyItem.hailMary(tardis, stack, player);
 	}
 
+	@Override
+	public void onItemEntityDestroyed(ItemEntity entity) {
+		Entity owner = entity.getOwner();
+
+		if (!(owner instanceof ServerPlayerEntity player))
+			return;
+
+		Tardis tardis = KeyItem.getTardis(entity.getWorld(), entity.getStack());
+		if (tardis == null) return;
+		tardis.loyalty().subLevel(player, 5);
+
+		FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.CLOISTER);
+	}
+
 	private static void hailMary(Tardis tardis, ItemStack stack, PlayerEntity player) {
 		if (player.getItemCooldownManager().isCoolingDown(stack.getItem()))
 			return;
@@ -143,20 +162,26 @@ public class KeyItem extends LinkableItem {
 		PlayerEntity player = context.getPlayer();
 		ItemStack stack = context.getStack();
 
-		if (world.isClient() || player == null)
+		if (world.isClient())
+			return ActionResult.SUCCESS;
+
+		if (player == null || !player.isSneaking())
 			return ActionResult.PASS;
 
-		if (!player.isSneaking())
+		if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock))
 			return ActionResult.PASS;
 
-		if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlock) {
-			if (consoleBlock.tardis().isEmpty())
-				return ActionResult.FAIL;
+		if (consoleBlock.tardis().isEmpty())
+			return ActionResult.FAIL;
 
+		Tardis tardis = consoleBlock.tardis().get();
+
+		if (tardis.loyalty().get(player).isOf(Loyalty.Type.COMPANION)) {
 			this.link(stack, consoleBlock.tardis().get());
 			return ActionResult.SUCCESS;
 		}
 
-		return ActionResult.PASS;
+		player.sendMessage(Text.translatable("message.ait.tardis.trust_issue", true));
+		return ActionResult.FAIL;
 	}
 }

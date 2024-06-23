@@ -64,10 +64,6 @@ public class TardisFileManager<T extends Tardis> {
         return null;
     }
 
-    public void saveTardis(MinecraftServer server, TardisManager<T, ?> manager) {
-        manager.forEach(tardis -> this.saveTardis(server, manager, tardis));
-    }
-
     public void saveTardis(MinecraftServer server, TardisManager<T, ?> manager, T tardis) {
         try {
             Path savePath = TardisFileManager.getSavePath(server, tardis.getUuid(), "json");
@@ -79,6 +75,10 @@ public class TardisFileManager<T extends Tardis> {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 
     @FunctionalInterface

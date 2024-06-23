@@ -3,12 +3,12 @@ package loqor.ait.client.renderers.monitors;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.monitors.CRTMonitorModel;
 import loqor.ait.core.blockentities.MonitorBlockEntity;
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SkullBlock;
@@ -56,6 +56,9 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 			return;
 
 		Tardis tardis = entity.tardis().get();
+
+		if (!tardis.engine().hasPower())
+			return;
 
 		matrices.push();
 		matrices.translate(0.5, 0.75, 0.5);

@@ -1,18 +1,16 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.blockentities.CoralBlockEntity;
-import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.core.advancement.TardisCriterions;
+import loqor.ait.core.blockentities.CoralBlockEntity;
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.manager.TardisBuilder;
-import loqor.ait.core.advancement.TardisCriterions;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
@@ -20,35 +18,30 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.RavagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
+@SuppressWarnings("deprecation")
 public class CoralPlantBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
+
 	private final VoxelShape DEFAULT = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 16.0);
-	public static final int MAX_AGE = 7;
-	public static final IntProperty AGE;
+
+	public static final IntProperty AGE = Properties.AGE_7;
 
 	public CoralPlantBlock(Settings settings) {
 		super(settings);
-	}
-
-	protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos) {
-		return floor.isOf(Blocks.SOUL_SAND);
 	}
 
 	protected IntProperty getAgeProperty() {
@@ -88,71 +81,51 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 			}
 		}
 
-		if (this.getAge(state) >= this.getMaxAge()) {
-			if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
-				if(world.getBlockEntity(pos) instanceof CoralBlockEntity coral) {
-					createTardis(world, pos, coral.CREATOR_NAME);
-				}
-			} else {
-				createConsole(world, pos);
-			}
+		if (!this.isMature(state))
+			return;
+
+		if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
+			this.createConsole(world, pos);
+			return;
 		}
+
+		if (world.getBlockEntity(pos) instanceof CoralBlockEntity coral)
+			this.createTardis(world, pos, coral.creator);
 	}
 
 	private void createConsole(ServerWorld world, BlockPos pos) {
 		world.setBlockState(pos, AITBlocks.CONSOLE.getDefaultState());
 	}
 
-	private void createTardis(ServerWorld world, BlockPos pos, String creatorName) {
-		// Create a new tardis
+	private void createTardis(ServerWorld world, BlockPos pos, UUID creatorId) {
 		ServerTardis created = ServerTardisManager.getInstance().create(new TardisBuilder()
 				.at(new AbsoluteBlockPos.Directed(pos, world, 0))
 				.exterior(ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE))
-				.desktop(DesktopRegistry.DEFAULT_CAVE)
-				.<StatsData>with(TardisComponent.Id.STATS, stats -> {
-					stats.setPlayerCreatorName(creatorName);
-					stats.markPlayerCreatorName();
-				}));
+				.desktop(DesktopRegistry.DEFAULT_CAVE).owner(world.getPlayerByUuid(creatorId))
+		);
 
-		created.getHandlers().getFuel().setCurrentFuel(0);
+		created.fuel().setCurrentFuel(0);
 	}
 
 	@Override
 	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
 		super.onPlaced(world, pos, state, placer, itemStack);
 
-		if (!(world instanceof ServerWorld)) return;
-		if(world.getBlockEntity(pos) instanceof CoralBlockEntity coral) {
-			if(placer instanceof PlayerEntity entity) {
-				coral.CREATOR_NAME = entity.getDisplayName().getString();
-				coral.markDirty();
-			}
-		}
+		if (!(placer instanceof ServerPlayerEntity player))
+			return;
+
 		if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock) ||
-				(!RiftChunkManager.isRiftChunk(pos) &&
-						!(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
-			// GET IT OUTTA HERE!!!
-			world.breakBlock(pos, placer.isPlayer() ? !((PlayerEntity) placer).isCreative() : true);
+				(!RiftChunkManager.isRiftChunk(pos) && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
+			world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
 			return;
 		}
 
-		if (placer instanceof ServerPlayerEntity player) {
-			TardisCriterions.PLACE_CORAL.trigger(player);
-		}
-	}
-
-	public void applyGrowth(World world, BlockPos pos, BlockState state) {
-		int i = this.getAge(state) + this.getGrowthAmount(world);
-		int j = this.getMaxAge();
-		if (i > j) {
-			i = j;
+		if (world.getBlockEntity(pos) instanceof CoralBlockEntity coral) {
+			coral.creator = player.getUuid();
+			coral.markDirty();
 		}
 
-		world.setBlockState(pos, this.withAge(i), 2);
-	}
-
-	protected int getGrowthAmount(World world) {
-		return MathHelper.nextInt(world.random, 2, 5);
+		TardisCriterions.PLACE_CORAL.trigger(player);
 	}
 
 	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
@@ -163,8 +136,6 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 		if (entity instanceof RavagerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
 			world.breakBlock(pos, true, entity);
 		}
-
-		super.onEntityCollision(state, world, pos, entity);
 	}
 
 	@Override
@@ -177,28 +148,12 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 		return DEFAULT;
 	}
 
-	protected ItemConvertible getSeedsItem() {
-		return Items.WHEAT_SEEDS;
-	}
-
 	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
 		return AITBlocks.CORAL_PLANT.asItem().getDefaultStack();
 	}
 
-	public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-		return true;
-	}
-
-	public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-		this.applyGrowth(world, pos, state);
-	}
-
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		builder.add(new Property[]{AGE}).add(FACING);
-	}
-
-	static {
-		AGE = Properties.AGE_7;
+		builder.add(AGE).add(FACING);
 	}
 
 	@Nullable

@@ -5,7 +5,9 @@ import gravity_changer.api.GravityChangerAPI;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisClientEvents;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.client.screens.interior.InteriorSettingsScreen;
 import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.entities.BaseControlEntity;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.Tardis;
@@ -22,6 +24,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
@@ -33,6 +36,7 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     private static final Property<Direction> DIRECTION = new Property<>(Property.Type.DIRECTION, "direction", Direction.DOWN);
 
     private final Value<Direction> direction = DIRECTION.create(this);
+    @Exclude private Direction tempDirection = Direction.DOWN;
 
     public GravityHandler() {
         super(ID);
@@ -41,6 +45,7 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     @Override
     public void onLoaded() {
         direction.of(this, DIRECTION);
+        this.tempDirection = Direction.DOWN;
     }
 
     @Override
@@ -100,20 +105,46 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     }
 
     public static void clientInit() {
-        TardisClientEvents.SETTINGS_SETUP.register(screen ->
-                screen.createDynamicTextButton(() -> Text.translatable("screen.ait.gravity",
-                        screen.tardis().<GravityHandler>handler(ID).direction.get().getName()
-                ), b -> {
-                    GravityHandler gravity = screen.tardis().handler(ID);
-                    Direction next = nextDirection(gravity.direction.get());
-
-                    gravity.direction.set(next, false);
-                    syncToServer(screen.tardis(), next);
-
-                    DynamicPressableTextWidget dynamic = (DynamicPressableTextWidget) b;
-                    dynamic.refresh();
-                }));
+        TardisClientEvents.SETTINGS_SETUP.register(GravityHandler::setup);
     }
 
-    static IdLike ID = new AbstractId<>("GRAVITY", GravityHandler::new, GravityHandler.class);
+    private static void setup(InteriorSettingsScreen screen){
+        screen.<DynamicPressableTextWidget>createAnyDynamicButton(button -> buttonText(screen, button),
+                (x, y, width, height, text, onPress, textRenderer) -> new DynamicPressableTextWidget(
+                        x, y, 80, height, text, onPress, textRenderer
+                ), button -> onButton(screen, (DynamicPressableTextWidget) button));
+    }
+
+    private static Text buttonText(InteriorSettingsScreen screen, DynamicPressableTextWidget button) {
+        GravityHandler gravity = screen.tardis().handler(ID);
+        boolean isChanged = !button.isLeftClick() || gravity.tempDirection != gravity.direction.get();
+
+        Direction direction = isChanged ? gravity.tempDirection : gravity.direction.get();
+        Formatting formatting = isChanged ? Formatting.YELLOW : Formatting.WHITE;
+
+        return Text.translatable("screen.ait.gravity",
+                capitalize(direction.getName())).formatted(formatting);
+    }
+
+    private static void onButton(InteriorSettingsScreen screen, DynamicPressableTextWidget button) {
+        Tardis tardis = screen.tardis();
+        GravityHandler gravity = tardis.handler(GravityHandler.ID);
+
+        if (button.isLeftClick()) {
+            gravity.direction.set(gravity.tempDirection, false);
+            button.refresh();
+
+            syncToServer(tardis, gravity.tempDirection);
+            return;
+        }
+
+        gravity.tempDirection = nextDirection(gravity.tempDirection);
+        button.refresh();
+    }
+
+    private static String capitalize(String str) {
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    static final IdLike ID = new AbstractId<>("GRAVITY", GravityHandler::new, GravityHandler.class);
 }
