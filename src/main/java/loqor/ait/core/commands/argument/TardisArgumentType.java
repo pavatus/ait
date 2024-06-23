@@ -10,6 +10,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
@@ -56,8 +57,8 @@ public class TardisArgumentType implements ArgumentType<TardisArgumentType.Serve
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        boolean isClient = context.getSource() instanceof ClientPlayerEntity;
-        TardisManager<?, ?> manager = TardisManager.getInstance(!isClient);
+        boolean isServer = context.getSource() instanceof FabricClientCommandSource;
+        TardisManager<?, ?> manager = TardisManager.getInstance(isServer);
 
         return CommandSource.suggestMatching(manager.ids().stream().map(UUID::toString), builder);
     }
