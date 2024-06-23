@@ -57,7 +57,7 @@ public class TardisArgumentType implements ArgumentType<TardisArgumentType.Serve
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        boolean isServer = context.getSource() instanceof FabricClientCommandSource;
+        boolean isServer = context.getSource() instanceof ServerCommandSource;
         TardisManager<?, ?> manager = TardisManager.getInstance(isServer);
 
         return CommandSource.suggestMatching(manager.ids().stream().map(UUID::toString), builder);
