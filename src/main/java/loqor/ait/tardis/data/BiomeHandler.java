@@ -1,112 +1,95 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.data.properties.v2.Property;
+import loqor.ait.tardis.data.properties.v2.Value;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import org.apache.commons.lang3.StringUtils;
 
-public class BiomeHandler extends TardisComponent {
+public class BiomeHandler extends KeyedTardisComponent {
 
-    public static final String BIOME_KEY = "biome_key";
+    private static final Property<BiomeType> TYPE = Property.forEnum("type", BiomeType.class, BiomeType.DEFAULT);
+    private final Value<BiomeType> type = TYPE.create(this);
 
     public BiomeHandler() {
         super(Id.BIOME);
     }
 
-    /*@Override
-    public void tick(MinecraftServer server) {
-        super.tick(server);
-    }*/
+    @Override
+    public void onLoaded() {
+        type.of(this, TYPE);
+    }
 
-    public void setBiome(Tardis tardis) {
-        if(tardis.getExteriorPos() == null) return;
-        World world = tardis.getExteriorPos().getWorld();
-
-        if(world.isClient())
+    public void update() {
+        if (tardis.getExteriorPos() == null)
             return;
 
-        PropertiesHandler.set(tardis, BIOME_KEY, world.getBiome(tardis.position()).getKey().get().getValue().getPath());
+        AbsoluteBlockPos pos = tardis.getExteriorPos();
+        World world = pos.getWorld();
+
+        this.type.set(getTagForBiome(world.getBiome(pos)));
     }
 
-    public String getBiomeKey() {
-        return PropertiesHandler.get(this.tardis(), BIOME_KEY);
+    public BiomeType getBiomeKey() {
+        return this.type.get();
     }
 
-    public static BiomeType getBiomeTypeFromKey(String biomeKey) {
+    private static BiomeType getTagForBiome(RegistryEntry<Biome> biome) {
+        if (biome.isIn(ConventionalBiomeTags.SNOWY) || biome.isIn(ConventionalBiomeTags.SNOWY_PLAINS) || biome.isIn(ConventionalBiomeTags.ICY))
+            return BiomeType.SNOWY;
+
+        if (biome.isIn(ConventionalBiomeTags.DESERT) || biome.isIn(ConventionalBiomeTags.BEACH) || biome.isIn(ConventionalBiomeTags.DEAD))
+            return BiomeType.SANDY;
+
+        if (biome.isIn(ConventionalBiomeTags.BADLANDS))
+            return BiomeType.RED_SANDY;
+
+        if (biome.isIn(ConventionalBiomeTags.SWAMP))
+            return BiomeType.MUDDY;
+
+        if (biome.isIn(ConventionalBiomeTags.IN_THE_END))
+            return BiomeType.CHORUS;
+
+        if (biome.isIn(ConventionalBiomeTags.FLORAL))
+            return BiomeType.CHERRY;
+
+        return getBiomeTypeFromKey(biome.getKey().get().getValue().getPath());
+    }
+
+    private static BiomeType getBiomeTypeFromKey(String biomeKey) {
         return switch(biomeKey) {
             default -> BiomeType.DEFAULT;
-            case "snowy_taiga", "snowy_beach", "frozen_peaks", "snowy_plains" -> BiomeType.SNOWY;
-            case "desert", "beach" -> BiomeType.SANDY;
-            case "badlands" -> BiomeType.RED_SANDY;
-            case "mangrove_swamp" -> BiomeType.MUDDY;
-            case "the_end" -> BiomeType.CHORUS;
             case "deep_dark" -> BiomeType.SCULK;
             case "cherry_grove" -> BiomeType.CHERRY;
         };
     }
 
     public enum BiomeType implements StringIdentifiable {
-        DEFAULT(),
-        SNOWY() {
-            @Override
-            public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
-                        texture.getPath().replace(".png", "_snowy.png"));
-                return specific;
-            }
-        },
-        SCULK() {
-            @Override
-            public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
-                        texture.getPath().replace(".png",  "_sculk.png"));
-                return specific;
-            }
-        },
-        SANDY() {
-            @Override
-            public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
-                        texture.getPath().replace(".png",  "_sand.png"));
-                return specific;
-            }
-        },
-        RED_SANDY() {
-            @Override
-            public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
-                        texture.getPath().replace(".png",  "_red_sand.png"));
-                return specific;
-            }
-        },
-        MUDDY() {
-            @Override
-            public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
-                        texture.getPath().replace(".png", "_mud.png"));
-                return specific;
-            }
-        },
-        CHORUS() {
-            @Override
-            public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
-                        texture.getPath().replace(".png",  "_chorus.png"));
-                return specific;
-            }
-        },
-        CHERRY() {
-            @Override
-            public Identifier getTextureFromKey(Identifier texture) {
-                Identifier specific = new Identifier(AITMod.MOD_ID,
-                        texture.getPath().replace(".png", "_cherry.png"));
-                return specific;
-            }
-        };
+        DEFAULT,
+        SNOWY("_snowy"),
+        SCULK("_sculk"),
+        SANDY("_sand"),
+        RED_SANDY("_red_sand"),
+        MUDDY("_mud"),
+        CHORUS("_chorus"),
+        CHERRY("_cherry");
+
+        private final String suffix;
+
+        BiomeType(String suffix) {
+            this.suffix = suffix;
+        }
+
+        BiomeType() {
+            this(null);
+        }
 
         @Override
         public String asString() {
@@ -114,7 +97,13 @@ public class BiomeHandler extends TardisComponent {
         }
 
         public Identifier getTextureFromKey(Identifier texture) {
-            return texture;
+            if (this.suffix == null)
+                return texture;
+
+            String path = texture.getPath();
+
+            return new Identifier(AITMod.MOD_ID, path.substring(
+                    0, path.length() - 4) + this.suffix + ".png");
         };
     }
 }

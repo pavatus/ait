@@ -6,7 +6,6 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -91,7 +90,7 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 
 		World world = tardis.getExteriorPos().getWorld();
 		world.getOtherEntities(null, new Box(tardis.getExteriorPos()).expand(8f))
-				.stream().filter(Entity::isPushable)
+				.stream().filter(entity -> entity.isPushable() || entity instanceof ProjectileEntity)
 				.filter(entity -> !(entity instanceof ServerPlayerEntity player
 						&& tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))) // Exclude players in spectator
 				.forEach(entity -> {

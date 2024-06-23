@@ -30,13 +30,14 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
 		profiler.push("find_tardis"); // find_console {
 
-		if (entity.tardis().isEmpty()) {
+		Tardis tardis = entity.tardis().get();
+
+		if (tardis == null || tardis.isAged()) {
 			profiler.pop(); // } find_console
 			profiler.pop(); // } console
 			return;
 		}
 
-		Tardis tardis = entity.tardis().get();
 		profiler.swap("render"); // } find_tardis / render {
 
 		this.renderConsole(profiler, tardis, entity, matrices, vertexConsumers, light, overlay);

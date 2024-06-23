@@ -176,8 +176,10 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		profiler.push("biome");
 
-		if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-			Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
+		if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+			BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
+			Identifier biomeTexture = exteriorVariant.getBiomeTexture(handler.getBiomeKey());
+
 			if (biomeTexture != null && !texture.equals(biomeTexture)) {
 				// yes i know it says emission, but go fuck yourself <3
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, true)), light, overlay, 1, 1, 1, alpha);

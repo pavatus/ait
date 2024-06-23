@@ -183,10 +183,14 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		// todo move these to a reusable method
 
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (!(blockEntity instanceof ExteriorBlockEntity exterior) || exterior.tardis().isEmpty())
+
+		if (!(blockEntity instanceof ExteriorBlockEntity exterior) || exterior.tardis() == null)
 			return getNormalShape(state);
 
 		Tardis tardis = exterior.tardis().get();
+
+		if (tardis == null)
+			return getNormalShape(state);
 
 		if (tardis.siege().isActive())
 			return SIEGE_SHAPE;
@@ -410,7 +414,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		tardis.travel().setPosition(new AbsoluteBlockPos.Directed(pos, world, tardis.travel().getPosition().getRotation()));
 
 		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
-		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).setBiome(tardis);
+		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
 
 		FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 

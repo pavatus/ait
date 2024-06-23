@@ -113,11 +113,12 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         );
 
         profiler.swap("biome");
-        if (tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null && !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-            Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
-            if (biomeTexture != null && !texture.equals(biomeTexture)) {
+        if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+            BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
+			Identifier biomeTexture = exteriorVariant.getBiomeTexture(biome.getBiomeKey());
+
+			if (biomeTexture != null && !texture.equals(biomeTexture))
                 model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)), light, overlay, 1, 1, 1, 1);
-            }
         }
 
         matrices.pop();

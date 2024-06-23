@@ -7,6 +7,7 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
@@ -30,10 +31,12 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 
 	@Override
 	public void render(FallingTardisEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-		if (entity.getTardis() == null)
+		Tardis tardis = entity.getTardis();
+
+		if (tardis == null)
 			return;
 
-		TardisExterior tardisExterior = entity.getTardis().getExterior();
+		TardisExterior tardisExterior = tardis.getExterior();
 		ClientExteriorVariantSchema exteriorVariant = tardisExterior.getVariant().getClient();
 
 		if (exteriorVariant == null)
@@ -56,7 +59,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? 180f + h : MinecraftClient.getInstance().player.getHeadYaw() + 180f));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-		boolean siege = entity.getTardis().siege().isActive();
+		boolean siege = tardis.siege().isActive();
 
 		if (siege) {
 			model = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
@@ -73,9 +76,9 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 		if (emission != null)
 			model.renderFalling(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(emission, true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, 1, 1, 1, 1, 1);
 
-		if(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey() != null
-				&& !exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-			Identifier biomeTexture = exteriorVariant.getBiomeTexture(BiomeHandler.getBiomeTypeFromKey(entity.getTardis().<BiomeHandler>handler(TardisComponent.Id.BIOME).getBiomeKey()));
+		if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+			BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
+			Identifier biomeTexture = exteriorVariant.getBiomeTexture(biome.getBiomeKey());
 
 			if (biomeTexture != null && !exteriorVariant.texture().equals(biomeTexture)) {
 				model.renderFalling(entity, model.getPart(), matrices, vertexConsumers.getBuffer(

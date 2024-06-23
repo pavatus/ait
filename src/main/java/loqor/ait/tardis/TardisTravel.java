@@ -374,7 +374,7 @@ public class TardisTravel extends TardisComponent {
 		// Set the position of the Tardis to the destination
 		this.setPosition(pos);
 		this.setDestination(pos);
-		((BiomeHandler) tardis().getHandlers().get(Id.BIOME)).setBiome(tardis());
+		((BiomeHandler) tardis().getHandlers().get(Id.BIOME)).update();
 		WorldOps.updateIfOnServer(destWorld, pos);
 	}
 
@@ -391,6 +391,8 @@ public class TardisTravel extends TardisComponent {
 
 		if (this.getState() != State.FLIGHT)
 			return;
+
+		ignoreChecks = ignoreChecks || tardis.hasGrowthExterior();
 
 		// Disable autopilot
 		// PropertiesHandler.setAutoPilot(this.getTardis().get().properties(), false);
@@ -447,7 +449,7 @@ public class TardisTravel extends TardisComponent {
 	}
 
 	private void onMaterialise(ServerTardis tardis) {
-		((BiomeHandler) tardis.getHandlers().get(Id.BIOME)).setBiome(tardis);
+		((BiomeHandler) tardis.getHandlers().get(Id.BIOME)).update();
 		if (tardis.isGrowth()) {
 			TardisExterior exterior = tardis.getExterior();
 
