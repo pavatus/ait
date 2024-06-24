@@ -56,7 +56,10 @@ public class TardisItemBuilder extends Item {
 		if (context.getHand() != Hand.MAIN_HAND)
 			return ActionResult.SUCCESS;
 
-		AbsoluteBlockPos.Directed pos = new AbsoluteBlockPos.Directed(context.getBlockPos().up(), world, DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw())));
+		AbsoluteBlockPos.Directed pos = new AbsoluteBlockPos.Directed(context.getBlockPos().up(), world,
+				DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getHeadYaw()))
+		);
+
 		BlockEntity entity = world.getBlockEntity(context.getBlockPos());
 
 		if (entity instanceof ConsoleBlockEntity consoleBlock) {
