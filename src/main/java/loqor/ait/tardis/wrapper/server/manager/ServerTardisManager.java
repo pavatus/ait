@@ -1,7 +1,6 @@
 package loqor.ait.tardis.wrapper.server.manager;
 
 import com.google.gson.GsonBuilder;
-import loqor.ait.AITMod;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.AITDimensions;
@@ -116,7 +115,6 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 	public ServerTardis create(TardisBuilder builder) {
 		ServerTardis tardis = builder.build();
-		AITMod.LOGGER.info("Created tardis " + tardis, new Throwable());
 		this.lookup.put(tardis);
 
 		return tardis;
