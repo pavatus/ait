@@ -332,7 +332,7 @@ public class MonitorScreen extends ConsoleScreen {
 		float tinted = alarms && isExtUnlocked ? 0.3f : base;
 
 		model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)),
-				LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, base, base, base, 1f
+				LightmapTextureManager.getBlockLightCoordinates(9), OverlayTexture.DEFAULT_UV, base, base, base, 1f
 		);
 
 		if (hasPower && emissive != null) {
