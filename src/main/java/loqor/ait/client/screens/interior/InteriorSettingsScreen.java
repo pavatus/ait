@@ -169,7 +169,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private void toSonicScreen() {
-		MinecraftClient.getInstance().setScreen(new SonicSettingsScreen(tardis().getUuid(), this.console, this));
+		MinecraftClient.getInstance().setScreen(new SonicSettingsScreen(this.tardis(), this.console, this));
 	}
 
 	public <T extends ClickableWidget> void addButton(T button) {
@@ -220,7 +220,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	public void toSecurityScreen() {
-		MinecraftClient.getInstance().setScreen(new TardisSecurityScreen(tardis().getUuid(), this.console, this));
+		MinecraftClient.getInstance().setScreen(new TardisSecurityScreen(tardis(), this.console, this));
 	}
 
 

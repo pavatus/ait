@@ -4,6 +4,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.screens.TardisScreen;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -18,7 +19,6 @@ import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
 
@@ -32,7 +32,7 @@ public class InteriorSelectScreen extends TardisScreen {
 	private TardisDesktopSchema selectedDesktop;
 
 
-	public InteriorSelectScreen(UUID tardis, Screen parent) {
+	public InteriorSelectScreen(ClientTardis tardis, Screen parent) {
 		super(Text.translatable("screen.ait.interor_select.title"), tardis);
 		this.parent = parent;
 	}
