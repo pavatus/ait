@@ -297,6 +297,9 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private void renderDesktop(DrawContext context) {
+
+		if (this.selectedDesktop == null) return;
+
 		context.drawCenteredTextWithShadow(
 				this.textRenderer,
 				this.selectedDesktop.name(),
@@ -304,8 +307,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				(int) (top + (bgHeight * 0.58f)),
 				0xffffff
 		);
-
-		if (this.selectedDesktop == null) return;
 
 		context.getMatrices().push();
 		context.getMatrices().translate(0, 0, -50f);
