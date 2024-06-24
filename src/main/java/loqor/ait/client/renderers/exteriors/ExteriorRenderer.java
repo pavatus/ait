@@ -53,8 +53,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		Tardis tardis = optionalTardis.get();
 		profiler.swap("render");
-
-		this.renderExterior(profiler, tardis, entity, tickDelta, matrices, vertexConsumers, light, overlay);
+		//System.out.println(entity.getAlpha());
+		if (entity.getAlpha() > 0)
+			this.renderExterior(profiler, tardis, entity, tickDelta, matrices, vertexConsumers, light, overlay);
 		profiler.pop();
 
 		profiler.pop();
