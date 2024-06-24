@@ -186,6 +186,10 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		TardisTravel travel = tardis.travel();
 		TardisTravel.State state = travel.getState();
 
+		/*if (state == LANDED && tardis.getExteriorPos() != null && !world.isClient()) {
+			((ExteriorBlock) blockState.getBlock()).tryFall(blockState, (ServerWorld) world, pos);
+		}*/
+
 		if (state != LANDED)
 			this.getAnimation().tick();
 

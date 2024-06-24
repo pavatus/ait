@@ -18,6 +18,7 @@ import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.link.v2.TardisRef;
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -181,7 +182,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
 			Identifier biomeTexture = exteriorVariant.getBiomeTexture(handler.getBiomeKey());
 
-			if (biomeTexture != null && !texture.equals(biomeTexture)) {
+			if (biomeTexture != null && !texture.equals(biomeTexture) && !(entity.getWorld().getBlockState(entity.getPos().down()).getBlock() instanceof AirBlock)) {
 				// yes i know it says emission, but go fuck yourself <3
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, true)), light, overlay, 1, 1, 1, alpha);
 			}

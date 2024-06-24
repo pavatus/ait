@@ -25,8 +25,11 @@ public class AntiGravsControl extends Control {
 
 		PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED));
 
-		if (tardis.getExteriorPos() != null)
-			WorldOps.updateIfOnServer(world, tardis.getExteriorPos());
+		if (tardis.travel().getPosition() != null) {
+			WorldOps.updateIfOnServer(tardis.travel().getPosition().getWorld(), tardis.travel().getPosition());
+			world.scheduleBlockTick(tardis.travel().getPosition(),
+					tardis.travel().getPosition().getWorld().getBlockState(tardis.travel().getPosition()).getBlock(), 2);
+		}
 
 		return true;
 	}
