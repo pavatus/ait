@@ -52,29 +52,23 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 		ClientConsoleVariantSchema variant = entity.getVariant().getClient();
         ConsoleModel console = variant.model();
 
-		boolean hasPower = tardis.engine().hasPower();
-
 		matrices.push();
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
 		if (!AITMod.AIT_CONFIG.DISABLE_CONSOLE_ANIMATIONS()) {
 			profiler.swap("animate");
-			console.animateBlockEntity(entity, tardis.travel().getState(), hasPower);
+			console.animateBlockEntity(entity, tardis.travel().getState(), tardis.engine().hasPower());
 		}
 
 		profiler.swap("render");
 		console.renderWithAnimations(entity, console.getPart(), matrices, vertexConsumers.getBuffer(
 				RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1
 		);
-
-		if (hasPower) {
-			profiler.swap("emission"); // emission {
-
-			ClientLightUtil.renderEmissive(
-					console::renderWithAnimations, variant.emission(), entity, console.getPart(),
-					matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
-			);
-		}
+		profiler.swap("emission"); // emission {
+		ClientLightUtil.renderEmissivable(
+				tardis.engine().hasPower(), console::renderWithAnimations, variant.emission(), entity,
+				console.getPart(), matrices, vertexConsumers, light, overlay, 1,  1, 1, 1
+		);
 
 		matrices.pop();
 		profiler.swap("sonic"); // } emission / sonic {
