@@ -1,10 +1,10 @@
 package loqor.ait.tardis.control.impl;
 
+import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.control.impl.pos.PosType;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -72,6 +72,7 @@ public class DimensionControl extends Control {
 	}
 
 	// @TODO for some reason in the dev env, this method tends to not like doing anything sometimes. idk, it works or it doesnt, but in builds, it always works. funny what a lil spaghetti man can tell you at 3 am
+	@Deprecated(forRemoval = true)
 	public static String convertWorldValueToModified(String value) {
 
 		// Split the string into words

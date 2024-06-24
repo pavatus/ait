@@ -24,7 +24,7 @@ public abstract class BasicSchema implements Identifiable, Nameable {
 
     @Override
     public String name() {
-        return text.getString();
+        return this.text().getString();
     }
 
     private static String join(char delim, int begin, String[] parts) {

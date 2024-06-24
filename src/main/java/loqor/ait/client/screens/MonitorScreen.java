@@ -3,23 +3,24 @@ package loqor.ait.client.screens;
 import com.google.common.collect.Lists;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
-import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.client.renderers.AITRenderLayers;
-import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.registry.impl.CategoryRegistry;
-import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.exterior.category.BoothCategory;
-import loqor.ait.tardis.exterior.category.ClassicCategory;
-import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
-import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.client.screens.interior.InteriorSettingsScreen;
+import loqor.ait.client.util.ClientLightUtil;
+import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DimensionControl;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.control.impl.DirectionControl;
+import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.exterior.category.ClassicCategory;
+import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.client.MinecraftClient;
@@ -27,7 +28,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -261,64 +264,96 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	protected void drawTardisExterior(DrawContext context, int x, int y, float scale) {
+		this.tickForSpin++;
+		Tardis tardis = this.tardis();
+
+		if (tardis == null)
+			return;
+
+		VertexConsumerProvider vertexConsumer = context.getVertexConsumers();
 		MatrixStack stack = context.getMatrices();
 
-		tickForSpin++;
+		int centerWidth = width / 2;
+		int centerHeight = height / 2;
 
-		if (tardis() != null) {
-			if (this.getCategory() == null || this.getCurrentVariant() == null)
-				return;
+		ExteriorCategorySchema category = this.getCategory();
+		ClientExteriorVariantSchema variant = this.getCurrentVariant();
 
-			boolean isExtUnlocked = tardis().isUnlocked(this.getCurrentVariant().parent());
+		if (category == null || variant == null)
+			return;
 
-			stack.push();
-			stack.translate(0, 0, 50f);
-			context.drawCenteredTextWithShadow(
-					this.textRenderer,
-					convertCategoryNameToProper(this.getCategory().name()), (width / 2 - 54), (height / 2 + 41),
-					5636095);
+		boolean isPoliceBox = category.equals(CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE))
+				|| category.equals(CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE));
 
-			List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(this.getCategory());
-			context.drawCenteredTextWithShadow(
-					this.textRenderer,
-					(list.indexOf(this.getCurrentVariant().parent()) + 1) + "/" + ExteriorVariantRegistry.withParent(this.getCategory()).size(),
-					(width / 2 - 29), (height / 2 + 26),
-					0x00ffb3);
-			stack.pop();
+		boolean isExtUnlocked = tardis.isUnlocked(variant.parent());
+		boolean hasPower = tardis.engine().hasPower();
+		boolean alarms = tardis.alarm().isEnabled();
 
-			ExteriorModel model = this.getCurrentVariant().model();
+		stack.push();
+		stack.translate(0, 0, 50f);
 
-			stack.push();
-			stack.translate(0, 0, -50f);
-			stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
-			context.drawTexture(TEXTURE, x - 41, y - 41, 173, 173, 83, 83);
-			stack.pop();
+		context.drawCenteredTextWithShadow(
+				this.textRenderer, category.text(), (centerWidth - 54),
+				(centerHeight + 41), 5636095
+		);
 
-			stack.push();
-			stack.translate(x, this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 11 : y, 0f);
-			if (this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE)) {
-				stack.scale(-12, 12, 12);
-			} else if (this.getCategory() == CategoryRegistry.getInstance().get(BoothCategory.REFERENCE)) {
-				stack.scale(-scale, scale, scale);
-			} else {
-				stack.scale(-scale, scale, scale);
-			}
-			stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) tickForSpin / 1200L) * 360.0f));
-			DiffuseLighting.disableGuiDepthLighting();
-			model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, 1f);
-			if (getCurrentVariant().emission() != null) model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().emission())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1: 0.1f, isExtUnlocked ? 1 : 0.1f, 1f);
-			DiffuseLighting.enableGuiDepthLighting();
-			stack.pop();
+		List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(category);
 
-			stack.push();
-			stack.translate(0, 0, 50f);
-			context.drawCenteredTextWithShadow(
-					this.textRenderer,
-					(isExtUnlocked) ? "" : "\uD83D\uDD12",
-					x, y,
-					Color.WHITE.getRGB());
-			stack.pop();
+		context.drawCenteredTextWithShadow(
+				this.textRenderer, (list.indexOf(variant.parent()) + 1)
+						+ "/" + list.size(),
+				(centerWidth - 29), (centerHeight + 26), 0x00ffb3
+		);
+
+		stack.pop();
+		ExteriorModel model = variant.model();
+
+		stack.push();
+		stack.translate(0, 0, -50f);
+		stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
+		context.drawTexture(TEXTURE, x - 41, y - 41, 173, 173, 83, 83);
+		stack.pop();
+
+		stack.push();
+		stack.translate(x, isPoliceBox ? y + 11 : y, 0f);
+
+		if (isPoliceBox) {
+			stack.scale(-12, 12, 12);
+		} else {
+			stack.scale(-scale, scale, scale);
 		}
+
+		stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) tickForSpin / 1200L) * 360.0f));
+
+		Identifier texture = variant.texture();
+		Identifier emissive = variant.emission();
+
+		float base = isExtUnlocked ? 1f : 0.1f;
+		float tinted = alarms && isExtUnlocked ? 0.3f : base;
+
+		model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)),
+				LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, base, base, base, 1f
+		);
+
+		if (hasPower && emissive != null) {
+			ClientLightUtil.renderEmissive(ClientLightUtil.Renderable.create(model::render), emissive, null,
+					model.getPart(), stack, context.getVertexConsumers(), LightmapTextureManager.MAX_LIGHT_COORDINATE,
+					OverlayTexture.DEFAULT_UV, base, tinted, tinted, 1f
+			);
+		}
+
+		stack.pop();
+
+		stack.push();
+		stack.translate(0, 0, 50f);
+
+		context.drawCenteredTextWithShadow(
+				this.textRenderer, isExtUnlocked
+						? "" : "\uD83D\uDD12",
+				x, y, Color.WHITE.getRGB()
+		);
+
+		stack.pop();
 	}
 
 	@Override

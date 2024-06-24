@@ -1,9 +1,9 @@
 package loqor.ait.core.data.schema.exterior;
 
 import com.google.gson.*;
+import loqor.ait.core.data.BasicSchema;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.core.data.base.Identifiable;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
@@ -13,13 +13,11 @@ import java.lang.reflect.Type;
 /**
  * @author duzo
  */
-public abstract class ExteriorCategorySchema implements Identifiable {
+public abstract class ExteriorCategorySchema extends BasicSchema {
 	private final Identifier id;
-	private final String name;
 
 	protected ExteriorCategorySchema(Identifier id, String name) {
 		this.id = id;
-		this.name = name;
 	}
 
 	@Override
@@ -31,12 +29,9 @@ public abstract class ExteriorCategorySchema implements Identifiable {
 				&& id.equals(other.id);
 	}
 
+	@Override
 	public Identifier id() {
 		return this.id;
-	}
-
-	public String name() {
-		return this.name;
 	}
 
 	/**
