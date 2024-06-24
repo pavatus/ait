@@ -33,7 +33,7 @@ public class FlightUtil {
 		travel.handbrake().set(false);
 		travel.autoLand().set(true);
 
-		travel.destination().set(pos);
+		travel.destination(pos);
 
 		if (travel.getState() == TravelHandler.State.LANDED) {
 			travel.dematerialize(true);

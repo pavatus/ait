@@ -69,7 +69,7 @@ public class RenegadeExteriorModel extends ExteriorModel {
 
 		matrices.push();
 		matrices.translate(0, -1.5f, 0);
-		renegade.getChild("door").yaw = exterior.tardis().get().getDoor().isOpen() ? 1.75f : 0f;
+		renegade.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? 1.75f : 0f;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();

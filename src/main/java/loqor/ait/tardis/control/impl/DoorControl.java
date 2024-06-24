@@ -25,7 +25,7 @@ public class DoorControl extends Control {
 			return false;
 		}
 
-		this.soundEvent = !tardis.getDoor().isOpen() ? SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON : SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF;
+		this.soundEvent = !tardis.door().isOpen() ? SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON : SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF;
 		useDoor(tardis, world, player.getBlockPos(), player);
 		return true;
 	}

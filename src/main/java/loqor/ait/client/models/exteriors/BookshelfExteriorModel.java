@@ -107,7 +107,7 @@ public class BookshelfExteriorModel extends ExteriorModel {
 		matrices.scale(1F, 1F, 1F);
 		matrices.translate(0, -1.5f, 0);
 
-		DoorData door = exterior.tardis().get().getDoor();
+		DoorData door = exterior.tardis().get().door();
 
 		this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -4.75F : 0.0F;
 		this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 4.75F : 0.0F;
@@ -128,7 +128,7 @@ public class BookshelfExteriorModel extends ExteriorModel {
 		matrices.scale(1F, 1F, 1F);
 		matrices.translate(0, -1.5f, 0);
 
-		DoorData door = realEntity.getTardis().getDoor();
+		DoorData door = realEntity.getTardis().door();
 
 		this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -4.75F : 0.0F;
 		this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 4.75F : 0.0F;

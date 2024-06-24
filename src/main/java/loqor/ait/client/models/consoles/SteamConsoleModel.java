@@ -938,13 +938,13 @@ public class SteamConsoleModel extends ConsoleModel {
 		direction.yaw = direction.yaw + (1.5708f * tardis.travel().destination().getRotation());
 
 		ModelPart doorControl = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("crank2").getChild("bone18");
-		doorControl.yaw = doorControl.yaw + (tardis.getDoor().isOpen() ? tardis.getDoor().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
+		doorControl.yaw = doorControl.yaw + (tardis.door().isOpen() ? tardis.door().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
 
 		ModelPart cloak = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone46");
 		cloak.roll = cloak.roll - (tardis.getHandlers().getCloak().isEnabled() ? 1.5708f : 0);
 
 		ModelPart doorLock = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone47");
-		doorLock.roll = doorLock.roll - (tardis.getDoor().locked() ? 1.5708f : 0);
+		doorLock.roll = doorLock.roll - (tardis.door().locked() ? 1.5708f : 0);
 
 		ModelPart autopilot = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone48");
 		autopilot.roll = autopilot.roll - (tardis.travel().autoLand().get() ? 1.5708f : 0);

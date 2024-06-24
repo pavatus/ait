@@ -46,7 +46,7 @@ public class TardisPortal extends Portal {
 				return;
 			}
 
-			if (!tardis.getDoor().isClosed())
+			if (!tardis.door().isClosed())
 				return;
 
 			// we know we are closed and have a tardis so we shouldn't be existing AHHH

@@ -3,7 +3,7 @@ package loqor.ait.tardis.animation;
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
-import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.data.TravelHandler;
 
 public class ClassicAnimation extends ExteriorAnimation {
 
@@ -16,17 +16,17 @@ public class ClassicAnimation extends ExteriorAnimation {
 		if (exterior.tardis().isEmpty())
 			return;
 
-		TardisTravel.State state = exterior.tardis().get().travel().getState();
+		TravelHandler.State state = exterior.tardis().get().travel().getState();
 
 		if (this.timeLeft < 0)
 			this.setupAnimation(exterior.tardis().get().travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 
-		if (state == TardisTravel.State.DEMAT) {
+		if (state == TravelHandler.State.DEMAT) {
 			timeLeft--;
 			this.setAlpha(getFadingAlpha());
 
 			runAlphaChecks(state);
-		} else if (state == TardisTravel.State.MAT) {
+		} else if (state == TravelHandler.State.MAT) {
 			timeLeft++;
 
 			if (timeLeft > 680) {
@@ -36,7 +36,7 @@ public class ClassicAnimation extends ExteriorAnimation {
 			}
 
 			runAlphaChecks(state);
-		} else if (state == TardisTravel.State.LANDED/* && alpha != 1f*/) {
+		} else if (state == TravelHandler.State.LANDED/* && alpha != 1f*/) {
 			this.setAlpha(1f);
 		}
 	}
@@ -46,7 +46,7 @@ public class ClassicAnimation extends ExteriorAnimation {
 	}
 
 	@Override
-	public void setupAnimation(TardisTravel.State state) {
+	public void setupAnimation(TravelHandler.State state) {
 		if (exterior.tardis().isEmpty() || exterior.tardis().get().getExterior().getCategory() == null) {
 			AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
 			alpha = 0f; // just make me vanish.
@@ -60,11 +60,11 @@ public class ClassicAnimation extends ExteriorAnimation {
 		maxTime = sound.maxTime();
 		startTime = sound.startTime();
 
-		if (state == TardisTravel.State.DEMAT) {
+		if (state == TravelHandler.State.DEMAT) {
 			alpha = 1f;
-		} else if (state == TardisTravel.State.MAT) {
+		} else if (state == TravelHandler.State.MAT) {
 			alpha = 0f;
-		} else if (state == TardisTravel.State.LANDED) {
+		} else if (state == TravelHandler.State.LANDED) {
 			alpha = 1f;
 		}
 	}

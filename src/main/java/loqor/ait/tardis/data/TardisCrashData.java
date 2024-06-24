@@ -2,7 +2,6 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.AITModTags;
 import loqor.ait.core.util.DeltaTimeManager;
@@ -68,7 +67,7 @@ public class TardisCrashData extends TardisComponent implements TardisTickable {
 		}
 		DirectedGlobalPos.Cached exteriorPosition = tardis.travel().position();
 		ServerWorld exteriorWorld = exteriorPosition.getWorld();
-		if (tardis.getDoor().isOpen() && this.getState() != State.NORMAL) {
+		if (tardis.door().isOpen() && this.getState() != State.NORMAL) {
 			exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
 					exteriorPosition.getPos().toCenterPos().x, exteriorPosition.getPos().getY() + 2f,
 					exteriorPosition.getPos().toCenterPos().z,

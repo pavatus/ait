@@ -864,13 +864,13 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		//Door Locking Mechanism Control
 		ModelPart doorlock = this.toyota.getChild("panel1").getChild("controls").getChild("smalllockernob").getChild("pivot3");
-		doorlock.yaw = tardis.getDoor().locked() ? doorlock.yaw + 0.5f : doorlock.yaw;
+		doorlock.yaw = tardis.door().locked() ? doorlock.yaw + 0.5f : doorlock.yaw;
 
 		//Door Control
 		ModelPart doorControl = this.toyota.getChild("panel1").getChild("controls").getChild("power");
-		doorControl.pitch = tardis.getDoor().isLeftOpen() ? doorControl.pitch - 1f : tardis.getDoor().isRightOpen() ? doorControl.pitch - 1.55f : doorControl.pitch;
+		doorControl.pitch = tardis.door().isLeftOpen() ? doorControl.pitch - 1f : tardis.door().isRightOpen() ? doorControl.pitch - 1.55f : doorControl.pitch;
 		ModelPart doorControlLights = this.toyota.getChild("panel1").getChild("controls").getChild("powerlights").getChild("powerlights2");
-		doorControlLights.pivotY = !(tardis.getDoor().isOpen()) ? doorControlLights.pivotY : doorControlLights.pivotY + 1;
+		doorControlLights.pivotY = !(tardis.door().isOpen()) ? doorControlLights.pivotY : doorControlLights.pivotY + 1;
 
 		//Alarm Control and Lights
 		ModelPart alarms = this.toyota.getChild("panel4").getChild("controls4").getChild("coloredlever2");

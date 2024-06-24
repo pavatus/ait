@@ -52,7 +52,7 @@ public class GeometricExteriorModel extends ExteriorModel {
 		matrices.scale(1F, 1F, 1F);
 		matrices.translate(0, -1.5f, 0);
 
-		DoorData door = exterior.tardis().get().getDoor();
+		DoorData door = exterior.tardis().get().door();
 
 		this.geometric.getChild("door").pivotZ += door.isOpen() ? -16f : 0f;
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
@@ -66,7 +66,7 @@ public class GeometricExteriorModel extends ExteriorModel {
 		matrices.scale(1f, 1F, 1F);
 		matrices.translate(0, -1.5f, 0);
 
-		DoorData door = realEntity.getTardis().getDoor();
+		DoorData door = realEntity.getTardis().door();
 
 		this.geometric.getChild("door").pivotZ += door.isOpen() ? -16f : 0f;
 

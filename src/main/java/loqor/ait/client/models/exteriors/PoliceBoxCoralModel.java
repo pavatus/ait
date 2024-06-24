@@ -101,7 +101,7 @@ public class PoliceBoxCoralModel extends ExteriorModel {
 		matrices.scale(0.63F, 0.63F, 0.63F);
 		matrices.translate(0, -1.5f, 0);
 
-		DoorData door = exterior.tardis().get().getDoor();
+		DoorData door = exterior.tardis().get().door();
 
 		this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
@@ -116,7 +116,7 @@ public class PoliceBoxCoralModel extends ExteriorModel {
 		matrices.scale(0.63F, 0.63F, 0.63F);
 		matrices.translate(0, -1.5f, 0);
 
-		DoorData door = realEntity.getTardis().getDoor();
+		DoorData door = realEntity.getTardis().door();
 
 		this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;

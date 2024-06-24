@@ -64,7 +64,7 @@ public class RenegadeDoorModel extends DoorModel {
 		matrices.translate(0, -1.5f, 0);
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f));
 
-		renegade.getChild("door").yaw = door.tardis().get().getDoor().isOpen() ? 1.75f : 0f;
+		renegade.getChild("door").yaw = door.tardis().get().door().isOpen() ? 1.75f : 0f;
 		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
 		matrices.pop();

@@ -69,7 +69,7 @@ public class SequenceRegistry {
 						finishedTardis.flight().decreaseFlightTime(120),
 				missedTardis -> {
 					missedTardis.removeFuel(-random.nextBetween(45, 125));
-					missedTardis.getDoor().openDoors();
+					missedTardis.door().openDoors();
 					List<Explosion> explosions = new ArrayList<>();
 
 					missedTardis.getDesktop().getConsolePos().forEach(console -> {
@@ -100,7 +100,7 @@ public class SequenceRegistry {
 		DIMENSIONAL_BREACH = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_breach"), (finishedTardis -> {
 					finishedTardis.flight().decreaseFlightTime(60);
 				}), (missedTardis -> {
-					missedTardis.getDoor().openDoors();
+					missedTardis.door().openDoors();
 				}), 80L, Text.literal("DIMENSION BREACH: SECURE DOORS").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new DimensionControl(), new DoorControl()));
 
@@ -164,12 +164,12 @@ public class SequenceRegistry {
 		DIMENSIONAL_DRIFT_Z = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_drift_z"), (finishedTardis -> {
 					finishedTardis.flight().decreaseFlightTime(120);
 				}), (missedTardis -> {
-					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
-							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
-							pos.getY(),
-							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
-							pos.getRotation()));
+					missedTardis.travel().destination(cached -> {
+						BlockPos pos = cached.getPos();
+
+						return cached.pos(random.nextBetween(pos.getX() - 8, pos.getX() + 8), pos.getY(),
+								random.nextBetween(pos.getZ() - 8, pos.getZ() + 8));
+					});
 				}), 100L, Text.literal("Drifting off course Z!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new DimensionControl(), new ZControl()));
 
@@ -182,7 +182,7 @@ public class SequenceRegistry {
 
 					BlockPos doorPos = directedDoorPos.getPos();
 
-					if (finishedTardis.getDoor().isOpen() || TardisUtil.getTardisDimension().isClient())
+					if (finishedTardis.door().isOpen() || TardisUtil.getTardisDimension().isClient())
 						return;
 
 					ItemEntity rewardForCloaking = new ItemEntity(EntityType.ITEM, TardisUtil.getTardisDimension());
@@ -199,7 +199,7 @@ public class SequenceRegistry {
 					BlockPos doorPos = directedDoorPos.getPos();
 					missedTardis.flight().increaseFlightTime(120);
 
-					if (missedTardis.getDoor().isOpen() || TardisUtil.getTardisDimension().isClient())
+					if (missedTardis.door().isOpen() || TardisUtil.getTardisDimension().isClient())
 						return;
 
 					Vec3d centered = doorPos.toCenterPos();

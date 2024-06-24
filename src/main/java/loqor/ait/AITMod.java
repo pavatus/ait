@@ -155,7 +155,7 @@ public class AITMod implements ModInitializer {
 			) || tardis.isRefueling())
 				return true; // cancelled
 
-			if (tardis.getDoor().isOpen())
+			if (tardis.door().isOpen())
 				return true;
 
 			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {

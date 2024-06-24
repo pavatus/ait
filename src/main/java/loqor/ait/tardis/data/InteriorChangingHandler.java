@@ -84,7 +84,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 
 		tardis.alarm().disable();
 
-		boolean previouslyLocked = tardis.getDoor().previouslyLocked();
+		boolean previouslyLocked = tardis.door().previouslyLocked();
 		DoorData.lockTardis(previouslyLocked, tardis, null, false);
 
 		tardis.engine().hasEngineCore().set(false);
@@ -140,7 +140,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 			return;
 		}
 
-		if (isInteriorEmpty() && !this.tardis().getDoor().locked()) {
+		if (isInteriorEmpty() && !this.tardis().door().locked()) {
 			DoorData.lockTardis(true, this.tardis(), null, true);
 		}
 		if (isInteriorEmpty() && !clearedOldInterior) {

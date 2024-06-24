@@ -163,8 +163,8 @@ public class DetectorBlock extends WallMountedBlock implements BlockEntityProvid
 
 			return state == TardisCrashData.State.UNSTABLE ? 7 : 15;
 		}),
-		DOOR_LOCKED(tardis -> tardis.getDoor().locked() ? 15 : 0),
-		DOOR_OPEN(tardis -> tardis.getDoor().isOpen() ? 15 : 0),
+		DOOR_LOCKED(tardis -> tardis.door().locked() ? 15 : 0),
+		DOOR_OPEN(tardis -> tardis.door().isOpen() ? 15 : 0),
 		SONIC(tardis -> tardis.sonic().hasConsoleSonic() ? 15 : 0),
 		ALARMS(tardis -> tardis.alarm().isEnabled() ? 15 : 0);
 

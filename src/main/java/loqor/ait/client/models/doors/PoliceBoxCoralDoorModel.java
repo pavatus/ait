@@ -124,7 +124,7 @@ public class PoliceBoxCoralDoorModel extends DoorModel {
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		DoorData door = doorEntity.tardis().get().getDoor();
+		DoorData door = doorEntity.tardis().get().door();
 
 		this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;

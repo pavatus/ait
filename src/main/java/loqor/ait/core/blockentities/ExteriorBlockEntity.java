@@ -96,7 +96,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		if (player.getMainHandStack().getItem() instanceof SonicItem &&
 				!tardis.siege().isActive() &&
 				!tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()
-				&& tardis.getDoor().isClosed()
+				&& tardis.door().isClosed()
 				&& tardis.crash().getRepairTicks() > 0) {
 			ItemStack sonic = player.getMainHandStack();
 			NbtCompound tag = sonic.getOrCreateNbt();
@@ -140,12 +140,12 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 
 		Tardis tardis = ref.get();
-		boolean previouslyLocked = tardis.getDoor().previouslyLocked();
+		boolean previouslyLocked = tardis.door().previouslyLocked();
 
 		if (!previouslyLocked && tardis.travel().getState() == TravelHandler.State.MAT && this.getAlpha() >= 0.9f)
 			TardisUtil.teleportInside(tardis, entity);
 
-		if (!tardis.getDoor().isOpen())
+		if (!tardis.door().isOpen())
 			return;
 
 		if (!tardis.getLockedTardis() && (!DependencyChecker.hasPortals() || !tardis.getExterior().getVariant().hasPortals()))
@@ -202,7 +202,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		animationTimer++;
 		Tardis tardis = this.tardis().get();
 
-		DoorData door = tardis.getDoor();
+		DoorData door = tardis.door();
 
 		DoorData.DoorStateEnum doorState = door.getDoorState();
 		DoorData.DoorStateEnum animState = door.getAnimationExteriorState();

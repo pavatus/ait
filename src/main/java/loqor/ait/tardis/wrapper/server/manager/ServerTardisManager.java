@@ -10,8 +10,8 @@ import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.core.events.WorldSaveEvent;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.manager.BufferedTardisManager;
@@ -263,15 +263,15 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 			// stop forcing all chunks
 			if (lock) {
 				TardisChunkUtil.stopForceExteriorChunk(tardis);
-				TardisTravel.State state = tardis.travel().getState();
+				TravelHandler.State state = tardis.travel().getState();
 
-				if (state == TardisTravel.State.DEMAT) {
-					tardis.travel().toFlight();
-				} else if (state == TardisTravel.State.MAT) {
-					tardis.travel().forceLand();
+				if (state == TravelHandler.State.DEMAT) {
+					tardis.travel().finishDemat();
+				} else if (state == TravelHandler.State.MAT) {
+					tardis.travel().finishLanding();
 				}
 
-				tardis.getDoor().closeDoors();
+				tardis.door().closeDoors();
 
 				if (DependencyChecker.hasPortals())
 					PortalsHandler.removePortals(tardis);

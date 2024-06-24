@@ -76,7 +76,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return exterior;
 	}
 
-	public DoorData getDoor() {
+	public DoorData door() {
 		return this.getHandlers().get(TardisComponent.Id.DOOR);
 	}
 
@@ -84,13 +84,8 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return this.handler(TardisComponent.Id.SONIC);
 	}
 
-	@Deprecated
-	public void setLockedTardis(boolean bool) {
-		this.getDoor().setLocked(bool);
-	}
-
 	public boolean getLockedTardis() {
-		return this.getDoor().locked();
+		return this.door().locked();
 	}
 
 	public TravelHandler travel() {
@@ -188,10 +183,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 	public WaypointHandler waypoint() {
 		return this.handler(TardisComponent.Id.WAYPOINTS);
-	}
-
-	public boolean inFlight() {
-		return this.travel().getState() != TravelHandler.State.LANDED;
 	}
 
 	public boolean isUnlocked(Unlockable unlockable) {

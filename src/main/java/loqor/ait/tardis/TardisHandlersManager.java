@@ -111,7 +111,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 
 	@Deprecated
 	public DoorData getDoor() {
-		return this.tardis().getDoor();
+		return this.tardis().door();
 	}
 
 	@Deprecated

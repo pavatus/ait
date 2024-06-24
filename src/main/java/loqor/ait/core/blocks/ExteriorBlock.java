@@ -201,7 +201,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
 		// todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
 		if (DependencyChecker.hasPortals())
-			if (tardis.getDoor().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
+			if (tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
 				return getLedgeShape(state);
 
 		TravelHandler.State travelState = tardis.travel().getState();
@@ -404,7 +404,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
-		DoorData.lockTardis(tardis.getDoor().previouslyLocked(), tardis, null, false);
+		DoorData.lockTardis(tardis.door().previouslyLocked(), tardis, null, false);
 	}
 
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {

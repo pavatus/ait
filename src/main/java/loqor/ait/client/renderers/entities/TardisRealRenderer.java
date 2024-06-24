@@ -74,7 +74,7 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 		}
 
 		if (!entity.isOnGround()) {
-			if (!tardis.getDoor().isOpen()) {
+			if (!tardis.door().isOpen()) {
 				this.model.getPart().setAngles((float) 0, ((entity.getRotation(tickDelta)) * 4), 0);
 				matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) (entity.getVelocity().horizontalLength() * 45f)));
 			} else {

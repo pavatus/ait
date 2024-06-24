@@ -3,7 +3,6 @@ package loqor.ait.tardis.animation;
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.CloakData;
 import loqor.ait.tardis.data.TravelHandler;
@@ -47,14 +46,14 @@ public abstract class ExteriorAnimation {
 	}
 
 	// fixme bug that sometimes happens where server doesnt have animation
-	protected void runAlphaChecks(TardisTravel.State state) {
+	protected void runAlphaChecks(TravelHandler.State state) {
 		if (this.exterior.getWorld().isClient() || this.exterior.tardis().isEmpty())
 			return;
 
-		if (alpha <= 0f && state == TardisTravel.State.DEMAT)
+		if (alpha <= 0f && state == TravelHandler.State.DEMAT)
 			exterior.tardis().get().travel().finishDemat();
 
-		if (alpha >= 1f && state == TardisTravel.State.MAT)
+		if (alpha >= 1f && state == TravelHandler.State.MAT)
 			exterior.tardis().get().travel().finishLanding(this.exterior);
 	}
 

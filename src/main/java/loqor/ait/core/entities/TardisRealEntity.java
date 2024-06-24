@@ -3,11 +3,9 @@ package loqor.ait.core.entities;
 import loqor.ait.core.AITDamageTypes;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
@@ -27,6 +25,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -81,16 +80,23 @@ public class TardisRealEntity extends LinkableLivingEntity {
 			return;
 
 		Tardis tardis = TardisManager.with(world, (o, manager) -> manager.demandTardis(o, tardisId));
-		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardis.getUuid(), (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
+		TravelHandler travel = tardis.travel();
+
+		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardisId, (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
+
+		tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(
+				DirectionControl.getGeneralizedRotation(travel.position().getRotation())
+		), 0);
+
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_IN_REAL_FLIGHT, true, true);
 
 		world.spawnEntity(tardisRealEntity);
 
-		tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(DirectionControl.getGeneralizedRotation(tardis.travel().position().getPos().getRotation())), 0);
 		player.getAbilities().flying = true;
 		player.getAbilities().allowFlying = true;
+
 		player.getAbilities().setFlySpeed(player.getAbilities().getFlySpeed() * 1.5F);
-		tardis.travel().toFlight();
+		travel.finishDemat();
 	}
 
 	@Override
@@ -124,7 +130,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					if(!shouldTriggerLandSound) {
 						this.getWorld().playSound(null, this.getBlockPos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS, 2F, 1F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
 						user.getAbilities().flying = false;
-						if(this.getTardis().getDoor().isClosed()) {
+						if(this.getTardis().door().isClosed()) {
 							DamageSource damage = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
 							this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity -> (!(entity instanceof PlayerEntity) || !entity.isSpectator() && !((PlayerEntity) entity).isCreative())).forEach((entity) -> {
 								if (entity != this.getControllingPassenger())
@@ -134,9 +140,14 @@ public class TardisRealEntity extends LinkableLivingEntity {
 						shouldTriggerLandSound = true;
 					}
 					if (user.isSneaking()) {
-						getTardis().travel().setStateAndLand(new DirectedGlobalPos.Cached(this.getWorld().getRegistryKey(), this.getBlockPos(), (byte) DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(user.getBodyYaw()))));
+						getTardis().travel().immediatelyLandAt(DirectedGlobalPos.Cached.create(
+                                (ServerWorld) this.getWorld(), this.getBlockPos(), (byte) DirectionControl.getGeneralizedRotation(
+										RotationPropertyHelper.fromYaw(user.getBodyYaw())))
+						);
+
 						if (getTardis().travel().getState() == TravelHandler.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
+
 						getTardis().travel().autoLand().set(false);
 						user.dismountVehicle();
 					}
@@ -166,7 +177,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 			}
 		}
 
-		if(!this.getWorld().isClient() && this.getTardis().getDoor().isOpen()) {
+		if(!this.getWorld().isClient() && this.getTardis().door().isOpen()) {
 			this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity -> (!(entity instanceof PlayerEntity) || !entity.isSpectator() && !((PlayerEntity) entity).isCreative())).forEach((entity) -> {
 				TardisUtil.teleportInside(this.getTardis(), entity);
 			});
@@ -244,7 +255,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	public void onPlayerCollision(PlayerEntity player) {
 		if (this.getPlayer().isPresent()) {
 			if (player != this.getPlayer().get()) {
-				if(this.getTardis().getDoor().isOpen()) {
+				if(this.getTardis().door().isOpen()) {
 					TardisUtil.teleportInside(this.getTardis(), player);
 				}
 			}

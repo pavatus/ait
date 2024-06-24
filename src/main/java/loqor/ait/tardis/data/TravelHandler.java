@@ -1,11 +1,11 @@
 package loqor.ait.tardis.data;
 
+import io.wispforest.owo.ops.WorldOps;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
@@ -20,19 +20,38 @@ import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.state.property.Properties;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @SuppressWarnings("removal")
 public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
     public ExteriorBlockEntity placeExterior() {
-        DirectedGlobalPos.Cached globalPos = this.position.get();
+        return placeExterior(true);
+    }
+
+    public ExteriorBlockEntity placeExterior(boolean animate) {
+        // Set the position of the Tardis to the destination
+        BiomeHandler biome = this.tardis.getHandlers().get(Id.BIOME);
+        biome.update();
+
+        return placeExterior(this.position(), animate);
+    }
+
+    private ExteriorBlockEntity placeExterior(DirectedGlobalPos.Cached globalPos, boolean animate) {
         ServerWorld world = globalPos.getWorld();
         BlockPos pos = globalPos.getPos();
 
@@ -46,7 +65,9 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         exterior.link(this.tardis);
         world.addBlockEntity(exterior);
 
-        this.runAnimations(exterior);
+        if (animate)
+            this.runAnimations(exterior);
+
         return exterior;
     }
 
@@ -65,6 +86,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
     public void deleteExterior() {
         DirectedGlobalPos.Cached globalPos = this.position.get();
+
         ServerWorld world = globalPos.getWorld();
         BlockPos pos = globalPos.getPos();
 
@@ -77,10 +99,9 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
     public void dematerialize(boolean withRemat) {
         if (TardisEvents.DEMAT.invoker().onDemat(this.tardis)) {
             // demat will be cancelled
-
             DirectedGlobalPos.Cached globalPos = this.position.get();
             globalPos.getWorld().playSound(null, globalPos.getPos(),
-                    AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f); // fixme can be spammed
+                    AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
 
             if (TardisUtil.isInteriorNotEmpty(this.tardis))
                 FlightUtil.playSoundAtEveryConsole(this.tardis.getDesktop(),
@@ -105,10 +126,9 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
         if (this.autoLand.get()) {
             // fulfill all the prerequisites
-            // DoorData.lockTardis(true, tardis(), null, false);
             this.handbrake.set(false);
 
-            this.tardis.getDoor().closeDoors();
+            this.tardis.door().closeDoors();
             this.tardis.setRefueling(false);
 
             if (this.speed.get() == 0)
@@ -116,15 +136,15 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         }
 
         DirectedGlobalPos.Cached globalPos = this.position.get();
-
-        this.autoLand.set(withRemat);
         ServerWorld world = globalPos.getWorld();
 
+        this.autoLand.set(withRemat);
         this.state.set(State.DEMAT);
+
         SoundEvent sound = this.getState().effect().sound();
 
-        world.playSound(null, globalPos.getPos(), sound, SoundCategory.BLOCKS);
         FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), sound, SoundCategory.BLOCKS, 10f, 1f);
+        world.playSound(null, globalPos.getPos(), sound, SoundCategory.BLOCKS);
 
         this.runAnimationsAt(globalPos);
     }
@@ -178,7 +198,6 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         // Get the server world of the destination
         ServerWorld destWorld = destination.getWorld();
         BlockPos destPos = destination.getPos();
-        byte rotation = destination.getRotation();
 
         // Play materialize sound at the destination
         SoundEvent sound = this.getState().effect().sound();
@@ -186,29 +205,15 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
         FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), sound, SoundCategory.BLOCKS, 1f, 1f);
 
-        // Set the destination block to the Tardis exterior block
-        ExteriorBlock block = (ExteriorBlock) AITBlocks.EXTERIOR_BLOCK;
-        BlockState state = block.getDefaultState().with(Properties.ROTATION, Math.abs(rotation)).with(ExteriorBlock.LEVEL_9, 0);
-        destWorld.setBlockState(destPos, state);
-
-        // Create and add the exterior block entity at the destination
-        ExteriorBlockEntity blockEntity = new ExteriorBlockEntity(destPos, state);
-        destWorld.addBlockEntity(blockEntity);
-
         // Set the position of the Tardis to the destination
         this.position.set(destination);
-
-        // Run animations on the block entity
-        this.runAnimations(blockEntity);
-
-        BiomeHandler biome = tardis.handler(Id.BIOME);
-        biome.update();
+        this.placeExterior();
 
         if (tardis.isGrowth()) {
             TardisExterior exterior = tardis.getExterior();
 
             exterior.setType(CategoryRegistry.CAPSULE);
-            tardis.getDoor().closeDoors();
+            tardis.door().closeDoors();
         }
     }
 
@@ -280,7 +285,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
     }
 
     public boolean inFlight() {
-        return tardis.inFlight();
+        return this.getState() != State.LANDED;
     }
 
     @Override
@@ -317,7 +322,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
             }
         }
 
-        BlockPos temp2 = this.destination().getPos();
+        BlockPos temp2 = destination.getPos();
 
         current = world.getBlockState(temp2);
         top = world.getBlockState(temp2.up());
@@ -327,13 +332,113 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
     }
 
     public void crash() {
-        // @TODO theo please do crash code here
+        if (this.getState() != State.FLIGHT || this.isCrashing())
+            return;
+
+        int intensity = this.speed.get() + tardis.tardisHammerAnnoyance + 1;
+        List<Explosion> explosions = new ArrayList<>();
+
+        tardis.getDesktop().getConsolePos().forEach(console -> {
+            FlightUtil.playSoundAtConsole(console,
+                    SoundEvents.ENTITY_GENERIC_EXPLODE,
+                    SoundCategory.BLOCKS, 3f, 1f
+            );
+
+            Explosion explosion = TardisUtil.getTardisDimension().createExplosion(
+                    null, null, null,
+                    console.toCenterPos(), 3f * intensity,
+                    false, World.ExplosionSourceType.BLOCK
+            );
+
+            explosions.add(explosion);
+        });
+
+        Random random = TardisUtil.random();
+        SequenceHandler sequence = this.tardis.sequence();
+
+        if (sequence.hasActiveSequence())
+            sequence.setActiveSequence(null, true);
+
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+            float xVel = random.nextFloat(-2f, 3f);
+            float yVel = random.nextFloat(-1f, 2f);
+            float zVel = random.nextFloat(-2f, 3f);
+
+            player.setVelocity(xVel * intensity, yVel * intensity, zVel * intensity);
+
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 20 * intensity, 1, true, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 20 * intensity, (int) Math.round(0.25 * intensity), true, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 20 * intensity, (int) Math.round(0.25 * intensity), true, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20 * intensity, (int) Math.round(0.25 * intensity), true, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 20 * intensity, (int) Math.round(0.75 * intensity), true, false, false));
+
+            if (explosions.isEmpty())
+                player.damage(player.getDamageSources().generic(), Math.round(intensity * 0.5));
+        }
+
+        tardis.door().setLocked(true);
+
+        PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
+        PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
+
+        this.speed.set(0);
+
+        tardis.removeFuel(500 * intensity);
+        tardis.tardisHammerAnnoyance = 0;
+
+        int multiplier = random.nextInt(0, 2) == 0 ? 1 : -1;
+        int random_change = random.nextInt(10, 100) * intensity * multiplier;
+        
+        DirectedGlobalPos.Cached median = FlightUtil.getPositionFromPercentage(
+                this.position(), this.destination(), tardis.flight().getDurationAsPercentage()
+        );
+
+        this.setCrashing(true);
+        this.destination.set(median.offset(random_change, 0, random_change));
+
+        this.crashAndMaterialise();
+        int repairTicks = 1000 * intensity;
+        tardis.crash().setRepairTicks(repairTicks);
+
+        if (repairTicks > TardisCrashData.UNSTABLE_TICK_START_THRESHOLD) {
+            tardis.crash().setState(TardisCrashData.State.TOXIC);
+        } else {
+            tardis.crash().setState(TardisCrashData.State.UNSTABLE);
+        }
+
+        TardisEvents.CRASH.invoker().onCrash(tardis);
     }
 
-    public void toFlight() {
-        // @TODO theo please do toFlight code here
+    public void crashAndMaterialise() {
+        if (this.getState() != State.FLIGHT)
+            return;
+
+        this.state.set(State.MAT);
+
+        ServerWorld destWorld = this.destination().getWorld();
+        BlockPos pos = this.destination().getPos();
+
+        ForcedChunkUtil.keepChunkLoaded(destWorld, pos);
+        WorldOps.updateIfOnServer(destWorld, pos);
+
+        // Set the position of the Tardis to the destination
+        this.position.set(this.destination());
+        this.placeExterior(false);
     }
 
-    public void setStateAndLand(DirectedGlobalPos.Cached cached) {
+    public void immediatelyLandAt(DirectedGlobalPos.Cached globalPos) {
+        this.state.set(State.LANDED);
+        this.deleteExterior();
+
+        ServerWorld destWorld = globalPos.getWorld();
+        BlockPos pos = globalPos.getPos();
+
+        ForcedChunkUtil.keepChunkLoaded(destWorld, pos);
+        WorldOps.updateIfOnServer(destWorld, pos);
+
+        this.destination.set(globalPos);
+
+        this.position.set(globalPos);
+        this.placeExterior(false);
     }
 }

@@ -881,10 +881,10 @@ public class HartnellConsoleModel extends ConsoleModel {
 		// Door Control Movements
 		ModelPart doorControl = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ctrl_panel_3").getChild("bone123");
 		ModelPart doorControlLight = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ind_lamp_20").getChild("bone117");
-		if (tardis.getDoor().isLeftOpen()) {
+		if (tardis.door().isLeftOpen()) {
 			doorControl.yaw = doorControl.yaw + 1.575f;
 			doorControlLight.pivotY = doorControlLight.pivotY + 1;
-		} else if (tardis.getDoor().isRightOpen()) {
+		} else if (tardis.door().isRightOpen()) {
 			doorControl.yaw = doorControl.yaw + 3.15f;
 			doorControlLight.pivotY = doorControlLight.pivotY + 1;
 		}
@@ -892,8 +892,8 @@ public class HartnellConsoleModel extends ConsoleModel {
 		// Door Lock Control Movement
 		ModelPart doorLock = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ctrl_panel_3").getChild("bone125");
 		ModelPart doorLockLight = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ind_lamp_21").getChild("bone118");
-		doorLock.yaw = tardis.getDoor().locked() ? doorLock.yaw + 1.575f : doorLock.yaw;
-		doorLockLight.pivotY = tardis.getDoor().locked() ? doorLockLight.pivotY : doorLockLight.pivotY + 1;
+		doorLock.yaw = tardis.door().locked() ? doorLock.yaw + 1.575f : doorLock.yaw;
+		doorLockLight.pivotY = tardis.door().locked() ? doorLockLight.pivotY : doorLockLight.pivotY + 1;
 
 		// Refueler Control Movements
 		ModelPart refueler = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("ctrl_panel_2").getChild("bone106");

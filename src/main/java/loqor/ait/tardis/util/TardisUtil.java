@@ -172,10 +172,10 @@ public class TardisUtil {
 						player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
 
 						if (player.getVehicle() instanceof TardisRealEntity real) {
-							DoorData.DoorStateEnum state = tardis.getDoor().getDoorState();
+							DoorData.DoorStateEnum state = tardis.door().getDoorState();
 							if (state == DoorData.DoorStateEnum.CLOSED || state == DoorData.DoorStateEnum.FIRST) {
 								DoorData.useDoor(tardis, player.getServerWorld(), null, player);
-								if (tardis.getDoor().isDoubleDoor()) {
+								if (tardis.door().isDoubleDoor()) {
 									DoorData.useDoor(tardis, player.getServerWorld(), null, player);
 								}
 							} else {
@@ -191,10 +191,10 @@ public class TardisUtil {
 							if (!player.isSneaking()) {
 								// annoying bad code
 
-								DoorData.DoorStateEnum state = tardis.getDoor().getDoorState();
+								DoorData.DoorStateEnum state = tardis.door().getDoorState();
 								if (state == DoorData.DoorStateEnum.CLOSED || state == DoorData.DoorStateEnum.FIRST) {
 									DoorData.useDoor(tardis, player.getServerWorld(), null, player);
-									if (tardis.getDoor().isDoubleDoor()) {
+									if (tardis.door().isDoubleDoor()) {
 										DoorData.useDoor(tardis, player.getServerWorld(), null, player);
 									}
 								} else {

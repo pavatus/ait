@@ -28,8 +28,6 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
-import static loqor.ait.tardis.TardisTravel.State.*;
-
 public class DoorData extends TardisComponent implements TardisTickable {
 	private boolean locked, left, right;
 	private DoorStateEnum doorState;
@@ -247,7 +245,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 						SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
 
 				lockTardis(false, tardis, player, true); // forcefully unlock the tardis
-				tardis.getDoor().openDoors();
+				tardis.door().openDoors();
 
 				return true;
 			}
@@ -271,7 +269,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 			return false;
 		}
 
-		DoorData door = tardis.getDoor();
+		DoorData door = tardis.door();
 
 		DoorSchema doorSchema = tardis.getExterior().getVariant().door();
 		SoundEvent sound = doorSchema.isDouble() && door.isBothOpen() ? doorSchema.closeSound() : doorSchema.openSound();
@@ -313,7 +311,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 			return false;
 
 		tardis.setLockedTardis(locked);
-		DoorData door = tardis.getDoor();
+		DoorData door = tardis.door();
 
 		if (door == null)
 			return false; // could have a case where the door is null but the thing above works fine meaning this false is wrong fixme

@@ -99,7 +99,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5f, 0);
 
-		DoorData door = exterior.tardis().get().getDoor();
+		DoorData door = exterior.tardis().get().door();
 		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
@@ -118,7 +118,7 @@ public class ClassicExteriorModel extends ExteriorModel {
 		/*this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
 		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
 
-		DoorData door = realEntity.getTardis().getDoor();
+		DoorData door = realEntity.getTardis().door();
 		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 

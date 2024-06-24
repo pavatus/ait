@@ -4,7 +4,6 @@ import com.google.gson.InstanceCreator;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.util.DeltaTimeManager;
@@ -37,29 +36,19 @@ import java.util.UUID;
 
 public class ServerTardis extends Tardis {
 
-	@Exclude private boolean lock;
-
 	public ServerTardis(UUID uuid, TardisDesktopSchema schema, ExteriorVariantSchema variantType) {
 		super(uuid, new ServerTardisDesktop(schema), new TardisExterior(variantType));
 	}
 
 	private ServerTardis() {
 		super();
-		this.lock = false;
 	}
 
 	public void sync() {
 		ServerTardisManager.getInstance().sendToSubscribers(this);
 	}
 
-	public void setLocked(boolean lock) {
-		this.lock = lock;
-	}
-
 	public void tick(MinecraftServer server) {
-		if (this.lock)
-			return;
-
 		// most of the logic is in the handlers, so we can just disable them if we're a growth
 		if (!this.engine().hasPower() && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-driftingmusicdelay")) {
 			List<PlayerEntity> playerEntities = TardisUtil.getPlayersInsideInterior(this);
@@ -79,15 +68,15 @@ public class ServerTardis extends Tardis {
 			this.generateInteriorWithItem();
 
 		if (this.isGrowth() && !this.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()) {
-			if (this.getDoor().isBothClosed()) {
-				this.getDoor().openDoors();
+			if (this.door().isBothClosed()) {
+				this.door().openDoors();
 			} else {
-				this.getDoor().setLocked(false);
+				this.door().setLocked(false);
 			}
 		}
 
-		if (this.siege().isActive() && !this.getDoor().locked())
-			this.getDoor().setLocked(true);
+		if (this.siege().isActive() && !this.door().locked())
+			this.door().setLocked(true);
 
 		this.getHandlers().tick(server);
 
@@ -115,16 +104,15 @@ public class ServerTardis extends Tardis {
 						return;
 
 					this.setFuelCount(8000);
-					this.engine().enablePower();
+
 					entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
 					entity.getWorld().playSound(null, position.getPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 10.0F, 0.75F);
 
 					InteriorChangingHandler interior = this.handler(TardisComponent.Id.INTERIOR);
 					interior.queueInteriorChange(DesktopRegistry.getInstance().getRandom(this));
 
-					if (interior.isGenerating()) {
+					if (interior.isGenerating())
 						entity.discard();
-					}
 				});
 	}
 

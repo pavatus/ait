@@ -2,8 +2,8 @@ package loqor.ait.tardis.control.impl;
 
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -29,8 +29,8 @@ public class AutoPilotControl extends Control {
 		}
 
 		// @TODO make a real world flight control.. later
-		if (player.isSneaking() && tardis.travel().getState() == TardisTravel.State.LANDED) {
-			if (tardis.getDoor().isOpen()) {
+		if (player.isSneaking() && tardis.travel().getState() == TravelHandler.State.LANDED) {
+			if (tardis.door().isOpen()) {
 				world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_CHAIN_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
 				return true;
 			} else {
@@ -40,7 +40,7 @@ public class AutoPilotControl extends Control {
 			TardisUtil.teleportOutside(tardis, player);
 
 			player.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));
-			TardisRealEntity.spawnFromTardisId(tardis.travel().position().getPos().getWorld(), tardis.getUuid(), tardis.travel().position().getPos(), player, player.getBlockPos());
+			TardisRealEntity.spawnFromTardisId(tardis.travel().position().getWorld(), tardis.getUuid(), tardis.travel().position().getPos(), player, player.getBlockPos());
 			return true;
 		}
 

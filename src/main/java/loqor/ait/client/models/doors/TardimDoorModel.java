@@ -59,7 +59,7 @@ public class TardimDoorModel extends DoorModel {
 		matrices.translate(0, -1.5f, 0);
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
 
-		DoorData handler = door.tardis().get().getDoor();
+		DoorData handler = door.tardis().get().door();
 
 		this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -1.575f : 0.0F;
 		this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;

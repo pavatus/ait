@@ -860,10 +860,10 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		antigravs.yaw = antigravs.yaw + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? 1.5708f : 0);
 
 		ModelPart doorControl = alnico.getChild("section5").getChild("controls5").getChild("tinyswitch6").getChild("bone24");
-		doorControl.yaw = doorControl.yaw + (tardis.getDoor().isOpen() ? tardis.getDoor().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
+		doorControl.yaw = doorControl.yaw + (tardis.door().isOpen() ? tardis.door().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
 
 		ModelPart doorLock = alnico.getChild("section5").getChild("controls5").getChild("tinyswitch7").getChild("bone25");
-		doorLock.yaw = doorLock.yaw + (tardis.getDoor().locked() ? 1.5708f : 0);
+		doorLock.yaw = doorLock.yaw + (tardis.door().locked() ? 1.5708f : 0);
 
 		ModelPart toast1 = alnico.getChild("section2").getChild("controls2").getChild("waypointcatridge").getChild("toast1");
 		ModelPart toastlever = alnico.getChild("section2").getChild("controls2").getChild("waypointcatridge").getChild("toastlever");

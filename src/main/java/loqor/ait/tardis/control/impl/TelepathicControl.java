@@ -1,13 +1,12 @@
 package loqor.ait.tardis.control.impl;
 
 import com.mojang.datafixers.util.Pair;
-import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.link.LinkableItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.NameTagItem;
 import net.minecraft.registry.Registry;
@@ -77,7 +76,7 @@ public class TelepathicControl extends Control {
 		if (found == null) {
 			text = Text.literal("The TARDIS is happy where it is"); // todo translatable
 		} else {
-			tardis.travel().setDestination(new AbsoluteBlockPos.Directed(found.add(0, 75, 0), tardis.travel().destination().getWorld(), tardis.travel().destination().getRotation()), true);
+			tardis.travel().destination(cached -> cached.pos(found.withY(75)));
 			tardis.removeFuel(500 * (tardis.tardisHammerAnnoyance + 1));
 		}
 
@@ -96,13 +95,13 @@ public class TelepathicControl extends Control {
 			if (found != null) return found;
 
 			found = getBastion(world, source, radius);
-			if (found != null) return found;
+            return found;
 		} else if (world.getRegistryKey() == World.END) {
 			found = getEndCity(world, source, radius);
-			if (found != null) return found;
+            return found;
 		} else if (world.getRegistryKey() == World.OVERWORLD) {
 			found = getVillage(world, source, radius);
-			if (found != null) return found;
+            return found;
 		}
 
 		return null;
@@ -136,12 +135,7 @@ public class TelepathicControl extends Control {
 		return false;
 	}
 
-	@Override
-	public boolean shouldHaveDelay() {
-		return true;
-	}
-
-	@Override
+    @Override
 	public long getDelayLength() {
 		return 5 * 1000L;
 	}

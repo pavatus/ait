@@ -52,6 +52,7 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+@SuppressWarnings("removal")
 public class TardisTravel extends TardisComponent {
 
 	public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
@@ -303,7 +304,7 @@ public class TardisTravel extends TardisComponent {
 				player.damage(TardisUtil.getTardisDimension().getDamageSources().generic(), damage_to_player);
 			}
 		}
-		tardis.setLockedTardis(true);
+		tardis.door().setLocked(true);
 		PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
 		PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
 		this.tardis.travel().speed().set(0);
@@ -336,7 +337,7 @@ public class TardisTravel extends TardisComponent {
 		this.materialise(false);
 	}
 
-	public void crashAndMaterialise() {
+	public void  crashAndMaterialise() {
 		if (this.getDestination().getWorld().isClient() || this.getState() != State.FLIGHT) {
 			return;
 		}
@@ -455,7 +456,7 @@ public class TardisTravel extends TardisComponent {
 			TardisExterior exterior = tardis.getExterior();
 
 			exterior.setType(CategoryRegistry.CAPSULE);
-			tardis.getDoor().closeDoors();
+			tardis.door().closeDoors();
 		}
 	}
 
@@ -476,7 +477,7 @@ public class TardisTravel extends TardisComponent {
 			// fulfill all the prerequisites
 			// DoorData.lockTardis(true, tardis(), null, false);
 			tardis.travel().handbrake().set(false);
-			this.tardis.getDoor().closeDoors();
+			this.tardis.door().closeDoors();
 			this.tardis.setRefueling(false);
 
 			if (this.tardis.travel().speed().get() == 0)

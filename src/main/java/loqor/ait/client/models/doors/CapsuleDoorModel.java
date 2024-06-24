@@ -88,7 +88,7 @@ public class CapsuleDoorModel extends DoorModel {
 		matrices.translate(0, -1.5f, 0);
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
 
-		DoorData handler = door.tardis().get().getDoor();
+		DoorData handler = door.tardis().get().door();
 
 		this.body.getChild("doors").getChild("door_left").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
 		this.body.getChild("doors").getChild("door_right").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;

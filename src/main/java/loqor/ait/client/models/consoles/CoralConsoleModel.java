@@ -1375,9 +1375,9 @@ public class CoralConsoleModel extends ConsoleModel {
 		// Door Control
 		ModelPart doorControl = controls.getChild("p_ctrl_1").getChild("bone29").getChild("crank").getChild("bone32");
 
-		if (tardis.getDoor().isLeftOpen()) {
+		if (tardis.door().isLeftOpen()) {
 			doorControl.pitch = doorControl.pitch - 0.8f;
-		} else if (tardis.getDoor().isRightOpen()) {
+		} else if (tardis.door().isRightOpen()) {
 			doorControl.pitch = doorControl.pitch - 1.5f;
 		}
 
