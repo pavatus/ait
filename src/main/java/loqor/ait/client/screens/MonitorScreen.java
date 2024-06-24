@@ -308,7 +308,8 @@ public class MonitorScreen extends ConsoleScreen {
 			}
 			stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) tickForSpin / 1200L) * 360.0f));
 			DiffuseLighting.disableGuiDepthLighting();
-			model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, 1);
+			model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().texture())), LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1 : 0.1f, 1f);
+			if (getCurrentVariant().emission() != null) model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(getCurrentVariant().emission())), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, isExtUnlocked ? 1 : 0.1f, isExtUnlocked ? 1: 0.1f, isExtUnlocked ? 1 : 0.1f, 1f);
 			DiffuseLighting.enableGuiDepthLighting();
 			stack.pop();
 
