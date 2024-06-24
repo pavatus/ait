@@ -286,16 +286,13 @@ public class MonitorScreen extends ConsoleScreen {
 					0x00ffb3);
 			stack.pop();
 
-			stack.push();
-			stack.translate(0, 0, 50f);
-			context.drawCenteredTextWithShadow(
-					this.textRenderer,
-					(isExtUnlocked) ? "" : "\uD83D\uDD12",
-					x, y,
-					Color.WHITE.getRGB());
-			stack.pop();
-
 			ExteriorModel model = this.getCurrentVariant().model();
+
+			stack.push();
+			stack.translate(0, 0, -50f);
+			stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
+			context.drawTexture(TEXTURE, x - 41, y - 41, 173, 173, 83, 83);
+			stack.pop();
 
 			stack.push();
 			stack.translate(x, this.getCategory() == CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE) || this.getCategory() == CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE) ? y + 11 : y, 0f);
@@ -314,9 +311,12 @@ public class MonitorScreen extends ConsoleScreen {
 			stack.pop();
 
 			stack.push();
-			stack.translate(0, 0, -50f);
-			stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
-			context.drawTexture(TEXTURE, x - 41, y - 41, 173, 173, 83, 83);
+			stack.translate(0, 0, 50f);
+			context.drawCenteredTextWithShadow(
+					this.textRenderer,
+					(isExtUnlocked) ? "" : "\uD83D\uDD12",
+					x, y,
+					Color.WHITE.getRGB());
 			stack.pop();
 		}
 	}
