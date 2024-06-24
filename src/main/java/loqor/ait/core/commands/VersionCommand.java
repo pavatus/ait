@@ -17,10 +17,10 @@ public class VersionCommand {
     private static final ModContainer AIT = FabricLoader.getInstance().getModContainer(AITMod.MOD_ID).get();
 
     private static final String LOGO = """
-                \\\\    _ _| __ __|
-               _ \\\\     |     | \s
-              ___ \\\\    |     | \s
-            _/    _\\\\ ___|   _| \s
+                \\    _ _| __ __|
+               _ \\     |     | \s
+              ___ \\    |     | \s
+            _/    _\\ ___|   _| \s
                                 """;
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
