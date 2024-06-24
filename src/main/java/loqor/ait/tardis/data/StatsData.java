@@ -5,8 +5,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
@@ -54,6 +56,10 @@ public class StatsData extends KeyedTardisComponent {
 	public void onLoaded() {
 		skybox.of(this, SKYBOX);
 		unlocks.of(this, UNLOCKS);
+
+		for (Iterator<TardisDesktopSchema> it = DesktopRegistry.getInstance().iterator(); it.hasNext(); ) {
+			this.unlock(it.next());
+		}
 	}
 
 	public boolean isUnlocked(Unlockable unlockable) {
