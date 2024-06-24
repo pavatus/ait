@@ -53,6 +53,9 @@ public class TardisItemBuilder extends Item {
 		if (world.isClient() || player == null)
 			return ActionResult.PASS;
 
+		if (player.getItemCooldownManager().isCoolingDown(this))
+			return ActionResult.FAIL;
+
 		if (context.getHand() != Hand.MAIN_HAND)
 			return ActionResult.SUCCESS;
 
@@ -85,6 +88,7 @@ public class TardisItemBuilder extends Item {
 		);
 
 		context.getStack().decrement(1);
+		player.getItemCooldownManager().set(this, 60 * 20);
 		return ActionResult.SUCCESS;
 	}
 }

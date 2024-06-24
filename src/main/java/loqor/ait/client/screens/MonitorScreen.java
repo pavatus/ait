@@ -7,6 +7,7 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.screens.interior.InteriorSettingsScreen;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
@@ -332,7 +333,7 @@ public class MonitorScreen extends ConsoleScreen {
 		float tinted = alarms && isExtUnlocked ? 0.3f : base;
 
 		model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)),
-				LightmapTextureManager.getBlockLightCoordinates(9), OverlayTexture.DEFAULT_UV, base, base, base, 1f
+				LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, base, base, base, 1f
 		);
 
 		if (hasPower && emissive != null) {

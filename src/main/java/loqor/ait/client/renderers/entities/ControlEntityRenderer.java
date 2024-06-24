@@ -30,6 +30,8 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
 
+import java.util.Objects;
+
 @Environment(value = EnvType.CLIENT)
 public class ControlEntityRenderer
 		extends LivingEntityRenderer<ConsoleControlEntity, ControlModel> {
@@ -72,9 +74,9 @@ public class ControlEntityRenderer
 			OrderedText orderedText = Text.of(text.getString().toUpperCase().replace("_", " ")).asOrderedText();
 			if (isPlayerLookingWithSonic) {
 				textRenderer.drawWithOutline(orderedText, h, (float) text.getString().length(), 0xF0F0F0, 0x000000, matrix4f, vertexConsumers, 0xFF);
-			} else if (isPlayerLooking && entity.getControl() instanceof RefuelerControl) {
-				Text fuelLevel = Text.translatable("control.ait.fuel_level", (int) ((entity.getTardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 100) + "%");
-				textRenderer.drawWithOutline(fuelLevel.asOrderedText(), h, (float) fuelLevel.getString().length(), 0xF0F0F0, 0x000000, matrix4f, vertexConsumers, 0xFF);
+			} else if (isPlayerLooking && Objects.equals(entity.getName().toString().toLowerCase(), "translation{key='refueler', args=[]}[style={}]")) {
+				Text fuelLevel = Text.literal((int) ((entity.getTardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 100) + "%");
+				textRenderer.drawWithOutline(fuelLevel.asOrderedText(), h / 2, (float) fuelLevel.getString().length(), 0xF0F0F0, 0x000000, matrix4f, vertexConsumers, 0xFF);
 			}
 		}
 		matrices.pop();
