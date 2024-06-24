@@ -7,6 +7,7 @@
   "mixins": [
     "DismountEntityMixin",
     "client.experimental_screen.LevelSummaryMixin",
+    "compat.gravity.EntityTagsMixin",
     "lookup.EntityTrackingSectionAccessor",
     "lookup.SectionedEntityCacheAccessor",
     "lookup.SimpleEntityLookupAccessor",
