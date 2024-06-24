@@ -139,6 +139,7 @@ public class AITMod implements ModInitializer {
 			LoyaltyCommand.register(dispatcher);
 			UnlockCommand.register(dispatcher);
 			DataCommand.register(dispatcher);
+			VersionCommand.register(dispatcher);
 		}));
 
 		TardisEvents.LANDED.register((tardis -> {

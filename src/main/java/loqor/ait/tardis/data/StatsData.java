@@ -58,7 +58,7 @@ public class StatsData extends KeyedTardisComponent {
 		unlocks.of(this, UNLOCKS);
 
 		for (Iterator<TardisDesktopSchema> it = DesktopRegistry.getInstance().iterator(); it.hasNext(); ) {
-			this.unlock(it.next());
+			this.unlock(it.next(), false);
 		}
 	}
 
@@ -67,11 +67,15 @@ public class StatsData extends KeyedTardisComponent {
 	}
 
 	public void unlock(Unlockable unlockable) {
+		this.unlock(unlockable, true);
+	}
+
+	private void unlock(Unlockable unlockable, boolean sync) {
 		// TODO implement native v2 collection properties to avoid this
 		this.unlocks.flatMap(strings -> {
 			strings.add(unlockable.id().toString());
 			return strings;
-		});
+		}, sync);
 	}
 
 	public Value<RegistryKey<World>> skybox() {
