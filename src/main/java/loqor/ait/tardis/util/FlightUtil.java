@@ -28,14 +28,15 @@ public class FlightUtil {
 	public static void travelTo(Tardis tardis, AbsoluteBlockPos.Directed pos) {
 		TardisTravel travel = tardis.travel();
 
-		tardis.flight().handbrake().set(false);
 		tardis.flight().autoLand().set(true);
 
 		travel.setDestination(pos, true);
 
 		if (travel.getState() == TardisTravel.State.LANDED) {
-			travel.dematerialise(true);
+			tardis.flight().handbrake().set(false);
+			tardis.flight().speed().set(tardis.flight().maxSpeed());
 		} else if (travel.getState() == TardisTravel.State.FLIGHT) {
+			//tardis.flight().speed().set(0);
 			travel.materialise();
 		}
 	}
