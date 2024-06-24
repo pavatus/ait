@@ -21,6 +21,7 @@ import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.tardis.util.FlightUtil;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -28,6 +29,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -37,7 +39,6 @@ import net.minecraft.util.math.RotationAxis;
 import java.awt.*;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import static loqor.ait.tardis.TardisTravel.State.FLIGHT;
 import static loqor.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
@@ -51,9 +52,8 @@ public class MonitorScreen extends ConsoleScreen {
 	int backgroundWidth = 208;
 	private int tickForSpin = 0;
 
-	public MonitorScreen(UUID tardis, BlockPos console) {
+	public MonitorScreen(ClientTardis tardis, BlockPos console) {
 		super(Text.translatable("screen." + AITMod.MOD_ID + ".monitor"), tardis, console);
-		this.tardisId = tardis;
 	}
 
 	@Override
@@ -73,16 +73,17 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	public ExteriorCategorySchema getCategory() {
-		return category == null ? getFromUUID(tardisId).getExterior().getCategory() : category;
+		return category == null ? tardis().getExterior().getCategory() : category;
 	}
 
 	public void setCategory(ExteriorCategorySchema category) {
 		this.category = category;
 
-		if (currentVariant == null) return;
-		if (this.currentVariant.parent().category() != category) {
+		if (currentVariant == null)
+			return;
+
+		if (this.currentVariant.parent().category() != category)
 			currentVariant = null;
-		}
 	}
 
 	public ClientExteriorVariantSchema getCurrentVariant() {
@@ -90,10 +91,10 @@ public class MonitorScreen extends ConsoleScreen {
 			changeCategory(true);
 
 		if (currentVariant == null)
-			if (!getFromUUID(tardisId).getExterior().getCategory().equals(getCategory())) {
+			if (!tardis().getExterior().getCategory().equals(getCategory())) {
 				setCurrentVariant(this.getCategory().getDefaultVariant());
 			} else {
-				setCurrentVariant(getFromUUID(tardisId).getExterior().getVariant());
+				setCurrentVariant(tardis().getExterior().getVariant());
 			}
 
 		return currentVariant;
@@ -113,7 +114,7 @@ public class MonitorScreen extends ConsoleScreen {
 		Text applyText = Text.literal("Apply");
 		this.addButton(new PressableTextWidget((width / 2 - 67), (height / 2 + 41),
 				this.textRenderer.getWidth(applyText), 10, Text.literal(""), button -> {
-			sendExteriorPacket();
+			sendExteriorPacket(this.tardis(), this.getCategory(), this.getCurrentVariant());
 		}, this.textRenderer));
 		this.addButton(new PressableTextWidget((width / 2 - 99), (height / 2 + 37),
 				this.textRenderer.getWidth("<"), 10, Text.literal(""), button -> {
@@ -140,14 +141,11 @@ public class MonitorScreen extends ConsoleScreen {
 		});
 	}
 
-	public void sendExteriorPacket() {
-		if (getFromUUID(tardisId) == null)
-			return;
-
-		if (this.getCategory() != getFromUUID(tardisId).getExterior().getCategory() || this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant()) {
-			ClientTardisUtil.changeExteriorWithScreen(this.tardisId,
-					this.getCategory().id().toString(), this.getCurrentVariant().id().toString(),
-					this.getCurrentVariant().parent() != getFromUUID(tardisId).getExterior().getVariant());
+	public static void sendExteriorPacket(ClientTardis tardis, ExteriorCategorySchema category, ClientExteriorVariantSchema variant) {
+		if (category != tardis.getExterior().getCategory() || variant.parent() != tardis.getExterior().getVariant()) {
+			ClientTardisUtil.changeExteriorWithScreen(tardis,
+					category.id().toString(), variant.id().toString(),
+					variant.parent() != tardis.getExterior().getVariant());
 		}
 	}
 
@@ -155,17 +153,19 @@ public class MonitorScreen extends ConsoleScreen {
 		if (tardis() == null || tardis().isGrowth())
 			return;
 
-		MinecraftClient.getInstance().setScreenAndRender(new InteriorSettingsScreen(this.tardisId, this.console, this));
+		MinecraftClient.getInstance().setScreenAndRender(new InteriorSettingsScreen(this.tardis(), this.console, this));
 	}
 
 	public void changeCategory(boolean direction) {
-		if (MinecraftClient.getInstance().player == null)
+		PlayerEntity player = MinecraftClient.getInstance().player;
+
+		if (player == null)
 			return;
 
 		if (direction) setCategory(nextCategory());
 		else setCategory(previousCategory());
 
-		if (CategoryRegistry.CORAL_GROWTH.equals(this.category) || (!("ad504e7c-22a0-4b3f-94e3-5b6ad5514cb6".equalsIgnoreCase(MinecraftClient.getInstance().player.getUuidAsString())) && CategoryRegistry.DOOM.equals(this.category))) {
+		if (CategoryRegistry.CORAL_GROWTH.equals(this.category) || (!("ad504e7c-22a0-4b3f-94e3-5b6ad5514cb6".equalsIgnoreCase(player.getUuidAsString())) && CategoryRegistry.DOOM.equals(this.category))) {
 			changeCategory(direction);
 		}
 	}
@@ -217,6 +217,9 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
+		// just this whole thing is for the flight
+		if (tardis() == null) return;
+
 		int i = (this.width - this.backgroundWidth) / 2;
 		int j = ((this.height) - this.backgroundHeight) / 2;
 		context.drawTexture(TEXTURE, i - 8, j + 4, 0, 0, this.backgroundWidth, this.backgroundHeight);
@@ -225,8 +228,7 @@ public class MonitorScreen extends ConsoleScreen {
 		if (!this.buttons.get(0).isHovered()) context.drawTexture(TEXTURE, i + 22, j + 114, 0, 227, 57, 12);
 
 		// around the battery
-		context.drawTexture(TEXTURE, i + 1, j + 129, 0, getFromUUID(tardisId).getFuel() > 250 ? 150 : 165, 99, 15);
-
+		context.drawTexture(TEXTURE, i + 1, j + 129, 0, tardis().getFuel() > 250 ? 150 : 165, 99, 15);
 
 		// triangle buttons
 		if (!this.buttons.get(1).isHovered()) context.drawTexture(TEXTURE, i + 3, j + 96, 0, 197, 15, 30);
@@ -235,12 +237,9 @@ public class MonitorScreen extends ConsoleScreen {
 		if (!this.buttons.get(4).isHovered()) context.drawTexture(TEXTURE, i + 83, j + 31, 15, 197, 15, 30);
 
 		// fuel markers @TODO come back and actually do the rest of it with the halves and the red parts too
-		for (int p = 0; p < Math.round((getFromUUID(tardisId).getFuel() / FuelData.TARDIS_MAX_FUEL) * 12); ++p) {
+		for (int p = 0; p < Math.round(tardis().getFuel() / FuelData.TARDIS_MAX_FUEL * 12); ++p) {
 			context.drawTexture(TEXTURE, i + 3 + (8 * p), j + 131, 99, 150, 7, 11);
 		}
-
-		// just this whole thing is for the flight
-		if (getFromUUID(tardisId) == null) return;
 
 		int progress = tardis().getHandlers().getFlight().getDurationAsPercentage();
 
@@ -261,13 +260,14 @@ public class MonitorScreen extends ConsoleScreen {
 		}
 	}
 
-	protected void drawTardisExterior(DrawContext context, int x, int y, float scale, float mouseX, float delta) {
+	protected void drawTardisExterior(DrawContext context, int x, int y, float scale) {
 		MatrixStack stack = context.getMatrices();
 
 		tickForSpin++;
 
-		if (getFromUUID(tardisId) != null) {
-			if (this.getCategory() == null || this.getCurrentVariant() == null) return;
+		if (tardis() != null) {
+			if (this.getCategory() == null || this.getCurrentVariant() == null)
+				return;
 
 			boolean isExtUnlocked = tardis().isUnlocked(this.getCurrentVariant().parent());
 
@@ -286,14 +286,14 @@ public class MonitorScreen extends ConsoleScreen {
 					0x00ffb3);
 			stack.pop();
 
-            stack.push();
+			stack.push();
 			stack.translate(0, 0, 50f);
-            context.drawCenteredTextWithShadow(
-                    this.textRenderer,
-                    (isExtUnlocked) ? "" : "\uD83D\uDD12",
-                    x, y,
+			context.drawCenteredTextWithShadow(
+					this.textRenderer,
+					(isExtUnlocked) ? "" : "\uD83D\uDD12",
+					x, y,
 					Color.WHITE.getRGB());
-            stack.pop();
+			stack.pop();
 
 			ExteriorModel model = this.getCurrentVariant().model();
 
@@ -326,21 +326,24 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	protected void drawInformationText(DrawContext context) {
-		int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
-		int j = ((this.width - this.backgroundWidth) / 2);
-		if (getFromUUID(tardisId) == null) return;
-		TardisTravel travel = getFromUUID(tardisId).travel();
-        AbsoluteBlockPos.Directed abpd = travel.inFlight() ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.getDestination(), getFromUUID(tardisId).getHandlers().getFlight().getDurationAsPercentage()) : travel.getPosition();
+		if (this.tardis() == null)
+			return;
+
+		TardisTravel travel = this.tardis().travel();
+		AbsoluteBlockPos.Directed abpd = travel.inFlight() ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.getDestination(), this.tardis().getHandlers().getFlight().getDurationAsPercentage()) : travel.getPosition();
 		AbsoluteBlockPos.Directed dabpd = travel.getDestination();
-        if (abpd.getDimension() == null) return;
+
+		if (abpd.getDimension() == null)
+			return;
+
 		String positionText = abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
-		String dimensionText = convertWorldValueToModified(abpd.getDimension().getValue());
+		String dimensionText = convertWorldValueToModified(abpd.getDimension().getValue().toString());
+
 		String directionText = DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
 		String destinationText = dabpd.getX() + ", " + dabpd.getY() + ", " + dabpd.getZ();
 		String dDimensionText = convertWorldValueToModified(dabpd.getDimension().getValue());
 		String dDirectionText = DirectionControl.rotationToDirection(dabpd.getRotation()).toUpperCase();
-		String fuelText = String.valueOf(Math.round((getFromUUID(tardisId).getFuel() / FuelData.TARDIS_MAX_FUEL) * 100));
-		String flightTimeText = (tardis().travel().getState() == TardisTravel.State.LANDED ? "0" : String.valueOf(tardis().flight().getDurationAsPercentage()));
+
 		// position
 		//context.drawText(this.textRenderer, Text.literal("Position"), (width / 2 - 64), (height / 2 - 46), 5636095, true);
 		context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 + 7), (height / 2 - 36), 0xFFFFFF, true);
@@ -370,13 +373,14 @@ public class MonitorScreen extends ConsoleScreen {
 		stack.translate(0, 0, -100f);
 		context.drawTexture(TEXTURE, j + 4, i + 32, 80, 180, 93, 76);
 		stack.pop();
-		this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f, 176, delta);
+		this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f);
 		this.drawBackground(context, delta, mouseX, mouseY);
 		// todo manually adjusting all these values are annoying me
 		this.drawInformationText(context);
 		super.render(context, mouseX, mouseY, delta);
 	}
 
+	@Deprecated(forRemoval = true)
 	public String convertCategoryNameToProper(String string) {
 		return switch (string) {
 			case "easter_head" -> "Moyai";

@@ -17,6 +17,7 @@ import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.sound.HumSound;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -36,7 +37,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Function;
 
 import static loqor.ait.tardis.TardisTravel.State.FLIGHT;
@@ -57,8 +57,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	private final Screen parent;
 	private TardisDesktopSchema selectedDesktop;
 
-	// loqor DONT rewrite with owo lib : (
-	public InteriorSettingsScreen(UUID tardis, BlockPos console, Screen parent) {
+	public InteriorSettingsScreen(ClientTardis tardis, BlockPos console, Screen parent) {
 		super(Text.translatable("screen.ait.interiorsettings.title"), tardis, console);
 
 		this.parent = parent;
