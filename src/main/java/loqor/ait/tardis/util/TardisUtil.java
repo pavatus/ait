@@ -142,17 +142,14 @@ public class TardisUtil {
 							return;
 
 						server.execute(() -> StackUtil.playBreak(player));
-
 						tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
+
+						if (variantChange)
+							tardis.getExterior().setVariant(schema);
+
 						WorldOps.updateIfOnServer(server.getWorld(tardis
 										.travel().getPosition().getWorld().getRegistryKey()),
 								tardis.getExteriorPos());
-						if (variantChange) {
-							tardis.getExterior().setVariant(schema);
-							WorldOps.updateIfOnServer(server.getWorld(tardis
-											.travel().getPosition().getWorld().getRegistryKey()),
-									tardis.getExteriorPos());
-						}
 					});
 				}
 		);

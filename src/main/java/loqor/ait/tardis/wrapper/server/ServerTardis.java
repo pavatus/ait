@@ -38,7 +38,6 @@ public class ServerTardis extends Tardis {
 
 	private ServerTardis() {
 		super();
-		this.lock = false;
 	}
 
 	public void sync() {

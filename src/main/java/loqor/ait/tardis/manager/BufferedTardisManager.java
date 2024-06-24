@@ -56,7 +56,14 @@ public abstract class BufferedTardisManager<T extends Tardis, P extends PlayerEn
     }
 
     public void updateTardis(@NotNull P player, T tardis, TardisComponent component) {
-        if (!(component.getId() instanceof TardisComponent.Id id)) {
+        TardisComponent.IdLike idLike = component.getId();
+
+        if (idLike == null) {
+            AITMod.LOGGER.error("Id is null for component class: " + component);
+            return;
+        }
+
+        if (!(idLike instanceof TardisComponent.Id id)) {
             AITMod.LOGGER.error("Part-update for non-AIT component {} is not supported! Use properties instead.", component.getId().name());
             return;
         }
