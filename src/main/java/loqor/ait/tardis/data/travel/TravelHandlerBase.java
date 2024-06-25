@@ -65,6 +65,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
 
         handbrake.of(this, HANDBRAKE);
         autoLand.of(this, AUTO_LAND);
+        crashing.of(this, CRASHING);
 
         MinecraftServer current = TravelHandlerBase.server();
 
