@@ -42,6 +42,9 @@ public class NetworkUtil {
 	}
 
 	public static Collection<ServerPlayerEntity> getPlayersNearExterior(Tardis tardis) {
+		if (tardis.travel().position() == null)
+			return new ArrayList<>();
+
 		return getTracking(tardis.travel().position());
 	}
 
