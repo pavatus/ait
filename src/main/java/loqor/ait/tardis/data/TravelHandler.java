@@ -357,9 +357,6 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
     public void finishLanding(ExteriorBlockEntity blockEntity) {
         this.runAnimations(blockEntity);
 
-        if (this.isClient())
-            return;
-
         DoorData.lockTardis(PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.tardis(), null, false);
         TardisEvents.LANDED.invoker().onLanded(this.tardis);
     }
