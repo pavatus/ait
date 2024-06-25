@@ -1,6 +1,7 @@
 package loqor.ait.tardis.data;
 
 import io.wispforest.owo.ops.WorldOps;
+import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
@@ -18,15 +19,20 @@ import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.FlightUtil;
+import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -38,6 +44,107 @@ import java.util.Random;
 
 @SuppressWarnings("removal")
 public class TravelHandler extends TravelHandlerBase implements TardisTickable {
+
+    public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
+
+    public int getDematTicks() {
+        return PropertiesHandler.getInt(this.tardis().properties(), PropertiesHandler.DEMAT_TICKS);
+    }
+
+    private void setDematTicks(int ticks) {
+        PropertiesHandler.set(this.tardis(), PropertiesHandler.DEMAT_TICKS, ticks, false);
+    }
+
+    /**
+     * Stops demat while its happening - then plays a boom sound to signify
+     */
+    private void cancelDemat() {
+        if (this.getState() != State.DEMAT)
+            return; // rip
+
+        if (this.position() == null || this.tardis().getDesktop() == null)
+            return;
+
+        this.finishLanding();
+
+        this.position().getWorld().playSound(null, this.position().getPos(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+        FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+
+        NetworkUtil.sendToInterior(this.tardis(), CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
+    }
+
+    private void tickDemat() {
+        if (this.getState() != State.DEMAT) {
+            if (getDematTicks() != 0)
+                setDematTicks(0);
+
+            return;
+        }
+
+        setDematTicks(getDematTicks() + 1);
+
+        if (tardis.travel().handbrake().get()) {
+            // cancel materialise
+            this.cancelDemat();
+            return;
+        }
+
+        if (getDematTicks() > FlightUtil.getSoundLength(this.getState().effect()) * 40) {
+            this.finishDemat();
+            this.setDematTicks(0);
+        }
+    }
+
+    private void tickMat() {
+        if (this.getState() != State.MAT) {
+            if (getDematTicks() != 0) setDematTicks(0);
+            return;
+        }
+
+        setDematTicks(getDematTicks() + 1);
+
+        if (getDematTicks() > (FlightUtil.getSoundLength(this.getState().effect()) * 40)) {
+            this.finishLanding();
+            this.setDematTicks(0);
+        }
+    }
+
+    @Override
+    public void tick(MinecraftServer server) {
+        this.tickDemat();
+        this.tickMat();
+
+        ServerTardis tardis = (ServerTardis) this.tardis();
+        int speed = this.tardis.travel().speed().get();
+        State state = this.getState();
+
+        boolean handbrake = tardis.travel().handbrake().get();
+        boolean autopilot = tardis.travel().autoLand().get();
+
+        if (speed > 0 && state == State.LANDED && !handbrake && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
+            this.dematerialize(autopilot);
+
+        if (speed == 0 && state == State.FLIGHT) {
+            if (tardis.crash().getState() == TardisCrashData.State.UNSTABLE) {
+                Random random = TardisUtil.random();
+                int multiplier = random.nextInt(0, 2) == 0 ? 1 : -1;
+
+                this.destination(cached -> cached.offset(
+                        random.nextInt(1, 10) * multiplier, 0,
+                        random.nextInt(1, 10) * multiplier)
+                );
+            }
+
+            if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT)) {
+                this.materialise();
+            }
+        }
+
+        // Should we just disable autopilot if the speed goes above 1?
+        if (speed > 1 && state == State.FLIGHT && autopilot) {
+            this.tardis.travel().speed().set(speed - 1);
+        }
+    }
 
     public ExteriorBlockEntity placeExterior() {
         return placeExterior(true);
