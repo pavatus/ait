@@ -181,7 +181,7 @@ public abstract class TardisManager<T extends Tardis, C> {
 	@SuppressWarnings("unchecked")
 	protected T readTardis(Gson gson, String json) {
 		T tardis = (T) gson.fromJson(json, Tardis.class);
-		Tardis.init(tardis, true);
+		Tardis.init(tardis, new TardisComponent.InitContext(false));
 
 		return tardis;
 	}

@@ -16,7 +16,6 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.util.TardisChunkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.entity.ItemEntity;
@@ -80,13 +79,6 @@ public class ServerTardis extends Tardis {
 			this.door().setLocked(true);
 
 		this.getHandlers().tick(server);
-
-		// im sure this is great for your server performace
-		if (TardisChunkUtil.shouldExteriorChunkBeForced(this) && !TardisChunkUtil.isExteriorChunkForced(this)) {
-			TardisChunkUtil.forceLoadExteriorChunk(this);
-		} else if (!TardisChunkUtil.shouldExteriorChunkBeForced(this) && TardisChunkUtil.isExteriorChunkForced(this)) {
-			TardisChunkUtil.stopForceExteriorChunk(this);
-		}
 
 		if (PropertiesHandler.getBool(this.properties(), PropertiesHandler.IS_FALLING))
 			DoorData.lockTardis(true, this, null, true);

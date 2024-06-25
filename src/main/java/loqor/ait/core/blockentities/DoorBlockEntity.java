@@ -53,7 +53,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 		Tardis tardis = door.tardis().get();
 		DirectedGlobalPos.Cached globalExteriorPos = tardis.travel().position();
 
-		if (!world.isClient())
+		if (world.isClient())
 			return;
 
 		BlockPos exteriorPos = globalExteriorPos.getPos();

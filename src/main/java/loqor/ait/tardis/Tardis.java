@@ -60,8 +60,8 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		this.handlers = null;
 	}
 
-	public static void init(Tardis tardis, boolean deserialized) {
-		Initializable.init(tardis, new TardisComponent.InitContext(deserialized));
+	public static void init(Tardis tardis, TardisComponent.InitContext ctx) {
+		Initializable.init(tardis, ctx);
 	}
 
 	public UUID getUuid() {
@@ -90,6 +90,10 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 	public TravelHandler travel() {
 		return this.handler(TardisComponent.Id.TRAVEL);
+	}
+
+	public TravelHandlerV2 travel2() {
+		return this.handler(TardisComponent.Id.TRAVEL2);
 	}
 
 	public LoyaltyHandler loyalty() {

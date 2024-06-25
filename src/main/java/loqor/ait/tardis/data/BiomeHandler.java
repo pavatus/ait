@@ -27,7 +27,7 @@ public class BiomeHandler extends KeyedTardisComponent {
     }
 
     public void update() {
-        DirectedGlobalPos.Cached pos = tardis.travel().position();
+        DirectedGlobalPos.Cached pos = this.tardis.travel().position();
 
         if (pos == null)
             return;

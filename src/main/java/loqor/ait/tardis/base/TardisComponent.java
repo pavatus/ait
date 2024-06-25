@@ -1,6 +1,7 @@
 package loqor.ait.tardis.base;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.*;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
@@ -13,6 +14,7 @@ import loqor.ait.tardis.util.Ordered;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -37,6 +39,8 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 	public TardisComponent(IdLike id) {
 		this.id = id;
 	}
+
+	public void postInit(InitContext ctx) { }
 
 	/**
 	 * Syncs this object and all its properties to the client.
@@ -158,7 +162,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 			return switch (this) {
 				case DESKTOP -> tardis.getDesktop();
 				case EXTERIOR -> tardis.getExterior();
-				case TRAVEL -> tardis.travel();
 				case HANDLERS -> tardis.getHandlers();
 				default -> tardis.handler(this);
 			};
@@ -269,7 +272,11 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		}
 	}
 
-	public record InitContext(boolean deserialized) implements Initializable.Context {
+	public record InitContext(@Nullable DirectedGlobalPos.Cached pos, boolean deserialized) implements Initializable.Context {
+
+		public InitContext(boolean deserialized) {
+			this(null, deserialized);
+		}
 
 		public boolean created() {
 			return !deserialized;

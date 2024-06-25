@@ -48,8 +48,8 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
     protected final IntValue speed = SPEED.create(this);
     protected final IntValue maxSpeed = MAX_SPEED.create(this);
 
-    public TravelHandlerBase() {
-        super(Id.TRAVEL);
+    public TravelHandlerBase(Id id) {
+        super(id);
     }
 
     @Override

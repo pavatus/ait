@@ -47,6 +47,10 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
+    public TravelHandler() {
+        super(Id.TRAVEL);
+    }
+
     public int getDematTicks() {
         return PropertiesHandler.getInt(this.tardis().properties(), PropertiesHandler.DEMAT_TICKS);
     }
@@ -377,6 +381,8 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
     }
 
     public void initPos(DirectedGlobalPos.Cached cached) {
+        cached.init(TravelHandlerBase.server());
+
         if (this.position.get() == null)
             this.position.set(cached);
 

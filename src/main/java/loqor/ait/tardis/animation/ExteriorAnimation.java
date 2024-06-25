@@ -45,18 +45,6 @@ public abstract class ExteriorAnimation {
 		return Math.clamp(0.0F, 1.0F, this.alpha);
 	}
 
-	// fixme bug that sometimes happens where server doesnt have animation
-	protected void runAlphaChecks(TravelHandler.State state) {
-		if (this.exterior.getWorld().isClient() || this.exterior.tardis().isEmpty())
-			return;
-
-		if (alpha <= 0f && state == TravelHandler.State.DEMAT)
-			exterior.tardis().get().travel().finishDemat();
-
-		if (alpha >= 1f && state == TravelHandler.State.MAT)
-			exterior.tardis().get().travel().finishLanding(this.exterior);
-	}
-
 	public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius) {
 		return radius >= distanceFromTardis(player, tardis);
 	}

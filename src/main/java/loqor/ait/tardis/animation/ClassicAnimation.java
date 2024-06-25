@@ -24,8 +24,6 @@ public class ClassicAnimation extends ExteriorAnimation {
 		if (state == TravelHandler.State.DEMAT) {
 			timeLeft--;
 			this.setAlpha(getFadingAlpha());
-
-			runAlphaChecks(state);
 		} else if (state == TravelHandler.State.MAT) {
 			timeLeft++;
 
@@ -34,8 +32,6 @@ public class ClassicAnimation extends ExteriorAnimation {
 			} else {
 				this.setAlpha(0f);
 			}
-
-			runAlphaChecks(state);
 		} else if (state == TravelHandler.State.LANDED/* && alpha != 1f*/) {
 			this.setAlpha(1f);
 		}

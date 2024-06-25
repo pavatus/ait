@@ -89,16 +89,16 @@ public class TardisBuilder {
         this.validate();
 
         ServerTardis tardis = new ServerTardis(this.uuid, this.desktop, this.exterior);
-        Tardis.init(tardis, false);
+        Tardis.init(tardis, new TardisComponent.InitContext(this.pos, false));
 
-        tardis.travel().initPos(this.pos);
+        tardis.travel().initPos(pos);
         tardis.travel().placeExterior();
 
         for (Consumer<ServerTardis> consumer : this.postInit) {
             consumer.accept(tardis);
         }
 
-        AITMod.LOGGER.info("Built {} in {}mst", tardis, System.currentTimeMillis() - start);
+        AITMod.LOGGER.info("Built {} in {}ms", tardis, System.currentTimeMillis() - start);
         return tardis;
     }
 }
