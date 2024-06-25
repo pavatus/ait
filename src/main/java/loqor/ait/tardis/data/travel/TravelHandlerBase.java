@@ -105,13 +105,13 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
         this.crashing.set(crashing);
     }
 
-    public void position(DirectedGlobalPos.Cached cached) {
+    public void forcePosition(DirectedGlobalPos.Cached cached) {
         cached.init(TravelHandlerBase.server());
         this.position.set(cached);
     }
 
     public void position(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
-        this.position(position.apply(this.position()));
+        this.forcePosition(position.apply(this.position()));
     }
 
     public DirectedGlobalPos.Cached destination() {

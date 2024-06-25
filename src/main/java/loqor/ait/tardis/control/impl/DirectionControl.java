@@ -67,13 +67,14 @@ public class DirectionControl extends Control {
 		return (rotation - 2) % 16;
 	}
 
-	public static int getGeneralizedRotation(int rotation) {
-		if (rotation % 2 != 0 && rotation < 15) {
-			return rotation + 1;
-		} else if (rotation == 15) {
+	public static byte getGeneralizedRotation(int rotation) {
+		if (rotation % 2 != 0 && rotation < 15)
+			return (byte) (rotation + 1);
+
+		if (rotation == 15)
 			return 0;
-		}
-		return rotation;
+
+		return (byte) rotation;
 	}
 
 	public static String rotationForArrow(int currentRot) {

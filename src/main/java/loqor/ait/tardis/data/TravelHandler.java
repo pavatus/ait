@@ -44,7 +44,6 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
     }
 
     public ExteriorBlockEntity placeExterior(boolean animate) {
-        // Set the position of the Tardis to the destination
         BiomeHandler biome = this.tardis.getHandlers().get(Id.BIOME);
         biome.update();
 

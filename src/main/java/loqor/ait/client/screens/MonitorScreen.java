@@ -42,7 +42,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static loqor.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
-import static loqor.ait.tardis.data.TravelHandler.State.FLIGHT;
 
 public class MonitorScreen extends ConsoleScreen {
 	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/monitor_gui.png");

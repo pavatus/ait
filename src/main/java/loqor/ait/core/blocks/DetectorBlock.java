@@ -153,7 +153,7 @@ public class DetectorBlock extends WallMountedBlock implements BlockEntityProvid
 	}
 
 	public enum Type implements StringIdentifiable {
-		FLIGHT(tardis -> tardis.inFlight() ? 15 : 0),
+		FLIGHT(tardis -> tardis.travel().inFlight() ? 15 : 0),
 		POWER(tardis -> tardis.engine().hasPower() ? 15 : 0),
 		CRASHED(tardis -> {
 			TardisCrashData.State state = tardis.crash().getState();
@@ -168,9 +168,7 @@ public class DetectorBlock extends WallMountedBlock implements BlockEntityProvid
 		SONIC(tardis -> tardis.sonic().hasConsoleSonic() ? 15 : 0),
 		ALARMS(tardis -> tardis.alarm().isEnabled() ? 15 : 0);
 
-		private static final Type[] values = Type.values();
-
-		private final String name;
+        private final String name;
 		private final Function<Tardis, Integer> func;
 
 		Type(Function<Tardis, Integer> func) {
