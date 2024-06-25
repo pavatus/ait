@@ -1,6 +1,6 @@
 package loqor.ait.tardis.util;
 
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.LinkableItem;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -33,17 +32,17 @@ public class NetworkUtil {
 	}
 
 	public static void sendToInterior(Tardis tardis, Identifier id, PacketByteBuf buf) {
-		for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+		for (ServerPlayerEntity player : NetworkUtil.getPlayersInInterior(tardis)) {
 			send(player, id, buf);
 		}
 	}
 
 	public static Collection<ServerPlayerEntity> getPlayersInInterior(Tardis tardis) {
-		return TardisUtil.getPlayersInInterior(tardis);
+		return TardisUtil.getPlayersInsideInterior(tardis);
 	}
 
 	public static Collection<ServerPlayerEntity> getPlayersNearExterior(Tardis tardis) {
-		return getTracking(tardis.travel().position().getPos());
+		return getTracking(tardis.travel().position());
 	}
 
 	/**
@@ -82,7 +81,7 @@ public class NetworkUtil {
 		return false;
 	}
 
-	public static Collection<ServerPlayerEntity> getTracking(AbsoluteBlockPos target) {
-		return PlayerLookup.tracking((ServerWorld) target.getWorld(), target);
+	public static Collection<ServerPlayerEntity> getTracking(DirectedGlobalPos.Cached globalPos) {
+		return PlayerLookup.tracking(globalPos.getWorld(), globalPos.getPos());
 	}
 }

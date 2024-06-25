@@ -2,8 +2,9 @@ package loqor.ait.core.item;
 
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableItem;
@@ -17,11 +18,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -111,7 +114,10 @@ public class KeyItem extends LinkableItem {
 			return;
 
 		Tardis tardis = KeyItem.getTardis(entity.getWorld(), entity.getStack());
-		if (tardis == null) return;
+
+		if (tardis == null)
+			return;
+
 		tardis.loyalty().subLevel(player, 5);
 
 		FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.CLOISTER);
@@ -124,6 +130,7 @@ public class KeyItem extends LinkableItem {
 		if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HAIL_MARY))
 			return;
 
+		TravelHandler travel = tardis.travel();
 		KeyItem keyType = (KeyItem) stack.getItem().asItem();
 
 		if (tardis.travel().handbrake().get())
@@ -135,12 +142,19 @@ public class KeyItem extends LinkableItem {
 		if (player.getHealth() > 4 || player.getWorld() == TardisUtil.getTardisDimension())
 			return;
 
-		tardis.travel().setDestination(TardisUtil.createFromPlayer(player), true);
+		World world = player.getWorld();
+		BlockPos pos = player.getBlockPos();
 
-		if (tardis.travel().getState() == TardisTravel.State.LANDED) {
-			tardis.travel().dematerialise(true);
-		} else if (tardis.travel().getState() == TardisTravel.State.FLIGHT) {
-			tardis.travel().materialise();
+		DirectedGlobalPos.Cached globalPos = DirectedGlobalPos.Cached.create(
+				(ServerWorld) world, pos, (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw())
+		);
+
+		tardis.travel().destination(globalPos);
+
+		if (travel.getState() == TravelHandler.State.LANDED) {
+			travel.dematerialize(true);
+		} else if (travel.getState() == TravelHandler.State.FLIGHT) {
+			travel.materialise();
 		}
 
 		player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3));
@@ -151,8 +165,9 @@ public class KeyItem extends LinkableItem {
 		PropertiesHandler.set(tardis.properties(), PropertiesHandler.HAIL_MARY, false);
 		PropertiesHandler.set(tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED, false);
 
-		player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f); // like a sound to show its been called
-		player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
+		// like a sound to show its been called
+		world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
+		world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
 	}
 
 	@Override

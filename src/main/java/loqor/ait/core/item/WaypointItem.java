@@ -1,7 +1,7 @@
 package loqor.ait.core.item;
 
 import loqor.ait.core.AITItems;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.Waypoint;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
@@ -77,7 +77,7 @@ public class WaypointItem extends Item implements DyeableItem {
 
 	public static ItemStack create(Waypoint pos) {
 		ItemStack stack = new ItemStack(AITItems.WAYPOINT_CARTRIDGE);
-		setPos(stack, pos);
+		setPos(stack, pos.getPos());
 
 		if (pos.hasName())
 			stack.setCustomName(Text.literal(pos.name()));
@@ -85,16 +85,16 @@ public class WaypointItem extends Item implements DyeableItem {
 		return stack;
 	}
 
-	public static AbsoluteBlockPos.Directed getPos(ItemStack stack) {
+	public static DirectedGlobalPos.Cached getPos(ItemStack stack) {
 		NbtCompound nbt = stack.getOrCreateNbt();
 
 		if (!nbt.contains(POS_KEY))
 			return null;
 
-		return AbsoluteBlockPos.Directed.fromNbt(nbt.getCompound(POS_KEY));
+		return DirectedGlobalPos.Cached.fromNbt(nbt.getCompound(POS_KEY));
 	}
 
-	public static void setPos(ItemStack stack, AbsoluteBlockPos.Directed pos) {
+	public static void setPos(ItemStack stack, DirectedGlobalPos pos) {
 		NbtCompound nbt = stack.getOrCreateNbt();
 		nbt.put(POS_KEY, pos.toNbt());
 	}

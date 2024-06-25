@@ -483,12 +483,12 @@ public class TardisUtil {
 		return null;
 	}
 
-	public static List<PlayerEntity> getPlayersInsideInterior(Tardis tardis) {
-		List<PlayerEntity> list = new ArrayList<>();
+	public static List<ServerPlayerEntity> getPlayersInsideInterior(Tardis tardis) {
+		List<ServerPlayerEntity> list = new ArrayList<>();
 
 		for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
 			if (TardisUtil.inBox(tardis.getDesktop().getCorners(), player.getBlockPos()))
-				list.add(player);
+				list.add((ServerPlayerEntity) player);
 		}
 
 		return list;

@@ -7,8 +7,9 @@ import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.DirectionControl;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -60,12 +61,14 @@ public class TardisItemBuilder extends Item {
 		BlockEntity entity = world.getBlockEntity(context.getBlockPos());
 
 		if (entity instanceof ConsoleBlockEntity consoleBlock) {
-			if (consoleBlock.tardis().isEmpty())
+			Tardis tardis = consoleBlock.tardis().get();
+
+			if (tardis == null)
 				return ActionResult.FAIL;
 
-			TardisTravel.State state = consoleBlock.tardis().get().travel().getState();
+			TravelHandler.State state = tardis.travel().getState();
 
-			if (!(state == TardisTravel.State.LANDED || state == TardisTravel.State.FLIGHT))
+			if (!(state == TravelHandler.State.LANDED || state == TravelHandler.State.FLIGHT))
 				return ActionResult.PASS;
 
 			consoleBlock.killControls();

@@ -1,7 +1,6 @@
 package loqor.ait.registry.impl;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.tardis.control.impl.*;
 import loqor.ait.tardis.control.impl.pos.IncrementControl;
@@ -81,12 +80,12 @@ public class SequenceRegistry {
 						explosions.add(explosion);
 					});
 
-					for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(missedTardis)) {
-						float random_X_velocity = TardisUtil.random().nextFloat(-2f, 3f);
-						float random_Y_velocity = TardisUtil.random().nextFloat(-1f, 2f);
-						float random_Z_velocity = TardisUtil.random().nextFloat(-2f, 3f);
+					for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(missedTardis)) {
+						float xVel = TardisUtil.random().nextFloat(-2f, 3f);
+						float yVel = TardisUtil.random().nextFloat(-1f, 2f);
+						float zVel = TardisUtil.random().nextFloat(-2f, 3f);
 
-						player.setVelocity(random_X_velocity * 2, random_Y_velocity * 2, random_Z_velocity * 2);
+						player.setVelocity(xVel * 2, yVel * 2, zVel * 2);
 
 						if (!explosions.isEmpty()) {
 							player.damage(TardisUtil.getTardisDimension().getDamageSources().explosion(explosions.get(0)), 0);
@@ -139,38 +138,34 @@ public class SequenceRegistry {
 
 		DIMENSIONAL_DRIFT_X = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_drift_x"), (finishedTardis -> {
 					finishedTardis.flight().decreaseFlightTime(120);
-				}), (missedTardis -> {
-					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
-							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
-							pos.getY(),
-							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
-							pos.getRotation()));
-				}), 100L, Text.literal("Drifting off course X!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+				}), (missedTardis -> missedTardis.travel().destination(cached -> {
+                    BlockPos pos = cached.getPos();
+
+                    return cached.pos(random.nextBetween(pos.getX() - 8, pos.getX() + 8), pos.getY(),
+                            random.nextBetween(pos.getZ() - 8, pos.getZ() + 8));
+                })), 100L, Text.literal("Drifting off course X!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new DimensionControl(), new XControl()));
 
 		DIMENSIONAL_DRIFT_Y = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_drift_y"), (finishedTardis -> {
 					finishedTardis.flight().decreaseFlightTime(120);
-				}), (missedTardis -> {
-					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
-							random.nextBetween(pos.getX() - 8, pos.getX() + 8),
-							pos.getY(),
-							random.nextBetween(pos.getZ() - 8, pos.getZ() + 8), pos.getWorld(),
-							pos.getRotation()));
-				}), 100L, Text.literal("Drifting off course Y!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+				}), (missedTardis -> missedTardis.travel().destination(cached -> {
+                    BlockPos pos = cached.getPos();
+
+                    return cached.pos(
+                            random.nextBetween(pos.getX() - 8, pos.getX() + 8), pos.getY(),
+                            random.nextBetween(pos.getZ() - 8, pos.getZ() + 8)
+                    );
+                })), 100L, Text.literal("Drifting off course Y!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new DimensionControl(), new YControl()));
 
 		DIMENSIONAL_DRIFT_Z = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_drift_z"), (finishedTardis -> {
 					finishedTardis.flight().decreaseFlightTime(120);
-				}), (missedTardis -> {
-					missedTardis.travel().destination(cached -> {
-						BlockPos pos = cached.getPos();
+				}), (missedTardis -> missedTardis.travel().destination(cached -> {
+                    BlockPos pos = cached.getPos();
 
-						return cached.pos(random.nextBetween(pos.getX() - 8, pos.getX() + 8), pos.getY(),
-								random.nextBetween(pos.getZ() - 8, pos.getZ() + 8));
-					});
-				}), 100L, Text.literal("Drifting off course Z!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                    return cached.pos(random.nextBetween(pos.getX() - 8, pos.getX() + 8), pos.getY(),
+                            random.nextBetween(pos.getZ() - 8, pos.getZ() + 8));
+                })), 100L, Text.literal("Drifting off course Z!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new DimensionControl(), new ZControl()));
 
 		CLOAK_TO_AVOID_VORTEX_TRAPPED_MOBS = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "cloak_to_avoid_vortex_trapped_mobs"), (finishedTardis -> {
@@ -235,12 +230,15 @@ public class SequenceRegistry {
 					finishedTardis.flight().decreaseFlightTime(240);
 				}), (missedTardis -> {
 					missedTardis.removeFuel(random.nextBetween(65, 250));
-					AbsoluteBlockPos.Directed pos = missedTardis.destination();
-					missedTardis.travel().setDestination(new AbsoluteBlockPos.Directed(
-							random.nextBetween(pos.getX() - 24, pos.getX() + 24),
-							pos.getY(),
-							random.nextBetween(pos.getZ() - 24, pos.getZ() + 24), pos.getWorld(),
-							pos.getRotation()));
+
+					missedTardis.travel().destination(cached -> {
+						BlockPos pos = cached.getPos();
+
+						return cached.pos(
+								random.nextBetween(pos.getX() - 24, pos.getX() + 24), pos.getY(),
+								random.nextBetween(pos.getZ() - 24, pos.getZ() + 24)
+						);
+					});
 				}), 110L, Text.literal("TARDIS off course!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new HandBrakeControl(), new ThrottleControl(), new RandomiserControl()));
 

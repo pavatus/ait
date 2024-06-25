@@ -1,5 +1,8 @@
 package loqor.ait.core.data;
 
+import loqor.ait.core.item.WaypointItem;
+import net.minecraft.item.ItemStack;
+
 // todo for now this is identical to abpd but will eventually hold more
 public class Waypoint {
 	private String name;
@@ -9,7 +12,7 @@ public class Waypoint {
 		this.pos = pos;
 	}
 
-	public Waypoint setName(String name) {
+	public Waypoint withName(String name) {
 		this.name = name;
 		return this;
 	}
@@ -26,7 +29,12 @@ public class Waypoint {
 		return pos;
 	}
 
-	public static Waypoint fromDirected(DirectedGlobalPos.Cached pos) {
+	public static Waypoint fromPos(DirectedGlobalPos.Cached pos) {
 		return new Waypoint(pos);
+	}
+
+	public static Waypoint fromStack(ItemStack stack) {
+		return fromPos(WaypointItem.getPos(stack))
+				.withName(stack.getName().getString());
 	}
 }

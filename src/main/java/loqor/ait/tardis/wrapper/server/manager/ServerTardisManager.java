@@ -84,12 +84,6 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), false));
 
-		ServerTickEvents.START_SERVER_TICK.register(server -> {
-			for (ServerTardis tardis : this.lookup.values()) {
-				tardis.startTick(server);
-			}
-		});
-
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			ServerPlayerEntity player = handler.getPlayer();
 
