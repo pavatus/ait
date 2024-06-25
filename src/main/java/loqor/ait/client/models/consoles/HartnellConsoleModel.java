@@ -4,14 +4,15 @@ import loqor.ait.AITMod;
 import loqor.ait.client.animation.console.hartnell.HartnellAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.CloakData;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ShieldData;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -23,9 +24,9 @@ import net.minecraft.util.math.BlockPos;
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 public class HartnellConsoleModel extends ConsoleModel {
+
 	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/hartnell_console.png");
 	public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/hartnell_console_emission.png");
-	public static final Animation EMPTY_ANIM = Animation.Builder.create(1).build(); // temporary animation bc rn we have none
 
 	private final ModelPart bone;
 
@@ -790,11 +791,11 @@ public class HartnellConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TardisTravel.State state) {
-		return switch (state) {
-			default -> HartnellAnimations.HARTNELL_INFLIGHT_ANIMATION;
-			case LANDED -> HartnellAnimations.HARTNELL_IDLE_ANIMATION;
-		};
+	public Animation getAnimationForState(TravelHandler.State state) {
+		if (state == TravelHandlerBase.State.LANDED)
+			return HartnellAnimations.HARTNELL_IDLE_ANIMATION;
+
+		return HartnellAnimations.HARTNELL_INFLIGHT_ANIMATION;
 	}
 
 	@Override

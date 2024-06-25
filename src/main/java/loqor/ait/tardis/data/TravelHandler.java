@@ -55,7 +55,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         BlockPos pos = globalPos.getPos();
 
         BlockState blockState = AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(
-                ExteriorBlock.ROTATION, DirectionControl.getGeneralizedRotation(globalPos.getRotation())
+                ExteriorBlock.ROTATION, (int) DirectionControl.getGeneralizedRotation(globalPos.getRotation())
         ).with(ExteriorBlock.LEVEL_9, 0);
 
         world.setBlockState(pos, blockState);
@@ -255,6 +255,21 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
         DoorData.lockTardis(PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.tardis(), null, false);
         TardisEvents.LANDED.invoker().onLanded(this.tardis);
+    }
+
+    /**
+     * Sets the position of the tardis based off the flight's progress to the destination.
+     */
+    public void setPosFromProgress() {
+        if (this.getState() != State.FLIGHT)
+            return;
+
+        DirectedGlobalPos.Cached pos = FlightUtil.getPositionFromPercentage(
+                this.position(), this.destination(),
+                this.tardis().flight().getDurationAsPercentage()
+        );
+
+        this.position.set(pos);
     }
 
     public void initPos(DirectedGlobalPos.Cached cached) {

@@ -396,7 +396,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (tardis == null)
 			return;
 
-		tardis.travel().position(cached -> cached.world(world.getRegistryKey()).pos(pos));
+		tardis.travel().forcePosition(cached -> cached.world(world.getRegistryKey()).pos(pos));
 
 		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();

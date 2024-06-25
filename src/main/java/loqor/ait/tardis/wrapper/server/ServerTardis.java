@@ -20,11 +20,11 @@ import loqor.ait.tardis.util.TardisChunkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 
@@ -32,7 +32,6 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-
 
 public class ServerTardis extends Tardis {
 
@@ -51,10 +50,12 @@ public class ServerTardis extends Tardis {
 	public void tick(MinecraftServer server) {
 		// most of the logic is in the handlers, so we can just disable them if we're a growth
 		if (!this.engine().hasPower() && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-driftingmusicdelay")) {
-			List<PlayerEntity> playerEntities = TardisUtil.getPlayersInsideInterior(this);
-			for (PlayerEntity player : playerEntities) {
+			List<ServerPlayerEntity> playerEntities = TardisUtil.getPlayersInsideInterior(this);
+
+			for (ServerPlayerEntity player : playerEntities) {
 				player.playSound(AITSounds.DRIFTING_MUSIC, SoundCategory.MUSIC, 1, 1);
 			}
+
 			DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.minutesToMilliseconds(new Random().nextInt(7, 9)));
 		}
 

@@ -1,11 +1,11 @@
 package loqor.ait.tardis.control.impl;
 
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.pos.PosType;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DimensionControl extends Control {
+
 	public DimensionControl() {
 		super("dimension");
 	}
@@ -28,47 +29,40 @@ public class DimensionControl extends Control {
 			return false;
 		}
 
-		TardisTravel travel = tardis.travel();
-		AbsoluteBlockPos.Directed dest = travel.getDestination();
+		TravelHandler travel = tardis.travel();
+		DirectedGlobalPos.Cached dest = travel.destination();
+
 		List<ServerWorld> dims = getDimensions(world.getServer());
-
 		int current = dims.indexOf(dest.getWorld() == null ? World.OVERWORLD : dest.getWorld());
-		int next;
 
+		int next;
 		if (!player.isSneaking()) {
-			next = ((current + 1) > dims.size() - 1) ? 0 : current + 1;
+			next = (current + 1) > dims.size() - 1 ? 0 : current + 1;
 		} else {
-			next = ((current - 1) < 0) ? dims.size() - 1 : current - 1;
+			next = (current - 1) < 0 ? dims.size() - 1 : current - 1;
 		}
 
 		// FIXME we should make it so that once the ender dragon is defeated, the end is unlocked; also make that a config option as well for the server. - Loqor
 
-		travel.setDestination(new AbsoluteBlockPos.Directed(PosType.Y.add(dest, 0), dims.get(next), dest.getRotation()), false); // postype.y.add means it clamps the y coord fixme doesnt work for nether as u can go above the bedrock but dont hardcode it like you did loqor :(
-		messagePlayer(player, (ServerWorld) travel.getDestination().getWorld());
+		ServerWorld destWorld = dims.get(next);
+
+		travel.destination(cached -> cached.world(destWorld));
+		messagePlayer(player, destWorld);
+		Text.translatable("dimension.minecraft.overworld");
+
 		return true;
 	}
 
 	private void messagePlayer(ServerPlayerEntity player, ServerWorld world) {
 		Text message = Text.translatable("message.ait.tardis.control.dimension.info").append(
-				Text.literal(" " + convertWorldToReadable(world))
+				dimensionText(world.getRegistryKey())
 		);
 
 		player.sendMessage(message, true); // fixme translatable is preferred
 	}
 
-	public static String convertWorldToReadable(World world) {
-		String path = world.getDimensionKey().getValue().getPath();
-
-		// Split the string into words
-		String[] words = path.split("_");
-
-		// Capitalize the first letter of each word
-		for (int i = 0; i < words.length; i++) {
-			words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
-		}
-
-		// Join the words back together with spaces
-		return String.join(" ", words);
+	public static Text dimensionText(RegistryKey<World> key) {
+		return Text.translatable(key.getValue().toTranslationKey("dimension"));
 	}
 
 	// @TODO for some reason in the dev env, this method tends to not like doing anything sometimes. idk, it works or it doesnt, but in builds, it always works. funny what a lil spaghetti man can tell you at 3 am

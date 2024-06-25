@@ -5,7 +5,7 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.CoralBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
@@ -99,7 +99,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
 	private void createTardis(ServerWorld world, BlockPos pos, UUID creatorId) {
 		ServerTardis created = ServerTardisManager.getInstance().create(new TardisBuilder()
-				.at(new AbsoluteBlockPos.Directed(pos, world, 0))
+				.at(DirectedGlobalPos.Cached.create(world, pos, (byte) 0))
 				.exterior(ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE))
 				.desktop(DesktopRegistry.DEFAULT_CAVE).owner(world.getPlayerByUuid(creatorId))
 		);

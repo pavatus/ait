@@ -66,6 +66,7 @@ public class Property<T> {
     public static class Type<T> {
 
         public static final Type<DirectedGlobalPos> DIRECTED_GLOBAL_POS = new Type<>((buf, pos) -> pos.write(buf), DirectedGlobalPos::read);
+        public static final Type<DirectedGlobalPos.Cached> CDIRECTED_GLOBAL_POS = new Type<>((buf, pos) -> pos.write(buf), DirectedGlobalPos.Cached::read);
         public static final Type<Identifier> IDENTIFIER = new Type<>(PacketByteBuf::writeIdentifier, PacketByteBuf::readIdentifier);
 
         public static final Type<RegistryKey<World>> WORLD_KEY = new Type<>(PacketByteBuf::writeRegistryKey, buf -> buf.readRegistryKey(RegistryKeys.WORLD));

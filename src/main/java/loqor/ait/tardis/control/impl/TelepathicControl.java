@@ -1,6 +1,7 @@
 package loqor.ait.tardis.control.impl;
 
 import com.mojang.datafixers.util.Pair;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
@@ -26,6 +27,7 @@ import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
 public class TelepathicControl extends Control {
+
 	public TelepathicControl() {
 		super("telepathic_circuit");
 	}
@@ -70,7 +72,9 @@ public class TelepathicControl extends Control {
 		Text text = Text.literal("The TARDIS is choosing.."); // todo translatable
 		player.sendMessage(text, true);
 
-		BlockPos found = locateStructureOfInterest((ServerWorld) tardis.travel().destination().getWorld(), tardis.travel().position());
+		DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+
+		BlockPos found = locateStructureOfInterest(globalPos.getWorld(), globalPos.getPos());
 		text = Text.literal("The TARDIS chose where to go.."); // todo translatable
 
 		if (found == null) {
@@ -125,7 +129,10 @@ public class TelepathicControl extends Control {
 
 	public static BlockPos getStructure(ServerWorld world, BlockPos pos, int radius, RegistryKey<Structure> key) {
 		Registry<Structure> registry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
-		if (registry.getEntry(key).isEmpty()) return null;
+
+		if (registry.getEntry(key).isEmpty())
+			return null;
+
 		Pair<BlockPos, RegistryEntry<Structure>> pair = world.getChunkManager().getChunkGenerator().locateStructure(world, RegistryEntryList.of(registry.getEntry(key).get()), pos, radius, false);
 		return pair != null ? pair.getFirst() : null;
 	}

@@ -2,7 +2,7 @@ package loqor.ait.core.item;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
@@ -17,6 +17,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -51,13 +52,18 @@ public class TardisItemBuilder extends Item {
 		World world = context.getWorld();
 		PlayerEntity player = context.getPlayer();
 
-		if (world.isClient() || player == null)
+		if (player == null)
+			return ActionResult.PASS;
+
+		if (!(world instanceof ServerWorld serverWorld))
 			return ActionResult.PASS;
 
 		if (context.getHand() != Hand.MAIN_HAND)
 			return ActionResult.SUCCESS;
 
-		AbsoluteBlockPos.Directed pos = new AbsoluteBlockPos.Directed(context.getBlockPos().up(), world, DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw())));
+		DirectedGlobalPos.Cached pos = DirectedGlobalPos.Cached.create(serverWorld, context.getBlockPos().up(),
+				DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw())));
+
 		BlockEntity entity = world.getBlockEntity(context.getBlockPos());
 
 		if (entity instanceof ConsoleBlockEntity consoleBlock) {

@@ -142,6 +142,11 @@ public class DirectedGlobalPos {
         return DirectedGlobalPos.create(dimension, pos, rotation);
     }
 
+    // TODO: make directedglobalpos use directedblockpos
+    public DirectedBlockPos toPos() {
+        return DirectedBlockPos.create(this.pos, this.rotation);
+    }
+
     public static class Cached extends DirectedGlobalPos {
 
         @Exclude private ServerWorld world;
@@ -223,6 +228,14 @@ public class DirectedGlobalPos {
 
             byte rotation = compound.getByte("rotation");
             return createNew(null, dimension, pos, rotation);
+        }
+
+        public static Cached read(PacketByteBuf buf) {
+            RegistryKey<World> registryKey = buf.readRegistryKey(RegistryKeys.WORLD);
+            BlockPos blockPos = buf.readBlockPos();
+            byte rotation = buf.readByte();
+
+            return Cached.createNew(null, registryKey, blockPos, rotation);
         }
     }
 

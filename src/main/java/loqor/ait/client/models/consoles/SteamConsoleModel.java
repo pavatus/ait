@@ -3,10 +3,10 @@ package loqor.ait.client.models.consoles;
 import loqor.ait.client.animation.console.steam.SteamAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.ShieldData;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -954,12 +954,11 @@ public class SteamConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TardisTravel.State state) {
+	public Animation getAnimationForState(TravelHandler.State state) {
 		return switch (state) {
 			case LANDED -> SteamAnimations.CONSOLE_STEAM_IDLE;
 			case FLIGHT, MAT, DEMAT, CRASH -> SteamAnimations.CONSOLE_STEAM_FLIGHT;
-			default -> Animation.Builder.create(0).build();
-		};
+        };
 	}
 
 	@Override

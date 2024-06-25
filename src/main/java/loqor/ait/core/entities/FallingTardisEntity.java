@@ -196,7 +196,7 @@ public class FallingTardisEntity extends Entity {
 			if (blockPos == null)
 				return;
 
-			tardis.travel().position(cached -> cached.pos(blockPos)
+			tardis.travel().forcePosition(cached -> cached.pos(blockPos)
 					.world(this.getWorld().getRegistryKey()));
 
 			if (this.isOnGround()) {

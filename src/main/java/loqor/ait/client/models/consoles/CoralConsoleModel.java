@@ -4,12 +4,12 @@ import loqor.ait.client.animation.console.coral.CoralAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ShieldData;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.WaypointHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.client.model.*;
@@ -1332,7 +1332,7 @@ public class CoralConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TardisTravel.State state) {
+	public Animation getAnimationForState(TravelHandler.State state) {
 		return switch (state) {
 			default -> CoralAnimations.CORAL_CONSOLE_INFLIGHT_ANIMATION;
 			case MAT -> CoralAnimations.CORAL_CONSOLE_REMAT_ANIMATION;

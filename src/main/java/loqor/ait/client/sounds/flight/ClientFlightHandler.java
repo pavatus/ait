@@ -5,7 +5,7 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
@@ -27,13 +27,14 @@ public class ClientFlightHandler extends SoundHandler {
 	}
 
 	public LoopingSound getFlightLoop() {
-		if (FLIGHT == null) FLIGHT = createFlightSound();
+		if (FLIGHT == null)
+			FLIGHT = createFlightSound();
 
 		return FLIGHT;
 	}
 
 	private LoopingSound createFlightSound() {
-		if (tardis().getHandlers().getCrashData().isToxic() || tardis().getHandlers().getCrashData().isUnstable()) {
+		if (tardis().crash().isToxic() || tardis().crash().isUnstable()) {
 			return new InteriorFlightSound(AITSounds.UNSTABLE_FLIGHT_LOOP, SoundCategory.BLOCKS, 1f);
 		}
 		return new InteriorFlightSound(AITSounds.FLIGHT_LOOP, SoundCategory.BLOCKS, 1f);
@@ -69,7 +70,10 @@ public class ClientFlightHandler extends SoundHandler {
 
 	public Tardis tardis() {
 		ClientPlayerEntity player = MinecraftClient.getInstance().player;
-		if (player == null) return null;
+
+		if (player == null)
+			return null;
+
 		return TardisUtil.findTardisByInterior(player.getBlockPos(), false);
 	}
 
@@ -83,7 +87,8 @@ public class ClientFlightHandler extends SoundHandler {
 	}
 
 	private boolean inFlight() {
-		return (isPlayerInATardis() && tardis() != null && tardis().travel().getState() == TardisTravel.State.FLIGHT);
+		Tardis tardis = this.tardis();
+		return (isPlayerInATardis() && tardis != null && tardis.travel().getState() == TravelHandler.State.FLIGHT);
 	}
 
 	public boolean hasThrottleAndHandbrakeDown() {

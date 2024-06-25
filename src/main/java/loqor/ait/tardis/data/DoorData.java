@@ -259,7 +259,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 			return false;
 		}
 
-		if (tardis.getLockedTardis() || tardis.getHandlers().getSonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
+		if (tardis.getLockedTardis() || tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
 			if (player != null && pos != null) {
 				player.sendMessage(Text.literal("\uD83D\uDD12"), true);
 				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
@@ -310,7 +310,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		if (!forced && (tardis.travel().getState() == TravelHandler.State.DEMAT || tardis.travel().getState() == TravelHandler.State.MAT))
 			return false;
 
-		tardis.setLockedTardis(locked);
+		tardis.door().setLocked(locked);
 		DoorData door = tardis.door();
 
 		if (door == null)
@@ -338,7 +338,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 	}
 
 	public boolean previouslyLocked(){
-		return PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED);
+		return PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED);
 	}
 
 	public enum DoorStateEnum {

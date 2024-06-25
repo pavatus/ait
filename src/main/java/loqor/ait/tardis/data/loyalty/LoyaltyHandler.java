@@ -60,13 +60,10 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
             return;
 
         Tardis tardis = this.tardis();
-        List<PlayerEntity> list = TardisUtil.getPlayersInsideInterior(tardis);
+        List<ServerPlayerEntity> list = TardisUtil.getPlayersInsideInterior(tardis);
 
-        for(PlayerEntity player : list) {
-            if (!(player instanceof ServerPlayerEntity serverPlayer))
-                return;
-
-            this.addLevel(serverPlayer, (this.get(player).level() >= Loyalty.Type.NEUTRAL.level &&
+        for (ServerPlayerEntity player : list) {
+            this.addLevel(player, (this.get(player).level() >= Loyalty.Type.NEUTRAL.level &&
                     this.get(player).level() < Loyalty.Type.COMPANION.level &&
                     AITMod.RANDOM.nextInt(0, 20) == 14) ? 1 : 0);
         }

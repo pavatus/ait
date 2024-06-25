@@ -172,7 +172,8 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					TardisUtil.teleportToInteriorPosition(this.getTardis(), user, this.getPlayerBlockPos().get());
 				}
 				this.dataTracker.set(PLAYER_UUID, Optional.empty());
-				this.getTardis().travel().setState(TravelHandler.State.LANDED);
+
+				this.getTardis().travel().immediatelyLandAt(getTardis().travel().position());
 				this.discard();
 			}
 		}

@@ -13,6 +13,7 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.Corners;
 import loqor.ait.core.data.DirectedBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SonicItem;
@@ -221,13 +222,10 @@ public class TardisUtil {
 							return;
 						}
 
-						tardis.travel().setDestination(new AbsoluteBlockPos.Directed(
-										serverPlayer.getBlockX(),
-										serverPlayer.getBlockY(),
-										serverPlayer.getBlockZ(),
-										serverPlayer.getWorld(),
-										RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())),
-								tardis.travel().autoLand().get());
+						tardis.travel().forceDestination(DirectedGlobalPos.Cached.create(
+                                (ServerWorld) serverPlayer.getWorld(), serverPlayer.getBlockPos(),
+                                (byte) RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())
+                        ));
 
 						FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
 					});
@@ -263,10 +261,6 @@ public class TardisUtil {
 		return TIME_VORTEX;
 	}
 
-	public static AbsoluteBlockPos.Directed createFromPlayer(PlayerEntity player) {
-		return new AbsoluteBlockPos.Directed(player.getBlockPos(), player.getWorld(), RotationPropertyHelper.fromYaw(player.getBodyYaw()));
-	}
-
 	public static boolean inBox(Box box, BlockPos pos) {
 		return pos.getX() <= box.maxX && pos.getX() >= box.minX &&
 				pos.getZ() <= box.maxZ && pos.getZ() >= box.minZ;
@@ -294,7 +288,9 @@ public class TardisUtil {
 	}
 
 	public static ExteriorBlockEntity getExterior(Tardis tardis) {
-		if (!(tardis.travel().position().getBlockEntity() instanceof ExteriorBlockEntity exterior))
+		DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+
+		if (!(globalPos.getWorld().getBlockEntity(globalPos.getPos()) instanceof ExteriorBlockEntity exterior))
 			return null;
 
 		return exterior;
@@ -374,14 +370,18 @@ public class TardisUtil {
 
 	public static void teleportOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
-		TardisUtil.teleportWithDoorOffset((ServerWorld) tardis.position().getWorld(), entity, tardis.travel().position().getPos().toBlockPos());
+		TardisUtil.teleportWithDoorOffset(tardis.travel().position().getWorld(), entity, tardis.travel().position().toPos());
 	}
 
 	public static void dropOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
 
-		DirectedBlockPos percentageOfDestination = FlightUtil.getPositionFromPercentage(tardis.position(), tardis.destination(), tardis.flight().getDurationAsPercentage()).toBlockPos();
-		TardisUtil.teleportWithDoorOffset((ServerWorld) tardis.destination().getWorld(), entity, percentageOfDestination);
+		DirectedGlobalPos.Cached percentageOfDestination = FlightUtil.getPositionFromPercentage(
+				tardis.travel().position(), tardis.travel().destination(),
+				tardis.flight().getDurationAsPercentage()
+		);
+
+		TardisUtil.teleportWithDoorOffset(tardis.travel().destination().getWorld(), entity, percentageOfDestination.toPos());
 	}
 
 	public static void teleportInside(Tardis tardis, Entity entity) {
@@ -573,8 +573,6 @@ public class TardisUtil {
 
 	/**
 	 * @see TardisUtil#getPlayersInsideInterior(Tardis)
-	 * @param tardis
-	 * @return
 	 */
 	@Deprecated(forRemoval = true)
 	public static List<ServerPlayerEntity> getPlayersInInterior(Tardis tardis) {

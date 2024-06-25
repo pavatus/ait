@@ -2,19 +2,12 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.properties.v2.Property;
-import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
-import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
-import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
-import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -87,7 +80,7 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	}
 
 	private boolean shouldAutoLand() {
-		return (this.autoLand().get()
+		return (this.tardis.travel().autoLand().get()
 				|| !TardisUtil.isInteriorNotEmpty(this.tardis()))
 				&& !PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 		// todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )

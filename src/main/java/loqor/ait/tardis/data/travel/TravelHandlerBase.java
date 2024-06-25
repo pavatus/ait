@@ -25,9 +25,9 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
 
     private static final Property<State> STATE = Property.forEnum("state", State.class, State.LANDED);
 
-    private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(Property.Type.DIRECTED_GLOBAL_POS, "position", Property.warnCompat("previous_position", null));
-    private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.DIRECTED_GLOBAL_POS, "destination", Property.warnCompat("previous_position", null));
-    private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.DIRECTED_GLOBAL_POS, "previous_position", Property.warnCompat("previous_position", null));
+    private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "position", (DirectedGlobalPos.Cached) Property.warnCompat("previous_position", null));
+    private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "destination", (DirectedGlobalPos.Cached) Property.warnCompat("previous_position", null));
+    private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) Property.warnCompat("previous_position", null));
 
     private static final BoolProperty HANDBRAKE = new BoolProperty("handbrake", Property.warnCompat("handbrake", true));
     private static final BoolProperty AUTO_LAND = new BoolProperty("auto_land", Property.warnCompat("auto_land", false));
@@ -110,7 +110,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
         this.position.set(cached);
     }
 
-    public void position(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
+    public void forcePosition(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
         this.forcePosition(position.apply(this.position()));
     }
 

@@ -753,7 +753,7 @@ public class TardisTravel extends TardisComponent {
 
 	public void placeExterior() {
 		this.position.setBlockState(AITBlocks.EXTERIOR_BLOCK.getDefaultState()
-				.with(ExteriorBlock.ROTATION, DirectionControl.getGeneralizedRotation(this.position.getRotation()))
+				.with(ExteriorBlock.ROTATION, (int) DirectionControl.getGeneralizedRotation(this.position.getRotation()))
 				.with(ExteriorBlock.LEVEL_9, 0));
 
 		this.position.addBlockEntity(new ExteriorBlockEntity(
