@@ -184,7 +184,7 @@ public class DirectedGlobalPos {
         }
 
         public void init(MinecraftServer server) {
-            if (this.world != null)
+            if (this.world == null)
                 this.world = server.getWorld(this.getDimension());
         }
 
