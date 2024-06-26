@@ -42,7 +42,7 @@ jobs:
       #  BETA: 1 # exclude assets if it's a beta dev build
 
     - name: Publish artifacts
-      uses: DrTheodor/discord-webhook-upload-action@e6ce331baf6f347bec9a1ddfdb0834456f0446d3
+      uses: DrTheodor/discord-webhook-upload-action@v1.2
       with:
         url: ${{ secrets.DEV_BUILDS }}
         file: 'build/libs/*'
