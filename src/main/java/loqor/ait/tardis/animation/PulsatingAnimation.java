@@ -5,6 +5,7 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.TravelHandlerV2;
 
 public class PulsatingAnimation extends ExteriorAnimation {
 	private static final int PULSE_LENGTH = 20;
@@ -22,7 +23,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
 			return;
 
 		Tardis tardis = exterior.tardis().get();
-		TravelHandler travel = tardis.travel();
+		TravelHandlerV2 travel = tardis.travel2();
 
 		TravelHandler.State state = travel.getState();
 
@@ -33,8 +34,8 @@ public class PulsatingAnimation extends ExteriorAnimation {
 			this.setAlpha(1f - this.getPulseAlpha());
 			this.timeLeft--;
 
-			if (this.alpha <= 0f)
-				travel.finishDemat();
+			//if (this.alpha <= 0f)
+			//	travel.finishDemat();
 
 			return;
 		}
@@ -46,8 +47,8 @@ public class PulsatingAnimation extends ExteriorAnimation {
 				this.setAlpha(this.getPulseAlpha());
 			else this.alpha = 0f;
 
-			if (alpha >= 1f)
-				tardis.travel().finishLanding(this.exterior);
+			//if (alpha >= 1f)
+			//	travel.finishLanding(this.exterior);
 
 			return;
 		}

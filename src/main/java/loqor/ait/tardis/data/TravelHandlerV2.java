@@ -31,7 +31,7 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
 
     @Override
     public void tick(MinecraftServer server) {
-        tickMat();
+        tickDemat();
 
         // im sure this is great for your server performace
         if (TardisChunkUtil.shouldExteriorChunkBeForced(this.tardis) && !TardisChunkUtil.isExteriorChunkForced(this.tardis)) {
@@ -41,8 +41,8 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
         }
     }
 
-    private void tickMat() {
-        if (this.getState() != State.MAT) {
+    private void tickDemat() {
+        if (this.getState() != State.DEMAT) {
             if (this.dematTicks != 0)
                 this.dematTicks = 0;
 
@@ -59,13 +59,12 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
             AITMod.LOGGER.error("EXT AT : " + ctx.pos());
             this.initPos(ctx.pos());
         }
-
     }
 
     @Override
     public void postInit(InitContext context) {
-        //if (this.isServer() && context.created())
-        //    this.placeExterior();
+        if (this.isServer() && context.created())
+            this.placeExterior();
     }
 
     public void deleteExterior() {
@@ -111,8 +110,10 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
     }
 
     private void runAnimations(ExteriorBlockEntity exterior) {
-        if (exterior.getAnimation() == null)
+        if (exterior.getAnimation() == null) {
+            AITMod.LOGGER.info("Null animation for exterior at {}", exterior.getPos());
             return;
+        }
 
         exterior.getAnimation().setupAnimation(this.getState());
         exterior.getAnimation().tellClientsToSetup(this.getState());

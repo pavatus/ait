@@ -86,10 +86,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		this.tardis = null;
 	}
 
-	public static void init(TardisComponent component, Tardis tardis, boolean deserialized) {
-		TardisComponent.init(component, tardis, new InitContext(deserialized));
-	}
-
 	public static void init(TardisComponent component, Tardis tardis, InitContext context) {
 		component.setTardis(tardis);
 		Initializable.init(component, context);
@@ -274,10 +270,15 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
 	public record InitContext(@Nullable DirectedGlobalPos.Cached pos, boolean deserialized) implements Initializable.Context {
 
-		public InitContext(boolean deserialized) {
-			this(null, deserialized);
+		public static InitContext createdAt(DirectedGlobalPos.Cached pos) {
+			return new InitContext(pos, false);
 		}
 
+		public static InitContext deserialize() {
+			return new InitContext(null, true);
+		}
+
+		@Override
 		public boolean created() {
 			return !deserialized;
 		}

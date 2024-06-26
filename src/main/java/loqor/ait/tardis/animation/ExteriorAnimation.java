@@ -34,11 +34,11 @@ public abstract class ExteriorAnimation {
 			return 1f;
 
 		if (this.timeLeft < 0) {
-			this.setupAnimation(exterior.tardis().get().travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+			this.setupAnimation(exterior.tardis().get().travel2().getState()); // fixme is a jank fix for the timeLeft going negative on client
 			return 1f;
 		}
 
-		if (this.exterior.tardis().get().travel().getState() == TravelHandler.State.LANDED
+		if (this.exterior.tardis().get().travel2().getState() == TravelHandler.State.LANDED
 				&& this.exterior.tardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled())
 			return 0.105f;
 
@@ -51,7 +51,7 @@ public abstract class ExteriorAnimation {
 
 	public static double distanceFromTardis(PlayerEntity player, Tardis tardis) {
 		BlockPos pPos = player.getBlockPos();
-		BlockPos tPos = tardis.travel().position().getPos();
+		BlockPos tPos = tardis.travel2().position().getPos();
 		return Math.sqrt(tPos.getSquaredDistance(pPos));
 	}
 

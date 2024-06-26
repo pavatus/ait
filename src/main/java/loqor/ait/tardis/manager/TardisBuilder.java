@@ -89,7 +89,7 @@ public class TardisBuilder {
         this.validate();
 
         ServerTardis tardis = new ServerTardis(this.uuid, this.desktop, this.exterior);
-        Tardis.init(tardis, new TardisComponent.InitContext(this.pos, false));
+        Tardis.init(tardis, TardisComponent.InitContext.createdAt(this.pos));
 
         tardis.travel().initPos(pos);
         tardis.travel().placeExterior();
