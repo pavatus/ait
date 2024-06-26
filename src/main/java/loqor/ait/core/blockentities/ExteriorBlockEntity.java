@@ -13,6 +13,7 @@ import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.AbstractLinkableBlockEntity;
 import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.util.TardisUtil;
@@ -161,7 +162,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
 		Tardis tardis = ref.get();
 
-		TravelHandler travel = tardis.travel();
+		TravelHandlerBase travel = tardis.travel2();
 		TravelHandler.State state = travel.getState();
 
 		if (state != TravelHandler.State.LANDED)

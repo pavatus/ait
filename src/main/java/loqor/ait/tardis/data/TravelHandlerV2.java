@@ -49,7 +49,7 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
             return;
         }
 
-        if (this.dematTicks++ > this.getState().effect().maxTime() * 2)
+        if (this.dematTicks++ > this.getState().effect().maxTime())
             this.finishDemat();
     }
 
