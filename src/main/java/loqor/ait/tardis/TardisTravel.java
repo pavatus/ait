@@ -782,15 +782,7 @@ public class TardisTravel extends TardisComponent {
 	}
 
 	public MatSound getMatSoundForCurrentState() {
-		if (this.tardis() != null) {
-			if (this.isCrashing()) {
-				return AITSounds.GHOST_MAT_ANIM;
-			}
-
-			//return this.tardis().getExterior().getVariant().getSound(this.getState());
-		}
-
-		return AITSounds.LANDED_ANIM;
+		return null;
 	}
 
 	public enum State {

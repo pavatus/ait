@@ -2,6 +2,7 @@ package loqor.ait.tardis.animation;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.CloakData;
@@ -34,7 +35,8 @@ public abstract class ExteriorAnimation {
 			return 1f;
 
 		if (this.timeLeft < 0) {
-			this.setupAnimation(exterior.tardis().get().travel2().getState()); // fixme is a jank fix for the timeLeft going negative on client
+			// fixme is a jank fix for the timeLeft going negative on client
+			this.setupAnimation(exterior.tardis().get().travel2().getState());
 			return 1f;
 		}
 
@@ -55,9 +57,42 @@ public abstract class ExteriorAnimation {
 		return Math.sqrt(tPos.getSquaredDistance(pPos));
 	}
 
-	public abstract void tick();
+	public abstract void tick(Tardis tardis);
 
-	public abstract void setupAnimation(TravelHandler.State state);
+	public boolean setupAnimation(TravelHandler.State state) {
+		if (exterior.tardis().isEmpty()) {
+			AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
+			this.alpha = 0f; // just make me vanish.
+			return false;
+		}
+
+		Tardis tardis = exterior.tardis().get();
+
+		if (tardis.getExterior().getCategory() == null) {
+			AITMod.LOGGER.error("Exterior category {} was null!", exterior);
+			this.alpha = 0f; // just make me vanish.
+			return false;
+		}
+
+		this.alpha = switch (state) {
+			case DEMAT, LANDED -> 1f;
+			case MAT -> 0f;
+
+			default -> throw new IllegalStateException("Unreachable.");
+		};
+
+		this.tellClientsToSetup(state);
+		MatSound sound = tardis.getExterior().getVariant().getSound(state);
+
+		if (sound == null)
+			return false;
+
+		this.timeLeft = sound.timeLeft();
+		this.maxTime = sound.maxTime();
+		this.startTime = sound.startTime();
+
+		return true;
+	}
 
 	public void setAlpha(float alpha) {
 		this.alpha = Math.clamp(0.0F, 1.0F, alpha);
@@ -79,7 +114,7 @@ public abstract class ExteriorAnimation {
 	}
 
 	public void tellClientToSetup(TravelHandler.State state, ServerPlayerEntity player) {
-		if (exterior.getWorld().isClient() || exterior.tardis().isEmpty())
+		if (exterior.tardis().isEmpty())
 			return;
 
 		PacketByteBuf data = PacketByteBufs.create();

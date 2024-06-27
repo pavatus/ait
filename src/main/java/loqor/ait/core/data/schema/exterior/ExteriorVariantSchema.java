@@ -81,7 +81,7 @@ public abstract class ExteriorVariantSchema implements Unlockable, Nameable {
 
 	public MatSound getSound(TravelHandler.State state) {
 		return switch (state) {
-			case LANDED, CRASH -> AITSounds.LANDED_ANIM;
+			case LANDED, CRASH -> null;
 			case FLIGHT -> AITSounds.FLIGHT_ANIM;
 			case DEMAT -> AITSounds.DEMAT_ANIM;
 			case MAT -> AITSounds.MAT_ANIM;

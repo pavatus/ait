@@ -1,6 +1,5 @@
 package loqor.ait.tardis.animation;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.Tardis;
@@ -18,11 +17,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
 	}
 
 	@Override
-	public void tick() {
-		if (exterior.tardis().isEmpty())
-			return;
-
-		Tardis tardis = exterior.tardis().get();
+	public void tick(Tardis tardis) {
 		TravelHandlerV2 travel = tardis.travel2();
 
 		TravelHandler.State state = travel.getState();
@@ -33,28 +28,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
 		if (state == TravelHandler.State.DEMAT) {
 			this.setAlpha(1f - this.getPulseAlpha());
 			this.timeLeft--;
-
-			//if (this.alpha <= 0f)
-			//	travel.finishDemat();
-
-			return;
 		}
-
-		if (state == TravelHandler.State.MAT) {
-			this.timeLeft--;
-
-			if (timeLeft < startTime)
-				this.setAlpha(this.getPulseAlpha());
-			else this.alpha = 0f;
-
-			//if (alpha >= 1f)
-			//	travel.finishLanding(this.exterior);
-
-			return;
-		}
-
-		if (state == TravelHandler.State.LANDED)
-			this.alpha = 1f;
 	}
 
 	public float getPulseAlpha() {
@@ -65,37 +39,14 @@ public class PulsatingAnimation extends ExteriorAnimation {
 	}
 
 	@Override
-	public void setupAnimation(TravelHandler.State state) {
-		if (exterior.tardis().isEmpty()) {
-			AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
-			this.alpha = 0f; // just make me vanish.
-			return;
-		}
+	public boolean setupAnimation(TravelHandler.State state) {
+		if (!super.setupAnimation(state))
+			return false;
 
-		Tardis tardis = exterior.tardis().get();
+		MatSound sound = state.effect();
 
-		if (tardis.getExterior().getCategory() == null) {
-			AITMod.LOGGER.error("Exterior category {} was null!", exterior);
-			this.alpha = 0f; // just make me vanish.
-			return;
-		}
-
-		MatSound sound = tardis.getExterior().getVariant().getSound(state);
-		this.tellClientsToSetup(state);
-
-		this.timeLeft = sound.timeLeft();
-		this.maxTime = sound.maxTime();
 		this.frequency = sound.frequency();
 		this.intensity = sound.intensity();
-		this.startTime = sound.startTime();
-
-		this.alpha = switch (state) {
-			case DEMAT, LANDED -> 1f;
-			case MAT -> 0f;
-
-			default -> throw new IllegalStateException("Unreachable.");
-		};
-
-		this.pulses = 0;
+		return true;
 	}
 }

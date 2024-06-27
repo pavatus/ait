@@ -166,17 +166,12 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		TravelHandler.State state = travel.getState();
 
 		if (state != TravelHandler.State.LANDED)
-			this.getAnimation().tick();
+			this.getAnimation().tick(tardis);
 
 		if (world.isClient()) {
 			this.checkAnimations();
 			this.exteriorLightBlockState(tardis);
-			return;
 		}
-
-		// ensures we don't exist during flight
-		if (state == TravelHandler.State.FLIGHT)
-			world.removeBlock(this.getPos(), false);
 	}
 
 	public void verifyAnimation() {

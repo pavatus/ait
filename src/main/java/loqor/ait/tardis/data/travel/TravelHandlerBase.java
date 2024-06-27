@@ -167,11 +167,11 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
     protected abstract boolean checkDestination(int limit, boolean fullCheck);
 
     public enum State {
-        LANDED(AITSounds.LANDED_ANIM),
+        LANDED(null),
         DEMAT(AITSounds.DEMAT_ANIM),
         FLIGHT(AITSounds.FLIGHT_ANIM),
         MAT(AITSounds.MAT_ANIM),
-        CRASH(AITSounds.LANDED_ANIM);
+        CRASH(AITSounds.GHOST_MAT_ANIM);
 
         private final MatSound sound;
 
