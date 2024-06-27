@@ -20,7 +20,6 @@ import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
@@ -169,11 +168,11 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		TravelHandlerBase travel = tardis.travel2();
 		TravelHandler.State state = travel.getState();
 
-		if ((world.isClient() || FabricLoader.getInstance().isDevelopmentEnvironment()) && state.animated())
-			this.getAnimation().tick(tardis);
-
 		if (!world.isClient())
 			return;
+
+		if (state.animated())
+			this.getAnimation().tick(tardis);
 
 		this.checkAnimations();
 	}

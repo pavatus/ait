@@ -1,12 +1,10 @@
 package loqor.ait.tardis.animation;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.TravelHandlerV2;
-import net.fabricmc.loader.api.FabricLoader;
 
 public class PulsatingAnimation extends ExteriorAnimation {
 	private static final int PULSE_LENGTH = 20;
@@ -30,13 +28,10 @@ public class PulsatingAnimation extends ExteriorAnimation {
 			this.setAlpha(1f - this.getPulseAlpha());
 
 		if (state == TravelHandler.State.MAT) {
-			if (timeLeft < startTime)
-				this.setAlpha(this.getPulseAlpha());
+			if (timeLeft < startTime) this.setAlpha(this.getPulseAlpha());
 			else this.alpha = 0f;
 		}
 
-		if (FabricLoader.getInstance().isDevelopmentEnvironment())
-			AITMod.LOGGER.info("TANIM {}/{}: {}", this.timeLeft, this.startTime, this.alpha);
 		this.timeLeft--;
 	}
 
