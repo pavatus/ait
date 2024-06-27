@@ -102,10 +102,7 @@ public abstract class ExteriorAnimation {
 		if (exterior.getWorld() == null)
 			return; // happens when tardis spawns above world limit, so thats nice
 
-		if (exterior.getWorld().isClient())
-			return;
-
-		if (exterior.tardis().isEmpty())
+		if (exterior.getWorld().isClient() || exterior.tardis().isEmpty())
 			return;
 
 		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(exterior.tardis().get())) {
@@ -114,7 +111,7 @@ public abstract class ExteriorAnimation {
 	}
 
 	public void tellClientToSetup(TravelHandler.State state, ServerPlayerEntity player) {
-		if (exterior.tardis().isEmpty())
+		if (exterior.getWorld().isClient() || exterior.tardis().isEmpty())
 			return;
 
 		PacketByteBuf data = PacketByteBufs.create();

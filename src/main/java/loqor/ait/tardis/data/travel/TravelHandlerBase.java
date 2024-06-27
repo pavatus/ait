@@ -5,6 +5,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
@@ -18,6 +19,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.border.WorldBorder;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @SuppressWarnings("removal")
@@ -129,11 +131,13 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
                 border.clamp(pos.getX(), pos.getY(), pos.getZ())
         );
 
-        this.tardis().flight().recalculate();
-        this.checkDestination(AITMod.AIT_CONFIG.SEARCH_HEIGHT(), PropertiesHandler.getBool(
+        // TODO: how about, instead of doing the checks at demat, do them at remat?
+        //  it makes much more sense, because the target could be obstructed by the time the tardis is there
+        cached = this.checkDestination(cached, AITMod.AIT_CONFIG.SEARCH_HEIGHT(), PropertiesHandler.getBool(
                 this.tardis().properties(), PropertiesHandler.FIND_GROUND)
         );
 
+        this.tardis().flight().recalculate();
         this.forceDestination(cached);
     }
 
@@ -166,21 +170,51 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
 
     protected abstract boolean checkDestination(int limit, boolean fullCheck);
 
+    protected DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck) {
+        return destination;
+    }
+
     public enum State {
-        LANDED(null),
-        DEMAT(AITSounds.DEMAT_ANIM),
+        LANDED,
+        DEMAT(AITSounds.DEMAT_ANIM, TravelHandlerV2::finishDemat),
         FLIGHT(AITSounds.FLIGHT_ANIM),
-        MAT(AITSounds.MAT_ANIM),
-        CRASH(AITSounds.GHOST_MAT_ANIM);
+        MAT(AITSounds.MAT_ANIM, TravelHandlerV2::finishRemat),
+        CRASH(AITSounds.GHOST_MAT_ANIM, travelHandlerV2 -> {});
 
         private final MatSound sound;
+        private final boolean animated;
+
+        private final Consumer<TravelHandlerV2> finish;
+
+        State() {
+            this(null);
+        }
 
         State(MatSound sound) {
+            this(sound, null, false);
+        }
+
+        State(MatSound sound, Consumer<TravelHandlerV2> finish) {
+            this(sound, finish, true);
+        }
+
+        State(MatSound sound, Consumer<TravelHandlerV2> finish, boolean animated) {
             this.sound = sound;
+            this.animated = animated;
+
+            this.finish = finish;
         }
 
         public MatSound effect() {
             return this.sound;
+        }
+
+        public boolean animated() {
+            return animated;
+        }
+
+        public void finish(TravelHandlerV2 handler) {
+            this.finish.accept(handler);
         }
     }
 }

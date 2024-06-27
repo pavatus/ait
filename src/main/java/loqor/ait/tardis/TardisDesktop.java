@@ -15,6 +15,7 @@ import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -116,6 +117,17 @@ public class TardisDesktop extends TardisComponent {
 
 		dim.setBlockState(consolePos, AITBlocks.CONSOLE_GENERATOR.getDefaultState(), Block.NOTIFY_ALL);
 		dim.addBlockEntity(generator);
+	}
+
+	public static void playSoundAtConsole(BlockPos console, SoundEvent sound, SoundCategory category, float volume, float pitch) {
+		ServerWorld dim = (ServerWorld) TardisUtil.getTardisDimension();
+		dim.playSound(null, console, sound, category, volume, pitch);
+	}
+
+	public void playSoundAtEveryConsole(SoundEvent sound, SoundCategory category, float volume, float pitch) {
+		this.getConsolePos().forEach(consolePos -> playSoundAtConsole(
+				consolePos, sound, category, volume, pitch)
+		);
 	}
 
 	public Set<BlockPos> getConsolePos() {

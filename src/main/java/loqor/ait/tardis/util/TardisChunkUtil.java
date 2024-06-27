@@ -22,14 +22,14 @@ public class TardisChunkUtil {
 
 	public static boolean shouldExteriorChunkBeForced(Tardis tardis) {
 		if (DependencyChecker.hasPortals()) {
-			return PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
+			return !(PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
 					|| tardis.travel().getState() == TravelHandler.State.DEMAT
 					|| tardis.travel().getState() == TravelHandler.State.MAT
-					|| !TardisUtil.getPlayersInInterior(tardis).isEmpty();
+					|| !TardisUtil.getPlayersInInterior(tardis).isEmpty());
 		}
 
-		return PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
+		return !(PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
 				|| tardis.travel().getState() == TravelHandler.State.DEMAT
-				|| tardis.travel().getState() == TravelHandler.State.MAT;
+				|| tardis.travel().getState() == TravelHandler.State.MAT);
 	}
 }

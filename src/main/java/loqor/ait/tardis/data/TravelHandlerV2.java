@@ -1,17 +1,18 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.ForcedChunkUtil;
+import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisChunkUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -23,7 +24,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable {
 
-    private int dematTicks;
+    private int animationTicks;
 
     public TravelHandlerV2() {
         super(Id.TRAVEL2);
@@ -31,7 +32,13 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
 
     @Override
     public void tick(MinecraftServer server) {
-        tickDemat();
+        State state = this.getState();
+
+        if (state.animated())
+            this.tickAnimationProgress(state);
+
+        if (server.getTicks() % 2 == 0)
+            return;
 
         // im sure this is great for your server performace
         if (TardisChunkUtil.shouldExteriorChunkBeForced(this.tardis) && !TardisChunkUtil.isExteriorChunkForced(this.tardis)) {
@@ -41,30 +48,26 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
         }
     }
 
-    private void tickDemat() {
-        if (this.getState() != State.DEMAT) {
-            if (this.dematTicks != 0)
-                this.dematTicks = 0;
+    private void tickAnimationProgress(State state) {
+        AITMod.LOGGER.info("Travel: TAP-{}", this.animationTicks);
 
+        if (this.animationTicks++ < state.effect().length())
             return;
-        }
 
-        if (this.dematTicks++ > this.getState().effect().length())
-            this.finishDemat();
+        this.animationTicks = 0;
+        state.finish(this);
     }
 
     @Override
     protected void onEarlyInit(InitContext ctx) {
-        if (ctx.created() && ctx.pos() != null) {
-            AITMod.LOGGER.error("EXT AT : " + ctx.pos());
+        if (ctx.created() && ctx.pos() != null)
             this.initPos(ctx.pos());
-        }
     }
 
     @Override
     public void postInit(InitContext context) {
         if (this.isServer() && context.created())
-            this.placeExterior();
+            this.placeAndAnimate();
     }
 
     public void deleteExterior() {
@@ -79,14 +82,11 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
             ForcedChunkUtil.stopForceLoading(world, pos);
     }
 
-    public ExteriorBlockEntity placeExterior() {
+    public ExteriorBlockEntity placeAndAnimate() {
         return placeExterior(true);
     }
 
     public ExteriorBlockEntity placeExterior(boolean animate) {
-        BiomeHandler biome = this.tardis.getHandlers().get(Id.BIOME);
-        biome.update();
-
         return placeExterior(this.position(), animate);
     }
 
@@ -106,38 +106,44 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
         if (animate)
             this.runAnimations(exterior);
 
+        BiomeHandler biome = this.tardis.getHandlers().get(Id.BIOME);
+        biome.update();
+
         return exterior;
     }
 
     private void runAnimations(ExteriorBlockEntity exterior) {
-        if (exterior.getAnimation() == null) {
+        State state = this.getState();
+        ExteriorAnimation animation = exterior.getAnimation();
+
+        if (animation == null) {
             AITMod.LOGGER.info("Null animation for exterior at {}", exterior.getPos());
             return;
         }
 
-        exterior.getAnimation().setupAnimation(this.getState());
-        exterior.getAnimation().tellClientsToSetup(this.getState());
+        animation.setupAnimation(state);
     }
 
     public void runAnimations() {
-        ServerWorld level = this.position().getWorld();
-        BlockEntity entity = level.getBlockEntity(this.position().getPos());
+        DirectedGlobalPos.Cached globalPos = this.position();
 
-        if (entity instanceof ExteriorBlockEntity exterior) {
+        ServerWorld level = globalPos.getWorld();
+        BlockEntity entity = level.getBlockEntity(globalPos.getPos());
+
+        if (entity instanceof ExteriorBlockEntity exterior)
             this.runAnimations(exterior);
-        }
     }
 
     public void dematerialize() {
         this.state.set(State.DEMAT);
-
         SoundEvent sound = this.getState().effect().sound();
 
-        this.position().getWorld().playSound(null, this.position().getPos(),
-                sound, SoundCategory.BLOCKS
+        // Play materialize sound at the position
+        this.position().getWorld().playSound(null,
+                this.position().getPos(), sound, SoundCategory.BLOCKS
         );
 
-        FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), sound, SoundCategory.BLOCKS, 10f, 1f);
+        this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 10f, 1f);
         this.runAnimations();
     }
 
@@ -150,6 +156,28 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
 
         if (PropertiesHandler.getBool(this.tardis().properties(), SecurityControl.SECURITY_KEY))
             SecurityControl.runSecurityProtocols(this.tardis());
+    }
+
+    public void rematerialize() {
+        this.state.set(State.MAT);
+        SoundEvent sound = this.getState().effect().sound();
+
+        this.position.set(this.destination());
+
+        // Play materialize sound at the destination
+        this.position().getWorld().playSound(null,
+                this.position().getPos(), sound, SoundCategory.BLOCKS
+        );
+
+        this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 10f, 1f);
+        this.placeAndAnimate();
+    }
+
+    public void finishRemat() {
+        this.state.set(State.LANDED);
+
+        DoorData.lockTardis(PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.tardis(), null, false);
+        TardisEvents.LANDED.invoker().onLanded(tardis());
     }
 
     public void initPos(DirectedGlobalPos.Cached cached) {

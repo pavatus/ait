@@ -76,13 +76,12 @@ public class AITSounds implements AutoRegistryContainer<SoundEvent> {
 
 
 	// FIXME: move somwehre else + these values suck
-	public static final MatSound DEMAT_ANIM = new MatSound(DEMAT, 240, 240, 240, 200, 0.2f, 0.4f); // fixme especially this one it flickers bad
-	public static final MatSound MAT_ANIM = new MatSound(MAT, 460, 240, 240, 200, 0.2f, 0.4f);
-	public static final MatSound FLIGHT_ANIM = new MatSound(FLIGHT_LOOP, 120, 60, 60, 60, 0, 0);
-	public static final MatSound EIGHT_DEMAT_ANIM = new MatSound(EIGHT_DEMAT, 8 * 20, 8 * 20, 8 * 20, 8 * 20, 0.1f, 0.3f);
+	public static final MatSound DEMAT_ANIM = new MatSound(DEMAT, 240, 240, 240, 210, 0.2f, 0.4f); // fixme especially this one it flickers bad
+	public static final MatSound MAT_ANIM = new MatSound(MAT, 460, 240, 240, 400, 0.2f, 0.4f);
+	public static final MatSound FLIGHT_ANIM = new MatSound(FLIGHT_LOOP, 120, 60, 60, 60, 0, 0); // tf is this even
+	public static final MatSound EIGHT_DEMAT_ANIM = new MatSound(EIGHT_DEMAT, 8 * 20, 8 * 20, 8 * 20, 9 * 20, 0.1f, 0.3f);
 	public static final MatSound EIGHT_MAT_ANIM = new MatSound(EIGHT_MAT, 11 * 20, 11 * 20, 9 * 20, 9 * 20, 0.2f, 0.4f);
 	public static final MatSound GHOST_MAT_ANIM = new MatSound(GHOST_MAT, 590, 320, 320, 320, 0.2f, 0.4f);
-	public static final MatSound LANDED_ANIM = new MatSound(null, 0, 0, 0, 0, 0, 0);
 
 	// Secret
 	public static final SoundEvent DOOM_DOOR_OPEN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/secret/doom_door_open"));

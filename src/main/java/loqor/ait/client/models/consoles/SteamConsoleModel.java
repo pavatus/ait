@@ -8,6 +8,7 @@ import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.ShieldData;
 import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -955,10 +956,10 @@ public class SteamConsoleModel extends ConsoleModel {
 
 	@Override
 	public Animation getAnimationForState(TravelHandler.State state) {
-		return switch (state) {
-			case LANDED -> SteamAnimations.CONSOLE_STEAM_IDLE;
-			case FLIGHT, MAT, DEMAT, CRASH -> SteamAnimations.CONSOLE_STEAM_FLIGHT;
-        };
+		if (state == TravelHandlerBase.State.LANDED)
+			return SteamAnimations.CONSOLE_STEAM_IDLE;
+
+		return SteamAnimations.CONSOLE_STEAM_FLIGHT;
 	}
 
 	@Override

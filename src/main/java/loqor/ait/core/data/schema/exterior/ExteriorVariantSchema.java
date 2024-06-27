@@ -2,7 +2,6 @@ package loqor.ait.core.data.schema.exterior;
 
 import com.google.gson.*;
 import loqor.ait.AITMod;
-import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.base.Nameable;
 import loqor.ait.core.data.schema.door.DoorSchema;
@@ -14,6 +13,7 @@ import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -79,13 +79,12 @@ public abstract class ExteriorVariantSchema implements Unlockable, Nameable {
 		return UnlockType.EXTERIOR;
 	}
 
+	/**
+	 * @see TravelHandlerBase.State#effect()
+	 */
+	@Deprecated
 	public MatSound getSound(TravelHandler.State state) {
-		return switch (state) {
-			case LANDED, CRASH -> null;
-			case FLIGHT -> AITSounds.FLIGHT_ANIM;
-			case DEMAT -> AITSounds.DEMAT_ANIM;
-			case MAT -> AITSounds.MAT_ANIM;
-		};
+		return state.effect();
 	}
 
 	public Identifier categoryId() {

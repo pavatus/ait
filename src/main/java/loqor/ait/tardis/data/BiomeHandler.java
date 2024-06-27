@@ -27,12 +27,14 @@ public class BiomeHandler extends KeyedTardisComponent {
     }
 
     public void update() {
-        DirectedGlobalPos.Cached pos = this.tardis.travel().position();
+        this.update(this.tardis.travel().position());
+    }
 
-        if (pos == null)
+    public void update(DirectedGlobalPos.Cached globalPos) {
+        if (globalPos == null)
             return;
 
-        RegistryEntry<Biome> entry = pos.getWorld().getBiome(pos.getPos());
+        RegistryEntry<Biome> entry = globalPos.getWorld().getBiome(globalPos.getPos());
         BiomeType biome = getTagForBiome(entry);
 
         this.type.set(biome);
