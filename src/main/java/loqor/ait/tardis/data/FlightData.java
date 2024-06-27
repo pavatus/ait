@@ -1,8 +1,6 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
@@ -15,7 +13,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
 
 public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	private static final String FLIGHT_TICKS_KEY = "flight_ticks";
@@ -32,13 +29,6 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 
 			flight.setFlightTicks(0);
 			flight.setTargetTicks(0);
-
-			DirectedGlobalPos.Cached pos = tardis.travel().position();
-			World world = pos.getWorld();
-
-			if(world != null) {
-				world.setBlockState(pos.getPos(), world.getBlockState(pos.getPos()).with(ExteriorBlock.LEVEL_9, 9), 3);
-			}
 		});
 
 		TardisEvents.DEMAT.register(tardis -> {

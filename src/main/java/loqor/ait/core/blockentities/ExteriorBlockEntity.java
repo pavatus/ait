@@ -163,7 +163,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 
 		Tardis tardis = ref.get();
-		this.exteriorLightBlockState(tardis);
 
 		TravelHandlerBase travel = tardis.travel2();
 		TravelHandler.State state = travel.getState();
@@ -174,6 +173,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		if (state.animated())
 			this.getAnimation().tick(tardis);
 
+		this.exteriorLightBlockState(state);
 		this.checkAnimations();
 	}
 
@@ -223,12 +223,12 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		return this.getAnimation().getAlpha();
 	}
 
-	private void exteriorLightBlockState(Tardis tardis) {
-		TravelHandler.State state = tardis.travel().getState();
+	private void exteriorLightBlockState(TravelHandlerBase.State state) {
+		if (!state.animated())
+			return;
 
-		if (state == TravelHandler.State.DEMAT || state == TravelHandler.State.MAT) {
-			int light = (int) Math.max(1, Math.min(this.getAlpha() * 9.0f, 9));
-			this.getWorld().setBlockState(pos, this.getCachedState().with(ExteriorBlock.LEVEL_9, light));
-		}
-	}
+        this.getWorld().setBlockState(pos, this.getCachedState().with(
+				ExteriorBlock.LEVEL_9, (int) this.getAlpha() * 9
+		));
+    }
 }

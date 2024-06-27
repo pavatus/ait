@@ -49,8 +49,6 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
     }
 
     private void tickAnimationProgress(State state) {
-        AITMod.LOGGER.info("Travel: TAP-{}", this.animationTicks);
-
         if (this.animationTicks++ < state.effect().length())
             return;
 
@@ -94,9 +92,11 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
         ServerWorld world = globalPos.getWorld();
         BlockPos pos = globalPos.getPos();
 
+        boolean hasPower = this.tardis.engine().hasPower();
+
         BlockState blockState = AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(
                 ExteriorBlock.ROTATION, (int) DirectionControl.getGeneralizedRotation(globalPos.getRotation())
-        ).with(ExteriorBlock.LEVEL_9, 0);
+        ).with(ExteriorBlock.LEVEL_9, hasPower ? 9 : 0);
 
         world.setBlockState(pos, blockState);
 

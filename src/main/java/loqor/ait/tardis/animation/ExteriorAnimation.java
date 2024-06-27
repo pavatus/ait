@@ -34,17 +34,11 @@ public abstract class ExteriorAnimation {
 		if (this.exterior.tardis().isEmpty())
 			return 1f;
 
-		if (this.timeLeft < 0) {
-			// fixme is a jank fix for the timeLeft going negative on client
-			this.setupAnimation(exterior.tardis().get().travel2().getState());
-			return 1f;
-		}
-
 		if (this.exterior.tardis().get().travel2().getState() == TravelHandler.State.LANDED
 				&& this.exterior.tardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled())
 			return 0.105f;
 
-		return Math.clamp(0.0F, 1.0F, this.alpha);
+		return this.alpha;
 	}
 
 	public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius) {

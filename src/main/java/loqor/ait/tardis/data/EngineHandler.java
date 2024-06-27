@@ -114,7 +114,7 @@ public class EngineHandler extends KeyedTardisComponent {
         if (world == null)
             return;
 
-        world.setBlockState(pos.getPos(), world.getBlockEntity(pos.getPos()).getCachedState()
+        world.setBlockState(pos.getPos(), world.getBlockState(pos.getPos())
                 .with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0)
         );
     }

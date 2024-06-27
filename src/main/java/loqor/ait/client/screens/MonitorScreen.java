@@ -223,11 +223,11 @@ public class MonitorScreen extends ConsoleScreen {
 		context.drawTexture(TEXTURE, i - 8, j + 4, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
 		// apply button
-		if (!this.buttons.get(0).isHovered()) context.drawTexture(TEXTURE, i + 22, j + 114, 0, 227, 57, 12);
+		if (!this.buttons.get(0).isHovered())
+			context.drawTexture(TEXTURE, i + 22, j + 114, 0, 227, 57, 12);
 
 		// around the battery
 		context.drawTexture(TEXTURE, i + 1, j + 129, 0, getFromUUID(tardisId).getFuel() > 250 ? 150 : 165, 99, 15);
-
 
 		// triangle buttons
 		if (!this.buttons.get(1).isHovered()) context.drawTexture(TEXTURE, i + 3, j + 96, 0, 197, 15, 30);
@@ -236,14 +236,11 @@ public class MonitorScreen extends ConsoleScreen {
 		if (!this.buttons.get(4).isHovered()) context.drawTexture(TEXTURE, i + 83, j + 31, 15, 197, 15, 30);
 
 		// fuel markers @TODO come back and actually do the rest of it with the halves and the red parts too
-		for (int p = 0; p < Math.round((getFromUUID(tardisId).getFuel() / FuelData.TARDIS_MAX_FUEL) * 12); ++p) {
+		for (int p = 0; p < Math.round(tardis().getFuel() / FuelData.TARDIS_MAX_FUEL * 12); ++p) {
 			context.drawTexture(TEXTURE, i + 3 + (8 * p), j + 131, 99, 150, 7, 11);
 		}
 
-		// just this whole thing is for the flight
-		if (getFromUUID(tardisId) == null) return;
-
-		int progress = tardis().getHandlers().getFlight().getDurationAsPercentage();
+		int progress = tardis().flight().getDurationAsPercentage();
 
 		for (int index = 0; index < 5; index++) {
 			int rangeStart = index * 20;
@@ -258,7 +255,10 @@ public class MonitorScreen extends ConsoleScreen {
 				uvOffset = UV_BASE;
 			}
 
-			context.drawTexture(TEXTURE, i + 101 + (index * 18), j + 78, tardis().travel().getState() == TravelHandler.State.FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
+			context.drawTexture(TEXTURE, i + 101 + index * 18, j + 78,
+					this.tardis().travel().getState() == TravelHandler.State.FLIGHT
+							? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17
+			);
 		}
 	}
 
