@@ -130,6 +130,14 @@ public class TardisDesktop extends TardisComponent {
 		);
 	}
 
+	public void playSoundAtEveryConsole(SoundEvent sound, SoundCategory category) {
+		this.playSoundAtEveryConsole(sound, category, 1f, 1f);
+	}
+
+	public void playSoundAtEveryConsole(SoundEvent sound) {
+		this.playSoundAtEveryConsole(sound, SoundCategory.BLOCKS);
+	}
+
 	public Set<BlockPos> getConsolePos() {
 		return consolePos;
 	}

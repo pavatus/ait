@@ -3,6 +3,7 @@ package loqor.ait.tardis.data;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
@@ -13,16 +14,24 @@ import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisChunkUtil;
+import loqor.ait.tardis.util.TardisUtil;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Random;
+
 public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable {
+
+    public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
     private int animationTicks;
 
@@ -46,6 +55,32 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
         } else if (!TardisChunkUtil.shouldExteriorChunkBeForced(this.tardis) && TardisChunkUtil.isExteriorChunkForced(this.tardis)) {
             TardisChunkUtil.stopForceExteriorChunk(this.tardis);
         }
+    }
+
+    @Override
+    protected int speed(int value) {
+        value = super.speed(value);
+
+        if (value > 0 && this.getState() == State.LANDED && !tardis.flight().handbrake() && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
+            this.dematerialize();
+
+        if (value != 0 || this.getState() != State.FLIGHT)
+            return value;
+
+        if (tardis.crash().getState() == TardisCrashData.State.UNSTABLE) {
+            Random random = TardisUtil.random();
+            int multiplier = random.nextInt(0, 2) == 0 ? 1 : -1;
+
+            this.destination(cached -> cached.offset(
+                    random.nextInt(1, 10) * multiplier, 0,
+                    random.nextInt(1, 10) * multiplier
+            ));
+        }
+
+        if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT))
+            this.rematerialize();
+
+        return value;
     }
 
     private void tickAnimationProgress(State state) {
@@ -156,6 +191,18 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
 
         if (PropertiesHandler.getBool(this.tardis().properties(), SecurityControl.SECURITY_KEY))
             SecurityControl.runSecurityProtocols(this.tardis());
+    }
+
+    public void cancelDemat() {
+        if (this.getState() != State.DEMAT)
+            return;
+
+        this.finishRemat();
+
+        this.position().getWorld().playSound(null, this.position().getPos(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+
+        NetworkUtil.sendToInterior(this.tardis(), CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
     }
 
     public void rematerialize() {

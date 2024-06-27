@@ -6,18 +6,27 @@ import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 
+// TODO move the flight-travel calculations stuff to TravelHandler
 public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	private static final String FLIGHT_TICKS_KEY = "flight_ticks";
 	private static final String TARGET_TICKS_KEY = "target_ticks";
 	private static final Random random = Random.create();
+
+	private static final BoolProperty HANDBRAKE = new BoolProperty("handbrake", true);
+	private static final BoolProperty AUTOPILOT = new BoolProperty("autopilot", false);
+
+	private final BoolValue handbrake = HANDBRAKE.create(this);
+	private final BoolValue autopilot = AUTOPILOT.create(this);
 
 	public FlightData() {
 		super(Id.FLIGHT);
@@ -33,7 +42,7 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 
 		TardisEvents.DEMAT.register(tardis -> {
 			FlightData flight = tardis.flight();
-			TravelHandler travel = tardis.travel();
+			TravelHandlerBase travel = tardis.travel2();
 
 			flight.setFlightTicks(0);
 			flight.setTargetTicks(FlightUtil.getFlightDuration(
@@ -44,17 +53,23 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 		});
 	}
 
+	@Override
+	public void onLoaded() {
+		handbrake.of(this, HANDBRAKE);
+		autopilot.of(this, AUTOPILOT);
+	}
+
 	private boolean isInFlight() {
-		return this.tardis().travel().getState() == TravelHandler.State.FLIGHT
-				|| this.tardis().travel().getState() == TravelHandler.State.MAT;
+		return this.tardis().travel2().getState() == TravelHandler.State.FLIGHT
+				|| this.tardis().travel2().getState() == TravelHandler.State.MAT;
 	}
 
 	private boolean isFlightTicking() {
-		return this.tardis().travel().getState() == TravelHandler.State.FLIGHT && this.getTargetTicks() != 0;
+		return this.tardis().travel2().getState() == TravelHandler.State.FLIGHT && this.getTargetTicks() != 0;
 	}
 
 	public boolean hasFinishedFlight() {
-		return (this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 || tardis().travel().isCrashing()) &&
+		return (this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 || tardis.travel2().isCrashing()) &&
 				!PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 	}
 
@@ -62,15 +77,14 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 		this.setFlightTicks(0);
 		this.setTargetTicks(0);
 
-		FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), SoundEvents.BLOCK_BELL_RESONATE); // temp sound
+		this.tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BELL_RESONATE);
 
-		if (shouldAutoLand()) {
-			this.tardis().travel().materialise();
-		}
+		if (this.shouldAutoLand())
+			this.tardis().travel2().rematerialize();
 	}
 
 	private boolean shouldAutoLand() {
-		return (this.tardis.travel().autoLand().get()
+		return (this.autopilot.get()
 				|| !TardisUtil.isInteriorNotEmpty(this.tardis()))
 				&& !PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 		// todo im not too sure if this second check should exist, but its so funny ( ghost monument reference )
@@ -85,9 +99,8 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	}
 
 	public int getDurationAsPercentage() {
-
 		if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0) {
-			if (this.tardis().travel().getState() == TravelHandler.State.DEMAT)
+			if (this.tardis().travel2().getState() == TravelHandler.State.DEMAT)
 				return 0;
 
 			return 100;
@@ -97,14 +110,13 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 	}
 
 	public void recalculate() {
-		this.setTargetTicks(FlightUtil.getFlightDuration(tardis().travel().position(), tardis().travel().destination()));
+		this.setTargetTicks(FlightUtil.getFlightDuration(tardis.travel2().position(), tardis.travel2().destination()));
 		this.setFlightTicks(this.isInFlight() ? MathHelper.clamp(this.getFlightTicks(), 0, this.getTargetTicks()) : 0);
 	}
 
 	public int getFlightTicks() {
-		if (!this.tardis().properties().getData().containsKey(FLIGHT_TICKS_KEY)) {
+		if (!this.tardis.properties().getData().containsKey(FLIGHT_TICKS_KEY))
 			this.setFlightTicks(0);
-		}
 
 		return PropertiesHandler.getInt(this.tardis().properties(), FLIGHT_TICKS_KEY);
 	}
@@ -124,13 +136,27 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 		PropertiesHandler.set(this.tardis(), TARGET_TICKS_KEY, ticks);
 	}
 
+	public void handbrake(boolean value) {
+		if (this.tardis.travel2().getState() == TravelHandlerBase.State.DEMAT && value)
+			this.tardis.travel2().cancelDemat();
+
+		handbrake.set(value);
+	}
+
+	public boolean handbrake() {
+		return handbrake.get();
+	}
+
+	public BoolValue autopilot() {
+		return autopilot;
+	}
+
 	@Override
 	public void tick(MinecraftServer server) {
-
-		ServerTardis tardis = (ServerTardis) this.tardis();
+		Tardis tardis = this.tardis();
 
 		TardisCrashData crash = tardis.crash();
-		TravelHandler travel = tardis.travel();
+		TravelHandlerV2 travel = tardis.travel2();
 
 		if (crash.getState() != TardisCrashData.State.NORMAL)
 			crash.addRepairTicks(2 * travel.speed().get());
@@ -138,37 +164,35 @@ public class FlightData extends KeyedTardisComponent implements TardisTickable {
 		if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && travel.getState() == TravelHandler.State.LANDED)
 			this.recalculate();
 
-		triggerSequencingDuringFlight(tardis);
+		this.triggerSequencingDuringFlight(tardis);
 
-		if (this.isInFlight() && !travel.isCrashing() && !(this.getFlightTicks() >= this.getTargetTicks()) && this.getTargetTicks() == 0) {
+		if (this.isInFlight() && !travel.isCrashing() && this.getTargetTicks() == 0 && this.getFlightTicks() < this.getTargetTicks())
 			this.recalculate();
-		}
 
 		if (this.isFlightTicking()) {
-			if (this.hasFinishedFlight()) {
+			if (this.hasFinishedFlight())
 				this.onFlightFinished();
-			}
 
 			this.setFlightTicks(this.getFlightTicks() + (Math.max(travel.speed().get() / 2, 1)));
 		}
 
 		if (!PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT)
 				&& this.isInFlight() && this.hasFinishedFlight() && !TardisUtil.isInteriorNotEmpty(tardis))
-			travel.materialise();
+			travel.rematerialize();
 	}
 
 	public void triggerSequencingDuringFlight(Tardis tardis) {
 		SequenceHandler sequences = tardis.sequence();
-		TravelHandler travel = tardis.travel();
+		TravelHandlerV2 travel = tardis.travel2();
 
-		if (!travel.autoLand().get()
+		if (!this.autopilot.get()
 				&& this.getDurationAsPercentage() < 100
-				&& travel.getState() == TravelHandler.State.FLIGHT && tardis.travel().position() != tardis.travel().destination() && !sequences.hasActiveSequence()) {
-			if (FlightUtil.getFlightDuration(tardis.travel().position(),
-					tardis.travel().destination()) > FlightUtil.convertSecondsToTicks(5)
-					&& random.nextBetween(0, 460 / (travel.speed().get() == 0 ? 1 : travel.speed().get())) == 7) {
-				sequences.triggerRandomSequence(true);
-			}
+				&& travel.getState() == TravelHandler.State.FLIGHT
+				&& !travel.position().equals(travel.destination())
+				&& !sequences.hasActiveSequence()
+				&& FlightUtil.getFlightDuration(travel.position(), tardis.travel2().destination()) > 100
+				&& random.nextBetween(0, 460 / (travel.speed().get() == 0 ? 1 : travel.speed().get())) == 7) {
+			sequences.triggerRandomSequence(true);
 		}
 	}
 }

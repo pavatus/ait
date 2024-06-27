@@ -87,7 +87,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
         setDematTicks(getDematTicks() + 1);
 
-        if (tardis.travel().handbrake().get()) {
+        if (tardis.flight().handbrake()) {
             // cancel materialise
             this.cancelDemat();
             return;
@@ -122,27 +122,11 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         int speed = this.tardis.travel().speed().get();
         State state = this.getState();
 
-        boolean handbrake = tardis.travel().handbrake().get();
-        boolean autopilot = tardis.travel().autoLand().get();
+        boolean handbrake = tardis.flight().handbrake().get();
+        boolean autopilot = tardis.flight().autopilot().get();
 
         if (speed > 0 && state == State.LANDED && !handbrake && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
             this.dematerialize(autopilot);
-
-        if (speed == 0 && state == State.FLIGHT) {
-            if (tardis.crash().getState() == TardisCrashData.State.UNSTABLE) {
-                Random random = TardisUtil.random();
-                int multiplier = random.nextInt(0, 2) == 0 ? 1 : -1;
-
-                this.destination(cached -> cached.offset(
-                        random.nextInt(1, 10) * multiplier, 0,
-                        random.nextInt(1, 10) * multiplier)
-                );
-            }
-
-            if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT)) {
-                this.materialise();
-            }
-        }
 
         // Should we just disable autopilot if the speed goes above 1?
         if (speed > 1 && state == State.FLIGHT && autopilot) {
@@ -234,9 +218,9 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         if (this.getState() != State.LANDED)
             return;
 
-        if (this.autoLand.get()) {
+        if (this.tardis.flight().autopilot().get()) {
             // fulfill all the prerequisites
-            this.handbrake.set(false);
+            this.tardis.flight().handbrake(false);
 
             this.tardis.door().closeDoors();
             this.tardis.setRefueling(false);
@@ -248,7 +232,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         DirectedGlobalPos.Cached globalPos = this.position.get();
         ServerWorld world = globalPos.getWorld();
 
-        this.autoLand.set(withRemat);
+        this.tardis.flight().autopilot().set(withRemat);
         this.state.set(State.DEMAT);
 
         SoundEvent sound = this.getState().effect().sound();
@@ -339,7 +323,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
     }
 
     public void finishLanding() {
-        if (this.autoLand.get() && this.speed.get() > 0)
+        if (this.tardis.flight().autopilot().get() && this.speed.get() > 0)
             this.speed.set(0);
 
         this.state.set(State.LANDED);
@@ -391,21 +375,6 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
         if (this.previousPosition.get() == null)
             this.previousPosition.set(cached);
-    }
-
-    public void increaseSpeed() {
-        // Stop speed from going above 1 if autopilot is enabled, and we're in flight
-        if (this.speed.get() > 0 && this.getState() == State.FLIGHT && this.autoLand.get())
-            return;
-
-        this.speed.set(MathHelper.clamp(this.speed.get() + 1, 0, this.maxSpeed.get()));
-    }
-
-    public void decreaseSpeed() {
-        if (this.getState() == State.LANDED && this.speed.get() == 1)
-            FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
-
-        this.speed.set(MathHelper.clamp(this.speed.get() - 1, 0, this.maxSpeed.get()));
     }
 
     public boolean inFlight() {
