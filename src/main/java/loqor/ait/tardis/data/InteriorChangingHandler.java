@@ -10,6 +10,7 @@ import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -109,7 +110,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		tardis.engine().disablePower();
 
 		if (tardis.hasGrowthExterior()) {
-			TravelHandlerV2 travel = tardis.travel2();
+			TravelHandler travel = tardis.travel2();
 
 			travel.handbrake(false);
 			travel.autopilot(true);
@@ -138,7 +139,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + this.tardis().getUuid().toString()))
 			return;
 
-		TravelHandlerV2 travel = this.tardis().travel2();
+		TravelHandler travel = this.tardis().travel2();
 
 		// TODO(travel): move this to travelhandler
 		//if (travel.getState() == TravelHandler.State.FLIGHT)

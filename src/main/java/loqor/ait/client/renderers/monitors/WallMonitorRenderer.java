@@ -9,9 +9,8 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -67,10 +66,9 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         float xVal = 0f;
         matrices.translate(xVal, -35f, 35f);
 
-        TravelHandlerV2 travel = tardis.travel2();
-        DirectedGlobalPos.Cached abpp = travel.getState() != TravelHandlerBase.State.LANDED ? FlightUtil.getPositionFromPercentage(
-                travel.position(), travel.destination(), tardis.travel2().getDurationAsPercentage()
-        ) : travel.position();
+        TravelHandler travel = tardis.travel2();
+        DirectedGlobalPos.Cached abpp = travel.getState() != TravelHandlerBase.State.LANDED
+                ? travel.getProgress() : travel.position();
 
         BlockPos abppPos = abpp.getPos();
 

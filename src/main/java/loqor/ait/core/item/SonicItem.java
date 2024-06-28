@@ -13,10 +13,10 @@ import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.*;
 import net.minecraft.client.item.TooltipContext;
@@ -441,7 +441,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 				world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
-				TravelHandlerV2 travel = tardis.travel2();
+				TravelHandler travel = tardis.travel2();
 
 				DirectedGlobalPos.Cached target = DirectedGlobalPos.Cached.create(world, pos, (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 
@@ -452,7 +452,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 					travel.destination(target);
 
 					if (isPilot)
-						FlightUtil.travelTo(tardis, target);
+						TravelUtil.travelTo(tardis, target);
 				}
 
 				player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);

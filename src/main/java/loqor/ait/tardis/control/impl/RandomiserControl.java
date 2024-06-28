@@ -4,7 +4,7 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
-import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -19,7 +19,7 @@ public class RandomiserControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-		TravelHandlerV2 travel = tardis.travel2();
+		TravelHandler travel = tardis.travel2();
 
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
 			this.addToControlSequence(tardis, player, console);
@@ -41,7 +41,7 @@ public class RandomiserControl extends Control {
 		return 2000L;
 	}
 
-	private void messagePlayer(ServerPlayerEntity player, TravelHandlerV2 travel) {
+	private void messagePlayer(ServerPlayerEntity player, TravelHandler travel) {
 		DirectedGlobalPos.Cached dest = travel.destination();
 		BlockPos pos = dest.getPos();
 

@@ -9,7 +9,6 @@ import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
@@ -76,8 +75,8 @@ public class PortalsHandler {
 
 	private static TardisPortal createExteriorPortal(Tardis tardis) {
 		DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
-		DirectedGlobalPos.Cached exteriorPos = tardis.travel2().getState() == TravelHandlerBase.State.LANDED ? tardis.travel2().position()
-				: FlightUtil.getPositionFromPercentage(tardis.travel2().position(), tardis.travel2().destination(), tardis.travel2().getDurationAsPercentage());
+		DirectedGlobalPos.Cached exteriorPos = tardis.travel2().getState() == TravelHandlerBase.State.LANDED
+				? tardis.travel2().position() : tardis.travel2().getProgress();
 
 		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
 		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
@@ -111,8 +110,8 @@ public class PortalsHandler {
 	// todo allow for multiple interior doors
 	private static TardisPortal createInteriorPortal(Tardis tardis) {
 		DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
-		DirectedGlobalPos.Cached exteriorPos = tardis.travel2().getState() == TravelHandlerBase.State.LANDED ? tardis.travel2().position()
-				: FlightUtil.getPositionFromPercentage(tardis.travel2().position(), tardis.travel2().destination(), tardis.travel2().getDurationAsPercentage());
+		DirectedGlobalPos.Cached exteriorPos = tardis.travel2().getState() == TravelHandlerBase.State.LANDED
+				? tardis.travel2().position() : tardis.travel2().getProgress();
 
 		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
 		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);

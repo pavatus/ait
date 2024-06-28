@@ -1,4 +1,4 @@
-package loqor.ait.tardis.data;
+package loqor.ait.tardis.data.travel;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
@@ -11,12 +11,11 @@ import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
+import loqor.ait.tardis.data.BiomeHandler;
+import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.travel.CrashableTardisTravel;
-import loqor.ait.tardis.data.travel.ProgressiveTravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.data.travel.TravelUtil;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.NetworkUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
@@ -29,13 +28,13 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-public class TravelHandlerV2 extends ProgressiveTravelHandler implements CrashableTardisTravel {
+public non-sealed class TravelHandler extends ProgressiveTravelHandler implements CrashableTardisTravel {
 
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
     private int animationTicks;
 
-    public TravelHandlerV2() {
+    public TravelHandler() {
         super(Id.TRAVEL2);
     }
 
@@ -70,7 +69,7 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
             return;
 
         if (tardis.crash().getState() == TardisCrashData.State.UNSTABLE)
-            this.destination(cached -> TravelUtil.jukePos(cached, 1, 10, 1));
+            this.destination(cached -> TravelUtil.jukePos(cached, 1, 10));
 
         if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT))
             this.rematerialize();
@@ -180,12 +179,7 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
         if (this.getState() != State.FLIGHT)
             return;
 
-        DirectedGlobalPos.Cached pos = FlightUtil.getPositionFromPercentage(
-                this.position(), this.destination(),
-                this.tardis().travel2().getDurationAsPercentage()
-        );
-
-        this.forcePosition(pos);
+        this.forcePosition(this.getProgress());
     }
 
     public void dematerialize() {
@@ -206,7 +200,7 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
 
         if (TardisEvents.DEMAT.invoker().onDemat(this.tardis)
                 || tardis.door().isOpen() || tardis.isRefueling()
-                || FlightUtil.isDematerialiseOnCooldown(this.tardis)
+                || TravelUtil.dematCooldown(this.tardis)
                 || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
                 || tardis.door().isOpen()
         ) {
@@ -224,7 +218,7 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
         );
 
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
-        FlightUtil.createDematerialiseDelay(this.tardis);
+        TravelUtil.runDematCooldown(this.tardis);
     }
 
     private void failRemat() {
@@ -237,7 +231,7 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
         // Create materialization delay and return
-        FlightUtil.createMaterialiseDelay(this.tardis);
+        TravelUtil.runMatCooldown(this.tardis);
     }
 
     public void forceDemat() {
@@ -280,10 +274,9 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
 
     public void rematerialize() {
         boolean bypass = tardis.hasGrowthExterior();
-        this.destination(FlightUtil.getPositionFromPercentage(this.position(), this.destination(),
-                tardis.travel2().getDurationAsPercentage()));
+        this.destination(this.getProgress());
 
-        if ((TardisEvents.MAT.invoker().onMat(tardis) || FlightUtil.isMaterialiseOnCooldown(tardis)) && !bypass) {
+        if ((TardisEvents.MAT.invoker().onMat(tardis) || TravelUtil.matCooldownn(tardis)) && !bypass) {
             this.failRemat();
             return;
         }

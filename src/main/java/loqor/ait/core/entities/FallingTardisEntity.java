@@ -8,8 +8,8 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -216,7 +216,7 @@ public class FallingTardisEntity extends Entity {
 			PropertiesHandler.set(this.getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
 
 		Tardis tardis = this.getTardis();
-		TravelHandlerV2 travel = tardis.travel2();
+		TravelHandler travel = tardis.travel2();
 
 		Block block = this.block.getBlock();
 		BlockPos blockPos = this.getBlockPos();

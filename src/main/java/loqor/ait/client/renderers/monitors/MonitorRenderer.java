@@ -8,9 +8,8 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SkullBlock;
 import net.minecraft.client.MinecraftClient;
@@ -69,10 +68,9 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		matrices.scale(0.005f, 0.005f, 0.005f);
 		matrices.translate(-50f, 0, -80);
 
-		TravelHandlerV2 travel = tardis.travel2();
-		DirectedGlobalPos.Cached abpp = travel.getState() != TravelHandlerBase.State.LANDED ? FlightUtil.getPositionFromPercentage(
-				travel.position(), travel.destination(), tardis.travel2().getDurationAsPercentage()
-		) : travel.position();
+		TravelHandler travel = tardis.travel2();
+		DirectedGlobalPos.Cached abpp = travel.getState() != TravelHandlerBase.State.LANDED
+				? travel.getProgress() : travel.position();
 
 		BlockPos abppPos = abpp.getPos();
 

@@ -5,7 +5,6 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
@@ -172,14 +171,14 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
 
     public enum State {
         LANDED,
-        DEMAT(AITSounds.DEMAT_ANIM, TravelHandlerV2::finishDemat),
+        DEMAT(AITSounds.DEMAT_ANIM, TravelHandler::finishDemat),
         FLIGHT(AITSounds.FLIGHT_ANIM),
-        MAT(AITSounds.MAT_ANIM, TravelHandlerV2::finishRemat);
+        MAT(AITSounds.MAT_ANIM, TravelHandler::finishRemat);
 
         private final MatSound sound;
         private final boolean animated;
 
-        private final Consumer<TravelHandlerV2> finish;
+        private final Consumer<TravelHandler> finish;
 
         State() {
             this(null);
@@ -189,11 +188,11 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
             this(sound, null, false);
         }
 
-        State(MatSound sound, Consumer<TravelHandlerV2> finish) {
+        State(MatSound sound, Consumer<TravelHandler> finish) {
             this(sound, finish, true);
         }
 
-        State(MatSound sound, Consumer<TravelHandlerV2> finish, boolean animated) {
+        State(MatSound sound, Consumer<TravelHandler> finish, boolean animated) {
             this.sound = sound;
             this.animated = animated;
 
@@ -208,7 +207,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
             return animated;
         }
 
-        public void finish(TravelHandlerV2 handler) {
+        public void finish(TravelHandler handler) {
             this.finish.accept(handler);
         }
     }

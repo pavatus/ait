@@ -4,7 +4,7 @@ import loqor.ait.core.data.Waypoint;
 import loqor.ait.core.item.WaypointItem;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.util.FlightUtil;
+import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -65,7 +65,7 @@ public class WaypointHandler extends TardisComponent {
 			return; // todo move this check to the DEMAT event so the fail to takeoff happens
 
 		this.tardis().travel2().autopilot(true);
-		FlightUtil.travelTo(tardis(), this.get().getPos());
+		TravelUtil.travelTo(tardis(), this.get().getPos());
 	}
 
 	public void setDestination() {

@@ -5,7 +5,6 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.data.TardisCrashData;
-import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.TardisUtil;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public interface CrashableTardisTravel {
+public sealed interface CrashableTardisTravel permits TravelHandler {
 
     TravelHandlerBase.State getState();
     boolean isCrashing();
@@ -32,7 +31,7 @@ public interface CrashableTardisTravel {
     void forceRemat();
 
     DirectedGlobalPos.Cached position();
-    DirectedGlobalPos.Cached destination();
+    DirectedGlobalPos.Cached getProgress();
     void destination(DirectedGlobalPos.Cached cached);
 
     /**
@@ -40,7 +39,7 @@ public interface CrashableTardisTravel {
      * If the Tardis is not in flight state, the crash will not be executed.
      */
     default void crash() {
-        if (this.getState() != TravelHandlerV2.State.FLIGHT || this.isCrashing())
+        if (this.getState() != TravelHandler.State.FLIGHT || this.isCrashing())
             return;
 
         Tardis tardis = this.tardis();
@@ -98,9 +97,7 @@ public interface CrashableTardisTravel {
         tardis.tardisHammerAnnoyance = 0;
 
         this.setCrashing(true);
-        this.destination(TravelUtil.jukePos(TravelUtil.getPositionFromPercentage(
-                this.position(), this.destination(), tardis.travel2().getDurationAsPercentage()
-        ), 10, 100, power));
+        this.destination(TravelUtil.jukePos(this.getProgress(), 10, 100, power));
 
         this.forceRemat();
 

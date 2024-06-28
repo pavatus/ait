@@ -2,7 +2,7 @@ package loqor.ait.core.item;
 
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -62,7 +62,7 @@ public class HammerItem extends SwordItem {
 			return ActionResult.SUCCESS;
 		}
 
-		TravelHandlerV2 flightData = tardis.travel2();
+		TravelHandler flightData = tardis.travel2();
 		int targetTicks = flightData.getTargetTicks();
 		int currentFlightTicks = flightData.getFlightTicks();
 		int bonus = 500 * tardis.travel2().speed().get();

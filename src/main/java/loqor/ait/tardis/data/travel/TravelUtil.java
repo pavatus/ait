@@ -1,8 +1,8 @@
 package loqor.ait.tardis.data.travel;
 
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -15,7 +15,7 @@ public class TravelUtil {
     private static final int BASE_FLIGHT_TICKS = 5 * 20;
 
     public static DirectedGlobalPos.Cached randomPos(Tardis tardis, int limit, int max) {
-        TravelHandlerV2 travel = tardis.travel2();
+        TravelHandler travel = tardis.travel2();
         DirectedGlobalPos.Cached dest = travel.destination();
         ServerWorld world = dest.getWorld();
 
@@ -30,7 +30,7 @@ public class TravelUtil {
     }
 
     public static void travelTo(Tardis tardis, DirectedGlobalPos.Cached pos) {
-        TravelHandlerV2 travel = tardis.travel2();
+        TravelHandler travel = tardis.travel2();
 
         travel.autopilot(true);
         travel.destination(pos);
@@ -66,5 +66,29 @@ public class TravelUtil {
 
     public static DirectedGlobalPos.Cached jukePos(DirectedGlobalPos.Cached pos, int min, int max) {
         return jukePos(pos, min, max, 1);
+    }
+
+    private static String getMaterialiseDelayId(Tardis tardis) {
+        return tardis.getUuid().toString() + "_materialise_delay";
+    }
+
+    private static String getDematerialiseDelayId(Tardis tardis) {
+        return tardis.getUuid().toString() + "_dematerialise_delay";
+    }
+
+    public static boolean matCooldownn(Tardis tardis) {
+        return DeltaTimeManager.isStillWaitingOnDelay(getMaterialiseDelayId(tardis));
+    }
+
+    public static boolean dematCooldown(Tardis tardis) {
+        return DeltaTimeManager.isStillWaitingOnDelay(getDematerialiseDelayId(tardis));
+    }
+
+    public static void runMatCooldown(Tardis tardis) {
+        DeltaTimeManager.createDelay(getMaterialiseDelayId(tardis), 5000L);
+    }
+
+    public static void runDematCooldown(Tardis tardis) {
+        DeltaTimeManager.createDelay(getDematerialiseDelayId(tardis), 5000L);
     }
 }

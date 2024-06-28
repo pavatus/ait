@@ -16,12 +16,11 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.exterior.category.BoothCategory;
 import loqor.ait.tardis.exterior.category.ClassicCategory;
 import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
-import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -331,8 +330,9 @@ public class MonitorScreen extends ConsoleScreen {
         if (getFromUUID(tardisId) == null)
 			return;
 
-		TravelHandlerV2 travel = this.tardis().travel2();
-        DirectedGlobalPos abpd = travel.getState() == TravelHandlerBase.State.FLIGHT ? FlightUtil.getPositionFromPercentage(travel.position(), travel.destination(), getFromUUID(tardisId).travel2().getDurationAsPercentage()) : travel.position();
+		TravelHandler travel = this.tardis().travel2();
+        DirectedGlobalPos abpd = travel.getState() == TravelHandlerBase.State.FLIGHT ? travel.getProgress() : travel.position();
+
 		DirectedGlobalPos dabpd = travel.destination();
 
         if (abpd.getDimension() == null)

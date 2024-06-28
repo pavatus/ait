@@ -3,7 +3,7 @@ package loqor.ait.tardis.animation;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 public class PulsatingAnimation extends ExteriorAnimation {
@@ -18,7 +18,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
 
 	@Override
 	public void tick(Tardis tardis) {
-		TravelHandlerV2 travel = tardis.travel2();
+		TravelHandler travel = tardis.travel2();
 		TravelHandlerBase.State state = travel.getState();
 
 		if (this.timeLeft < 0)

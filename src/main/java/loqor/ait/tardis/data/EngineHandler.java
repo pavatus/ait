@@ -13,8 +13,8 @@ import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.World;
@@ -38,7 +38,7 @@ public class EngineHandler extends KeyedTardisComponent {
 
         TardisEvents.LOSE_POWER.register(tardis -> {
             if (TardisUtil.getTardisDimension() != null) {
-                FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+                tardis.getDesktop().playSoundAtEveryConsole(AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
             }
 
             // disabling protocols
@@ -104,7 +104,7 @@ public class EngineHandler extends KeyedTardisComponent {
     }
 
     private void updateExteriorState() {
-        TravelHandlerV2 travel = this.tardis.travel2();
+        TravelHandler travel = this.tardis.travel2();
 
         if (travel.getState() != TravelHandlerBase.State.LANDED)
             return;

@@ -7,8 +7,8 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.LinkableLivingEntity;
 import loqor.ait.tardis.util.TardisUtil;
@@ -81,7 +81,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 			return;
 
 		Tardis tardis = TardisManager.with(world, (o, manager) -> manager.demandTardis(o, tardisId));
-		TravelHandlerV2 travel = tardis.travel2();
+		TravelHandler travel = tardis.travel2();
 
 		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardisId, (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
 

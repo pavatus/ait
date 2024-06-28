@@ -2,13 +2,13 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.SiegeTardisItem;
+import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -105,7 +105,7 @@ public class SiegeData extends KeyedTardisComponent implements TardisTickable {
 		}
 
 		for (BlockPos console : this.tardis.getDesktop().getConsolePos()) {
-			FlightUtil.playSoundAtConsole(console, sound, SoundCategory.BLOCKS, 3f, 1f);
+			TardisDesktop.playSoundAtConsole(console, sound, SoundCategory.BLOCKS, 3f, 1f);
 		}
 
 		this.tardis.removeFuel((0.01 * FuelData.TARDIS_MAX_FUEL) * (this.tardis.tardisHammerAnnoyance + 1));

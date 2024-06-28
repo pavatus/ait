@@ -1,9 +1,9 @@
 package loqor.ait.tardis.control.impl;
 
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -31,7 +31,7 @@ public class RefuelerControl extends Control {
 			tardis.setRefueling(!tardis.isRefueling());
 
 			if (tardis.isRefueling())
-				FlightUtil.playSoundAtConsole(console, SoundEvents.BLOCK_CANDLE_EXTINGUISH, SoundCategory.BLOCKS, 10, 1);
+				TardisDesktop.playSoundAtConsole(console, SoundEvents.BLOCK_CANDLE_EXTINGUISH, SoundCategory.BLOCKS, 10, 1);
 
 			return true;
 		}

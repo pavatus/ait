@@ -3,8 +3,8 @@ package loqor.ait.core.item;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.DirectionControl;
+import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -80,7 +80,7 @@ public class RemoteItem extends LinkableItem {
 
 				tardis.travel2().speed().set(tardis.travel2().maxSpeed());
 
-				FlightUtil.travelTo(tardis, DirectedGlobalPos.Cached.create(serverWorld, temp,
+				TravelUtil.travelTo(tardis, DirectedGlobalPos.Cached.create(serverWorld, temp,
 						DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw())))
 				);
 			} else {

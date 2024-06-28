@@ -9,6 +9,7 @@ import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.Disposable;
 import loqor.ait.tardis.util.Ordered;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
@@ -97,7 +98,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
 		HANDLERS(TardisHandlersManager.class, null),
 
-		TRAVEL2(TravelHandlerV2.class, TravelHandlerV2::new),
+		TRAVEL2(TravelHandler.class, TravelHandler::new),
 		DOOR(DoorData.class, DoorData::new),
 		SONIC(SonicHandler.class, SonicHandler::new),
 		PERMISSIONS(PermissionHandler.class, PermissionHandler::new),

@@ -3,6 +3,7 @@ package loqor.ait.tardis.data;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.Entity;
@@ -64,7 +65,7 @@ public class HADSData extends TardisComponent implements TardisTickable {
 	public void dematerialiseWhenInDanger() {
 		ServerTardis tardis = (ServerTardis) tardis();
 
-		TravelHandlerV2 travel = tardis.travel2();
+		TravelHandler travel = tardis.travel2();
 		TravelHandlerBase.State state = travel.getState();
 
 		ServerAlarmHandler alarm = tardis.alarm();

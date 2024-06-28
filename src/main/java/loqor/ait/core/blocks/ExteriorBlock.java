@@ -6,7 +6,6 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
@@ -16,7 +15,6 @@ import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -45,6 +43,7 @@ import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
@@ -278,9 +277,10 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (blockEntity instanceof ExteriorBlockEntity exterior) {
 			if (world.isClient()) {
 				if (exterior.tardis().isEmpty()) {
-					ClientTardisManager.getInstance().askTardis(new AbsoluteBlockPos(pos, world));
+					ClientTardisManager.getInstance().askTardis(GlobalPos.create(world.getRegistryKey(), pos));
 					return ActionResult.FAIL;
 				}
+
 				return ActionResult.SUCCESS;
 			}
 
@@ -401,7 +401,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
 
-		FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+		tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
 		DoorData.lockTardis(tardis.door().previouslyLocked(), tardis, null, false);

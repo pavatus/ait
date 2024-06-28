@@ -4,11 +4,11 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -119,8 +119,7 @@ public class KeyItem extends LinkableItem {
 			return;
 
 		tardis.loyalty().subLevel(player, 5);
-
-		FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.CLOISTER);
+		tardis.getDesktop().playSoundAtEveryConsole(AITSounds.CLOISTER);
 	}
 
 	private static void hailMary(Tardis tardis, ItemStack stack, PlayerEntity player) {
@@ -130,7 +129,7 @@ public class KeyItem extends LinkableItem {
 		if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HAIL_MARY))
 			return;
 
-		TravelHandlerV2 travel = tardis.travel2();
+		TravelHandler travel = tardis.travel2();
 		KeyItem keyType = (KeyItem) stack.getItem().asItem();
 
 		if (travel.handbrake())
@@ -149,7 +148,7 @@ public class KeyItem extends LinkableItem {
 				(ServerWorld) world, pos, (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw())
 		);
 
-		FlightUtil.travelTo(tardis, globalPos);
+		TravelUtil.travelTo(tardis, globalPos);
 
 		player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3));
 		player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 6 * 20, 3));

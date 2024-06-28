@@ -9,7 +9,6 @@ import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.*;
 import loqor.ait.core.advancement.TardisCriterions;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.commands.*;
 import loqor.ait.core.data.schema.MachineRecipeSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
@@ -33,7 +32,6 @@ import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
@@ -143,22 +141,14 @@ public class AITMod implements ModInitializer {
 			TravelDebugCommand.register(dispatcher);
 		}));
 
-		// TODO(travel): move this to travelhandler
-		TardisEvents.LANDED.register((tardis -> {
-			// stuff for resetting the ExteriorAnimation
-			if (tardis.travel2().position().getWorld().getBlockEntity(tardis.travel2().position().getPos()) instanceof ExteriorBlockEntity entity) {
-				entity.getAnimation().setupAnimation(tardis.travel2().getState());
-			}
-		}));
-
 		TardisEvents.CRASH.register(tardis -> {
-			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+			for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
 				TardisCriterions.CRASH.trigger(player);
 			}
 		});
 
-		TardisEvents.REGAIN_POWER.register(tardis -> FlightUtil.playSoundAtEveryConsole(
-				tardis.getDesktop(), AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f)
+		TardisEvents.REGAIN_POWER.register(tardis -> tardis.getDesktop().playSoundAtEveryConsole(
+				AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f)
 		);
 
 		ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ((server, player, handler, buf, responseSender) -> {

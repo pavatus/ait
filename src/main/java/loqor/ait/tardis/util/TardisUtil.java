@@ -10,7 +10,6 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.Corners;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
@@ -34,7 +33,6 @@ import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -218,7 +216,7 @@ public class TardisUtil {
 						ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(playerUuid);
 
 						if (serverPlayer == null) {
-							FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
+							tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
 							return;
 						}
 
@@ -227,7 +225,7 @@ public class TardisUtil {
                                 (byte) RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())
                         ));
 
-						FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
+						tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
 					});
 				}
 		);
@@ -376,11 +374,7 @@ public class TardisUtil {
 	public static void dropOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
 
-		DirectedGlobalPos.Cached percentageOfDestination = FlightUtil.getPositionFromPercentage(
-				tardis.travel2().position(), tardis.travel2().destination(),
-				tardis.travel2().getDurationAsPercentage()
-		);
-
+		DirectedGlobalPos.Cached percentageOfDestination = tardis.travel2().getProgress();
 		TardisUtil.teleportWithDoorOffset(tardis.travel2().destination().getWorld(), entity, percentageOfDestination.toPos());
 	}
 
@@ -451,15 +445,6 @@ public class TardisUtil {
 		 Tardis result = TardisManager.getInstance(isServer).find(tardis -> TardisUtil.inBox(
 				tardis.getDesktop().getCorners(), pos));
 		 return result == null || result.isDisposed() ? null : result;
-	}
-
-	public static Tardis findTardisByPosition(AbsoluteBlockPos pos, TardisManager<?, ?> manager) {
-		Tardis result = manager.find(tardis -> tardis.travel2().position().getPos().equals(pos));
-
-		if (result == null && manager instanceof ClientTardisManager client)
-			client.askTardis(pos);
-
-		return result;
 	}
 
 	public static void giveEffectToInteriorPlayers(Tardis tardis, StatusEffectInstance effect) {

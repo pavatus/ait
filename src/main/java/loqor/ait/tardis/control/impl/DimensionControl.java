@@ -3,7 +3,7 @@ package loqor.ait.tardis.control.impl;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
@@ -29,7 +29,7 @@ public class DimensionControl extends Control {
 			return false;
 		}
 
-		TravelHandlerV2 travel = tardis.travel2();
+		TravelHandler travel = tardis.travel2();
 		DirectedGlobalPos.Cached dest = travel.destination();
 
 		List<ServerWorld> dims = getDimensions(world.getServer());

@@ -11,6 +11,7 @@ import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.Disposable;
 
 import java.util.Objects;
@@ -88,7 +89,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return this.door().locked();
 	}
 
-	public TravelHandlerV2 travel2() {
+	public TravelHandler travel2() {
 		return this.handler(TardisComponent.Id.TRAVEL2);
 	}
 

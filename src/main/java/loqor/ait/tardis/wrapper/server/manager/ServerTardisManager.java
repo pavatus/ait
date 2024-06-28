@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
@@ -29,7 +29,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -60,11 +60,14 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 		ServerPlayNetworking.registerGlobalReceiver(
 				ASK_POS, (server, player, handler, buf, responseSender) -> {
-					BlockPos pos = AbsoluteBlockPos.fromNbt(buf.readNbt());
-
+					GlobalPos pos = buf.readGlobalPos();
 					ServerTardis found = null;
+
 					for (ServerTardis tardis : this.lookup.values()) {
-						if (!tardis.travel2().position().equals(pos))
+						DirectedGlobalPos exteriorPos = tardis.travel2().position();
+
+						if (!exteriorPos.getPos().equals(pos.getPos())
+								|| !exteriorPos.getDimension().equals(pos.getDimension()))
 							continue;
 
 						found = tardis;

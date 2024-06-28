@@ -29,8 +29,8 @@ import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -187,7 +187,7 @@ public class AITModClient implements ClientModInitializer {
         );
 
         // does all this clientplaynetwrokigng shite really have to go in here, theres probably somewhere else it can go right??
-        ClientPlayNetworking.registerGlobalReceiver(TardisTravel.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) ->
+        ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) ->
                 client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
 
         // FIXME well this seems pointless

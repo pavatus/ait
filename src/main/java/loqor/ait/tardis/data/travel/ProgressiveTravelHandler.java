@@ -1,17 +1,16 @@
 package loqor.ait.tardis.data.travel;
 
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.TardisCrashData;
-import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
 import loqor.ait.tardis.data.properties.v2.integer.IntValue;
-import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -83,7 +82,14 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0)
             return this.tardis().travel2().getState() == TravelHandlerBase.State.DEMAT ? 0 : 100;
 
-        return FlightUtil.getDurationAsPercentage(this.getFlightTicks(), this.getTargetTicks());
+        int target = this.getTargetTicks();
+        return (MathHelper.clamp(this.getFlightTicks(), 1, target) * 100) / target;
+    }
+
+    public DirectedGlobalPos.Cached getProgress() {
+        return TravelUtil.getPositionFromPercentage(
+                this.position(), this.destination(), this.getDurationAsPercentage()
+        );
     }
 
     public void recalculate() {
@@ -153,7 +159,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
 
     public void decreaseSpeed() {
         if (this.getState() == State.LANDED && this.speed.get() == 1)
-            FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+            this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.AMBIENT);
 
         this.speed(this.speed.get() - 1);
     }
@@ -169,7 +175,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         Tardis tardis = this.tardis();
 
         TardisCrashData crash = tardis.crash();
-        TravelHandlerV2 travel = tardis.travel2();
+        TravelHandler travel = tardis.travel2();
 
         if (crash.getState() != TardisCrashData.State.NORMAL)
             crash.addRepairTicks(2 * travel.speed().get());
@@ -177,7 +183,8 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && travel.getState() == TravelHandlerBase.State.LANDED)
             this.recalculate();
 
-        this.triggerSequencingDuringFlight(tardis);
+        if (server.getTicks() % 2 == 0)
+            this.triggerSequencingDuringFlight(tardis);
 
         if (this.isInFlight() && !travel.isCrashing() && this.getTargetTicks() == 0 && this.getFlightTicks() < this.getTargetTicks())
             this.recalculate();
@@ -196,10 +203,10 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         if (!this.autopilot.get()
                 && this.getDurationAsPercentage() < 100
                 && this.getState() == TravelHandlerBase.State.FLIGHT
-                && !this.position().equals(this.destination())
                 && !sequences.hasActiveSequence()
-                && FlightUtil.getFlightDuration(this.position(), this.destination()) > 100
-                && random.nextBetween(0, 460 / (this.speed().get() == 0 ? 1 : this.speed().get())) == 7) {
+                && !this.position().equals(this.destination())
+                && this.getTargetTicks() > 100
+                && random.nextBetween(0, 230 / (this.speed().get() == 0 ? 1 : this.speed().get())) == 7) {
             sequences.triggerRandomSequence(true);
         }
     }

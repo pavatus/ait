@@ -6,7 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.util.FlightUtil;
+import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.entity.Entity;
@@ -52,7 +52,7 @@ public class SummonTardisCommand {
 				(ServerWorld) source.getWorld(), pos, (byte) RotationPropertyHelper.fromYaw(source.getBodyYaw())
 		);
 
-		FlightUtil.travelTo(tardis, globalPos);
+		TravelUtil.travelTo(tardis, globalPos);
 		source.sendMessage(Text.translatableWithFallback("tardis.summon",
 				"TARDIS [%s] is on the way!", tardis.getUuid().toString().substring(0, 7))
 		);
