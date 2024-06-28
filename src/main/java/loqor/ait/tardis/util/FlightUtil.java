@@ -6,8 +6,7 @@ import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.data.TravelHandlerV2;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.tardis.data.travel.TravelUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -29,13 +28,7 @@ public class FlightUtil {
 	 */
 	@Deprecated(forRemoval = true)
 	public static void travelTo(Tardis tardis, DirectedGlobalPos.Cached pos) {
-		TravelHandlerV2 travel = tardis.travel2();
-
-		travel.autopilot(true);
-		travel.destination(pos);
-
-		if (travel.getState() == TravelHandlerBase.State.LANDED)
-			travel.dematerialize();
+		TravelUtil.travelTo(tardis, pos);
 	}
 
 	public static int getFlightDuration(DirectedGlobalPos.Cached source, DirectedGlobalPos.Cached destination) {

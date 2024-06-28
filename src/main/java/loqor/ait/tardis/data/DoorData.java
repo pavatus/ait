@@ -319,13 +319,14 @@ public class DoorData extends TardisComponent implements TardisTickable {
 
 		door.setDoorState(DoorStateEnum.CLOSED);
 
-		if (!forced) {
+		if (!forced)
 			PropertiesHandler.set(tardis, PropertiesHandler.PREVIOUSLY_LOCKED, locked);
-		}
 
-		if (tardis.siege().isActive()) return true;
+		if (tardis.siege().isActive())
+			return true;
 
 		String lockedState = tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
+
 		if (player != null)
 			player.sendMessage(Text.literal(lockedState), true);
 

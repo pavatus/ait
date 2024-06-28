@@ -80,8 +80,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
     }
 
     protected int clampSpeed(int value) {
-        int max = this.autopilot() ? 1 : this.maxSpeed.get();
-        return MathHelper.clamp(value, 0, max);
+        return MathHelper.clamp(value, 0, this.maxSpeed.get());
     }
 
     public IntValue maxSpeed() {
@@ -172,8 +171,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
         LANDED,
         DEMAT(AITSounds.DEMAT_ANIM, TravelHandlerV2::finishDemat),
         FLIGHT(AITSounds.FLIGHT_ANIM),
-        MAT(AITSounds.MAT_ANIM, TravelHandlerV2::finishRemat),
-        CRASH(AITSounds.GHOST_MAT_ANIM, travelHandlerV2 -> {});
+        MAT(AITSounds.MAT_ANIM, TravelHandlerV2::finishRemat);
 
         private final MatSound sound;
         private final boolean animated;

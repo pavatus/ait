@@ -195,10 +195,20 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
         if (!this.tardis.engine().hasPower())
             return;
 
+        if (this.autopilot()) {
+            // fulfill all the prerequisites
+            this.tardis.door().closeDoors();
+            this.tardis.setRefueling(false);
+
+            if (this.speed().get() == 0)
+                this.increaseSpeed();
+        }
+
         if (TardisEvents.DEMAT.invoker().onDemat(this.tardis)
                 || tardis.door().isOpen() || tardis.isRefueling()
                 || FlightUtil.isDematerialiseOnCooldown(this.tardis)
                 || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
+                || tardis.door().isOpen()
         ) {
             this.failDemat();
             return;
@@ -231,15 +241,6 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
     }
 
     public void forceDemat() {
-        if (this.autopilot()) {
-            // fulfill all the prerequisites
-            this.tardis.door().closeDoors();
-            this.tardis.setRefueling(false);
-
-            if (this.tardis.travel2().speed().get() == 0)
-                this.increaseSpeed();
-        }
-
         this.state.set(State.DEMAT);
         SoundEvent sound = this.getState().effect().sound();
 
@@ -317,10 +318,8 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
     }
 
     public void finishRemat() {
-        if (this.autopilot.get() && this.speed.get() > 0)
+        if (this.autopilot() && this.speed.get() > 0)
             this.speed.set(0);
-
-        AITMod.LOGGER.info("Finish remat called", new Throwable());
 
         this.state.set(State.LANDED);
         this.resetFlight();

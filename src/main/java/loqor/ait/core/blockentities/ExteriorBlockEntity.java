@@ -129,10 +129,8 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 		}
 
-		if ((tardis.travel2().getState() == TravelHandlerBase.State.LANDED
-				|| tardis.travel2().getState() == TravelHandlerBase.State.CRASH)) {
+		if (tardis.travel2().getState() == TravelHandlerBase.State.LANDED)
 			DoorData.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
-		}
 	}
 
 	public void onEntityCollision(Entity entity) {

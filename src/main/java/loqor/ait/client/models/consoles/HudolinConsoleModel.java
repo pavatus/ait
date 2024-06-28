@@ -618,10 +618,10 @@ public class HudolinConsoleModel extends ConsoleModel {
 
 	@Override
 	public Animation getAnimationForState(TravelHandlerBase.State state) {
-		return switch (state) {
-			case FLIGHT, MAT, DEMAT, CRASH -> HudolinAnimations.HUDOLIN_FLIGHT;
-			default -> Animation.Builder.create(0).build();
-		};
+		if (state == TravelHandlerBase.State.LANDED)
+			return Animation.Builder.create(0).build();
+
+		return HudolinAnimations.HUDOLIN_FLIGHT;
 	}
 
 	@Override

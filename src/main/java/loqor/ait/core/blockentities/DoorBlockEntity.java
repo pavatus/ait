@@ -101,7 +101,8 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 			return;
 		}
 
-		DoorData.useDoor(tardis, (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
+		if (tardis.travel2().getState() == TravelHandlerBase.State.LANDED)
+			DoorData.useDoor(tardis, (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
 	}
 
 	public Direction getFacing() {
