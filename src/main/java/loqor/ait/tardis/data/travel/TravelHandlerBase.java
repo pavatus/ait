@@ -76,7 +76,12 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
     }
 
     protected void speed(int value) {
-        this.speed.set(MathHelper.clamp(value, 0, this.maxSpeed.get()));
+        this.speed.set(this.clampSpeed(value));
+    }
+
+    protected int clampSpeed(int value) {
+        int max = this.autopilot() ? 1 : this.maxSpeed.get();
+        return MathHelper.clamp(value, 0, max);
     }
 
     public IntValue maxSpeed() {

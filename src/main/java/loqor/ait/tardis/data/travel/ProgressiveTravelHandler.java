@@ -151,17 +151,18 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     }
 
     public void increaseSpeed() {
-        this.speed(this.clampSpeed(this.speed.get()));
+        this.speed(this.speed.get() + 1);
     }
 
     public void decreaseSpeed() {
         if (this.getState() == State.LANDED && this.speed.get() == 1)
             FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
 
-        this.speed(this.clampSpeed(this.speed.get() - 1));
+        this.speed(this.speed.get() - 1);
     }
 
-    private int clampSpeed(int value) {
+    @Override
+    protected int clampSpeed(int value) {
         int max = this.autopilot() ? 1 : this.maxSpeed.get();
         return MathHelper.clamp(value, 0, max);
     }
