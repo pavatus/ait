@@ -12,8 +12,10 @@ import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.CrashableTardisTravel;
 import loqor.ait.tardis.data.travel.ProgressiveTravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -28,7 +30,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Random;
 
-public class TravelHandlerV2 extends ProgressiveTravelHandler {
+public class TravelHandlerV2 extends ProgressiveTravelHandler implements CrashableTardisTravel {
 
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
@@ -146,6 +148,17 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler {
         return exterior;
     }
 
+    public void immediatelyLandHere(DirectedGlobalPos.Cached globalPos) {
+        this.deleteExterior();
+        this.state.set(TravelHandlerBase.State.LANDED);
+
+        this.placeExterior(false);
+        this.finishRemat();
+
+        this.destination.set(globalPos);
+        this.position.set(globalPos);
+    }
+
     private void runAnimations(ExteriorBlockEntity exterior) {
         State state = this.getState();
         ExteriorAnimation animation = exterior.getAnimation();
@@ -168,9 +181,59 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler {
             this.runAnimations(exterior);
     }
 
+    /**
+     * Sets the current position to the destination progress one.
+     */
+    public void stopHere() {
+        if (this.getState() != State.FLIGHT)
+            return;
+
+        DirectedGlobalPos.Cached pos = FlightUtil.getPositionFromPercentage(
+                this.position(), this.destination(),
+                this.tardis().travel2().getDurationAsPercentage()
+        );
+
+        this.forcePosition(pos);
+    }
+
     public void dematerialize() {
         if (this.getState() != State.LANDED)
             return;
+
+        if (!this.tardis.engine().hasPower())
+            return;
+
+        if (TardisEvents.DEMAT.invoker().onDemat(this.tardis)
+                || tardis.door().isOpen() || tardis.isRefueling()
+                || FlightUtil.isDematerialiseOnCooldown(this.tardis)
+                || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
+        ) {
+            this.failDemat();
+            return;
+        }
+
+        this.forceDemat();
+    }
+
+    private void failDemat() {
+        // demat will be cancelled
+        this.position().getWorld().playSound(null, this.position().getPos(),
+                AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f
+        ); // fixme can be spammed
+
+        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
+        FlightUtil.createDematerialiseDelay(this.tardis);
+    }
+
+    public void forceDemat() {
+        if (this.autopilot()) {
+            // fulfill all the prerequisites
+            this.tardis.door().closeDoors();
+            this.tardis.setRefueling(false);
+
+            if (this.tardis.travel2().speed().get() == 0)
+                this.increaseSpeed();
+        }
 
         this.state.set(State.DEMAT);
         SoundEvent sound = this.getState().effect().sound();

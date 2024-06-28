@@ -3,7 +3,6 @@ package loqor.ait.tardis.control.impl;
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.TravelHandlerV2;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -39,7 +38,7 @@ public class ThrottleControl extends Control {
 			}
 		}
 
-		if (travel.getState() == TravelHandler.State.DEMAT)
+		if (travel.getState() == TravelHandlerV2.State.DEMAT)
 			tardis.sequence().setActivePlayer(player);
 
 		return true;

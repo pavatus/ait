@@ -5,6 +5,7 @@ import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
@@ -69,14 +70,14 @@ public class OvergrownData extends TardisComponent implements TardisTickable {
 		if (tardis().isGrowth())
 			return;
 
-		if (this.isOvergrown() && (this.tardis().travel2().getState() == TravelHandler.State.FLIGHT
-				|| this.tardis().travel2().getState() == TravelHandler.State.MAT)) {
+		if (this.isOvergrown() && (this.tardis().travel2().getState() == TravelHandlerBase.State.FLIGHT
+				|| this.tardis().travel2().getState() == TravelHandlerBase.State.MAT)) {
 			this.setOvergrown(false);
 			this.setTicks(0);
 			return;
 		}
 
-		if (this.isOvergrown() || this.tardis().travel2().getState() != TravelHandler.State.LANDED)
+		if (this.isOvergrown() || this.tardis().travel2().getState() != TravelHandlerBase.State.LANDED)
 			return;
 
 		// We know the tardis is landed so we can start ticking away

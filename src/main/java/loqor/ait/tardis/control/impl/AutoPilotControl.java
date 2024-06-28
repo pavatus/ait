@@ -3,7 +3,7 @@ package loqor.ait.tardis.control.impl;
 import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -29,7 +29,7 @@ public class AutoPilotControl extends Control {
 		}
 
 		// @TODO make a real world flight control.. later
-		if (player.isSneaking() && tardis.travel2().getState() == TravelHandler.State.LANDED) {
+		if (player.isSneaking() && tardis.travel2().getState() == TravelHandlerBase.State.LANDED) {
 			if (tardis.door().isOpen()) {
 				world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_CHAIN_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
 				return true;
@@ -44,7 +44,8 @@ public class AutoPilotControl extends Control {
 			return true;
 		}
 
-		tardis.travel2().autopilot().flatMap(autoLand -> !autoLand);
+		boolean autopilot = tardis.travel2().autopilot();
+		tardis.travel2().autopilot(!autopilot);
 		return true;
 	}
 

@@ -9,9 +9,9 @@ import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.WaypointHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -1332,7 +1332,7 @@ public class CoralConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TravelHandler.State state) {
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
 		return switch (state) {
 			default -> CoralAnimations.CORAL_CONSOLE_INFLIGHT_ANIMATION;
 			case MAT -> CoralAnimations.CORAL_CONSOLE_REMAT_ANIMATION;
@@ -1420,7 +1420,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Autopilot
 		ModelPart autopilot = controls.getChild("ctrl_4").getChild("bone15").getChild("switch24").getChild("bone19");
-		autopilot.pivotY = tardis.travel2().autopilot().get() ? autopilot.pivotY + 1 : autopilot.pivotY;
+		autopilot.pivotY = tardis.travel2().autopilot() ? autopilot.pivotY + 1 : autopilot.pivotY;
 
 		ModelPart security = controls.getChild("ctrl_4").getChild("bone15").getChild("switch25").getChild("bone20");
 		security.pivotY = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? security.pivotY + 1 : security.pivotY;

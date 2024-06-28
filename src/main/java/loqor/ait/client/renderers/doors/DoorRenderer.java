@@ -17,8 +17,8 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.OvergrownData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.TardisRef;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -77,7 +77,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 			texture = tardis.door().isOpen() ? DoomDoorModel.DOOM_DOOR_OPEN : DoomDoorModel.DOOM_DOOR;
 		}
 
-		if (DependencyChecker.hasPortals() && tardis.travel2().getState() == TravelHandler.State.LANDED
+		if (DependencyChecker.hasPortals() && tardis.travel2().getState() == TravelHandlerBase.State.LANDED
 				&& tardis.door().getDoorState() != DoorData.DoorStateEnum.CLOSED
 		) {
 			DirectedGlobalPos.Cached globalPos = tardis.travel2().position();

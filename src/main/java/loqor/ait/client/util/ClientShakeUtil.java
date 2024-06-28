@@ -1,7 +1,7 @@
 package loqor.ait.client.util;
 
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.MathHelper;
 
@@ -14,9 +14,9 @@ public class ClientShakeUtil {
 
 	public static boolean shouldShake(Tardis tardis) {
 		return Objects.equals(ClientTardisUtil.getCurrentTardis(), tardis)
-				&& tardis.travel2().getState() != TravelHandler.State.LANDED
+				&& tardis.travel2().getState() != TravelHandlerBase.State.LANDED
 				&& ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE
-				&& !tardis.travel2().autopilot().get();
+				&& !tardis.travel2().autopilot();
 	}
 
 	/**

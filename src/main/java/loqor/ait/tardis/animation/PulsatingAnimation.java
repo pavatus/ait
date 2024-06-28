@@ -3,8 +3,8 @@ package loqor.ait.tardis.animation;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 public class PulsatingAnimation extends ExteriorAnimation {
 	private static final int PULSE_LENGTH = 20;
@@ -19,15 +19,15 @@ public class PulsatingAnimation extends ExteriorAnimation {
 	@Override
 	public void tick(Tardis tardis) {
 		TravelHandlerV2 travel = tardis.travel2();
-		TravelHandler.State state = travel.getState();
+		TravelHandlerBase.State state = travel.getState();
 
 		if (this.timeLeft < 0)
 			this.setupAnimation(travel.getState()); // fixme is a jank fix for the timeLeft going negative on client
 
-		if (state == TravelHandler.State.DEMAT)
+		if (state == TravelHandlerBase.State.DEMAT)
 			this.setAlpha(1f - this.getPulseAlpha());
 
-		if (state == TravelHandler.State.MAT) {
+		if (state == TravelHandlerBase.State.MAT) {
 			if (timeLeft < startTime) this.setAlpha(this.getPulseAlpha());
 			else this.alpha = 0f;
 		}
@@ -43,7 +43,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
 	}
 
 	@Override
-	public boolean setupAnimation(TravelHandler.State state) {
+	public boolean setupAnimation(TravelHandlerBase.State state) {
 		if (!super.setupAnimation(state))
 			return false;
 

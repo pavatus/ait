@@ -10,7 +10,6 @@ import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.CloakData;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
@@ -791,7 +790,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TravelHandler.State state) {
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
 		if (state == TravelHandlerBase.State.LANDED)
 			return HartnellAnimations.HARTNELL_IDLE_ANIMATION;
 
@@ -951,7 +950,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Auto Pilot Control Movements
 		ModelPart autoPilot = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("st_switch").getChild("bone26");
-		autoPilot.yaw = !tardis.travel2().autopilot().get() ? autoPilot.yaw + 1 : autoPilot.yaw;
+		autoPilot.yaw = !tardis.travel2().autopilot() ? autoPilot.yaw + 1 : autoPilot.yaw;
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}

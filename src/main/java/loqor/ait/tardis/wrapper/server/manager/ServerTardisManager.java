@@ -9,16 +9,16 @@ import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.core.events.WorldSaveEvent;
+import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.manager.BufferedTardisManager;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.manager.TardisFileManager;
 import loqor.ait.tardis.util.NetworkUtil;
-import loqor.ait.tardis.util.TardisChunkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -256,12 +256,12 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		for (ServerTardis tardis : this.lookup.values()) {
 			// stop forcing all chunks
 			if (lock) {
-				TardisChunkUtil.stopForceExteriorChunk(tardis);
-				TravelHandler.State state = tardis.travel2().getState();
+				ForcedChunkUtil.stopForceLoading(tardis.travel2().position());
+				TravelHandlerBase.State state = tardis.travel2().getState();
 
-				if (state == TravelHandler.State.DEMAT) {
+				if (state == TravelHandlerBase.State.DEMAT) {
 					tardis.travel2().finishDemat();
-				} else if (state == TravelHandler.State.MAT) {
+				} else if (state == TravelHandlerBase.State.MAT) {
 					tardis.travel2().finishRemat();
 				}
 

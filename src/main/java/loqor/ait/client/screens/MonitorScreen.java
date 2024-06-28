@@ -16,8 +16,8 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.exterior.category.BoothCategory;
 import loqor.ait.tardis.exterior.category.ClassicCategory;
 import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
@@ -257,7 +257,7 @@ public class MonitorScreen extends ConsoleScreen {
 			}
 
 			context.drawTexture(TEXTURE, i + 101 + index * 18, j + 78,
-					this.tardis().travel2().getState() == TravelHandler.State.FLIGHT
+					this.tardis().travel2().getState() == TravelHandlerBase.State.FLIGHT
 							? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17
 			);
 		}
@@ -332,7 +332,7 @@ public class MonitorScreen extends ConsoleScreen {
 			return;
 
 		TravelHandlerV2 travel = this.tardis().travel2();
-        DirectedGlobalPos abpd = travel.getState() == TravelHandler.State.FLIGHT ? FlightUtil.getPositionFromPercentage(travel.position(), travel.destination(), getFromUUID(tardisId).travel2().getDurationAsPercentage()) : travel.position();
+        DirectedGlobalPos abpd = travel.getState() == TravelHandlerBase.State.FLIGHT ? FlightUtil.getPositionFromPercentage(travel.position(), travel.destination(), getFromUUID(tardisId).travel2().getDurationAsPercentage()) : travel.position();
 		DirectedGlobalPos dabpd = travel.destination();
 
         if (abpd.getDimension() == null)

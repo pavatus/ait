@@ -2,8 +2,8 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
@@ -13,7 +13,6 @@ import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -30,21 +29,18 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 
 	static {
 		TardisEvents.DEMAT.register((tardis -> {
-			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()
-					|| tardis.travel2().handbrake() || PropertiesHandler.getBool(
-					tardis.properties(), PropertiesHandler.IS_FALLING
-			) || tardis.isRefueling())
+			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating())
 				return true; // cancelled
 
-			if (tardis.door().isOpen())
-				return true;
+            return tardis.door().isOpen();
+        }));
 
-			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
-				TardisCriterions.TAKEOFF.trigger(player);
-			}
+		TardisEvents.LANDED.register(tardis -> {
+			if (!tardis.isGrowth())
+				return;
 
-			return false;
-		}));
+			tardis.getExterior().setType(CategoryRegistry.CAPSULE);
+		});
 	}
 
 	private void setGenerating(boolean var) {
@@ -110,14 +106,14 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		DoorData.lockTardis(previouslyLocked, tardis, null, false);
 
 		tardis.engine().hasEngineCore().set(false);
+		tardis.engine().disablePower();
 
 		if (tardis.hasGrowthExterior()) {
 			TravelHandlerV2 travel = tardis.travel2();
 
 			travel.handbrake(false);
-			travel.autopilot().set(true);
+			travel.autopilot(true);
 
-			// TODO(travel) replace with proper demat method
 			travel.dematerialize();
 		}
 	}

@@ -3,10 +3,10 @@ package loqor.ait.core.entities;
 import loqor.ait.core.AITDamageTypes;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
@@ -26,6 +26,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -141,15 +142,15 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					}
 					if (user.isSneaking()) {
 						// TODO(travel): replace with proper travel method
-						/*getTardis().travel2().immediatelyLandAt(DirectedGlobalPos.Cached.create(
-                                (ServerWorld) this.getWorld(), this.getBlockPos(), (byte) DirectionControl.getGeneralizedRotation(
+						getTardis().travel2().immediatelyLandHere(DirectedGlobalPos.Cached.create(
+                                (ServerWorld) this.getWorld(), this.getBlockPos(), DirectionControl.getGeneralizedRotation(
 										RotationPropertyHelper.fromYaw(user.getBodyYaw())))
-						);*/
+						);
 
-						if (getTardis().travel2().getState() == TravelHandler.State.LANDED)
+						if (getTardis().travel2().getState() == TravelHandlerBase.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
 
-						getTardis().travel2().autopilot().set(false);
+						getTardis().travel2().autopilot(false);
 						user.dismountVehicle();
 					}
 				} else {

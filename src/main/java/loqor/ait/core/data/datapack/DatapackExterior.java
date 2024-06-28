@@ -12,8 +12,8 @@ import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -92,8 +92,13 @@ public class DatapackExterior extends ExteriorVariantSchema {
 		return this.getParent().door();
 	}
 
+	/**
+	 * @see TravelHandlerBase.State#effect()
+	 * @param state
+	 * @return
+	 */
 	@Override
-	public MatSound getSound(TravelHandler.State state) {
+	public MatSound getSound(TravelHandlerBase.State state) {
 		return this.getParent().getSound(state);
 	}
 

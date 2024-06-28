@@ -13,11 +13,9 @@ import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
 import loqor.ait.tardis.data.properties.v2.integer.IntValue;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
@@ -34,8 +32,6 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
     private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "destination", (DirectedGlobalPos.Cached) Property.warnCompat("previous_position", null));
     private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) Property.warnCompat("previous_position", null));
 
-    private static final BoolProperty HANDBRAKE = new BoolProperty("handbrake", Property.warnCompat("handbrake", true));
-    private static final BoolProperty AUTO_LAND = new BoolProperty("auto_land", Property.warnCompat("auto_land", false));
     private static final BoolProperty CRASHING = new BoolProperty("crashing", Property.warnCompat("crashing", false));
 
     private static final IntProperty SPEED = new IntProperty("speed", Property.warnCompat("speed", 0));
@@ -81,18 +77,6 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
 
     protected void speed(int value) {
         this.speed.set(MathHelper.clamp(value, 0, this.maxSpeed.get()));
-    }
-
-    public void increaseSpeed() {
-        int max = this.tardis.travel2().autopilot().get() ? 1 : this.maxSpeed.get();
-        this.speed(MathHelper.clamp(this.speed.get() + 1, 0, max));
-    }
-
-    public void decreaseSpeed() {
-        if (this.getState() == State.LANDED && this.speed.get() == 1)
-            FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
-
-        this.speed(MathHelper.clamp(this.speed.get() - 1, 0, this.maxSpeed.get()));
     }
 
     public IntValue maxSpeed() {

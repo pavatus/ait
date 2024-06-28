@@ -11,7 +11,6 @@ import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.fabricmc.api.EnvType;
@@ -83,7 +82,7 @@ public abstract class ExteriorVariantSchema implements Unlockable, Nameable {
 	 * @see TravelHandlerBase.State#effect()
 	 */
 	@Deprecated
-	public MatSound getSound(TravelHandler.State state) {
+	public MatSound getSound(TravelHandlerBase.State state) {
 		return state.effect();
 	}
 

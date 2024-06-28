@@ -276,6 +276,14 @@ public class AITMod implements ModInitializer {
 			AIT_CONFIG.save();
 		});
 
+		TardisEvents.DEMAT.register(tardis -> {
+			for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+				TardisCriterions.TAKEOFF.trigger(player);
+			}
+
+			return false;
+		});
+
 		AIT_ITEM_GROUP.initialize();
 	}
 

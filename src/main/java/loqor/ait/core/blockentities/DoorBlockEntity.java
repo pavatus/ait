@@ -9,9 +9,9 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
@@ -137,12 +137,12 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
 		TravelHandlerV2 travel = tardis.travel2();
 
-		if (travel.getState() == TravelHandler.State.FLIGHT) {
+		if (travel.getState() == TravelHandlerBase.State.FLIGHT) {
 			TardisUtil.dropOutside(tardis, entity); // SHOULD properly drop someone out at the correct position instead of the not correct position :)
 			return;
 		}
 
-		if (travel.getState() != TravelHandler.State.LANDED)
+		if (travel.getState() != TravelHandlerBase.State.LANDED)
 			return;
 
 		TardisUtil.teleportOutside(tardis, entity);

@@ -5,6 +5,7 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.HostileEntity;
@@ -55,8 +56,11 @@ public class ServerAlarmHandler extends TardisComponent implements TardisTickabl
 			return;
 		}
 
-		if (!tardis.getHandlers().getAlarms().isEnabled()) return;
-		if (tardis.travel2().getState() == TravelHandler.State.FLIGHT) return;
+		if (!tardis.alarm().isEnabled())
+			return;
+
+		if (tardis.travel2().getState() == TravelHandlerBase.State.FLIGHT)
+			return;
 
 		soundCounter++;
 

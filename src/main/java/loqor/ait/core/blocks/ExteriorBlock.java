@@ -14,8 +14,8 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.*;
@@ -158,9 +158,9 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (tardis.siege().isActive())
 			return SIEGE_SHAPE;
 
-		TravelHandler.State travelState = tardis.travel2().getState();
+		TravelHandlerBase.State travelState = tardis.travel2().getState();
 
-		if (travelState == TravelHandler.State.LANDED || exterior.getAlpha() > 0.75)
+		if (travelState == TravelHandlerBase.State.LANDED || exterior.getAlpha() > 0.75)
 			return normal;
 
 		if (DependencyChecker.hasPortals())
@@ -204,9 +204,9 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 			if (tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
 				return getLedgeShape(state);
 
-		TravelHandler.State travelState = tardis.travel2().getState();
+		TravelHandlerBase.State travelState = tardis.travel2().getState();
 
-		if (travelState == TravelHandler.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
+		if (travelState == TravelHandlerBase.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
 			return getNormalShape(state);
 
 		if (DependencyChecker.hasPortals()) {
@@ -257,9 +257,9 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (!(blockEntity instanceof ExteriorBlockEntity exterior) || exterior.tardis().isEmpty())
 			return getNormalShape(state);
 
-		TravelHandler.State travelState = exterior.tardis().get().travel2().getState();
+		TravelHandlerBase.State travelState = exterior.tardis().get().travel2().getState();
 
-		if (travelState == TravelHandler.State.LANDED || exterior.getAlpha() > 0.75)
+		if (travelState == TravelHandlerBase.State.LANDED || exterior.getAlpha() > 0.75)
 			return getNormalShape(state);
 
 		if (exterior.tardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM))
@@ -348,7 +348,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (antigravs)
 			return;
 
-		if (tardis.travel2().getState() != TravelHandler.State.LANDED)
+		if (tardis.travel2().getState() != TravelHandlerBase.State.LANDED)
 			return;
 
 		if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))

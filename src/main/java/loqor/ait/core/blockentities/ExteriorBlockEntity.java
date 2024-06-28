@@ -12,7 +12,6 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.AbstractLinkableBlockEntity;
 import loqor.ait.tardis.link.v2.TardisRef;
@@ -130,8 +129,8 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 		}
 
-		if ((tardis.travel2().getState() == TravelHandler.State.LANDED
-				|| tardis.travel2().getState() == TravelHandler.State.CRASH)) {
+		if ((tardis.travel2().getState() == TravelHandlerBase.State.LANDED
+				|| tardis.travel2().getState() == TravelHandlerBase.State.CRASH)) {
 			DoorData.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
 		}
 	}
@@ -145,7 +144,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		Tardis tardis = ref.get();
 		boolean previouslyLocked = tardis.door().previouslyLocked();
 
-		if (!previouslyLocked && tardis.travel2().getState() == TravelHandler.State.MAT && this.getAlpha() >= 0.9f)
+		if (!previouslyLocked && tardis.travel2().getState() == TravelHandlerBase.State.MAT && this.getAlpha() >= 0.9f)
 			TardisUtil.teleportInside(tardis, entity);
 
 		if (!tardis.door().isOpen())
@@ -165,7 +164,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		Tardis tardis = ref.get();
 
 		TravelHandlerBase travel = tardis.travel2();
-		TravelHandler.State state = travel.getState();
+		TravelHandlerBase.State state = travel.getState();
 
 		if (!world.isClient())
 			return;

@@ -3,8 +3,8 @@ package loqor.ait.tardis.control.impl;
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -41,12 +41,12 @@ public class HandBrakeControl extends Control {
 		TravelHandlerV2 travel = tardis.travel2();
 
 		// TODO(travel): replace with proper travel methods
-		if (handbrake && travel.getState() == TravelHandler.State.FLIGHT) {
-			if (travel.autopilot().get()) {
-				//travel.setPosFromProgress();
-				travel.finishRemat();
+		if (handbrake && travel.getState() == TravelHandlerBase.State.FLIGHT) {
+			if (travel.autopilot()) {
+				travel.stopHere();
+				travel.rematerialize();
 			} else {
-				//travel.crash();
+				travel.crash();
 			}
 		}
 

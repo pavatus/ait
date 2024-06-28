@@ -6,7 +6,6 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
@@ -948,14 +947,14 @@ public class SteamConsoleModel extends ConsoleModel {
 		doorLock.roll = doorLock.roll - (tardis.door().locked() ? 1.5708f : 0);
 
 		ModelPart autopilot = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone48");
-		autopilot.roll = autopilot.roll - (tardis.travel2().autopilot().get() ? 1.5708f : 0);
+		autopilot.roll = autopilot.roll - (tardis.travel2().autopilot() ? 1.5708f : 0);
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}
 
 	@Override
-	public Animation getAnimationForState(TravelHandler.State state) {
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
 		if (state == TravelHandlerBase.State.LANDED)
 			return SteamAnimations.CONSOLE_STEAM_IDLE;
 

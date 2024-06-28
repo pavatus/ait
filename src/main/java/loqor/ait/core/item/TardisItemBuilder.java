@@ -12,9 +12,9 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.EngineHandler;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -77,9 +77,9 @@ public class TardisItemBuilder extends Item {
 			if (tardis == null)
 				return ActionResult.FAIL;
 
-			TravelHandler.State state = tardis.travel2().getState();
+			TravelHandlerBase.State state = tardis.travel2().getState();
 
-			if (!(state == TravelHandler.State.LANDED || state == TravelHandler.State.FLIGHT))
+			if (!(state == TravelHandlerBase.State.LANDED || state == TravelHandlerBase.State.FLIGHT))
 				return ActionResult.PASS;
 
 			consoleBlock.killControls();

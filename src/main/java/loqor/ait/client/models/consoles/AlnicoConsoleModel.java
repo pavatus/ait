@@ -7,8 +7,8 @@ import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -833,7 +833,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		power.pitch = !tardis.engine().hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
 
 		ModelPart autoPilot = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch1");
-		autoPilot.pitch = tardis.travel2().autopilot().get() ? autoPilot.pitch + 0.5f : autoPilot.pitch;
+		autoPilot.pitch = tardis.travel2().autopilot() ? autoPilot.pitch + 0.5f : autoPilot.pitch;
 
 		ModelPart security = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch4");
 		security.pitch = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? security.pitch + 0.5f : security.pitch;
@@ -886,7 +886,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TravelHandler.State state) {
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
 		return switch (state) {
 			case FLIGHT, MAT, DEMAT -> AlnicoAnimations.CONSOLE_ALNICO_FLIGHT;
 			case LANDED -> AlnicoAnimations.CONSOLE_ALNICO_IDLE;

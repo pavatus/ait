@@ -6,7 +6,7 @@ import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.entities.TardisRealEntity;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.command.ServerCommandSource;
@@ -35,7 +35,7 @@ public class RealWorldCommand {
 		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
 		// TODO: better error handling
-		if (tardis.travel2().getState() != TravelHandler.State.LANDED)
+		if (tardis.travel2().getState() != TravelHandlerBase.State.LANDED)
 			return 0;
 
 		DirectedGlobalPos.Cached globalPos = tardis.travel2().position();

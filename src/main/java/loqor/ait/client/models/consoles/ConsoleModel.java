@@ -1,7 +1,7 @@
 package loqor.ait.client.models.consoles;
 
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -24,7 +24,7 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
 		super(function);
 	}
 
-	public void animateBlockEntity(ConsoleBlockEntity console, TravelHandler.State state, boolean hasPower) {
+	public void animateBlockEntity(ConsoleBlockEntity console, TravelHandlerBase.State state, boolean hasPower) {
 		// fyi, this is directly referencing camel animation code, its just specific according to the block entity that is being used
 		// to detect different states. - Loqor
 		this.getPart().traverse().forEach(ModelPart::resetTransform);
@@ -41,5 +41,5 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
 	public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 	}
 
-	public abstract Animation getAnimationForState(TravelHandler.State state);
+	public abstract Animation getAnimationForState(TravelHandlerBase.State state);
 }

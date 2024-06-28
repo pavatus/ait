@@ -8,8 +8,8 @@ import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -885,8 +885,8 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPart autopilot = this.toyota.getChild("panel4").getChild("controls4").getChild("tinyswitch2");
 		ModelPart autopilotLight = this.toyota.getChild("panel4").getChild("yellow4");
 
-		autopilot.pitch = tardis.travel2().autopilot().get() ? autopilot.pitch + 1f : autopilot.pitch - 1f;
-		autopilotLight.pivotY = tardis.travel2().autopilot().get() ? autopilotLight.pivotY : autopilotLight.pivotY + 1;
+		autopilot.pitch = tardis.travel2().autopilot() ? autopilot.pitch + 1f : autopilot.pitch - 1f;
+		autopilotLight.pivotY = tardis.travel2().autopilot() ? autopilotLight.pivotY : autopilotLight.pivotY + 1;
 
 		// Siege Mode Control
 		ModelPart siegeMode = this.toyota.getChild("panel2").getChild("controls3").getChild("siegemode").getChild("siegemodehandle");
@@ -934,7 +934,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TravelHandler.State state) {
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
 		return switch (state) {
 			case MAT, DEMAT, FLIGHT -> ToyotaAnimations.CONSOLE_TOYOTA_FLIGHT;
 			case LANDED -> ToyotaAnimations.CONSOLE_TOYOTA_IDLE;

@@ -8,7 +8,6 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.FlightUtil;
@@ -102,7 +101,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		this.textRenderer.drawWithOutline(Text.of("⛽").asOrderedText(), 0, 78, 0xFAF000, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(fuelText).asOrderedText(), 8, 78, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
-		String flightTimeText = tardis.travel2().getState() == TravelHandler.State.LANDED ? "0%" : tardis.travel2().getDurationAsPercentage() + "%";
+		String flightTimeText = tardis.travel2().getState() == TravelHandlerBase.State.LANDED ? "0%" : tardis.travel2().getDurationAsPercentage() + "%";
 		this.textRenderer.drawWithOutline(Text.of("⏳").asOrderedText(), 0, 92, 0x00FF0F, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(flightTimeText).asOrderedText(), 8, 92, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 

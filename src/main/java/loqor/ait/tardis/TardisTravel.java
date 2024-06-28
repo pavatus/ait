@@ -81,7 +81,7 @@ public class TardisTravel extends TardisComponent {
 
 	static {
 		TardisEvents.LOSE_POWER.register(tardis ->
-				tardis.travel2().autopilot().set(false));
+				tardis.travel2().autopilot(false));
 	}
 
 	public boolean isCrashing() {
@@ -113,7 +113,7 @@ public class TardisTravel extends TardisComponent {
 		State state = this.getState();
 
 		boolean handbrake = tardis.travel2().handbrake();
-		boolean autopilot = tardis.travel2().autopilot().get();
+		boolean autopilot = tardis.travel2().autopilot();
 
 		if (speed > 0 && state == State.LANDED && !handbrake && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
 			this.dematerialise(autopilot);
@@ -147,7 +147,7 @@ public class TardisTravel extends TardisComponent {
 
 	public void increaseSpeed() {
 		// Stop speed from going above 1 if autopilot is enabled, and we're in flight
-		if (this.tardis.travel2().speed().get() > 0 && this.getState() == State.FLIGHT && tardis.travel2().autopilot().get()) {
+		if (this.tardis.travel2().speed().get() > 0 && this.getState() == State.FLIGHT && tardis.travel2().autopilot()) {
 			return;
 		}
 
@@ -473,7 +473,7 @@ public class TardisTravel extends TardisComponent {
 		if (FlightUtil.isDematerialiseOnCooldown(tardis()))
 			return; // cancelled
 
-		if (tardis.travel2().autopilot().get()) {
+		if (tardis.travel2().autopilot()) {
 			// fulfill all the prerequisites
 			// DoorData.lockTardis(true, tardis(), null, false);
 			tardis.travel2().handbrake(false);
@@ -484,7 +484,7 @@ public class TardisTravel extends TardisComponent {
 				this.increaseSpeed();
 		}
 
-		tardis.travel2().autopilot().set(withRemat);
+		tardis.travel2().autopilot(withRemat);
 		ServerWorld world = (ServerWorld) this.getPosition().getWorld();
 
 		if (!ignoreChecks && TardisEvents.DEMAT.invoker().onDemat(tardis())) {
@@ -625,7 +625,7 @@ public class TardisTravel extends TardisComponent {
 	}
 
 	public void forceLand(@Nullable ExteriorBlockEntity blockEntity) {
-		if (tardis.travel2().autopilot().get() && this.tardis.travel2().speed().get() > 0) {
+		if (tardis.travel2().autopilot() && this.tardis.travel2().speed().get() > 0) {
 			this.tardis.travel2().speed().set(0);
 		}
 

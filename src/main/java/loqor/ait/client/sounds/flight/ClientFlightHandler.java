@@ -5,7 +5,7 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
@@ -88,7 +88,7 @@ public class ClientFlightHandler extends SoundHandler {
 
 	private boolean inFlight() {
 		Tardis tardis = this.tardis();
-		return (tardis != null && tardis.travel2().getState() == TravelHandler.State.FLIGHT);
+		return (tardis != null && tardis.travel2().getState() == TravelHandlerBase.State.FLIGHT);
 	}
 
 	public boolean hasThrottleAndHandbrakeDown() {

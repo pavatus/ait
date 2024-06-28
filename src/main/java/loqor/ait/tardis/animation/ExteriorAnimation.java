@@ -6,7 +6,7 @@ import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.CloakData;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.NetworkUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -34,7 +34,7 @@ public abstract class ExteriorAnimation {
 		if (this.exterior.tardis().isEmpty())
 			return 1f;
 
-		if (this.exterior.tardis().get().travel2().getState() == TravelHandler.State.LANDED
+		if (this.exterior.tardis().get().travel2().getState() == TravelHandlerBase.State.LANDED
 				&& this.exterior.tardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled())
 			return 0.105f;
 
@@ -53,7 +53,7 @@ public abstract class ExteriorAnimation {
 
 	public abstract void tick(Tardis tardis);
 
-	public boolean setupAnimation(TravelHandler.State state) {
+	public boolean setupAnimation(TravelHandlerBase.State state) {
 		if (exterior.tardis().isEmpty()) {
 			AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
 			this.alpha = 0f; // just make me vanish.
@@ -92,7 +92,7 @@ public abstract class ExteriorAnimation {
 		this.alpha = Math.clamp(0.0F, 1.0F, alpha);
 	}
 
-	public void tellClientsToSetup(TravelHandler.State state) {
+	public void tellClientsToSetup(TravelHandlerBase.State state) {
 		if (exterior.getWorld() == null)
 			return; // happens when tardis spawns above world limit, so thats nice
 
@@ -104,7 +104,7 @@ public abstract class ExteriorAnimation {
 		}
 	}
 
-	public void tellClientToSetup(TravelHandler.State state, ServerPlayerEntity player) {
+	public void tellClientToSetup(TravelHandlerBase.State state, ServerPlayerEntity player) {
 		if (exterior.getWorld().isClient() || exterior.tardis().isEmpty())
 			return;
 

@@ -6,8 +6,8 @@ import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -31,19 +31,11 @@ public class FlightUtil {
 	public static void travelTo(Tardis tardis, DirectedGlobalPos.Cached pos) {
 		TravelHandlerV2 travel = tardis.travel2();
 
-		travel.autopilot().set(true);
+		travel.autopilot(true);
 		travel.destination(pos);
 
-		if (travel.getState() == TravelHandler.State.LANDED)
+		if (travel.getState() == TravelHandlerBase.State.LANDED)
 			travel.dematerialize();
-	}
-
-	public static int convertSecondsToTicks(int seconds) {
-		return seconds * 20;
-	}
-
-	public static int convertSecondsToTicks(double seconds) {
-		return (int) (seconds * 20);
 	}
 
 	public static int getFlightDuration(DirectedGlobalPos.Cached source, DirectedGlobalPos.Cached destination) {
@@ -51,7 +43,7 @@ public class FlightUtil {
 		boolean hasDirChanged = !(source.getRotation() == destination.getRotation());
 		boolean hasDimChanged = !(source.getDimension().equals(destination.getDimension()));
 
-		return (int) (BASE_FLIGHT_TICKS + (distance / 10f) + (hasDirChanged ? convertSecondsToTicks(5) : 0) + (hasDimChanged ? convertSecondsToTicks(30) : 0));
+		return (int) (BASE_FLIGHT_TICKS + (distance / 10f) + (hasDirChanged ? 100 : 0) + (hasDimChanged ? 600 : 0));
 	}
 
 	public static AbsoluteBlockPos.Directed getPositionFromPercentage(AbsoluteBlockPos.Directed source, AbsoluteBlockPos.Directed destination, int percentage) {

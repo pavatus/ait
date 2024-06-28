@@ -12,6 +12,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
@@ -80,7 +81,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		if (directed == null)
 			return false;
 
-		return (tardis.travel2().getState() != TravelHandler.State.LANDED && tardis().travel2().getState() != TravelHandler.State.MAT)
+		return (tardis.travel2().getState() != TravelHandlerBase.State.LANDED && tardis().travel2().getState() != TravelHandlerBase.State.MAT)
 				&& !tardis.areShieldsActive() && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(
 				directed.getPos()
 		) instanceof DoorBlockEntity;
@@ -307,7 +308,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		if (tardis.getLockedTardis() == locked)
 			return true;
 
-		if (!forced && (tardis.travel2().getState() == TravelHandler.State.DEMAT || tardis.travel2().getState() == TravelHandler.State.MAT))
+		if (!forced && (tardis.travel2().getState() == TravelHandlerBase.State.DEMAT || tardis.travel2().getState() == TravelHandlerBase.State.MAT))
 			return false;
 
 		tardis.door().setLocked(locked);

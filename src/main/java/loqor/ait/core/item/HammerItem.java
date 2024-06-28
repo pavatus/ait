@@ -2,8 +2,8 @@ package loqor.ait.core.item;
 
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,7 +54,7 @@ public class HammerItem extends SwordItem {
 		if (player == null || tardis == null)
 			return ActionResult.PASS;
 
-		if (!(tardis.travel2().getState() == TravelHandler.State.FLIGHT)) {
+		if (!(tardis.travel2().getState() == TravelHandlerBase.State.FLIGHT)) {
 			world.playSound(null, consoleBlockEntity.getPos(),
 					SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS, 1f, 1.0f);
 			return ActionResult.SUCCESS;
@@ -75,7 +75,7 @@ public class HammerItem extends SwordItem {
 			estimated_fuel_cost_for_hit += (150 * tardis.travel2().speed().get() * tardis.tardisHammerAnnoyance) / 7.0;
 
 		if (!world.isClient() && current_fuel + estimated_fuel_cost_for_hit > max_fuel) {
-			//tardis.travel2().crash(); // TODO(travel): use proper travel method
+			tardis.travel2().crash();
 			tardis.fuel().setCurrentFuel(0.0);
 			return ActionResult.SUCCESS;
 		}
@@ -84,9 +84,8 @@ public class HammerItem extends SwordItem {
 		tardis.fuel().setCurrentFuel(current_fuel - estimated_fuel_cost_for_hit);
 		tardis.tardisHammerAnnoyance++;
 
-		// TODO(travel): use proper travel method
 		if (!world.isClient() && shouldCrashTardis(tardis.tardisHammerAnnoyance)) {
-			//tardis.travel2().crash();
+			tardis.travel2().crash();
 		} else {
 			world.playSound(null, consoleBlockEntity.getPos(),
 					SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.25f * tardis.tardisHammerAnnoyance, 1.0f);

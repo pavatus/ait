@@ -1,10 +1,10 @@
 package loqor.ait.tardis.data.travel;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.TardisCrashData;
-import loqor.ait.tardis.data.TravelHandler;
 import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
@@ -13,6 +13,7 @@ import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
 import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
@@ -49,11 +50,11 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     }
 
     private boolean isInFlight() {
-        return this.getState() == TravelHandler.State.FLIGHT || this.getState() == TravelHandler.State.MAT;
+        return this.getState() == State.FLIGHT || this.getState() == State.MAT;
     }
 
     private boolean isFlightTicking() {
-        return this.tardis().travel2().getState() == TravelHandler.State.FLIGHT && this.getTargetTicks() != 0;
+        return this.tardis().travel2().getState() == State.FLIGHT && this.getTargetTicks() != 0;
     }
 
     public boolean hasFinishedFlight() {
@@ -82,7 +83,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
 
     public int getDurationAsPercentage() {
         if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0) {
-            if (this.tardis().travel2().getState() == TravelHandler.State.DEMAT)
+            if (this.tardis().travel2().getState() == TravelHandlerBase.State.DEMAT)
                 return 0;
 
             return 100;
@@ -135,8 +136,34 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         return handbrake.get();
     }
 
-    public BoolValue autopilot() {
-        return autopilot;
+    public boolean autopilot() {
+        return autopilot.get();
+    }
+
+    public void autopilot(boolean value) {
+        int speed = this.speed.get();
+        int expectedSpeed = this.clampSpeed(speed);
+
+        if (expectedSpeed != speed)
+            this.speed(expectedSpeed);
+
+        this.autopilot.set(value);
+    }
+
+    public void increaseSpeed() {
+        this.speed(this.clampSpeed(this.speed.get()));
+    }
+
+    public void decreaseSpeed() {
+        if (this.getState() == State.LANDED && this.speed.get() == 1)
+            FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+
+        this.speed(this.clampSpeed(this.speed.get() - 1));
+    }
+
+    private int clampSpeed(int value) {
+        int max = this.autopilot() ? 1 : this.maxSpeed.get();
+        return MathHelper.clamp(value, 0, max);
     }
 
     @Override
@@ -149,7 +176,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         if (crash.getState() != TardisCrashData.State.NORMAL)
             crash.addRepairTicks(2 * travel.speed().get());
 
-        if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && travel.getState() == TravelHandler.State.LANDED)
+        if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && travel.getState() == TravelHandlerBase.State.LANDED)
             this.recalculate();
 
         this.triggerSequencingDuringFlight(tardis);
@@ -170,7 +197,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
 
         if (!this.autopilot.get()
                 && this.getDurationAsPercentage() < 100
-                && this.getState() == TravelHandler.State.FLIGHT
+                && this.getState() == TravelHandlerBase.State.FLIGHT
                 && !this.position().equals(this.destination())
                 && !sequences.hasActiveSequence()
                 && FlightUtil.getFlightDuration(this.position(), this.destination()) > 100

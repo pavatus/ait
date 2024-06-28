@@ -3,6 +3,7 @@ package loqor.ait.tardis.data;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.TntEntity;
@@ -40,9 +41,6 @@ public class HADSData extends TardisComponent implements TardisTickable {
 
 	// @TODO Fix hads idk why its broken. duzo did something to the demat idk what happened lol
 	public void tickingForDanger(World world) {
-		if (tardis.travel2().position().getPos() == null)
-			return;
-
 		List<Entity> listOfEntities = world.getOtherEntities(null,
 				new Box(tardis.travel2().position().getPos()).expand(3f),
 				EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
@@ -67,22 +65,22 @@ public class HADSData extends TardisComponent implements TardisTickable {
 		ServerTardis tardis = (ServerTardis) tardis();
 
 		TravelHandlerV2 travel = tardis.travel2();
-		TravelHandler.State state = travel.getState();
+		TravelHandlerBase.State state = travel.getState();
 
-		ServerAlarmHandler alarm = tardis.getHandlers().getAlarms();
+		ServerAlarmHandler alarm = tardis.alarm();
 
 		if (this.isInDanger()) {
-			if (state == TravelHandler.State.LANDED)
-				travel.dematerialize(); // TODO(travel): replace with a proper method
+			if (state == TravelHandlerBase.State.LANDED)
+				travel.dematerialize();
 
 			tardis.alarm().enable();
 			return;
 		}
 
-		if (state == TravelHandler.State.FLIGHT)
+		if (state == TravelHandlerBase.State.FLIGHT)
 			travel.rematerialize();
 
-		if (state == TravelHandler.State.MAT)
+		if (state == TravelHandlerBase.State.MAT)
 			alarm.disable();
 	}
 }

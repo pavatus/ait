@@ -31,7 +31,7 @@ import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.api.ClientModInitializer;
@@ -181,7 +181,7 @@ public class AITModClient implements ClientModInitializer {
                         if (exterior.getAnimation() == null)
                             return;
 
-                        exterior.getAnimation().setupAnimation(TravelHandler.State.values()[p]);
+                        exterior.getAnimation().setupAnimation(TravelHandlerBase.State.values()[p]);
                     });
                 }
         );
