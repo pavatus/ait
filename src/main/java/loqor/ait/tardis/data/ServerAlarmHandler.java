@@ -1,14 +1,11 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
-
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.server.MinecraftServer;
@@ -59,13 +56,13 @@ public class ServerAlarmHandler extends TardisComponent implements TardisTickabl
 		}
 
 		if (!tardis.getHandlers().getAlarms().isEnabled()) return;
-		if (tardis.travel().getState() == TravelHandler.State.FLIGHT) return;
+		if (tardis.travel2().getState() == TravelHandler.State.FLIGHT) return;
 
 		soundCounter++;
 
 		if (soundCounter >= CLOISTER_LENGTH_TICKS) {
 			soundCounter = 0;
-			tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
+			tardis.travel2().position().getWorld().playSound(null, tardis.travel2().position().getPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
 		}
 	}
 }

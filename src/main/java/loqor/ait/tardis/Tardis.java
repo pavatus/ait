@@ -88,10 +88,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return this.door().locked();
 	}
 
-	public TravelHandler travel() {
-		return this.handler(TardisComponent.Id.TRAVEL);
-	}
-
 	public TravelHandlerV2 travel2() {
 		return this.handler(TardisComponent.Id.TRAVEL2);
 	}
@@ -171,10 +167,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 	public PropertiesHolder properties() {
 		return this.handler(TardisComponent.Id.PROPERTIES);
-	}
-
-	public FlightData flight() {
-		return this.handler(TardisComponent.Id.FLIGHT);
 	}
 
 	public TardisCrashData crash() {

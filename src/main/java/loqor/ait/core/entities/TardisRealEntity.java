@@ -3,12 +3,13 @@ package loqor.ait.core.entities;
 import loqor.ait.core.AITDamageTypes;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.LinkableLivingEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
@@ -25,7 +26,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -80,7 +80,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 			return;
 
 		Tardis tardis = TardisManager.with(world, (o, manager) -> manager.demandTardis(o, tardisId));
-		TravelHandler travel = tardis.travel();
+		TravelHandlerV2 travel = tardis.travel2();
 
 		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardisId, (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
 
@@ -104,7 +104,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		if (this.getWorld().isClient())
 			this.lastVelocity = this.getVelocity();
 
-		boolean gravs = PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED);
+		boolean gravs = PropertiesHandler.getBool(this.getTardis().properties(), PropertiesHandler.ANTIGRAVS_ENABLED);
 		this.setRotation(0, 0);
 
 		super.tick();
@@ -114,7 +114,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 		PlayerEntity user = this.getPlayer().get();
 
-		boolean realFlight = PropertiesHandler.getBool(this.getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
+		boolean realFlight = PropertiesHandler.getBool(this.getTardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
 		user.startRiding(this);
 
 		if (realFlight) {
@@ -140,15 +140,16 @@ public class TardisRealEntity extends LinkableLivingEntity {
 						shouldTriggerLandSound = true;
 					}
 					if (user.isSneaking()) {
-						getTardis().travel().immediatelyLandAt(DirectedGlobalPos.Cached.create(
+						// TODO(travel): replace with proper travel method
+						/*getTardis().travel2().immediatelyLandAt(DirectedGlobalPos.Cached.create(
                                 (ServerWorld) this.getWorld(), this.getBlockPos(), (byte) DirectionControl.getGeneralizedRotation(
 										RotationPropertyHelper.fromYaw(user.getBodyYaw())))
-						);
+						);*/
 
-						if (getTardis().travel().getState() == TravelHandler.State.LANDED)
+						if (getTardis().travel2().getState() == TravelHandler.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
 
-						getTardis().travel().autoLand().set(false);
+						getTardis().travel2().autopilot().set(false);
 						user.dismountVehicle();
 					}
 				} else {
@@ -156,7 +157,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					user.getAbilities().allowFlying = true;
 				}
 			}
-		} else if (!getTardis().travel().inFlight()) {
+		} else if (getTardis().travel2().getState() == TravelHandlerBase.State.LANDED) {
 			if (user.getWorld().isClient() && MinecraftClient.getInstance().player == user) {
 				MinecraftClient client = MinecraftClient.getInstance();
 				client.options.setPerspective(Perspective.FIRST_PERSON);
@@ -173,7 +174,8 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				}
 				this.dataTracker.set(PLAYER_UUID, Optional.empty());
 
-				this.getTardis().travel().immediatelyLandAt(getTardis().travel().position());
+				// TODO(travel): replace with proper travel method
+				//this.getTardis().travel2().immediatelyLandAt(getTardis().travel2().position());
 				this.discard();
 			}
 		}

@@ -9,10 +9,10 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.ProgressiveTravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisChunkUtil;
@@ -29,7 +29,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Random;
 
-public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable {
+public class TravelHandlerV2 extends ProgressiveTravelHandler {
 
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
@@ -41,6 +41,7 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
 
     @Override
     public void tick(MinecraftServer server) {
+        super.tick(server);
         State state = this.getState();
 
         if (state.animated())
@@ -61,7 +62,7 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
     protected int speed(int value) {
         value = super.speed(value);
 
-        if (value > 0 && this.getState() == State.LANDED && !tardis.flight().handbrake() && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
+        if (value > 0 && this.getState() == State.LANDED && !tardis.travel2().handbrake() && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
             this.dematerialize();
 
         if (value != 0 || this.getState() != State.FLIGHT)
@@ -111,8 +112,7 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
 
         world.removeBlock(pos, false);
 
-        if (this.isServer())
-            ForcedChunkUtil.stopForceLoading(world, pos);
+        ForcedChunkUtil.stopForceLoading(world, pos);
     }
 
     public ExteriorBlockEntity placeAndAnimate() {
@@ -144,6 +144,7 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
         BiomeHandler biome = this.tardis.getHandlers().get(Id.BIOME);
         biome.update();
 
+        ForcedChunkUtil.keepChunkLoaded(world, pos);
         return exterior;
     }
 
@@ -191,6 +192,8 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
 
         if (PropertiesHandler.getBool(this.tardis().properties(), SecurityControl.SECURITY_KEY))
             SecurityControl.runSecurityProtocols(this.tardis());
+
+        this.startFlight();
     }
 
     public void cancelDemat() {
@@ -222,9 +225,10 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
 
     public void finishRemat() {
         this.state.set(State.LANDED);
+        this.resetFlight();
 
-        DoorData.lockTardis(PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.tardis(), null, false);
-        TardisEvents.LANDED.invoker().onLanded(tardis());
+        DoorData.lockTardis(PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.tardis, null, false);
+        TardisEvents.LANDED.invoker().onLanded(this.tardis);
     }
 
     public void initPos(DirectedGlobalPos.Cached cached) {
@@ -241,7 +245,7 @@ public class TravelHandlerV2 extends TravelHandlerBase implements TardisTickable
     }
 
     @Override
-    protected boolean checkDestination(int limit, boolean fullCheck) {
+    public boolean checkDestination(int limit, boolean fullCheck) {
         return false;
     }
 }

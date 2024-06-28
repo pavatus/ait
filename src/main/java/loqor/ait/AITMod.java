@@ -31,6 +31,7 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
@@ -142,37 +143,22 @@ public class AITMod implements ModInitializer {
 			TravelDebugCommand.register(dispatcher);
 		}));
 
+		// TODO(travel): move this to travelhandler
 		TardisEvents.LANDED.register((tardis -> {
 			// stuff for resetting the ExteriorAnimation
-			if (tardis.travel().position().getWorld().getBlockEntity(tardis.travel().position().getPos()) instanceof ExteriorBlockEntity entity) {
-				entity.getAnimation().setupAnimation(tardis.travel().getState());
+			if (tardis.travel2().position().getWorld().getBlockEntity(tardis.travel2().position().getPos()) instanceof ExteriorBlockEntity entity) {
+				entity.getAnimation().setupAnimation(tardis.travel2().getState());
 			}
 		}));
 
-		TardisEvents.DEMAT.register((tardis -> {
-			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()
-					|| tardis.travel().handbrake().get() || PropertiesHandler.getBool(
-							tardis.properties(), PropertiesHandler.IS_FALLING
-			) || tardis.isRefueling())
-				return true; // cancelled
-
-			if (tardis.door().isOpen())
-				return true;
-
-			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
-				TardisCriterions.TAKEOFF.trigger(player);
-			}
-
-			return false;
-		}));
-
+		// TODO(travel): move this to travelhandler
 		TardisEvents.MAT.register((tardis -> {
             // Check if the Tardis is on cooldown
 			boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
 
 			// Check if the destination is already occupied
-			boolean isDestinationOccupied = !tardis.travel().destination().getPos().equals(tardis.travel().position().getPos())
-					&& !tardis.travel().checkDestination(10, true);
+			boolean isDestinationOccupied = !tardis.travel2().destination().getPos().equals(tardis.travel2().position().getPos())
+					&& !tardis.travel2().checkDestination(10, true);
 
 			return isCooldown || isDestinationOccupied;
 		}));
@@ -195,7 +181,7 @@ public class AITMod implements ModInitializer {
 					return;
 
 				// nuh uh no interior changing during flight
-				if(tardis.travel().inFlight())
+				if (tardis.travel2().getState() != TravelHandlerBase.State.LANDED)
 					return;
 
 				tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).queueInteriorChange(desktop);

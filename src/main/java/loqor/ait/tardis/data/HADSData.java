@@ -35,16 +35,16 @@ public class HADSData extends TardisComponent implements TardisTickable {
 	@Override
 	public void tick(MinecraftServer server) {
 		if (isHADSActive())
-			tickingForDanger(tardis.travel().position().getWorld());
+			tickingForDanger(tardis.travel2().position().getWorld());
 	}
 
 	// @TODO Fix hads idk why its broken. duzo did something to the demat idk what happened lol
 	public void tickingForDanger(World world) {
-		if (tardis.travel().position().getPos() == null)
+		if (tardis.travel2().position().getPos() == null)
 			return;
 
 		List<Entity> listOfEntities = world.getOtherEntities(null,
-				new Box(tardis.travel().position().getPos()).expand(3f),
+				new Box(tardis.travel2().position().getPos()).expand(3f),
 				EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
 
 		for (Entity entity : listOfEntities) {
@@ -66,21 +66,21 @@ public class HADSData extends TardisComponent implements TardisTickable {
 	public void dematerialiseWhenInDanger() {
 		ServerTardis tardis = (ServerTardis) tardis();
 
-		TravelHandler travel = tardis.travel();
+		TravelHandlerV2 travel = tardis.travel2();
 		TravelHandler.State state = travel.getState();
 
 		ServerAlarmHandler alarm = tardis.getHandlers().getAlarms();
 
 		if (this.isInDanger()) {
 			if (state == TravelHandler.State.LANDED)
-				travel.dematerialize(false);
+				travel.dematerialize(); // TODO(travel): replace with a proper method
 
 			tardis.alarm().enable();
 			return;
 		}
 
 		if (state == TravelHandler.State.FLIGHT)
-			travel.materialise();
+			travel.rematerialize();
 
 		if (state == TravelHandler.State.MAT)
 			alarm.disable();

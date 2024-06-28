@@ -2,7 +2,7 @@ package loqor.ait.tardis.control.impl;
 
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.TravelHandlerV2;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -16,7 +16,7 @@ public class FastReturnControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-		TravelHandler travel = tardis.travel();
+		TravelHandlerV2 travel = tardis.travel2();
 
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
 			this.addToControlSequence(tardis, player, console);

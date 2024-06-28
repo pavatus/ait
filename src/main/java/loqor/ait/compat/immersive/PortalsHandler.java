@@ -66,7 +66,7 @@ public class PortalsHandler {
 
 		TardisPortal interior = createInteriorPortal(tardis);
 
-		if (tardis.travel().getState() == TravelHandler.State.LANDED) {
+		if (tardis.travel2().getState() == TravelHandler.State.LANDED) {
 			list.add(createExteriorPortal(tardis));
 		}
 
@@ -76,8 +76,8 @@ public class PortalsHandler {
 
 	private static TardisPortal createExteriorPortal(Tardis tardis) {
 		DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
-		DirectedGlobalPos.Cached exteriorPos = tardis.travel().getState() == TravelHandler.State.LANDED ? tardis.travel().position()
-				: FlightUtil.getPositionFromPercentage(tardis.travel().position(), tardis.travel().destination(), tardis.flight().getDurationAsPercentage());
+		DirectedGlobalPos.Cached exteriorPos = tardis.travel2().getState() == TravelHandler.State.LANDED ? tardis.travel2().position()
+				: FlightUtil.getPositionFromPercentage(tardis.travel2().position(), tardis.travel2().destination(), tardis.travel2().getDurationAsPercentage());
 
 		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
 		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
@@ -111,8 +111,8 @@ public class PortalsHandler {
 	// todo allow for multiple interior doors
 	private static TardisPortal createInteriorPortal(Tardis tardis) {
 		DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
-		DirectedGlobalPos.Cached exteriorPos = tardis.travel().getState() == TravelHandler.State.LANDED ? tardis.travel().position()
-				: FlightUtil.getPositionFromPercentage(tardis.travel().position(), tardis.travel().destination(), tardis.flight().getDurationAsPercentage());
+		DirectedGlobalPos.Cached exteriorPos = tardis.travel2().getState() == TravelHandler.State.LANDED ? tardis.travel2().position()
+				: FlightUtil.getPositionFromPercentage(tardis.travel2().position(), tardis.travel2().destination(), tardis.travel2().getDurationAsPercentage());
 
 		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
 		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);

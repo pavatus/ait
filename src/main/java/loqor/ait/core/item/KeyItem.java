@@ -4,7 +4,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableItem;
@@ -130,10 +130,10 @@ public class KeyItem extends LinkableItem {
 		if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HAIL_MARY))
 			return;
 
-		TravelHandler travel = tardis.travel();
+		TravelHandlerV2 travel = tardis.travel2();
 		KeyItem keyType = (KeyItem) stack.getItem().asItem();
 
-		if (tardis.travel().handbrake().get())
+		if (travel.handbrake())
 			return;
 
 		if (!keyType.hasProtocol(Protocols.HAIL))
@@ -149,13 +149,7 @@ public class KeyItem extends LinkableItem {
 				(ServerWorld) world, pos, (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw())
 		);
 
-		tardis.travel().destination(globalPos);
-
-		if (travel.getState() == TravelHandler.State.LANDED) {
-			travel.dematerialize(true);
-		} else if (travel.getState() == TravelHandler.State.FLIGHT) {
-			travel.materialise();
-		}
+		FlightUtil.travelTo(tardis, globalPos);
 
 		player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3));
 		player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 6 * 20, 3));

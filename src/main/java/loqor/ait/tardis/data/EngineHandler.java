@@ -13,6 +13,7 @@ import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.sound.SoundCategory;
@@ -103,9 +104,9 @@ public class EngineHandler extends KeyedTardisComponent {
     }
 
     private void updateExteriorState() {
-        TravelHandler travel = this.tardis.travel();
+        TravelHandlerV2 travel = this.tardis.travel2();
 
-        if (travel.inFlight())
+        if (travel.getState() != TravelHandlerBase.State.LANDED)
             return;
 
         DirectedGlobalPos.Cached pos = travel.position();

@@ -9,6 +9,8 @@ import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SkullBlock;
@@ -68,14 +70,14 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		matrices.scale(0.005f, 0.005f, 0.005f);
 		matrices.translate(-50f, 0, -80);
 
-		TravelHandler travel = tardis.travel();
-		DirectedGlobalPos.Cached abpp = travel.inFlight() ? FlightUtil.getPositionFromPercentage(
-				travel.position(), travel.destination(), tardis.flight().getDurationAsPercentage()
+		TravelHandlerV2 travel = tardis.travel2();
+		DirectedGlobalPos.Cached abpp = travel.getState() != TravelHandlerBase.State.LANDED ? FlightUtil.getPositionFromPercentage(
+				travel.position(), travel.destination(), tardis.travel2().getDurationAsPercentage()
 		) : travel.position();
 
 		BlockPos abppPos = abpp.getPos();
 
-		DirectedGlobalPos.Cached abpd = tardis.travel().destination();
+		DirectedGlobalPos.Cached abpd = tardis.travel2().destination();
 		BlockPos abpdPos = abpd.getPos();
 
 		String positionPosText = " " + abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
@@ -100,7 +102,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		this.textRenderer.drawWithOutline(Text.of("⛽").asOrderedText(), 0, 78, 0xFAF000, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(fuelText).asOrderedText(), 8, 78, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
-		String flightTimeText = tardis.travel().getState() == TravelHandler.State.LANDED ? "0%" : tardis.flight().getDurationAsPercentage() + "%";
+		String flightTimeText = tardis.travel2().getState() == TravelHandler.State.LANDED ? "0%" : tardis.travel2().getDurationAsPercentage() + "%";
 		this.textRenderer.drawWithOutline(Text.of("⏳").asOrderedText(), 0, 92, 0x00FF0F, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(flightTimeText).asOrderedText(), 8, 92, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 

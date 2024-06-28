@@ -4,6 +4,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.TravelHandlerV2;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -22,7 +23,7 @@ public class ThrottleControl extends Control {
 		if (tardis.isInDanger())
 			return false;
 
-		TravelHandler travel = tardis.travel();
+		TravelHandlerV2 travel = tardis.travel2();
 
 		if (!leftClick) {
 			if (player.isSneaking()) {

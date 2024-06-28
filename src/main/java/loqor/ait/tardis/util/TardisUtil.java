@@ -146,13 +146,13 @@ public class TardisUtil {
 
 						tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
 						WorldOps.updateIfOnServer(server.getWorld(tardis
-										.travel().position().getWorld().getRegistryKey()),
-								tardis.travel().position().getPos());
+										.travel2().position().getWorld().getRegistryKey()),
+								tardis.travel2().position().getPos());
 						if (variantChange) {
 							tardis.getExterior().setVariant(schema);
 							WorldOps.updateIfOnServer(server.getWorld(tardis
-											.travel().position().getWorld().getRegistryKey()),
-									tardis.travel().position().getPos());
+											.travel2().position().getWorld().getRegistryKey()),
+									tardis.travel2().position().getPos());
 						}
 					});
 				}
@@ -186,9 +186,9 @@ public class TardisUtil {
 						}
 
 						BlockPos pos = player.getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()
-								? tardis.getDesktop().doorPos().getPos() : tardis.travel().position().getPos();
+								? tardis.getDesktop().doorPos().getPos() : tardis.travel2().position().getPos();
 
-						if ((player.squaredDistanceTo(tardis.travel().position().getPos().getX(), tardis.travel().position().getPos().getY(), tardis.travel().position().getPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
+						if ((player.squaredDistanceTo(tardis.travel2().position().getPos().getX(), tardis.travel2().position().getPos().getY(), tardis.travel2().position().getPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
 							if (!player.isSneaking()) {
 								// annoying bad code
 
@@ -222,7 +222,7 @@ public class TardisUtil {
 							return;
 						}
 
-						tardis.travel().forceDestination(DirectedGlobalPos.Cached.create(
+						tardis.travel2().forceDestination(DirectedGlobalPos.Cached.create(
                                 (ServerWorld) serverPlayer.getWorld(), serverPlayer.getBlockPos(),
                                 (byte) RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())
                         ));
@@ -288,7 +288,7 @@ public class TardisUtil {
 	}
 
 	public static ExteriorBlockEntity getExterior(Tardis tardis) {
-		DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+		DirectedGlobalPos.Cached globalPos = tardis.travel2().position();
 
 		if (!(globalPos.getWorld().getBlockEntity(globalPos.getPos()) instanceof ExteriorBlockEntity exterior))
 			return null;
@@ -370,18 +370,18 @@ public class TardisUtil {
 
 	public static void teleportOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
-		TardisUtil.teleportWithDoorOffset(tardis.travel().position().getWorld(), entity, tardis.travel().position().toPos());
+		TardisUtil.teleportWithDoorOffset(tardis.travel2().position().getWorld(), entity, tardis.travel2().position().toPos());
 	}
 
 	public static void dropOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
 
 		DirectedGlobalPos.Cached percentageOfDestination = FlightUtil.getPositionFromPercentage(
-				tardis.travel().position(), tardis.travel().destination(),
-				tardis.flight().getDurationAsPercentage()
+				tardis.travel2().position(), tardis.travel2().destination(),
+				tardis.travel2().getDurationAsPercentage()
 		);
 
-		TardisUtil.teleportWithDoorOffset(tardis.travel().destination().getWorld(), entity, percentageOfDestination.toPos());
+		TardisUtil.teleportWithDoorOffset(tardis.travel2().destination().getWorld(), entity, percentageOfDestination.toPos());
 	}
 
 	public static void teleportInside(Tardis tardis, Entity entity) {
@@ -454,7 +454,7 @@ public class TardisUtil {
 	}
 
 	public static Tardis findTardisByPosition(AbsoluteBlockPos pos, TardisManager<?, ?> manager) {
-		Tardis result = manager.find(tardis -> tardis.travel().position().getPos().equals(pos));
+		Tardis result = manager.find(tardis -> tardis.travel2().position().getPos().equals(pos));
 
 		if (result == null && manager instanceof ClientTardisManager client)
 			client.askTardis(pos);

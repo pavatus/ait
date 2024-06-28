@@ -17,6 +17,7 @@ import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.exterior.category.BoothCategory;
 import loqor.ait.tardis.exterior.category.ClassicCategory;
 import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
@@ -240,7 +241,7 @@ public class MonitorScreen extends ConsoleScreen {
 			context.drawTexture(TEXTURE, i + 3 + (8 * p), j + 131, 99, 150, 7, 11);
 		}
 
-		int progress = tardis().flight().getDurationAsPercentage();
+		int progress = tardis().travel2().getDurationAsPercentage();
 
 		for (int index = 0; index < 5; index++) {
 			int rangeStart = index * 20;
@@ -256,7 +257,7 @@ public class MonitorScreen extends ConsoleScreen {
 			}
 
 			context.drawTexture(TEXTURE, i + 101 + index * 18, j + 78,
-					this.tardis().travel().getState() == TravelHandler.State.FLIGHT
+					this.tardis().travel2().getState() == TravelHandler.State.FLIGHT
 							? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17
 			);
 		}
@@ -327,14 +328,11 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	protected void drawInformationText(DrawContext context) {
-		int i = ((this.height - this.backgroundHeight) / 2); // loqor make sure to use these so it stays consistent on different sized screens (kind of ??)
-		int j = ((this.width - this.backgroundWidth) / 2);
-
-		if (getFromUUID(tardisId) == null)
+        if (getFromUUID(tardisId) == null)
 			return;
 
-		TravelHandler travel = getFromUUID(tardisId).travel();
-        DirectedGlobalPos abpd = travel.getState() == TravelHandler.State.FLIGHT ? FlightUtil.getPositionFromPercentage(travel.position(), travel.destination(), getFromUUID(tardisId).flight().getDurationAsPercentage()) : travel.position();
+		TravelHandlerV2 travel = this.tardis().travel2();
+        DirectedGlobalPos abpd = travel.getState() == TravelHandler.State.FLIGHT ? FlightUtil.getPositionFromPercentage(travel.position(), travel.destination(), getFromUUID(tardisId).travel2().getDurationAsPercentage()) : travel.position();
 		DirectedGlobalPos dabpd = travel.destination();
 
         if (abpd.getDimension() == null)

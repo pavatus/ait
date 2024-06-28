@@ -14,9 +14,9 @@ public class ClientShakeUtil {
 
 	public static boolean shouldShake(Tardis tardis) {
 		return Objects.equals(ClientTardisUtil.getCurrentTardis(), tardis)
-				&& tardis.travel().getState() != TravelHandler.State.LANDED
+				&& tardis.travel2().getState() != TravelHandler.State.LANDED
 				&& ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE
-				&& !tardis.travel().autoLand().get();
+				&& !tardis.travel2().autopilot().get();
 	}
 
 	/**

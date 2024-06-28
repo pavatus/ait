@@ -13,7 +13,7 @@ import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.FlightUtil;
@@ -311,7 +311,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		Tardis tardis = LinkableItem.getTardis(world, stack);
 
 		if (tardis != null)
-			position = tardis.travel() == null || tardis.travel().position().getPos() == null ? "In Flight..." : tardis.travel().position().getPos().toShortString();
+			position = tardis.travel2() == null || tardis.travel2().position().getPos() == null ? "In Flight..." : tardis.travel2().position().getPos().toShortString();
 
 		tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
 
@@ -441,7 +441,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 				world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
-				TravelHandler travel = tardis.travel();
+				TravelHandlerV2 travel = tardis.travel2();
 
 				DirectedGlobalPos.Cached target = DirectedGlobalPos.Cached.create(world, pos, (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 

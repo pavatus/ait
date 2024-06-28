@@ -2,6 +2,7 @@ package loqor.ait.tardis.control.impl;
 
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -26,7 +27,7 @@ public class RefuelerControl extends Control {
 			return false;
 		}
 
-		if (tardis.travel().handbrake().get()) {
+		if (tardis.travel2().getState() == TravelHandlerBase.State.LANDED) {
 			tardis.setRefueling(!tardis.isRefueling());
 
 			if (tardis.isRefueling())

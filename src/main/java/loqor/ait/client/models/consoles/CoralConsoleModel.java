@@ -1389,7 +1389,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Throttle
 		ModelPart throttle = controls.getChild("p_ctrl_5").getChild("bone49").getChild("lever3").getChild("bone52");
-		throttle.roll = throttle.roll + (tardis.travel().speed().get() / (float) tardis.travel().maxSpeed().get());
+		throttle.roll = throttle.roll + (tardis.travel2().speed().get() / (float) tardis.travel2().maxSpeed().get());
 
 		// Increment
 		ModelPart increment = controls.getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("crank2");
@@ -1406,7 +1406,9 @@ public class CoralConsoleModel extends ConsoleModel {
 		controls.getChild("ctrl_1").getChild("bone13").getChild("insert").getChild("bone96").visible = tardis.<WaypointHandler>handler(TardisComponent.Id.WAYPOINTS).hasCartridge();
 
 		// Handbrake
-		controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw = !tardis.travel().handbrake().get() ? controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw : controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw + 0.75f;
+		controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw = !tardis.travel2().handbrake()
+				? controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw
+				: controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw + 0.75f;
 
 		// Siege Mode
 		ModelPart siege = controls.getChild("p_ctrl_3").getChild("bone36").getChild("handbrake");
@@ -1418,7 +1420,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Autopilot
 		ModelPart autopilot = controls.getChild("ctrl_4").getChild("bone15").getChild("switch24").getChild("bone19");
-		autopilot.pivotY = tardis.travel().autoLand().get() ? autopilot.pivotY + 1 : autopilot.pivotY;
+		autopilot.pivotY = tardis.travel2().autopilot().get() ? autopilot.pivotY + 1 : autopilot.pivotY;
 
 		ModelPart security = controls.getChild("ctrl_4").getChild("bone15").getChild("switch25").getChild("bone20");
 		security.pivotY = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? security.pivotY + 1 : security.pivotY;

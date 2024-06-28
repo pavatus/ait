@@ -158,7 +158,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (tardis.siege().isActive())
 			return SIEGE_SHAPE;
 
-		TravelHandler.State travelState = tardis.travel().getState();
+		TravelHandler.State travelState = tardis.travel2().getState();
 
 		if (travelState == TravelHandler.State.LANDED || exterior.getAlpha() > 0.75)
 			return normal;
@@ -204,7 +204,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 			if (tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
 				return getLedgeShape(state);
 
-		TravelHandler.State travelState = tardis.travel().getState();
+		TravelHandler.State travelState = tardis.travel2().getState();
 
 		if (travelState == TravelHandler.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
 			return getNormalShape(state);
@@ -257,7 +257,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (!(blockEntity instanceof ExteriorBlockEntity exterior) || exterior.tardis().isEmpty())
 			return getNormalShape(state);
 
-		TravelHandler.State travelState = exterior.tardis().get().travel().getState();
+		TravelHandler.State travelState = exterior.tardis().get().travel2().getState();
 
 		if (travelState == TravelHandler.State.LANDED || exterior.getAlpha() > 0.75)
 			return getNormalShape(state);
@@ -348,7 +348,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (antigravs)
 			return;
 
-		if (tardis.travel().getState() != TravelHandler.State.LANDED)
+		if (tardis.travel2().getState() != TravelHandler.State.LANDED)
 			return;
 
 		if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))
@@ -396,7 +396,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (tardis == null)
 			return;
 
-		tardis.travel().forcePosition(cached -> cached.world(world.getRegistryKey()).pos(pos));
+		tardis.travel2().forcePosition(cached -> cached.world(world.getRegistryKey()).pos(pos));
 
 		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();

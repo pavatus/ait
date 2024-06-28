@@ -150,11 +150,6 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 	}
 
 	@Deprecated
-	public FlightData getFlight() {
-		return this.tardis().flight();
-	}
-
-	@Deprecated
 	public FuelData getFuel() {
 		return this.tardis().fuel();
 	}

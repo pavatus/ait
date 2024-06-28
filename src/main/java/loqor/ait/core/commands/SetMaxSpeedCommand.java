@@ -30,7 +30,7 @@ public class SetMaxSpeedCommand {
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 		int speed = IntegerArgumentType.getInteger(context, "speed");
 
-		tardis.travel().maxSpeed().set(speed);
+		tardis.travel2().maxSpeed().set(speed);
 		return Command.SINGLE_SUCCESS;
 	}
 }

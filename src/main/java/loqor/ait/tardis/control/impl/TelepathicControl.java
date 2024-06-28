@@ -72,7 +72,7 @@ public class TelepathicControl extends Control {
 		Text text = Text.literal("The TARDIS is choosing.."); // todo translatable
 		player.sendMessage(text, true);
 
-		DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+		DirectedGlobalPos.Cached globalPos = tardis.travel2().position();
 
 		BlockPos found = locateStructureOfInterest(globalPos.getWorld(), globalPos.getPos());
 		text = Text.literal("The TARDIS chose where to go.."); // todo translatable
@@ -80,7 +80,7 @@ public class TelepathicControl extends Control {
 		if (found == null) {
 			text = Text.literal("The TARDIS is happy where it is"); // todo translatable
 		} else {
-			tardis.travel().destination(cached -> cached.pos(found.withY(75)));
+			tardis.travel2().destination(cached -> cached.pos(found.withY(75)));
 			tardis.removeFuel(500 * (tardis.tardisHammerAnnoyance + 1));
 		}
 

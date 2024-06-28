@@ -66,7 +66,7 @@ public class TardisTravel extends TardisComponent {
 	private static final Random random = new Random();
 
 	public TardisTravel(AbsoluteBlockPos.Directed pos) {
-		super(Id.TRAVEL);
+		super(Id.TRAVEL2);
 		this.position = pos;
 
 		if (this.lastPosition == null)
@@ -81,7 +81,7 @@ public class TardisTravel extends TardisComponent {
 
 	static {
 		TardisEvents.LOSE_POWER.register(tardis ->
-				tardis.travel().autoLand().set(false));
+				tardis.travel2().autopilot().set(false));
 	}
 
 	public boolean isCrashing() {
@@ -109,11 +109,11 @@ public class TardisTravel extends TardisComponent {
 		this.tickMat();
 
 		ServerTardis tardis = (ServerTardis) this.tardis();
-		int speed = this.tardis.travel().speed().get();
+		int speed = this.tardis.travel2().speed().get();
 		State state = this.getState();
 
-		boolean handbrake = tardis.travel().handbrake().get();
-		boolean autopilot = tardis.travel().autoLand().get();
+		boolean handbrake = tardis.travel2().handbrake();
+		boolean autopilot = tardis.travel2().autopilot().get();
 
 		if (speed > 0 && state == State.LANDED && !handbrake && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
 			this.dematerialise(autopilot);
@@ -141,24 +141,24 @@ public class TardisTravel extends TardisComponent {
 
 		// Should we just disable autopilot if the speed goes above 1?
 		if (speed > 1 && state == State.FLIGHT && autopilot) {
-			this.tardis.travel().speed().set(speed - 1);
+			this.tardis.travel2().speed().set(speed - 1);
 		}
 	}
 
 	public void increaseSpeed() {
 		// Stop speed from going above 1 if autopilot is enabled, and we're in flight
-		if (this.tardis.travel().speed().get() > 0 && this.getState() == State.FLIGHT && tardis.travel().autoLand().get()) {
+		if (this.tardis.travel2().speed().get() > 0 && this.getState() == State.FLIGHT && tardis.travel2().autopilot().get()) {
 			return;
 		}
 
-		this.tardis.travel().speed().set(MathHelper.clamp(this.tardis.travel().speed().get() + 1, 0, this.tardis.travel().maxSpeed().get()));
+		this.tardis.travel2().speed().set(MathHelper.clamp(this.tardis.travel2().speed().get() + 1, 0, this.tardis.travel2().maxSpeed().get()));
 	}
 
 	public void decreaseSpeed() {
-		if (this.getState() == State.LANDED && this.tardis.travel().speed().get() == 1)
+		if (this.getState() == State.LANDED && this.tardis.travel2().speed().get() == 1)
 			FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
 
-		this.tardis.travel().speed().set(MathHelper.clamp(this.tardis.travel().speed().get() - 1, 0, this.tardis.travel().maxSpeed().get()));
+		this.tardis.travel2().speed().set(MathHelper.clamp(this.tardis.travel2().speed().get() - 1, 0, this.tardis.travel2().maxSpeed().get()));
 	}
 
 	public boolean inFlight() {
@@ -215,7 +215,7 @@ public class TardisTravel extends TardisComponent {
 
 		setDematTicks(getDematTicks() + 1);
 
-		if (tardis.travel().handbrake().get()) {
+		if (tardis.travel2().handbrake()) {
 			// cancel materialise
 			this.cancelDemat();
 			return;
@@ -257,7 +257,7 @@ public class TardisTravel extends TardisComponent {
 			return;
 
 		Tardis tardis = tardis();
-		int crash_intensity = this.tardis.travel().speed().get() + tardis.tardisHammerAnnoyance + 1;
+		int crash_intensity = this.tardis.travel2().speed().get() + tardis.tardisHammerAnnoyance + 1;
 
 		List<Explosion> explosions = new ArrayList<>();
 
@@ -307,13 +307,13 @@ public class TardisTravel extends TardisComponent {
 		tardis.door().setLocked(true);
 		PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
 		PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
-		this.tardis.travel().speed().set(0);
+		this.tardis.travel2().speed().set(0);
 		tardis.removeFuel(500 * crash_intensity);
 		tardis.tardisHammerAnnoyance = 0;
 		int random_int = random.nextInt(0, 2);
 		int up_or_down = random_int == 0 ? 1 : -1;
 		int random_change = random.nextInt(10, 100) * crash_intensity * up_or_down;
-		AbsoluteBlockPos.Directed percentageOfDestination = FlightUtil.getPositionFromPercentage(this.position, this.destination, tardis.flight().getDurationAsPercentage());
+		AbsoluteBlockPos.Directed percentageOfDestination = FlightUtil.getPositionFromPercentage(this.position, this.destination, tardis.travel2().getDurationAsPercentage());
 		int new_x = percentageOfDestination.getX() + random_change;
 		int new_y = percentageOfDestination.getY();
 		int new_z = percentageOfDestination.getZ() + random_change;
@@ -399,7 +399,7 @@ public class TardisTravel extends TardisComponent {
 		// PropertiesHandler.setAutoPilot(this.getTardis().get().properties(), false);
 
 		this.setDestination(FlightUtil.getPositionFromPercentage(this.position, this.destination,
-				tardis.flight().getDurationAsPercentage()), true);
+				tardis.travel2().getDurationAsPercentage()), true);
 
 		// Check if materialization is on cooldown and return if it is
 		if (!ignoreChecks && FlightUtil.isMaterialiseOnCooldown(tardis)) {
@@ -473,18 +473,18 @@ public class TardisTravel extends TardisComponent {
 		if (FlightUtil.isDematerialiseOnCooldown(tardis()))
 			return; // cancelled
 
-		if (tardis.travel().autoLand().get()) {
+		if (tardis.travel2().autopilot().get()) {
 			// fulfill all the prerequisites
 			// DoorData.lockTardis(true, tardis(), null, false);
-			tardis.travel().handbrake().set(false);
+			tardis.travel2().handbrake(false);
 			this.tardis.door().closeDoors();
 			this.tardis.setRefueling(false);
 
-			if (this.tardis.travel().speed().get() == 0)
+			if (this.tardis.travel2().speed().get() == 0)
 				this.increaseSpeed();
 		}
 
-		tardis.travel().autoLand().set(withRemat);
+		tardis.travel2().autopilot().set(withRemat);
 		ServerWorld world = (ServerWorld) this.getPosition().getWorld();
 
 		if (!ignoreChecks && TardisEvents.DEMAT.invoker().onDemat(tardis())) {
@@ -625,8 +625,8 @@ public class TardisTravel extends TardisComponent {
 	}
 
 	public void forceLand(@Nullable ExteriorBlockEntity blockEntity) {
-		if (tardis.travel().autoLand().get() && this.tardis.travel().speed().get() > 0) {
-			this.tardis.travel().speed().set(0);
+		if (tardis.travel2().autopilot().get() && this.tardis.travel2().speed().get() > 0) {
+			this.tardis.travel2().speed().set(0);
 		}
 
 		this.setState(TardisTravel.State.LANDED);
@@ -697,7 +697,7 @@ public class TardisTravel extends TardisComponent {
 		this.destination = border.contains(this.destination)
 				? pos : new AbsoluteBlockPos.Directed(border.clamp(pos.getX(), pos.getY(), pos.getZ()),
 				pos.getDimension(), pos.getRotation());
-		this.tardis().flight().recalculate();
+		this.tardis().travel2().recalculate();
 
 		if (withChecks)
 			this.checkDestination(CHECK_LIMIT, PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.FIND_GROUND));
@@ -718,7 +718,7 @@ public class TardisTravel extends TardisComponent {
 
 		AbsoluteBlockPos.Directed pos = FlightUtil.getPositionFromPercentage(
 				source, this.getDestination(),
-				this.tardis().flight()
+				this.tardis().travel2()
 						.getDurationAsPercentage()
 		);
 

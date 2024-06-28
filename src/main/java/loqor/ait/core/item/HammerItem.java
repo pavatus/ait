@@ -2,8 +2,8 @@ package loqor.ait.core.item;
 
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.FlightData;
 import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.TravelHandlerV2;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,16 +54,16 @@ public class HammerItem extends SwordItem {
 		if (player == null || tardis == null)
 			return ActionResult.PASS;
 
-		if (!(tardis.travel().getState() == TravelHandler.State.FLIGHT)) {
+		if (!(tardis.travel2().getState() == TravelHandler.State.FLIGHT)) {
 			world.playSound(null, consoleBlockEntity.getPos(),
 					SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS, 1f, 1.0f);
 			return ActionResult.SUCCESS;
 		}
 
-		FlightData flightData = tardis.flight();
+		TravelHandlerV2 flightData = tardis.travel2();
 		int targetTicks = flightData.getTargetTicks();
 		int current_flight_ticks = flightData.getFlightTicks();
-		int added_flight_ticks = 500 * tardis.travel().speed().get();
+		int added_flight_ticks = 500 * tardis.travel2().speed().get();
 		double current_fuel = tardis.fuel().getCurrentFuel();
 		double max_fuel = tardis.fuel().getMaxFuel();
 
@@ -72,10 +72,10 @@ public class HammerItem extends SwordItem {
 
 		double estimated_fuel_cost_for_hit = added_flight_ticks / 5.0;
 		if (tardis.tardisHammerAnnoyance > 0)
-			estimated_fuel_cost_for_hit += (150 * tardis.travel().speed().get() * tardis.tardisHammerAnnoyance) / 7.0;
+			estimated_fuel_cost_for_hit += (150 * tardis.travel2().speed().get() * tardis.tardisHammerAnnoyance) / 7.0;
 
 		if (!world.isClient() && current_fuel + estimated_fuel_cost_for_hit > max_fuel) {
-			tardis.travel().crash();
+			//tardis.travel2().crash(); // TODO(travel): use proper travel method
 			tardis.fuel().setCurrentFuel(0.0);
 			return ActionResult.SUCCESS;
 		}
@@ -84,8 +84,9 @@ public class HammerItem extends SwordItem {
 		tardis.fuel().setCurrentFuel(current_fuel - estimated_fuel_cost_for_hit);
 		tardis.tardisHammerAnnoyance++;
 
+		// TODO(travel): use proper travel method
 		if (!world.isClient() && shouldCrashTardis(tardis.tardisHammerAnnoyance)) {
-			tardis.travel().crash();
+			//tardis.travel2().crash();
 		} else {
 			world.playSound(null, consoleBlockEntity.getPos(),
 					SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.25f * tardis.tardisHammerAnnoyance, 1.0f);

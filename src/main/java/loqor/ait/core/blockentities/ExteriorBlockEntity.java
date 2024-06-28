@@ -130,8 +130,8 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 		}
 
-		if ((tardis.travel().getState() == TravelHandler.State.LANDED
-				|| tardis.travel().getState() == TravelHandler.State.CRASH)) {
+		if ((tardis.travel2().getState() == TravelHandler.State.LANDED
+				|| tardis.travel2().getState() == TravelHandler.State.CRASH)) {
 			DoorData.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
 		}
 	}
@@ -145,7 +145,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		Tardis tardis = ref.get();
 		boolean previouslyLocked = tardis.door().previouslyLocked();
 
-		if (!previouslyLocked && tardis.travel().getState() == TravelHandler.State.MAT && this.getAlpha() >= 0.9f)
+		if (!previouslyLocked && tardis.travel2().getState() == TravelHandler.State.MAT && this.getAlpha() >= 0.9f)
 			TardisUtil.teleportInside(tardis, entity);
 
 		if (!tardis.door().isOpen())
@@ -186,10 +186,10 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		Tardis tardis = ref.get();
 
 		this.animation = tardis.getExterior().getVariant().animation(this);
-		this.animation.setupAnimation(tardis.travel().getState());
+		this.animation.setupAnimation(tardis.travel2().getState());
 
 		if (this.getWorld() != null && !this.getWorld().isClient()) {
-			this.animation.tellClientsToSetup(tardis.travel().getState());
+			this.animation.tellClientsToSetup(tardis.travel2().getState());
 		}
 	}
 

@@ -8,7 +8,7 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
@@ -196,7 +196,7 @@ public class FallingTardisEntity extends Entity {
 			if (blockPos == null)
 				return;
 
-			tardis.travel().forcePosition(cached -> cached.pos(blockPos)
+			tardis.travel2().forcePosition(cached -> cached.pos(blockPos)
 					.world(this.getWorld().getRegistryKey()));
 
 			if (this.isOnGround()) {
@@ -205,7 +205,7 @@ public class FallingTardisEntity extends Entity {
 			}
 		}
 
-		this.setVelocity(this.getVelocity().multiply(tardis.travel().isCrashing() ? 1.05f : 0.98f));
+		this.setVelocity(this.getVelocity().multiply(tardis.travel2().isCrashing() ? 1.05f : 0.98f));
 
 		if (this.getY() <= (double) this.getWorld().getBottomY() + 2)
 			this.tickInVoid();
@@ -216,7 +216,7 @@ public class FallingTardisEntity extends Entity {
 			PropertiesHandler.set(this.getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
 
 		Tardis tardis = this.getTardis();
-		TravelHandler travel = tardis.travel();
+		TravelHandlerV2 travel = tardis.travel2();
 
 		Block block = this.block.getBlock();
 		BlockPos blockPos = this.getBlockPos();
@@ -253,7 +253,7 @@ public class FallingTardisEntity extends Entity {
 		if (block instanceof ExteriorBlock exterior)
 			exterior.onLanding(tardis, this.getWorld(), blockPos);
 
-		travel.placeExterior();
+		travel.placeExterior(false);
 		this.discard();
 	}
 

@@ -840,15 +840,15 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPart throttle = this.toyota.getChild("panel4").getChild("controls4").getChild("throttle");
 		ModelPart throttleLights = this.toyota.getChild("panel4").getChild("flightlights").getChild("flightlights2");
 
-		throttle.pitch = throttle.pitch + ((tardis.travel().speed().get() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
-		throttleLights.pivotY = !(tardis.travel().speed().get() > 0) ? throttleLights.pivotY + 1 : throttleLights.pivotY;
+		throttle.pitch = throttle.pitch + ((tardis.travel2().speed().get() / (float) tardis.travel2().maxSpeed().get()) * 1.5f);
+		throttleLights.pivotY = !(tardis.travel2().speed().get() > 0) ? throttleLights.pivotY + 1 : throttleLights.pivotY;
 
 		//Handbrake Control and Lights
 		ModelPart handbrake = this.toyota.getChild("panel4").getChild("controls4").getChild("handbrake").getChild("pivot");
-		handbrake.yaw = !tardis.travel().handbrake().get() ? handbrake.yaw - 1.57f : handbrake.yaw;
+		handbrake.yaw = !tardis.travel2().handbrake() ? handbrake.yaw - 1.57f : handbrake.yaw;
 		ModelPart handbrakeLights = this.toyota.getChild("panel4").getChild("flightlights").getChild("handbrakelights").getChild("handbrakelights2");
 
-		handbrakeLights.pivotY = !tardis.travel().handbrake().get() ? handbrakeLights.pivotY + 1 : handbrakeLights.pivotY;
+		handbrakeLights.pivotY = !tardis.travel2().handbrake() ? handbrakeLights.pivotY + 1 : handbrakeLights.pivotY;
 
 		// @TODO MONSTER THE ONE ON THE LEFT IS THE POWER NOT THE RIGHT SMH
 		//Power Switch and Lights
@@ -885,8 +885,8 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPart autopilot = this.toyota.getChild("panel4").getChild("controls4").getChild("tinyswitch2");
 		ModelPart autopilotLight = this.toyota.getChild("panel4").getChild("yellow4");
 
-		autopilot.pitch = tardis.travel().autoLand().get() ? autopilot.pitch + 1f : autopilot.pitch - 1f;
-		autopilotLight.pivotY = tardis.travel().autoLand().get() ? autopilotLight.pivotY : autopilotLight.pivotY + 1;
+		autopilot.pitch = tardis.travel2().autopilot().get() ? autopilot.pitch + 1f : autopilot.pitch - 1f;
+		autopilotLight.pivotY = tardis.travel2().autopilot().get() ? autopilotLight.pivotY : autopilotLight.pivotY + 1;
 
 		// Siege Mode Control
 		ModelPart siegeMode = this.toyota.getChild("panel2").getChild("controls3").getChild("siegemode").getChild("siegemodehandle");
@@ -909,7 +909,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		// Direction Control
 		ModelPart direction = this.toyota.getChild("panel6").getChild("controls2").getChild("smallnob2");
-		direction.pitch = direction.pitch + tardis.travel().destination().getRotation();
+		direction.pitch = direction.pitch + tardis.travel2().destination().getRotation();
 
 		// Increment Control
 		ModelPart increment = this.toyota.getChild("panel2").getChild("controls3").getChild("gears").getChild("largegear2");

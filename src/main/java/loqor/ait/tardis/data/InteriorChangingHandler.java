@@ -1,6 +1,8 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
@@ -11,6 +13,7 @@ import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -23,6 +26,25 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 
 	public InteriorChangingHandler() {
 		super(Id.INTERIOR);
+	}
+
+	static {
+		TardisEvents.DEMAT.register((tardis -> {
+			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()
+					|| tardis.travel2().handbrake() || PropertiesHandler.getBool(
+					tardis.properties(), PropertiesHandler.IS_FALLING
+			) || tardis.isRefueling())
+				return true; // cancelled
+
+			if (tardis.door().isOpen())
+				return true;
+
+			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+				TardisCriterions.TAKEOFF.trigger(player);
+			}
+
+			return false;
+		}));
 	}
 
 	private void setGenerating(boolean var) {
@@ -90,12 +112,13 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		tardis.engine().hasEngineCore().set(false);
 
 		if (tardis.hasGrowthExterior()) {
-			TravelHandler travel = tardis.travel();
+			TravelHandlerV2 travel = tardis.travel2();
 
-			travel.handbrake().set(false);
-			travel.autoLand().set(true);
+			travel.handbrake(false);
+			travel.autopilot().set(true);
 
-			travel.forceDematerialize(true);
+			// TODO(travel) replace with proper demat method
+			travel.dematerialize();
 		}
 	}
 
@@ -119,10 +142,11 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + this.tardis().getUuid().toString()))
 			return;
 
-		TravelHandler travel = this.tardis().travel();
+		TravelHandlerV2 travel = this.tardis().travel2();
 
-		if (travel.getState() == TravelHandler.State.FLIGHT)
-			travel.crash();
+		// TODO(travel): move this to travelhandler
+		//if (travel.getState() == TravelHandler.State.FLIGHT)
+		//	travel.crash();
 
 		if (this.isGenerating()) {
 			if (!this.tardis().alarm().isEnabled())

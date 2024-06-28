@@ -91,7 +91,7 @@ public class ServerTardis extends Tardis {
 						(((ItemEntity) entity).getStack().getItem() == Items.NETHER_STAR ||
 								isChargedCrystal(((ItemEntity) entity).getStack())) &&
 						entity.isTouchingWater()).forEach(entity -> {
-					DirectedGlobalPos position = this.travel().position();
+					DirectedGlobalPos position = this.travel2().position();
 
 					if (position == null)
 						return;

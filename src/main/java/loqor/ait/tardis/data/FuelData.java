@@ -3,13 +3,11 @@ package loqor.ait.tardis.data;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.ArtronHolder;
 import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
@@ -94,9 +92,9 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 	public void tick(MinecraftServer server) {
 
 		ServerTardis tardis = (ServerTardis) this.tardis();
-		DirectedGlobalPos.Cached pos = tardis.travel().position();
+		DirectedGlobalPos.Cached pos = tardis.travel2().position();
 		World world = pos.getWorld();
-		TravelHandler.State state = tardis.travel().getState();
+		TravelHandler.State state = tardis.travel2().getState();
 
 		if (state == TravelHandler.State.LANDED) {
 			if (this.isRefueling() && this.getCurrentFuel() < FuelData.TARDIS_MAX_FUEL && (!isRefuelOnDelay(tardis))) {
@@ -118,11 +116,12 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 		if (state == TravelHandler.State.FLIGHT) {
 			if (!isDrainOnDelay(tardis)) {
 				createDrainDelay(tardis);
-				removeFuel((4 ^ (tardis.travel().speed().get())) * (tardis.tardisHammerAnnoyance + 1));
+				removeFuel((4 ^ (tardis.travel2().speed().get())) * (tardis.tardisHammerAnnoyance + 1));
 			}
 
-			if (!tardis.engine().hasPower())
-				tardis().travel().crash(); // hehe force land if you don't have enough fuel
+			// TODO(travel): replace with proper travel method
+			//if (!tardis.engine().hasPower())
+			//	  tardis().travel2().crash(); // hehe force land if you don't have enough fuel
 		}
 
 		if ((state == TravelHandler.State.DEMAT || state == TravelHandler.State.MAT) && !isDrainOnDelay(tardis)) {

@@ -69,14 +69,14 @@ public class OvergrownData extends TardisComponent implements TardisTickable {
 		if (tardis().isGrowth())
 			return;
 
-		if (this.isOvergrown() && (this.tardis().travel().getState() == TravelHandler.State.FLIGHT
-				|| this.tardis().travel().getState() == TravelHandler.State.MAT)) {
+		if (this.isOvergrown() && (this.tardis().travel2().getState() == TravelHandler.State.FLIGHT
+				|| this.tardis().travel2().getState() == TravelHandler.State.MAT)) {
 			this.setOvergrown(false);
 			this.setTicks(0);
 			return;
 		}
 
-		if (this.isOvergrown() || this.tardis().travel().getState() != TravelHandler.State.LANDED)
+		if (this.isOvergrown() || this.tardis().travel2().getState() != TravelHandler.State.LANDED)
 			return;
 
 		// We know the tardis is landed so we can start ticking away

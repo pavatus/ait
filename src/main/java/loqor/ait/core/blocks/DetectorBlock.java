@@ -4,6 +4,7 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blockentities.DetectorBlockEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TardisCrashData;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -153,7 +154,7 @@ public class DetectorBlock extends WallMountedBlock implements BlockEntityProvid
 	}
 
 	public enum Type implements StringIdentifiable {
-		FLIGHT(tardis -> tardis.travel().inFlight() ? 15 : 0),
+		FLIGHT(tardis -> tardis.travel2().getState() != TravelHandlerBase.State.LANDED ? 15 : 0),
 		POWER(tardis -> tardis.engine().hasPower() ? 15 : 0),
 		CRASHED(tardis -> {
 			TardisCrashData.State state = tardis.crash().getState();

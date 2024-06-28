@@ -76,7 +76,7 @@ public class SiegeTardisItem extends Item {
 			}
 		}
 
-		tardis.travel().forcePosition(fromEntity(entity));
+		tardis.travel2().forcePosition(fromEntity(entity));
 
 		if (!tardis.isSiegeBeingHeld()) {
 			tardis.setSiegeBeingHeld(entity.getUuid());
@@ -175,18 +175,18 @@ public class SiegeTardisItem extends Item {
 	}
 
 	public static void pickupTardis(Tardis tardis, ServerPlayerEntity player) {
-		if (tardis.travel().handbrake().get())
+		if (tardis.travel2().handbrake())
 			return;
 
-		tardis.travel().deleteExterior();
+		tardis.travel2().deleteExterior();
 		tardis.siege().setSiegeBeingHeld(player.getUuid());
 		player.getInventory().insertStack(create(tardis));
 		player.getInventory().markDirty();
 	}
 
 	public static void placeTardis(Tardis tardis, DirectedGlobalPos.Cached pos) {
-		tardis.travel().forcePosition(pos);
-		tardis.travel().placeExterior();
+		tardis.travel2().forcePosition(pos);
+		tardis.travel2().placeAndAnimate();
 		tardis.setSiegeBeingHeld(null);
 	}
 

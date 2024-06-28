@@ -4,7 +4,7 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
-import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.TravelHandlerV2;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -18,23 +18,23 @@ public class RandomiserControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-		TravelHandler travel = tardis.travel();
+		TravelHandlerV2 travel = tardis.travel2();
 
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
 			this.addToControlSequence(tardis, player, console);
 			return false;
 		}
 
-		tardis.travel().destination(randomiseDestination(tardis, 10));
-		tardis.removeFuel((0.1d * IncrementManager.increment(tardis)) * (tardis.tardisHammerAnnoyance + 1));
+		tardis.travel2().destination(randomiseDestination(tardis, 10));
+		tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * (tardis.tardisHammerAnnoyance + 1));
 
 		messagePlayer(player, travel);
 		return true;
 	}
 
-	// fixme this is LAGGYYY @TODO
+	// TODO(travel): improve the performance of this
 	public static DirectedGlobalPos.Cached randomiseDestination(Tardis tardis, int limit) {
-		TravelHandler travel = tardis.travel();
+		TravelHandlerV2 travel = tardis.travel2();
 		int increment = IncrementManager.increment(tardis);
 
 		DirectedGlobalPos.Cached dest = travel.destination();
@@ -58,7 +58,7 @@ public class RandomiserControl extends Control {
 		return 2000L;
 	}
 
-	private void messagePlayer(ServerPlayerEntity player, TravelHandler travel) {
+	private void messagePlayer(ServerPlayerEntity player, TravelHandlerV2 travel) {
 		DirectedGlobalPos.Cached dest = travel.destination();
 		BlockPos pos = dest.getPos();
 

@@ -97,7 +97,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
 		HANDLERS(TardisHandlersManager.class, null),
 
-		TRAVEL(TravelHandler.class, TravelHandler::new),
 		TRAVEL2(TravelHandlerV2.class, TravelHandlerV2::new),
 		DOOR(DoorData.class, DoorData::new),
 		SONIC(SonicHandler.class, SonicHandler::new),
@@ -119,7 +118,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		SEQUENCE(SequenceHandler.class, SequenceHandler::new, null),
 		FUEL(FuelData.class, FuelData::new, null),
 		HADS(HADSData.class, HADSData::new, null),
-		FLIGHT(FlightData.class, FlightData::new, null),
 		SIEGE(SiegeData.class, SiegeData::new, null),
 		CLOAK(CloakData.class, CloakData::new, null),
 

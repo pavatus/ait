@@ -101,7 +101,7 @@ public class SiegeData extends KeyedTardisComponent implements TardisTickable {
 			this.tardis.alarm().disable();
 
 			if (this.tardis.getExterior().findExteriorBlock().isEmpty())
-				this.tardis.travel().placeExterior();
+				this.tardis.travel2().placeExterior(false);
 		}
 
 		for (BlockPos console : this.tardis.getDesktop().getConsolePos()) {

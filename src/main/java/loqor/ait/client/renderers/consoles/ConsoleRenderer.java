@@ -59,7 +59,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
 		if (!AITMod.AIT_CONFIG.DISABLE_CONSOLE_ANIMATIONS()) {
 			profiler.swap("animate");
-			console.animateBlockEntity(entity, tardis.travel().getState(), hasPower);
+			console.animateBlockEntity(entity, tardis.travel2().getState(), hasPower);
 		}
 
 		profiler.swap("render");

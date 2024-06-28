@@ -48,7 +48,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
     public TravelHandler() {
-        super(Id.TRAVEL);
+        super(Id.TRAVEL2);
     }
 
     public int getDematTicks() {
@@ -87,7 +87,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
         setDematTicks(getDematTicks() + 1);
 
-        if (tardis.flight().handbrake()) {
+        if (tardis.travel2().handbrake()) {
             // cancel materialise
             this.cancelDemat();
             return;
@@ -119,18 +119,18 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         this.tickMat();
 
         ServerTardis tardis = (ServerTardis) this.tardis();
-        int speed = this.tardis.travel().speed().get();
+        int speed = this.tardis.travel2().speed().get();
         State state = this.getState();
 
-        boolean handbrake = tardis.flight().handbrake().get();
-        boolean autopilot = tardis.flight().autopilot().get();
+        boolean handbrake = tardis.travel2().handbrake();
+        boolean autopilot = tardis.travel2().autopilot().get();
 
         if (speed > 0 && state == State.LANDED && !handbrake && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
             this.dematerialize(autopilot);
 
         // Should we just disable autopilot if the speed goes above 1?
         if (speed > 1 && state == State.FLIGHT && autopilot) {
-            this.tardis.travel().speed().set(speed - 1);
+            this.tardis.travel2().speed().set(speed - 1);
         }
     }
 
@@ -218,9 +218,9 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         if (this.getState() != State.LANDED)
             return;
 
-        if (this.tardis.flight().autopilot().get()) {
+        if (this.tardis.travel2().autopilot().get()) {
             // fulfill all the prerequisites
-            this.tardis.flight().handbrake(false);
+            this.tardis.travel2().handbrake(false);
 
             this.tardis.door().closeDoors();
             this.tardis.setRefueling(false);
@@ -232,7 +232,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         DirectedGlobalPos.Cached globalPos = this.position.get();
         ServerWorld world = globalPos.getWorld();
 
-        this.tardis.flight().autopilot().set(withRemat);
+        this.tardis.travel2().autopilot().set(withRemat);
         this.state.set(State.DEMAT);
 
         SoundEvent sound = this.getState().effect().sound();
@@ -275,7 +275,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
             return;
 
         DirectedGlobalPos.Cached destination = FlightUtil.getPositionFromPercentage(
-                this.position.get(), this.destination(), tardis.flight().getDurationAsPercentage()
+                this.position.get(), this.destination(), tardis.travel2().getDurationAsPercentage()
         );
 
         this.destination.set(destination, true);
@@ -323,7 +323,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
     }
 
     public void finishLanding() {
-        if (this.tardis.flight().autopilot().get() && this.speed.get() > 0)
+        if (this.tardis.travel2().autopilot().get() && this.speed.get() > 0)
             this.speed.set(0);
 
         this.state.set(State.LANDED);
@@ -358,7 +358,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
 
         DirectedGlobalPos.Cached pos = FlightUtil.getPositionFromPercentage(
                 this.position(), this.destination(),
-                this.tardis().flight().getDurationAsPercentage()
+                this.tardis().travel2().getDurationAsPercentage()
         );
 
         this.position.set(pos);
@@ -483,7 +483,7 @@ public class TravelHandler extends TravelHandlerBase implements TardisTickable {
         int random_change = random.nextInt(10, 100) * intensity * multiplier;
         
         DirectedGlobalPos.Cached median = FlightUtil.getPositionFromPercentage(
-                this.position(), this.destination(), tardis.flight().getDurationAsPercentage()
+                this.position(), this.destination(), tardis.travel2().getDurationAsPercentage()
         );
 
         this.setCrashing(true);
