@@ -117,6 +117,9 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
     }
 
     public void destination(DirectedGlobalPos.Cached cached) {
+        if (this.destination().equals(cached))
+            return;
+
         cached.init(TravelHandlerBase.server());
 
         WorldBorder border = cached.getWorld().getWorldBorder();

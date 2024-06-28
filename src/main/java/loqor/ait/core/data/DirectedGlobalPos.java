@@ -100,7 +100,9 @@ public class DirectedGlobalPos {
         if (!(o instanceof DirectedGlobalPos globalPos))
             return false;
 
-        return Objects.equals(this.dimension, globalPos.dimension) && Objects.equals(this.pos, globalPos.pos);
+        return Objects.equals(this.dimension, globalPos.dimension)
+                && Objects.equals(this.pos, globalPos.pos)
+                && Objects.equals(this.rotation, globalPos.rotation);
     }
 
     public int hashCode() {

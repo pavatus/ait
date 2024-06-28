@@ -280,16 +280,15 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
 
     public void rematerialize() {
         boolean bypass = tardis.hasGrowthExterior();
-        this.forceDestination(FlightUtil.getPositionFromPercentage(this.position(), this.destination(),
+        this.destination(FlightUtil.getPositionFromPercentage(this.position(), this.destination(),
                 tardis.travel2().getDurationAsPercentage()));
 
-        if (bypass) {
-            this.forceRemat();
+        if ((TardisEvents.MAT.invoker().onMat(tardis) || FlightUtil.isMaterialiseOnCooldown(tardis)) && !bypass) {
+            this.failRemat();
             return;
         }
 
-        if (TardisEvents.MAT.invoker().onMat(tardis) || FlightUtil.isMaterialiseOnCooldown(tardis))
-            this.failRemat();
+        this.forceRemat();
     }
 
     public void forceRemat() {

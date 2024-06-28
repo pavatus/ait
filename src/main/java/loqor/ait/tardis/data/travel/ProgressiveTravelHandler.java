@@ -80,17 +80,16 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     }
 
     public int getDurationAsPercentage() {
-        if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0) {
-            if (this.tardis().travel2().getState() == TravelHandlerBase.State.DEMAT)
-                return 0;
-
-            return 100;
-        }
+        if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0)
+            return this.tardis().travel2().getState() == TravelHandlerBase.State.DEMAT ? 0 : 100;
 
         return FlightUtil.getDurationAsPercentage(this.getFlightTicks(), this.getTargetTicks());
     }
 
     public void recalculate() {
+        if (this.isFlightTicking() && this.hasFinishedFlight())
+            return;
+
         this.setTargetTicks(TravelUtil.getFlightDuration(this.position(), this.destination()));
         this.setFlightTicks(this.isInFlight() ? MathHelper.clamp(this.getFlightTicks(), 0, this.getTargetTicks()) : 0);
     }
