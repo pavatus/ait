@@ -30,8 +30,8 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     private final IntValue flightTicks = FLIGHT_TICKS.create(this);
     private final IntValue targetTicks = TARGET_TICKS.create(this);
 
-    private final BoolValue handbrake = HANDBRAKE.create(this);
-    private final BoolValue autopilot = AUTOPILOT.create(this);
+    protected final BoolValue handbrake = HANDBRAKE.create(this);
+    protected final BoolValue autopilot = AUTOPILOT.create(this);
 
     public ProgressiveTravelHandler(Id id) {
         super(id);

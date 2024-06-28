@@ -230,6 +230,9 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler {
     }
 
     public void finishRemat() {
+        if (this.autopilot.get() && this.speed.get() > 0)
+            this.speed.set(0);
+
         AITMod.LOGGER.info("Finish remat called", new Throwable());
 
         this.state.set(State.LANDED);

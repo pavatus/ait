@@ -84,7 +84,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
     }
 
     public void increaseSpeed() {
-        int max = this.getState() == State.FLIGHT && this.tardis.travel2().autopilot().get() ? 1 : this.maxSpeed.get();
+        int max = this.tardis.travel2().autopilot().get() ? 1 : this.maxSpeed.get();
         this.speed(MathHelper.clamp(this.speed.get() + 1, 0, max));
     }
 
