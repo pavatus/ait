@@ -5,6 +5,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.data.travel.TravelUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -25,32 +26,14 @@ public class RandomiserControl extends Control {
 			return false;
 		}
 
-		tardis.travel2().destination(randomiseDestination(tardis, 10));
-		tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * (tardis.tardisHammerAnnoyance + 1));
+		world.getServer().execute(() -> {
+			tardis.travel2().destination(TravelUtil.randomPos(tardis, 10, IncrementManager.increment(tardis)));
+			tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * (tardis.tardisHammerAnnoyance + 1));
 
-		messagePlayer(player, travel);
+			messagePlayer(player, travel);
+		});
+
 		return true;
-	}
-
-	// TODO(travel): improve the performance of this
-	public static DirectedGlobalPos.Cached randomiseDestination(Tardis tardis, int limit) {
-		TravelHandlerV2 travel = tardis.travel2();
-		int increment = IncrementManager.increment(tardis);
-
-		DirectedGlobalPos.Cached dest = travel.destination();
-		ServerWorld world = dest.getWorld();
-
-		for (int i = 0; i <= limit; i++) {
-			dest = dest.pos(
-					world.random.nextBoolean() ? world.random.nextInt(increment) : -world.random.nextInt(increment), 0,
-					world.random.nextBoolean() ? world.random.nextInt(increment) : -world.random.nextInt(increment)
-			);
-
-			if (i >= limit)
-				return dest;
-		}
-
-		return dest;
 	}
 
 	@Override

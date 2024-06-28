@@ -1,0 +1,54 @@
+package loqor.ait.tardis.data.travel;
+
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.TravelHandlerV2;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+
+public class TravelUtil {
+
+    private static final int BASE_FLIGHT_TICKS = 5 * 20;
+
+    public static DirectedGlobalPos.Cached randomPos(Tardis tardis, int limit, int max) {
+        TravelHandlerV2 travel = tardis.travel2();
+        DirectedGlobalPos.Cached dest = travel.destination();
+        ServerWorld world = dest.getWorld();
+
+        for (int i = 0; i <= limit; i++) {
+            dest = dest.pos(
+                    world.random.nextBoolean() ? world.random.nextInt(max) : -world.random.nextInt(max), 0,
+                    world.random.nextBoolean() ? world.random.nextInt(max) : -world.random.nextInt(max)
+            );
+        }
+
+        return dest;
+    }
+
+    public static void travelTo(Tardis tardis, DirectedGlobalPos.Cached pos) {
+        TravelHandlerV2 travel = tardis.travel2();
+
+        travel.autopilot(true);
+        travel.destination(pos);
+
+        if (travel.getState() == TravelHandlerBase.State.LANDED)
+            travel.dematerialize();
+    }
+
+    public static DirectedGlobalPos.Cached getPositionFromPercentage(DirectedGlobalPos.Cached source, DirectedGlobalPos.Cached destination, int percentage) {
+        // https://stackoverflow.com/questions/33907276/calculate-point-between-two-coordinates-based-on-a-percentage
+
+        float per = percentage / 100f;
+        BlockPos diff = destination.getPos().subtract(source.getPos());
+        return destination.offset((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per));
+    }
+
+    public static int getFlightDuration(DirectedGlobalPos.Cached source, DirectedGlobalPos.Cached destination) {
+        float distance = MathHelper.sqrt((float) source.getPos().getSquaredDistance(destination.getPos()));
+        boolean hasDirChanged = !(source.getRotation() == destination.getRotation());
+        boolean hasDimChanged = !(source.getDimension().equals(destination.getDimension()));
+
+        return (int) (BASE_FLIGHT_TICKS + (distance / 10f) + (hasDirChanged ? 100 : 0) + (hasDimChanged ? 600 : 0));
+    }
+}
