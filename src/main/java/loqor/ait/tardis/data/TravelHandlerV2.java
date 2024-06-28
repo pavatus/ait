@@ -48,15 +48,25 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler {
     }
 
     @Override
-    protected int speed(int value) {
-        value = super.speed(value);
+    protected void speed(int value) {
+        super.speed(value);
+        this.tryFly();
+    }
 
-        // TODO move
-        if (value > 0 && this.getState() == State.LANDED && !this.handbrake() && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
+    @Override
+    public void handbrake(boolean value) {
+        super.handbrake(value);
+        this.tryFly();
+    }
+
+    private void tryFly() {
+        int speed = this.speed.get();
+
+        if (speed > 0 && this.getState() == State.LANDED && !this.handbrake() && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
             this.dematerialize();
 
-        if (value != 0 || this.getState() != State.FLIGHT)
-            return value;
+        if (speed != 0 || this.getState() != State.FLIGHT)
+            return;
 
         if (tardis.crash().getState() == TardisCrashData.State.UNSTABLE) {
             Random random = TardisUtil.random();
@@ -70,8 +80,6 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler {
 
         if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT))
             this.rematerialize();
-
-        return value;
     }
 
     private void tickAnimationProgress(State state) {
