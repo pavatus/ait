@@ -15,9 +15,9 @@ import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.CrashableTardisTravel;
 import loqor.ait.tardis.data.travel.ProgressiveTravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.NetworkUtil;
-import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -27,8 +27,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Random;
 
 public class TravelHandlerV2 extends ProgressiveTravelHandler implements CrashableTardisTravel {
 
@@ -70,15 +68,8 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
         if (speed != 0 || this.getState() != State.FLIGHT)
             return;
 
-        if (tardis.crash().getState() == TardisCrashData.State.UNSTABLE) {
-            Random random = TardisUtil.random();
-            int multiplier = random.nextInt(0, 2) == 0 ? 1 : -1;
-
-            this.destination(cached -> cached.offset(
-                    random.nextInt(1, 10) * multiplier, 0,
-                    random.nextInt(1, 10) * multiplier
-            ));
-        }
+        if (tardis.crash().getState() == TardisCrashData.State.UNSTABLE)
+            this.destination(cached -> TravelUtil.jukePos(cached, 1, 10, 1));
 
         if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT))
             this.rematerialize();
@@ -309,6 +300,9 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
 
         this.state.set(State.MAT);
         SoundEvent sound = this.getState().effect().sound();
+
+        if (this.isCrashing())
+            sound = AITSounds.EMERG_MAT;
 
         this.position.set(this.destination());
 

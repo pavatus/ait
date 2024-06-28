@@ -8,7 +8,6 @@ import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.tardis.data.TravelHandlerV2;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.integer.IntValue;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -98,13 +97,10 @@ public interface CrashableTardisTravel {
 
         tardis.tardisHammerAnnoyance = 0;
 
-        int up_or_down = random.nextInt(0, 2) == 0 ? 1 : -1;
-        int random_change = random.nextInt(10, 100) * power * up_or_down;
-
-        DirectedGlobalPos.Cached percentageOfDestination = FlightUtil.getPositionFromPercentage(this.position(), this.destination(), tardis.travel2().getDurationAsPercentage());
-
         this.setCrashing(true);
-        this.destination(percentageOfDestination.offset(random_change, 0, random_change));
+        this.destination(TravelUtil.jukePos(TravelUtil.getPositionFromPercentage(
+                this.position(), this.destination(), tardis.travel2().getDurationAsPercentage()
+        ), 10, 100, power));
 
         this.rematerialize();
 

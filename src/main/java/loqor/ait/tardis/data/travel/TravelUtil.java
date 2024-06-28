@@ -3,9 +3,12 @@ package loqor.ait.tardis.data.travel;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.TravelHandlerV2;
+import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.Random;
 
 public class TravelUtil {
 
@@ -50,5 +53,18 @@ public class TravelUtil {
         boolean hasDimChanged = !(source.getDimension().equals(destination.getDimension()));
 
         return (int) (BASE_FLIGHT_TICKS + (distance / 10f) + (hasDirChanged ? 100 : 0) + (hasDimChanged ? 600 : 0));
+    }
+
+    public static DirectedGlobalPos.Cached jukePos(DirectedGlobalPos.Cached pos, int min, int max, int multiplier) {
+        Random random = TardisUtil.random();
+        multiplier *= random.nextInt(0, 2) == 0 ? 1 : -1;
+
+        return pos.offset(random.nextInt(min, max) * multiplier, 0,
+                random.nextInt(min, max) * multiplier
+        );
+    }
+
+    public static DirectedGlobalPos.Cached jukePos(DirectedGlobalPos.Cached pos, int min, int max) {
+        return jukePos(pos, min, max, 1);
     }
 }
