@@ -219,10 +219,23 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
         // demat will be cancelled
         this.position().getWorld().playSound(null, this.position().getPos(),
                 AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f
-        ); // fixme can be spammed
+        );
 
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
         FlightUtil.createDematerialiseDelay(this.tardis);
+    }
+
+    private void failRemat() {
+        // Play failure sound at the current position
+        this.position().getWorld().playSound(null, this.position().getPos(),
+                AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f
+        );
+
+        // Play failure sound at the Tardis console position if the interior is not empty
+        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
+
+        // Create materialization delay and return
+        FlightUtil.createMaterialiseDelay(this.tardis);
     }
 
     public void forceDemat() {
@@ -273,8 +286,26 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
     }
 
     public void rematerialize() {
+        boolean bypass = tardis.hasGrowthExterior();
+        this.destination(FlightUtil.getPositionFromPercentage(this.position(), this.destination(),
+                tardis.travel2().getDurationAsPercentage()));
+
+        if (bypass) {
+            this.forceRemat();
+            return;
+        }
+
+        if (TardisEvents.MAT.invoker().onMat(tardis) || FlightUtil.isMaterialiseOnCooldown(tardis))
+            this.failRemat();
+    }
+
+    public void forceRemat() {
         if (this.getState() != State.FLIGHT)
             return;
+
+        if (this.tardis.sequence().hasActiveSequence()) {
+            this.tardis.sequence().setActiveSequence(null, true);
+        }
 
         this.state.set(State.MAT);
         SoundEvent sound = this.getState().effect().sound();
@@ -288,8 +319,6 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
 
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 10f, 1f);
         this.placeAndAnimate();
-
-        AITMod.LOGGER.info("Remat called", new Throwable());
     }
 
     public void finishRemat() {

@@ -42,9 +42,11 @@ public class HammerItem extends SwordItem {
 
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
-		World world = context.getWorld();
 		BlockPos pos = context.getBlockPos();
 		PlayerEntity player = context.getPlayer();
+
+		if (!(context.getWorld() instanceof ServerWorld world))
+			return ActionResult.SUCCESS;
 
 		if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity))
 			return ActionResult.PASS;
@@ -62,26 +64,26 @@ public class HammerItem extends SwordItem {
 
 		TravelHandlerV2 flightData = tardis.travel2();
 		int targetTicks = flightData.getTargetTicks();
-		int current_flight_ticks = flightData.getFlightTicks();
-		int added_flight_ticks = 500 * tardis.travel2().speed().get();
-		double current_fuel = tardis.fuel().getCurrentFuel();
-		double max_fuel = tardis.fuel().getMaxFuel();
+		int currentFlightTicks = flightData.getFlightTicks();
+		int bonus = 500 * tardis.travel2().speed().get();
+		double fuel = tardis.fuel().getCurrentFuel();
+		double maxFuel = tardis.fuel().getMaxFuel();
 
 		if (tardis.tardisHammerAnnoyance > 0)
-			added_flight_ticks -= (int) Math.round(added_flight_ticks * 0.1 * tardis.tardisHammerAnnoyance);
+			bonus -= (int) Math.round(bonus * 0.1 * tardis.tardisHammerAnnoyance);
 
-		double estimated_fuel_cost_for_hit = added_flight_ticks / 5.0;
+		double fuelCost = bonus / 5.0;
 		if (tardis.tardisHammerAnnoyance > 0)
-			estimated_fuel_cost_for_hit += (150 * tardis.travel2().speed().get() * tardis.tardisHammerAnnoyance) / 7.0;
+			fuelCost += (150 * tardis.travel2().speed().get() * tardis.tardisHammerAnnoyance) / 7.0;
 
-		if (!world.isClient() && current_fuel + estimated_fuel_cost_for_hit > max_fuel) {
+		if (!world.isClient() && fuel + fuelCost > maxFuel) {
 			tardis.travel2().crash();
 			tardis.fuel().setCurrentFuel(0.0);
 			return ActionResult.SUCCESS;
 		}
 
-		flightData.setFlightTicks(Math.min(current_flight_ticks + added_flight_ticks, targetTicks));
-		tardis.fuel().setCurrentFuel(current_fuel - estimated_fuel_cost_for_hit);
+		flightData.setFlightTicks(Math.min(currentFlightTicks + bonus, targetTicks));
+		tardis.fuel().setCurrentFuel(fuel - fuelCost);
 		tardis.tardisHammerAnnoyance++;
 
 		if (!world.isClient() && shouldCrashTardis(tardis.tardisHammerAnnoyance)) {
@@ -94,9 +96,10 @@ public class HammerItem extends SwordItem {
 		if (world.isClient())
 			return ActionResult.PASS;
 
-		((ServerWorld) world).spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX() + 0.5f, pos.getY() + 1.25,
+		world.spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX() + 0.5f, pos.getY() + 1.25,
 				pos.getZ() + 0.5f, 5 * tardis.tardisHammerAnnoyance, 0, 0, 0, 0.1f * tardis.tardisHammerAnnoyance);
-		((ServerWorld) world).spawnParticles(new DustColorTransitionParticleEffect(
+
+		world.spawnParticles(new DustColorTransitionParticleEffect(
 						new Vector3f(0.75f, 0.75f, 0.75f), new Vector3f(0.1f, 0.1f, 0.1f), 1), pos.getX() + 0.5f, pos.getY() + 1.25,
 				pos.getZ() + 0.5f, 5 * tardis.tardisHammerAnnoyance, 0, 0, 0, 0.1f * tardis.tardisHammerAnnoyance);
 
