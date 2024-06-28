@@ -31,16 +31,11 @@ public class FlightUtil {
 	public static void travelTo(Tardis tardis, DirectedGlobalPos.Cached pos) {
 		TravelHandlerV2 travel = tardis.travel2();
 
-		travel.handbrake(false);
 		travel.autopilot().set(true);
-
 		travel.destination(pos);
 
-		if (travel.getState() == TravelHandler.State.LANDED) {
-			//travel.dematerialize(true);
-		} else if (travel.getState() == TravelHandler.State.FLIGHT) {
-			//travel.materialise();
-		}
+		if (travel.getState() == TravelHandler.State.LANDED)
+			travel.dematerialize();
 	}
 
 	public static int convertSecondsToTicks(int seconds) {

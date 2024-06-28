@@ -15,7 +15,6 @@ import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.ProgressiveTravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.NetworkUtil;
-import loqor.ait.tardis.util.TardisChunkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
@@ -46,23 +45,14 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler {
 
         if (state.animated())
             this.tickAnimationProgress(state);
-
-        if (server.getTicks() % 2 == 0)
-            return;
-
-        // im sure this is great for your server performace
-        if (TardisChunkUtil.shouldExteriorChunkBeForced(this.tardis) && !TardisChunkUtil.isExteriorChunkForced(this.tardis)) {
-            TardisChunkUtil.forceLoadExteriorChunk(this.tardis);
-        } else if (!TardisChunkUtil.shouldExteriorChunkBeForced(this.tardis) && TardisChunkUtil.isExteriorChunkForced(this.tardis)) {
-            TardisChunkUtil.stopForceExteriorChunk(this.tardis);
-        }
     }
 
     @Override
     protected int speed(int value) {
         value = super.speed(value);
 
-        if (value > 0 && this.getState() == State.LANDED && !tardis.travel2().handbrake() && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
+        // TODO move
+        if (value > 0 && this.getState() == State.LANDED && !this.handbrake() && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
             this.dematerialize();
 
         if (value != 0 || this.getState() != State.FLIGHT)
@@ -171,6 +161,9 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler {
     }
 
     public void dematerialize() {
+        if (this.getState() != State.LANDED)
+            return;
+
         this.state.set(State.DEMAT);
         SoundEvent sound = this.getState().effect().sound();
 
@@ -209,6 +202,9 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler {
     }
 
     public void rematerialize() {
+        if (this.getState() != State.FLIGHT)
+            return;
+
         this.state.set(State.MAT);
         SoundEvent sound = this.getState().effect().sound();
 
@@ -221,9 +217,13 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler {
 
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 10f, 1f);
         this.placeAndAnimate();
+
+        AITMod.LOGGER.info("Remat called", new Throwable());
     }
 
     public void finishRemat() {
+        AITMod.LOGGER.info("Finish remat called", new Throwable());
+
         this.state.set(State.LANDED);
         this.resetFlight();
 

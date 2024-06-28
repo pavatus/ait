@@ -8,8 +8,13 @@ import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.DirectionControl;
+import loqor.ait.tardis.data.EngineHandler;
+import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.TravelHandler;
+import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.exterior.category.CapsuleCategory;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -88,6 +93,11 @@ public class TardisItemBuilder extends Item {
 		ServerTardisManager.getInstance().create(new TardisBuilder()
 				.at(pos).desktop(DesktopRegistry.getInstance().get(this.desktop)).owner(player)
 				.exterior(ExteriorVariantRegistry.getInstance().pickRandomWithParent(category))
+				.<FuelData>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(fuel.getMaxFuel()))
+				.<EngineHandler>with(TardisComponent.Id.ENGINE, engine -> {
+					engine.hasEngineCore().set(true);
+					engine.enablePower();
+				}).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY, loyalty -> loyalty.set(player, new Loyalty(Loyalty.Type.OWNER)))
 		);
 
 		context.getStack().decrement(1);

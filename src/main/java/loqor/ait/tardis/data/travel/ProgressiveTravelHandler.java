@@ -12,7 +12,6 @@ import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
 import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.FlightUtil;
-import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
@@ -69,14 +68,8 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
 
         this.tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BELL_RESONATE);
 
-        if (this.shouldAutoLand())
+        if (this.autopilot.get() && !PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT))
             this.tardis().travel2().rematerialize();
-    }
-
-    private boolean shouldAutoLand() {
-        return (this.autopilot.get()
-                || !TardisUtil.isInteriorNotEmpty(this.tardis))
-                && !PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
     }
 
     public void increaseFlightTime(int ticks) {
@@ -170,10 +163,6 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
 
             this.setFlightTicks(this.getFlightTicks() + (Math.max(travel.speed().get() / 2, 1)));
         }
-
-        if (!PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT)
-                && this.isInFlight() && this.hasFinishedFlight() && !TardisUtil.isInteriorNotEmpty(tardis))
-            travel.rematerialize();
     }
 
     public void triggerSequencingDuringFlight(Tardis tardis) {

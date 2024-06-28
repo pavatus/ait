@@ -227,8 +227,8 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		if (!state.animated())
 			return;
 
-        this.getWorld().setBlockState(pos, this.getCachedState().with(
-				ExteriorBlock.LEVEL_9, (int) this.getAlpha() * 9
+        this.getWorld().setBlockState(pos, this.getWorld().getBlockState(pos).with(
+				ExteriorBlock.LEVEL_9, Math.round(this.getAlpha() * 9)
 		));
     }
 }
