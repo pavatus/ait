@@ -251,6 +251,8 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
 
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 10f, 1f);
         this.runAnimations();
+
+        this.startFlight();
     }
 
     public void finishDemat() {
@@ -262,8 +264,6 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
 
         if (PropertiesHandler.getBool(this.tardis().properties(), SecurityControl.SECURITY_KEY))
             SecurityControl.runSecurityProtocols(this.tardis());
-
-        this.startFlight();
     }
 
     public void cancelDemat() {
@@ -280,7 +280,7 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
 
     public void rematerialize() {
         boolean bypass = tardis.hasGrowthExterior();
-        this.destination(FlightUtil.getPositionFromPercentage(this.position(), this.destination(),
+        this.forceDestination(FlightUtil.getPositionFromPercentage(this.position(), this.destination(),
                 tardis.travel2().getDurationAsPercentage()));
 
         if (bypass) {
