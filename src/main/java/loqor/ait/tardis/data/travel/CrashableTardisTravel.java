@@ -29,7 +29,7 @@ public interface CrashableTardisTravel {
 
     Tardis tardis();
     IntValue speed();
-    void rematerialize();
+    void forceRemat();
 
     DirectedGlobalPos.Cached position();
     DirectedGlobalPos.Cached destination();
@@ -102,7 +102,7 @@ public interface CrashableTardisTravel {
                 this.position(), this.destination(), tardis.travel2().getDurationAsPercentage()
         ), 10, 100, power));
 
-        this.rematerialize();
+        this.forceRemat();
 
         int repairTicks = 1000 * power;
         tardis.crash().setRepairTicks(repairTicks);
