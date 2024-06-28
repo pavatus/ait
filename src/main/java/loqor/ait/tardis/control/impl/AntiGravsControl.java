@@ -23,7 +23,7 @@ public class AntiGravsControl extends Control {
 			return false;
 		}
 
-		PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, !PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED));
+		PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED));
 
 		if (tardis.travel2().position().getPos() != null)
 			WorldOps.updateIfOnServer(world, tardis.travel2().position().getPos());

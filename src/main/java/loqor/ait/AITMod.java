@@ -151,18 +151,6 @@ public class AITMod implements ModInitializer {
 			}
 		}));
 
-		// TODO(travel): move this to travelhandler
-		TardisEvents.MAT.register((tardis -> {
-            // Check if the Tardis is on cooldown
-			boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
-
-			// Check if the destination is already occupied
-			boolean isDestinationOccupied = !tardis.travel2().destination().getPos().equals(tardis.travel2().position().getPos())
-					&& !tardis.travel2().checkDestination(10, true);
-
-			return isCooldown || isDestinationOccupied;
-		}));
-
 		TardisEvents.CRASH.register(tardis -> {
 			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
 				TardisCriterions.CRASH.trigger(player);

@@ -27,6 +27,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 public class TravelHandlerV2 extends ProgressiveTravelHandler implements CrashableTardisTravel {
 
@@ -342,7 +343,36 @@ public class TravelHandlerV2 extends ProgressiveTravelHandler implements Crashab
     }
 
     @Override
-    public boolean checkDestination(int limit, boolean fullCheck) {
-        return false;
+    protected DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck) {
+        ServerWorld world = destination.getWorld();
+        BlockPos.Mutable temp = destination.getPos().mutableCopy();
+
+        destination = destination.pos(temp.getX(), MathHelper.clamp(
+                temp.getY(), world.getBottomY(), world.getTopY() - 1
+        ), temp.getZ());
+
+        BlockState current;
+        BlockState top;
+        BlockState ground;
+
+        if (fullCheck) {
+            for (int i = 0; i < limit; i++) {
+                current = world.getBlockState(temp);
+                top = world.getBlockState(temp.up());
+                ground = world.getBlockState(temp.down());
+
+                if (isReplaceable(current, top) && !isReplaceable(ground)) // check two blocks cus tardis is two blocks tall yk and check for grond
+                    return destination.pos(temp);
+
+                temp = temp.down().mutableCopy();
+            }
+        }
+
+        temp = temp.mutableCopy();
+
+        current = world.getBlockState(temp);
+        top = world.getBlockState(temp.up());
+
+        return isReplaceable(current, top) ? destination.pos(temp) : destination;
     }
 }

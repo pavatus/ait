@@ -159,8 +159,6 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
         return true;
     }
 
-    protected abstract boolean checkDestination(int limit, boolean fullCheck);
-
     protected DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck) {
         return destination;
     }
