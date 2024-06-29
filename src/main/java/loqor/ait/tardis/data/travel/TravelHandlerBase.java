@@ -63,6 +63,9 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
 
         crashing.of(this, CRASHING);
 
+        if (this.isClient())
+            return;
+
         MinecraftServer current = TravelHandlerBase.server();
 
         this.position.ifPresent(cached -> cached.init(current), false);
