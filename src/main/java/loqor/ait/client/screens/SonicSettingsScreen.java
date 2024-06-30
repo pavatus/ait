@@ -40,8 +40,6 @@ public class SonicSettingsScreen extends ConsoleScreen {
     public SonicSettingsScreen(UUID tardis, BlockPos console, Screen parent) {
         super(Text.translatable("screen.ait.sonicsettings.title"), tardis, console);
         this.parent = parent;
-
-        sendSonicChangePacket();
     }
 
     @Override
@@ -112,6 +110,8 @@ public class SonicSettingsScreen extends ConsoleScreen {
 
         SonicSchema schema = SonicRegistry.getInstance().toList().get(this.selectedSonic);
 
+        if (!tardis().isUnlocked(schema)) return;
+
         SonicItem.setSchema(tardis().sonic().get(SonicHandler.HAS_CONSOLE_SONIC), schema);
         ClientTardisUtil.changeSonicWithScreen(this.tardisId, schema);
     }
@@ -171,6 +171,15 @@ public class SonicSettingsScreen extends ConsoleScreen {
             context.drawItem(sonicCopy,0, 0);
             DiffuseLighting.enableGuiDepthLighting();
 
+            stack.pop();
+
+            stack.push();
+            stack.translate(0, 0, 50f);
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    (tardis().isUnlocked(schema)) ? "" : "\uD83D\uDD12",
+                    x, y,
+                    Color.WHITE.getRGB());
             stack.pop();
 
             stack.push();

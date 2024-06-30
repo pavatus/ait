@@ -8,5 +8,7 @@
     "scanning": "ait:item/sonic/song/scanning",
     "tardis": "ait:item/sonic/song/tardis"
   },
-  "loyalty": "NEUTRAL"
+  "loyalty": {
+    "type": "COMPANION"
+  }
 }

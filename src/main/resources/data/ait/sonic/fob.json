@@ -8,5 +8,7 @@
     "scanning": "ait:item/sonic/fob/scanning",
     "tardis": "ait:item/sonic/fob/tardis"
   },
-  "loyalty": "PILOT"
+  "loyalty": {
+    "type": "PILOT"
+  }
 }
