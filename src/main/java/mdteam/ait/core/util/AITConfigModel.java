@@ -19,5 +19,5 @@ public class AITConfigModel {
 	public double force_sync_delay = 10;
 	@SectionHeader("Client")
 	public float INTERIOR_HUM_VOLUME = 0.2f;
-	public boolean CUSTOM_MENU = true;
+	public boolean CUSTOM_MENU = false;
 }

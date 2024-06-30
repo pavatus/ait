@@ -220,6 +220,9 @@ public class AITMod implements ModInitializer {
 
 			if (tardis == null || desktop == null) return;
 
+			// nuh uh no interior changing during flight
+			if(tardis.getTravel().inFlight()) return;
+
 			tardis.getHandlers().getInteriorChanger().queueInteriorChange(desktop);
 		}));
 

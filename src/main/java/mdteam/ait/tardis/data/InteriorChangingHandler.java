@@ -76,7 +76,7 @@ public class InteriorChangingHandler extends TardisLink {
 
 		Tardis tardis = this.findTardis().get();
 
-		if (!tardis.isGrowth() && !tardis.hasPower()) return;
+		if (!tardis.isGrowth() && !tardis.hasPower() && !tardis.getHandlers().getCrashData().isToxic()) return;
 
 		if (tardis.getHandlers().getFuel().getCurrentFuel() < 5000 && !(tardis.isGrowth() && tardis.hasGrowthDesktop())) {
 			for (PlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {

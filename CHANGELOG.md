@@ -1,15 +1,10 @@
-# 1.0.4 Official Release
-- Overhauled the sonic system.
-- Added a hud overlay to display which blocks are interactable with the Sonic.
-- There is only 1 sonic, and it's casing can be changed via the TARDIS console menu when the sonic is inserted called "sonic settings".
-- The sonic can now interact with more blocks!
-- The detector block now has a recipe.
-- The Zeiton cluster now drops zeiton shards.
-- The Zeiton block is now craftable via zeiton shards.
-- New default sonic by Kiseki.
-- Some new functionality for the sonic in different modes.
-- Fixed bug where people could skip the nether star/charged zeiton crystal.
-- The telepathic control has been debuffed to avoid server crashing.
-- Repair ticks have been correctly put to seconds and work properly now.
-- Growth will demat and remat on change of exterior, TARDIS will land if finished flight and the interior is empty.
-- Creation date issue has been resolved, added time as well.
+# 1.0.4.1 Official Release
+- Fix date crash ( #264 ... )
+- Remove underline text on sonic screen
+- Sonic works with all candles ( #250 )
+- Cant change interior during crash/flight
+- Exterior properly falls again ( #248 )
+- Summoning with sonic faces right direction ( #247 )
+- Coral growth texture/model fixed ( #182 )
+- Removed insta-travel via crashing
+- Custom menu off by default >:)

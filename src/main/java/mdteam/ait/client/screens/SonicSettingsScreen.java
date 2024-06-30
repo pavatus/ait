@@ -9,6 +9,7 @@ import mdteam.ait.tardis.data.SonicHandler;
 import mdteam.ait.tardis.exterior.category.ExteriorCategorySchema;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -21,9 +22,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
 import java.awt.*;
@@ -43,6 +47,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
     public SonicSettingsScreen(UUID tardis, UUID console, Screen parent) {
         super(Text.translatable("screen.ait.sonicsettings.title"), tardis, console);
         this.parent = parent;
+        sendSonicChangePacket();
         updateTardis();
     }
 
@@ -66,7 +71,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
         this.buttons.clear();
 
         Text applyText = Text.literal("Apply");
-        this.addButton(new PressableTextWidget((int) (left + (bgWidth * 0.21f)), (int) (top + (bgHeight * 0.878f)),
+        this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.21f)), (int) (top + (bgHeight * 0.878f)),
                 this.textRenderer.getWidth(applyText), 10, Text.literal("     "), button -> {
             sendSonicChangePacket();
         }, this.textRenderer));
@@ -77,7 +82,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
                 this.textRenderer));
 
         this.addButton(
-                new PressableTextWidget(
+                new AITPressableTextWidget(
                         (int) (left + (bgWidth * 0.06f)),
                         (int) (top + (bgHeight * 0.882f)),
                         this.textRenderer.getWidth("<"),
@@ -88,7 +93,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
                 )
         );
         this.addButton(
-                new PressableTextWidget(
+                new AITPressableTextWidget(
                         (int) (left + (bgWidth * 0.47f)),
                         (int) (top + (bgHeight * 0.882f)),
                         this.textRenderer.getWidth(">"),
@@ -229,5 +234,22 @@ public class SonicSettingsScreen extends ConsoleScreen {
     private void drawBackground(DrawContext context) {
         context.drawTexture(BACKGROUND, left, top, 0, 0, bgWidth, bgHeight);
         context.drawTexture(BACKGROUND, left + 9, top + 24, 0, 168, 93, 76);
+    }
+
+    public static class AITPressableTextWidget extends ButtonWidget {
+        private final TextRenderer textRenderer;
+        private final Text text;
+        //private final Text hoverText;
+        public AITPressableTextWidget(int x, int y, int width, int height, Text text, ButtonWidget.PressAction onPress, TextRenderer textRenderer) {
+            super(x, y, width, height, text, onPress, DEFAULT_NARRATION_SUPPLIER);
+            this.textRenderer = textRenderer;
+            this.text = text;
+            //this.hoverText = Texts.setStyleIfAbsent(text.copy(), Style.EMPTY.withUnderline(true));
+        }
+
+        public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+            Text text = /*this.isSelected() ? this.hoverText : */this.text;
+            context.drawTextWithShadow(this.textRenderer, text, this.getX(), this.getY(), 16777215 | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        }
     }
 }
