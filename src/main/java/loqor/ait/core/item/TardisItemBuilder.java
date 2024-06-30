@@ -60,27 +60,30 @@ public class TardisItemBuilder extends Item {
 		if (player == null)
 			return ActionResult.PASS;
 
-		if (!(world instanceof ServerWorld serverWorld))
-			return ActionResult.PASS;
+        if (!(world instanceof ServerWorld serverWorld))
+            return ActionResult.PASS;
 
-		if (context.getHand() != Hand.MAIN_HAND)
+        if (player.getItemCooldownManager().isCoolingDown(this))
+            return ActionResult.FAIL;
+
+        if (context.getHand() != Hand.MAIN_HAND)
 			return ActionResult.SUCCESS;
 
-		DirectedGlobalPos.Cached pos = DirectedGlobalPos.Cached.create(serverWorld, context.getBlockPos().up(),
-				DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw())));
+        DirectedGlobalPos.Cached pos = DirectedGlobalPos.Cached.create(serverWorld, context.getBlockPos().up(),
+                DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw())));
 
-		BlockEntity entity = world.getBlockEntity(context.getBlockPos());
+        BlockEntity entity = world.getBlockEntity(context.getBlockPos());
 
 		if (entity instanceof ConsoleBlockEntity consoleBlock) {
-			Tardis tardis = consoleBlock.tardis().get();
+            Tardis tardis = consoleBlock.tardis().get();
 
-			if (tardis == null)
-				return ActionResult.FAIL;
+            if (tardis == null)
+                return ActionResult.FAIL;
 
-			TravelHandlerBase.State state = tardis.travel2().getState();
+            TravelHandlerBase.State state = tardis.travel2().getState();
 
-			if (!(state == TravelHandlerBase.State.LANDED || state == TravelHandlerBase.State.FLIGHT))
-				return ActionResult.PASS;
+            if (!(state == TravelHandlerBase.State.LANDED || state == TravelHandlerBase.State.FLIGHT))
+                return ActionResult.PASS;
 
 			consoleBlock.killControls();
 			world.removeBlock(context.getBlockPos(), false);
@@ -90,17 +93,18 @@ public class TardisItemBuilder extends Item {
 
 		ExteriorCategorySchema category = CategoryRegistry.getInstance().get(this.exterior);
 
-		ServerTardisManager.getInstance().create(new TardisBuilder()
-				.at(pos).desktop(DesktopRegistry.getInstance().get(this.desktop)).owner(player)
-				.exterior(ExteriorVariantRegistry.getInstance().pickRandomWithParent(category))
-				.<FuelData>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(fuel.getMaxFuel()))
-				.<EngineHandler>with(TardisComponent.Id.ENGINE, engine -> {
-					engine.hasEngineCore().set(true);
-					engine.enablePower();
-				}).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY, loyalty -> loyalty.set(player, new Loyalty(Loyalty.Type.OWNER)))
-		);
+        ServerTardisManager.getInstance().create(new TardisBuilder()
+                .at(pos).desktop(DesktopRegistry.getInstance().get(this.desktop)).owner(player)
+                .exterior(ExteriorVariantRegistry.getInstance().pickRandomWithParent(category))
+                .<FuelData>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(fuel.getMaxFuel()))
+                .<EngineHandler>with(TardisComponent.Id.ENGINE, engine -> {
+                    engine.hasEngineCore().set(true);
+                    engine.enablePower();
+                }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY, loyalty -> loyalty.set(player, new Loyalty(Loyalty.Type.OWNER)))
+        );
 
 		context.getStack().decrement(1);
+        player.getItemCooldownManager().set(this, 60 * 20);
 		return ActionResult.SUCCESS;
 	}
 }

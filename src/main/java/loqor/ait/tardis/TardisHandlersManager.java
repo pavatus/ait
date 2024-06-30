@@ -238,10 +238,19 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 		public JsonElement serialize(TardisHandlersManager manager, java.lang.reflect.Type type, JsonSerializationContext context) {
 			JsonObject result = new JsonObject();
 
-			manager.forEach(component -> result.add(
-                    component.getId().name(),
-                    context.serialize(component)
-            ));
+			manager.forEach(component -> {
+				IdLike idLike = component.getId();
+
+				if (idLike == null) {
+					AITMod.LOGGER.error("Id was null for {}", component.getClass());
+					return;
+				}
+
+				result.add(
+						idLike.name(),
+						context.serialize(component)
+				);
+			});
 
 			return result;
 		}

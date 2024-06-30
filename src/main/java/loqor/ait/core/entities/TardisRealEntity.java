@@ -257,6 +257,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 	@Override
 	public void onPlayerCollision(PlayerEntity player) {
+		if(player.getWorld().isClient()) return;
 		if (this.getPlayer().isPresent()) {
 			if (player != this.getPlayer().get()) {
 				if(this.getTardis().door().isOpen()) {

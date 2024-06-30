@@ -142,6 +142,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 	public static ClientExteriorVariantSchema MINT;
 	public static ClientExteriorVariantSchema HUDOLIN;
 	public static ClientExteriorVariantSchema SHALKA;
+	public static ClientExteriorVariantSchema EXILE;
 	public static ClientExteriorVariantSchema CAPSULE_DEFAULT;
 	public static ClientExteriorVariantSchema CAPSULE_SOUL;
 	public static ClientExteriorVariantSchema CAPSULE_FIRE;
@@ -190,6 +191,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 		MINT = register(new ClientClassicBoxMintVariant());
 		HUDOLIN = register(new ClientClassicBoxHudolinVariant());
 		SHALKA = register(new ClientClassicBoxShalkaVariant());
+		EXILE = register(new ClientClassicBoxExileVariant());
 
 		// Capsule
 		CAPSULE_DEFAULT = register(new ClientCapsuleDefaultVariant());

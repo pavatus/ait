@@ -20,7 +20,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import java.awt.*;
-import java.util.UUID;
 
 public class TardisSecurityScreen extends ConsoleScreen {
 	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/security_menu.png");
@@ -30,7 +29,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 	int choicesCount = 0;
 	private final Screen parent;
 
-	public TardisSecurityScreen(UUID tardis, BlockPos console, Screen parent) {
+	public TardisSecurityScreen(ClientTardis tardis, BlockPos console, Screen parent) {
 		super(Text.translatable("screen.ait.security.title"), tardis, console);
 		this.parent = parent;
 	}

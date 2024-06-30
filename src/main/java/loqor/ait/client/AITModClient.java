@@ -33,6 +33,7 @@ import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.LinkableBlockEntity;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -120,24 +121,30 @@ public class AITModClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN_TARDIS, (client, handler, buf, responseSender) -> {
             int id = buf.readInt();
             UUID uuid = buf.readUuid();
-            Screen screen = screenFromId(id, uuid);
 
-            if (screen == null)
-                return;
+            ClientTardisManager.getInstance().getTardis(uuid, tardis -> {
+                Screen screen = screenFromId(id, tardis);
 
-            client.execute(() -> client.setScreenAndRender(screen));
+                if (screen == null)
+                    return;
+
+                client.execute(() -> client.setScreenAndRender(screen));
+            });
         });
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN_CONSOLE, (client, handler, buf, responseSender) -> {
             int id = buf.readInt();
-            UUID tardis = buf.readUuid();
+            UUID uuid = buf.readUuid();
             BlockPos console = buf.readBlockPos();
-            Screen screen = screenFromId(id, tardis, console);
 
-            if (screen == null)
-                return;
+            ClientTardisManager.getInstance().getTardis(uuid, tardis -> {
+                Screen screen = screenFromId(id, tardis, console);
 
-            client.execute(() -> client.setScreenAndRender(screen));
+                if (screen == null)
+                    return;
+
+                client.execute(() -> client.setScreenAndRender(screen));
+            });
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
@@ -208,15 +215,16 @@ public class AITModClient implements ClientModInitializer {
         return screenFromId(id, null, null);
     }
 
-    public static Screen screenFromId(int id, @Nullable UUID tardis) {
+    public static Screen screenFromId(int id, @Nullable ClientTardis tardis) {
         return screenFromId(id, tardis, null);
     }
-    public static Screen screenFromId(int id, @Nullable UUID tardis, @Nullable BlockPos console) {
+
+    public static Screen screenFromId(int id, @Nullable ClientTardis tardis, @Nullable BlockPos console) {
         return switch (id) {
             default -> null;
             case 0 -> new MonitorScreen(tardis, console);
             //case 1 -> new EngineScreen(tardis);
-            case 2 -> new OwOInteriorSelectScreen(tardis, new MonitorScreen(tardis, console));
+            case 2 -> new OwOInteriorSelectScreen(tardis.getUuid(), new MonitorScreen(tardis, console));
         };
     }
 

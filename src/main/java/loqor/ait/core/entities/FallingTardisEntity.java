@@ -223,8 +223,10 @@ public class FallingTardisEntity extends Entity {
 
 		boolean isCrashing = travel.isCrashing();
 
-		if (MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
-			ClientShakeUtil.shake(isCrashing ? 3.0f : 0.5f);
+		if(this.getWorld().isClient()) {
+			if (MinecraftClient.getInstance().world != null && MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
+				ClientShakeUtil.shake(isCrashing ? 3.0f : 0.5f);
+		}
 
 		if (this.getWorld().isClient())
 			return;

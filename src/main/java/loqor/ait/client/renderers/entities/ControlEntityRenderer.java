@@ -4,6 +4,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ControlModel;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import net.fabricmc.api.EnvType;
@@ -27,6 +28,8 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
+
+import java.util.Objects;
 
 @Environment(value = EnvType.CLIENT)
 public class ControlEntityRenderer
@@ -65,10 +68,14 @@ public class ControlEntityRenderer
 		float h = (float) -textRenderer.getWidth(text) / 2;
 		HitResult hitresult = MinecraftClient.getInstance().crosshairTarget;
 		if (hitresult != null) {
+			boolean isPlayerLookingWithSonic = isPlayerLookingAtControlWithSonic(hitresult, entity);
 			boolean isPlayerLooking = isPlayerLookingAtControl(hitresult, entity);
 			OrderedText orderedText = Text.of(text.getString().toUpperCase().replace("_", " ")).asOrderedText();
-			if (isPlayerLooking) {
+			if (isPlayerLookingWithSonic) {
 				textRenderer.drawWithOutline(orderedText, h, (float) text.getString().length(), 0xF0F0F0, 0x000000, matrix4f, vertexConsumers, 0xFF);
+			} else if (isPlayerLooking && Objects.equals(entity.getName().toString().toLowerCase(), "translation{key='refueler', args=[]}[style={}]")) {
+				Text fuelLevel = Text.literal((int) ((entity.getTardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 100) + "%");
+				textRenderer.drawWithOutline(fuelLevel.asOrderedText(), h / 2, (float) fuelLevel.getString().length(), 0xF0F0F0, 0x000000, matrix4f, vertexConsumers, 0xFF);
 			}
 		}
 		matrices.pop();
@@ -126,7 +133,7 @@ public class ControlEntityRenderer
 		return current || prev;
 	}
 
-	public static boolean isPlayerLookingAtControl(HitResult hitResult, ConsoleControlEntity entity) {
+	public static boolean isPlayerLookingAtControlWithSonic(HitResult hitResult, ConsoleControlEntity entity) {
 		if (entity.getWorld() == null || !entity.getWorld().isClient())
 			return false;
 		PlayerEntity player = MinecraftClient.getInstance().player;
@@ -146,6 +153,19 @@ public class ControlEntityRenderer
 					Entity hitEntity = ((EntityHitResult) hitResult).getEntity();
 					return hitEntity != null && hitEntity.equals(entity) && (nbt.getInt(SonicItem.PREV_MODE_KEY) == 3 || nbt.getInt(SonicItem.MODE_KEY) == 3);
 				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean isPlayerLookingAtControl(HitResult hitResult, ConsoleControlEntity entity) {
+		if (entity.getWorld() == null || !entity.getWorld().isClient())
+			return false;
+		PlayerEntity player = MinecraftClient.getInstance().player;
+		if (player != null) {
+			if (hitResult.getType() == HitResult.Type.ENTITY) {
+				Entity hitEntity = ((EntityHitResult) hitResult).getEntity();
+				return hitEntity != null && hitEntity.equals(entity);
 			}
 		}
 		return false;

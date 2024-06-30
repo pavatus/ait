@@ -143,15 +143,15 @@ public class TardisUtil {
 						server.execute(() -> StackUtil.playBreak(player));
 
 						tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
-						WorldOps.updateIfOnServer(server.getWorld(tardis
-										.travel2().position().getWorld().getRegistryKey()),
-								tardis.travel2().position().getPos());
-						if (variantChange) {
-							tardis.getExterior().setVariant(schema);
-							WorldOps.updateIfOnServer(server.getWorld(tardis
-											.travel2().position().getWorld().getRegistryKey()),
-									tardis.travel2().position().getPos());
-						}
+                        WorldOps.updateIfOnServer(server.getWorld(tardis
+                                        .travel().position().getWorld().getRegistryKey()),
+                                tardis.travel().position().getPos());
+                        if (variantChange) {
+                            tardis.getExterior().setVariant(schema);
+                            WorldOps.updateIfOnServer(server.getWorld(tardis
+                                            .travel2().position().getWorld().getRegistryKey()),
+                                    tardis.travel().position().getPos());
+                        }
 					});
 				}
 		);
@@ -183,10 +183,12 @@ public class TardisUtil {
 							return;
 						}
 
-						BlockPos pos = player.getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()
-								? tardis.getDesktop().doorPos().getPos() : tardis.travel2().position().getPos();
+                        BlockPos exteriorPos = tardis.travel().position().getPos();
 
-						if ((player.squaredDistanceTo(tardis.travel2().position().getPos().getX(), tardis.travel2().position().getPos().getY(), tardis.travel2().position().getPos().getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
+						BlockPos pos = player.getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()
+								? tardis.getDesktop().doorPos().getPos() : exteriorPos;
+
+						if ((player.squaredDistanceTo(exteriorPos.getX(), exteriorPos.getY(), exteriorPos.getZ())) <= 200 || TardisUtil.inBox(tardis.getDesktop().getCorners().getBox(), player.getBlockPos())) {
 							if (!player.isSneaking()) {
 								// annoying bad code
 
@@ -216,17 +218,17 @@ public class TardisUtil {
 						ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(playerUuid);
 
 						if (serverPlayer == null) {
-							tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
-							return;
+                            tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_SCULK_SHRIEKER_BREAK, SoundCategory.BLOCKS, 3f, 1f);
+                            return;
 						}
 
-						tardis.travel2().forceDestination(DirectedGlobalPos.Cached.create(
+                        tardis.travel2().forceDestination(DirectedGlobalPos.Cached.create(
                                 (ServerWorld) serverPlayer.getWorld(), serverPlayer.getBlockPos(),
                                 (byte) RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())
                         ));
 
-						tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
-					});
+                        tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 3f, 1f);
+                    });
 				}
 		);
 	}
@@ -285,14 +287,14 @@ public class TardisUtil {
 		return door;
 	}
 
-	public static ExteriorBlockEntity getExterior(Tardis tardis) {
-		DirectedGlobalPos.Cached globalPos = tardis.travel2().position();
+    public static ExteriorBlockEntity getExterior(Tardis tardis) {
+        DirectedGlobalPos.Cached globalPos = tardis.travel2().position();
 
-		if (!(globalPos.getWorld().getBlockEntity(globalPos.getPos()) instanceof ExteriorBlockEntity exterior))
-			return null;
+        if (!(globalPos.getWorld().getBlockEntity(globalPos.getPos()) instanceof ExteriorBlockEntity exterior))
+            return null;
 
-		return exterior;
-	}
+        return exterior;
+    }
 
 	public static Corners findInteriorSpot() {
 		BlockPos first = findRandomPlace();
@@ -368,14 +370,14 @@ public class TardisUtil {
 
 	public static void teleportOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
-		TardisUtil.teleportWithDoorOffset(tardis.travel2().position().getWorld(), entity, tardis.travel2().position().toPos());
+		TardisUtil.teleportWithDoorOffset(tardis.travel().position().getWorld(), entity, tardis.travel2().position().toPos());
 	}
 
 	public static void dropOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
 
-		DirectedGlobalPos.Cached percentageOfDestination = tardis.travel2().getProgress();
-		TardisUtil.teleportWithDoorOffset(tardis.travel2().destination().getWorld(), entity, percentageOfDestination.toPos());
+        DirectedGlobalPos.Cached percentageOfDestination = tardis.travel2().getProgress();
+        TardisUtil.teleportWithDoorOffset(tardis.travel().destination().getWorld(), entity, percentageOfDestination.toPos());
 	}
 
 	public static void teleportInside(Tardis tardis, Entity entity) {

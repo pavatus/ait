@@ -1,10 +1,9 @@
 package loqor.ait.tardis;
 
 import com.google.gson.*;
+import loqor.ait.core.data.BasicSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.core.data.base.Nameable;
 import loqor.ait.registry.unlockable.Unlockable;
-import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.desktops.textures.DesktopPreviewTexture;
 import loqor.ait.tardis.util.TardisUtil;
@@ -15,7 +14,7 @@ import net.minecraft.util.Identifier;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
-public abstract class TardisDesktopSchema implements Unlockable, Nameable {
+public abstract class TardisDesktopSchema extends BasicSchema implements Unlockable {
 
 	private final Identifier id;
 	private final DesktopPreviewTexture preview;
@@ -30,11 +29,6 @@ public abstract class TardisDesktopSchema implements Unlockable, Nameable {
 	@Override
 	public Identifier id() {
 		return id;
-	}
-
-	@Override
-	public String name() {
-		return DimensionControl.convertWorldValueToModified(id().getPath());
 	}
 
 	@Override

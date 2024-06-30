@@ -7,6 +7,7 @@ import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -25,7 +26,6 @@ import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
 import java.util.List;
-import java.util.UUID;
 
 public class SonicSettingsScreen extends ConsoleScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/sonic_selection.png");
@@ -37,7 +37,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
     private final Screen parent;
     private int selectedSonic;
 
-    public SonicSettingsScreen(UUID tardis, BlockPos console, Screen parent) {
+    public SonicSettingsScreen(ClientTardis tardis, BlockPos console, Screen parent) {
         super(Text.translatable("screen.ait.sonicsettings.title"), tardis, console);
         this.parent = parent;
     }
@@ -113,7 +113,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
         if (!tardis().isUnlocked(schema)) return;
 
         SonicItem.setSchema(tardis().sonic().get(SonicHandler.HAS_CONSOLE_SONIC), schema);
-        ClientTardisUtil.changeSonicWithScreen(this.tardisId, schema);
+        ClientTardisUtil.changeSonicWithScreen(this.tardis().getUuid(), schema);
     }
 
     private <T extends ClickableWidget> void addButton(T button) {
@@ -144,14 +144,17 @@ public class SonicSettingsScreen extends ConsoleScreen {
     }
 
     protected void drawSonicScrewdriver(DrawContext context, int x, int y, float scale) {
-        if(!getFromUUID(this.tardisId).sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) {
+        if (this.tardis() == null)
+            return;
+
+        if(!this.tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) {
             return;
         }
 
-        ItemStack sonic = tardis().sonic().get(SonicHandler.HAS_CONSOLE_SONIC);
+        ItemStack sonic = this.tardis().sonic().get(SonicHandler.HAS_CONSOLE_SONIC);
         NbtCompound nbt = sonic.getOrCreateNbt();
 
-        if (getFromUUID(tardisId) != null) {
+        if (this.tardis() != null) {
             MatrixStack stack = context.getMatrices();
 
             ItemStack sonicCopy = sonic.copy();

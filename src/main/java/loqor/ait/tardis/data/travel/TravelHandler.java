@@ -35,7 +35,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
     private int animationTicks;
 
     public TravelHandler() {
-        super(Id.TRAVEL2);
+        super(Id.TRAVEL);
     }
 
     @Override

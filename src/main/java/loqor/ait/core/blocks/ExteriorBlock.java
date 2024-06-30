@@ -157,10 +157,10 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (tardis.siege().isActive())
 			return SIEGE_SHAPE;
 
-		TravelHandlerBase.State travelState = tardis.travel2().getState();
+        TravelHandlerBase.State travelState = tardis.travel2().getState();
 
-		if (travelState == TravelHandlerBase.State.LANDED || exterior.getAlpha() > 0.75)
-			return normal;
+        if (travelState == TravelHandlerBase.State.LANDED || exterior.getAlpha() > 0.75)
+            return normal;
 
 		if (DependencyChecker.hasPortals())
 			return PORTALS_SHAPE;
@@ -203,10 +203,10 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 			if (tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
 				return getLedgeShape(state);
 
-		TravelHandlerBase.State travelState = tardis.travel2().getState();
+        TravelHandlerBase.State travelState = tardis.travel2().getState();
 
-		if (travelState == TravelHandlerBase.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
-			return getNormalShape(state);
+        if (travelState == TravelHandlerBase.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
+            return getNormalShape(state);
 
 		if (DependencyChecker.hasPortals()) {
 			return PORTALS_SHAPE;
@@ -256,16 +256,16 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (!(blockEntity instanceof ExteriorBlockEntity exterior) || exterior.tardis().isEmpty())
 			return getNormalShape(state);
 
-		TravelHandlerBase.State travelState = exterior.tardis().get().travel2().getState();
+        TravelHandlerBase.State travelState = exterior.tardis().get().travel().getState();
 
-		if (travelState == TravelHandlerBase.State.LANDED || exterior.getAlpha() > 0.75)
-			return getNormalShape(state);
+        if (travelState == TravelHandlerBase.State.LANDED || exterior.getAlpha() > 0.75)
+            return getNormalShape(state);
 
-		if (exterior.tardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM))
-			return LEDGE_DOOM;
+        if (exterior.tardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM))
+            return LEDGE_DOOM;
 
-		if (DependencyChecker.hasPortals())
-			return PORTALS_SHAPE;
+        if (DependencyChecker.hasPortals())
+            return PORTALS_SHAPE;
 
 		return VoxelShapes.empty();
 	}
@@ -348,7 +348,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (antigravs)
 			return;
 
-		if (tardis.travel2().getState() != TravelHandlerBase.State.LANDED)
+		if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
 			return;
 
 		if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))
@@ -359,6 +359,22 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         if (state.get(WATERLOGGED))
 			state.with(WATERLOGGED, false);
 	}
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
+
+        if(world.isClient())
+            return;
+
+        Tardis tardis = this.findTardis(((ServerWorld) world), pos);
+
+        if (tardis == null) {
+            return;
+        }
+
+        ((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
+    }
 
 	private static boolean canFallThrough(World world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
@@ -396,12 +412,13 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (tardis == null)
 			return;
 
-		tardis.travel2().forcePosition(cached -> cached.world(world.getRegistryKey()).pos(pos));
+        tardis.travel().forcePosition(cached -> cached.world(world.getRegistryKey()).pos(pos));
 
-		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
-		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
+        world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+        ((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
 
-		tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+        world.scheduleBlockTick(pos, this, 2);
+        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
 		DoorData.lockTardis(tardis.door().previouslyLocked(), tardis, null, false);

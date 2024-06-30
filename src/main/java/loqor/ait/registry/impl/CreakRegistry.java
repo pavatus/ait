@@ -13,6 +13,7 @@ import net.minecraft.util.Identifier;
 import java.util.Random;
 
 // do i really need a registry for this?? no, but also YES.
+// TODO replace this with sound tags perhaps?
 public class CreakRegistry {
 	public static final SimpleRegistry<CreakSound> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<CreakSound>ofRegistry(new Identifier(AITMod.MOD_ID, "creak"))).buildAndRegister();
 

@@ -54,7 +54,13 @@ public class TardisComponentRegistry implements Registry {
     }
 
     public TardisComponent.IdLike get(String name) {
-        return REGISTRY.get(name);
+        // TODO fix this
+        return switch (name) {
+            case "EXTERIOR" -> TardisComponent.Id.EXTERIOR;
+            case "DESKTOP" -> TardisComponent.Id.DESKTOP;
+            case "HANDLERS" -> TardisComponent.Id.HANDLERS;
+            default -> REGISTRY.get(name);
+        };
     }
 
     public TardisComponent.IdLike get(int index) {
@@ -81,7 +87,8 @@ public class TardisComponentRegistry implements Registry {
 
         @Override
         public TardisComponent.IdLike deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return TardisComponentRegistry.getInstance().get(json.getAsString());
+            String id = json.getAsString();
+            return TardisComponentRegistry.getInstance().get(id);
         }
 
         @Override

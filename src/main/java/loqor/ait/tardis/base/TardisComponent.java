@@ -98,7 +98,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
 		HANDLERS(TardisHandlersManager.class, null),
 
-		TRAVEL2(TravelHandler.class, TravelHandler::new),
+		TRAVEL(TravelHandler.class, TravelHandler::new),
 		DOOR(DoorData.class, DoorData::new),
 		SONIC(SonicHandler.class, SonicHandler::new),
 		PERMISSIONS(PermissionHandler.class, PermissionHandler::new),

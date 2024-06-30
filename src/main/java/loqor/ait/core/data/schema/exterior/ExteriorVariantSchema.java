@@ -3,7 +3,7 @@ package loqor.ait.core.data.schema.exterior;
 import com.google.gson.*;
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.data.base.Nameable;
+import loqor.ait.core.data.BasicSchema;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.registry.impl.CategoryRegistry;
@@ -37,8 +37,7 @@ import java.lang.reflect.Type;
  * @author duzo
  * @see ExteriorVariantRegistry
  */
-public abstract class ExteriorVariantSchema implements Unlockable, Nameable {
-	private final String name;
+public abstract class ExteriorVariantSchema extends BasicSchema implements Unlockable {
 	private final Identifier category;
 	private final Identifier id;
 	private final Loyalty loyalty;
@@ -47,7 +46,6 @@ public abstract class ExteriorVariantSchema implements Unlockable, Nameable {
 	private ClientExteriorVariantSchema cachedSchema;
 
 	protected ExteriorVariantSchema(String name, Identifier category, Identifier id, Loyalty loyalty) {
-		this.name = name;
 		this.category = category;
 
 		this.id = id;
@@ -56,11 +54,6 @@ public abstract class ExteriorVariantSchema implements Unlockable, Nameable {
 
 	protected ExteriorVariantSchema(String name, Identifier category, Identifier id) {
 		this(name, category, id, Loyalty.MIN);
-	}
-
-	@Override
-	public String name() {
-		return this.name;
 	}
 
 	@Override

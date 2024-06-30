@@ -5,6 +5,7 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -33,6 +34,10 @@ public class ClientTardisUtil {
 		buf.writeBoolean(variantchange);
 		buf.writeString(variant);
 		ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);
+	}
+
+	public static void changeExteriorWithScreen(ClientTardis tardis, String exterior, String variant, boolean variantchange) {
+		changeExteriorWithScreen(tardis.getUuid(), exterior, variant, variantchange);
 	}
 
 	public static void changeSonicWithScreen(UUID uuid, SonicSchema schema) {

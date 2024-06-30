@@ -74,7 +74,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 		}
 
 		if (emission != null)
-			model.renderFalling(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisRenderEmissionCull(emission, true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, 1, 1, 1, 1, 1);
+			model.renderFalling(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(emission, true)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
 		if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
 			BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
@@ -83,7 +83,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 			if (biomeTexture != null && !exteriorVariant.texture().equals(biomeTexture)) {
 				model.renderFalling(entity, model.getPart(), matrices, vertexConsumers.getBuffer(
 						AITRenderLayers.getEntityTranslucentCull(biomeTexture)
-				), light, 1, 1, 1, 1, 1);
+				), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 			}
 		}
 

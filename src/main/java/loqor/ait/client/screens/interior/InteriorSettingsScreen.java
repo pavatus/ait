@@ -18,6 +18,7 @@ import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -37,7 +38,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Function;
 
 import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
@@ -57,8 +57,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	private final Screen parent;
 	private TardisDesktopSchema selectedDesktop;
 
-	// loqor DONT rewrite with owo lib : (
-	public InteriorSettingsScreen(UUID tardis, BlockPos console, Screen parent) {
+	public InteriorSettingsScreen(ClientTardis tardis, BlockPos console, Screen parent) {
 		super(Text.translatable("screen.ait.interiorsettings.title"), tardis, console);
 
 		this.parent = parent;
@@ -170,7 +169,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private void toSonicScreen() {
-		MinecraftClient.getInstance().setScreen(new SonicSettingsScreen(tardis().getUuid(), this.console, this));
+		MinecraftClient.getInstance().setScreen(new SonicSettingsScreen(this.tardis(), this.console, this));
 	}
 
 	public <T extends ClickableWidget> void addButton(T button) {
@@ -221,7 +220,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	public void toSecurityScreen() {
-		MinecraftClient.getInstance().setScreen(new TardisSecurityScreen(tardis().getUuid(), this.console, this));
+		MinecraftClient.getInstance().setScreen(new TardisSecurityScreen(tardis(), this.console, this));
 	}
 
 
@@ -298,6 +297,9 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private void renderDesktop(DrawContext context) {
+
+		if (this.selectedDesktop == null) return;
+
 		context.drawCenteredTextWithShadow(
 				this.textRenderer,
 				this.selectedDesktop.name(),
@@ -305,8 +307,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				(int) (top + (bgHeight * 0.58f)),
 				0xffffff
 		);
-
-		if (this.selectedDesktop == null) return;
 
 		context.getMatrices().push();
 		context.getMatrices().translate(0, 0, -50f);

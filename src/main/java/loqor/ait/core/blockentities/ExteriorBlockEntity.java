@@ -129,7 +129,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 		}
 
-		if (tardis.travel2().getState() == TravelHandlerBase.State.LANDED)
+		if (tardis.travel().getState() == TravelHandlerBase.State.LANDED)
 			DoorData.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
 	}
 
@@ -142,7 +142,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		Tardis tardis = ref.get();
 		boolean previouslyLocked = tardis.door().previouslyLocked();
 
-		if (!previouslyLocked && tardis.travel2().getState() == TravelHandlerBase.State.MAT && this.getAlpha() >= 0.9f)
+		if (!previouslyLocked && tardis.travel().getState() == TravelHandlerBase.State.MAT && this.getAlpha() >= 0.9f)
 			TardisUtil.teleportInside(tardis, entity);
 
 		if (!tardis.door().isOpen())
@@ -154,43 +154,43 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
 	@Override
 	public void tick(World world, BlockPos pos, BlockState blockState, ExteriorBlockEntity blockEntity) {
-		TardisRef ref = this.tardis();
+        TardisRef ref = this.tardis();
 
-		if (ref == null || ref.isEmpty())
-			return;
+        if (ref == null || ref.isEmpty())
+            return;
 
-		Tardis tardis = ref.get();
+        Tardis tardis = ref.get();
 
-		TravelHandlerBase travel = tardis.travel2();
-		TravelHandlerBase.State state = travel.getState();
+        TravelHandlerBase travel = tardis.travel2();
+        TravelHandlerBase.State state = travel.getState();
 
-		if (!world.isClient())
-			return;
+        if (!world.isClient())
+            return;
 
-		if (state.animated())
-			this.getAnimation().tick(tardis);
+        if (state.animated())
+            this.getAnimation().tick(tardis);
 
-		this.exteriorLightBlockState(state);
-		this.checkAnimations();
+        this.exteriorLightBlockState(state);
+        this.checkAnimations();
 	}
 
 	public void verifyAnimation() {
 		TardisRef ref = this.tardis();
 
-		if (this.animation != null || ref.isEmpty())
+		if (this.animation != null || ref == null || ref.isEmpty())
 			return;
 
 		Tardis tardis = ref.get();
 
 		this.animation = tardis.getExterior().getVariant().animation(this);
-		this.animation.setupAnimation(tardis.travel2().getState());
+		this.animation.setupAnimation(tardis.travel().getState());
 
 		if (this.getWorld() != null && !this.getWorld().isClient()) {
-			this.animation.tellClientsToSetup(tardis.travel2().getState());
+			this.animation.tellClientsToSetup(tardis.travel().getState());
 		}
 	}
 
-	@Environment(EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
 	public void checkAnimations() {
 		if (this.tardis().isEmpty())
 			return;
@@ -220,12 +220,12 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		return this.getAnimation().getAlpha();
 	}
 
-	private void exteriorLightBlockState(TravelHandlerBase.State state) {
-		if (!state.animated())
-			return;
+    private void exteriorLightBlockState(TravelHandlerBase.State state) {
+        if (!state.animated())
+            return;
 
         this.getWorld().setBlockState(pos, this.getWorld().getBlockState(pos).with(
-				ExteriorBlock.LEVEL_9, Math.round(this.getAlpha() * 9)
-		));
+                ExteriorBlock.LEVEL_9, Math.round(this.getAlpha() * 9)
+        ));
     }
 }

@@ -20,6 +20,7 @@ import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.TardisRef;
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -120,7 +121,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
 			Identifier biomeTexture = exteriorVariant.getBiomeTexture(biome.getBiomeKey());
 
-			if (biomeTexture != null && !texture.equals(biomeTexture))
+			if (biomeTexture != null && !texture.equals(biomeTexture) && tardis.travel().position().getWorld() != null && !(tardis.travel().position().getWorld().getBlockState(tardis.travel().position().getPos().down()).getBlock() instanceof AirBlock))
                 model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)), light, overlay, 1, 1, 1, 1);
         }
 

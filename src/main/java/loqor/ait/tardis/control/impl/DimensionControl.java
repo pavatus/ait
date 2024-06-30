@@ -29,7 +29,7 @@ public class DimensionControl extends Control {
 			return false;
 		}
 
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 		DirectedGlobalPos.Cached dest = travel.destination();
 
 		List<ServerWorld> dims = getDimensions(world.getServer());
@@ -37,9 +37,9 @@ public class DimensionControl extends Control {
 
 		int next;
 		if (!player.isSneaking()) {
-			next = (current + 1) > dims.size() - 1 ? 0 : current + 1;
+			next = ((current + 1) > dims.size() - 1) ? 0 : current + 1;
 		} else {
-			next = (current - 1) < 0 ? dims.size() - 1 : current - 1;
+			next = ((current - 1) < 0) ? dims.size() - 1 : current - 1;
 		}
 
 		// FIXME we should make it so that once the ender dragon is defeated, the end is unlocked; also make that a config option as well for the server. - Loqor
@@ -65,6 +65,7 @@ public class DimensionControl extends Control {
 	}
 
 	// @TODO for some reason in the dev env, this method tends to not like doing anything sometimes. idk, it works or it doesnt, but in builds, it always works. funny what a lil spaghetti man can tell you at 3 am
+	@Deprecated(forRemoval = true)
 	public static String convertWorldValueToModified(String value) {
 
 		// Split the string into words

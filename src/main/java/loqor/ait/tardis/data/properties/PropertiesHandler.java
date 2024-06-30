@@ -15,7 +15,6 @@ import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -179,10 +178,7 @@ public class PropertiesHandler {
 	}
 
 	private static void unlockAllFreebies(HashMap<String, Object> map) {
-		for (Iterator<TardisDesktopSchema> it = DesktopRegistry.getInstance().iterator(); it.hasNext(); ) {
-			TardisDesktopSchema schema = it.next();
-			map.put(schema.id().getPath() + "_unlocked", schema.freebie());
-		}
+
 	}
 
 	// FIXME wow this sucks.
@@ -233,8 +229,6 @@ public class PropertiesHandler {
 		map.put(ShieldData.IS_SHIELDED, false);
 		map.put(TardisCrashData.TARDIS_RECOVERY_STATE, TardisCrashData.State.NORMAL);
 		map.put(TardisCrashData.TARDIS_REPAIR_TICKS, 0);
-
-		unlockAllFreebies(map);
 		return map;
 	}
 }
