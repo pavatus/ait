@@ -41,11 +41,6 @@ jobs:
         uses: Kir-Antipov/mc-publish@v3.3                                   #The specified MC-Publish GitHub Action in the version 3.2
         with:
           changelog-file: CHANGELOG.md
-          curseforge-id: 856138                                             #The id of your CurseForge project
-          curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
-
-          modrinth-id: ZMP9ZjB9                                             #The id of your modrinth project
-          modrinth-token: "${{env.MODRINTH_TOKEN}}"
 
           github-token: "${{secrets.GITHUB_TOKEN}}"
           github-generate-changelog: true
