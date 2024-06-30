@@ -7,5 +7,6 @@
     "overload": "ait:item/sonic/coral/overload",
     "scanning": "ait:item/sonic/coral/scanning",
     "tardis": "ait:item/sonic/coral/tardis"
-  }
+  },
+  "loyalty": "NEUTRAL"
 }

@@ -7,5 +7,6 @@
     "overload": "ait:item/sonic/copper/overload",
     "scanning": "ait:item/sonic/copper/scanning",
     "tardis": "ait:item/sonic/copper/tardis"
-  }
+  },
+  "loyalty": "PILOT"
 }

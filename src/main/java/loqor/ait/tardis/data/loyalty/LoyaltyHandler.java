@@ -4,6 +4,7 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.base.Nameable;
 import loqor.ait.registry.impl.DesktopRegistry;
+import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
@@ -86,6 +87,7 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
         ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
         DesktopRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
         ExteriorVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        SonicRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
     }
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {

@@ -7,5 +7,6 @@
     "overload": "ait:item/sonic/renaissance/overload",
     "scanning": "ait:item/sonic/renaissance/scanning",
     "tardis": "ait:item/sonic/renaissance/tardis"
-  }
+  },
+  "loyalty": "COMPANION"
 }

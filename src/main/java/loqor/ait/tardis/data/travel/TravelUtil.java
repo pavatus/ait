@@ -21,7 +21,7 @@ public class TravelUtil {
 
         for (int i = 0; i <= limit; i++) {
             dest = dest.pos(
-                    world.random.nextBoolean() ? world.random.nextInt(max) : -world.random.nextInt(max), 0,
+                    world.random.nextBoolean() ? world.random.nextInt(max) : -world.random.nextInt(max), dest.getPos().getY(),
                     world.random.nextBoolean() ? world.random.nextInt(max) : -world.random.nextInt(max)
             );
         }
