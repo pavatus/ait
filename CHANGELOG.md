@@ -7,3 +7,4 @@
 - Summoning with sonic faces right direction ( #247 )
 - Coral growth texture/model fixed ( #182 )
 - Removed insta-travel via crashing
+- Custom menu off by default >:)
