@@ -42,7 +42,7 @@ jobs:
         with:
           changelog-file: CHANGELOG.md
           # curseforge-id: 856138                                             #The id of your CurseForge project
-          curseforge-token: "${{secrets.CURSEFORGE_TOKEN}}"
+          # curseforge-token: "${{secrets.CURSEFORGE_TOKEN}}"
 
           modrinth-id: ZMP9ZjB9                                             #The id of your modrinth project
           modrinth-token: "${{secrets.MODRINTH_TOKEN}}"
