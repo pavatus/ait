@@ -115,7 +115,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 			travel.handbrake(false);
 			travel.autopilot(true);
 
-			travel.dematerialize();
+			travel.forceDemat();
 		}
 	}
 
