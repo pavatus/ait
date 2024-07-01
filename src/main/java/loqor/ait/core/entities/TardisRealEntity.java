@@ -145,10 +145,10 @@ public class TardisRealEntity extends LinkableLivingEntity {
 						shouldTriggerLandSound = true;
 					}
 
-					if (user.isSneaking()) {
+					if (user.isSneaking() && this.getWorld() instanceof ServerWorld serverWorld) {
 						// TODO(travel): replace with proper travel method
 						getTardis().travel().immediatelyLandHere(DirectedGlobalPos.Cached.create(
-                                (ServerWorld) this.getWorld(), this.getBlockPos(), DirectionControl.getGeneralizedRotation(
+								serverWorld, this.getBlockPos(), DirectionControl.getGeneralizedRotation(
 										RotationPropertyHelper.fromYaw(user.getBodyYaw())))
 						);
 
