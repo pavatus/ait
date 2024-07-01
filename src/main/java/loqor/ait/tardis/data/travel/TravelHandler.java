@@ -129,6 +129,9 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
 
         world.setBlockState(pos, blockState);
 
+        if (!PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED))
+            world.scheduleBlockTick(pos, AITBlocks.EXTERIOR_BLOCK, 2);
+
         ExteriorBlockEntity exterior = new ExteriorBlockEntity(pos, blockState, this.tardis);
         world.addBlockEntity(exterior);
 
