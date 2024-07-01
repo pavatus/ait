@@ -1,6 +1,7 @@
 package loqor.ait.core.item;
 
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.blocks.PeanutBlock;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
@@ -47,6 +48,9 @@ public class HammerItem extends SwordItem {
 
 		if (!(context.getWorld() instanceof ServerWorld world))
 			return ActionResult.SUCCESS;
+
+		if (world.getBlockState(pos).getBlock() instanceof PeanutBlock peanut)
+			peanut.explode(context.getWorld(), pos);
 
 		if (!(world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity))
 			return ActionResult.PASS;
