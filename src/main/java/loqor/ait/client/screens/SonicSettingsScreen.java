@@ -162,6 +162,16 @@ public class SonicSettingsScreen extends ConsoleScreen {
             SonicSchema schema = SonicRegistry.getInstance().toList().get(this.selectedSonic);
 
             SonicItem.setSchema(sonicCopy, schema);
+
+            stack.push();
+            stack.translate(50f, 50f, 1000f);
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    (tardis().isUnlocked(schema)) ? "" : "\uD83D\uDD12",
+                    x, y,
+                    Color.WHITE.getRGB());
+            stack.pop();
+
             stack.push();
 
             SonicSchema.Rendering rendering = schema.rendering();
@@ -181,15 +191,6 @@ public class SonicSettingsScreen extends ConsoleScreen {
             DiffuseLighting.enableGuiDepthLighting();
             RenderSystem.setShaderColor(1, 1, 1,1);
 
-            stack.pop();
-
-            stack.push();
-            stack.translate(0, 0, 50f);
-            context.drawCenteredTextWithShadow(
-                    this.textRenderer,
-                    (tardis().isUnlocked(schema)) ? "" : "\uD83D\uDD12",
-                    x, y,
-                    Color.WHITE.getRGB());
             stack.pop();
 
             stack.push();
