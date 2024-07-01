@@ -64,7 +64,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     // TODO inline
     private void onFlightFinished() {
         this.tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BELL_RESONATE);
-        this.resetFlight();
+        //this.resetFlight();
 
         if (this.autopilot.get() && !PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT))
             this.tardis().travel().rematerialize();
@@ -103,9 +103,6 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     }
 
     public void recalculate() {
-        if (this.isFlightTicking() && this.hasFinishedFlight())
-            return;
-
         this.setTargetTicks(TravelUtil.getFlightDuration(this.position(), this.destination()));
         this.setFlightTicks(this.isInFlight() ? MathHelper.clamp(this.getFlightTicks(), 0, this.getTargetTicks()) : 0);
     }
@@ -196,7 +193,6 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         if (this.isInFlight() && !travel.isCrashing() && this.getTargetTicks() == 0 && this.getFlightTicks() < this.getTargetTicks())
             this.recalculate();
 
-        this.recalculate();
         if (server.getTicks() % 2 == 0)
             this.triggerSequencingDuringFlight(tardis);
 
