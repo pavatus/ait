@@ -1,5 +1,6 @@
 package loqor.ait.tardis.data.travel;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
@@ -100,7 +101,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
 
             System.out.println("to: " + this.destination().getPos() + "; from: " + this.position().getPos() + "; %=" + this.getDurationAsPercentage() +
                     "; alt: " + TravelUtil.getPositionFromPercentage(
-                    this.position(), this.destination(), this.getDurationAsPercentage()
+                    this.position(), this.destination(), 100 - this.getDurationAsPercentage()
             ).getPos());
         }
         return TravelUtil.getPositionFromPercentage(
@@ -118,11 +119,15 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         this.setTargetTicks(TravelUtil.getFlightDuration(
                 this.position(), this.destination())
         );
+
+        AITMod.LOGGER.info("Started flight: ");
     }
 
     protected void resetFlight() {
         this.setFlightTicks(0);
         this.setTargetTicks(0);
+
+        AITMod.LOGGER.info("Reset flight");
     }
 
     public int getFlightTicks() {
