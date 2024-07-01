@@ -42,9 +42,14 @@ public class TravelUtil {
 
     public static DirectedGlobalPos.Cached getPositionFromPercentage(DirectedGlobalPos.Cached source, DirectedGlobalPos.Cached destination, int percentage) {
         // https://stackoverflow.com/questions/33907276/calculate-point-between-two-coordinates-based-on-a-percentage
+        if (percentage == 0)
+            return source;
+
+        if (percentage == 100)
+            return destination;
 
         float per = percentage / 100f;
-        BlockPos diff = destination.getPos().subtract(source.getPos());
+        BlockPos diff = destination.getPos().toImmutable().subtract(source.getPos());
         return destination.offset((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per));
     }
 
