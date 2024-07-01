@@ -260,7 +260,7 @@ public class AITMod implements ModInitializer {
 				TardisCriterions.TAKEOFF.trigger(player);
 			}
 
-			return false;
+			return TardisEvents.Interaction.PASS;
 		});
 
 		AIT_ITEM_GROUP.initialize();
