@@ -18,8 +18,8 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Objects;
@@ -83,10 +83,8 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 			}
 		} else {
 			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(
-					(entity.getPlayer().get().getHorizontalFacing() == Direction.NORTH
-							|| entity.getPlayer().get().getHorizontalFacing() == Direction.SOUTH) ?
-							entity.getPlayer().get().getHorizontalFacing().asRotation() :
-							-entity.getPlayer().get().getHorizontalFacing().asRotation()));
+					RotationPropertyHelper.toDegrees(tardis.travel().position().getRotation())
+			));
 		}
 
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));

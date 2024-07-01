@@ -63,7 +63,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 			}
 
 			buf.encodeAsJson(DatapackExterior.CODEC, new DatapackExterior(
-					schema.name(), schema.id(), schema.categoryId(), schema.id(), DatapackExterior.DEFAULT_TEXTURE,
+					schema.id(), schema.categoryId(), schema.id(), DatapackExterior.DEFAULT_TEXTURE,
 					DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, false, schema.getRequirement())
 			);
 		}

@@ -34,7 +34,6 @@ public class DatapackExterior extends ExteriorVariantSchema {
 
 	public static final Codec<DatapackExterior> CODEC = RecordCodecBuilder.create(
 			instance -> instance.group(
-					Codec.STRING.optionalFieldOf("name", "Undefined").forGetter(ExteriorVariantSchema::name),
 					Identifier.CODEC.fieldOf("id").forGetter(ExteriorVariantSchema::id),
 					Identifier.CODEC.fieldOf("category").forGetter(ExteriorVariantSchema::categoryId),
 					Identifier.CODEC.fieldOf("parent").forGetter(DatapackExterior::getParentId),
@@ -45,8 +44,8 @@ public class DatapackExterior extends ExteriorVariantSchema {
 					Loyalty.CODEC.optionalFieldOf("loyalty", Loyalty.MIN).forGetter(DatapackExterior::getRequirement)
 			).apply(instance, DatapackExterior::new));
 
-	public DatapackExterior(String name, Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, Identifier biomeTexturePath, boolean isDatapack, Loyalty loyalty) {
-		super(name, category, id, loyalty);
+	public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, Identifier biomeTexturePath, boolean isDatapack, Loyalty loyalty) {
+		super(category, id, loyalty);
 		this.parent = parent;
 		this.texture = texture;
 		this.emission = emission;

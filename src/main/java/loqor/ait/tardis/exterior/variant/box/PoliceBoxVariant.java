@@ -1,15 +1,15 @@
 package loqor.ait.tardis.exterior.variant.box;
 
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.AITMod;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.animation.PulsatingAnimation;
-import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.door.PoliceBoxDoorVariant;
+import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -19,7 +19,7 @@ public abstract class PoliceBoxVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/police_box/police_box_";
 
 	protected PoliceBoxVariant(String name) { // idk why i added the modid bit i dont use it later lol
-		super(name, PoliceBoxCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/police_box/" + name), new Loyalty(Loyalty.Type.PILOT));
+		super(PoliceBoxCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/police_box/" + name), new Loyalty(Loyalty.Type.PILOT));
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 public class DevDesktop extends TardisDesktopSchema {
 
 	public DevDesktop() {
-		super(new Identifier(AITMod.MOD_ID, "desktop/dev"), new DesktopPreviewTexture(
+		super(new Identifier(AITMod.MOD_ID, "dev"), new DesktopPreviewTexture(
 				DesktopPreviewTexture.pathFromDesktopId(new Identifier(AITMod.MOD_ID, "dev")),
 				800,
 				800

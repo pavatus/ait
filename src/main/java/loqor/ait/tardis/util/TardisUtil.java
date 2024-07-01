@@ -42,6 +42,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.WardenEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -414,6 +415,7 @@ public class TardisUtil {
 					player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
 				} else {
 					if (entity instanceof EnderDragonEntity
+							|| entity instanceof EnderDragonPart
 							|| entity instanceof WitherEntity
 							|| entity instanceof WardenEntity)
 						return;

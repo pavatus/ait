@@ -18,7 +18,7 @@ public abstract class CapsuleVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/capsule/capsule_";
 
 	protected CapsuleVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-		super(name, CapsuleCategory.REFERENCE, new Identifier(modId, "exterior/capsule/" + name));
+		super(CapsuleCategory.REFERENCE, new Identifier(modId, "exterior/capsule/" + name));
 	}
 
 	protected CapsuleVariant(String name) {

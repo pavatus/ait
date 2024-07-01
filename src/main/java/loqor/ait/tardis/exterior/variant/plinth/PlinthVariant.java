@@ -1,15 +1,15 @@
 package loqor.ait.tardis.exterior.variant.plinth;
 
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.AITMod;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.animation.PulsatingAnimation;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.exterior.category.PlinthCategory;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
-import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.tardis.door.PlinthDoorVariant;
+import loqor.ait.tardis.exterior.category.PlinthCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -19,7 +19,7 @@ public abstract class PlinthVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/plinth/plinth_";
 
 	protected PlinthVariant(String name) {
-		super(name, PlinthCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/plinth/" + name), new Loyalty(Loyalty.Type.COMPANION));
+		super(PlinthCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/plinth/" + name), new Loyalty(Loyalty.Type.COMPANION));
 	}
 
 	@Override

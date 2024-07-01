@@ -1,15 +1,15 @@
 package loqor.ait.tardis.exterior.variant.classic;
 
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.exterior.category.ClassicCategory;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.AITMod;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.animation.PulsatingAnimation;
+import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.door.ClassicDoorVariant;
-import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.tardis.exterior.category.ClassicCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -19,7 +19,7 @@ public abstract class ClassicBoxVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/classic/classic_";
 
 	protected ClassicBoxVariant(String name, String modId) {
-		super(name, ClassicCategory.REFERENCE, new Identifier(modId, "exterior/classic/" + name), new Loyalty(Loyalty.Type.OWNER));
+		super(ClassicCategory.REFERENCE, new Identifier(modId, "exterior/classic/" + name), new Loyalty(Loyalty.Type.OWNER));
 	}
 
 	protected ClassicBoxVariant(String name) {

@@ -26,6 +26,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.c2s.play.UpdatePlayerAbilitiesC2SPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -93,8 +95,8 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 		world.spawnEntity(tardisRealEntity);
 
-		player.getAbilities().flying = true;
-		player.getAbilities().allowFlying = true;
+		if (player instanceof ServerPlayerEntity serverUser)
+			updatePlayer(serverUser, true, true);
 
 		player.getAbilities().setFlySpeed(player.getAbilities().getFlySpeed() * 1.5F);
 		travel.finishDemat();
@@ -130,7 +132,10 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				if((gravs || this.isOnGround()) && !user.getAbilities().flying) {
 					if(!shouldTriggerLandSound) {
 						this.getWorld().playSound(null, this.getBlockPos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS, 2F, 1F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-						user.getAbilities().flying = false;
+
+						if (user instanceof ServerPlayerEntity serverUser)
+							updatePlayer(serverUser, null, false);
+
 						if(this.getTardis().door().isClosed()) {
 							DamageSource damage = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
 							this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity -> (!(entity instanceof PlayerEntity) || !entity.isSpectator() && !((PlayerEntity) entity).isCreative())).forEach((entity) -> {
@@ -156,7 +161,9 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					}
 				} else {
 					shouldTriggerLandSound = false;
-					user.getAbilities().allowFlying = true;
+
+					if (user instanceof ServerPlayerEntity serverUser)
+						updatePlayer(serverUser, true, null);
 				}
 			}
 		} else if (getTardis().travel().getState() == TravelHandlerBase.State.LANDED) {
@@ -167,8 +174,10 @@ public class TardisRealEntity extends LinkableLivingEntity {
 			} else {
 				user.clearStatusEffects();
 				user.getAbilities().setFlySpeed(0.05F);
-				user.getAbilities().allowFlying = false;
-				user.getAbilities().flying = false;
+
+				if (user instanceof ServerPlayerEntity serverUser)
+					updatePlayer(serverUser, false, false);
+
 				if(this.getPlayerBlockPos().isEmpty()) {
 					TardisUtil.teleportInside(this.getTardis(), user);
 				} else {
@@ -187,6 +196,16 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				TardisUtil.teleportInside(this.getTardis(), entity);
 			});
 		}
+	}
+
+	private static void updatePlayer(ServerPlayerEntity player, Boolean allowFlight, Boolean flying) {
+		if (allowFlight != null)
+			player.getAbilities().allowFlying = allowFlight;
+
+		if (flying != null)
+			player.getAbilities().flying = flying;
+
+		player.networkHandler.sendPacket(new UpdatePlayerAbilitiesC2SPacket(player.getAbilities()));
 	}
 
 	public Vec3d lerpVelocity(float tickDelta) {

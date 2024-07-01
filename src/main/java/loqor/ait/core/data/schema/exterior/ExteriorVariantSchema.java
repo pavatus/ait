@@ -45,15 +45,16 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 	@Environment(EnvType.CLIENT)
 	private ClientExteriorVariantSchema cachedSchema;
 
-	protected ExteriorVariantSchema(String name, Identifier category, Identifier id, Loyalty loyalty) {
-		this.category = category;
+	protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty) {
+        super("exterior");
+        this.category = category;
 
 		this.id = id;
 		this.loyalty = loyalty;
 	}
 
-	protected ExteriorVariantSchema(String name, Identifier category, Identifier id) {
-		this(name, category, id, Loyalty.MIN);
+	protected ExteriorVariantSchema(Identifier category, Identifier id) {
+		this(category, id, Loyalty.MIN);
 	}
 
 	@Override

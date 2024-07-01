@@ -3,20 +3,20 @@ package loqor.ait.core.data;
 import loqor.ait.core.data.base.Identifiable;
 import loqor.ait.core.data.base.Nameable;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 public abstract class BasicSchema implements Identifiable, Nameable {
 
+    private final String prefix;
     private Text text;
+
+    protected BasicSchema(String prefix) {
+        this.prefix = prefix;
+    }
 
     @Override
     public Text text() {
         if (this.text == null) {
-            Identifier id = this.id();
-            String[] parts = id.getPath().split("/");
-
-            this.text = Text.translatable(parts[0] + "." + id.getNamespace()
-                    + "." + join('.', 1, parts));
+            this.text = Text.translatable(this.id().toTranslationKey(this.prefix));
         }
 
         return text;

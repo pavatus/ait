@@ -33,7 +33,7 @@ public class DirectionControl extends Control {
 		rotation = wrap(rotation, ExteriorBlock.MAX_ROTATION_INDEX);
 
 		travel.forceDestination(dest.rotation(rotation));
-		messagePlayer(player, getNextGeneralizedRotation(dest.getRotation()));
+		messagePlayer(player, rotation);
 		return true;
 	}
 

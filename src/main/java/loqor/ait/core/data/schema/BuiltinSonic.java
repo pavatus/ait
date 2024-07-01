@@ -1,7 +1,6 @@
 package loqor.ait.core.data.schema;
 
 import loqor.ait.AITMod;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import static loqor.ait.AITMod.MOD_ID;
@@ -14,8 +13,8 @@ public class BuiltinSonic extends SonicSchema {
             "inactive", "interaction", "overload", "scanning", "tardis"
     };
 
-    protected BuiltinSonic(Identifier id, String translation, Models models) {
-        super(id, Text.translatable(translation), models, new Rendering());
+    protected BuiltinSonic(Identifier id, Models models) {
+        super(id, models, new Rendering());
     }
 
     public static BuiltinSonic create(String id) {
@@ -27,7 +26,7 @@ public class BuiltinSonic extends SonicSchema {
 
         Identifier sonicId = new Identifier(AITMod.MOD_ID, id);
 
-        return new BuiltinSonic(sonicId, sonicId.toTranslationKey("sonic"), new Models(
+        return new BuiltinSonic(sonicId, new Models(
                 identifiers[0], identifiers[1], identifiers[2], identifiers[3], identifiers[4]
         ));
     }
