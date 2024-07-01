@@ -454,6 +454,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             // Other
             provider.addSound("tardis/cloister", AITSounds.CLOISTER);
             provider.addSound("tardis/groan", AITSounds.GROAN);
+            provider.addSound("tardis/vortex_sound", AITSounds.VORTEX_SOUND);
 
             return provider;
         })));

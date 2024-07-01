@@ -67,6 +67,9 @@ public class AITSounds implements AutoRegistryContainer<SoundEvent> {
 	public static final SoundEvent CREAK_SEVEN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_seven"));
 	public static final SoundEvent WHISPER = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/whisper"));
 
+	// Vortex Sounds
+	public static final SoundEvent VORTEX_SOUND = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/vortex_sound"));
+
 	// Tools
 	public static final SoundEvent DING = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tools/goes_ding"));
 
