@@ -197,7 +197,6 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
                 || tardis.door().isOpen() || tardis.isRefueling()
                 || TravelUtil.dematCooldown(this.tardis)
                 || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
-                || tardis.door().isOpen()
         ) {
             this.failDemat();
             return;

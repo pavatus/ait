@@ -144,13 +144,13 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     }
 
     public void autopilot(boolean value) {
+        this.autopilot.set(value);
+
         int speed = this.speed.get();
         int expectedSpeed = this.clampSpeed(speed);
 
         if (expectedSpeed != speed)
-            this.speed(expectedSpeed);
-
-        this.autopilot.set(value);
+            this.speed.set(expectedSpeed);
     }
 
     public void increaseSpeed() {
