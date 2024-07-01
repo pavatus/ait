@@ -3,6 +3,7 @@ package loqor.ait.core.data;
 import loqor.ait.core.data.base.Identifiable;
 import loqor.ait.core.data.base.Nameable;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 public abstract class BasicSchema implements Identifiable, Nameable {
 
@@ -16,7 +17,15 @@ public abstract class BasicSchema implements Identifiable, Nameable {
     @Override
     public Text text() {
         if (this.text == null) {
-            this.text = Text.translatable(this.id().toTranslationKey(this.prefix));
+            Identifier id = this.id();
+
+            // turn stuff like ait:exterior/police_box into ait:police_box
+            String[] parts = id.getPath().split("/");
+            String last = parts[parts.length - 1];
+
+            this.text = Text.translatable(
+                    this.prefix + "." + id.getNamespace() + "." + last
+            );
         }
 
         return text;
