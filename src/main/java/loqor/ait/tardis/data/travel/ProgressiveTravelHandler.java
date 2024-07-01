@@ -57,7 +57,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     }
 
     public boolean hasFinishedFlight() {
-        return (this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 || tardis.travel().isCrashing()) &&
+        return (this.getFlightTicks() >= this.getTargetTicks() || tardis.travel().isCrashing()) &&
                 !PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
     }
 
