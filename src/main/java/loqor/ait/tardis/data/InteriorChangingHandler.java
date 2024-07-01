@@ -113,7 +113,6 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		if (tardis.hasGrowthExterior()) {
 			TravelHandler travel = tardis.travel();
 
-			travel.handbrake(false);
 			travel.autopilot(true);
 
 			travel.forceDemat();

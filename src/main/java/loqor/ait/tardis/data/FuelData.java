@@ -120,7 +120,7 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 				removeFuel((4 ^ (tardis.travel().speed())) * (tardis.tardisHammerAnnoyance + 1));
 			}
 
-			// TODO(travel): replace with proper travel method
+			// TODO: make a crash method to avoid isGrowth checks outside of interiorchanginghandler
 			if (!tardis.engine().hasPower() && !tardis.isGrowth())
 				  this.tardis.travel().crash(); // hehe force land if you don't have enough fuel
 		}
