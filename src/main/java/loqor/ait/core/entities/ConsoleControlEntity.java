@@ -281,7 +281,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		if (this.consoleBlockPos == null || this.control == null || !(world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))
 			return null;
 
-        System.out.println("haha, control: " + console);
 		return console.tardis().get();
 	}
 

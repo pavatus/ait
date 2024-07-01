@@ -26,7 +26,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.c2s.play.UpdatePlayerAbilitiesC2SPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -205,7 +204,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 		if (flying != null)
 			player.getAbilities().flying = flying;
 
-		player.networkHandler.sendPacket(new UpdatePlayerAbilitiesC2SPacket(player.getAbilities()));
+		player.sendAbilitiesUpdate();
 	}
 
 	public Vec3d lerpVelocity(float tickDelta) {
