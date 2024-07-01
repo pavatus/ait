@@ -41,7 +41,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 				return false;
 
 			tardis.getExterior().setType(CategoryRegistry.CAPSULE);
-            return false;
+            return true;
         });
 	}
 
