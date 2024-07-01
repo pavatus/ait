@@ -146,11 +146,11 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         this.deleteExterior();
         this.state.set(TravelHandlerBase.State.LANDED);
 
-        this.placeExterior(false);
-        this.finishRemat();
-
         this.forceDestination(globalPos);
         this.forcePosition(globalPos);
+
+        this.finishRemat();
+        this.placeExterior(false);
     }
 
     private void runAnimations(ExteriorBlockEntity exterior) {
