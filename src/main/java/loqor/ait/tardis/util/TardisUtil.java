@@ -588,7 +588,12 @@ public class TardisUtil {
 	}
 
 	public static List<Entity> getEntitiesInInterior(Tardis tardis, int area) {
-		BlockPos pos = tardis.getDesktop().doorPos().getPos();
+		DirectedBlockPos directedPos = tardis.getDesktop().doorPos();
+
+		if (directedPos == null)
+			return List.of();
+
+		BlockPos pos = directedPos.getPos();
 
 		return getTardisDimension().getEntitiesByClass(Entity.class, new Box(
 				pos.north(area).east(area).up(area), pos.south(area).west(area).down(area)

@@ -64,7 +64,7 @@ public class ServerTardis extends Tardis {
 		}
 
 		// @TODO if tnt explodes in the interior (near the console), then it should crash
-		if (this.isGrowth())
+		if (this.isGrowth() && server.getTicks() % 10 == 0)
 			this.generateInteriorWithItem();
 
 		if (this.isGrowth() && !this.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()) {
