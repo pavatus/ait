@@ -1,6 +1,7 @@
 package loqor.ait.client.screens;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.data.schema.SonicSchema;
@@ -170,9 +171,15 @@ public class SonicSettingsScreen extends ConsoleScreen {
             stack.translate(x + positionOffset.x(), y + positionOffset.y(), positionOffset.z());
             stack.scale(scale + scaleOffset.x(), scale + scaleOffset.y(), scale + scaleOffset.z());
 
+            boolean isSonicUnlocked = tardis().isUnlocked(schema);
+
+            float base = isSonicUnlocked ? 1f : 0.1f;
+
+            RenderSystem.setShaderColor(base, base, base, 1f);
             DiffuseLighting.disableGuiDepthLighting();
             context.drawItem(sonicCopy,0, 0);
             DiffuseLighting.enableGuiDepthLighting();
+            RenderSystem.setShaderColor(1, 1, 1,1);
 
             stack.pop();
 
