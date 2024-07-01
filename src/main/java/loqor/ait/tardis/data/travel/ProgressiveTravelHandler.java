@@ -1,6 +1,5 @@
 package loqor.ait.tardis.data.travel;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
@@ -58,7 +57,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     }
 
     public boolean hasFinishedFlight() {
-        return (this.getFlightTicks() >= this.getTargetTicks() || tardis.travel().isCrashing()) &&
+        return (this.getFlightTicks() >= this.getTargetTicks() ||  this.getTargetTicks() == 0 || tardis.travel().isCrashing()) &&
                 !PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
     }
 
@@ -97,12 +96,6 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     }
 
     public DirectedGlobalPos.Cached getProgress() {
-        if (this.isServer() && this.position().getWorld().getServer().getTicks() % 5 == 0) {
-            System.out.println("to: " + this.destination().getPos() + "; from: " + this.position().getPos() + "; %="
-                    + this.getDurationAsPercentage() + "; alt: " + TravelUtil.getPositionFromPercentage(
-                    this.destination(), this.position(), this.getDurationAsPercentage()
-            ).getPos() + "; ft: " + this.getFlightTicks() + "; tt: " + this.getTargetTicks());
-        }
         return TravelUtil.getPositionFromPercentage(
                 this.position(), this.destination(), this.getDurationAsPercentage()
         );
@@ -118,15 +111,11 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         this.setTargetTicks(TravelUtil.getFlightDuration(
                 this.position(), this.destination())
         );
-
-        AITMod.LOGGER.info("Started flight: ");
     }
 
     protected void resetFlight() {
         this.setFlightTicks(0);
         this.setTargetTicks(0);
-
-        AITMod.LOGGER.info("Reset flight");
     }
 
     public int getFlightTicks() {
@@ -214,8 +203,6 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
 
             this.setFlightTicks(this.getFlightTicks() + (Math.max(this.speed() / 2, 1)));
         }
-
-        this.getProgress();
     }
 
     public void triggerSequencingDuringFlight(Tardis tardis) {

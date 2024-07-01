@@ -43,7 +43,7 @@ public class HandBrakeControl extends Control {
 		// TODO(travel): replace with proper travel methods
 		if (handbrake && travel.getState() == TravelHandlerBase.State.FLIGHT) {
 			if (travel.autopilot()) {
-				//travel.stopHere();
+				travel.stopHere();
 				travel.rematerialize();
 			} else {
 				travel.crash();

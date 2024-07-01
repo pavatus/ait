@@ -1,6 +1,5 @@
 package loqor.ait.tardis.data.travel;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
@@ -49,8 +48,14 @@ public class TravelUtil {
             return destination;
 
         float per = percentage / 100f;
-        BlockPos diff = destination.getPos().toImmutable().subtract(source.getPos());
-        return destination.offset((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per));
+        BlockPos pos = source.getPos();
+        BlockPos diff = destination.getPos().subtract(pos);
+
+        return destination.pos(pos.add(
+                (int) (diff.getX() * per),
+                (int) (diff.getY() * per),
+                (int) (diff.getZ() * per)
+        ));
     }
 
     public static int getFlightDuration(DirectedGlobalPos.Cached source, DirectedGlobalPos.Cached destination) {
@@ -65,7 +70,6 @@ public class TravelUtil {
         Random random = TardisUtil.random();
         multiplier *= random.nextInt(0, 2) == 0 ? 1 : -1;
 
-        AITMod.LOGGER.info("JUKED POS!");
         return pos.offset(random.nextInt(min, max) * multiplier, 0,
                 random.nextInt(min, max) * multiplier
         );
