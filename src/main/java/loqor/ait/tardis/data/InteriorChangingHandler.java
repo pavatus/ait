@@ -38,7 +38,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 
 		TardisEvents.MAT.register(tardis -> {
 			if (!tardis.isGrowth())
-				return true;
+				return false;
 
 			tardis.getExterior().setType(CategoryRegistry.CAPSULE);
             return true;
