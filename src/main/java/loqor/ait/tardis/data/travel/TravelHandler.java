@@ -300,6 +300,8 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         if (this.isCrashing())
             sound = AITSounds.EMERG_MAT;
 
+        this.forcePosition(this.destination());
+
         // Play materialize sound at the destination
         this.position().getWorld().playSound(null,
                 this.position().getPos(), sound, SoundCategory.BLOCKS
