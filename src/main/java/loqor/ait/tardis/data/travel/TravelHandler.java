@@ -48,19 +48,27 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
     }
 
     @Override
+    public void speed(int value) {
+        super.speed(value);
+        this.tryFly(this.handbrake());
+    }
+
+    @Override
     public void handbrake(boolean value) {
         this.tryFly(value);
         super.handbrake(value);
     }
 
     private void tryFly(boolean handbrake) {
-        if (this.getState() == State.LANDED && !handbrake
+        int speed = this.speed();
+
+        if (speed > 0 && this.getState() == State.LANDED && !handbrake
                 && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
             this.dematerialize();
             return;
         }
 
-        if (this.speed.get() != 0 || this.getState() != State.FLIGHT)
+        if (speed != 0 || this.getState() != State.FLIGHT)
             return;
 
         if (tardis.crash().getState() == TardisCrashData.State.UNSTABLE)
